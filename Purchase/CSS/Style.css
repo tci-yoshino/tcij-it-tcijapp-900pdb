@@ -235,30 +235,10 @@ em {
 
 .list table {
   width: 100%;
-}
-
-.list table.parent {
-  width: 100%;
   border-collapse: separate;
   border-spacing: 2px;
   empty-cells: show;
-}
-
-.list table.parent th {
-  text-align: left;
-  background-color: #cbd0d3;
-  padding: 2px 5px;
-  white-space: nowrap;
-}
-
-.list table.parent th.subhead {
-  background-color: #fff;
-  padding: 10px 2px 0 2px;
-}
-
-.list table.parent td {
-  background-color: #e5ecf3;
-  padding: 2px 5px;
+/*  margin-bottom: 10px;*/
 }
 
 .list table.child {
@@ -266,22 +246,30 @@ em {
   margin-left: 15px;
 }
 
-.list table.child th {
+.list th {
   text-align: left;
   background-color: #cbd0d3;
   padding: 2px 5px;
   white-space: nowrap;
 }
 
-.list table.child th.subhead {
+.list th.subhead {
   background-color: #fff;
   padding: 10px 2px 0 2px;
 }
 
-.list table.child td {
+.list td {
   background-color: #e5ecf3;
   padding: 2px 5px;
 }
+
+/*
+.list th.reminder {
+  background-color: #fff;
+  padding: 10px 2px 0 2px;
+  vertical-align: top;
+  width: 10px;
+}*/
 
 .list dl {
   margin: 0;
