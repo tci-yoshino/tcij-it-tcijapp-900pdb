@@ -12,7 +12,7 @@
 <body>
     <!-- Main Content Area -->
     <div id="content">
-        <div class="tabs"><a href="~/CountrySetting.aspx">New Country</a></div>
+        <div class="tabs"><a href="./CountrySetting.aspx">New Country</a></div>
 
         <h3>Country</h3>
 
