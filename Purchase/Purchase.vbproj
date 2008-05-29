@@ -81,18 +81,43 @@
     <Import Include="System.Web.UI.HtmlControls" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Default.aspx" />
+    <Content Include="CountryList.aspx" />
+    <Content Include="CSS\Print.css" />
+    <Content Include="CSS\Style.css" />
+    <Content Include="Default.html" />
+    <Content Include="Footer.html" />
+    <Content Include="Global.asax" />
+    <Content Include="Header.aspx" />
+    <Content Include="Image\Arrow.gif" />
+    <Content Include="Image\Check.gif" />
+    <Content Include="Image\Logo.gif" />
+    <Content Include="Image\Search.gif" />
+    <Content Include="JS\Colorful.js" />
+    <Content Include="JS\Common.js" />
+    <Content Include="MyTask.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.vb" />
-    <Compile Include="CommonPage.vb" />
-    <Compile Include="Default.aspx.vb">
+    <Compile Include="CommonPage.vb">
       <SubType>ASPXCodeBehind</SubType>
-      <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Default.aspx.designer.vb">
-      <DependentUpon>Default.aspx</DependentUpon>
+    <Compile Include="CountryList.aspx.designer.vb">
+      <DependentUpon>CountryList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CountryList.aspx.vb">
+      <DependentUpon>CountryList.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="Global.asax.vb">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Header.aspx.designer.vb">
+      <DependentUpon>Header.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Header.aspx.vb">
+      <DependentUpon>Header.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -108,6 +133,13 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="MyTask.aspx.designer.vb">
+      <DependentUpon>MyTask.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MyTask.aspx.vb">
+      <DependentUpon>MyTask.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
