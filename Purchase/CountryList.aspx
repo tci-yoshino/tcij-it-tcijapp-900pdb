@@ -43,7 +43,9 @@
             </asp:Repeater>
         </div>
     </div><!-- Main Content Area END -->
-    <asp:SqlDataSource ID="SrcCountry" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="SrcCountry" runat="server" 
+    ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+    SelectCommand="SELECT [CountryCode], [CountryName], [DefaultQuoLocationName] FROM [v_Country]"></asp:SqlDataSource>
 
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
