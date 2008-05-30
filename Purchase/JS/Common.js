@@ -13,18 +13,20 @@ function include(file) {
 
 
 function navi(menu) {
-  var doc = top.header.document;
+  if(top.header){
+    var doc = top.header.document;
 
-  doc.getElementById('home').className = '';
-  doc.getElementById('product').className = '';
-  doc.getElementById('supplier').className = '';
-//  doc.getElementById('product_type').className = '';
-//  doc.getElementById('rfq_status').className = '';
-//  doc.getElementById('po_status').className = '';
-  doc.getElementById('setting').className = '';
-//  doc.getElementById('personal_setting').className = '';
+    doc.getElementById('home').className = '';
+    doc.getElementById('product').className = '';
+    doc.getElementById('supplier').className = '';
+//    doc.getElementById('product_type').className = '';
+//    doc.getElementById('rfq_status').className = '';
+//    doc.getElementById('po_status').className = '';
+    doc.getElementById('setting').className = '';
+//    doc.getElementById('personal_setting').className = '';
 
-  doc.getElementById(menu).className = 'current';
+    doc.getElementById(menu).className = 'current';
+  }
 
   return true;
 }
