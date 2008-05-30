@@ -19,28 +19,31 @@
         <div class="list">
             <p class="attention"></p>
 
-            <asp:Repeater ID="CountryList" runat="server" DataSourceID="SrcCountry">
-                <HeaderTemplate>
-                    <table>
-                        <tr>
-                            <th style="width:10%">Country Code</th>
-                            <th style="width:15%">Country Name</th>
-                            <th style="width:15%">Default Quo-Location</th>
-                            <th>Edit</th>
+            <asp:ListView ID="CountryList" runat="server" DataSourceID="SrcCountry" DataKeyNames="CountryCode">
+                <LayoutTemplate>
+                    <table ID="itemPlaceholderContainer" runat="server" border="0" style="">
+                        <tr runat="server" style="">
+                            <th runat="server" style="width:10%">Country Code</th>
+                            <th runat="server" style="width:15%">Country Name</th>
+                            <th runat="server" style="width:15%">Default Quo-Location</th>
+                            <th></th>
                         </tr>
-                </HeaderTemplate>
-                <ItemTemplate>
-                        <tr>
-                            <td><asp:Label ID="CountryCode" runat="server" Text="" /></td>
-                            <td><asp:Label ID="CountryName" runat="server" Text="" /></td>
-                            <td><asp:Label ID="DefaultQuoLocationName" runat="server" Text="" /></td>
-                            <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl="./CountrySetting.aspx">Edit &raquo;</asp:HyperLink></td>
+                        <tr ID="itemPlaceholder" runat="server">
                         </tr>
-                </ItemTemplate>
-                <FooterTemplate>
                     </table>
-                </FooterTemplate>
-            </asp:Repeater>
+                </LayoutTemplate>
+                <EmptyDataTemplate>
+                    <h3 style="font-style:italic">No data found.</h3>
+                </EmptyDataTemplate>
+                <ItemTemplate>
+                    <tr>
+                        <td><asp:Label ID="CountryCode" runat="server" Text='' /></td>
+                        <td><asp:Label ID="CountryName" runat="server" Text='' /></td>
+                        <td><asp:Label ID="DefaultQuoLocation" runat="server" Text='' /></td>
+                        <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl="./CountrySetting.aspx">Edit</asp:HyperLink></td>
+                    </tr>
+                </ItemTemplate>
+            </asp:ListView>
         </div>
     </div><!-- Main Content Area END -->
     <asp:SqlDataSource ID="SrcCountry" runat="server" 

@@ -22,7 +22,7 @@ Partial Public Class CountryList
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents CountryList As Global.System.Web.UI.WebControls.Repeater
+    Protected WithEvents CountryList As Global.System.Web.UI.WebControls.ListView
 
     '''<summary>
     '''SrcCountry コントロール。
