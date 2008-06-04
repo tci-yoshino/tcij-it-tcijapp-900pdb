@@ -37,9 +37,9 @@
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr>
-                        <td><asp:Label ID="CountryCode" runat="server" Text='' /></td>
-                        <td><asp:Label ID="CountryName" runat="server" Text='' /></td>
-                        <td><asp:Label ID="DefaultQuoLocation" runat="server" Text='' /></td>
+                        <td><asp:Label ID="CountryCodeLabel" runat="server" Text='<%# Eval("CountryCode") %>' /></td>
+                        <td><asp:Label ID="CountryNameLabel" runat="server" Text='<%# Eval("CountryName") %>' /></td>
+                        <td><asp:Label ID="DefaultQuoLocationNameLabel" runat="server" Text='<%# Eval("DefaultQuoLocationName") %>' /></td>
                         <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl="./CountrySetting.aspx">Edit</asp:HyperLink></td>
                     </tr>
                 </ItemTemplate>
