@@ -83,6 +83,7 @@
   <ItemGroup>
     <Content Include="CountryList.aspx" />
     <Content Include="CountrySelect.aspx" />
+    <Content Include="CountrySetting.aspx" />
     <Content Include="CSS\Print.css" />
     <Content Include="CSS\Style.css" />
     <Content Include="Default.html" />
@@ -116,6 +117,13 @@
     </Compile>
     <Compile Include="CountrySelect.aspx.vb">
       <DependentUpon>CountrySelect.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="CountrySetting.aspx.designer.vb">
+      <DependentUpon>CountrySetting.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CountrySetting.aspx.vb">
+      <DependentUpon>CountrySetting.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
     </Compile>
     <Compile Include="Global.asax.vb">
