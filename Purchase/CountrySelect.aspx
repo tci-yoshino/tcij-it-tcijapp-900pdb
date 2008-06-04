@@ -31,6 +31,7 @@
                     </tr>
                 </table>
 
+                <asp:HiddenField ID="Action" runat="server" Value="Search" />
                 <asp:Button ID="Search" runat="server" Text="Search" />
                 <input type="button" value="Clear" />
             </form>
@@ -55,14 +56,17 @@
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr>
-                        <td><asp:Label ID="CountryCode" runat="server" Text='' /></td>
-                        <td><asp:Label ID="CountryName" runat="server" Text='' /></td>
+                        <td><asp:Label ID="CountryCode" runat="server" Text='' /><%#Eval("CountryCode")%></td>
+                        <td><asp:Label ID="CountryName" runat="server" Text='' /><%#Eval("Name")%></td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>
         </div>
 
     </div><!-- Main Content Area END -->
-    <asp:SqlDataSource ID="SrcCountry" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="SrcCountry" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" />
+    
 </body>
 </html>
+
+      
