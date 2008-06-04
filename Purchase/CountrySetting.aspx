@@ -35,7 +35,7 @@
 					<tr>
 						<th>Default Quo-Location <span class="required">*</span> : </th>
 						<td>
-                            <asp:DropDownList ID="LocationList" runat="server">
+                            <asp:DropDownList ID="Location" runat="server">
                             </asp:DropDownList>
 						</td>
 					</tr>

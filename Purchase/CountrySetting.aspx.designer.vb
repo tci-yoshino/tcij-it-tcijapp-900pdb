@@ -43,13 +43,13 @@ Partial Public Class CountrySetting
     Protected WithEvents Name As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
-    '''LocationList コントロール。
+    '''Location コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents LocationList As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents Location As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
     '''Save コントロール。
