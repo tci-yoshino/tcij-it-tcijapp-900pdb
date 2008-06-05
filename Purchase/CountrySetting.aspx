@@ -17,15 +17,16 @@
 		<h3>Country Setting</h3>
 
 		<div class="main">
-			<p class="attention"></p>
-
-			<form id="CountryForm" runat="server">
+			
+            <form id="CountryForm" runat="server">
+			<p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
+			
 				<table>
 					<tr>
 						<th>Country Code <span class="required">*</span> : </th>
 						<td>
 						    <asp:TextBox ID="Code" runat="server" Width="7em" MaxLength="5" ReadOnly="true" CssClass="readonly"></asp:TextBox>
-						    <a href="#" onclick="popup('./CountrySelect.aspx')" /><img src="./Image/Search.gif" alt="Search" /></a>
+						    <asp:ImageButton ID="Search" runat="server" ImageUrl="~/Image/Search.gif" />
 						</td>
 					</tr>
 					<tr>
@@ -50,5 +51,5 @@
 
 	<!-- Footer -->
 	<!--#include virtual="./Footer.html" --><!-- Footer END -->
-</body>
+	</body>
 </html>

@@ -25,6 +25,15 @@ Partial Public Class CountrySetting
     Protected WithEvents CountryForm As Global.System.Web.UI.HtmlControls.HtmlForm
 
     '''<summary>
+    '''Msg コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
     '''Code コントロール。
     '''</summary>
     '''<remarks>
@@ -32,6 +41,15 @@ Partial Public Class CountrySetting
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Code As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''Search コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Search As Global.System.Web.UI.WebControls.ImageButton
 
     '''<summary>
     '''Name コントロール。
