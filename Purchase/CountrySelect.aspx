@@ -2,6 +2,19 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+<script type="text/javascript">
+<!--
+
+function returnValues(code, name){
+  if(opener){
+    opener.document.getElementById('Code').value=code
+    opener.document.getElementById('Name').value=name
+  }
+}
+
+-->
+</script>
+
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head runat="server">
     <title>Purchase DB</title>
@@ -33,7 +46,7 @@
 
                 <asp:HiddenField ID="Action" runat="server" Value="Search" />
                 <asp:Button ID="Search" runat="server" Text="Search" />
-                <input type="button" value="Clear" />
+                <input type="reset" value="Clear" />
             </form>
         </div>
 
@@ -55,7 +68,7 @@
                     <h3 style="font-style:italic">No match found.</h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr>
+                    <tr onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name")%>');">
                         <td><asp:Label ID="CountryCode" runat="server" Text='' /><%#Eval("CountryCode")%></td>
                         <td><asp:Label ID="CountryName" runat="server" Text='' /><%#Eval("Name")%></td>
                     </tr>
@@ -64,7 +77,14 @@
         </div>
 
     </div><!-- Main Content Area END -->
-    <asp:SqlDataSource ID="SrcCountry" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" />
+    <asp:SqlDataSource ID="SrcCountry" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"
+         SelectCommand="SELECT [CountryCode], [Name] FROM [s_Country] WHERE [CountryCode] = @Code AND [Name] LIKE '%' + @Name + '%' ORDER BY CountryCode, Name">
+      <SelectParameters>
+        <asp:Parameter Name="Code" DefaultValue="NULL" />
+        <asp:Parameter Name="Name" DefaultValue="NULL" />
+      </SelectParameters>
+      
+    </asp:SqlDataSource>
     
 </body>
 </html>
