@@ -25,6 +25,7 @@
     </connectionStrings>
   
     <system.web>
+        <customErrors defaultRedirect="SystemError.html" mode="On"/>
         <!-- 
             デバッグ シンボルをコンパイルされたページに挿入するに
             は、compilation debug="true" に設定します。この設
