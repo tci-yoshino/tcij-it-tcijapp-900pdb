@@ -2,374 +2,372 @@
 
 /* General Rules */
 html {
-  overflow-y: scroll;
+    overflow-y: scroll;
 }
 
 body {
-  background: #fff;
-  font-family: Arial,sans-serif;
-  font-size: 9pt;
-  color: #333631;
-  margin: 0;
-  padding: 0;
+    background: #fff;
+    font-family: Arial,sans-serif;
+    font-size: 9pt;
+    color: #333631;
+    margin: 0;
+    padding: 0;
 }
 
 h1 {
-  font-size: 140%;
+    font-size: 140%;
 }
 
 h2 {
-  font-size: 130%;
+    font-size: 130%;
 }
 
 h3 {
-  font-size: 120%;
-  margin: 0 0 10px 0;
-  margin-bottom: 10px;
-  clear: both;
+    font-size: 120%;
+    margin: 0 0 10px 0;
+    margin-bottom: 10px;
+    clear: both;
 }
 
 h4 {
-  font-size: 110%;
+    font-size: 110%;
 }
 
 a,
 a:link,
 a:visited,
 a:active {
-  color: #2651a5;
-  text-decoration: none;
+    color: #2651a5;
+    text-decoration: none;
 }
 
 a:hover {
-  color: #2651a5;
-  text-decoration: underline;
+    color: #2651a5;
+    text-decoration: underline;
 }
 
 hr {
-  margin: 0 0 10px 0;
-  height: 1px;
-  border: solid 1px #2651a5;
+    margin: 0 0 10px 0;
+    height: 1px;
+    border: solid 1px #2651a5;
 }
 
 form {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 select,
 input,
 textarea {
-  font-family: Arial,sans-serif;
-  font-size: 9pt;
-  font-weight: normal;
+    font-family: Arial,sans-serif;
+    font-size: 9pt;
+    font-weight: normal;
 }
 
 img {
-  vertical-align: bottom;
-  border: none;
+    vertical-align: bottom;
+    border: none;
 }
 
 em {
-  color: #d70035;
-  font-style: normal;
-  font-weight: bold;
+    color: #d70035;
+    font-style: normal;
+    font-weight: bold;
 }
 
 /* Header Rules */
 #header {
-  margin: 5px 7px;
+    margin: 5px 7px;
 }
 
 #header h1 {
-  display: inline;
-  margin-left: 5px;
-  text-align: left;
-  color: #2651a5;
+    display: inline;
+    margin-left: 5px;
+    text-align: left;
+    color: #2651a5;
 }
 
 #header table {
-  border-collapse: collapse;
-  border-spacing: 0;
-  float: left;
+    border-collapse: collapse;
+    border-spacing: 0;
+    float: left;
 }
 
 #header p {
-  text-align: right;
-  margin-top: 2em;
-  float: right;
+    text-align: right;
+    margin-top: 2em;
+    float: right;
 }
 
 /* Global Navigation Rules */
 #navi {
-  clear: both;
-  background-color: #2651a5;
-  margin: 0;
-  padding: 3px 12px 20px 12px;
-  text-align: left;
-  font-size: 10pt;
+    clear: both;
+    background-color: #2651a5;
+    margin: 0;
+    padding: 3px 12px 20px 12px;
+    text-align: left;
+    font-size: 10pt;
 }
 
 #navi ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
 }
 
 #navi li {
-  float: left;
-  padding: 0 0 5px 0;
+    float: left;
+    padding: 0 0 5px 0;
 }
 
 #navi a {
-  margin: 0;
-  padding: 0 10px 5px 8px;
-  font-weight: bold;
-  text-decoration: none;
-  color: #fff;
+    margin: 0;
+    padding: 0 10px 5px 8px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #fff;
 }
 
 #navi a:hover {
-  background-color: #fff;
-  color: #2651a5;
-  -moz-border-radius: 5px 5px 0 0;
+    background-color: #fff;
+    color: #2651a5;
+    -moz-border-radius: 5px 5px 0 0;
 }
 
 #navi li.current a,
 #navi li.current a:hover {
-  background-color: #fff;
-  color: #333631;
-  -moz-border-radius: 5px 5px 0 0;
+    background-color: #fff;
+    color: #333631;
+    -moz-border-radius: 5px 5px 0 0;
 }
 
 /* Sub Navigation Rules */
 #subNavi {
-  border-color: #2651a5;
-  border-style: solid;
-  border-width: 0 0 1px 0;
-  margin: 0;
-  padding: 3px 12px 5px 20px;
-  text-align: left;
-  font-size: 10pt;
+    border-color: #2651a5;
+    border-style: solid;
+    border-width: 0 0 1px 0;
+    margin: 0;
+    padding: 3px 12px 5px 20px;
+    text-align: left;
+    font-size: 10pt;
 /*  position: fixed; */
 }
 
 #subNavi a {
-  margin: 0;
-  padding: 0 5px;
-  text-decoration: none;
-  color: #2651a5;
+    margin: 0;
+    padding: 0 5px;
+    text-decoration: none;
+    color: #2651a5;
 }
 
 #subNavi a:hover {
-  color: #333631;
-  font-weight: bold;
+    color: #333631;
+    font-weight: bold;
 }
 
 #subNavi a.current {
-  color: #333631;
-  font-weight: bold;
+    color: #333631;
+    font-weight: bold;
 }
 
 /* Main Content Area Rules */
 #content {
-  margin: 12px 25px 2em 25px;
-  padding: 0;
+    margin: 12px 25px 2em 25px;
+    padding: 0;
 }
 
 .main {
-  margin: 0 0 10px 0;
-  padding: 0;
+    margin: 0 0 10px 0;
+    padding: 0;
 }
 
 .main h3 {
-  margin-top: 0;
+    margin-top: 0;
 }
 
 .main p {
-  margin: 3px;
+    margin: 3px;
 }
 
 .main table {
-  border-collapse: separate;
-  border-spacing: 2px;
-  empty-cells: show;
-  margin-bottom: 10px;
+    border-collapse: separate;
+    border-spacing: 2px;
+    empty-cells: show;
+    margin-bottom: 10px;
 }
 
 .main table.left {
-  border-collapse: separate;
-  border-spacing: 2px;
-  empty-cells: show;
-  margin: 0 20px 10px 0;
-  float: left;
+    border-collapse: separate;
+    border-spacing: 2px;
+    empty-cells: show;
+    margin: 0 20px 10px 0;
+    float: left;
 }
 
 .main caption {
-  text-align: left;
+    text-align: left;
 }
 
 .main th {
-  text-align: right;
-  vertical-align: top;
-  padding: 2px 5px 2px 0;
-  white-space: nowrap;
+    text-align: right;
+    vertical-align: top;
+    padding: 2px 5px 2px 0;
+    white-space: nowrap;
 }
 
 .main td {
-  vertical-align: top;
+    vertical-align: top;
 }
 
 .main ul {
 }
 
 .main li {
-  margin: 0 0 5px 0;
+    margin: 0 0 5px 0;
 }
 
 .list {
-  margin: 0 0 10px 0;
-  padding: 0;
-  clear: both;
+    margin: 0 0 10px 0;
+    padding: 0;
+    clear: both;
 }
 
 .list table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 2px;
-  empty-cells: show;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 2px;
+    empty-cells: show;
 /*  margin-bottom: 10px;*/
 }
 
 .list table.child {
-  width: 98%;
-  margin-left: 15px;
+    width: 98%;
+    margin-left: 15px;
 }
 
 .list th {
-  text-align: left;
-  background-color: #cbd0d3;
-  padding: 2px 5px;
-  white-space: nowrap;
+    text-align: left;
+    background-color: #cbd0d3;
+    padding: 2px 5px;
+    white-space: nowrap;
 }
 
 .list th.subhead {
-  background-color: #fff;
-  padding: 10px 2px 0 2px;
+    background-color: #fff;
+    padding: 10px 2px 0 2px;
 }
 
 .list td {
-  background-color: #e5ecf3;
-  padding: 2px 5px;
+    background-color: #e5ecf3;
+    padding: 2px 5px;
 }
 
-/*
-.list th.reminder {
-  background-color: #fff;
-  padding: 10px 2px 0 2px;
-  vertical-align: top;
-  width: 10px;
-}*/
-
 .list dl {
-  margin: 0;
+    margin: 0;
 }
 
 .list dt {
-  float: left;
-  text-indent: 5px;
-  padding: 0 0 5px 0;
+    float: left;
+    text-indent: 5px;
+    padding: 0 0 5px 0;
 }
 
 .list dd {
-  padding: 0 0 5px 1em;
+    padding: 0 0 5px 1em;
 }
 
 .switch {
-  text-align: right;
-  border: none;
-  margin: 0;
-  float: right;
+    text-align: right;
+    border: none;
+    margin: 0;
+    float: right;
 }
 
 .switch th {
-  padding: 0 5px;
+    padding: 0 5px;
 }
 
 .tabs {
-  width: 100%;
-  margin: 0 0 5px 0;
-  text-align: right;
+    width: 100%;
+    margin: 0 0 5px 0;
+    text-align: right;
 }
 
 .tabs a {
-  padding: 0 5px;
+    padding: 0 5px;
 }
 
 .btns {
-  margin: 5px 0;
-  text-align: center;
-  clear: both;
+    margin: 5px 0;
+    text-align: center;
+    clear: both;
 }
 
 .btns input {
-  width: 70px;
+    width: 70px;
 }
 
 input.readonly {
-  background-color: #cbd0d3;
+    background-color: #cbd0d3;
 }
 
 /*
 option.message {
-  color: #696969;
+    color: #696969;
 }*/
 
 .number {
-  text-align: right;
-  ime-mode: disabled;
+    text-align: right;
+    ime-mode: disabled;
 }
 
 .indent {
-  margin-left: 15px;
+    margin-left: 15px;
 }
 
 .required {
-  font-size: 150%;
-  font-weight: bold;
-  color: #d70035;
+    font-size: 150%;
+    font-weight: bold;
+    color: #d70035;
 }
 
 .attention {
-  color: #d70035;
+    color: #d70035;
+    font-weight: bold;
+}
+
+.format {
+    font-style: italic;
+    color: #808080;
 }
 
 .zebra1 {
-  width: 100%;
-  background-color: #e5ecf3;
+    width: 100%;
+    background-color: #e5ecf3;
 }
 
 .zebra2 {
-  width: 100%;
-  background-color: #eee;
+    width: 100%;
+    background-color: #eee;
 }
 
 /* Footer Rules */
 #footer {
-  margin-top: 5em;
-  padding: 5px 7px;
+    margin-top: 5em;
+    padding: 5px 7px;
 /*  background-color: #cbd0d3; */
 }
 
 #footer address {
-  text-align: right;
+    text-align: right;
 }
 
 #footer a {
-  background: url("/Purchase/Image/Arrow.gif") no-repeat;
-  margin: 0;
-  padding: 0 15px;
-  text-decoration: none;
-  color: #2651a5;
-  float: left;
+    background: url("/Purchase/Image/Arrow.gif") no-repeat;
+    margin: 0;
+    padding: 0 15px;
+    text-decoration: none;
+    color: #2651a5;
+    float: left;
 }
