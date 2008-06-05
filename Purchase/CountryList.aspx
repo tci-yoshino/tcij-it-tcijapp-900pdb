@@ -40,7 +40,7 @@
                         <td><asp:Label ID="CountryCodeLabel" runat="server" Text='<%# Eval("CountryCode") %>' /></td>
                         <td><asp:Label ID="CountryNameLabel" runat="server" Text='<%# Eval("CountryName") %>' /></td>
                         <td><asp:Label ID="DefaultQuoLocationNameLabel" runat="server" Text='<%# Eval("DefaultQuoLocationName") %>' /></td>
-                        <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl="./CountrySetting.aspx">Edit</asp:HyperLink></td>
+                        <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl='<%# Eval("Url") %>'>Edit</asp:HyperLink></td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>
@@ -48,7 +48,7 @@
     </div><!-- Main Content Area END -->
     <asp:SqlDataSource ID="SrcCountry" runat="server" 
     ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-    SelectCommand="SELECT [CountryCode], [CountryName], [DefaultQuoLocationName] FROM [v_Country]"></asp:SqlDataSource>
+    SelectCommand="SELECT [CountryCode], [CountryName], [DefaultQuoLocationName], './CountrySetting.aspx?Action=Edit&Code=' + [CountryCode] AS Url FROM [v_Country]"></asp:SqlDataSource>
 
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
