@@ -27,8 +27,8 @@
   </Configurations>
   <DTSPackages>
     <DtsPackage>
-      <Name>Package.dtsx</Name>
-      <FullPath>Package.dtsx</FullPath>
+      <Name>SupplierImport.dtsx</Name>
+      <FullPath>SupplierImport.dtsx</FullPath>
       <References />
     </DtsPackage>
   </DTSPackages>
