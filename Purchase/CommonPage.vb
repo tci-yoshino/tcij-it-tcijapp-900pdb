@@ -37,7 +37,7 @@ Public Class CommonPage
         dbCommand = dbConnection.CreateCommand
 
         If Session("UserID") = Nothing Then
-            st_buf = Split(Request.ServerVariables("LOGON_USER"))
+            st_buf = Split(Request.ServerVariables("LOGON_USER"), "\")
             st_accountName = st_buf(st_buf.Length - 1)
 
             dbCommand.CommandText = "SELECT UserID, LocationCode, RoleCode, PrivilegeLevel FROM v_User WHERE AccountName = @AccountName"
