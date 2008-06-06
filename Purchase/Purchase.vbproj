@@ -98,7 +98,10 @@
     <Content Include="JS\Common.js" />
     <Content Include="MyTask.aspx" />
     <Content Include="Setting.html" />
+    <Content Include="SupplierSelect.aspx" />
+    <Content Include="SystemError.html" />
     <Content Include="Web.config" />
+    <Content Include="AuthError.html" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.vb" />
@@ -157,6 +160,13 @@
     <Compile Include="MyTask.aspx.vb">
       <DependentUpon>MyTask.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SupplierSelect.aspx.designer.vb">
+      <DependentUpon>SupplierSelect.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SupplierSelect.aspx.vb">
+      <DependentUpon>SupplierSelect.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
