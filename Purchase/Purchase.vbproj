@@ -98,6 +98,7 @@
     <Content Include="JS\Common.js" />
     <Content Include="MyTask.aspx" />
     <Content Include="Setting.html" />
+    <Content Include="SupplierSearch.aspx" />
     <Content Include="SupplierSelect.aspx" />
     <Content Include="SystemError.html" />
     <Content Include="Web.config" />
@@ -160,6 +161,13 @@
     <Compile Include="MyTask.aspx.vb">
       <DependentUpon>MyTask.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SupplierSearch.aspx.designer.vb">
+      <DependentUpon>SupplierSearch.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SupplierSearch.aspx.vb">
+      <DependentUpon>SupplierSearch.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
     </Compile>
     <Compile Include="SupplierSelect.aspx.designer.vb">
       <DependentUpon>SupplierSelect.aspx</DependentUpon>
