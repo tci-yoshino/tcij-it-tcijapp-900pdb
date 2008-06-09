@@ -20,6 +20,7 @@
     Dim DBConn As New System.Data.SqlClient.SqlConnection   'データベースコネクション	
     Dim DBCommand As System.Data.SqlClient.SqlCommand       'データベースコマンド	
     Dim DBReader As System.Data.SqlClient.SqlDataReader     'データリーダー	
+    Dim ActNai As String                                    '処理判断内容
 
     Sub Set_DBConnectingString()
         Dim settings As ConnectionStringSettings
@@ -42,66 +43,133 @@
         '[Msgのクリア]--------------------------------------------------------------------
         Msg.Text = ""
 
-        '[Location設定]-------------------------------------------------------------------
-        DBCommand = DBConn.CreateCommand()
-        DBCommand.CommandText = "SELECT Name FROM dbo.s_Location"
-        DBReader = DBCommand.ExecuteReader()
-        DBCommand.Dispose()
-        Location.Items.Clear()
-        Location.Items.Add("Direct")
-        Do Until DBReader.Read = False
-            Location.Items.Add(DBReader("Name"))
-        Loop
-        DBReader.Close()
-
-        '[処理(登録/修正)の判断]----------------------------------------------------------
-        If Request.QueryString("Action") = "Edit" Then
-            Code.Text = Request.QueryString("Code")
-            Search.Visible = False
+        If IsPostBack = False Then
+            '[Location設定]-------------------------------------------------------------------
             DBCommand = DBConn.CreateCommand()
-            DBCommand.CommandText = "SELECT CountryName,DefaultQuoLocationName FROM dbo.v_Country WHERE CountryCode = '" & Code.Text.ToString & "'"
+            DBCommand.CommandText = "SELECT Name FROM dbo.s_Location"
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
-            If DBReader.Read = True Then
-                Name.Text = DBReader("CountryName")
-                Location.Text = DBReader("DefaultQuoLocationName")
-            End If
+            Location.Items.Clear()
+            Location.Items.Add("Direct")
+            Do Until DBReader.Read = False
+                Location.Items.Add(DBReader("Name"))
+            Loop
             DBReader.Close()
-        Else
-            Code.CssClass = ""
-            Code.ReadOnly = False
+
+            '[処理(登録/修正)の判断]----------------------------------------------------------
+            If Request.QueryString("Action") = "Edit" Then
+                Code.Text = Request.QueryString("Code")
+                Search.Visible = False
+                DBCommand = DBConn.CreateCommand()
+                DBCommand.CommandText = "SELECT CountryName,DefaultQuoLocationName FROM dbo.v_Country WHERE CountryCode = '" & Code.Text.ToString & "'"
+                DBReader = DBCommand.ExecuteReader()
+                DBCommand.Dispose()
+                If DBReader.Read = True Then
+                    Name.Text = DBReader("CountryName")
+                    Location.Text = DBReader("DefaultQuoLocationName")
+                End If
+                DBReader.Close()
+            Else
+                Code.CssClass = ""
+                Code.ReadOnly = False
+            End If
         End If
     End Sub
 
+    Private Sub CountrySetting_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
+        Dim wClient As String       'クライアントサイドの処理を格納する
+        Dim Type2 As Type = Me.GetType
+        wClient = Clientside()
+        If wClient <> "" Then
+            ClientScript.RegisterStartupScript(Type2, "startup", Chr(13) & Chr(10) & "<script language='JavaScript' type=text/javascript> " & wClient & " </script>")
+        End If
+    End Sub
+
+    Private Function Clientside()
+        Clientside = ""
+        If ActNai = "CountrySelect.aspx_Open" Then
+            Clientside = "popup('CountrySelect.aspx?code=" & Code.Text.ToString & "')"
+        End If
+    End Function
+
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
+        Dim MLocation As String = ""
         If Code.Text.ToString = "" Then
             Msg.Text = "Please Input Country_Code"
         Else
-            '[s_Country check]----------------------------------------------------------
-            DBCommand = DBConn.CreateCommand()
-            DBCommand.CommandText = "SELECT CountryCode FROM dbo.s_Country WHERE CountryCode = '" & Code.Text.ToString & "'"
-            DBReader = DBCommand.ExecuteReader()
-            DBCommand.Dispose()
-            If DBReader.Read = False Then
-                Msg.Text = "Not found Country_Code"
-            End If
-            DBReader.Close()
-            '[PurchasingCountryの追加又は更新]------------------------------------------
-            DBCommand = DBConn.CreateCommand()
-            DBCommand.CommandText = "SELECT CountryCode FROM dbo.PurchasingCountry WHERE CountryCode = '" & Code.Text.ToString & "'"
-            DBReader = DBCommand.ExecuteReader()
-            DBCommand.Dispose()
-            If DBReader.Read = True Then
-                'DBCommand.CommandText = "UPDATE [Zh_Action] SET UDateCata=null,TantCata='',UDate3=null,Tant3='',NYo1='',NPri1='',NCata1='',NYo2='',NPri2='',NCata2='',NYo3='',NPri3='',NCata3='',NChg=''  WHERE ([SCode]='" & TextBox1.Text.ToString & "')"
-                'DBCommand.ExecuteNonQuery()
-                'DBCommand.Dispose()
+            If Name.Text.ToString = "" Then
+                Msg.Text = "Not found Country_Name"
             Else
-
+                '[s_Country check]----------------------------------------------------------
+                DBCommand = DBConn.CreateCommand()
+                DBCommand.CommandText = "SELECT CountryCode FROM dbo.s_Country WHERE CountryCode = '" & Code.Text.ToString & "'"
+                DBReader = DBCommand.ExecuteReader()
+                DBCommand.Dispose()
+                If DBReader.Read = True Then
+                    DBReader.Close()
+                    '[PurchasingCountryの追加又は更新]------------------------------------------
+                    DBCommand = DBConn.CreateCommand()
+                    DBCommand.CommandText = "SELECT CountryCode FROM dbo.PurchasingCountry WHERE CountryCode = '" & Code.Text.ToString & "'"
+                    DBReader = DBCommand.ExecuteReader()
+                    DBCommand.Dispose()
+                    If DBReader.Read = True Then
+                        DBReader.Close()
+                        If Location.Text.ToString <> "Direct" Then
+                            DBCommand = DBConn.CreateCommand()
+                            DBCommand.CommandText = "SELECT LocationCode FROM dbo.s_Location WHERE Name = '" & Location.Text.ToString & "'"
+                            DBReader = DBCommand.ExecuteReader()
+                            DBCommand.Dispose()
+                            If DBReader.Read = True Then
+                                MLocation = DBReader("LocationCode")
+                                DBReader.Close()
+                                '[PurchasingCountryの更新処理]------------------------------------------
+                                DBCommand.CommandText = "UPDATE [PurchasingCountry] SET DefaultQuoLocationCode='" & MLocation & "',UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "'  WHERE CountryCode ='" & Code.Text.ToString & "'"
+                                DBCommand.ExecuteNonQuery()
+                            Else
+                                DBReader.Close()
+                            End If
+                        Else
+                            '[PurchasingCountryの更新処理]------------------------------------------
+                            DBCommand.CommandText = "UPDATE [PurchasingCountry] SET DefaultQuoLocationCode=null,UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "'  WHERE CountryCode ='" & Code.Text.ToString & "'"
+                            DBCommand.ExecuteNonQuery()
+                        End If
+                    Else
+                        DBReader.Close()
+                        '[PurchasingCountryの追加処理]------------------------------------------
+                        If Location.Text.ToString <> "Direct" Then
+                            DBCommand = DBConn.CreateCommand()
+                            DBCommand.CommandText = "SELECT LocationCode FROM dbo.s_Location WHERE Name = '" & Location.Text.ToString & "'"
+                            DBReader = DBCommand.ExecuteReader()
+                            DBCommand.Dispose()
+                            If DBReader.Read = True Then
+                                MLocation = DBReader("LocationCode")
+                                DBReader.Close()
+                                '[PurchasingCountryの追加処理]------------------------------------------
+                                DBCommand.CommandText = "INSERT INTO PurchasingCountry (CountryCode,DefaultQuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" & UCase(Code.Text.ToString) & "','" & MLocation & "','" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "')"
+                                DBCommand.ExecuteNonQuery()
+                            Else
+                                DBReader.Close()
+                            End If
+                        Else
+                            '[PurchasingCountryの追加処理]------------------------------------------
+                            DBCommand.CommandText = "INSERT INTO PurchasingCountry (CountryCode,DefaultQuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" & UCase(Code.Text.ToString) & "',null,'" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "')"
+                            DBCommand.ExecuteNonQuery()
+                        End If
+                    End If
+                Else
+                    Msg.Text = "Not found Country_Code"
+                End If
+                DBReader.Close()
             End If
+        End If
+        '[呼出元のフォームに戻る]------------------------------------------
+        If Msg.Text.ToString = "" Then
+            Response.Redirect("CountryList.aspx")
         End If
     End Sub
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles Search.Click
-        Search.OnClientClick = "popup('CountrySelect.aspx?code=" & Code.Text.ToString & "')"
+        ActNai = "CountrySelect.aspx_Open"
     End Sub
+
 End Class

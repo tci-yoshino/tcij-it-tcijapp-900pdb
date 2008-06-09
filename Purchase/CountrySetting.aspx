@@ -10,46 +10,48 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
 </head>
 <body>
+			
+            <form id="CountryForm" runat="server">
 	<!-- Main Content Area -->
 	<div id="content">
-		<div class="tabs"></div>
+		<div class="tabs">
+            <br />
+        </div>
 
 		<h3>Country Setting</h3>
 
 		<div class="main">
 			
-            <form id="CountryForm" runat="server">
 			<p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 			
 				<table>
 					<tr>
 						<th>Country Code <span class="required">*</span> : </th>
 						<td>
-						    <asp:TextBox ID="Code" runat="server" Width="7em" MaxLength="5" ReadOnly="true" CssClass="readonly"></asp:TextBox>
+						    <asp:TextBox ID="Code" runat="server" Width="7em" MaxLength="5" ReadOnly="true" 
+                                CssClass="readonly" TabIndex="1"></asp:TextBox>
 						    <asp:ImageButton ID="Search" runat="server" ImageUrl="~/Image/Search.gif" />
 						</td>
 					</tr>
 					<tr>
 						<th>Country Name : </th>
-						<td><asp:TextBox ID="Name" runat="server" Width="21em" MaxLength="255" ReadOnly="true" CssClass="readonly"></asp:TextBox></td>
+						<td><asp:TextBox ID="Name" runat="server" Width="21em" MaxLength="255" 
+                                ReadOnly="true" CssClass="readonly" TabIndex="2"></asp:TextBox></td>
 					</tr>
 					<tr>
 						<th>Default Quo-Location <span class="required">*</span> : </th>
-						<td>
-                            <asp:DropDownList ID="Location" runat="server">
-                            </asp:DropDownList>
-						</td>
+						<td><asp:DropDownList ID="Location" runat="server"></asp:DropDownList></td>
 					</tr>
 				</table>
-
+                <asp:HiddenField ID="UpdateDate" runat="server" />
 				<div class="btns">
                     <asp:Button ID="Save" runat="server" Text="Save" />
 				</div>
-			</form>
 		</div>
 	</div><!-- Main Content Area END -->
 
 	<!-- Footer -->
 	<!--#include virtual="./Footer.html" --><!-- Footer END -->
-	</body>
+			</form>
+		</body>
 </html>
