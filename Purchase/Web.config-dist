@@ -25,7 +25,6 @@
     </connectionStrings>
   
     <system.web>
-        <customErrors defaultRedirect="SystemError.html" mode="On"/>
         <!-- 
             デバッグ シンボルをコンパイルされたページに挿入するに
             は、compilation debug="true" に設定します。この設
@@ -94,6 +93,7 @@
             <error statusCode="404" redirect="FileNotFound.htm" />
         </customErrors>
         -->
+        <customErrors defaultRedirect="SystemError.html" mode="On"/>
 
       <httpHandlers>
         <remove verb="*" path="*.asmx"/>
@@ -155,4 +155,11 @@
       </assemblyBinding>
     </runtime>
 
+    <system.net>
+      <mailSettings>
+        <smtp from="app@tokyokasei.co.jp">
+          <network defaultCredentials="true" host="tex1.tci.tokyokasei" password="" userName="" />
+        </smtp>
+      </mailSettings>
+    </system.net>
 </configuration>
