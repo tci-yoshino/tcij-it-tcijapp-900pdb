@@ -36,3 +36,17 @@ function popup(file) {
 
   window.open(file, "popup" ,option + ",left=100,top=100,scrollbars=yes,menubar=no,toolbar=no,statusbar=no,resizable=yes,directories=no");
 }
+
+function clearForm(formname){
+
+  var name = formname;
+  var targetForm = document.forms[name];
+  var len = targetForm.elements.length;
+
+  for(i = 0; i < len; i++) {
+    if(targetForm.elements[i].type == "text" || targetForm.elements[i].type == "textarea" || targetForm.elements[i].type == "password"){
+      alert(targetForm.elements[i].type);
+      targetForm.elements[i].value = "";
+    }
+  }
+}
