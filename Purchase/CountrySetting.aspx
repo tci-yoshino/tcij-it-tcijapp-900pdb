@@ -32,7 +32,7 @@
 					<tr>
 						<th>Country Name : </th>
 						<td><asp:TextBox ID="Name" runat="server" Width="21em" MaxLength="255" 
-                                ReadOnly="true" CssClass="readonly" TabIndex="2"></asp:TextBox></td>
+                                ReadOnly="True" CssClass="readonly" TabIndex="2"></asp:TextBox></td>
 					</tr>
 					<tr>
 						<th>Default Quo-Location <span class="required">*</span> : </th>

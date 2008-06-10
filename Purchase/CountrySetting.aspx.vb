@@ -93,75 +93,74 @@
     End Function
 
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
-        Dim MLocation As String = ""
+        Dim memoLocation As String = ""
+
+        '[データのチェックと保存]----------------------------------------------------------
         If Code.Text.ToString = "" Then
             Msg.Text = "Please Input Country_Code"
         Else
-            If Name.Text.ToString = "" Then
-                Msg.Text = "Not found Country_Name"
-            Else
-                '[s_Country check]----------------------------------------------------------
+            '[s_Country check]----------------------------------------------------------
+            DBCommand = DBConn.CreateCommand()
+            DBCommand.CommandText = "SELECT CountryCode FROM dbo.s_Country WHERE CountryCode = '" & Code.Text.ToString & "'"
+            DBReader = DBCommand.ExecuteReader()
+            DBCommand.Dispose()
+            If DBReader.Read = True Then
+                '[PurchasingCountryの追加又は更新]------------------------------------------
+                DBReader.Close()
                 DBCommand = DBConn.CreateCommand()
-                DBCommand.CommandText = "SELECT CountryCode FROM dbo.s_Country WHERE CountryCode = '" & Code.Text.ToString & "'"
+                DBCommand.CommandText = "SELECT CountryCode FROM dbo.PurchasingCountry WHERE CountryCode = '" & Code.Text.ToString & "'"
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
                 If DBReader.Read = True Then
                     DBReader.Close()
-                    '[PurchasingCountryの追加又は更新]------------------------------------------
-                    DBCommand = DBConn.CreateCommand()
-                    DBCommand.CommandText = "SELECT CountryCode FROM dbo.PurchasingCountry WHERE CountryCode = '" & Code.Text.ToString & "'"
-                    DBReader = DBCommand.ExecuteReader()
-                    DBCommand.Dispose()
-                    If DBReader.Read = True Then
-                        DBReader.Close()
-                        If Location.Text.ToString <> "Direct" Then
-                            DBCommand = DBConn.CreateCommand()
-                            DBCommand.CommandText = "SELECT LocationCode FROM dbo.s_Location WHERE Name = '" & Location.Text.ToString & "'"
-                            DBReader = DBCommand.ExecuteReader()
-                            DBCommand.Dispose()
-                            If DBReader.Read = True Then
-                                MLocation = DBReader("LocationCode")
-                                DBReader.Close()
-                                '[PurchasingCountryの更新処理]------------------------------------------
-                                DBCommand.CommandText = "UPDATE [PurchasingCountry] SET DefaultQuoLocationCode='" & MLocation & "',UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "'  WHERE CountryCode ='" & Code.Text.ToString & "'"
-                                DBCommand.ExecuteNonQuery()
-                            Else
-                                DBReader.Close()
-                            End If
-                        Else
+                    If Location.Text.ToString <> "Direct" Then
+                        DBCommand = DBConn.CreateCommand()
+                        DBCommand.CommandText = "SELECT LocationCode FROM dbo.s_Location WHERE Name = '" & Location.Text.ToString & "'"
+                        DBReader = DBCommand.ExecuteReader()
+                        DBCommand.Dispose()
+                        If DBReader.Read = True Then
+                            memoLocation = DBReader("LocationCode")
+                            DBReader.Close()
                             '[PurchasingCountryの更新処理]------------------------------------------
-                            DBCommand.CommandText = "UPDATE [PurchasingCountry] SET DefaultQuoLocationCode=null,UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "'  WHERE CountryCode ='" & Code.Text.ToString & "'"
+                            DBCommand.CommandText = "UPDATE [PurchasingCountry] SET DefaultQuoLocationCode='" & memoLocation & "',UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "'  WHERE CountryCode ='" & Code.Text.ToString & "'"
                             DBCommand.ExecuteNonQuery()
+                        Else
+                            DBReader.Close()
                         End If
                     Else
-                        DBReader.Close()
-                        '[PurchasingCountryの追加処理]------------------------------------------
-                        If Location.Text.ToString <> "Direct" Then
-                            DBCommand = DBConn.CreateCommand()
-                            DBCommand.CommandText = "SELECT LocationCode FROM dbo.s_Location WHERE Name = '" & Location.Text.ToString & "'"
-                            DBReader = DBCommand.ExecuteReader()
-                            DBCommand.Dispose()
-                            If DBReader.Read = True Then
-                                MLocation = DBReader("LocationCode")
-                                DBReader.Close()
-                                '[PurchasingCountryの追加処理]------------------------------------------
-                                DBCommand.CommandText = "INSERT INTO PurchasingCountry (CountryCode,DefaultQuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" & UCase(Code.Text.ToString) & "','" & MLocation & "','" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "')"
-                                DBCommand.ExecuteNonQuery()
-                            Else
-                                DBReader.Close()
-                            End If
-                        Else
-                            '[PurchasingCountryの追加処理]------------------------------------------
-                            DBCommand.CommandText = "INSERT INTO PurchasingCountry (CountryCode,DefaultQuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" & UCase(Code.Text.ToString) & "',null,'" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "')"
-                            DBCommand.ExecuteNonQuery()
-                        End If
+                        '[PurchasingCountryの更新処理]------------------------------------------
+                        DBCommand.CommandText = "UPDATE [PurchasingCountry] SET DefaultQuoLocationCode=null,UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "'  WHERE CountryCode ='" & Code.Text.ToString & "'"
+                        DBCommand.ExecuteNonQuery()
                     End If
                 Else
-                    Msg.Text = "Not found Country_Code"
+                    DBReader.Close()
+                    '[PurchasingCountryの追加処理]------------------------------------------
+                    If Location.Text.ToString <> "Direct" Then
+                        DBCommand = DBConn.CreateCommand()
+                        DBCommand.CommandText = "SELECT LocationCode FROM dbo.s_Location WHERE Name = '" & Location.Text.ToString & "'"
+                        DBReader = DBCommand.ExecuteReader()
+                        DBCommand.Dispose()
+                        If DBReader.Read = True Then
+                            memoLocation = DBReader("LocationCode")
+                            DBReader.Close()
+                            '[PurchasingCountryの追加処理]------------------------------------------
+                            DBCommand.CommandText = "INSERT INTO PurchasingCountry (CountryCode,DefaultQuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" & UCase(Code.Text.ToString) & "','" & memoLocation & "','" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "')"
+                            DBCommand.ExecuteNonQuery()
+                        Else
+                            DBReader.Close()
+                        End If
+                    Else
+                        '[PurchasingCountryの追加処理]------------------------------------------
+                        DBCommand.CommandText = "INSERT INTO PurchasingCountry (CountryCode,DefaultQuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" & UCase(Code.Text.ToString) & "',null,'" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "')"
+                        DBCommand.ExecuteNonQuery()
+                    End If
                 End If
+            Else
                 DBReader.Close()
+                Msg.Text = "Not found Country_Code"
             End If
         End If
+
         '[呼出元のフォームに戻る]------------------------------------------
         If Msg.Text.ToString = "" Then
             Response.Redirect("CountryList.aspx")
