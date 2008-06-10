@@ -25,7 +25,7 @@
 				<table>
 					<tr>
 						<th>Supplier Code : </th>
-						<td><asp:Label ID="SupplierCode" runat="server" Text=""></asp:Label></td>
+						<td><asp:Label ID="Code" runat="server" Text=""></asp:Label></td>
 					</tr>
 					<tr>
 						<th>R/3 Supplier Code : </th>
@@ -118,9 +118,9 @@
 						</td>
 					</tr>
 				</table>
+                <asp:HiddenField ID="Action" runat="server" value="Save" />
 
 				<div class="btns">
-                    <asp:HiddenField ID="Action" runat="server" value="Save" />
                     <asp:Button ID="Save" runat="server" Text="Save" />
 				</div>
 			</form>

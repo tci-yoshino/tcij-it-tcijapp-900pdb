@@ -34,13 +34,13 @@ Partial Public Class SupplierSetting
     Protected WithEvents SupplierForm As Global.System.Web.UI.HtmlControls.HtmlForm
 
     '''<summary>
-    '''SupplierCode コントロール。
+    '''Code コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents SupplierCode As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents Code As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
     '''R3SupplierCode コントロール。
