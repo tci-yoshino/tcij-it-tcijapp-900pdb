@@ -46,7 +46,7 @@ function returnValues(code, name){
 
                 <asp:HiddenField ID="Action" runat="server" Value="Search" />
                 <asp:Button ID="Search" runat="server" Text="Search" />
-                <input type="reset" value="Clear" />
+                <input type="button" value="Clear" onclick="clearForm('Form1')" />
             </form>
         </div>
 
