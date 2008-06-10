@@ -45,7 +45,6 @@ function clearForm(formname){
 
   for(i = 0; i < len; i++) {
     if(targetForm.elements[i].type == "text" || targetForm.elements[i].type == "textarea" || targetForm.elements[i].type == "password"){
-      alert(targetForm.elements[i].type);
       targetForm.elements[i].value = "";
     }
   }
