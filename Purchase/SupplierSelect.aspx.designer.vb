@@ -16,6 +16,15 @@ Option Explicit On
 Partial Public Class SupplierSelect
 
     '''<summary>
+    '''ErrorMessages コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents ErrorMessages As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
     '''SearchForm コントロール。
     '''</summary>
     '''<remarks>
@@ -43,6 +52,15 @@ Partial Public Class SupplierSelect
     Protected WithEvents Name As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
+    '''Location コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Location As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''Search コントロール。
     '''</summary>
     '''<remarks>
@@ -59,13 +77,4 @@ Partial Public Class SupplierSelect
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents SupplierList As Global.System.Web.UI.WebControls.ListView
-
-    '''<summary>
-    '''SrcSupplier コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents SrcSupplier As Global.System.Web.UI.WebControls.SqlDataSource
 End Class
