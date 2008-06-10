@@ -43,7 +43,9 @@
 		<hr />
 
         <div class="list">
-            <asp:ListView ID="SupplierList" runat="server" AutoGenerateColumns="False" DataSourceID="SrcSupplier">
+        
+            <asp:ListView ID="SupplierList" runat="server" AutoGenerateColumns="False" 
+                DataSourceID="SrcSupplier" DataKeyNames="Supplier Code">
                 <LayoutTemplate>
                     <table ID="itemPlaceholderContainer" runat="server">
                         <tr id="Tr1" runat="server">
@@ -59,16 +61,21 @@
                     <h3 style="font-style:italic">No match found.</h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr>
-                        <td><asp:Label ID="SupplierCode" runat="server" Text='' /></td>
-                        <td><asp:Label ID="R3SupplierCode" runat="server" Text='' /></td>
-                        <td><asp:Label ID="SupplierName" runat="server" Text='' /></td>
+                    <tr style="">
+                        <td><asp:Label ID="Supplier_CodeLabel" runat="server" 
+                                Text='<%# Eval("[Supplier Code]") %>' /></td>
+                        <td><asp:Label ID="R_3_Supplier_CodeLabel" runat="server" 
+                                Text='<%# Eval("[R/3 Supplier Code]") %>' /></td>
+                        <td><asp:Label ID="Supplier_NameLabel" runat="server" 
+                                Text='<%# Eval("[Supplier Name]") %>' /></td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>
         </div>
     </div><!-- Main Content Area END -->
-    <asp:SqlDataSource ID="SrcSupplier" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="SrcSupplier" runat="server" 
+    ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" SelectCommand="SELECT SupplierCode AS [Supplier Code], R3SupplierCode AS [R/3 Supplier Code], ISNULL(Name3, '') + N' ' + ISNULL(Name4, '') AS [Supplier Name] FROM dbo.Supplier">
+    </asp:SqlDataSource>
 
 	<!-- Footer -->
 	<!--#include virtual="./Footer.html" --><!-- Footer END -->
