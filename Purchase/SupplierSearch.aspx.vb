@@ -43,9 +43,15 @@
     End Sub
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
+        '[Code,R3Codeを1Byte形式に変換する]-----------------------------------------------
+        Code.Text = StrConv(Code.Text.ToString, VbStrConv.Narrow)
+        R3Code.Text = StrConv(R3Code.Text.ToString, VbStrConv.Narrow)
+
         '[Supplier検索]-------------------------------------------------------------------
-        If Not IsNumeric(Code.Text.ToString) Then
+        If Code.Text.ToString <> "" And Not IsNumeric(Code.Text.ToString) Then
             Msg.Text = "コードには数字を入力して下さい"
+            SrcSupplier.SelectCommand = ""
+            SupplierList.DataBind()
         Else
             Msg.Text = ""
             Dim SQLStr As String = ""
@@ -64,7 +70,6 @@
             End If
             SrcSupplier.SelectCommand = SrcSupplier.SelectCommand + SQLStr
         End If
-
     End Sub
 
 End Class

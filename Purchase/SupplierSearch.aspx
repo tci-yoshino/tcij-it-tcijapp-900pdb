@@ -36,7 +36,7 @@
 				</table>
 
 				<asp:Button ID="Search" runat="server" Text="Search" />
-				<input type="button" value="Clear" />
+				<input type="button" value="Clear" onclick="clearForm('SearchForm');" />
 			</form>
 		</div>
 
@@ -58,12 +58,12 @@
                     </table>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
-                    <h3 style="font-style:italic">No match found.</h3>
+                   <h3 style="font-style:italic"><%If IsPostBack = True Then%>No match found.<%End If%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr style="">
-                        <td><asp:Label ID="Supplier_CodeLabel" runat="server" 
-                                Text='<%# Eval("[Supplier Code]") %>' /></td>
+                        <td>
+                            <asp:HyperLink ID="Supplier_CodeLabel" runat="server" NavigateUrl="./SupplierSetting.aspx"><%# Eval("[Supplier Code]") %></asp:HyperLink></td>
                         <td><asp:Label ID="R_3_Supplier_CodeLabel" runat="server" 
                                 Text='<%# Eval("[R/3 Supplier Code]") %>' /></td>
                         <td><asp:Label ID="Supplier_NameLabel" runat="server" 
