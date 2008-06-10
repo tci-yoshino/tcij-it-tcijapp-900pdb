@@ -68,7 +68,13 @@
                 If SQLStr = "" Then SQLStr = "WHERE " Else SQLStr = SQLStr + " AND "
                 SQLStr = SQLStr + "(Name1 + N' ' + Name2 LIKE '%" & Name.Text.ToString & "%')"
             End If
-            SrcSupplier.SelectCommand = SrcSupplier.SelectCommand + SQLStr
+
+            '[検索項目すべて指定しない場合は結果無しとする]-------------------------------
+            If SQLStr = "" Then
+                SrcSupplier.SelectCommand = ""
+            Else
+                SrcSupplier.SelectCommand = SrcSupplier.SelectCommand + SQLStr
+            End If
         End If
     End Sub
 
