@@ -16,15 +16,6 @@ Option Explicit On
 Partial Public Class CountrySetting
 
     '''<summary>
-    '''CountryForm コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents CountryForm As Global.System.Web.UI.HtmlControls.HtmlForm
-
-    '''<summary>
     '''Msg コントロール。
     '''</summary>
     '''<remarks>
@@ -32,6 +23,15 @@ Partial Public Class CountrySetting
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
+    '''CountryForm コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents CountryForm As Global.System.Web.UI.HtmlControls.HtmlForm
 
     '''<summary>
     '''Code コントロール。
@@ -70,13 +70,13 @@ Partial Public Class CountrySetting
     Protected WithEvents Location As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
-    '''UpdateDate コントロール。
+    '''Action コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents UpdateDate As Global.System.Web.UI.WebControls.HiddenField
+    Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
     '''Save コントロール。

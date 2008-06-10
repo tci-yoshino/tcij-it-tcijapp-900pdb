@@ -10,27 +10,23 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
 </head>
 <body>
-			
-            <form id="CountryForm" runat="server">
 	<!-- Main Content Area -->
 	<div id="content">
-		<div class="tabs">
-            <br />
-        </div>
+		<div class="tabs"></div>
 
 		<h3>Country Setting</h3>
 
 		<div class="main">
-			
 			<p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
-			
+
+			<form id="CountryForm" runat="server">
 				<table>
 					<tr>
 						<th>Country Code <span class="required">*</span> : </th>
 						<td>
 						    <asp:TextBox ID="Code" runat="server" Width="7em" MaxLength="5" ReadOnly="true" 
                                 CssClass="readonly" TabIndex="1"></asp:TextBox>
-						    <asp:ImageButton ID="Search" runat="server" ImageUrl="~/Image/Search.gif" />
+						    <asp:ImageButton ID="Search" runat="server" ImageUrl="./Image/Search.gif" />
 						</td>
 					</tr>
 					<tr>
@@ -43,15 +39,15 @@
 						<td><asp:DropDownList ID="Location" runat="server"></asp:DropDownList></td>
 					</tr>
 				</table>
-                <asp:HiddenField ID="UpdateDate" runat="server" />
+                <asp:HiddenField ID="Action" runat="server" value="Save" />
 				<div class="btns">
                     <asp:Button ID="Save" runat="server" Text="Save" />
 				</div>
+			</form>
 		</div>
 	</div><!-- Main Content Area END -->
 
 	<!-- Footer -->
-	<!--#include virtual="./Footer.html" --><!-- Footer END -->
-			</form>
-		</body>
+	<!--#include virtual="./Footer.html" --><!-- Footer END -->			
+</body>
 </html>
