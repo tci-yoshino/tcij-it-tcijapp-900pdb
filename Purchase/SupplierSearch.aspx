@@ -63,7 +63,7 @@
                 <ItemTemplate>
                     <tr style="">
                         <td>
-                            <asp:HyperLink ID="Supplier_CodeLabel" runat="server" NavigateUrl="./SupplierSetting.aspx"><%# Eval("[Supplier Code]") %></asp:HyperLink></td>
+                            <asp:HyperLink ID="Supplier_CodeLabel" runat="server" NavigateUrl="./SupplierSetting.aspx?Action=Edit&Code=1"><%# Eval("[Supplier Code]") %></asp:HyperLink></td>
                         <td><asp:Label ID="R_3_Supplier_CodeLabel" runat="server" 
                                 Text='<%# Eval("[R/3 Supplier Code]") %>' /></td>
                         <td><asp:Label ID="Supplier_NameLabel" runat="server" 

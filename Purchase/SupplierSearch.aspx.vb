@@ -1,5 +1,5 @@
 ﻿Public Partial Class SupplierSearch
-    Inherits System.Web.UI.Page
+    Inherits CommonPage
 
 #Region " Web フォーム デザイナで生成されたコード "
     '*****（Region内は変更しないこと）*****
@@ -74,7 +74,7 @@
                 SrcSupplier.SelectCommand = ""
             Else
                 SrcSupplier.SelectCommand = SrcSupplier.SelectCommand + SQLStr
-            End If
+              End If
         End If
     End Sub
 
