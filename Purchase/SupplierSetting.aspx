@@ -72,7 +72,7 @@
 					<tr>
 						<th>Country <span class="required">*</span> : </th>
 						<td>
-                            <asp:DropDownList ID="Country" runat="server">
+                            <asp:DropDownList ID="Country" runat="server" AutoPostBack="True">
                             </asp:DropDownList>
 						</td>
 					</tr>
