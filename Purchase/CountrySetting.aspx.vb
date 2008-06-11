@@ -93,7 +93,7 @@
     End Function
 
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
-        Dim memoLocation As String = ""
+        Dim st_Location As String = ""
 
         '[データのチェックと保存]----------------------------------------------------------
         If Code.Text.ToString = "" Then
@@ -119,10 +119,10 @@
                         DBReader = DBCommand.ExecuteReader()
                         DBCommand.Dispose()
                         If DBReader.Read = True Then
-                            memoLocation = DBReader("LocationCode")
+                            st_Location = DBReader("LocationCode")
                             DBReader.Close()
                             '[PurchasingCountryの更新処理]------------------------------------------
-                            DBCommand.CommandText = "UPDATE [PurchasingCountry] SET DefaultQuoLocationCode='" & memoLocation & "',UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "'  WHERE CountryCode ='" & Code.Text.ToString & "'"
+                            DBCommand.CommandText = "UPDATE [PurchasingCountry] SET DefaultQuoLocationCode='" & st_Location & "',UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "'  WHERE CountryCode ='" & Code.Text.ToString & "'"
                             DBCommand.ExecuteNonQuery()
                         Else
                             DBReader.Close()
@@ -141,10 +141,10 @@
                         DBReader = DBCommand.ExecuteReader()
                         DBCommand.Dispose()
                         If DBReader.Read = True Then
-                            memoLocation = DBReader("LocationCode")
+                            st_Location = DBReader("LocationCode")
                             DBReader.Close()
                             '[PurchasingCountryの追加処理]------------------------------------------
-                            DBCommand.CommandText = "INSERT INTO PurchasingCountry (CountryCode,DefaultQuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" & UCase(Code.Text.ToString) & "','" & memoLocation & "','" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "')"
+                            DBCommand.CommandText = "INSERT INTO PurchasingCountry (CountryCode,DefaultQuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" & UCase(Code.Text.ToString) & "','" & st_Location & "','" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "')"
                             DBCommand.ExecuteNonQuery()
                         Else
                             DBReader.Close()
