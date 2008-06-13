@@ -71,10 +71,10 @@
                     <h3 style="font-style:italic">No match found.</h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name3")%> <%#Eval("Name4")%>','<%#Eval("QuoLocationCode")%>');">
+                    <tr onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name3")%> <%#Eval("Name4")%>','<%#Eval("QuoLocationCode") %>');">
                         <td><asp:Label ID="SupplierCode" runat="server" Text='' /><%#Eval("SupplierCode")%></td>
                         <td><asp:Label ID="SupplierName" runat="server" Text='' /><%#Eval("Name3")%>&nbsp;<%#Eval("Name4")%></td>
-                        <td><asp:Label ID="QuoLocationCode" runat="server" Text='' /><%#Eval("QuoLocationCode")%></td>
+                        <td><asp:Label ID="QuoLocationCode" runat="server" Text='' /></td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>

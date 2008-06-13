@@ -47,11 +47,18 @@
 
             ' Supplier List のデータをクリア
             SupplierList.Items.Clear()
-            SupplierList.DataBind()
+            'SupplierList.DataBind()
 
             ' ポストバックではない 且つ GET が 空, notiong, NULL 以外なら実行
             If Not (IsPostBack) And Not (String.IsNullOrEmpty(Request.QueryString("Code"))) Then
-                Get_Supplier_Data(DBConnectString.ConnectionString)
+                Dim dataSet As DataSet = New DataSet
+                dataSet = Get_Supplier_Data(dataSet, DBConnectString.ConnectionString)
+                Dim SupplierDataTable As DataTable = dataSet.Tables("Supplier")
+                SupplierDataTable.Columns.Add("QuoLocationCode", Type.GetType("System.String"))
+                SupplierDataTable.NewRow()
+                SupplierDataTable.Rows(0)("QuoLocationCode") = "test"
+                SupplierList.DataSource = SupplierDataTable
+                SupplierList.DataBind()
             End If
 
         End If
@@ -60,53 +67,42 @@
     ' Search ボタンクリック処理
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
         If Not String.IsNullOrEmpty(st_Code) Or Not String.IsNullOrEmpty(st_Name) Then
-            Get_Supplier_Data(DBConnectString.ConnectionString)
+            Dim dataSet As DataSet = New DataSet
+            dataSet = Get_Supplier_Data(dataSet, DBConnectString.ConnectionString)
+            Dim SupplierDataTable As DataTable = dataSet.Tables("Supplier")
+            SupplierDataTable.Columns.Add("QuoLocationCode", Type.GetType("System.String"), "QuoLocationCode")
+            SupplierDataTable.Rows(0)("QuoLocationCode") = "test"
+            SupplierList.DataSource = SupplierDataTable
+            SupplierList.DataBind()
         End If
     End Sub
 
-
-    Private Sub Get_Supplier_Data(ByVal connectionString As String)
-
-        Dim st_where As String = " WHERE (Supplier.SupplierCode = @Code) AND ({ fn CONCAT(Supplier.Name1, Supplier.Name2) } LIKE N'%' + @Name + '%') "
-
-            If Not String.IsNullOrEmpty(st_Code) And String.IsNullOrEmpty(st_Name) Then
-                st_where = " WHERE (Supplier.SupplierCode = @Code) "
-            ElseIf String.IsNullOrEmpty(st_Code) And Not String.IsNullOrEmpty(st_Name) Then
-                st_where = " WHERE ({ fn CONCAT(Supplier.Name1, Supplier.Name2) } LIKE N'%' + @Name + '%') "
-            End If
-
+    Public Function Get_Supplier_Data(ByVal dataSet As DataSet, ByVal connectionString As String) As DataSet
         Dim st_query As String = _
-  "SELECT Supplier.SupplierCode, Supplier.Name3, Supplier.Name4, Supplier.CountryCode, " _
-& "  ISNULL(IrregularRFQLocation.QuoLocationCode,PurchasingCountry.DefaultQuoLocationCode) as QuoLocationCode " _
-& "FROM Supplier " _
-& "  INNER JOIN PurchasingCountry ON Supplier.CountryCode = PurchasingCountry.CountryCode" _
-& "  LEFT OUTER JOIN IrregularRFQLocation ON Supplier.SupplierCode = IrregularRFQLocation.SupplierCode" _
-& "      AND IrregularRFQLocation.EnqLocationCode = @Location " _
-& st_where _
-& "ORDER BY Supplier.SupplierCode, Supplier.Name3;"
+            "SELECT Supplier.SupplierCode, Supplier.Name3, Supplier.Name4, Supplier.CountryCode, " _
+            & "     IrregularRFQLocation.QuoLocationCode as IrregularQuoLocationCode,PurchasingCountry.DefaultQuoLocationCode " _
+            & "FROM Supplier " _
+            & "  INNER JOIN PurchasingCountry ON Supplier.CountryCode = PurchasingCountry.CountryCode" _
+            & "  LEFT OUTER JOIN IrregularRFQLocation ON Supplier.SupplierCode = IrregularRFQLocation.SupplierCode" _
+            & "      AND IrregularRFQLocation.EnqLocationCode = @Location " _
+            & "ORDER BY Supplier.SupplierCode, Supplier.Name3;"
 
-        Try
+        Using connection As New SqlClient.SqlConnection(connectionString)
 
-            Using connection As New SqlClient.SqlConnection(connectionString)
+            Dim adapter As New SqlClient.SqlDataAdapter()
+            Dim command As New SqlClient.SqlCommand(st_query, connection)
 
-                Dim command As New SqlClient.SqlCommand(st_query, connection)
-                command.Parameters.AddWithValue("Code", st_Code)
-                command.Parameters.AddWithValue("Name", st_Name)
-                command.Parameters.AddWithValue("Location", st_Location)
-                connection.Open()
+            command.Parameters.AddWithValue("Code", st_Code)
+            command.Parameters.AddWithValue("Name", st_Name)
+            command.Parameters.AddWithValue("Location", st_Location)
 
-                Dim reader As SqlClient.SqlDataReader = command.ExecuteReader()
+            adapter.SelectCommand = command
+            adapter.Fill(dataSet)
 
-                SupplierList.DataSource = reader
-                SupplierList.DataBind()
-                reader.Close()
+            Return dataSet
 
-            End Using
+        End Using
+    End Function
 
-        Catch ex As Exception
-            SupplierList.Items.Clear()
-            SupplierList.DataBind()
-        End Try
 
-    End Sub
 End Class
