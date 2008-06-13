@@ -53,7 +53,7 @@ function returnValues(code, name){
         <hr />
 
         <div class="list">
-            <asp:ListView ID="CountryList" runat="server" AutoGenerateColumns="False" DataSourceID="SrcCountry">
+            <asp:ListView ID="CountryList" runat="server" AutoGenerateColumns="False">
                 <LayoutTemplate>
                     <table ID="itemPlaceholderContainer" runat="server">
                         <tr runat="server">
@@ -77,14 +77,6 @@ function returnValues(code, name){
         </div>
 
     </div><!-- Main Content Area END -->
-    <asp:SqlDataSource ID="SrcCountry" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"
-         SelectCommand="SELECT [CountryCode], [Name] FROM [s_Country] WHERE [CountryCode] = @Code AND [Name] LIKE '%' + @Name + '%' ORDER BY CountryCode, Name">
-      <SelectParameters>
-        <asp:Parameter Name="Code" DefaultValue="NULL" />
-        <asp:Parameter Name="Name" DefaultValue="NULL" />
-      </SelectParameters>
-      
-    </asp:SqlDataSource>
     
 </body>
 </html>

@@ -1,6 +1,7 @@
 ﻿Public Partial Class CountrySelect
     Inherits CommonPage
 
+    Public DBConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
     Public st_Code As String
     Public st_Name As String
     Public st_Action As String
@@ -24,36 +25,59 @@
         Code.Text = st_Code
         Name.Text = st_Name
 
+        ' Cuntry List のデータをクリア
+        CountryList.Items.Clear()
+        CountryList.DataBind()
+
         ' ポストバックではない 且つ GET が 空, notiong, NULL 以外なら実行
         If Not (IsPostBack) And Not (String.IsNullOrEmpty(Request.QueryString("Code"))) Then
-            ' SQL クエリをSelectCommand にセット
-            SrcCountry.SelectCommand = "SELECT [CountryCode], [Name] FROM [s_Country] WHERE [CountryCode] = @Code ORDER BY CountryCode, Name"
-
-            ' SelectParameters のデフォルト値に Code をセット
-            SrcCountry.SelectParameters.Item("Code").DefaultValue = IIf(st_Code <> "", st_Code, "NULL")
+            Get_Country_List(DBConnectString.ConnectionString)
         End If
 
     End Sub
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Search.Click
 
-        Dim st_Sql_Select As String = ""
+        If Not String.IsNullOrEmpty(st_Code) Or Not String.IsNullOrEmpty(st_Name) Then
+            Get_Country_List(DBConnectString.ConnectionString)
+        End If
 
-        ' Code と Name の値によって SQL クエリを分岐
+    End Sub
+
+
+    Private Sub Get_Country_List(ByVal connectionString As String)
+
+        Dim st_where As String = " WHERE [CountryCode] = @Code AND [Name] LIKE '%' + @Name + '%' "
+
         If Not String.IsNullOrEmpty(st_Code) And String.IsNullOrEmpty(st_Name) Then
-            st_Sql_Select = "WHERE [CountryCode] = @Code"
+            st_where = " WHERE [CountryCode] = @Code "
         ElseIf String.IsNullOrEmpty(st_Code) And Not String.IsNullOrEmpty(st_Name) Then
-            st_Sql_Select = "WHERE [Name] LIKE '%' + @Name + '%'"
+            st_where = " WHERE [Name] LIKE '%' + @Name + '%' "
         End If
 
-        ' SQL クエリをSelectCommand にセット
-        If Not (String.IsNullOrEmpty(st_Sql_Select)) Then
-            SrcCountry.SelectCommand = "SELECT [CountryCode], [Name] FROM [s_Country] " & st_Sql_Select & " ORDER BY CountryCode, Name"
-        End If
+        Dim st_query As String = "SELECT [CountryCode], [Name] FROM [s_Country] " & st_where & " ORDER BY CountryCode, Name"
 
-        ' SelectParameters のデフォルト値に Code と Name をセット
-        SrcCountry.SelectParameters.Item("Code").DefaultValue = IIf(String.IsNullOrEmpty(st_Code), "NULL", st_Code)
-        SrcCountry.SelectParameters.Item("Name").DefaultValue = IIf(String.IsNullOrEmpty(st_Name), "NULL", st_Name)
+        Try
+
+            Using connection As New SqlClient.SqlConnection(connectionString)
+
+                Dim command As New SqlClient.SqlCommand(st_query, connection)
+                command.Parameters.AddWithValue("Code", st_Code)
+                command.Parameters.AddWithValue("Name", st_Name)
+                connection.Open()
+
+                Dim reader As SqlClient.SqlDataReader = command.ExecuteReader()
+
+                CountryList.DataSource = reader
+                CountryList.DataBind()
+                reader.Close()
+
+            End Using
+
+        Catch ex As Exception
+            CountryList.Items.Clear()
+            CountryList.DataBind()
+        End Try
 
     End Sub
 
