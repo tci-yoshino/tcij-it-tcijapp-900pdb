@@ -45,20 +45,23 @@
             Name.Text = st_Name
             Location.Value = st_Location
 
+            ' Supplier List のデータをクリア
+            SupplierList.Items.Clear()
+            SupplierList.DataBind()
+
             ' ポストバックではない 且つ GET が 空, notiong, NULL 以外なら実行
             If Not (IsPostBack) And Not (String.IsNullOrEmpty(Request.QueryString("Code"))) Then
                 Get_Supplier_Data(DBConnectString.ConnectionString)
             End If
 
         End If
-
-
-
     End Sub
 
     ' Search ボタンクリック処理
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
-        Get_Supplier_Data(DBConnectString.ConnectionString)
+        If Not String.IsNullOrEmpty(st_Code) Or Not String.IsNullOrEmpty(st_Name) Then
+            Get_Supplier_Data(DBConnectString.ConnectionString)
+        End If
     End Sub
 
 
@@ -102,9 +105,8 @@
 
         Catch ex As Exception
             SupplierList.Items.Clear()
-
+            SupplierList.DataBind()
         End Try
 
     End Sub
-
 End Class
