@@ -322,6 +322,10 @@ option.message {
     ime-mode: disabled;
 }
 
+.magnify {
+    vertical-align: bottom;
+}
+
 .indent {
     margin-left: 15px;
 }
