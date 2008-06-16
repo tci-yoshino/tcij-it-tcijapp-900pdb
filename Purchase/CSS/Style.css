@@ -263,6 +263,13 @@ em {
     padding: 2px 5px;
 }
 
+.list td.over 
+{
+	cursor: pointer;
+    background-color: #ccdff3;
+    padding: 2px 5px;
+}
+
 .list dl {
     margin: 0;
 }
