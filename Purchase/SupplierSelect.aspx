@@ -72,9 +72,12 @@
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name3")%> <%#Eval("Name4")%>','<%#Eval("QuoLocationCode") %>');">
-                        <td><asp:Label ID="SupplierCode" runat="server" Text='' /><%#Eval("SupplierCode")%></td>
-                        <td><asp:Label ID="SupplierName" runat="server" Text='' /><%#Eval("Name3")%>&nbsp;<%#Eval("Name4")%></td>
-                        <td><asp:Label ID="QuoLocationCode" runat="server" Text='' /></td>
+                        <td><asp:Label ID="SupplierCode" runat="server" Text='<%#Eval("SupplierCode")%>' /></td>
+                        <td>
+                          <asp:Label ID="SupplierName3" runat="server" Text='<%#Eval("Name3")%> ' />
+                          <asp:Label ID="SupplierName4" runat="server" Text='<%#Eval("Name4")%>' />
+                        </td>
+                        <td><asp:Label ID="QuoLocationCode" runat="server" Text='<%#Eval("QuoLocationCode") %>' /></td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>
