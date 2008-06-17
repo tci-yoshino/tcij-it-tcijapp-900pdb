@@ -1,4 +1,4 @@
-﻿<%@ Page Language="vb" AutoEventWireup="false" CodeBehind="MakerSelect.aspx.vb" Inherits="Purchase.SupplierSelect" %>
+﻿<%@ Page Language="vb" AutoEventWireup="false" CodeBehind="MakerSelect.aspx.vb" Inherits="Purchase.MakerSelect" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -11,8 +11,10 @@
     <script type="text/javascript">
     <!--
 
-    function returnValues(code, name, location){
+    function returnValues(code, name3, name4, location){
       if(opener){
+        var name = name3 + " " + name4;
+        if (name3 == "") name = name4;
         opener.document.getElementById('Code').value=code
         opener.document.getElementById('Name').value=name
         //if(opener.document.getElementById('QuoLocation')){
@@ -71,7 +73,7 @@
                     <h3 style="font-style:italic">No match found.</h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name3")%> <%#Eval("Name4")%>','<%#Eval("QuoLocationCode") %>');">
+                    <tr onmouseover="cellOver(this)" onmouseout="cellOut(this)" onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name3")%>','<%#Eval("Name4")%>','<%#Eval("QuoLocationCode") %>');">
                         <td><asp:Label ID="SupplierCode" runat="server" Text='<%#Eval("SupplierCode")%>' /></td>
                         <td>
                           <asp:Label ID="SupplierName3" runat="server" Text='<%#Eval("Name3")%> ' />

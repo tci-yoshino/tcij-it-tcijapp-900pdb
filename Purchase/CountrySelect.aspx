@@ -72,7 +72,8 @@ function returnValues(code, name){
                     <h3 style="font-style:italic">No match found.</h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name")%>');">
+                
+                    <tr onmouseover="cellOver(this)" onmouseout="cellOut(this)" onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name")%>');">
                         <td><asp:Label ID="CountryCode" runat="server" Text='' /><%#Eval("CountryCode")%></td>
                         <td><asp:Label ID="CountryName" runat="server" Text='' /><%#Eval("Name")%></td>
                     </tr>
