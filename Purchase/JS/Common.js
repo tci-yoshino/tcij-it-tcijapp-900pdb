@@ -50,4 +50,16 @@ function clearForm(formname){
   }
 }
 
+function cellOver(obj){
+  var tdrows = obj.getElementsByTagName('TD');
+    for(var tno=0;tno<tdrows.length;tno++){
+      tdrows[tno].className = "over";
+  }
+}
 
+function cellOut(obj){
+  var tdrows = obj.getElementsByTagName('TD');
+    for(var tno=0;tno<tdrows.length;tno++){
+      tdrows[tno].className = "";
+  }
+}
