@@ -16,15 +16,6 @@ Option Explicit On
 Partial Public Class SupplierSearch
 
     '''<summary>
-    '''Msg コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
-
-    '''<summary>
     '''SearchForm コントロール。
     '''</summary>
     '''<remarks>
@@ -32,6 +23,15 @@ Partial Public Class SupplierSearch
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents SearchForm As Global.System.Web.UI.HtmlControls.HtmlForm
+
+    '''<summary>
+    '''Msg コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
     '''Code コントロール。

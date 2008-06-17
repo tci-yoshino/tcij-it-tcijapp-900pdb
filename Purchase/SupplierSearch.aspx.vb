@@ -55,7 +55,7 @@
         Else
             Msg.Text = ""
             Dim SQLStr As String = ""
-            SrcSupplier.SelectCommand = "SELECT SupplierCode AS [Supplier Code], R3SupplierCode AS [R/3 Supplier Code], ISNULL(Name3, '') + N' ' + ISNULL(Name4, '') AS [Supplier Name] FROM dbo.Supplier "
+            SrcSupplier.SelectCommand = "SELECT SupplierCode AS [Supplier Code], R3SupplierCode AS [R/3 Supplier Code], ISNULL(Name3, '') + N' ' + ISNULL(Name4, '') AS [Supplier Name], './SupplierSetting.aspx?Action=Edit&Code=' + str([SupplierCode]) AS Url  FROM dbo.Supplier "
             If Code.Text.ToString <> "" Then
                 If SQLStr = "" Then SQLStr = "WHERE "
                 SQLStr = SQLStr + "(SupplierCode = '" & Code.Text.ToString & "')"
