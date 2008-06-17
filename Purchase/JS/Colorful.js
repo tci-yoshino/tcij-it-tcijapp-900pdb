@@ -27,6 +27,7 @@ function ColorfulInput() {
       for(var i in this.skip) {
          if(elm.type == this.skip[i]) return false;
       }
+      if(elm.readOnly) return false;
       return true;
    }
 
