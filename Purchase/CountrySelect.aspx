@@ -18,13 +18,15 @@ function returnValues(code, name){
   if(opener){
     opener.document.getElementById('Code').value=code
     opener.document.getElementById('Name').value=name
+    window.close();
   }
+
 }
 
 -->
 </script>
 </head>
-<body onload="cellColer('CountryList_itemPlaceholderContainer')">
+<body>
     <!-- Main Content Area -->
     <div id="content">
         <div class="tabs"></div>
