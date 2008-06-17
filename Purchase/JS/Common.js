@@ -51,27 +51,3 @@ function clearForm(formname){
 }
 
 
-function cellColer(tid){
-  if (document.getElementById(tid)){
-    var tableObj = document.getElementById(tid);
-    var rows = tableObj.getElementsByTagName('TR');
-    for(var no=0;no<rows.length;no++){
-      rows[no].onmouseover = over
-      rows[no].onmouseout = out;
-    }
-  }
-}
-
-function over(){
-      var tdrows = this.getElementsByTagName('TD');
-    for(var tno=0;tno<tdrows.length;tno++){
-      tdrows[tno].className = "over"
-    }
-}
-
-function out(){
-      var tdrows = this.getElementsByTagName('TD');
-    for(var tno=0;tno<tdrows.length;tno++){
-      tdrows[tno].className = ""
-    }
-}
