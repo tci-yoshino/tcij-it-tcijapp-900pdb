@@ -25,13 +25,13 @@ Partial Public Class MyTask
     Protected WithEvents SwitchForm As Global.System.Web.UI.HtmlControls.HtmlForm
 
     '''<summary>
-    '''User コントロール。
+    '''UID コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents User As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents UID As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
     '''Switch コントロール。
@@ -43,22 +43,22 @@ Partial Public Class MyTask
     Protected WithEvents Switch As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
-    '''RFQList コントロール。
+    '''RFQ コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents RFQList As Global.System.Web.UI.WebControls.Repeater
+    Protected WithEvents RFQ As Global.System.Web.UI.WebControls.ListView
 
     '''<summary>
-    '''POList コントロール。
+    '''PO コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents POList As Global.System.Web.UI.WebControls.Repeater
+    Protected WithEvents PO As Global.System.Web.UI.WebControls.ListView
 
     '''<summary>
     '''SrcRFQ コントロール。
