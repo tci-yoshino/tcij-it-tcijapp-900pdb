@@ -10,6 +10,8 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
 </head>
 <body>
+
+			<form id="SupplierForm" runat="server">
 	<!-- Main Content Area -->
 	<div id="content">
 		<div class="tabs">
@@ -21,7 +23,6 @@
 		<div class="main">
 			<p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 
-			<form id="SupplierForm" runat="server">
 				<table>
 					<tr>
 						<th>Supplier Code : </th>
@@ -34,8 +35,8 @@
 					<tr>
 						<th>R/3 Company Name : </th>
 						<td>
-                            <asp:TextBox ID="SupplierName1" runat="server"  Width="21em" MaxLength="255" ReadOnly="true" CssClass="readonly"></asp:TextBox>
-							<asp:TextBox ID="SupplierName2" runat="server"  Width="21em" MaxLength="255" ReadOnly="true" CssClass="readonly"></asp:TextBox>
+                            <asp:TextBox ID="SupplierName1" runat="server"  Width="21em" MaxLength="255"></asp:TextBox>
+							<asp:TextBox ID="SupplierName2" runat="server"  Width="21em" MaxLength="255"></asp:TextBox>
 						</td>
 					</tr>
 					<tr>
@@ -48,8 +49,8 @@
 					<tr>
 						<th>Search Term : </th>
 						<td>
-							<asp:TextBox ID="SearchTerm1" runat="server"  Width="21em" MaxLength="255" ReadOnly="true" CssClass="readonly"></asp:TextBox>
-							<asp:TextBox ID="SearchTerm2" runat="server"  Width="21em" MaxLength="255" ReadOnly="true" CssClass="readonly"></asp:TextBox>
+							<asp:TextBox ID="SearchTerm1" runat="server"  Width="21em" MaxLength="255"></asp:TextBox>
+							<asp:TextBox ID="SearchTerm2" runat="server"  Width="21em" MaxLength="255"></asp:TextBox>
 						</td>
 					</tr>
 				</table>
@@ -104,7 +105,7 @@
 					</tr>
 					<tr>
 						<th>R/3 Comments : </th>
-						<td><asp:TextBox ID="R3Comment" runat="server"  Width="21em" MaxLength="255" ReadOnly="true" CssClass="readonly"></asp:TextBox></td>
+						<td><asp:TextBox ID="R3Comment" runat="server"  Width="21em" MaxLength="255"></asp:TextBox></td>
 					</tr>
 					<tr>
 						<th>Comments : </th>
@@ -113,7 +114,8 @@
 					<tr>
 						<th>Default Quo-Location : </th>
 						<td>
-                            <asp:DropDownList ID="DefaultQuoLocation" runat="server">
+                            <asp:DropDownList ID="DefaultQuoLocation" runat="server" 
+                                AppendDataBoundItems="True">
                             </asp:DropDownList>
 						</td>
 					</tr>
@@ -121,13 +123,13 @@
                 <asp:HiddenField ID="Action" runat="server" value="Save" />
 
 				<div class="btns">
-                    <asp:Button ID="Save" runat="server" Text="Save" />
+                    <asp:Button ID="Save" runat="server" Text="Save" UseSubmitBehavior="False" />
 				</div>
-			</form>
 		</div>
 	</div><!-- Main Content Area END -->
 
 	<!-- Footer -->
 	<!--#include virtual="./Footer.html" --><!-- Footer END -->
-</body>
+			</form>
+		</body>
 </html>

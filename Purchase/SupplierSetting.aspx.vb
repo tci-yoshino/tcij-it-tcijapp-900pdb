@@ -52,7 +52,7 @@
 
         '[初期データ表示]-----------------------------------------------------------------
         If IsPostBack = False Then
-            '[Country設定]-------------------------------------------------------------------
+            '[Country設定]----------------------------------------------------------------
             DBCommand = DBConn.CreateCommand()
             DBCommand.CommandText = "SELECT name FROM s_Country ORDER BY name"
             DBReader = DBCommand.ExecuteReader()
@@ -63,7 +63,7 @@
             Loop
             DBReader.Close()
 
-            '[Region設定]-------------------------------------------------------------------
+            '[Region設定]-----------------------------------------------------------------
             DBCommand = DBConn.CreateCommand()
             DBCommand.CommandText = "SELECT name FROM s_Region ORDER BY name"
             DBReader = DBCommand.ExecuteReader()
@@ -74,19 +74,30 @@
             Loop
             DBReader.Close()
 
+            '[DefaultQuoLocation設定]-----------------------------------------------------
+            DBCommand = DBConn.CreateCommand()
+            DBCommand.CommandText = "SELECT LocationCode, Name FROM dbo.s_Location"
+            DBReader = DBCommand.ExecuteReader()
+            DBCommand.Dispose()
+            DefaultQuoLocation.Items.Clear()
+            DefaultQuoLocation.Items.Add(New ListItem("", ""))
+            DefaultQuoLocation.Items.Add(New ListItem("Direct", "Direct"))
+            Do Until DBReader.Read = False
+                DefaultQuoLocation.Items.Add(New ListItem(DBReader("Name"), DBReader("LocationCode")))
+            Loop
+            DBReader.Close()
+
             If Request.QueryString("Action") = "Edit" Then
                 Code.Text = Request.QueryString("Code")
                 DataDisplay1()
                 SetCountryCode()
                 SetTownName()
                 SetRegionCode()
-                SetDefaultQuoLocation()
                 DataDisplay2()
             Else
                 SetCountryCode()
                 SetTownName()
                 SetRegionCode()
-                SetDefaultQuoLocation()
             End If
         End If
     End Sub
@@ -108,7 +119,7 @@
             If Request.QueryString("Action") = "Edit" Then
                 '[Supplierの更新]-------------------------------------------------------------------
                 DBCommand = DBConn.CreateCommand()
-                DBCommand.CommandText = "SELECT SupplierCode FROM dbo.Supplier WHERE SupplierCode = '" & Code.Text.ToString & "'"
+                DBCommand.CommandText = "SELECT SupplierCode FROM dbo.Supplier WHERE SupplierCode = '" & Trim(Code.Text.ToString) & "'"
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
                 If DBReader.Read = True Then
@@ -148,20 +159,32 @@
                     If Email.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Email.Text.ToString & "',"
                     st_SQLSTR = st_SQLSTR & "Website="
                     If Website.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null, " Else st_SQLSTR = st_SQLSTR & "'" & Website.Text.ToString & "',"
+                    st_SQLSTR = st_SQLSTR & "Note="
+                    If Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null, " Else st_SQLSTR = st_SQLSTR & "'" & Comment.Text.ToString & "',"
                     st_SQLSTR = st_SQLSTR & "UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "' "
-                    st_SQLSTR = st_SQLSTR & "WHERE SupplierCode='" & Code.Text.ToString & "'"
+                    st_SQLSTR = st_SQLSTR & "WHERE SupplierCode='" & Trim(Code.Text.ToString) & "'"
                     DBCommand.CommandText = st_SQLSTR
                     DBCommand.ExecuteNonQuery()
+
+                    '[IrregularRFQLocationの更新]-------------------------------------------------------------------
+                    If DefaultQuoLocation.SelectedValue = "" Then
+
+                    ElseIf DefaultQuoLocation.SelectedValue = "Direct" Then
+                        DBCommand.CommandText = "UPDATE IrregularRFQLocation SET QuoLocationCode=null WHERE SupplierCode = '" & Code.Text.ToString & "'"
+                        DBCommand.ExecuteNonQuery()
+                    Else
+                        DBCommand.CommandText = "UPDATE IrregularRFQLocation SET QuoLocationCode='" & DefaultQuoLocation.SelectedValue & "' WHERE SupplierCode = '" & Trim(Code.Text.ToString) & "'"
+                        DBCommand.ExecuteNonQuery()
+                    End If
                 Else
                     DBReader.Close()
-                    Msg.Text = "予期せぬエラー"
                 End If
             Else
                 '[Supplierの登録]-------------------------------------------------------------------
             End If
 
             '[呼出元のフォームに戻る]------------------------------------------
-            Response.Redirect("SupplierSearch.aspx")
+            'Response.Redirect("SupplierSearch.aspx")
         Else
             Msg.Text = "必須項目を入力して下さい"
         End If
@@ -179,18 +202,6 @@
         DBReader.Close()
     End Sub
 
-    Public Sub SetRegionCode()
-        '[選択したRegionCode取得]-------------------------------------------------------------------
-        DBCommand = DBConn.CreateCommand()
-        DBCommand.CommandText = "SELECT RegionCode FROM s_Region WHERE (CountryCode = '" & st_CountryCode & "') AND (Name = '" & Region.Text.ToString & "')"
-        DBReader = DBCommand.ExecuteReader()
-        DBCommand.Dispose()
-        If DBReader.Read = True Then
-            st_RegionCode = DBReader("RegionCode")
-        End If
-        DBReader.Close()
-    End Sub
-
     Public Sub SetTownName()
         '[選択したCountryCodeで都市名選出]-----------------------------------------------------------
         DBCommand = DBConn.CreateCommand()
@@ -204,18 +215,15 @@
         DBReader.Close()
     End Sub
 
-    Public Sub SetDefaultQuoLocation()
-        '[DefaultQuoLocation設定]-------------------------------------------------------------------
+    Public Sub SetRegionCode()
+        '[選択したRegionCode取得]-------------------------------------------------------------------
         DBCommand = DBConn.CreateCommand()
-        DBCommand.CommandText = "SELECT LocationCode, Name FROM dbo.s_Location"
+        DBCommand.CommandText = "SELECT RegionCode FROM s_Region WHERE (CountryCode = '" & st_CountryCode & "') AND (Name = '" & Region.Text.ToString & "')"
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
-        DefaultQuoLocation.Items.Clear()
-        DefaultQuoLocation.Items.Add("")
-        DefaultQuoLocation.Items.Add("Direct")
-        Do Until DBReader.Read = False
-            DefaultQuoLocation.Items.Add(DBReader("Name"))
-        Loop
+        If DBReader.Read = True Then
+            st_RegionCode = DBReader("RegionCode")
+        End If
         DBReader.Close()
     End Sub
 
@@ -241,17 +249,8 @@
             If Not TypeOf DBReader("Fax") Is DBNull Then Fax.Text = DBReader("Fax")
             If Not TypeOf DBReader("Email") Is DBNull Then Email.Text = DBReader("Email")
             If Not TypeOf DBReader("Website") Is DBNull Then Website.Text = DBReader("Website")
-        End If
-        DBReader.Close()
-        DataDisplay2()
-    End Sub
-
-    Public Sub DataDisplay2()
-        DBCommand = DBConn.CreateCommand()
-        DBCommand.CommandText = "SELECT CountryCode, RegionCode FROM dbo.Supplier WHERE SupplierCode = '" & Code.Text.ToString & "'"
-        DBReader = DBCommand.ExecuteReader()
-        DBCommand.Dispose()
-        If DBReader.Read = True Then
+            If Not TypeOf DBReader("Comment") Is DBNull Then R3Comment.Text = DBReader("Comment")
+            If Not TypeOf DBReader("Note") Is DBNull Then Comment.Text = DBReader("Note")
             DBCommand2 = DBConn2.CreateCommand()
             DBCommand2.CommandText = "SELECT name FROM [s_Country] WHERE CountryCode='" & DBReader("CountryCode") & "'"
             DBReader2 = DBCommand2.ExecuteReader()
@@ -260,12 +259,44 @@
                 Country.Text = DBReader2("name")
             End If
             DBReader2.Close()
+        End If
+        DBReader.Close()
+    End Sub
+
+    Public Sub DataDisplay2()
+        DBCommand = DBConn.CreateCommand()
+        DBCommand.CommandText = "SELECT CountryCode, RegionCode FROM dbo.Supplier WHERE SupplierCode = '" & Code.Text.ToString & "'"
+        DBReader = DBCommand.ExecuteReader()
+        DBCommand.Dispose()
+        If DBReader.Read = True Then
+            '[Country.Item設定]-----------------------------------------------------------------
+            DBCommand2 = DBConn2.CreateCommand()
+            DBCommand2.CommandText = "SELECT name FROM [s_Country] WHERE CountryCode='" & DBReader("CountryCode") & "'"
+            DBReader2 = DBCommand2.ExecuteReader()
+            DBCommand2.Dispose()
+            If DBReader2.Read = True Then
+                Country.Text = DBReader2("name")
+            End If
+            DBReader2.Close()
+            '[Region.Item設定]------------------------------------------------------------------
             DBCommand2 = DBConn2.CreateCommand()
             DBCommand2.CommandText = "SELECT Name FROM dbo.s_Region WHERE (CountryCode = '" & DBReader("CountryCode") & "') AND (RegionCode = '" & DBReader("RegionCode") & "')"
             DBReader2 = DBCommand2.ExecuteReader()
             DBCommand2.Dispose()
             If DBReader2.Read = True Then
                 Region.Text = DBReader2("name")
+            End If
+            DBReader2.Close()
+            '[DefaultQuoLocation.Item設定]------------------------------------------------------
+            DBCommand2 = DBConn2.CreateCommand()
+            DBCommand2.CommandText = "SELECT QuoLocationCode FROM dbo.IrregularRFQLocation WHERE (SupplierCode = '" & Trim(Code.Text.ToString) & "')"
+            'DBCommand2.CommandText = "SELECT dbo.s_Location.Name FROM dbo.s_Location RIGHT OUTER JOIN dbo.IrregularRFQLocation ON dbo.s_Location.LocationCode = dbo.IrregularRFQLocation.QuoLocationCode WHERE (dbo.IrregularRFQLocation.SupplierCode = '" & Code.Text.ToString & "')"
+            DBReader2 = DBCommand2.ExecuteReader()
+            DBCommand2.Dispose()
+            If DBReader2.Read = True Then
+                If Not TypeOf DBReader2("QuoLocationCode") Is DBNull Then
+                    DefaultQuoLocation.Text = DBReader2("QuoLocationCode")
+                End If
             End If
             DBReader2.Close()
         End If
