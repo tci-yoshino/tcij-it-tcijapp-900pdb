@@ -104,6 +104,7 @@
     <Content Include="SystemError.html" />
     <Content Include="Web.config" />
     <Content Include="AuthError.html" />
+    <Content Include="MakerSelect.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.vb" />
@@ -182,6 +183,13 @@
     </Compile>
     <Compile Include="SupplierSetting.aspx.vb">
       <DependentUpon>SupplierSetting.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="MakerSelect.aspx.designer.vb">
+      <DependentUpon>MakerSelect.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MakerSelect.aspx.vb">
+      <DependentUpon>MakerSelect.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
     </Compile>
   </ItemGroup>
