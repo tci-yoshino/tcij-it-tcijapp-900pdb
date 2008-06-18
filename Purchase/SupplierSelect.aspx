@@ -73,7 +73,7 @@
                     <h3 style="font-style:italic">No match found.</h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onmouseover="cellClassChange(this, 'over')" onmouseout="cellClassDll(this)" onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name3")%>','<%#Eval("Name4")%>','<%#Eval("QuoLocationCode") %>');">
+                    <tr onmouseover="ChangeClass(this)" onmouseout="DllClass(this)" onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name3")%>','<%#Eval("Name4")%>','<%#Eval("QuoLocationCode") %>');">
                         <td><asp:Label ID="SupplierCode" runat="server" Text='<%#Eval("SupplierCode")%>' /></td>
                         <td>
                           <asp:Label ID="SupplierName3" runat="server" Text='<%#Eval("Name3")%> ' />
