@@ -73,7 +73,7 @@ function returnValues(code, name){
                 </EmptyDataTemplate>
                 <ItemTemplate>
                 
-                    <tr onmouseover="cellOver(this)" onmouseout="cellOut(this)" onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name")%>');">
+                    <tr onmouseover="cellClassChange(this)" onmouseout="cellClassDll(this)" onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name")%>');">
                         <td><asp:Label ID="CountryCode" runat="server" Text='' /><%#Eval("CountryCode")%></td>
                         <td><asp:Label ID="CountryName" runat="server" Text='' /><%#Eval("Name")%></td>
                     </tr>
