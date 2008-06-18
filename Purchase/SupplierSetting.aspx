@@ -15,6 +15,7 @@
 	<!-- Main Content Area -->
 	<div id="content">
 		<div class="tabs">
+			<asp:HiddenField ID="StAction" runat="server" />
 			<a href="./SuppliersProductSetting.aspx">Suppliers Product</a>
 		</div>
 

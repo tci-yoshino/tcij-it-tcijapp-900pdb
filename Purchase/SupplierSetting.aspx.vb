@@ -52,14 +52,17 @@
 
         '[初期データ表示]-----------------------------------------------------------------
         If IsPostBack = False Then
+            '[StAction設定]---------------------------------------------------------------
+            StAction.Value = Request.QueryString("Action")
+
             '[Country設定]----------------------------------------------------------------
             DBCommand = DBConn.CreateCommand()
-            DBCommand.CommandText = "SELECT name FROM s_Country ORDER BY name"
+            DBCommand.CommandText = "SELECT CountryName FROM v_Country ORDER BY CountryName"
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             Country.Items.Clear()
             Do Until DBReader.Read = False
-                Country.Items.Add(DBReader("Name"))
+                Country.Items.Add(DBReader("CountryName"))
             Loop
             DBReader.Close()
 
@@ -116,7 +119,7 @@
         If SupplierName3.Text.ToString <> "" And Address1.Text.ToString <> "" And Country.Text.ToString <> "" Then
             SetCountryCode()
             SetRegionCode()
-            If Request.QueryString("Action") = "Edit" Then
+            If StAction.Value = "Edit" Then
                 '[Supplierの更新]-------------------------------------------------------------------
                 DBCommand = DBConn.CreateCommand()
                 DBCommand.CommandText = "SELECT SupplierCode FROM dbo.Supplier WHERE SupplierCode = '" & Trim(Code.Text.ToString) & "'"
@@ -159,6 +162,8 @@
                     If Email.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Email.Text.ToString & "',"
                     st_SQLSTR = st_SQLSTR & "Website="
                     If Website.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null, " Else st_SQLSTR = st_SQLSTR & "'" & Website.Text.ToString & "',"
+                    st_SQLSTR = st_SQLSTR & "Comment="
+                    If R3Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null, " Else st_SQLSTR = st_SQLSTR & "'" & R3Comment.Text.ToString & "',"
                     st_SQLSTR = st_SQLSTR & "Note="
                     If Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null, " Else st_SQLSTR = st_SQLSTR & "'" & Comment.Text.ToString & "',"
                     st_SQLSTR = st_SQLSTR & "UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "' "
@@ -166,25 +171,54 @@
                     DBCommand.CommandText = st_SQLSTR
                     DBCommand.ExecuteNonQuery()
 
-                    '[IrregularRFQLocationの更新]-------------------------------------------------------------------
-                    If DefaultQuoLocation.SelectedValue = "" Then
-
-                    ElseIf DefaultQuoLocation.SelectedValue = "Direct" Then
-                        DBCommand.CommandText = "UPDATE IrregularRFQLocation SET QuoLocationCode=null WHERE SupplierCode = '" & Code.Text.ToString & "'"
-                        DBCommand.ExecuteNonQuery()
-                    Else
-                        DBCommand.CommandText = "UPDATE IrregularRFQLocation SET QuoLocationCode='" & DefaultQuoLocation.SelectedValue & "' WHERE SupplierCode = '" & Trim(Code.Text.ToString) & "'"
-                        DBCommand.ExecuteNonQuery()
-                    End If
+                    '[IrregularRFQLocationの更新]---------------------------------------------------
+                    IRFQLocation_Mainte()
                 Else
                     DBReader.Close()
                 End If
             Else
                 '[Supplierの登録]-------------------------------------------------------------------
-            End If
+                st_SQLSTR = "INSERT INTO Supplier (R3SupplierCode,Name1,Name2,Name3,Name4,SearchTerm1,SearchTerm2,Address1,Address2,Address3,PostalCode,CountryCode,RegionCode,Telephone,Fax,Email,Comment,Website,Note,LocationCode,isDisabled,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ("
+                If R3SupplierCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & R3SupplierCode.Text.ToString & "',"
+                If SupplierName1.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SupplierName1.Text.ToString & "',"
+                If SupplierName2.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SupplierName2.Text.ToString & "',"
+                If SupplierName3.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SupplierName3.Text.ToString & "',"
+                If SupplierName4.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SupplierName4.Text.ToString & "',"
+                If SearchTerm1.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SearchTerm1.Text.ToString & "',"
+                If SearchTerm2.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SearchTerm2.Text.ToString & "',"
+                If Address1.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Address1.Text.ToString & "',"
+                If Address2.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Address2.Text.ToString & "',"
+                If Address3.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Address3.Text.ToString & "',"
+                If PostalCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & PostalCode.Text.ToString & "',"
+                If Country.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & st_CountryCode & "',"
+                If Region.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & st_RegionCode & "',"
+                If Telephone.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Telephone.Text.ToString & "',"
+                If Fax.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Fax.Text.ToString & "',"
+                If Email.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Email.Text.ToString & "',"
+                If R3Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & R3Comment.Text.ToString & "',"
+                If Website.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Website.Text.ToString & "',"
+                If Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Comment.Text.ToString & "',"
+                st_SQLSTR = st_SQLSTR & "null,0,'" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "')"
+                DBCommand = DBConn.CreateCommand()
+                DBCommand.CommandText = st_SQLSTR
+                DBCommand.ExecuteNonQuery()
 
-            '[呼出元のフォームに戻る]------------------------------------------
-            'Response.Redirect("SupplierSearch.aspx")
+                '[新規登録されたSupplierCodeの取得]--------------------------------------------------
+                DBCommand = DBConn.CreateCommand()
+                DBCommand.CommandText = "Select @@IDENTITY as SupplierCode"
+                DBReader = DBCommand.ExecuteReader()
+                DBCommand.Dispose()
+                If DBReader.Read = True Then
+                    Code.Text = DBReader("SupplierCode")
+                End If
+                DBReader.Close()
+
+                '[IrregularRFQLocationの更新]--------------------------------------------------------
+                IRFQLocation_Mainte()
+
+                '[StActionをEditにする]--------------------------------------------------------------
+                StAction.Value = "Edit"
+            End If
         Else
             Msg.Text = "必須項目を入力して下さい"
         End If
@@ -303,4 +337,48 @@
         DBReader.Close()
     End Sub
 
+    Public Sub IRFQLocation_Mainte()
+        '[IrregularRFQLocationの更新]-------------------------------------------------------------------
+        If DefaultQuoLocation.SelectedValue = "" Then
+            DBCommand = DBConn.CreateCommand()
+            DBCommand.CommandText = "SELECT SupplierCode FROM [IrregularRFQLocation] WHERE SupplierCode='" & Trim(Code.Text.ToString) & "'"
+            DBReader = DBCommand.ExecuteReader()
+            DBCommand.Dispose()
+            If DBReader.Read = True Then
+                DBReader.Close()
+                DBCommand.CommandText = "DELETE FROM IrregularRFQLocation WHERE SupplierCode = '" & Trim(Code.Text.ToString) & "'"
+                DBCommand.ExecuteNonQuery()
+            Else
+                DBReader.Close()
+            End If
+        ElseIf DefaultQuoLocation.SelectedValue = "Direct" Then
+            DBCommand = DBConn.CreateCommand()
+            DBCommand.CommandText = "SELECT SupplierCode FROM [IrregularRFQLocation] WHERE SupplierCode='" & Trim(Code.Text.ToString) & "'"
+            DBReader = DBCommand.ExecuteReader()
+            DBCommand.Dispose()
+            If DBReader.Read = True Then
+                DBReader.Close()
+                DBCommand.CommandText = "UPDATE IrregularRFQLocation SET QuoLocationCode=null WHERE SupplierCode = '" & Trim(Code.Text.ToString) & "'"
+                DBCommand.ExecuteNonQuery()
+            Else
+                DBReader.Close()
+                DBCommand.CommandText = "INSERT INTO IrregularRFQLocation (EnqLocationCode,SupplierCode,QuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" & Session("LocationCode") & "','" & Trim(Code.Text.ToString) & "',null,'" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "')"
+                DBCommand.ExecuteNonQuery()
+            End If
+        Else
+            DBCommand = DBConn.CreateCommand()
+            DBCommand.CommandText = "SELECT SupplierCode FROM [IrregularRFQLocation] WHERE SupplierCode='" & Trim(Code.Text.ToString) & "'"
+            DBReader = DBCommand.ExecuteReader()
+            DBCommand.Dispose()
+            If DBReader.Read = True Then
+                DBReader.Close()
+                DBCommand.CommandText = "UPDATE IrregularRFQLocation SET QuoLocationCode='" & DefaultQuoLocation.SelectedValue & "' WHERE SupplierCode = '" & Trim(Code.Text.ToString) & "'"
+                DBCommand.ExecuteNonQuery()
+            Else
+                DBReader.Close()
+                DBCommand.CommandText = "INSERT INTO IrregularRFQLocation (EnqLocationCode,SupplierCode,QuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" & Session("LocationCode") & "','" & Trim(Code.Text.ToString) & "','" & DefaultQuoLocation.SelectedValue & "','" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "')"
+                DBCommand.ExecuteNonQuery()
+            End If
+        End If
+    End Sub
 End Class
