@@ -50,11 +50,11 @@ function clearForm(formname){
   }
 }
 
-function cellClassChange(obj){
+function cellClassChange(obj,classname){
   if (!obj.getElementsByTagName('TD')) return false;
   var tdrows = obj.getElementsByTagName('TD');
     for(var tno=0;tno<tdrows.length;tno++){
-      tdrows[tno].className = "over";
+      tdrows[tno].className = classname;
   }
 }
 
