@@ -50,7 +50,7 @@ function clearForm(formname){
   }
 }
 
-function ChangeClass(obj){
+function changeClass(obj){
   if (!obj.getElementsByTagName('TD')) return false;
   var tdrows = obj.getElementsByTagName('TD');
     for(var tno=0;tno<tdrows.length;tno++){
@@ -58,7 +58,7 @@ function ChangeClass(obj){
   }
 }
 
-function DllClass(obj){
+function deleteClass(obj){
   if (!obj.getElementsByTagName('TD')) return false;
   var tdrows = obj.getElementsByTagName('TD');
     for(var tno=0;tno<tdrows.length;tno++){
