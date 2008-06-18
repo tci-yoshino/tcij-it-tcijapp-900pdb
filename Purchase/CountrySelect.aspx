@@ -14,6 +14,17 @@
 <script type="text/javascript">
 <!--
 
+var colorful = new ColorfulInput;
+colorful.skip = ['submit','button','reset'];
+colorful.color['focus'] = '#FFF799';
+
+window.onload = function() {
+   colorful.set();
+   changeCellColor("CountryList_itemPlaceholderContainer")
+   
+}
+
+
 function returnValues(code, name){
   if(opener){
     opener.document.getElementById('Code').value=code
@@ -73,7 +84,7 @@ function returnValues(code, name){
                 </EmptyDataTemplate>
                 <ItemTemplate>
                 
-                    <tr onmouseover="changeClass(this)" onmouseout="deleteClass(this)" onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name")%>');">
+                    <tr onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name")%>');">
                         <td><asp:Label ID="CountryCode" runat="server" Text='' /><%#Eval("CountryCode")%></td>
                         <td><asp:Label ID="CountryName" runat="server" Text='' /><%#Eval("Name")%></td>
                     </tr>

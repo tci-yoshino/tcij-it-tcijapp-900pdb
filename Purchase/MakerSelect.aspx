@@ -11,6 +11,15 @@
     <script type="text/javascript">
     <!--
 
+var colorful = new ColorfulInput;
+colorful.skip = ['submit','button','reset'];
+colorful.color['focus'] = '#FFF799';
+
+window.onload = function() {
+   colorful.set();
+   changeCellColor("SupplierList_itemPlaceholderContainer")
+   
+}
     function returnValues(code, name3, name4, location){
       if(opener){
         var name = name3 + " " + name4;
@@ -73,7 +82,7 @@
                     <h3 style="font-style:italic">No match found.</h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onmouseover="changeClass(this)" onmouseout="deleteClass(this)" onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name3")%>','<%#Eval("Name4")%>','<%#Eval("QuoLocationCode") %>');">
+                    <tr onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name3")%>','<%#Eval("Name4")%>','<%#Eval("QuoLocationCode") %>');">
                         <td><asp:Label ID="SupplierCode" runat="server" Text='<%#Eval("SupplierCode")%>' /></td>
                         <td>
                           <asp:Label ID="SupplierName3" runat="server" Text='<%#Eval("Name3")%> ' />

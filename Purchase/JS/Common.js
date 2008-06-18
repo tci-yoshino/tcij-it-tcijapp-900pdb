@@ -50,18 +50,31 @@ function clearForm(formname){
   }
 }
 
-function changeClass(obj){
-  if (!obj.getElementsByTagName('TD')) return false;
-  var tdrows = obj.getElementsByTagName('TD');
-    for(var tno=0;tno<tdrows.length;tno++){
-      tdrows[tno].className = "over";
+function changeCellColor(tableid){
+  if (!document.getElementById(tableid)) return false;
+  var table = document.getElementById(tableid);
+
+  if (!table.getElementsByTagName('TR')) return false;
+  var tr = table.getElementsByTagName('TR')
+
+  for(var no=0;no<tr.length;no++){
+    if (tr[no].getElementsByTagName('TD')) {
+        tr[no].onmouseover = overCell;
+        tr[no].onmouseout = outCell;
+    }
   }
 }
 
-function deleteClass(obj){
-  if (!obj.getElementsByTagName('TD')) return false;
-  var tdrows = obj.getElementsByTagName('TD');
-    for(var tno=0;tno<tdrows.length;tno++){
-      tdrows[tno].className = "";
+function overCell(){
+  var td = this.getElementsByTagName('TD')
+  for(var no=0;no<td.length;no++){
+    td[no].className = 'over';
+  }
+}
+
+function outCell(){
+  var td = this.getElementsByTagName('TD')
+  for(var no=0;no<td.length;no++){
+    td[no].className = '';
   }
 }
