@@ -6,7 +6,6 @@
     Public st_Code As String
     Public st_Name As String
     Public st_Location As String
-    Public st_Action As String
     Public st_Errorr_Meggage As String = ""
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -23,11 +22,6 @@
             Exit Sub
 
         Else
-
-            ' パラメータ Action を取得
-            If Request.QueryString("Action") = "Search" Or Request.Form("Action") = "Search" Then
-                st_Action = "Search"
-            End If
 
             ' パラメータ Code, Name を取得
             st_Code = IIf(Not (IsPostBack) And Not (String.IsNullOrEmpty(Request.QueryString("Code"))), Request.QueryString("Code"), Request.Form("Code"))

@@ -4,14 +4,8 @@
     Public DBConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
     Public st_Code As String
     Public st_Name As String
-    Public st_Action As String
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-
-        ' パラメータAction を取得
-        If Request.QueryString("Action") = "Search" Or Request.Form("Action") = "Search" Then
-            st_Action = "Search"
-        End If
 
         ' パラメータCode, Name を取得
         st_Code = IIf(Not (IsPostBack) And Not (String.IsNullOrEmpty(Request.QueryString("Code"))), Request.QueryString("Code"), Request.Form("Code"))
