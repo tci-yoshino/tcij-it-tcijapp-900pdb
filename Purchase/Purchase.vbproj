@@ -97,11 +97,30 @@
     <Content Include="JS\Colorful.js" />
     <Content Include="JS\Common.js" />
     <Content Include="MyTask.aspx" />
+    <Content Include="POCorrespondence.aspx" />
+    <Content Include="POListByRFQ.aspx" />
+    <Content Include="ProductListBySupplier.aspx" />
+    <Content Include="ProductSearch.aspx" />
+    <Content Include="ProductSelect.aspx" />
+    <Content Include="ProductSetting.aspx" />
+    <Content Include="RequestedTask.aspx" />
+    <Content Include="RFQCorrespondence.aspx" />
+    <Content Include="RFQIssue.aspx" />
+    <Content Include="RFQListByProduct.aspx" />
+    <Content Include="RFQListBySupplier.aspx" />
+    <Content Include="RFQSearchByProduct.aspx" />
+    <Content Include="RFQSearchBySupplier.aspx" />
+    <Content Include="RFQSelect.aspx" />
+    <Content Include="RFQUpdate.aspx" />
     <Content Include="Setting.html" />
+    <Content Include="SupplierListByProduct.aspx" />
     <Content Include="SupplierSearch.aspx" />
     <Content Include="SupplierSelect.aspx" />
     <Content Include="SupplierSetting.aspx" />
+    <Content Include="SuppliersProductImport.aspx" />
+    <Content Include="SuppliersProductSetting.aspx" />
     <Content Include="SystemError.html" />
+    <Content Include="UnassignedTask.aspx" />
     <Content Include="Web.config" />
     <Content Include="AuthError.html" />
     <Content Include="MakerSelect.aspx" />
@@ -164,6 +183,118 @@
       <DependentUpon>MyTask.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="POCorrespondence.aspx.designer.vb">
+      <DependentUpon>POCorrespondence.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="POCorrespondence.aspx.vb">
+      <DependentUpon>POCorrespondence.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="POListByRFQ.aspx.designer.vb">
+      <DependentUpon>POListByRFQ.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="POListByRFQ.aspx.vb">
+      <DependentUpon>POListByRFQ.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProductListBySupplier.aspx.designer.vb">
+      <DependentUpon>ProductListBySupplier.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProductListBySupplier.aspx.vb">
+      <DependentUpon>ProductListBySupplier.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProductSearch.aspx.designer.vb">
+      <DependentUpon>ProductSearch.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProductSearch.aspx.vb">
+      <DependentUpon>ProductSearch.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProductSelect.aspx.designer.vb">
+      <DependentUpon>ProductSelect.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProductSelect.aspx.vb">
+      <DependentUpon>ProductSelect.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProductSetting.aspx.designer.vb">
+      <DependentUpon>ProductSetting.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProductSetting.aspx.vb">
+      <DependentUpon>ProductSetting.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RequestedTask.aspx.designer.vb">
+      <DependentUpon>RequestedTask.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RequestedTask.aspx.vb">
+      <DependentUpon>RequestedTask.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RFQCorrespondence.aspx.designer.vb">
+      <DependentUpon>RFQCorrespondence.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RFQCorrespondence.aspx.vb">
+      <DependentUpon>RFQCorrespondence.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RFQIssue.aspx.designer.vb">
+      <DependentUpon>RFQIssue.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RFQIssue.aspx.vb">
+      <DependentUpon>RFQIssue.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RFQListByProduct.aspx.designer.vb">
+      <DependentUpon>RFQListByProduct.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RFQListByProduct.aspx.vb">
+      <DependentUpon>RFQListByProduct.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RFQListBySupplier.aspx.designer.vb">
+      <DependentUpon>RFQListBySupplier.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RFQListBySupplier.aspx.vb">
+      <DependentUpon>RFQListBySupplier.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RFQSearchByProduct.aspx.designer.vb">
+      <DependentUpon>RFQSearchByProduct.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RFQSearchByProduct.aspx.vb">
+      <DependentUpon>RFQSearchByProduct.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RFQSearchBySupplier.aspx.designer.vb">
+      <DependentUpon>RFQSearchBySupplier.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RFQSearchBySupplier.aspx.vb">
+      <DependentUpon>RFQSearchBySupplier.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RFQSelect.aspx.designer.vb">
+      <DependentUpon>RFQSelect.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RFQSelect.aspx.vb">
+      <DependentUpon>RFQSelect.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RFQUpdate.aspx.designer.vb">
+      <DependentUpon>RFQUpdate.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RFQUpdate.aspx.vb">
+      <DependentUpon>RFQUpdate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SupplierListByProduct.aspx.designer.vb">
+      <DependentUpon>SupplierListByProduct.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SupplierListByProduct.aspx.vb">
+      <DependentUpon>SupplierListByProduct.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="SupplierSearch.aspx.designer.vb">
       <DependentUpon>SupplierSearch.aspx</DependentUpon>
     </Compile>
@@ -191,6 +322,27 @@
     <Compile Include="MakerSelect.aspx.vb">
       <DependentUpon>MakerSelect.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="SuppliersProductImport.aspx.designer.vb">
+      <DependentUpon>SuppliersProductImport.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SuppliersProductImport.aspx.vb">
+      <DependentUpon>SuppliersProductImport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SuppliersProductSetting.aspx.designer.vb">
+      <DependentUpon>SuppliersProductSetting.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SuppliersProductSetting.aspx.vb">
+      <DependentUpon>SuppliersProductSetting.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UnassignedTask.aspx.designer.vb">
+      <DependentUpon>UnassignedTask.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UnassignedTask.aspx.vb">
+      <DependentUpon>UnassignedTask.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -231,7 +383,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>1521</DevelopmentServerPort>
+          <DevelopmentServerPort>4827</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>
