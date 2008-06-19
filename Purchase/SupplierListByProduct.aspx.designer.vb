@@ -34,13 +34,13 @@ Partial Public Class SupplierListByProduct
     Protected WithEvents ProductName As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
-    '''SupplierProduct コントロール。
+    '''SupplierProductList コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents SupplierProduct As Global.System.Web.UI.WebControls.ListView
+    Protected WithEvents SupplierProductList As Global.System.Web.UI.WebControls.ListView
 
     '''<summary>
     '''SrcSupplierProduct コントロール。

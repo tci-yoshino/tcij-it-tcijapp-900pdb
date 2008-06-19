@@ -32,7 +32,7 @@
         </div>
 
         <div class="list">
-            <asp:ListView ID="SupplierProduct" runat="server" DataSourceID="SrcSupplierProduct">
+            <asp:ListView ID="SupplierProductList" runat="server" DataSourceID="SrcSupplierProduct">
                 <LayoutTemplate>
                     <table ID="itemPlaceholderContainer" runat="server" border="0" style="">
                         <tr>
