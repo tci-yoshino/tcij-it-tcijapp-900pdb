@@ -49,7 +49,11 @@
 
         '[Supplier検索]-------------------------------------------------------------------
         If Code.Text.ToString <> "" And Not IsNumeric(Code.Text.ToString) Then
-            Msg.Text = "コードには数字を入力して下さい"
+            Msg.Text = "SupplierCodeには数字を入力して下さい"
+            SrcSupplier.SelectCommand = ""
+            SupplierList.DataBind()
+        ElseIf not IsNumeric(R3Code.Text.ToString) then
+            Msg.Text = "R/3SupplierCodeには数字を入力して下さい"
             SrcSupplier.SelectCommand = ""
             SupplierList.DataBind()
         Else
@@ -74,7 +78,7 @@
                 SrcSupplier.SelectCommand = ""
             Else
                 SrcSupplier.SelectCommand = SrcSupplier.SelectCommand + SQLStr
-              End If
+            End If
         End If
     End Sub
 
