@@ -13,68 +13,68 @@ Option Explicit On
 
 
 
-Partial Public Class MyTask
+Partial Public Class ProductSelect
 
     '''<summary>
-    '''SwitchForm コントロール。
+    '''Msg コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents SwitchForm As Global.System.Web.UI.HtmlControls.HtmlForm
+    Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
-    '''UID コントロール。
+    '''SearchForm コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents UID As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents SearchForm As Global.System.Web.UI.HtmlControls.HtmlForm
 
     '''<summary>
-    '''Switch コントロール。
+    '''Code コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents Switch As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents Code As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
-    '''RFQList コントロール。
+    '''CAS コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents RFQList As Global.System.Web.UI.WebControls.ListView
+    Protected WithEvents CAS As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
-    '''POList コントロール。
+    '''Name コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents POList As Global.System.Web.UI.WebControls.ListView
+    Protected WithEvents Name As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
-    '''SrcRFQ コントロール。
+    '''Search コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents SrcRFQ As Global.System.Web.UI.WebControls.SqlDataSource
+    Protected WithEvents Search As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
-    '''SrcPO コントロール。
+    '''ProductList コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents SrcPO As Global.System.Web.UI.WebControls.SqlDataSource
+    Protected WithEvents ProductList As Global.System.Web.UI.WebControls.ListView
 End Class

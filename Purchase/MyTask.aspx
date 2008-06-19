@@ -36,7 +36,7 @@
         <h3>RFQ</h3>
 
         <div class="list">
-            <asp:ListView ID="RFQ" runat="server" DataSourceID="SrcRFQ">
+            <asp:ListView ID="RFQList" runat="server" DataSourceID="SrcRFQ">
                 <LayoutTemplate>
                     <table ID="itemPlaceholderContainer" runat="server" border="0" style="">
                         <tr ID="itemPlaceholder" runat="server">
@@ -79,7 +79,7 @@
         <h3>PO</h3>
 
         <div class="list">
-            <asp:ListView ID="PO" runat="server" DataSourceID="SrcPO">
+            <asp:ListView ID="POList" runat="server" DataSourceID="SrcPO">
                 <AlternatingItemTemplate>
                     <table class="child">
                         <tr>
