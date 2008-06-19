@@ -39,13 +39,13 @@
         Set_DBConnectingString()
         DBConn = Me.SqlConnection1
         DBConn.Open()
+        DBCommand = DBConn.CreateCommand()
 
         '[Msgのクリア]--------------------------------------------------------------------
         Msg.Text = ""
 
         If IsPostBack = False Then
             '[Location設定]-------------------------------------------------------------------
-            DBCommand = DBConn.CreateCommand()
             DBCommand.CommandText = "SELECT Name FROM dbo.s_Location"
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
@@ -60,7 +60,6 @@
             If Request.QueryString("Action") = "Edit" Then
                 Code.Text = Request.QueryString("Code")
                 Search.Visible = False
-                DBCommand = DBConn.CreateCommand()
                 DBCommand.CommandText = "SELECT CountryName,DefaultQuoLocationName FROM dbo.v_Country WHERE CountryCode = '" & Code.Text.ToString & "'"
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
@@ -100,21 +99,18 @@
                 Msg.Text = "CountryCodeを入力して下さい"
             Else
                 '[s_Country check]----------------------------------------------------------
-                DBCommand = DBConn.CreateCommand()
                 DBCommand.CommandText = "SELECT CountryCode FROM dbo.s_Country WHERE CountryCode = '" & Code.Text.ToString & "'"
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
                 If DBReader.Read = True Then
                     '[PurchasingCountryの追加又は更新]------------------------------------------
                     DBReader.Close()
-                    DBCommand = DBConn.CreateCommand()
                     DBCommand.CommandText = "SELECT CountryCode FROM dbo.PurchasingCountry WHERE CountryCode = '" & Code.Text.ToString & "'"
                     DBReader = DBCommand.ExecuteReader()
                     DBCommand.Dispose()
                     If DBReader.Read = True Then
                         DBReader.Close()
                         If Location.Text.ToString <> "Direct" Then
-                            DBCommand = DBConn.CreateCommand()
                             DBCommand.CommandText = "SELECT LocationCode FROM dbo.s_Location WHERE Name = '" & Location.Text.ToString & "'"
                             DBReader = DBCommand.ExecuteReader()
                             DBCommand.Dispose()
@@ -136,7 +132,6 @@
                         DBReader.Close()
                         '[PurchasingCountryの追加処理]------------------------------------------
                         If Location.Text.ToString <> "Direct" Then
-                            DBCommand = DBConn.CreateCommand()
                             DBCommand.CommandText = "SELECT LocationCode FROM dbo.s_Location WHERE Name = '" & Location.Text.ToString & "'"
                             DBReader = DBCommand.ExecuteReader()
                             DBCommand.Dispose()
