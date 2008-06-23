@@ -24,7 +24,7 @@
                     <tr>
                         <th>Supplier Code <span class="required">*</span> : </th>
                         <td>
-						    <asp:TextBox ID="SupplierCode" runat="server" Width="7em" MaxLength="10" ReadOnly="true" CssClass="readonly"></asp:TextBox>
+						    <asp:TextBox ID="Supplier" runat="server" Width="7em" MaxLength="10" ReadOnly="true" CssClass="readonly"></asp:TextBox>
 						    <asp:ImageButton ID="SupplierSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="popup('./SupplierSelect.aspx')" />
                         </td>
                     </tr>
@@ -59,7 +59,8 @@
                         </td>
                     </tr>
                 </table>
-
+                <asp:HiddenField ID="Product" runat="server" />
+                
                 <div class="btns">
                     <asp:Button ID="Save" runat="server" Text="Save" />
                 </div>
