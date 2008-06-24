@@ -141,7 +141,8 @@
                 Next i
             End Using
         Catch ex As Exception
-            st_Errorr_Meggage = "Database error"
+            'Exception をスローする
+            Throw
         End Try
 
         Return dataSet

@@ -69,8 +69,8 @@
             End Using
 
         Catch ex As Exception
-            CountryList.Items.Clear()
-            CountryList.DataBind()
+            'Exception をスローする
+            Throw
         End Try
 
     End Sub
