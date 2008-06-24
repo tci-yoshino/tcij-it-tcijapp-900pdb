@@ -10,6 +10,7 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
 </head>
 <body>
+    <form id="form1" runat="server">
     <!-- Main Content Area -->
     <div id="content">
         <div class="tabs"><a href="./SuppliersProductSetting.aspx">New Suppliers Product</a> | <a href="./SuppliersProductImport.aspx">Excel Import</a></div>
@@ -53,11 +54,11 @@
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr>
-                        <td><asp:Label ID="ProductNumber" runat="server" Text='' /></td>
-                        <td><asp:Label ID="ProductName" runat="server" Text='' /></td>
-                        <td><asp:Label ID="SupplierItemNumber" runat="server" Text='' /></td>
-                        <td><asp:Label ID="Note" runat="server" Text='' /></td>
-                        <td><asp:Label ID="UpdateDate" runat="server" Text='' /></td>
+                        <td><asp:Label ID="ProductNumber" runat="server" Text='<%# Eval("ProductNumber") %>' /></td>
+                        <td><asp:Label ID="ProductName" runat="server" Text='<%# Eval("ProductName") %>' /></td>
+                        <td><asp:Label ID="SupplierItemNumber" runat="server" Text='<%# Eval("SupplierItemNumber") %>' /></td>
+                        <td><asp:Label ID="Note" runat="server" Text='<%# Eval("Note") %>' /></td>
+                        <td><asp:Label ID="UpdateDate" runat="server" Text='<%# Eval("UpdateDate") %>' /></td>
                         <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl=''>Edit</asp:HyperLink></td>
                         <td><asp:HyperLink ID="Delete" runat="server" NavigateUrl=''>Delete</asp:HyperLink></td>
                     </tr>
@@ -65,9 +66,13 @@
             </asp:ListView>
         </div>
     </div><!-- Main Content Area END -->
-    <asp:SqlDataSource ID="SrcSupplierProduct" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="SrcSupplierProduct" runat="server" 
+    ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+    SelectCommand="SELECT dbo.Product.ProductNumber, dbo.Product.Name AS ProductName, dbo.Supplier_Product.SupplierItemNumber, dbo.Supplier_Product.Note, dbo.Supplier_Product.UpdateDate
+FROM dbo.Supplier_Product LEFT OUTER JOIN dbo.Product ON dbo.Supplier_Product.ProductID = dbo.Product.ProductID"></asp:SqlDataSource>
 
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
+</form>
 </body>
 </html>

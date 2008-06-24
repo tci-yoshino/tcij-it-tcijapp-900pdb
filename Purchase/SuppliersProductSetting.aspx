@@ -17,33 +17,36 @@
         <h3>Suppliers Product</h3>
 
         <div class="main">
-            <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 
             <form id="SupplierProductForm" runat="server">
+            <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
+
                 <table>
                     <tr>
                         <th>Supplier Code <span class="required">*</span> : </th>
                         <td>
-						    <asp:TextBox ID="Supplier" runat="server" Width="7em" MaxLength="10" ReadOnly="true" CssClass="readonly"></asp:TextBox>
+						    <asp:TextBox ID="Supplier" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
 						    <asp:ImageButton ID="SupplierSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="popup('./SupplierSelect.aspx')" />
                         </td>
                     </tr>
                     <tr>
                         <th>Supplier Name : </th>
                         <td>
-                            <asp:TextBox ID="SupplierName" runat="server" Width="21em" ReadOnly="true" CssClass="readonly"></asp:TextBox>
+                            <asp:TextBox ID="SupplierName" runat="server" Width="21em" ReadOnly="True" 
+                                CssClass="readonly"></asp:TextBox>
                         </td>
                     </tr>
                     <tr>
                         <th>Product Number <span class="required">*</span> : </th>
                         <td>
-                            <asp:TextBox ID="ProductNumber" runat="server" Width="7em" MaxLength="32" ReadOnly="true" CssClass="readonly"></asp:TextBox>
+                            <asp:TextBox ID="ProductNumber" runat="server" Width="7em" MaxLength="32"></asp:TextBox>
                         </td>
                     </tr>
                     <tr>
                         <th>Product Name : </th>
                         <td>
-                            <asp:TextBox ID="ProductName" runat="server" Width="21em" ReadOnly="true" CssClass="readonly"></asp:TextBox>
+                            <asp:TextBox ID="ProductName" runat="server" Width="21em" ReadOnly="True" 
+                                CssClass="readonly"></asp:TextBox>
                         </td>
                     </tr>
                     <tr>
@@ -60,6 +63,8 @@
                     </tr>
                 </table>
                 <asp:HiddenField ID="Product" runat="server" />
+                
+                <asp:HiddenField ID="Action" runat="server" Value="Save" />
                 
                 <div class="btns">
                     <asp:Button ID="Save" runat="server" Text="Save" />

@@ -16,15 +16,6 @@ Option Explicit On
 Partial Public Class SuppliersProductSetting
 
     '''<summary>
-    '''Msg コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
-
-    '''<summary>
     '''SupplierProductForm コントロール。
     '''</summary>
     '''<remarks>
@@ -32,6 +23,15 @@ Partial Public Class SuppliersProductSetting
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents SupplierProductForm As Global.System.Web.UI.HtmlControls.HtmlForm
+
+    '''<summary>
+    '''Msg コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
     '''Supplier コントロール。
@@ -104,6 +104,15 @@ Partial Public Class SuppliersProductSetting
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Product As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''Action コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
     '''Save コントロール。
