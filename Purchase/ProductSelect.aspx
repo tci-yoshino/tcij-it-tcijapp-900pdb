@@ -8,6 +8,23 @@
     <link rel="stylesheet" href="./CSS/Style.css" type="text/css" media="screen,print" />
     <script type="text/javascript" src="./JS/Common.js"></script>
     <script type="text/javascript" src="./JS/Colorful.js"></script>
+    <script type="text/javascript">
+    <!--
+
+window.onload = function() {
+   colorful.set();
+   changeCellColor("ProductList_itemPlaceholderContainer")
+   
+}
+    function returnValues(code, name){
+      if(opener){
+        opener.document.getElementById('ProductNumber').value=code
+        opener.document.getElementById('ProductName').value=name
+      }
+    }
+
+    -->
+    </script>
 </head>
 <body>
 	<!-- Main Content Area -->
@@ -36,7 +53,7 @@
 				</table>
 
 				<asp:Button ID="Search" runat="server" Text="Search" />
-				<input type="button" value="Clear" />
+				<input type="button" value="Clear" onclick="clearForm('SearchForm')" />
 			</form>
 		</div>
 
@@ -58,9 +75,9 @@
                     <h3 style="font-style:italic">No match found.</h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr>
-                        <td><asp:Label ID="ProductNumber" runat="server" Text='' /></td>
-                        <td><asp:Label ID="ProductName" runat="server" Text='' /></td>
+                    <tr onclick="returnValues('<%#Eval("ProductNumber")%>','<%#Eval("ProductName")%>')">
+                        <td><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>' /></td>
+                        <td><asp:Label ID="ProductName" runat="server" Text='<%#Eval("ProductName")%>' /></td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>
