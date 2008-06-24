@@ -14,10 +14,6 @@
 <script type="text/javascript">
 <!--
 
-var colorful = new ColorfulInput;
-colorful.skip = ['submit','button','reset'];
-colorful.color['focus'] = '#FFF799';
-
 window.onload = function() {
    colorful.set();
    changeCellColor("CountryList_itemPlaceholderContainer")
