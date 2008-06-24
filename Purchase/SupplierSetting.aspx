@@ -16,7 +16,7 @@
 	<div id="content">
 		<div class="tabs">
 			<asp:HiddenField ID="StAction" runat="server" />
-			<a href="./SuppliersProductSetting.aspx">Suppliers Product</a>
+			<a href="<%=url %>" >Suppliers Product</a>
 		</div>
 
 		<h3>Supplier Setting</h3>

@@ -28,6 +28,7 @@
     Dim DBReader2 As System.Data.SqlClient.SqlDataReader    'データリーダー	
     Dim st_CountryCode As String = ""                       '選択したCountryCode
     Dim st_RegionCode As String = ""                        '選択したRegionCode
+    Public url As String = ""
 
     Sub Set_DBConnectingString()
         Dim settings As ConnectionStringSettings
@@ -277,6 +278,7 @@
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
         If DBReader.Read = True Then
+            url = "./ProductListBySupplier.aspx?Supplier=" & Code.Text.ToString
             If Not TypeOf DBReader("R3SupplierCode") Is DBNull Then R3SupplierCode.Text = DBReader("R3SupplierCode")
             If Not TypeOf DBReader("Name1") Is DBNull Then SupplierName1.Text = DBReader("Name1")
             If Not TypeOf DBReader("Name2") Is DBNull Then SupplierName2.Text = DBReader("Name2")
