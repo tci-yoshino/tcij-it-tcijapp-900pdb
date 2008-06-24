@@ -76,11 +76,11 @@
     Public Function Get_Supplier_Data(ByVal dataSet As DataSet, ByVal connectionString As String) As DataSet
 
         ' WHERE 分の分岐
-        Dim st_where As String = " WHERE(Supplier.SupplierCode = @Code) AND ({ fn CONCAT(Supplier.Name1, Supplier.Name2) } LIKE N'%' + @Name + '%') "
+        Dim st_where As String = " WHERE(Supplier.SupplierCode = @Code) AND (ISNULL(Supplier.Name1,'') + ' ' + ISNULL(Supplier.Name2,'') LIKE N'%' + @Name + '%') "
         If Not String.IsNullOrEmpty(st_Code) And String.IsNullOrEmpty(st_Name) Then
             st_where = " WHERE(Supplier.SupplierCode = @Code) "
         ElseIf String.IsNullOrEmpty(st_Code) And Not String.IsNullOrEmpty(st_Name) Then
-            st_where = "  WHERE({ fn CONCAT(Supplier.Name1, Supplier.Name2) } LIKE N'%' + @Name + '%')  "
+            st_where = "  WHERE(ISNULL(Supplier.Name1,'') + ' ' + ISNULL(Supplier.Name2,'') LIKE N'%' + @Name + '%')  "
         End If
 
         ' 仕入先リスト取得
