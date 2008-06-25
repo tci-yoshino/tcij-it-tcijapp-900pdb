@@ -47,9 +47,9 @@
         If DBReader.Read = True Then
             SupplierName.Text = DBReader("Name3")
         End If
-        SrcSupplierProduct.SelectCommand = "SELECT dbo.Product.ProductNumber, dbo.Product.Name AS ProductName, dbo.Supplier_Product.SupplierItemNumber, dbo.Supplier_Product.Note, replace(convert(char,dbo.Supplier_Product.UpdateDate,111),'/','-') as UpdateDate " & _
-                                           "FROM dbo.Supplier_Product LEFT OUTER JOIN dbo.Product ON dbo.Supplier_Product.ProductID = dbo.Product.ProductID " & _
-                                           "WHERE (dbo.Supplier_Product.SupplierCode = " & SupplierCode.Text.ToString & ")"
+        SrcSupplierProduct.SelectCommand = "SELECT Product.ProductID, Product.ProductNumber, CASE WHEN NOT Product.QuoName IS NULL THEN Product.QuoName ELSE Product.Name END AS ProductName, Supplier_Product.SupplierItemNumber, Supplier_Product.Note, REPLACE(CONVERT(char, Supplier_Product.UpdateDate, 111), '/', '-') AS UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&Supplier=" + SupplierCode.Text.ToString + "&Product=' AS Url " & _
+                                           "FROM Supplier_Product LEFT OUTER JOIN Product ON Supplier_Product.ProductID = Product.ProductID " & _
+                                           "WHERE (Supplier_Product.SupplierCode = " & SupplierCode.Text.ToString & ")"
         SupplierProductList.DataBind()
     End Sub
 
