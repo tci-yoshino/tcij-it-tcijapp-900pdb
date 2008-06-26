@@ -115,7 +115,7 @@
     <Content Include="Setting.html" />
     <Content Include="SupplierListByProduct.aspx" />
     <Content Include="SupplierSearch.aspx" />
-    <Content Include="SupplierSelect.aspx" />
+    <Content Include="RFQSupplierSelect.aspx" />
     <Content Include="SupplierSetting.aspx" />
     <Content Include="SuppliersProductImport.aspx" />
     <Content Include="SuppliersProductSetting.aspx" />
@@ -302,11 +302,11 @@
       <DependentUpon>SupplierSearch.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
     </Compile>
-    <Compile Include="SupplierSelect.aspx.designer.vb">
-      <DependentUpon>SupplierSelect.aspx</DependentUpon>
+    <Compile Include="RFQSupplierSelect.aspx.designer.vb">
+      <DependentUpon>RFQSupplierSelect.aspx</DependentUpon>
     </Compile>
-    <Compile Include="SupplierSelect.aspx.vb">
-      <DependentUpon>SupplierSelect.aspx</DependentUpon>
+    <Compile Include="RFQSupplierSelect.aspx.vb">
+      <DependentUpon>RFQSupplierSelect.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
     </Compile>
     <Compile Include="SupplierSetting.aspx.designer.vb">
