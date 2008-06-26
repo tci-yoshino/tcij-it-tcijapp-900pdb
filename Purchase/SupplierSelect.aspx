@@ -16,15 +16,17 @@ window.onload = function() {
    changeCellColor("SupplierList_itemPlaceholderContainer")
    
 }
-    function returnValues(code, name3, name4, location){
+    function returnValues(code, r3code, name3, name4, countryCode, location){
       if(opener){
         var name = name3 + " " + name4;
         if (name3 == "") name = name4;
-        opener.document.getElementById('Code').value=code
-        opener.document.getElementById('Name').value=name
-        //if(opener.document.getElementById('QuoLocation')){
-         // opener.document.getElementById('QuoLocation').selectedIndex = location
-        //}
+        opener.document.getElementById('SupplierCode').value=code
+        opener.document.getElementById('R3SupplierCode').value=r3code
+        opener.document.getElementById('SupplierName').value=name
+        opener.document.getElementById('SupplierCountry').value=countryCode
+        if(opener.document.getElementById('QuoLocation')){
+          opener.document.getElementById('QuoLocation').selectedIndex = location
+        }
       }
     }
 
@@ -78,10 +80,10 @@ window.onload = function() {
                     <h3 style="font-style:italic">No match found.</h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name3")%>','<%#Eval("Name4")%>','<%#Eval("QuoLocationCode") %>');">
+                    <tr onclick="returnValues('<%#Eval("SupplierCode")%>','<%#Eval("R3SupplierCode") %>','<%#Eval("Name3")%>','<%#Eval("Name4")%>','<%#Eval("CountryCode") %>','<%#Eval("QuoLocationCode") %>');">
                         <td><asp:Label ID="SupplierCode" runat="server" Text='<%#Eval("SupplierCode")%>' /></td>
                         <td>
-                          <asp:Label ID="SupplierName3" runat="server" Text='<%#Eval("Name3")%> ' />
+                          <asp:Label ID="SupplierName3" runat="server" Text='<%#Eval("Name3")%>' />&nbsp;
                           <asp:Label ID="SupplierName4" runat="server" Text='<%#Eval("Name4")%>' />
                         </td>
                         <td><asp:Label ID="QuoLocationCode" runat="server" Text='<%#Eval("QuoLocationCode") %>' /></td>

@@ -90,7 +90,7 @@
         ' IrregularRFQLocation.SupplierCode を取得し、この値が NULL の場合はレコードが取得「できなかった」と判断する。
         Dim st_query As String = _
   "SELECT " _
-& "  Supplier.SupplierCode, Supplier.Name3, Supplier.Name4, Supplier.CountryCode, " _
+& "  Supplier.SupplierCode, Supplier.R3SupplierCode, Supplier.Name3, Supplier.Name4, Supplier.CountryCode, " _
 & "  IrregularRFQLocation.SupplierCode AS IrregularSupplierCode, " _
 & " PurchasingCountry.DefaultQuoLocationCode, " _
 & "  IrregularRFQLocation.QuoLocationCode AS IrregularQuoLocationCode " _
