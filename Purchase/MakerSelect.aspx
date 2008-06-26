@@ -16,16 +16,14 @@ window.onload = function() {
    changeCellColor("SupplierList_itemPlaceholderContainer")
    
 }
-    function returnValues(code, name3, name4, location){
+    function returnValues(code, name3, name4, countryCode){
       if(opener){
         var name = name3 + " " + name4;
         if (name3 == "") name = name4;
-        opener.document.getElementById('Code').value=code
-        opener.document.getElementById('Name').value=name
-        //if(opener.document.getElementById('QuoLocation')){
-         // opener.document.getElementById('QuoLocation').selectedIndex = location
-        //}
-      }
+        opener.document.getElementById('MakerCode').value=code
+        opener.document.getElementById('MakerName').value=name
+        opener.document.getElementById('MakerCountry').value=countryCode
+       }
     }
 
     -->
@@ -40,7 +38,6 @@ window.onload = function() {
 
 		<div class="main">
 			<p class="attention"><asp:Label ID="ErrorMessages" runat="server"></asp:Label></p>
-<%  If Not String.IsNullOrEmpty(st_Location) Then%>
 			<form id="SearchForm" runat="server">
 				<table>
 					<tr>
@@ -53,7 +50,6 @@ window.onload = function() {
 					</tr>
 				</table>
 
-				<asp:HiddenField ID="Location" runat="server" Value="" />
 				<asp:Button ID="Search" runat="server" Text="Search" />
 				<input type="button" value="Clear" onclick="clearForm('SearchForm')" />
 			</form>
@@ -68,7 +64,6 @@ window.onload = function() {
                         <tr id="Tr1" runat="server">
                             <th id="Th1" runat="server" style="width:15%">Maker Code</th>
                             <th id="Th2" runat="server" style="width:70%">Maker Name</th>
-                            <th id="Th3" runat="server" style="width:15%">Quo Location</th>
                         </tr>
                         <tr ID="itemPlaceholder" runat="server">
                         </tr>
@@ -78,19 +73,16 @@ window.onload = function() {
                     <h3 style="font-style:italic">No match found.</h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name3")%>','<%#Eval("Name4")%>','<%#Eval("QuoLocationCode") %>');">
+                    <tr onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name3")%>','<%#Eval("Name4")%>','<%#Eval("CountryCode") %>');">
                         <td><asp:Label ID="SupplierCode" runat="server" Text='<%#Eval("SupplierCode")%>' /></td>
                         <td>
                           <asp:Label ID="SupplierName3" runat="server" Text='<%#Eval("Name3")%> ' />
                           <asp:Label ID="SupplierName4" runat="server" Text='<%#Eval("Name4")%>' />
                         </td>
-                        <td><asp:Label ID="QuoLocationCode" runat="server" Text='<%#Eval("QuoLocationCode") %>' /></td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>
         </div>
-<% End If%>
-
     </div><!-- Main Content Area END -->
 
 
