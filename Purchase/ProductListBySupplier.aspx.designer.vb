@@ -59,4 +59,13 @@ Partial Public Class ProductListBySupplier
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents SrcSupplierProduct As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
+    '''JobNaiyo コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents JobNaiyo As Global.System.Web.UI.WebControls.HiddenField
 End Class

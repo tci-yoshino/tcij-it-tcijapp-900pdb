@@ -20,6 +20,9 @@
     Dim DBConn As New System.Data.SqlClient.SqlConnection   'データベースコネクション	
     Dim DBCommand As System.Data.SqlClient.SqlCommand       'データベースコマンド	
     Dim DBReader As System.Data.SqlClient.SqlDataReader     'データリーダー	
+    Public Url As String
+    Public AddUrl As String
+    Dim ActNai As String                                    '処理判断内容
 
     Sub Set_DBConnectingString()
         Dim settings As ConnectionStringSettings
@@ -47,10 +50,47 @@
         If DBReader.Read = True Then
             SupplierName.Text = DBReader("Name3")
         End If
-        SrcSupplierProduct.SelectCommand = "SELECT Product.ProductID, Product.ProductNumber, CASE WHEN NOT Product.QuoName IS NULL THEN Product.QuoName ELSE Product.Name END AS ProductName, Supplier_Product.SupplierItemNumber, Supplier_Product.Note, REPLACE(CONVERT(char, Supplier_Product.UpdateDate, 111), '/', '-') AS UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&Supplier=" + SupplierCode.Text.ToString + "&Product=' AS Url " & _
+        SrcSupplierProduct.SelectCommand = "SELECT Product.ProductID, Product.ProductNumber, CASE WHEN NOT Product.QuoName IS NULL THEN Product.QuoName ELSE Product.Name END AS ProductName, Supplier_Product.SupplierItemNumber, Supplier_Product.Note, REPLACE(CONVERT(char, Supplier_Product.UpdateDate, 111), '/', '-') AS UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&Supplier=" + SupplierCode.Text.ToString + "&Product=' AS Url, './ProductListBySupplier.aspx?Action=Delete&Supplier=" + SupplierCode.Text.ToString + "&ProductNumber=' AS DelUrl " & _
                                            "FROM Supplier_Product LEFT OUTER JOIN Product ON Supplier_Product.ProductID = Product.ProductID " & _
-                                           "WHERE (Supplier_Product.SupplierCode = " & SupplierCode.Text.ToString & ")"
+                                           "WHERE (Supplier_Product.SupplierCode = '" & SupplierCode.Text.ToString & "')"
         SupplierProductList.DataBind()
+
+        If Request.QueryString("Action") = "Delete" Then
+            ActNai = "DataDelete"
+        End If
+
     End Sub
 
+    Private Sub Page_PreRenderComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRenderComplete
+        Dim FCnt As Integer
+        Dim wClient As String       'クライアントサイドの処理を格納する
+        Dim Type2 As Type = Me.GetType
+        wClient = Clientside()
+        If wClient <> "" Then
+            ClientScript.RegisterStartupScript(Type2, "startup", Chr(13) & Chr(10) & "<script language='JavaScript' type=text/javascript> " & wClient & " </script>")
+        End If
+
+        If IsPostBack = True Then
+            If JobNaiyo.Value = "DeleteOK" Then
+
+
+                Url = "./ProductListBySupplier.aspx?Supplier=" & SupplierCode.Text.ToString
+                Response.Redirect(Url)
+            End If
+        End If
+
+        AddUrl = "./SuppliersProductSetting.aspx?Supplier=" & SupplierCode.Text.ToString
+    End Sub
+
+    Private Function Clientside()
+        Clientside = ""
+        If Request.QueryString("Action") = "Delete" Then
+            If ActNai = "DataDelete" Then
+                Clientside = "if (confirm('Supplier:" & Request.QueryString("supplier") & " ProductNumber:" & Request.QueryString("ProductNumber") & "を削除していいですか？')){form1.JobNaiyo.value = 'DeleteOK'; form1.submit();}"
+            End If
+            ActNai = ""
+        End If
+    End Function
+
 End Class
+
