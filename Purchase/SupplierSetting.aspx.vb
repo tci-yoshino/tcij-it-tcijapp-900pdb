@@ -53,6 +53,8 @@
         DBCommand = DBConn.CreateCommand()
         DBCommand2 = DBConn2.CreateCommand()
 
+        url = "./ProductListBySupplier.aspx"
+
         '[初期データ表示]-----------------------------------------------------------------
         If IsPostBack = False Then
             '[StAction設定]---------------------------------------------------------------
