@@ -20,6 +20,8 @@
     Dim DBConn As New System.Data.SqlClient.SqlConnection   'データベースコネクション	
     Dim DBCommand As System.Data.SqlClient.SqlCommand       'データベースコマンド	
     Dim DBReader As System.Data.SqlClient.SqlDataReader     'データリーダー	
+    Public Url As String
+    Public st_ProductID As String
 
     Sub Set_DBConnectingString()
         Dim settings As ConnectionStringSettings
@@ -40,8 +42,15 @@
         DBConn.Open()
         DBCommand = DBConn.CreateCommand()
 
+        st_ProductID = Request.QueryString("Product")
         If IsPostBack = False Then
-            If Request.QueryString("Action") <> "Edit" Then SupplierSelect.Visible = False
+            If Request.QueryString("Action") = "Edit" Then
+                SupplierSelect.Visible = False
+            Else
+                If Request.QueryString("Supplier") <> "" Then
+                    SupplierSelect.Visible = False
+                End If
+            End If
 
             If Request.QueryString("Supplier") <> "" Then
                 '[SupplierNameの表示]---------------------------------------------------------------
@@ -50,8 +59,8 @@
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
                 If DBReader.Read = True Then
-                    Supplier.Text = DBReader("SupplierCode")
-                    SupplierName.Text = DBReader("Name3")
+                    If Not TypeOf DBReader("SupplierCode") Is DBNull Then Supplier.Text = DBReader("SupplierCode")
+                    If Not TypeOf DBReader("Name3") Is DBNull Then SupplierName.Text = DBReader("Name3")
                     Supplier.ReadOnly = True
                     Supplier.CssClass = "readonly"
                 End If
@@ -59,12 +68,13 @@
             End If
             If Request.QueryString("Product") <> "" Then
                 '[ProductNameの表示]----------------------------------------------------------------
-                DBCommand.CommandText = "SELECT ProductNumber,Name FROM Product WHERE ProDuctID='" & Request.QueryString("Product") & "'"
+                DBCommand.CommandText = "SELECT ProductNumber,Name,QuoName FROM Product WHERE ProDuctID='" & Request.QueryString("Product") & "'"
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
                 If DBReader.Read = True Then
-                    ProductNumber.Text = DBReader("ProductNumber")
-                    ProductName.Text = DBReader("Name")
+                    If Not TypeOf DBReader("ProductNumber") Is DBNull Then ProductNumber.Text = DBReader("ProductNumber")
+                    If Not TypeOf DBReader("Name") Is DBNull Then ProductName.Text = DBReader("Name")
+                    If Not TypeOf DBReader("QuoName") Is DBNull Then ProductName.Text = DBReader("QuoName")
                     ProductNumber.ReadOnly = True
                     ProductNumber.CssClass = "readonly"
                 End If
@@ -75,8 +85,8 @@
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
                 If DBReader.Read = True Then
-                    SupplierItemNumber.Text = DBReader("SupplierItemNumber")
-                    Note.Text = DBReader("Note")
+                    If Not TypeOf DBReader("SupplierItemNumber") Is DBNull Then SupplierItemNumber.Text = DBReader("SupplierItemNumber")
+                    If Not TypeOf DBReader("Note") Is DBNull Then Note.Text = DBReader("Note")
                 End If
                 DBReader.Close()
             End If
@@ -101,51 +111,56 @@
                 DBReader.Close()
 
                 '[Product存在チェック]--------------------------------------------------------------
-                DBCommand.CommandText = "SELECT ProductNumber,Name,QuoName FROM Product WHERE ProductNumber='" & ProductNumber.Text.ToString & "'"
+                DBCommand.CommandText = "SELECT ProductID,ProductNumber,Name,QuoName FROM Product WHERE ProductNumber='" & ProductNumber.Text.ToString & "'"
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
                 If DBReader.Read = True Then
                     ProductNumber.Text = DBReader("ProductNumber")
                     If Not TypeOf DBReader("Name") Is DBNull Then ProductName.Text = DBReader("Name")
                     If Not TypeOf DBReader("QuoName") Is DBNull Then ProductName.Text = DBReader("QuoName")
+                    '[ProductID取得]----------------------------------------------------------------
+                    st_ProductID = DBReader("ProductID")
                 Else
                     Msg.Text = "ProductNumberが見つかりません"
                 End If
                 DBReader.Close()
 
-                '[Supplier_Product登録、更新]-------------------------------------------------------
-                If Msg.Text = "" Then
-                    If Request.QueryString("Action") = "" Then
+                If Msg.Text.ToString = "" Then
+                    '[Supplier_Product登録、更新]-------------------------------------------------------
+                    DBCommand.CommandText = "SELECT SupplierCode,ProductID FROM Supplier_Product WHERE (SupplierCode = '" & Supplier.Text.ToString & "' AND ProductID='" & st_ProductID & "')"
+                    DBReader = DBCommand.ExecuteReader()
+                    DBCommand.Dispose()
+                    If DBReader.Read = True Then
+                        '[Supplier_Product更新]---------------------------------------------------------
+                        DBReader.Close()
+                        st_SQLSTR = "UPDATE Supplier_Product SET SupplierItemNumber="
+                        If SupplierItemNumber.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SupplierItemNumber.Text.ToString & "',"
+                        st_SQLSTR = st_SQLSTR & "Note="
+                        If Note.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Note.Text.ToString & "',"
+                        st_SQLSTR = st_SQLSTR & "UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "' "
+                        st_SQLSTR = st_SQLSTR & "WHERE (SupplierCode = '" & Supplier.Text.ToString & "' AND ProductID='" & st_ProductID & "')"
+                        DBCommand.CommandText = st_SQLSTR
+                        DBCommand.ExecuteNonQuery()
+                    Else
                         '[Supplier_Product登録]---------------------------------------------------------
+                        DBReader.Close()
                         st_SQLSTR = "INSERT INTO Supplier_Product (SupplierCode,ProductID,SupplierItemNumber,Note,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ("
-                        st_SQLSTR = st_SQLSTR & Supplier.Text.ToString & "," & Request.QueryString("Product") & ","
+                        st_SQLSTR = st_SQLSTR & Supplier.Text.ToString & "," & st_ProductID & ","
                         If SupplierItemNumber.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SupplierItemNumber.Text.ToString & "',"
                         If Note.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Note.Text.ToString & "',"
                         st_SQLSTR = st_SQLSTR & "'" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "')"
                         DBCommand.CommandText = st_SQLSTR
                         DBCommand.ExecuteNonQuery()
-                    Else
-                        '[Supplier_Product更新]---------------------------------------------------------
-                        DBCommand.CommandText = "SELECT SupplierCode,ProductID FROM Supplier_Product WHERE (SupplierCode = '" & Supplier.Text.ToString & "' AND ProductID='" & Request.QueryString("Product") & "')"
-                        DBReader = DBCommand.ExecuteReader()
-                        DBCommand.Dispose()
-                        If DBReader.Read = True Then
-                            DBReader.Close()
-                            st_SQLSTR = "UPDATE Supplier_Product SET SupplierItemNumber="
-                            If SupplierItemNumber.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SupplierItemNumber.Text.ToString & "',"
-                            st_SQLSTR = st_SQLSTR & "Note="
-                            If Note.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Note.Text.ToString & "',"
-                            st_SQLSTR = st_SQLSTR & "UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "' "
-                            DBCommand.CommandText = st_SQLSTR
-                            DBCommand.ExecuteNonQuery()
-                        Else
-                            DBReader.Close()
-                        End If
                     End If
+                    Url = "./ProductListBySupplier.aspx?Supplier=" & Supplier.Text.ToString
+                    Response.Redirect(Url)
                 End If
             Else
                 Msg.Text = "必須項目を入力して下さい"
             End If
+        Else
+            Msg.Text = "Saveは拒否されました"
         End If
     End Sub
+
 End Class

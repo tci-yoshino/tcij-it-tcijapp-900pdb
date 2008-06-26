@@ -58,7 +58,8 @@
                     <tr>
                         <th>Note : </th>
                         <td>
-                            <asp:TextBox ID="Note" runat="server" Width="21em" MaxLength="3000"></asp:TextBox>
+                            <asp:TextBox ID="Note" runat="server" Width="21em" MaxLength="3000" 
+                                Height="142px" TextMode="MultiLine"></asp:TextBox>
                         </td>
                     </tr>
                 </table>
