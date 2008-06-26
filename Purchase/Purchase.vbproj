@@ -124,6 +124,7 @@
     <Content Include="Web.config" />
     <Content Include="AuthError.html" />
     <Content Include="MakerSelect.aspx" />
+    <Content Include="SupplierSelect.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.vb" />
@@ -343,6 +344,13 @@
     <Compile Include="UnassignedTask.aspx.vb">
       <DependentUpon>UnassignedTask.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SupplierSelect.aspx.designer.vb">
+      <DependentUpon>SupplierSelect.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SupplierSelect.aspx.vb">
+      <DependentUpon>SupplierSelect.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
