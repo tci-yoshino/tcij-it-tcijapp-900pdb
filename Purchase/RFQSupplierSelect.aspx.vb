@@ -1,4 +1,4 @@
-﻿Partial Public Class SupplierSelect
+﻿Partial Public Class RFQSupplierSelect
     Inherits CommonPage
 
     ' 接続文字列

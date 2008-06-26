@@ -13,7 +13,7 @@ Option Explicit On
 
 
 
-Partial Public Class SupplierSelect
+Partial Public Class RFQSupplierSelect
 
     '''<summary>
     '''ErrorMessages コントロール。
