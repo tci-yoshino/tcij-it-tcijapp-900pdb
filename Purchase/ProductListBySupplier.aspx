@@ -59,9 +59,9 @@
                         <td><asp:Label ID="SupplierItemNumber" runat="server" Text='<%# Eval("SupplierItemNumber") %>' /></td>
                         <td><asp:Label ID="Note" runat="server" Text='<%# Eval("Note") %>' /></td>
                         <td><asp:Label ID="UpdateDate" runat="server" Text='<%# Eval("UpdateDate") %>' /></td>
-                        <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl='<%# Eval("Url")+trim(Str(Eval("ProductID"))) %>'>Edit</asp:HyperLink></td>
+                        <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl='<%# Eval("Url")+Trim(str(Eval("ProductID"))) %>'>Edit</asp:HyperLink></td>
                         <td>
-                            <asp:HyperLink ID="Delete" runat="server" NavigateUrl='<%# Eval("DelUrl")+Eval("ProductNumber") %>'>Delete</asp:HyperLink>
+                            <asp:HyperLink ID="Delete" runat="server" NavigateUrl='<%# Eval("DelUrl")+Trim(str(Eval("ProductID"))) %>'>Delete</asp:HyperLink>
                             <asp:HiddenField ID="ProductID" runat="server" Value='<%# Eval("ProductID") %>' />
                         </td>
                     </tr>
@@ -71,7 +71,8 @@
     </div><!-- Main Content Area END -->
     <asp:SqlDataSource ID="SrcSupplierProduct" runat="server" 
     ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-    SelectCommand="SELECT dbo.Product.ProductID, dbo.Product.ProductNumber, dbo.Product.Name AS ProductName, dbo.Supplier_Product.SupplierItemNumber, dbo.Supplier_Product.Note, dbo.Supplier_Product.UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&Supplier=' + SupplierCode.Text.ToString + '&Product=' AS Url, './ProductListBySupplier.aspx?Action=Delete&Supplier=' + SupplierCode.Text.ToString + '&ProductNumber=' AS DelUrl
+    
+        SelectCommand="SELECT dbo.Product.ProductID, dbo.Product.ProductNumber, dbo.Product.Name AS ProductName, dbo.Supplier_Product.SupplierItemNumber, dbo.Supplier_Product.Note, dbo.Supplier_Product.UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&amp;Supplier=' + SupplierCode.Text.ToString + '&amp;Product=' AS Url, './ProductListBySupplier.aspx?Action=Delete&amp;Supplier=' + SupplierCode.Text.ToString + '&amp;Product=' AS DelUrl
 FROM dbo.Supplier_Product LEFT OUTER JOIN dbo.Product ON dbo.Supplier_Product.ProductID = dbo.Product.ProductID"></asp:SqlDataSource>
 
     <!-- Footer -->
