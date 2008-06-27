@@ -25,10 +25,6 @@
             Msg.Text = "SupplierCodeには数字を入力して下さい"
             SrcSupplier.SelectCommand = ""
             SupplierList.DataBind()
-        ElseIf R3Code.Text.ToString <> "" And Not IsNumeric(R3Code.Text.ToString) Then
-            Msg.Text = "R/3SupplierCodeには数字を入力して下さい"
-            SrcSupplier.SelectCommand = ""
-            SupplierList.DataBind()
         Else
             Msg.Text = ""
             Dim SQLStr As String = ""
@@ -37,9 +33,14 @@
                 If SQLStr = "" Then SQLStr = "WHERE "
                 SQLStr = SQLStr + "(SupplierCode = '" & Code.Text.ToString & "')"
             End If
+            '[R3Codeが数字の場合と文字の場合とでは検索が異なる]---------------------------
             If R3Code.Text.ToString <> "" Then
                 If SQLStr = "" Then SQLStr = "WHERE " Else SQLStr = SQLStr + " AND "
-                SQLStr = SQLStr + "((R3SupplierCode) = " & (R3Code.Text.ToString) & ")"
+                If IsNumeric(R3Code.Text.ToString) Then
+                    SQLStr = SQLStr + "((R3SupplierCode) = " & (R3Code.Text.ToString) & ")"
+                Else
+                    SQLStr = SQLStr + "((R3SupplierCode) = '" & (R3Code.Text.ToString) & "')"
+                End If
             End If
             If Name.Text.ToString <> "" Then
                 If SQLStr = "" Then SQLStr = "WHERE " Else SQLStr = SQLStr + " AND "
