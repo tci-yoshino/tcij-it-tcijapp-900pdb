@@ -20,9 +20,9 @@
     Dim DBConn As New System.Data.SqlClient.SqlConnection   'データベースコネクション	
     Dim DBCommand As System.Data.SqlClient.SqlCommand       'データベースコマンド	
     Dim DBReader As System.Data.SqlClient.SqlDataReader     'データリーダー	
-    Public Url As String
-    Public AddUrl As String
-    Dim ActNai As String                                    '処理判断内容
+    Public Url As String = ""
+    Public AddUrl As String = ""
+    Dim ActNai As String = ""                               '処理判断内容
 
     Sub Set_DBConnectingString()
         Dim settings As ConnectionStringSettings
@@ -62,23 +62,25 @@
     End Sub
 
     Private Sub Page_PreRenderComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRenderComplete
-        Dim FCnt As Integer
         Dim wClient As String       'クライアントサイドの処理を格納する
         Dim Type2 As Type = Me.GetType
-        wClient = Clientside()
-        If wClient <> "" Then
-            ClientScript.RegisterStartupScript(Type2, "startup", Chr(13) & Chr(10) & "<script language='JavaScript' type=text/javascript> " & wClient & " </script>")
+
+        If Request.QueryString("Action") = "Delete" Then
+            wClient = Clientside()
+            If wClient <> "" Then
+                ClientScript.RegisterStartupScript(Type2, "startup", Chr(13) & Chr(10) & "<script language='JavaScript' type=text/javascript> " & wClient & " </script>")
+            End If
         End If
 
         If IsPostBack = True Then
             If JobNaiyo.Value = "DeleteOK" Then
-
 
                 Url = "./ProductListBySupplier.aspx?Supplier=" & SupplierCode.Text.ToString
                 Response.Redirect(Url)
             End If
         End If
 
+        '[New Suppliers ProductのURL設定]------------------------------------------------------------
         AddUrl = "./SuppliersProductSetting.aspx?Supplier=" & SupplierCode.Text.ToString
     End Sub
 
