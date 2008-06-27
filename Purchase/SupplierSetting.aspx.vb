@@ -237,6 +237,8 @@
             Else
                 Msg.Text = "必須項目を入力して下さい"
             End If
+        Else
+            Msg.Text = "Saveは拒否されました"
         End If
     End Sub
 
