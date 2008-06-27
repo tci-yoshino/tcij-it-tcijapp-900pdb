@@ -160,6 +160,8 @@
             If Msg.Text.ToString = "" Then
                 Response.Redirect("CountryList.aspx")
             End If
+        Else
+            Msg.Text = "Saveは拒否されました"
         End If
     End Sub
 
