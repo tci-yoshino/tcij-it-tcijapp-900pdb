@@ -37,8 +37,7 @@
 		</div>
 		<hr />
         <div class="list">
-            <asp:ListView ID="SupplierList" runat="server" AutoGenerateColumns="False" 
-                DataSourceID="SrcSupplier" DataKeyNames="Supplier Code">
+            <asp:ListView ID="SupplierList" runat="server" DataSourceID="SrcSupplier" DataKeyNames="Supplier Code">
                 <LayoutTemplate>
                     <table ID="itemPlaceholderContainer" runat="server">
                         <tr id="Tr1" runat="server">
