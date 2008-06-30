@@ -76,6 +76,12 @@ em {
     font-weight: bold;
 }
 
+pre {
+    margin: 3px;
+    padding: 10px 0;
+    background-color: #fff3ad;
+}
+
 /* Header Rules */
 #header {
     margin: 5px 7px;
