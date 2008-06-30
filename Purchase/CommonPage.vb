@@ -8,9 +8,6 @@ Public Class CommonPage
     Inherits Page
 
     Protected Overrides Sub OnLoad(ByVal e As System.EventArgs)
-        'Call the base class's OnLoad method
-        MyBase.OnLoad(e)
-
         Dim st_action As String = ""
         Dim st_scriptName As String = ""
         Dim st_accountName As String = ""
@@ -20,7 +17,7 @@ Public Class CommonPage
         Dim dbCommand As SqlClient.SqlCommand
         Dim dbReader As SqlDataReader
 
-        'User authorization process
+        ' User authorization process
         If Request.RequestType = "POST" Then
             st_action = IIf(Request.Form("Action") = Nothing, "", Request.Form("Action"))
         ElseIf Request.RequestType = "GET" Then
@@ -45,7 +42,7 @@ Public Class CommonPage
 
             dbReader = dbCommand.ExecuteReader()
             If dbReader.Read = False Then
-                'Authorization failed
+                ' Authorization failed
                 Response.Redirect("AuthError.html")
             End If
 
@@ -65,12 +62,15 @@ Public Class CommonPage
 
         dbReader = dbCommand.ExecuteReader()
         If dbReader.Read = False Then
-            'Authorization failed
+            ' Authorization failed
             Response.Redirect("AuthError.html")
         End If
 
         dbCommand.Dispose()
         dbReader.Close()
         dbConnection.Close()
+
+        ' Call the base class's OnLoad method
+        MyBase.OnLoad(e)
     End Sub
 End Class
