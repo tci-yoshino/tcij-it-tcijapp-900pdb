@@ -81,12 +81,15 @@
                 DBReader.Close()
             End If
             If Supplier.Text.ToString <> "" And ProductNumber.Text.ToString <> "" Then
-                DBCommand.CommandText = "SELECT SupplierItemNumber,Note FROM Supplier_Product WHERE (SupplierCode = '" & Request.QueryString("Supplier") & "' AND ProductID='" & Request.QueryString("Product") & "')"
+                DBCommand.CommandText = "SELECT SupplierItemNumber,Note,UpdateDate FROM Supplier_Product WHERE (SupplierCode = '" & Request.QueryString("Supplier") & "' AND ProductID='" & Request.QueryString("Product") & "')"
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
                 If DBReader.Read = True Then
                     If Not TypeOf DBReader("SupplierItemNumber") Is DBNull Then SupplierItemNumber.Text = DBReader("SupplierItemNumber")
                     If Not TypeOf DBReader("Note") Is DBNull Then Note.Text = DBReader("Note")
+                    UpdateDate.Value = DBReader("UpdateDate")
+                Else
+                    UpdateDate.Value = ""
                 End If
                 DBReader.Close()
             End If
@@ -128,20 +131,30 @@
 
                     If Msg.Text.ToString = "" Then
                         '[Supplier_Product登録、更新]-------------------------------------------------------
-                        DBCommand.CommandText = "SELECT SupplierCode,ProductID FROM Supplier_Product WHERE (SupplierCode = '" & Supplier.Text.ToString & "' AND ProductID='" & st_ProductID & "')"
+                        DBCommand.CommandText = "SELECT SupplierCode,ProductID,UpdateDate FROM Supplier_Product WHERE (SupplierCode = '" & Supplier.Text.ToString & "' AND ProductID='" & st_ProductID & "')"
                         DBReader = DBCommand.ExecuteReader()
                         DBCommand.Dispose()
                         If DBReader.Read = True Then
-                            '[Supplier_Product更新]---------------------------------------------------------
-                            DBReader.Close()
-                            st_SQLSTR = "UPDATE Supplier_Product SET SupplierItemNumber="
-                            If SupplierItemNumber.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SupplierItemNumber.Text.ToString & "',"
-                            st_SQLSTR = st_SQLSTR & "Note="
-                            If Note.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Note.Text.ToString & "',"
-                            st_SQLSTR = st_SQLSTR & "UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "' "
-                            st_SQLSTR = st_SQLSTR & "WHERE (SupplierCode = '" & Supplier.Text.ToString & "' AND ProductID='" & st_ProductID & "')"
-                            DBCommand.CommandText = st_SQLSTR
-                            DBCommand.ExecuteNonQuery()
+                            If Request.QueryString("Action") = "Edit" Then
+                                If DBReader("UpdateDate") = UpdateDate.Value Then
+                                    '[Supplier_Product更新]---------------------------------------------------------
+                                    DBReader.Close()
+                                    st_SQLSTR = "UPDATE Supplier_Product SET SupplierItemNumber="
+                                    If SupplierItemNumber.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SupplierItemNumber.Text.ToString & "',"
+                                    st_SQLSTR = st_SQLSTR & "Note="
+                                    If Note.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Note.Text.ToString & "',"
+                                    st_SQLSTR = st_SQLSTR & "UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "' "
+                                    st_SQLSTR = st_SQLSTR & "WHERE (SupplierCode = '" & Supplier.Text.ToString & "' AND ProductID='" & st_ProductID & "')"
+                                    DBCommand.CommandText = st_SQLSTR
+                                    DBCommand.ExecuteNonQuery()
+                                Else
+                                    DBReader.Close()
+                                    Msg.Text = "このデータは他のユーザーによって編集されました。その内容を確認し再度編集をお願いします"
+                                End If
+                            Else
+                                DBReader.Close()
+                                Msg.Text = "このデータはすでに登録済です。その内容を確認し再度処理をお願いします"
+                            End If
                         Else
                             '[Supplier_Product登録]---------------------------------------------------------
                             DBReader.Close()
@@ -153,8 +166,10 @@
                             DBCommand.CommandText = st_SQLSTR
                             DBCommand.ExecuteNonQuery()
                         End If
-                        Url = "./ProductListBySupplier.aspx?Supplier=" & Supplier.Text.ToString
-                        Response.Redirect(Url)
+                        If Msg.Text.ToString = "" Then
+                            Url = "./ProductListBySupplier.aspx?Supplier=" & Supplier.Text.ToString
+                            Response.Redirect(Url)
+                        End If
                     End If
                 Else
                     Msg.Text = "必須項目を入力して下さい"

@@ -106,6 +106,15 @@ Partial Public Class SuppliersProductSetting
     Protected WithEvents Product As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
+    '''UpdateDate コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents UpdateDate As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''Action コントロール。
     '''</summary>
     '''<remarks>
