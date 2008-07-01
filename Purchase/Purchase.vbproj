@@ -87,6 +87,7 @@
     <Content Include="CSS\Print.css" />
     <Content Include="CSS\Style.css" />
     <Content Include="Default.html" />
+    <Content Include="favicon.ico" />
     <Content Include="Footer.html" />
     <Content Include="Global.asax" />
     <Content Include="Header.aspx" />
@@ -98,7 +99,9 @@
     <Content Include="JS\Common.js" />
     <Content Include="MyTask.aspx" />
     <Content Include="POCorrespondence.aspx" />
+    <Content Include="POIssue.aspx" />
     <Content Include="POListByRFQ.aspx" />
+    <Content Include="POUpdate.aspx" />
     <Content Include="ProductListBySupplier.aspx" />
     <Content Include="ProductSearch.aspx" />
     <Content Include="ProductSelect.aspx" />
@@ -191,11 +194,25 @@
       <DependentUpon>POCorrespondence.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="POIssue.aspx.designer.vb">
+      <DependentUpon>POIssue.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="POIssue.aspx.vb">
+      <DependentUpon>POIssue.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="POListByRFQ.aspx.designer.vb">
       <DependentUpon>POListByRFQ.aspx</DependentUpon>
     </Compile>
     <Compile Include="POListByRFQ.aspx.vb">
       <DependentUpon>POListByRFQ.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="POUpdate.aspx.designer.vb">
+      <DependentUpon>POUpdate.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="POUpdate.aspx.vb">
+      <DependentUpon>POUpdate.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ProductListBySupplier.aspx.designer.vb">
