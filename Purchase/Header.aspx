@@ -5,14 +5,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Purchase DB</title>
-    <link rel="stylesheet" href="CSS/Style.css" type="text/css" media="screen,print" />
+    <link rel="stylesheet" href="./CSS/Style.css" type="text/css" media="screen,print" />
 </head>
 <body>
     <!-- Header -->
     <div id="header">
         <table>
             <tr>
-                <td><a href="MyTask.aspx" target="main"><img width="60" height="45" border="0" src="Image/Logo.gif" /></a></td>
+                <td><a href="./MyTask.aspx" target="main"><img width="60" height="45" border="0" src="./Image/Logo.gif" alt="Purchase DB" /></a></td>
                 <td><h1>Purchase DB</h1></td>
             </tr>
         </table>
