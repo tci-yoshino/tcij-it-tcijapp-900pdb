@@ -12,7 +12,7 @@
 <body>
     <!-- Main Content Area -->
     <div id="content">
-        <div class="tabs"><a href="#" onclick="popup('2-4-2.shtml')">RFQ Correspondence / History</a></div>
+        <div class="tabs"><a href="#" onclick="popup('./RFQCorrespondence.aspx')">RFQ Correspondence / History</a></div>
 
         <h3>Quotation Reply</h3>
 
