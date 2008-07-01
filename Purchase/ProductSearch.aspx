@@ -23,11 +23,11 @@
                 <table>
                     <tr>
                         <th>Product Number <span class="required">*</span> : </th>
-                        <td><asp:TextBox ID="Code" runat="server" Width="7em" MaxLength="32"></asp:TextBox></td>
+                        <td><asp:TextBox ID="ProductNumber" runat="server" Width="7em" MaxLength="32"></asp:TextBox></td>
                     </tr>
                     <tr>
                         <th>CAS Number : </th>
-                        <td><asp:TextBox ID="CAS" runat="server" Width="7em" MaxLength="32"></asp:TextBox></td>
+                        <td><asp:TextBox ID="CASNumber" runat="server" Width="7em" MaxLength="32"></asp:TextBox></td>
                     </tr>
                 </table>
                 <asp:Button ID="Search" runat="server" Text="Search" />

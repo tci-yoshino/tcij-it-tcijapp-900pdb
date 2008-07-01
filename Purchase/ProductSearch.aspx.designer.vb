@@ -34,22 +34,22 @@ Partial Public Class ProductSearch
     Protected WithEvents SearchForm As Global.System.Web.UI.HtmlControls.HtmlForm
 
     '''<summary>
-    '''Code コントロール。
+    '''ProductNumber コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents Code As Global.System.Web.UI.WebControls.TextBox
+    Protected WithEvents ProductNumber As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
-    '''CAS コントロール。
+    '''CASNumber コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents CAS As Global.System.Web.UI.WebControls.TextBox
+    Protected WithEvents CASNumber As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
     '''Search コントロール。
