@@ -17,9 +17,10 @@
 		<h3>Country Setting</h3>
 
 		<div class="main">
-			<p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 
 			<form id="CountryForm" runat="server">
+			<p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
+
 				<table>
 					<tr>
 						<th>Country Code <span class="required">*</span> : </th>
@@ -40,6 +41,7 @@
 					</tr>
 				</table>
                 <asp:HiddenField ID="Action" runat="server" value="Save" />
+				<asp:HiddenField ID="UpdateDate" runat="server" />
 				<div class="btns">
                     <asp:Button ID="Save" runat="server" Text="Save" />
 				</div>

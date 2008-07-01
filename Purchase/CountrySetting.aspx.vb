@@ -68,9 +68,17 @@
                     Location.Text = DBReader("DefaultQuoLocationName")
                 End If
                 DBReader.Close()
+                '[最終的に更新するPurchasingCountryのUpdateDateの値をHidden(UpdateDate)にセット]
+                DBCommand.CommandText = "SELECT UpdateDate FROM PurchasingCountry WHERE CountryCode = '" & Code.Text.ToString & "'"
+                DBReader = DBCommand.ExecuteReader()
+                DBCommand.Dispose()
+                If DBReader.Read = True Then
+                    UpdateDate.Value = DBReader("UpdateDate")
+                End If
             Else
                 Code.CssClass = ""
                 Code.ReadOnly = False
+                UpdateDate.Value = ""
             End If
         End If
     End Sub
@@ -110,23 +118,41 @@
                     DBCommand.Dispose()
                     If DBReader.Read = True Then
                         DBReader.Close()
-                        If Location.Text.ToString <> "Direct" Then
-                            DBCommand.CommandText = "SELECT LocationCode FROM dbo.s_Location WHERE Name = '" & Location.Text.ToString & "'"
+                        If Request.QueryString("Action") = "Edit" Then
+                            '[PurchasingCountryのUpdateDateの値を取得する]---------------------------
+                            DBCommand.CommandText = "SELECT UpdateDate FROM PurchasingCountry WHERE CountryCode = '" & Code.Text.ToString & "'"
                             DBReader = DBCommand.ExecuteReader()
                             DBCommand.Dispose()
                             If DBReader.Read = True Then
-                                st_Location = DBReader("LocationCode")
-                                DBReader.Close()
-                                '[PurchasingCountryの更新処理]------------------------------------------
-                                DBCommand.CommandText = "UPDATE [PurchasingCountry] SET DefaultQuoLocationCode='" & st_Location & "',UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "'  WHERE CountryCode ='" & Code.Text.ToString & "'"
-                                DBCommand.ExecuteNonQuery()
+                                If DBReader("UpdateDate") = UpdateDate.Value Then
+                                    DBReader.Close()
+                                    If Location.Text.ToString <> "Direct" Then
+                                        DBCommand.CommandText = "SELECT LocationCode FROM dbo.s_Location WHERE Name = '" & Location.Text.ToString & "'"
+                                        DBReader = DBCommand.ExecuteReader()
+                                        DBCommand.Dispose()
+                                        If DBReader.Read = True Then
+                                            st_Location = DBReader("LocationCode")
+                                            DBReader.Close()
+                                            '[PurchasingCountryの更新処理]------------------------------------------
+                                            DBCommand.CommandText = "UPDATE [PurchasingCountry] SET DefaultQuoLocationCode='" & st_Location & "',UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "'  WHERE CountryCode ='" & Code.Text.ToString & "'"
+                                            DBCommand.ExecuteNonQuery()
+                                        Else
+                                            DBReader.Close()
+                                        End If
+                                    Else
+                                        '[PurchasingCountryの更新処理]------------------------------------------
+                                        DBCommand.CommandText = "UPDATE [PurchasingCountry] SET DefaultQuoLocationCode=null,UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "'  WHERE CountryCode ='" & Code.Text.ToString & "'"
+                                        DBCommand.ExecuteNonQuery()
+                                    End If
+                                Else
+                                    DBReader.Close()
+                                    Msg.Text = "このデータは他のユーザーによって編集されました。その内容を確認し再度編集をお願いします"
+                                End If
                             Else
                                 DBReader.Close()
                             End If
                         Else
-                            '[PurchasingCountryの更新処理]------------------------------------------
-                            DBCommand.CommandText = "UPDATE [PurchasingCountry] SET DefaultQuoLocationCode=null,UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "'  WHERE CountryCode ='" & Code.Text.ToString & "'"
-                            DBCommand.ExecuteNonQuery()
+                            Msg.Text = "このデータはすでに登録済です。その内容を確認し再度処理をお願いします"
                         End If
                     Else
                         DBReader.Close()
