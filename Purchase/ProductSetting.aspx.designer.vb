@@ -34,13 +34,13 @@ Partial Public Class ProductSetting
     Protected WithEvents Product As Global.System.Web.UI.HtmlControls.HtmlForm
 
     '''<summary>
-    '''Code コントロール。
+    '''ProductNumber コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents Code As Global.System.Web.UI.WebControls.TextBox
+    Protected WithEvents ProductNumber As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
     '''ProductName コントロール。
@@ -140,6 +140,15 @@ Partial Public Class ProductSetting
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents ProductID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''Action コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
     '''Save コントロール。

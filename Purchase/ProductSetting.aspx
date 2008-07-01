@@ -23,7 +23,7 @@
                 <table class="left">
                     <tr>
                         <th>Product Number <span class="required">*</span> : </th>
-                        <td><asp:TextBox ID="Code" runat="server" Width="7em" MaxLength="32"></asp:TextBox></td>
+                        <td><asp:TextBox ID="ProductNumber" runat="server" Width="7em" MaxLength="32"></asp:TextBox></td>
                     </tr>
                     <tr>
                         <th>Product Name 1 <span class="required">*</span> : </th>
@@ -70,6 +70,7 @@
                     </tr>
                 </table>
                 <asp:HiddenField ID="ProductID" runat="server" />
+                <asp:HiddenField ID="Action" runat="server" Value="Save" />
 
                 <div class="btns">
                     <asp:Button ID="Save" runat="server" Text="Save" />
