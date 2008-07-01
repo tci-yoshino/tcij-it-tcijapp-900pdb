@@ -15,10 +15,11 @@
           </sectionGroup>
         </sectionGroup>
       </sectionGroup>
-    </configSections>  
+    </configSections>
 
-
-    <appSettings/>
+    <appSettings>
+        <add key="ErrorMailTo" value="app@tokyokasei.co.jp"/>
+    </appSettings>
 
     <connectionStrings>
         <add name="DatabaseConnect" connectionString="Data Source=tdb1; Initial Catalog=Purchase; Persist Security Info=False; User ID=Purchase; Password=n061t@kun;" providerName="System.Data.SqlClient"/>
@@ -93,7 +94,6 @@
             <error statusCode="404" redirect="FileNotFound.htm" />
         </customErrors>
         -->
-        <customErrors defaultRedirect="SystemError.html" mode="On"/>
 
       <httpHandlers>
         <remove verb="*" path="*.asmx"/>
