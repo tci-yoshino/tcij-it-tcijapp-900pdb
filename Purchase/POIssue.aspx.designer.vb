@@ -16,6 +16,15 @@ Option Explicit On
 Partial Public Class POIssue
 
     '''<summary>
+    '''Head1 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Head1 As Global.System.Web.UI.HtmlControls.HtmlHead
+
+    '''<summary>
     '''POForm コントロール。
     '''</summary>
     '''<remarks>
