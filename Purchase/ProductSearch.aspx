@@ -63,7 +63,18 @@
             </asp:ListView>
         </div>
     </div><!-- Main Content Area END -->
-    <asp:SqlDataSource ID="SrcProduct" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="SrcProduct" runat="server" 
+    ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+    SelectCommand="SELECT                  ProductNumber, QuoName, CASNumber
+FROM                     dbo.Product
+WHERE                   (ProductNumber = @ProductNumber) AND (CASNumber = @CASNumber)">
+        <SelectParameters>
+            <asp:ControlParameter ControlID="ProductNumber" Name="ProductNumber" 
+                PropertyName="Text" />
+            <asp:ControlParameter ControlID="CASNumber" Name="CASNumber" 
+                PropertyName="Text" />
+        </SelectParameters>
+</asp:SqlDataSource>
     
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
