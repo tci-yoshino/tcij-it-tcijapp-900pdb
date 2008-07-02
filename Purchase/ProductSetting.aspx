@@ -73,6 +73,8 @@
                 <asp:HiddenField ID="ProductID" runat="server" />
                 <asp:HiddenField ID="Action" runat="server" Value="Save" />
 
+                <asp:HiddenField ID="stAction" runat="server" />
+
                 <asp:HiddenField ID="UpdateDate" runat="server" />
 
                 <div class="btns">

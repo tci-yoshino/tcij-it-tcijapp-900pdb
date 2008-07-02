@@ -39,9 +39,10 @@
 
         If IsPostBack = False Then
             '[ProductIDのセット]------------------------------------------------------------------------
+            stAction.Value = Request.QueryString("Action")
             ProductID.Value = Request.QueryString("ProductID")
 
-            If Request.QueryString("Action") = "Edit" Then
+            If stAction.Value = "Edit" Then
                 DBCommand.CommandText = "SELECT ProductNumber, Name, QuoName, CASNumber, MolecularFormula, Reference, Comment, Status, ProposalDept, ProcumentDept, PD, UpdateDate " & _
                                         "FROM dbo.Product WHERE (ProductID = " + ProductID.Value + ")"
                 DBReader = DBCommand.ExecuteReader()
@@ -79,7 +80,7 @@
             If TCICommon.Func.IsNewProductNumber(ProductNumber.Text.ToString) = True Then NumberType = "NEW"
             If NumberType <> "" Then
                 If ProductNumber.Text.ToString <> "" And ProductName.Text.ToString <> "" Then
-                    If Request.QueryString("Action") = "Edit" Then
+                    If stAction.Value = "Edit" Then
                         '[ProductのUpdateDateチェック]-----------------------------------------------------------
                         DBCommand.CommandText = "SELECT UpdateDate FROM dbo.Product WHERE ProductID = '" & ProductID.Value & "'"
                         DBReader = DBCommand.ExecuteReader()
@@ -147,6 +148,7 @@
                             DBCommand.CommandText = st_SqlStr
                             DBCommand.ExecuteNonQuery()
                             Msg.Text = "表示データを登録しました"
+                            stAction.Value = "Edit"
                         End If
                     End If
                 Else
