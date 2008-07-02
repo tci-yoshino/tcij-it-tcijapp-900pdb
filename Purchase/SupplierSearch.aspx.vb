@@ -1,16 +1,6 @@
 ﻿Public Partial Class SupplierSearch
     Inherits CommonPage
 
-#Region " Web フォーム デザイナで生成されたコード "
-    '*****（Region内は変更しないこと）*****
-    <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-    End Sub
-
-    Private Sub Page_Init(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Init
-        InitializeComponent()
-    End Sub
-#End Region
-
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         SrcSupplier.SelectCommand = ""
     End Sub
