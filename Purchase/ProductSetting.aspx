@@ -17,9 +17,10 @@
         <h3>Product Setting</h3>
 
         <div class="main">
-            <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 
             <form id="Product" runat="server">
+            <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
+
                 <table class="left">
                     <tr>
                         <th>Product Number <span class="required">*</span> : </th>
@@ -71,6 +72,8 @@
                 </table>
                 <asp:HiddenField ID="ProductID" runat="server" />
                 <asp:HiddenField ID="Action" runat="server" Value="Save" />
+
+                <asp:HiddenField ID="UpdateDate" runat="server" />
 
                 <div class="btns">
                     <asp:Button ID="Save" runat="server" Text="Save" />
