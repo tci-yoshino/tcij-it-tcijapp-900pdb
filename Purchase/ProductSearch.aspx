@@ -31,7 +31,7 @@
                     </tr>
                 </table>
                 <asp:Button ID="Search" runat="server" Text="Search" />
-                <input type="button" value="Clear" />
+                <input type="button" value="Clear" onclick="clearForm('SearchForm');" />
             </form>
         </div>
 
@@ -55,9 +55,9 @@
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr>
-                        <td><asp:Label ID="ProductNumber" runat="server" Text='' /></td>
-                        <td><asp:Label ID="ProductName" runat="server" Text='' /></td>
-                        <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl=''>Edit</asp:HyperLink></td>
+                        <td><asp:Label ID="ProductNumber" runat="server" Text='<%# Eval("[ProductNumber]") %>' /></td>
+                        <td><asp:Label ID="ProductName" runat="server" Text='<%# Eval("[ProductName]") %>' /></td>
+                        <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl='<%# Eval("Url") %>'>Edit</asp:HyperLink></td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>
@@ -65,15 +65,8 @@
     </div><!-- Main Content Area END -->
     <asp:SqlDataSource ID="SrcProduct" runat="server" 
     ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-    SelectCommand="SELECT                  ProductNumber, QuoName, CASNumber
-FROM                     dbo.Product
-WHERE                   (ProductNumber = @ProductNumber) AND (CASNumber = @CASNumber)">
-        <SelectParameters>
-            <asp:ControlParameter ControlID="ProductNumber" Name="ProductNumber" 
-                PropertyName="Text" />
-            <asp:ControlParameter ControlID="CASNumber" Name="CASNumber" 
-                PropertyName="Text" />
-        </SelectParameters>
+    
+    SelectCommand="SELECT ProductNumber, CASE WHEN NOT Product.QuoName IS NULL THEN Product.QuoName ELSE Product.Name END AS ProductName, CASNumber FROM dbo.Product">
 </asp:SqlDataSource>
     
     <!-- Footer -->

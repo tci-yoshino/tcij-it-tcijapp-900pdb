@@ -1,56 +1,28 @@
 ﻿Public Partial Class ProductSearch
     Inherits CommonPage
 
-#Region " Web フォーム デザイナで生成されたコード "
-    '*****（Region内は変更しないこと）*****
-    <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Me.SqlConnection1 = New System.Data.SqlClient.SqlConnection
-        Me.SqlConnection1.FireInfoMessageEventOnUserErrors = False
-    End Sub
-
-    Protected WithEvents SqlConnection1 As System.Data.SqlClient.SqlConnection
-
-    Private Sub Page_Init(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Init
-        InitializeComponent()
-    End Sub
-#End Region
-
-    '*****（DB接続用変数定義）*****
-    Dim DBConnString As String                              '接続文字列	
-    Dim DBConn As New System.Data.SqlClient.SqlConnection   'データベースコネクション	
-    Dim DBCommand As System.Data.SqlClient.SqlCommand       'データベースコマンド	
-    Dim DBReader As System.Data.SqlClient.SqlDataReader     'データリーダー	
-
-    Sub Set_DBConnectingString()
-        Dim settings As ConnectionStringSettings
-        '[接続文字列を設定ファイル(Web.config)から取得]---------------------------------------------
-        settings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
-        If Not settings Is Nothing Then
-            '[接続文字列をイミディエイトに出力]-----------------------------------------------------
-            Debug.Print(settings.ConnectionString)
-        End If
-        '[sqlConnectionに接続文字列を設定]----------------------------------------------------------
-        Me.SqlConnection1.ConnectionString = settings.ConnectionString
-    End Sub
-
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        Set_DBConnectingString()
-        DBConn = Me.SqlConnection1
-        DBConn.Open()
-        DBCommand = DBConn.CreateCommand()
-
+        SrcProduct.SelectCommand = ""
     End Sub
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
-        SrcProduct.SelectCommand = "SELECT ProductNumber, QuoName, CASNumber FROM dbo.Product WHERE "
-        If ProductNumber.Text.ToString <> "" Then SrcProduct.SelectCommand = SrcProduct.SelectCommand + "(ProductNumber = '" + ProductNumber.Text.ToString + "')"
+        Dim st_SqlStr As String = " "
+        SrcProduct.SelectCommand = "SELECT ProductNumber, CASE WHEN NOT Product.QuoName IS NULL THEN Product.QuoName ELSE Product.Name END AS ProductName, './ProductSetting.aspx?Action=Edit&ProductID=' + Rtrim(Ltrim(Str(ProductID))) AS Url FROM dbo.Product "
+        If ProductNumber.Text.ToString <> "" Then st_SqlStr = st_SqlStr + "WHERE (ProductNumber = '" + ProductNumber.Text.ToString + "')"
         If CASNumber.Text.ToString <> "" Then
-            If Right(SrcProduct.SelectCommand, 1) = ")" Then
-                SrcProduct.SelectCommand = SrcProduct.SelectCommand + " AND (CASNumber = '" + CASNumber.Text.ToString + "')"
+            If Right(st_SqlStr, 1) = ")" Then
+                st_SqlStr = st_SqlStr + " AND (CASNumber = '" + CASNumber.Text.ToString + "')"
             Else
-                SrcProduct.SelectCommand = SrcProduct.SelectCommand + "(CASNumber = '" + CASNumber.Text.ToString + "')"
+                st_SqlStr = st_SqlStr + "WHERE (CASNumber = '" + CASNumber.Text.ToString + "')"
             End If
         End If
-        ProductList.DataBind()
+
+        '[検索項目すべて指定しない場合は結果無しとする]-------------------------------
+        If st_SqlStr = " " Then st_SqlStr = ""
+        If st_SqlStr = "" Then
+            SrcProduct.SelectCommand = ""
+        Else
+            SrcProduct.SelectCommand = SrcProduct.SelectCommand + st_SqlStr
+        End If
     End Sub
 End Class
