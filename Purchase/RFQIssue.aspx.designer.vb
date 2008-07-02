@@ -25,6 +25,15 @@ Partial Public Class RFQIssue
     Protected WithEvents RFQForm As Global.System.Web.UI.HtmlControls.HtmlForm
 
     '''<summary>
+    '''Msg コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
     '''EnqLocation コントロール。
     '''</summary>
     '''<remarks>
@@ -365,4 +374,22 @@ Partial Public Class RFQIssue
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Issue As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''Action コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''HiddenField2 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents HiddenField2 As Global.System.Web.UI.WebControls.HiddenField
 End Class

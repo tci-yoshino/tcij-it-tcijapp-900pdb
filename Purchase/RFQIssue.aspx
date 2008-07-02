@@ -171,6 +171,8 @@
                     <asp:Button ID="Issue" runat="server" Text="Issue" />
 				</div>
 			</div>
+			<asp:HiddenField ID="Action" runat="server" />
+		    <asp:HiddenField ID="HiddenField2" runat="server" />
 		</form>
 	</div><!-- Main Content Area END -->
     
