@@ -69,6 +69,7 @@
         End If
 
         url = "./SupplierListByProduct.aspx?ProductID=" & ProductID.Value
+        If Right(url, 1) = "=" Then url = "./ProductSetting.aspx"
     End Sub
 
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
