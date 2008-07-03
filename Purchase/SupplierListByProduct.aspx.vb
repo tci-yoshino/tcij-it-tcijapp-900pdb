@@ -41,20 +41,22 @@
         DBConn.Open()
         DBCommand = DBConn.CreateCommand()
 
-        DBCommand.CommandText = "SELECT ProductNumber, Name, QuoName FROM dbo.Product WHERE ProductID = " + Request.QueryString("ProductID")
-        DBReader = DBCommand.ExecuteReader()
-        DBCommand.Dispose()
-        If DBReader.Read = True Then
-            ProductNumber.Text = DBReader("ProductNumber")
-            If Not TypeOf DBReader("Name") Is DBNull Then ProductName.Text = DBReader("Name")
-            If Not TypeOf DBReader("QuoName") Is DBNull Then ProductName.Text = DBReader("QuoName")
-        End If
-        DBReader.Close()
+        If IsPostBack = False Then
+            DBCommand.CommandText = "SELECT ProductNumber, Name, QuoName FROM dbo.Product WHERE ProductID = " + Request.QueryString("ProductID")
+            DBReader = DBCommand.ExecuteReader()
+            DBCommand.Dispose()
+            If DBReader.Read = True Then
+                ProductNumber.Text = DBReader("ProductNumber")
+                If Not TypeOf DBReader("Name") Is DBNull Then ProductName.Text = DBReader("Name")
+                If Not TypeOf DBReader("QuoName") Is DBNull Then ProductName.Text = DBReader("QuoName")
+            End If
+            DBReader.Close()
 
-        SrcSupplierProduct.SelectCommand = "SELECT dbo.Supplier_Product.SupplierCode, ISNULL(dbo.Supplier.Name3, '') + N' ' + ISNULL(dbo.Supplier.Name4, '') AS [SupplierName], dbo.Supplier_Product.SupplierItemNumber, dbo.Supplier_Product.Note, REPLACE(CONVERT(char, Supplier_Product.UpdateDate, 111), '/', '-') AS UpdateDate, './SupplierListByProduct.aspx?Action=Edit&Supplier='+rtrim(ltrim(str(Supplier_Product.SupplierCode)))+'&Product=" + Request.QueryString("ProductID") + "' AS Url, './SupplierListByProduct.aspx?Action=Delete&Supplier='+rtrim(ltrim(str(Supplier_Product.SupplierCode)))+'&ProductID=" + Request.QueryString("ProductID") + "' AS DelUrl " & _
-                                           "FROM dbo.Supplier_Product LEFT OUTER JOIN dbo.Supplier ON dbo.Supplier_Product.SupplierCode = dbo.Supplier.SupplierCode " & _
-                                           "WHERE(dbo.Supplier_Product.ProductID = " + Request.QueryString("ProductID") + ")"
-        SupplierProductList.DataBind()
+            SrcSupplierProduct.SelectCommand = "SELECT dbo.Supplier_Product.SupplierCode, ISNULL(dbo.Supplier.Name3, '') + N' ' + ISNULL(dbo.Supplier.Name4, '') AS [SupplierName], dbo.Supplier_Product.SupplierItemNumber, dbo.Supplier_Product.Note, REPLACE(CONVERT(char, Supplier_Product.UpdateDate, 111), '/', '-') AS UpdateDate, './SupplierListByProduct.aspx?Action=Edit&Supplier='+rtrim(ltrim(str(Supplier_Product.SupplierCode)))+'&Product=" + Request.QueryString("ProductID") + "' AS Url, './SupplierListByProduct.aspx?Action=Delete&Supplier='+rtrim(ltrim(str(Supplier_Product.SupplierCode)))+'&ProductID=" + Request.QueryString("ProductID") + "' AS DelUrl " & _
+                                               "FROM dbo.Supplier_Product LEFT OUTER JOIN dbo.Supplier ON dbo.Supplier_Product.SupplierCode = dbo.Supplier.SupplierCode " & _
+                                               "WHERE(dbo.Supplier_Product.ProductID = " + Request.QueryString("ProductID") + ")"
+            SupplierProductList.DataBind()
+        End If
     End Sub
 
     Private Sub Page_PreRenderComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRenderComplete
