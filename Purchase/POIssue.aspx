@@ -19,7 +19,8 @@
         <form id="POForm" runat="server">
             <div class="main">
                 <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
-            
+
+<%  If Not String.IsNullOrEmpty(st_rfqLineNumber) Then%>
                 <table class="left">
                     <tr>
                         <th>RFQ Reference Number : </th>
@@ -27,7 +28,10 @@
                     </tr>
                     <tr>
                         <th>R/3 PO Number : </th>
-                        <td><asp:TextBox ID="R3PONumber" runat="server" Width="10em" MaxLength="10"></asp:TextBox></td>
+                        <td>
+                            <asp:TextBox ID="R3PONumber" runat="server" Width="10em" MaxLength="10"></asp:TextBox>
+                            <asp:TextBox ID="R3POLineNumber" runat="server" Width="5em" MaxLength="5"></asp:TextBox>
+                        </td>
                     </tr>
                     <tr>
                         <th>PO Date <span class="required">*</span> : </th>
@@ -36,8 +40,9 @@
                     <tr>
                         <th>PO-User <span class="required">*</span> : </th>
                         <td>
-                            <asp:DropDownList ID="POUser" runat="server">
+                            <asp:DropDownList ID="POUser" runat="server" DataSourceID="SrcUser">
                             </asp:DropDownList>
+                            <asp:SqlDataSource ID="SrcUser" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
                             (<asp:Label ID="POLocation" runat="server" Text=""></asp:Label>)
                         </td>
                     </tr>
@@ -50,9 +55,9 @@
                         <th>Order Quantity <span class="required">*</span> : </th>
                         <td>
                             <asp:TextBox ID="OrderQuantity" runat="server" Width="5em" MaxLength="10"></asp:TextBox>
-                            <asp:DropDownList ID="OrderUnit" runat="server">
+                            <asp:DropDownList ID="OrderUnit" runat="server" DataSourceID="SrcUnit">
                             </asp:DropDownList>
-                            x <asp:TextBox ID="OrderPiece" runat="server" Width="3em" MaxLength="10"></asp:TextBox>
+                            <asp:SqlDataSource ID="SrcUnit" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
                         </td>
                     </tr>
                     <tr>
@@ -94,8 +99,9 @@
                     <tr>
                         <th>Purpose : </th>
                         <td>
-                            <asp:DropDownList ID="Purpose" runat="server">
+                            <asp:DropDownList ID="Purpose" runat="server" DataSourceID="SrcPurpose">
                             </asp:DropDownList>
+                            <asp:SqlDataSource ID="SrcPurpose" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
                         </td>
                     </tr>
                     <tr>
@@ -162,10 +168,13 @@
                         <td><asp:TextBox ID="PurchasingRequisitionNumber" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
                     </tr>
                 </table>
-
+                <asp:HiddenField ID="RFQLineNumber" runat="server" />
+                <asp:HiddenField ID="Action" runat="server" Value="Issue" />
+                
                 <div class="btns">
                     <asp:Button ID="Issue" runat="server" Text="Issue" />
                 </div>
+<% End If%>
             </div>
         </form>
 

@@ -61,6 +61,15 @@ Partial Public Class POIssue
     Protected WithEvents R3PONumber As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
+    '''R3POLineNumber コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents R3POLineNumber As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
     '''PODate コントロール。
     '''</summary>
     '''<remarks>
@@ -77,6 +86,15 @@ Partial Public Class POIssue
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents POUser As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''SrcUser コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SrcUser As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
     '''POLocation コントロール。
@@ -124,13 +142,13 @@ Partial Public Class POIssue
     Protected WithEvents OrderUnit As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
-    '''OrderPiece コントロール。
+    '''SrcUnit コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents OrderPiece As Global.System.Web.UI.WebControls.TextBox
+    Protected WithEvents SrcUnit As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
     '''DeliveryDate コントロール。
@@ -248,6 +266,15 @@ Partial Public Class POIssue
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Purpose As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''SrcPurpose コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SrcPurpose As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
     '''RawMaterialFor コントロール。
@@ -383,6 +410,24 @@ Partial Public Class POIssue
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents PurchasingRequisitionNumber As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''RFQLineNumber コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents RFQLineNumber As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''Action コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
     '''Issue コントロール。
