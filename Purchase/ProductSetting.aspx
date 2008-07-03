@@ -12,7 +12,7 @@
 <body>
     <!-- Main Content Area -->
     <div id="content">
-        <div class="tabs"><a href="./SupplierListByProduct.aspx">Supplier List</a></div>
+        <div class="tabs"><a href="<%=url %>">Supplier List</a></div>
 
         <h3>Product Setting</h3>
 

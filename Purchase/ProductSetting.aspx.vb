@@ -18,6 +18,7 @@
     Dim DBConn As New System.Data.SqlClient.SqlConnection   'データベースコネクション	
     Dim DBCommand As System.Data.SqlClient.SqlCommand       'データベースコマンド	
     Dim DBReader As System.Data.SqlClient.SqlDataReader     'データリーダー	
+    Public url As String = ""
 
     Sub Set_DBConnectingString()
         Dim settings As ConnectionStringSettings
@@ -67,6 +68,7 @@
             End If
         End If
 
+        url = "./SupplierListByProduct.aspx?ProductID=" & ProductID.Value
     End Sub
 
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
@@ -91,6 +93,7 @@
                                 '[Product更新処理]---------------------------------------------------------------
                                 st_SqlStr = "UPDATE dbo.Product SET ProductNumber="
                                 If ProductNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & ProductNumber.Text.ToString & "',"
+                                st_SqlStr = st_SqlStr + "NumberType='" + NumberType + "',"
                                 st_SqlStr = st_SqlStr & "Name="
                                 If ProductName.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & ProductName.Text.ToString & "',"
                                 st_SqlStr = st_SqlStr & "QuoName="
@@ -107,7 +110,9 @@
                                 st_SqlStr = st_SqlStr & "WHERE ProductID = '" & ProductID.Value & "'"
                                 DBCommand.CommandText = st_SqlStr
                                 DBCommand.ExecuteNonQuery()
+                                Msg.Text = "表示データを更新しました"
 
+                                '[引き続き更新処理ができるようにUpdateDate設定]----------------------------------
                                 DBCommand.CommandText = "SELECT UpdateDate FROM dbo.Product WHERE (ProductID = " + ProductID.Value + ")"
                                 DBReader = DBCommand.ExecuteReader()
                                 DBCommand.Dispose()
@@ -135,7 +140,7 @@
                             '[Product追加処理]-----------------------------------------------------------------------
                             st_SqlStr = "INSERT INTO Product (ProductNumber,NumberType,Name,QuoName,JapaneseName,ChineseName,CASNumber,MolecularFormula,Status,ProposalDept,ProcumentDept,PD,Reference,Comment,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ("
                             If ProductNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + ProductNumber.Text.ToString + "',"
-                            st_SqlStr = st_SqlStr + "'TCI',"
+                            st_SqlStr = st_SqlStr + "'" + NumberType + "',"
                             If ProductName.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + ProductName.Text.ToString + "',"
                             If QuoName.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + QuoName.Text.ToString + "',"
                             st_SqlStr = st_SqlStr + "null,null,"
@@ -148,6 +153,22 @@
                             DBCommand.CommandText = st_SqlStr
                             DBCommand.ExecuteNonQuery()
                             Msg.Text = "表示データを登録しました"
+
+                            '[新規登録されたProductIDの取得]--------------------------------------------------
+                            DBCommand.CommandText = "Select @@IDENTITY as ProductID"
+                            DBReader = DBCommand.ExecuteReader()
+                            DBCommand.Dispose()
+                            If DBReader.Read = True Then
+                                ProductID.Value = DBReader("ProductID")
+                            End If
+                            DBReader.Close()
+                            '[引き続き更新処理ができるようにUpdateDate設定]----------------------------------
+                            DBCommand.CommandText = "SELECT UpdateDate FROM dbo.Product WHERE (ProductID = " + ProductID.Value + ")"
+                            DBReader = DBCommand.ExecuteReader()
+                            DBCommand.Dispose()
+                            If DBReader.Read = True Then
+                                UpdateDate.Value = DBReader("UpdateDate") '[同時更新チェック用]
+                            End If
                             stAction.Value = "Edit"
                         End If
                     End If
