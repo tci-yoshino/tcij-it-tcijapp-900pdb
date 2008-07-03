@@ -22,7 +22,6 @@
     Dim DBReader As System.Data.SqlClient.SqlDataReader     'データリーダー	
     Public Url As String = ""
     Public AddUrl As String = ""
-    Dim ActNai As String = ""                               '処理判断内容
 
     Sub Set_DBConnectingString()
         Dim settings As ConnectionStringSettings
