@@ -12,7 +12,7 @@
 <body>
     <!-- Main Content Area -->
     <div id="content">
-        <div class="tabs"><a href="./SuppliersProductSetting.aspx">New Suppliers Product</a></div>
+        <div class="tabs"><a href="<%=AddUrl %>">New Suppliers Product</a></div>
 
         <h3>Supplier List</h3>
 
@@ -53,19 +53,25 @@
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr>
-                        <td><asp:Label ID="SupplierCode" runat="server" Text='' /></td>
-                        <td><asp:Label ID="SupplierName" runat="server" Text='' /></td>
-                        <td><asp:Label ID="SupplierItemNumber" runat="server" Text='' /></td>
-                        <td><asp:Label ID="Note" runat="server" Text='' /></td>
-                        <td><asp:Label ID="UpdateDate" runat="server" Text='' /></td>
-                        <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl=''>Edit</asp:HyperLink></td>
-                        <td><asp:HyperLink ID="Delete" runat="server" NavigateUrl=''>Delete</asp:HyperLink></td>
+                        <td><asp:Label ID="SupplierCode" runat="server" Text='<%# Eval("SupplierCode") %>' /></td>
+                        <td><asp:Label ID="SupplierName" runat="server" Text='<%# Eval("SupplierName") %>' /></td>
+                        <td><asp:Label ID="SupplierItemNumber" runat="server" Text='<%# Eval("SupplierItemNumber") %>' /></td>
+                        <td><asp:Label ID="Note" runat="server" Text='<%# Eval("Note") %>' /></td>
+                        <td><asp:Label ID="UpdateDate" runat="server" Text='<%# Eval("UpdateDate") %>' /></td>
+                        <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl='<%# Eval("Url") %>'>Edit</asp:HyperLink></td>
+                        <td><asp:HyperLink ID="Delete" runat="server" NavigateUrl='<%# Eval("DelUrl") %>'>Delete</asp:HyperLink></td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>
         </div>
     </div><!-- Main Content Area END -->
-    <asp:SqlDataSource ID="SrcSupplierProduct" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="SrcSupplierProduct" runat="server" 
+    ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+    SelectCommand="SELECT                  dbo.Supplier_Product.SupplierCode AS [Supplier Code], ISNULL(dbo.Supplier.Name3, '') + N' ' + ISNULL(dbo.Supplier.Name4, '') 
+                                  AS [Supplier Name], dbo.Supplier_Product.SupplierItemNumber AS [Supplier Item Number], dbo.Supplier_Product.Note, 
+                                  dbo.Supplier_Product.UpdateDate AS [Update Date]
+FROM                     dbo.Supplier_Product LEFT OUTER JOIN
+                                  dbo.Supplier ON dbo.Supplier_Product.SupplierCode = dbo.Supplier.SupplierCode"></asp:SqlDataSource>
 
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
