@@ -67,9 +67,14 @@
     </div><!-- Main Content Area END -->
     <asp:SqlDataSource ID="SrcSupplierProduct" runat="server" 
     ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-    SelectCommand="SELECT                  dbo.Supplier_Product.SupplierCode AS [Supplier Code], ISNULL(dbo.Supplier.Name3, '') + N' ' + ISNULL(dbo.Supplier.Name4, '') 
-                                  AS [Supplier Name], dbo.Supplier_Product.SupplierItemNumber AS [Supplier Item Number], dbo.Supplier_Product.Note, 
-                                  dbo.Supplier_Product.UpdateDate AS [Update Date]
+    
+        SelectCommand="SELECT                  dbo.Supplier_Product.SupplierCode, ISNULL(dbo.Supplier.Name3, '') + N' ' + ISNULL(dbo.Supplier.Name4, '') AS SupplierName, 
+                                  dbo.Supplier_Product.SupplierItemNumber, dbo.Supplier_Product.Note, REPLACE(CONVERT(char, dbo.Supplier_Product.UpdateDate, 111), 
+                                  '/', '-') AS UpdateDate, 
+                                  './SuppliersProductSetting.aspx?Action=Edit&amp;Supplier=' + RTRIM(LTRIM(STR(dbo.Supplier_Product.SupplierCode))) 
+                                  + '&amp;Product=&quot; + Request.QueryString(&quot;ProductID&quot;) + &quot;&amp;Return=SP' AS Url, 
+                                  './SuppliersProductSetting.aspx?Action=Delete&amp;Supplier=' + RTRIM(LTRIM(STR(dbo.Supplier_Product.SupplierCode))) 
+                                  + '&amp;ProductID=&quot; + Request.QueryString(&quot;ProductID&quot;) + &quot;' AS DelUrl
 FROM                     dbo.Supplier_Product LEFT OUTER JOIN
                                   dbo.Supplier ON dbo.Supplier_Product.SupplierCode = dbo.Supplier.SupplierCode"></asp:SqlDataSource>
 

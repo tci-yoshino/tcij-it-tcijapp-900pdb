@@ -52,13 +52,16 @@
                     If Not TypeOf DBReader("QuoName") Is DBNull Then ProductName.Text = DBReader("QuoName")
                 End If
                 DBReader.Close()
-
                 SrcSupplierProduct.SelectCommand = "SELECT dbo.Supplier_Product.SupplierCode, ISNULL(dbo.Supplier.Name3, '') + N' ' + ISNULL(dbo.Supplier.Name4, '') AS [SupplierName], dbo.Supplier_Product.SupplierItemNumber, dbo.Supplier_Product.Note, REPLACE(CONVERT(char, Supplier_Product.UpdateDate, 111), '/', '-') AS UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&Supplier='+rtrim(ltrim(str(Supplier_Product.SupplierCode)))+'&Product=" + Request.QueryString("ProductID") + "&Return=SP' AS Url, './SuppliersProductSetting.aspx?Action=Delete&Supplier='+rtrim(ltrim(str(Supplier_Product.SupplierCode)))+'&ProductID=" + Request.QueryString("ProductID") + "' AS DelUrl " & _
                                                    "FROM dbo.Supplier_Product LEFT OUTER JOIN dbo.Supplier ON dbo.Supplier_Product.SupplierCode = dbo.Supplier.SupplierCode " & _
-                                                   "WHERE(dbo.Supplier_Product.ProductID = " + Request.QueryString("ProductID") + ")"
+                                                   "WHERE (dbo.Supplier_Product.ProductID = " + Request.QueryString("ProductID") + ")"
                 SupplierProductList.DataBind()
             End If
         Else
+            SrcSupplierProduct.SelectCommand = "SELECT dbo.Supplier_Product.SupplierCode, ISNULL(dbo.Supplier.Name3, '') + N' ' + ISNULL(dbo.Supplier.Name4, '') AS [SupplierName], dbo.Supplier_Product.SupplierItemNumber, dbo.Supplier_Product.Note, REPLACE(CONVERT(char, Supplier_Product.UpdateDate, 111), '/', '-') AS UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&Supplier='+rtrim(ltrim(str(Supplier_Product.SupplierCode)))+'&Product=" + Request.QueryString("ProductID") + "&Return=SP' AS Url, './SuppliersProductSetting.aspx?Action=Delete&Supplier='+rtrim(ltrim(str(Supplier_Product.SupplierCode)))+'&ProductID=" + Request.QueryString("ProductID") + "' AS DelUrl " & _
+                                             "FROM dbo.Supplier_Product LEFT OUTER JOIN dbo.Supplier ON dbo.Supplier_Product.SupplierCode = dbo.Supplier.SupplierCode " & _
+                                             "WHERE (dbo.Supplier_Product.ProductID = '')"
+            SupplierProductList.DataBind()
             Msg.Text = "ProductIDが設定されていません"
         End If
 
