@@ -167,7 +167,11 @@
                             DBCommand.ExecuteNonQuery()
                         End If
                         If Msg.Text.ToString = "" Then
-                            Url = "./ProductListBySupplier.aspx?Supplier=" & Supplier.Text.ToString
+                            If Request.QueryString("Return") = "SP" Then
+                                Url = "./SupplierListByProduct.aspx?ProductID=" & st_ProductID
+                            Else
+                                Url = "./ProductListBySupplier.aspx?Supplier=" & Supplier.Text.ToString
+                            End If
                             Response.Redirect(Url)
                         End If
                     End If
