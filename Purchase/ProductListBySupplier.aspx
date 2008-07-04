@@ -18,7 +18,7 @@
         <h3>Suppliers Product</h3>
 
         <div class="main">
-            <p class="attention"></p>
+            <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
             
             <table>
                 <tr>
@@ -72,8 +72,16 @@
     <asp:SqlDataSource ID="SrcSupplierProduct" runat="server" 
     ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
     
-        SelectCommand="SELECT dbo.Product.ProductID, dbo.Product.ProductNumber, dbo.Product.Name AS ProductName, dbo.Supplier_Product.SupplierItemNumber, dbo.Supplier_Product.Note, dbo.Supplier_Product.UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&amp;Supplier=' + SupplierCode.Text.ToString + '&amp;Product=' AS Url, './ProductListBySupplier.aspx?Action=Delete&amp;Supplier=' + SupplierCode.Text.ToString + '&amp;Product=' AS DelUrl
-FROM dbo.Supplier_Product LEFT OUTER JOIN dbo.Product ON dbo.Supplier_Product.ProductID = dbo.Product.ProductID"></asp:SqlDataSource>
+        
+        SelectCommand="SELECT                  dbo.Product.ProductID, dbo.Product.ProductNumber, CASE WHEN NOT Product .QuoName IS NULL 
+                                  THEN Product .QuoName ELSE Product .Name END AS ProductName, dbo.Supplier_Product.SupplierItemNumber, 
+                                  dbo.Supplier_Product.Note, REPLACE(CONVERT(char, dbo.Supplier_Product.UpdateDate, 111), '/', '-') AS UpdateDate, 
+                                  './SuppliersProductSetting.aspx?Action=Edit&amp;Supplier=&quot; + SupplierCode.Text.ToString + &quot;&amp;Product=' + RTRIM(LTRIM(STR(dbo.Product.ProductID)))
+                                   AS Url, 
+                                  './ProductListBySupplier.aspx?Action=Delete&amp;Supplier=&quot; + SupplierCode.Text.ToString + &quot;&amp;ProductID=' + RTRIM(LTRIM(STR(dbo.Product.ProductID)))
+                                   AS DelUrl
+FROM                     dbo.Supplier_Product LEFT OUTER JOIN
+                                  dbo.Product ON dbo.Supplier_Product.ProductID = dbo.Product.ProductID"></asp:SqlDataSource>
 
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
