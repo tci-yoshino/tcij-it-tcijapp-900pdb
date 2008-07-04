@@ -51,7 +51,7 @@
         End If
         DBReader.Close()
 
-        SrcSupplierProduct.SelectCommand = "SELECT Product.ProductID,Product.ProductNumber, CASE WHEN NOT Product.QuoName IS NULL THEN Product.QuoName ELSE Product.Name END AS ProductName, Supplier_Product.SupplierItemNumber, Supplier_Product.Note, REPLACE(CONVERT(char, Supplier_Product.UpdateDate, 111), '/', '-') AS UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&Supplier=" + SupplierCode.Text.ToString + "&Product=' AS Url, './ProductListBySupplier.aspx?Action=Delete&Supplier=" + SupplierCode.Text.ToString + "&ProductID=' AS DelUrl " & _
+        SrcSupplierProduct.SelectCommand = "SELECT Product.ProductID,Product.ProductNumber, CASE WHEN NOT Product.QuoName IS NULL THEN Product.QuoName ELSE Product.Name END AS ProductName, Supplier_Product.SupplierItemNumber, Supplier_Product.Note, REPLACE(CONVERT(char, Supplier_Product.UpdateDate, 111), '/', '-') AS UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&Supplier=" + SupplierCode.Text.ToString + "&Product='+rtrim(ltrim(str(Product.ProductID))) AS Url, './ProductListBySupplier.aspx?Action=Delete&Supplier=" + SupplierCode.Text.ToString + "&ProductID='+rtrim(ltrim(str(Product.ProductID))) AS DelUrl " & _
                                            "FROM Supplier_Product LEFT OUTER JOIN Product ON Supplier_Product.ProductID = Product.ProductID " & _
                                            "WHERE (Supplier_Product.SupplierCode = '" & SupplierCode.Text.ToString & "')"
         SupplierProductList.DataBind()

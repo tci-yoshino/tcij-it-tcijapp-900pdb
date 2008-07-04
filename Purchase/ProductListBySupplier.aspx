@@ -59,9 +59,9 @@
                         <td><asp:Label ID="SupplierItemNumber" runat="server" Text='<%# Eval("SupplierItemNumber") %>' /></td>
                         <td><asp:Label ID="Note" runat="server" Text='<%# Eval("Note") %>' /></td>
                         <td><asp:Label ID="UpdateDate" runat="server" Text='<%# Eval("UpdateDate") %>' /></td>
-                        <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl='<%# Eval("Url")+Trim(str(Eval("ProductID"))) %>'>Edit</asp:HyperLink></td>
+                        <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl='<%# Eval("Url") %>'>Edit</asp:HyperLink></td>
                         <td>
-                            <asp:HyperLink ID="Delete" runat="server" NavigateUrl='<%# Eval("DelUrl")+Trim(str(Eval("ProductID"))) %>'>Delete</asp:HyperLink>
+                            <asp:HyperLink ID="Delete" runat="server" NavigateUrl='<%# Eval("DelUrl") %>'>Delete</asp:HyperLink>
                             <asp:HiddenField ID="ProductID" runat="server" Value='<%# Eval("ProductID") %>' />
                         </td>
                     </tr>
