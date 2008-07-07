@@ -33,7 +33,7 @@
 					<tr>
 						<th>Supplier Code <span class="required">*</span> : </th>
 						<td>
-						    <asp:TextBox ID="SupplierCode" runat="server" Width="7em" MaxLength="10" ReadOnly="true" CssClass="readonly"></asp:TextBox>
+						    <asp:TextBox ID="SupplierCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
 						    <asp:ImageButton ID="SupplierSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="popup('./SupplierSelect.aspx')" />
 						</td>
 					</tr>
@@ -55,7 +55,7 @@
 					<tr>
 						<th>Maker Code : </th>
 						<td>
-						    <asp:TextBox ID="MakerCode" runat="server" Width="7em" MaxLength="10" ReadOnly="true" CssClass="readonly"></asp:TextBox>
+						    <asp:TextBox ID="MakerCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
 						    <asp:ImageButton ID="MakerSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="popup('./MakerSelect.aspx')" />
 						</td>
 					</tr>
