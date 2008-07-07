@@ -374,22 +374,4 @@ Partial Public Class RFQIssue
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Issue As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
-    '''Action コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
-
-    '''<summary>
-    '''HiddenField2 コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents HiddenField2 As Global.System.Web.UI.WebControls.HiddenField
 End Class
