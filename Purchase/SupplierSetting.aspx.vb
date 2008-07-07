@@ -26,7 +26,6 @@
     Dim DBConn2 As New System.Data.SqlClient.SqlConnection  'データベースコネクション	
     Dim DBCommand2 As System.Data.SqlClient.SqlCommand      'データベースコマンド	
     Dim DBReader2 As System.Data.SqlClient.SqlDataReader    'データリーダー	
-    Dim st_CountryCode As String = ""                       '選択したCountryCode
     Dim st_RegionCode As String = ""                        '選択したRegionCode
     Public url As String = ""
 
@@ -61,22 +60,12 @@
             StAction.Value = Request.QueryString("Action")
 
             '[Country設定]----------------------------------------------------------------
-            DBCommand.CommandText = "SELECT CountryName FROM v_Country ORDER BY CountryName"
+            DBCommand.CommandText = "SELECT CountryCode,CountryName FROM v_Country ORDER BY CountryName"
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             Country.Items.Clear()
             Do Until DBReader.Read = False
-                Country.Items.Add(DBReader("CountryName"))
-            Loop
-            DBReader.Close()
-
-            '[Region設定]-----------------------------------------------------------------
-            DBCommand.CommandText = "SELECT name FROM s_Region ORDER BY name"
-            DBReader = DBCommand.ExecuteReader()
-            DBCommand.Dispose()
-            Region.Items.Clear()
-            Do Until DBReader.Read = False
-                Region.Items.Add(DBReader("Name"))
+                Country.Items.Add(New ListItem(DBReader("CountryName"), DBReader("CountryCode")))
             Loop
             DBReader.Close()
 
@@ -92,23 +81,17 @@
             Loop
             DBReader.Close()
 
-            If Request.QueryString("Action") = "Edit" Then
+            If StAction.Value = "Edit" Then
                 Code.Text = Trim(Request.QueryString("Code"))
                 DataDisplay1()
-                SetCountryCode()
                 SetTownName()
                 SetRegionCode()
                 DataDisplay2()
-            Else
-                SetCountryCode()
-                SetTownName()
-                SetRegionCode()
             End If
         End If
     End Sub
 
     Protected Sub Country_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles Country.SelectedIndexChanged
-        SetCountryCode()
         SetTownName()
     End Sub
 
@@ -138,7 +121,6 @@
                     Dim sqlTran As System.Data.SqlClient.SqlTransaction = DBConn.BeginTransaction()
                     DBCommand.Transaction = sqlTran
                     Try
-                        SetCountryCode()
                         SetRegionCode()
                         If StAction.Value = "Edit" Then
                             '[Supplierの更新]-------------------------------------------------------------------
@@ -171,7 +153,7 @@
                                 st_SQLSTR = st_SQLSTR & "PostalCode="
                                 If PostalCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & PostalCode.Text.ToString & "',"
                                 st_SQLSTR = st_SQLSTR & "CountryCode="
-                                If Country.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & st_CountryCode & "',"
+                                If Country.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Country.Text.ToString & "',"
                                 st_SQLSTR = st_SQLSTR & "RegionCode="
                                 If Region.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & st_RegionCode & "',"
                                 st_SQLSTR = st_SQLSTR & "Telephone="
@@ -210,7 +192,7 @@
                             If Address2.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Address2.Text.ToString & "',"
                             If Address3.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Address3.Text.ToString & "',"
                             If PostalCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & PostalCode.Text.ToString & "',"
-                            If Country.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & st_CountryCode & "',"
+                            If Country.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Country.Text.ToString & "',"
                             If Region.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & st_RegionCode & "',"
                             If Telephone.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Telephone.Text.ToString & "',"
                             If Fax.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Fax.Text.ToString & "',"
@@ -263,38 +245,21 @@
         End If
     End Sub
 
-    Public Sub SetCountryCode()
-        '[選択したCountryCode取得]-------------------------------------------------------------------
-        DBCommand.CommandText = "SELECT CountryCode FROM [s_Country] WHERE name='" & Country.Text.ToString & "'"
-        DBReader = DBCommand.ExecuteReader()
-        DBCommand.Dispose()
-        If DBReader.Read = True Then
-            st_CountryCode = DBReader("CountryCode")
-        End If
-        DBReader.Close()
-    End Sub
-
     Public Sub SetTownName()
-        '[選択したCountryCodeで都市名選出]-----------------------------------------------------------
-        DBCommand.CommandText = "SELECT name FROM s_Region WHERE countrycode='" & st_CountryCode & "' ORDER BY name"
+        '[RegionにText及びValue設定]----------------------------------------------------------------
+        DBCommand.CommandText = "SELECT CountryCode,RegionCode,Name FROM s_Region WHERE CountryCode='" & Country.Text.ToString & "' ORDER BY name"
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
         Region.Items.Clear()
         Do Until DBReader.Read = False
-            Region.Items.Add(DBReader("Name"))
+            Region.Items.Add(New ListItem(DBReader("Name"), Left(DBReader("CountryCode") + "     ", 5) + DBReader("RegionCode")))
         Loop
         DBReader.Close()
     End Sub
 
     Public Sub SetRegionCode()
-        '[選択したRegionCode取得]-------------------------------------------------------------------
-        DBCommand.CommandText = "SELECT RegionCode FROM s_Region WHERE (CountryCode = '" & st_CountryCode & "') AND (Name = '" & Region.Text.ToString & "')"
-        DBReader = DBCommand.ExecuteReader()
-        DBCommand.Dispose()
-        If DBReader.Read = True Then
-            st_RegionCode = DBReader("RegionCode")
-        End If
-        DBReader.Close()
+        '[選択したRegionからRegionCode取得]---------------------------------------------------------
+        st_RegionCode = Trim(Mid(Region.Text.ToString, 6, Len(Region.Text.ToString) - 5))
     End Sub
 
     Public Sub DataDisplay1()
@@ -321,14 +286,7 @@
             If Not TypeOf DBReader("Website") Is DBNull Then Website.Text = DBReader("Website")
             If Not TypeOf DBReader("Comment") Is DBNull Then R3Comment.Text = DBReader("Comment")
             If Not TypeOf DBReader("Note") Is DBNull Then Comment.Text = DBReader("Note")
-
-            DBCommand2.CommandText = "SELECT name FROM [s_Country] WHERE CountryCode='" & DBReader("CountryCode") & "'"
-            DBReader2 = DBCommand2.ExecuteReader()
-            DBCommand2.Dispose()
-            If DBReader2.Read = True Then
-                Country.Text = DBReader2("name")
-            End If
-            DBReader2.Close()
+            Country.SelectedValue = DBReader("CountryCode")
             UpdateDate.Value = DBReader("UpdateDate")
             DBReader.Close()
         Else
@@ -342,22 +300,10 @@
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
         If DBReader.Read = True Then
-            '[Country.Item設定]-----------------------------------------------------------------
-            DBCommand2.CommandText = "SELECT name FROM [s_Country] WHERE CountryCode='" & DBReader("CountryCode") & "'"
-            DBReader2 = DBCommand2.ExecuteReader()
-            DBCommand2.Dispose()
-            If DBReader2.Read = True Then
-                Country.Text = DBReader2("name")
-            End If
-            DBReader2.Close()
-            '[Region.Item設定]------------------------------------------------------------------
-            DBCommand2.CommandText = "SELECT Name FROM dbo.s_Region WHERE (CountryCode = '" & DBReader("CountryCode") & "') AND (RegionCode = '" & DBReader("RegionCode") & "')"
-            DBReader2 = DBCommand2.ExecuteReader()
-            DBCommand2.Dispose()
-            If DBReader2.Read = True Then
-                Region.Text = DBReader2("name")
-            End If
-            DBReader2.Close()
+            '[Country,Regionにデータ表示]-------------------------------------------------------
+            Country.Text = DBReader("CountryCode")
+            Region.Text = Left(DBReader("CountryCode") + "     ", 5) + DBReader("RegionCode")
+
             '[DefaultQuoLocation.Item設定]------------------------------------------------------
             DBCommand2.CommandText = "SELECT QuoLocationCode FROM dbo.IrregularRFQLocation WHERE (SupplierCode = '" & Code.Text.ToString & "')"
             DBReader2 = DBCommand2.ExecuteReader()
