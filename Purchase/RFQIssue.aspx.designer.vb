@@ -43,6 +43,15 @@ Partial Public Class RFQIssue
     Protected WithEvents EnqLocation As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
+    '''SDS_RFQIssue_Loc コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SDS_RFQIssue_Loc As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
     '''EnqUser コントロール。
     '''</summary>
     '''<remarks>
@@ -50,6 +59,15 @@ Partial Public Class RFQIssue
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents EnqUser As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''SDS_RFQIssue_Enq_U コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SDS_RFQIssue_Enq_U As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
     '''ProductNumber コントロール。
@@ -178,6 +196,15 @@ Partial Public Class RFQIssue
     Protected WithEvents QuoUser As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
+    '''SDS_RFQIssue_Que_U コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SDS_RFQIssue_Que_U As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
     '''Purpose コントロール。
     '''</summary>
     '''<remarks>
@@ -185,6 +212,15 @@ Partial Public Class RFQIssue
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Purpose As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''SDS_RFQIssue_Pur コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SDS_RFQIssue_Pur As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
     '''RequiredPurity コントロール。
@@ -248,6 +284,15 @@ Partial Public Class RFQIssue
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents EnqPiece_1 As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''SDS_RFQIssue_Qua コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SDS_RFQIssue_Qua As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
     '''SupplierItemNumber_1 コントロール。

@@ -10,13 +10,14 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
 </head>
 <body>
+
+		<form id="RFQForm" runat="server">
 	<!-- Main Content Area -->
 	<div id="content">
 		<div class="tabs"></div>
 
 		<h3>RFQ Issue</h3>
 
-		<form id="RFQForm" runat="server">
 			<div class="main">
 			    <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 			    
@@ -24,32 +25,49 @@
 					<tr>
 						<th>Enq-Location <span class="required">*</span> : </th>
 						<td>
-                            <asp:DropDownList ID="EnqLocation" runat="server">
+                            <asp:DropDownList ID="EnqLocation" runat="server" AutoPostBack="True" 
+                                DataSourceID="SDS_RFQIssue_Loc" DataTextField="Name" 
+                                DataValueField="LocationCode">
                             </asp:DropDownList>
+						    <asp:SqlDataSource ID="SDS_RFQIssue_Loc" runat="server" 
+                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+                                SelectCommand="SELECT LocationCode, Name FROM s_Location ORDER BY Name">
+                            </asp:SqlDataSource>
 						</td>
 					</tr>
 					<tr>
 						<th>Enq-User <span class="required">*</span> : </th>
 						<td>
-                            <asp:DropDownList ID="EnqUser" runat="server">
+                            <asp:DropDownList ID="EnqUser" runat="server" DataSourceID="SDS_RFQIssue_Enq_U" 
+                                DataTextField="Name" DataValueField="UserID">
                             </asp:DropDownList>
+						    <asp:SqlDataSource ID="SDS_RFQIssue_Enq_U" runat="server" 
+                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+                                SelectCommand="SELECT [UserID], [Name] FROM [v_User] WHERE ([LocationCode] = @LocationCode) ORDER BY [Name]">
+                                <SelectParameters>
+                                    <asp:ControlParameter ControlID="EnqLocation" Name="LocationCode" 
+                                        PropertyName="SelectedValue" Type="String" />
+                                </SelectParameters>
+                            </asp:SqlDataSource>
 						</td>
 					</tr>
 					<tr>
 						<th>Product Number <span class="required">*</span> : </th>
 						<td>
-						    <asp:TextBox ID="ProductNumber" runat="server" Width="7em" MaxLength="10" ReadOnly="true" CssClass="readonly"></asp:TextBox> 
-                            <asp:ImageButton ID="ProductSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="popup('./ProductSelect.aspx')" />
+						    <asp:TextBox ID="ProductNumber" runat="server" Width="7em" MaxLength="10"></asp:TextBox> 
+                            <asp:ImageButton ID="ProductSelect" runat="server" 
+                                ImageUrl="./Image/Search.gif" CssClass="magnify"  
+                                OnClientClick="return ProductNumber_onclick()" />
                         </td>
 					</tr>
 					<tr>
 						<th>Product Name <span class="required">*</span> : </th>
-						<td><asp:TextBox ID="ProductName" runat="server" Width="21em" ReadOnly="true" CssClass="readonly"></asp:TextBox></td>
+						<td><asp:TextBox ID="ProductName" runat="server" Width="21em" ReadOnly="true" CssClass="readonly">12 </asp:TextBox></td>
 					</tr>
 					<tr>
 						<th>Supplier Code <span class="required">*</span> : </th>
 						<td>
-						    <asp:TextBox ID="SupplierCode" runat="server" Width="7em" MaxLength="10" ReadOnly="true" CssClass="readonly"></asp:TextBox>
+						    <asp:TextBox ID="SupplierCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
 						    <asp:ImageButton ID="SupplierSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="popup('./SupplierSelect.aspx')" />
 						</td>
 					</tr>
@@ -67,7 +85,7 @@
 					<tr>
 						<th>Maker Code : </th>
 						<td>
-						    <asp:TextBox ID="MakerCode" runat="server" Width="7em" MaxLength="10" ReadOnly="true" CssClass="readonly"></asp:TextBox>
+						    <asp:TextBox ID="MakerCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
 						    <asp:ImageButton ID="MakerSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="popup('./MakerSelect.aspx')" />
 						</td>
 					</tr>
@@ -84,22 +102,39 @@
 					<tr>
 						<th>Quo-Location <span class="required">*</span> : </th>
 						<td>
-                            <asp:DropDownList ID="QuoLocation" runat="server">
+                            <asp:DropDownList ID="QuoLocation" runat="server" AppendDataBoundItems="True" 
+                                AutoPostBack="True" DataSourceID="SDS_RFQIssue_Loc" DataTextField="Name" 
+                                DataValueField="LocationCode">
+                                <asp:ListItem>Direct</asp:ListItem>
                             </asp:DropDownList>
 						</td>
 					</tr>
 					<tr>
 						<th>Quo-User : </th>
 						<td>
-                            <asp:DropDownList ID="QuoUser" runat="server">
+                            <asp:DropDownList ID="QuoUser" runat="server" DataSourceID="SDS_RFQIssue_Que_U" 
+                                DataTextField="Name" DataValueField="UserID">
                             </asp:DropDownList>
+						    <asp:SqlDataSource ID="SDS_RFQIssue_Que_U" runat="server" 
+                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+                                SelectCommand="SELECT [UserID], [Name] FROM [v_User] WHERE ([LocationCode] = @LocationCode) ORDER BY [Name]">
+                                <SelectParameters>
+                                    <asp:ControlParameter ControlID="QuoLocation" Name="LocationCode" 
+                                        PropertyName="SelectedValue" Type="String" />
+                                </SelectParameters>
+                            </asp:SqlDataSource>
 						</td>
 					</tr>
 					<tr>
 						<th>Purpose <span class="required">*</span> : </th>
 						<td>
-                            <asp:DropDownList ID="Purpose" runat="server">
+                            <asp:DropDownList ID="Purpose" runat="server" DataSourceID="SDS_RFQIssue_Pur" 
+                                DataTextField="Text" DataValueField="PurposeCode">
                             </asp:DropDownList>
+						    <asp:SqlDataSource ID="SDS_RFQIssue_Pur" runat="server" 
+                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+                                SelectCommand="SELECT [PurposeCode], [Text] FROM [Purpose] ORDER BY [SortOrder]">
+                            </asp:SqlDataSource>
 						</td>
 					</tr>
 					<tr>
@@ -129,9 +164,16 @@
                         <th>1</th>
                         <td>
                             <asp:TextBox ID="EnqQuantity_1" runat="server" Width="5em" MaxLength="18" CssClass="number"></asp:TextBox>
-                            <asp:DropDownList ID="EnqUnit_1" runat="server">
+                            <asp:DropDownList ID="EnqUnit_1" runat="server" AppendDataBoundItems="True" 
+                                DataSourceID="SDS_RFQIssue_Qua" DataTextField="UnitCode" 
+                                DataValueField="UnitCode">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                             x <asp:TextBox ID="EnqPiece_1" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox>
+                            <asp:SqlDataSource ID="SDS_RFQIssue_Qua" runat="server" 
+                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+                                SelectCommand="SELECT [UnitCode] FROM [PurchasingUnit] ORDER BY [UnitCode]">
+                            </asp:SqlDataSource>
                         </td>
                         <td><asp:TextBox ID="SupplierItemNumber_1" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
                     </tr>
@@ -139,7 +181,10 @@
                         <th>2</th>
                         <td>
                             <asp:TextBox ID="EnqQuantity_2" runat="server" Width="5em" MaxLength="18" CssClass="number"></asp:TextBox>
-                            <asp:DropDownList ID="EnqUnit_2" runat="server">
+                            <asp:DropDownList ID="EnqUnit_2" runat="server" AppendDataBoundItems="True" 
+                                DataSourceID="SDS_RFQIssue_Qua" DataTextField="UnitCode" 
+                                DataValueField="UnitCode">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                             x <asp:TextBox ID="EnqPiece_2" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox>
                         </td>
@@ -149,7 +194,10 @@
                         <th>3</th>
                         <td>
                             <asp:TextBox ID="EnqQuantity_3" runat="server" Width="5em" MaxLength="18" CssClass="number"></asp:TextBox>
-                            <asp:DropDownList ID="EnqUnit_3" runat="server">
+                            <asp:DropDownList ID="EnqUnit_3" runat="server" AppendDataBoundItems="True" 
+                                DataSourceID="SDS_RFQIssue_Qua" DataTextField="UnitCode" 
+                                DataValueField="UnitCode">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                             x <asp:TextBox ID="EnqPiece_3" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox>
                         </td>
@@ -159,7 +207,10 @@
                         <th>4</th>
                         <td>
                             <asp:TextBox ID="EnqQuantity_4" runat="server" Width="5em" MaxLength="18" CssClass="number"></asp:TextBox>
-                            <asp:DropDownList ID="EnqUnit_4" runat="server">
+                            <asp:DropDownList ID="EnqUnit_4" runat="server" AppendDataBoundItems="True" 
+                                DataSourceID="SDS_RFQIssue_Qua" DataTextField="UnitCode" 
+                                DataValueField="UnitCode">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                             x <asp:TextBox ID="EnqPiece_4" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox>
                         </td>
@@ -171,10 +222,17 @@
                     <asp:Button ID="Issue" runat="server" Text="Issue" />
 				</div>
 			</div>
-		</form>
 	</div><!-- Main Content Area END -->
     
 	<!-- Footer -->
 	<!--#include virtual="./Footer.html" --><!-- Footer END -->
-</body>
+		</form>
+		<script language ="javascript" type="text/javascript">
+		function ProductNumber_onclick() {
+		var txt = document.getElementById('ProductNumber').value;
+		popup('./ProductSelect.aspx?ProductNumber=' + txt);
+		document.getElementById('ProductName').value="125"; 
+		}
+		</script>
+	</body>
 </html>
