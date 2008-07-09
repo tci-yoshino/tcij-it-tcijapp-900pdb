@@ -8,6 +8,19 @@
     <link rel="stylesheet" href="./CSS/Style.css" type="text/css" media="screen,print" />
     <script type="text/javascript" src="./JS/Common.js"></script>
     <script type="text/javascript" src="./JS/Colorful.js"></script>
+    <script type="text/javascript">
+<!--
+function deleteLine(code) {
+    if (!confirm("It can't be restored once deleted.\nAre you sure to delete this entry?")) {
+        return false;
+    }
+    document.DeleteForm.SupplierCode = code;
+    document.DeleteForm.submit();
+
+    return true;
+}
+//-->
+    </script>
 </head>
 <body>
     <!-- Main Content Area -->
@@ -32,6 +45,12 @@
         </div>
 
         <div class="list">
+            <form id="DeleteForm" action="" method="post">
+                <asp:HiddenField ID="ProductID" runat="server" Value='' />
+                <input type="hidden" id="SupplierCode" />
+                <input type="hidden" id="Action" value="Delete" />
+            </form>
+        
             <asp:ListView ID="SupplierProductList" runat="server" DataSourceID="SrcSupplierProduct">
                 <LayoutTemplate>
                     <table ID="itemPlaceholderContainer" runat="server" border="0" style="">
@@ -59,7 +78,7 @@
                         <td><asp:Label ID="Note" runat="server" Text='<%# Eval("Note") %>' /></td>
                         <td><asp:Label ID="UpdateDate" runat="server" Text='<%# Eval("UpdateDate") %>' /></td>
                         <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl='<%# Eval("Url") %>'>Edit</asp:HyperLink></td>
-                        <td><asp:HyperLink ID="Delete" runat="server" NavigateUrl='<%# Eval("DelUrl") %>'>Delete</asp:HyperLink></td>
+                        <td><asp:HyperLink ID="Delete" runat="server" NavigateUrl='javascript:deleteLine(<%# Eval("SupplierCode") %>);'>Delete</asp:HyperLink></td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>
