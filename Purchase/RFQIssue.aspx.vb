@@ -1,8 +1,9 @@
 ﻿Public Partial Class RFQIssue
     Inherits CommonPage
     Public DBConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
-    Public DBConn As New System.Data.SqlClient.SqlConnection   'データベースコネクション
-    Public DBCommand As System.Data.SqlClient.SqlCommand       'データベースコマンド
+    Public DBConn As New System.Data.SqlClient.SqlConnection
+    Public DBCommand As System.Data.SqlClient.SqlCommand
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Dim st_ProductID As String = ""
         Dim st_SupplierCode As String = ""
@@ -70,7 +71,14 @@
 
 
 
-
+        Else
+            'ReadOnly項目の設定
+            ProductName.Text = Request.Form("ProductName").ToString
+            R3SupplierCode.Text = Request.Form("R3SupplierCode").ToString
+            SupplierName.Text = Request.Form("SupplierName").ToString
+            SupplierCountry.Text = Request.Form("SupplierCountry").ToString
+            MakerName.Text = Request.Form("MakerName").ToString
+            MakerCountry.Text = Request.Form("MakerCountry").ToString
         End If
 
     End Sub
@@ -82,7 +90,7 @@
     End Sub
 
     Private Sub Page_PreRenderComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRenderComplete
-        ProductName.Text = "999"
+        'ProductName.Text = "999"
     End Sub
 
     Private Sub Page_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload

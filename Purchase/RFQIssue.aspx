@@ -57,43 +57,49 @@
 						    <asp:TextBox ID="ProductNumber" runat="server" Width="7em" MaxLength="10"></asp:TextBox> 
                             <asp:ImageButton ID="ProductSelect" runat="server" 
                                 ImageUrl="./Image/Search.gif" CssClass="magnify"  
-                                OnClientClick="return ProductNumber_onclick()" />
+                                OnClientClick="return ProductSelect_onclick()" />
                         </td>
 					</tr>
 					<tr>
 						<th>Product Name <span class="required">*</span> : </th>
-						<td><asp:TextBox ID="ProductName" runat="server" Width="21em" ReadOnly="true" CssClass="readonly">12 </asp:TextBox></td>
+						<td><asp:TextBox ID="ProductName" runat="server" Width="21em" ReadOnly="True" 
+                                CssClass="readonly" EnableViewState="False"></asp:TextBox></td>
 					</tr>
 					<tr>
 						<th>Supplier Code <span class="required">*</span> : </th>
 						<td>
 						    <asp:TextBox ID="SupplierCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
-						    <asp:ImageButton ID="SupplierSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="popup('./SupplierSelect.aspx')" />
+						    <asp:ImageButton ID="SupplierSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="return SupplierSelect_onclick()" />
 						</td>
 					</tr>
 					<tr>
 						<th>R/3 Supplier Code : </th>
-						<td><asp:TextBox ID="R3SupplierCode" runat="server" Width="7em" MaxLength="10" ReadOnly="true" CssClass="readonly"></asp:TextBox></td>
+						<td><asp:TextBox ID="R3SupplierCode" runat="server" Width="7em" MaxLength="10" 
+                                ReadOnly="true" CssClass="readonly" EnableViewState="False"></asp:TextBox></td>
 					</tr>
 					<tr>
 						<th>Supplier Name / Country <span class="required">*</span> : </th>
 						<td>
-						    <asp:TextBox ID="SupplierName" runat="server" Width="21em" ReadOnly="true" CssClass="readonly"></asp:TextBox>
-						    <asp:TextBox ID="SupplierCountry" runat="server" Width="4em" ReadOnly="true" CssClass="readonly"></asp:TextBox>
+						    <asp:TextBox ID="SupplierName" runat="server" Width="21em" ReadOnly="true" 
+                                CssClass="readonly" EnableViewState="False"></asp:TextBox>
+						    <asp:TextBox ID="SupplierCountry" runat="server" Width="4em" ReadOnly="true" 
+                                CssClass="readonly" EnableViewState="False"></asp:TextBox>
 						</td>
 					</tr>
 					<tr>
 						<th>Maker Code : </th>
 						<td>
 						    <asp:TextBox ID="MakerCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
-						    <asp:ImageButton ID="MakerSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="popup('./MakerSelect.aspx')" />
+						    <asp:ImageButton ID="MakerSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="return MakerSelect_onclick()" />
 						</td>
 					</tr>
 					<tr>
 						<th>Maker Name / Country : </th>
 						<td>
-						    <asp:TextBox ID="MakerName" runat="server" Width="21em" ReadOnly="true" CssClass="readonly"></asp:TextBox>
-						    <asp:TextBox ID="MakerCountry" runat="server" Width="4em" ReadOnly="true" CssClass="readonly"></asp:TextBox>
+						    <asp:TextBox ID="MakerName" runat="server" Width="21em" ReadOnly="true" 
+                                CssClass="readonly" EnableViewState="False"></asp:TextBox>
+						    <asp:TextBox ID="MakerCountry" runat="server" Width="4em" ReadOnly="true" 
+                                CssClass="readonly" EnableViewState="False"></asp:TextBox>
 						</td>
 					</tr>
 				</table>
@@ -228,10 +234,17 @@
 	<!--#include virtual="./Footer.html" --><!-- Footer END -->
 		</form>
 		<script language ="javascript" type="text/javascript">
-		function ProductNumber_onclick() {
-		var txt = document.getElementById('ProductNumber').value;
-		popup('./ProductSelect.aspx?ProductNumber=' + txt);
-		document.getElementById('ProductName').value="125"; 
+		function ProductSelect_onclick() {
+    		var txt = document.getElementById('ProductNumber').value;
+	    	popup('./ProductSelect.aspx?ProductNumber=' + txt);
+		}
+		function SupplierSelect_onclick() {
+    		var txt = document.getElementById('SupplierCode').value;
+	    	popup('./RFQSupplierSelect.aspx?SupplierCode=' + txt);
+		}
+		function MakerSelect_onclick() {
+    		var txt = document.getElementById('MakerCode').value;
+	    	popup('./MakerSelect.aspx?MakerCode=' + txt);
 		}
 		</script>
 	</body>
