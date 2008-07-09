@@ -22,6 +22,7 @@
     Dim DBReader As System.Data.SqlClient.SqlDataReader     'データリーダー	
     Public Url As String = ""
     Public AddUrl As String = ""
+    Public ImpUrl As String = ""
 
     Sub Set_DBConnectingString()
         Dim settings As ConnectionStringSettings
@@ -77,6 +78,9 @@
 
         '[New Suppliers ProductのURL設定]------------------------------------------------------------
         AddUrl = "./SuppliersProductSetting.aspx?Supplier=" & SupplierCode.Text.ToString
+
+        '[Excel ImportのURL設定]---------------------------------------------------------------------
+        ImpUrl = "./SuppliersProductImport.aspx?Supplier=" & SupplierCode.Text.ToString
     End Sub
 
 End Class

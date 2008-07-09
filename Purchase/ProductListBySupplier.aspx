@@ -13,7 +13,7 @@
     <form id="form1" runat="server">
     <!-- Main Content Area -->
     <div id="content">
-        <div class="tabs"><a href="<%=AddUrl %>">New Suppliers Product</a> | <a href="./SuppliersProductImport.aspx">Excel Import</a></div>
+        <div class="tabs"><a href="<%=AddUrl %>">New Suppliers Product</a> | <a href="<%=ImpUrl %>">Excel Import</a></div>
 
         <h3>Suppliers Product</h3>
 

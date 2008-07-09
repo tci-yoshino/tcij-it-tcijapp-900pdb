@@ -18,7 +18,7 @@
 
         <form id="ExcelImportForm" runat="server">
             <div class="main">
-                <p class="attention"></p>
+                <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 
                 <table>
                     <tr>
