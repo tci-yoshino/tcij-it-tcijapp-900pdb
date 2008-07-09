@@ -30,8 +30,6 @@
                         ProductNumber.CssClass = "readonly"
                         ProductName.CssClass = "readonly"
                         ProductSelect.Visible = False
-                    Else
-
                     End If
                     DBReader.Close()
                 End If
@@ -56,23 +54,12 @@
                         SupplierCountry.ReadOnly = True
                         SupplierCountry.CssClass = "readonly"
                         SupplierSelect.Visible = False
-                    Else
-
                     End If
                     DBReader.Close()
                 End If
             End If
-
-
-
-
-
-
-
-
-
         Else
-            'ReadOnly項目の設定
+            'ReadOnly項目の再設定
             ProductName.Text = Request.Form("ProductName").ToString
             R3SupplierCode.Text = Request.Form("R3SupplierCode").ToString
             SupplierName.Text = Request.Form("SupplierName").ToString
@@ -80,7 +67,6 @@
             MakerName.Text = Request.Form("MakerName").ToString
             MakerCountry.Text = Request.Form("MakerCountry").ToString
         End If
-
     End Sub
 
     Private Sub Page_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
@@ -89,12 +75,66 @@
         End If
     End Sub
 
-    Private Sub Page_PreRenderComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRenderComplete
-        'ProductName.Text = "999"
-    End Sub
-
     Private Sub Page_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload
         DBConn.Close()
+
+    End Sub
+
+    Protected Sub Issue_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Issue.Click
+        Dim st_Indispensability As String = ""
+        If Request.QueryString("Action") <> "Issue" Then
+            Exit Sub
+        End If
+        '必須入力項目チェック
+        If EnqLocation.SelectedValue = "" Then
+            st_Indispensability = st_Indispensability & "Enq-Location "
+        End If
+        If EnqUser.SelectedValue = "" Then
+            st_Indispensability = st_Indispensability & "Enq-User "
+        End If
+        If ProductNumber.Text = "" Then
+            st_Indispensability = st_Indispensability & "ProductNumber "
+        End If
+        If SupplierCode.Text = "" Then
+            st_Indispensability = st_Indispensability & "SupplierCode "
+        End If
+        If QuoLocation.SelectedValue = "" Then
+            st_Indispensability = st_Indispensability & "Quo-Location "
+        End If
+        If Purpose.SelectedValue <> "" Then
+            st_Indispensability = st_Indispensability & "Purpose "
+        End If
+        If st_Indispensability <> "" Then
+            Msg.Text = st_Indispensability & "を設定して下さい。"
+        End If
+
+        'enq用入力チェック。作成中
+        If EnqQuantity_1.Text <> "" And EnqUnit_1.SelectedValue <> "" And EnqPiece_1.Text <> "" Then
+
+        End If
+        If EnqQuantity_2.Text <> "" And EnqUnit_2.SelectedValue <> "" And EnqPiece_2.Text <> "" Then
+
+        End If
+        If EnqQuantity_3.Text <> "" And EnqUnit_3.SelectedValue <> "" And EnqPiece_3.Text <> "" Then
+
+        End If
+        If EnqQuantity_4.Text <> "" And EnqUnit_4.SelectedValue <> "" And EnqPiece_4.Text <> "" Then
+
+        End If
+        'EnqQuantity_1	EnqUnit_1	EnqPiece_1
+        'EnqQuantity_2	EnqUnit_2	EnqPiece_2
+        'EnqQuantity_3	EnqUnit_3	EnqPiece_3
+        'EnqQuantity_4	EnqUnit_4	EnqPiece_4
+
+        'めもめも
+        ' = "INSERT INTO TestInsert(Name, State)  _"
+        '& "VALUES (@Name, @State);" _
+        '& " SELECT ID, Name, Stat FROM TestInsert WHERE (ID = SCOPE_IDENTITY())"
+
+
+
+
+
 
     End Sub
 End Class

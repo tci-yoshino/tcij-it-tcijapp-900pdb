@@ -61,7 +61,7 @@
                         </td>
 					</tr>
 					<tr>
-						<th>Product Name <span class="required">*</span> : </th>
+						<th>Product Name : </th>
 						<td><asp:TextBox ID="ProductName" runat="server" Width="21em" ReadOnly="True" 
                                 CssClass="readonly" EnableViewState="False"></asp:TextBox></td>
 					</tr>
@@ -78,7 +78,7 @@
                                 ReadOnly="true" CssClass="readonly" EnableViewState="False"></asp:TextBox></td>
 					</tr>
 					<tr>
-						<th>Supplier Name / Country <span class="required">*</span> : </th>
+						<th>Supplier Name / Country : </th>
 						<td>
 						    <asp:TextBox ID="SupplierName" runat="server" Width="21em" ReadOnly="true" 
                                 CssClass="readonly" EnableViewState="False"></asp:TextBox>
@@ -239,12 +239,14 @@
 	    	popup('./ProductSelect.aspx?ProductNumber=' + txt);
 		}
 		function SupplierSelect_onclick() {
-    		var txt = document.getElementById('SupplierCode').value;
-	    	popup('./RFQSupplierSelect.aspx?SupplierCode=' + txt);
+    		var txt1 = document.getElementById('SupplierCode').value;
+    		var txt2 = document.getElementById('EnqLocation').value;
+    		alert (txt2);
+	    	popup('./RFQSupplierSelect.aspx?Code=' + txt1 + '&Location=' + txt2);
 		}
 		function MakerSelect_onclick() {
     		var txt = document.getElementById('MakerCode').value;
-	    	popup('./MakerSelect.aspx?MakerCode=' + txt);
+	    	popup('./MakerSelect.aspx?Code=' + txt);
 		}
 		</script>
 	</body>
