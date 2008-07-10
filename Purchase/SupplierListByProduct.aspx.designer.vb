@@ -43,15 +43,6 @@ Partial Public Class SupplierListByProduct
     Protected WithEvents ProductName As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
-    '''ProductID コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents ProductID As Global.System.Web.UI.WebControls.HiddenField
-
-    '''<summary>
     '''SupplierProductList コントロール。
     '''</summary>
     '''<remarks>

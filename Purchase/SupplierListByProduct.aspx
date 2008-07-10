@@ -46,7 +46,7 @@ function deleteLine(code) {
 
         <div class="list">
             <form id="DeleteForm" action="" method="post">
-                <asp:HiddenField ID="ProductID" runat="server" Value='' />
+                <input type="hidden" id="ProductID" value='<%=ProductID  %>' />
                 <input type="hidden" id="SupplierCode" />
                 <input type="hidden" id="Action" value="Delete" />
             </form>
@@ -78,7 +78,7 @@ function deleteLine(code) {
                         <td><asp:Label ID="Note" runat="server" Text='<%# Eval("Note") %>' /></td>
                         <td><asp:Label ID="UpdateDate" runat="server" Text='<%# Eval("UpdateDate") %>' /></td>
                         <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl='<%# Eval("Url") %>'>Edit</asp:HyperLink></td>
-                        <td><asp:HyperLink ID="Delete" runat="server" NavigateUrl='javascript:deleteLine(<%# Eval("SupplierCode") %>);'>Delete</asp:HyperLink></td>
+                        <td><asp:HyperLink ID="Delete" runat="server" NavigateUrl='<%# "javascript:deleteLine(" & Eval("SupplierCode") & ");" %>'>Delete</asp:HyperLink></td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>

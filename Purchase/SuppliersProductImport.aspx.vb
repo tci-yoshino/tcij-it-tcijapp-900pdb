@@ -20,6 +20,7 @@
     Dim DBConn As New System.Data.SqlClient.SqlConnection   'データベースコネクション	
     Dim DBCommand As System.Data.SqlClient.SqlCommand       'データベースコマンド	
     Dim DBReader As System.Data.SqlClient.SqlDataReader     'データリーダー	
+    Dim ImpExcel As String
 
     Sub Set_DBConnectingString()
         Dim settings As ConnectionStringSettings
@@ -49,18 +50,36 @@
                     SupplierName.Text = DBReader("Name3")
                 End If
                 DBReader.Close()
-                'SrcSupplierProduct.SelectCommand = "SELECT Product.ProductID,Product.ProductNumber, CASE WHEN NOT Product.QuoName IS NULL THEN Product.QuoName ELSE Product.Name END AS ProductName, Supplier_Product.SupplierItemNumber, Supplier_Product.Note, REPLACE(CONVERT(char, Supplier_Product.UpdateDate, 111), '/', '-') AS UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&Supplier=" + SupplierCode.Text.ToString + "&Product='+rtrim(ltrim(str(Product.ProductID))) AS Url, './ProductListBySupplier.aspx?Action=Delete&Supplier=" + SupplierCode.Text.ToString + "&ProductID='+rtrim(ltrim(str(Product.ProductID))) AS DelUrl " & _
-                '                                   "FROM Supplier_Product LEFT OUTER JOIN Product ON Supplier_Product.ProductID = Product.ProductID " & _
-                '                                   "WHERE (Supplier_Product.SupplierCode = '" & SupplierCode.Text.ToString & "')"
-                'SupplierProductList.DataBind()
             End If
         Else
-            'SrcSupplierProduct.SelectCommand = "SELECT Product.ProductID,Product.ProductNumber, CASE WHEN NOT Product.QuoName IS NULL THEN Product.QuoName ELSE Product.Name END AS ProductName, Supplier_Product.SupplierItemNumber, Supplier_Product.Note, REPLACE(CONVERT(char, Supplier_Product.UpdateDate, 111), '/', '-') AS UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&Supplier=" + SupplierCode.Text.ToString + "&Product='+rtrim(ltrim(str(Product.ProductID))) AS Url, './ProductListBySupplier.aspx?Action=Delete&Supplier=" + SupplierCode.Text.ToString + "&ProductID='+rtrim(ltrim(str(Product.ProductID))) AS DelUrl " & _
-            '                                       "FROM Supplier_Product LEFT OUTER JOIN Product ON Supplier_Product.ProductID = Product.ProductID " & _
-            '                                       "WHERE (Supplier_Product.SupplierCode = '')"
-            'SupplierProductList.DataBind()
             Msg.Text = "SupplierCodeが設定されていません"
         End If
     End Sub
 
+    Protected Sub Preview_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Preview.Click
+        '[作成Table名の決定]------------------------------------------------------------
+        ImpExcel = "D:\\temp\\G_System4\DT" & IO.Path.GetFileName(File.PostedFile.FileName)
+
+        '[作成Tableがある場合削除する]--------------------------------------------------
+        DBCommand.CommandText = "IF object_id('" & ImpExcel & "', 'U') IS NOT NULL DROP TABLE [" & ImpExcel & "]"
+        DBCommand.ExecuteNonQuery()
+
+        If File.PostedFile.FileName <> "" Then
+            File.PostedFile.SaveAs(ImpExcel)
+        End If
+
+
+        ''[指定コードをDBに取り込む]-----------------------------------------------
+        'Dim fileReader As System.IO.StreamReader
+        'fileReader = My.Computer.FileSystem.OpenTextFileReader(ImpExcel, System.Text.Encoding.Default)
+        'Dim stringReader As String = ""
+        'Do Until fileReader.EndOfStream = True
+        '    Dim aaa As String = stringReader
+        'Loop
+        'fileReader.Close()
+
+
+
+
+    End Sub
 End Class
