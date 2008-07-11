@@ -1,1 +1,24 @@
-<?xml version="1.0"?><DTSConfiguration><DTSConfigurationHeading><DTSConfigurationFileInfo GeneratedBy="akutsu" GeneratedFromPackageName="ProductImport" GeneratedFromPackageID="{19D05BC8-92A0-47B5-B85E-BAD0746F3CA5}" GeneratedDate="2008/07/09 13:37:11"/></DTSConfigurationHeading><Configuration ConfiguredType="Property" Path="\Package.Connections[ADO.Purchase].Properties[Password]" ValueType="String"><ConfiguredValue>n061t@kun</ConfiguredValue></Configuration><Configuration ConfiguredType="Property" Path="\Package.Connections[ADO.Purchase].Properties[ServerName]" ValueType="String"><ConfiguredValue>HS-SYS0255</ConfiguredValue></Configuration><Configuration ConfiguredType="Property" Path="\Package.Connections[ADO.Purchase].Properties[UserName]" ValueType="String"><ConfiguredValue>Purchase</ConfiguredValue></Configuration><Configuration ConfiguredType="Property" Path="\Package.Connections[Purchase_Import_New_Product.log].Properties[ConnectionString]" ValueType="String"><ConfiguredValue>C:\tcijapp\Purchase\Batch\Purchase\log\Purchase_Import_New_Product.log</ConfiguredValue></Configuration><Configuration ConfiguredType="Property" Path="\Package.Connections[SMTP].Properties[SmtpServer]" ValueType="String"><ConfiguredValue>tex1.tci.tokyokasei</ConfiguredValue></Configuration><Configuration ConfiguredType="Property" Path="\Package.Variables[User::Dir_File].Properties[Value]" ValueType="String"><ConfiguredValue>\\tdb1\if$\Purchase\</ConfiguredValue></Configuration><Configuration ConfiguredType="Property" Path="\Package.Variables[User::Dir_Temp].Properties[Value]" ValueType="String"><ConfiguredValue>C:\tcijapp\Purchase\Batch\Purchase\temp\</ConfiguredValue></Configuration><Configuration ConfiguredType="Property" Path="\Package.Variables[User::File_New_Product].Properties[Value]" ValueType="String"><ConfiguredValue>NewProduct.txt</ConfiguredValue></Configuration><Configuration ConfiguredType="Property" Path="\Package.Variables[User::Mail_To].Properties[Value]" ValueType="String"><ConfiguredValue>JOSYS-8@tokyokasei.co.jp</ConfiguredValue></Configuration></DTSConfiguration>
+<?xml version="1.0"?>
+<DTSConfiguration>
+<DTSConfigurationHeading>
+<DTSConfigurationFileInfo GeneratedBy="akutsu" GeneratedFromPackageName="ProductImport" GeneratedFromPackageID="{19D05BC8-92A0-47B5-B85E-BAD0746F3CA5}" GeneratedDate="2008/07/11 11:16:45"/>
+</DTSConfigurationHeading>
+<Configuration ConfiguredType="Property" Path="\Package.Connections[ADO.Purchase].Properties[Password]" ValueType="String">
+<ConfiguredValue>n061t@kun</ConfiguredValue>
+</Configuration>
+<Configuration ConfiguredType="Property" Path="\Package.Connections[ADO.Purchase].Properties[ServerName]" ValueType="String">
+<ConfiguredValue>TDB1</ConfiguredValue>
+</Configuration>
+<Configuration ConfiguredType="Property" Path="\Package.Connections[ADO.Purchase].Properties[UserName]" ValueType="String">
+<ConfiguredValue>Purchase</ConfiguredValue>
+</Configuration>
+<Configuration ConfiguredType="Property" Path="\Package.Connections[SMTP].Properties[SmtpServer]" ValueType="String">
+<ConfiguredValue>tex1.tci.tokyokasei</ConfiguredValue>
+</Configuration>
+<Configuration ConfiguredType="Property" Path="\Package.Variables[User::Dir_Log].Properties[Value]" ValueType="String">
+<ConfiguredValue>C:\tcijapp\Purchase\Batch\log\</ConfiguredValue>
+</Configuration>
+<Configuration ConfiguredType="Property" Path="\Package.Variables[User::Mail_To].Properties[Value]" ValueType="String">
+<ConfiguredValue>app@tokyokasei.co.jp</ConfiguredValue>
+</Configuration>
+</DTSConfiguration>
