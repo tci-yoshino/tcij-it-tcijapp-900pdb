@@ -7,7 +7,7 @@
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Dim st_ProductID As String = ""
         Dim st_SupplierCode As String = ""
-        Dim DBReader As System.Data.SqlClient.SqlDataReader     'データリーダー
+        Dim DBReader As System.Data.SqlClient.SqlDataReader
         DBConn.ConnectionString = DBConnectString.ConnectionString
         DBConn.Open()
         DBCommand = DBConn.CreateCommand()
@@ -81,11 +81,18 @@
     End Sub
 
     Protected Sub Issue_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Issue.Click
+        Dim DBReader As System.Data.SqlClient.SqlDataReader
+        Dim i As Integer = 0
         Dim st_Indispensability As String = ""
+        Dim Bo_Line As Boolean = False
+        Dim Bo_UnLine As Boolean = False
+        Dim i_ProductID As Integer = -1
+        Dim i_RFQNumber As Integer = -1
+
         If Request.QueryString("Action") <> "Issue" Then
             Exit Sub
         End If
-        '必須入力項目チェック
+        '必須入力項目チェックHeader
         If EnqLocation.SelectedValue = "" Then
             st_Indispensability = st_Indispensability & "Enq-Location "
         End If
@@ -101,40 +108,153 @@
         If QuoLocation.SelectedValue = "" Then
             st_Indispensability = st_Indispensability & "Quo-Location "
         End If
-        If Purpose.SelectedValue <> "" Then
+        If Purpose.SelectedValue = "" Then
             st_Indispensability = st_Indispensability & "Purpose "
         End If
         If st_Indispensability <> "" Then
-            Msg.Text = st_Indispensability & "を設定して下さい。"
+            Msg.Text = st_Indispensability & "を設定して下さい"
+            Exit Sub
         End If
 
-        'enq用入力チェック。作成中
+        '入力項目チェックLine
         If EnqQuantity_1.Text <> "" And EnqUnit_1.SelectedValue <> "" And EnqPiece_1.Text <> "" Then
-
+            Bo_Line = True
+        ElseIf EnqQuantity_1.Text = "" And EnqUnit_1.SelectedValue = "" And EnqPiece_1.Text = "" Then
+        Else
+            Bo_UnLine = True
         End If
         If EnqQuantity_2.Text <> "" And EnqUnit_2.SelectedValue <> "" And EnqPiece_2.Text <> "" Then
-
+            Bo_Line = True
+        ElseIf EnqQuantity_2.Text = "" And EnqUnit_2.SelectedValue = "" And EnqPiece_2.Text = "" Then
+        Else
+            Bo_UnLine = True
         End If
         If EnqQuantity_3.Text <> "" And EnqUnit_3.SelectedValue <> "" And EnqPiece_3.Text <> "" Then
-
+            Bo_Line = True
+        ElseIf EnqQuantity_3.Text = "" And EnqUnit_3.SelectedValue = "" And EnqPiece_3.Text = "" Then
+        Else
+            Bo_UnLine = True
         End If
         If EnqQuantity_4.Text <> "" And EnqUnit_4.SelectedValue <> "" And EnqPiece_4.Text <> "" Then
-
+            Bo_Line = True
+        ElseIf EnqQuantity_4.Text = "" And EnqUnit_4.SelectedValue = "" And EnqPiece_4.Text = "" Then
+        Else
+            Bo_UnLine = True
         End If
-        'EnqQuantity_1	EnqUnit_1	EnqPiece_1
-        'EnqQuantity_2	EnqUnit_2	EnqPiece_2
-        'EnqQuantity_3	EnqUnit_3	EnqPiece_3
-        'EnqQuantity_4	EnqUnit_4	EnqPiece_4
+        If Bo_Line = False Then
+            Msg.Text = "Enq-Quantity を設定して下さい"
+            Exit Sub
+        End If
+        If Bo_UnLine = True Then
+            Msg.Text = "Enq-Quantity の設定が不正です"
+            Exit Sub
+        End If
 
-        'めもめも
-        ' = "INSERT INTO TestInsert(Name, State)  _"
-        '& "VALUES (@Name, @State);" _
-        '& " SELECT ID, Name, Stat FROM TestInsert WHERE (ID = SCOPE_IDENTITY())"
+        '入力内容のチェック (とりあえずProductNumber以外は後回しで）
+        DBCommand.CommandText = "SELECT ProductID FROM Product WHERE (ProductNumber = @st_ProductNumber)"
+        DBCommand.Parameters.Add("st_ProductNumber", SqlDbType.VarChar, 32).Value = ProductNumber.Text
+        DBReader = DBCommand.ExecuteReader()
+        DBCommand.Dispose()
+        If DBReader.HasRows = True Then
+            While DBReader.Read
+                i_ProductID = IIf(IsNumeric(DBReader("ProductID").ToString) = True, CInt(DBReader("ProductID").ToString), -99)
+            End While
+        End If
+        DBReader.Close()
+        If i_ProductID = -1 Or i_ProductID = -99 Then
+            Msg.Text = "ProductNumber の設定が不正です"
+            Exit Sub
+        End If
+
+
+        Dim sqlTran As System.Data.SqlClient.SqlTransaction = DBConn.BeginTransaction()
+        DBCommand.Transaction = sqlTran
+
+        Try
+            'Header登録
+            DBCommand.CommandType = CommandType.Text
+            DBCommand.CommandText = "INSERT INTO RFQHeader " _
+                                  & "(EnqLocationCode, EnqUserID, QuoLocationCode, QuoUserID, " _
+                                  & "ProductID, SupplierCode, MakerCode, PurposeCode, RequiredPurity, " _
+                                  & "RequiredQMMethod, RequiredSpecification, Comment, RFQStatusCode, CreatedBy, UpdatedBy)" _
+                                  & "VALUES(@EnqLocationCode, @EnqUserID, @QuoLocationCode, @QuoUserID, " _
+                                  & "@ProductID, @SupplierCode, @MakerCode, @PurposeCode, @RequiredPurity, " _
+                                  & "@RequiredQMMethod, @RequiredSpecification, @Comment, @RFQStatusCode, @CreatedBy, @UpdatedBy); " _
+                                  & " SELECT RFQNumber FROM RFQHeader WHERE (RFQNumber = SCOPE_IDENTITY())"
+            Dim param1 As System.Data.SqlClient.SqlParameter
+            Dim param2 As System.Data.SqlClient.SqlParameter
+            Dim param3 As System.Data.SqlClient.SqlParameter
+            Dim param4 As System.Data.SqlClient.SqlParameter
+            Dim param5 As System.Data.SqlClient.SqlParameter
+            Dim param6 As System.Data.SqlClient.SqlParameter
+            Dim param7 As System.Data.SqlClient.SqlParameter
+            Dim param8 As System.Data.SqlClient.SqlParameter
+            Dim param9 As System.Data.SqlClient.SqlParameter
+            Dim param10 As System.Data.SqlClient.SqlParameter
+            Dim param11 As System.Data.SqlClient.SqlParameter
+            Dim param12 As System.Data.SqlClient.SqlParameter
+            Dim param13 As System.Data.SqlClient.SqlParameter
+            Dim param14 As System.Data.SqlClient.SqlParameter
+            Dim param15 As System.Data.SqlClient.SqlParameter
+
+            param1 = DBCommand.Parameters.Add("@EnqLocationCode", SqlDbType.VarChar, 5)
+            param2 = DBCommand.Parameters.Add("@EnqUserID", SqlDbType.Int)
+            param3 = DBCommand.Parameters.Add("@QuoLocationCode", SqlDbType.VarChar, 5)
+            param4 = DBCommand.Parameters.Add("@QuoUserID", SqlDbType.Int)
+            param5 = DBCommand.Parameters.Add("@ProductID", SqlDbType.Int)
+            param6 = DBCommand.Parameters.Add("@SupplierCode", SqlDbType.Int)
+            param7 = DBCommand.Parameters.Add("@MakerCode", SqlDbType.Int)
+            param8 = DBCommand.Parameters.Add("@PurposeCode", SqlDbType.VarChar, 5)
+            param9 = DBCommand.Parameters.Add("@RequiredPurity", SqlDbType.NVarChar, 255)
+            param10 = DBCommand.Parameters.Add("@RequiredQMMethod", SqlDbType.NVarChar, 255)
+            param11 = DBCommand.Parameters.Add("@RequiredSpecification", SqlDbType.NVarChar, 255)
+            param12 = DBCommand.Parameters.Add("@Comment", SqlDbType.NVarChar, 3000)
+            param13 = DBCommand.Parameters.Add("@RFQStatusCode", SqlDbType.VarChar, 5)
+            param14 = DBCommand.Parameters.Add("@CreatedBy", SqlDbType.Int)
+            param15 = DBCommand.Parameters.Add("@UpdatedBy", SqlDbType.Int)
+
+            param1.Value = EnqLocation.SelectedValue
+            param2.Value = EnqUser.SelectedValue
+            param3.Value = IIf(QuoLocation.SelectedValue = "Direct", System.DBNull.Value, QuoLocation.SelectedValue)
+            param4.Value = IIf(IsNumeric(QuoUser.SelectedValue) = True, QuoUser.SelectedValue, System.DBNull.Value)
+            param5.Value = i_ProductID
+            param6.Value = SupplierCode.Text
+            param7.Value = IIf(IsNumeric(MakerCode.Text) = True, MakerCode.Text, System.DBNull.Value)
+            param8.Value = Purpose.SelectedValue
+            param9.Value = RequiredPurity.Text
+            param10.Value = RequiredQMMethod.Text
+            param11.Value = RequiredSpecification.Text
+            param12.Value = Comment.Text
+            param13.Value = IIf(QuoLocation.SelectedValue = "Direct", "N", IIf(IsNumeric(QuoUser.SelectedValue) = True, "A", ""))
+            param14.Value = CInt(Session("UserID"))
+            param15.Value = CInt(Session("UserID"))
+            DBReader = DBCommand.ExecuteReader()
+            DBCommand.Dispose()
+            If DBReader.HasRows = True Then
+                While DBReader.Read
+                    i_RFQNumber = IIf(IsNumeric(DBReader("RFQNumber").ToString) = True, CInt(DBReader("RFQNumber").ToString), -99)
+                End While
+            End If
+            DBReader.Close()
+
+            'MsgBox(i_RFQNumber)
+            'OK正常に取得できていることを確認した。
 
 
 
 
-
-
+            sqlTran.Commit()
+        Catch ex As Exception
+            sqlTran.Rollback()
+            Throw
+        Finally
+            DBCommand.Dispose()
+        End Try
     End Sub
+
+
+
+
+
+
 End Class
