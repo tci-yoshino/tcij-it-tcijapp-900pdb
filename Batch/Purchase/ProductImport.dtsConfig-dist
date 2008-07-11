@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<DTSConfiguration>
+<DTSConfigurationHeading>
+<DTSConfigurationFileInfo GeneratedBy="akutsu" GeneratedFromPackageName="ProductImport" GeneratedFromPackageID="{19D05BC8-92A0-47B5-B85E-BAD0746F3CA5}" GeneratedDate="2008/07/11 12:16:08"/>
+</DTSConfigurationHeading>
+<Configuration ConfiguredType="Property" Path="\Package.Variables[User::Dir_File].Properties[Value]" ValueType="String">
+<ConfiguredValue>\\tdb1\if$\Purchase\</ConfiguredValue>
+</Configuration>
+<Configuration ConfiguredType="Property" Path="\Package.Variables[User::Dir_Temp].Properties[Value]" ValueType="String">
+<ConfiguredValue>C:\tcijapp\Purchase\Batch\temp\</ConfiguredValue>
+</Configuration>
+<Configuration ConfiguredType="Property" Path="\Package.Variables[User::File_New_Product].Properties[Value]" ValueType="String">
+<ConfiguredValue>NewProduct.txt</ConfiguredValue>
+</Configuration>
+</DTSConfiguration>
