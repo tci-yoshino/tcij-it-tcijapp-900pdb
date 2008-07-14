@@ -26,9 +26,7 @@
                             ProductName.Text = DBReader("Name").ToString
                         End While
                         ProductNumber.ReadOnly = True
-                        ProductName.ReadOnly = True
                         ProductNumber.CssClass = "readonly"
-                        ProductName.CssClass = "readonly"
                         ProductSelect.Visible = False
                     End If
                     DBReader.Close()
@@ -37,22 +35,19 @@
             If Request.QueryString("SupplierCode") <> "" Then
                 st_SupplierCode = Request.QueryString("SupplierCode")
                 If IsNumeric(st_SupplierCode) Then
-                    DBCommand.CommandText = "SELECT R3SupplierCode, ISNULL(Name3, '') + ISNULL(Name4, '') AS SupplierName, CountryCode FROM Supplier WHERE SupplierCode = @st_SupplierCode"
+                    DBCommand.CommandText = "SELECT SupplierCode, R3SupplierCode, ISNULL(Name3, '') + ISNULL(Name4, '') AS SupplierName, CountryCode FROM Supplier WHERE SupplierCode = @st_SupplierCode"
                     DBCommand.Parameters.Add("st_SupplierCode", SqlDbType.Int).Value = CInt(st_SupplierCode)
                     DBReader = DBCommand.ExecuteReader()
                     DBCommand.Dispose()
                     If DBReader.HasRows = True Then
                         While DBReader.Read
+                            SupplierCode.Text = DBReader("SupplierCode").ToString
                             R3SupplierCode.Text = DBReader("R3SupplierCode").ToString
                             SupplierName.Text = DBReader("SupplierName").ToString
                             SupplierCountry.Text = DBReader("CountryCode").ToString
                         End While
-                        R3SupplierCode.ReadOnly = True
-                        R3SupplierCode.CssClass = "readonly"
-                        SupplierName.ReadOnly = True
-                        SupplierName.CssClass = "readonly"
-                        SupplierCountry.ReadOnly = True
-                        SupplierCountry.CssClass = "readonly"
+                        SupplierCode.ReadOnly = True
+                        SupplierCode.CssClass = "readonly"
                         SupplierSelect.Visible = False
                     End If
                     DBReader.Close()
@@ -66,6 +61,12 @@
             SupplierCountry.Text = Request.Form("SupplierCountry").ToString
             MakerName.Text = Request.Form("MakerName").ToString
             MakerCountry.Text = Request.Form("MakerCountry").ToString
+            If SupplierCode.ReadOnly = True Then
+                SupplierCode.Text = Request.Form("SupplierCode").ToString
+            End If
+            If ProductNumber.ReadOnly = True Then
+                ProductNumber.Text = Request.Form("ProductNumber").ToString
+            End If
         End If
     End Sub
 
@@ -87,7 +88,14 @@
         Dim Bo_Line As Boolean = False
         Dim Bo_UnLine As Boolean = False
         Dim i_ProductID As Integer = -1
+        Dim i_SupplierCode As Integer = -1
+        Dim i_MakerCode As Integer = -1
         Dim i_RFQNumber As Integer = -1
+        Dim Enq_Quantity1 As Boolean = False
+        Dim Enq_Quantity2 As Boolean = False
+        Dim Enq_Quantity3 As Boolean = False
+        Dim Enq_Quantity4 As Boolean = False
+        Dim i_Result As Integer
 
         If Request.QueryString("Action") <> "Issue" Then
             Exit Sub
@@ -115,27 +123,59 @@
             Msg.Text = st_Indispensability & "を設定して下さい"
             Exit Sub
         End If
-
+        If Integer.TryParse(SupplierCode.Text, i_Result) = False Then
+            Msg.Text = "SupplierCode の設定が不正です"
+            Exit Sub
+        End If
+        If MakerCode.Text = "" Then
+            'MakerCodeは省略可能
+        ElseIf Integer.TryParse(MakerCode.Text, i_Result) Then
+            '数値に変換できた場合の処理(小数点含まず)は正常
+        Else
+            '数値に変換できなかった場合の処理(小数点含む場合もこちら)は入力値不正
+            Msg.Text = "MakerCode の設定が不正です"
+            Exit Sub
+        End If
         '入力項目チェックLine
         If EnqQuantity_1.Text <> "" And EnqUnit_1.SelectedValue <> "" And EnqPiece_1.Text <> "" Then
+            If IsNumeric(EnqQuantity_1.Text) = False Or IsNumeric(EnqPiece_1.Text) = False Then
+                Bo_UnLine = True
+            Else
+                Enq_Quantity1 = True
+            End If
             Bo_Line = True
         ElseIf EnqQuantity_1.Text = "" And EnqUnit_1.SelectedValue = "" And EnqPiece_1.Text = "" Then
         Else
             Bo_UnLine = True
         End If
         If EnqQuantity_2.Text <> "" And EnqUnit_2.SelectedValue <> "" And EnqPiece_2.Text <> "" Then
+            If IsNumeric(EnqQuantity_2.Text) = False Or IsNumeric(EnqPiece_2.Text) = False Then
+                Bo_UnLine = True
+            Else
+                Enq_Quantity2 = True
+            End If
             Bo_Line = True
         ElseIf EnqQuantity_2.Text = "" And EnqUnit_2.SelectedValue = "" And EnqPiece_2.Text = "" Then
         Else
             Bo_UnLine = True
         End If
         If EnqQuantity_3.Text <> "" And EnqUnit_3.SelectedValue <> "" And EnqPiece_3.Text <> "" Then
+            If IsNumeric(EnqQuantity_3.Text) = False Or IsNumeric(EnqPiece_3.Text) = False Then
+                Bo_UnLine = True
+            Else
+                Enq_Quantity3 = True
+            End If
             Bo_Line = True
         ElseIf EnqQuantity_3.Text = "" And EnqUnit_3.SelectedValue = "" And EnqPiece_3.Text = "" Then
         Else
             Bo_UnLine = True
         End If
         If EnqQuantity_4.Text <> "" And EnqUnit_4.SelectedValue <> "" And EnqPiece_4.Text <> "" Then
+            If IsNumeric(EnqQuantity_4.Text) = False Or IsNumeric(EnqPiece_4.Text) = False Then
+                Bo_UnLine = True
+            Else
+                Enq_Quantity4 = True
+            End If
             Bo_Line = True
         ElseIf EnqQuantity_4.Text = "" And EnqUnit_4.SelectedValue = "" And EnqPiece_4.Text = "" Then
         Else
@@ -150,7 +190,7 @@
             Exit Sub
         End If
 
-        '入力内容のチェック (とりあえずProductNumber以外は後回しで）
+        '入力内容のチェック
         DBCommand.CommandText = "SELECT ProductID FROM Product WHERE (ProductNumber = @st_ProductNumber)"
         DBCommand.Parameters.Add("st_ProductNumber", SqlDbType.VarChar, 32).Value = ProductNumber.Text
         DBReader = DBCommand.ExecuteReader()
@@ -165,11 +205,38 @@
             Msg.Text = "ProductNumber の設定が不正です"
             Exit Sub
         End If
-
-
+        DBCommand.CommandText = "SELECT SupplierCode FROM Supplier WHERE (SupplierCode = @st_SupplierCode)"
+        DBCommand.Parameters.Add("st_SupplierCode", SqlDbType.Int).Value = CInt(SupplierCode.Text)
+        DBReader = DBCommand.ExecuteReader()
+        DBCommand.Dispose()
+        If DBReader.HasRows = True Then
+            While DBReader.Read
+                i_SupplierCode = IIf(IsNumeric(DBReader("SupplierCode").ToString) = True, CInt(DBReader("SupplierCode").ToString), -99)
+            End While
+        End If
+        DBReader.Close()
+        If i_SupplierCode = -1 Or i_SupplierCode = -99 Then
+            Msg.Text = "SupplierCode の設定が不正です"
+            Exit Sub
+        End If
+        If MakerCode.Text <> "" Then
+            DBCommand.CommandText = "SELECT SupplierCode FROM Supplier WHERE (SupplierCode = @st_MakerCode)"
+            DBCommand.Parameters.Add("st_MakerCode", SqlDbType.Int).Value = CInt(MakerCode.Text)
+            DBReader = DBCommand.ExecuteReader()
+            DBCommand.Dispose()
+            If DBReader.HasRows = True Then
+                While DBReader.Read
+                    i_MakerCode = IIf(IsNumeric(DBReader("SupplierCode").ToString) = True, CInt(DBReader("SupplierCode").ToString), -99)
+                End While
+            End If
+            DBReader.Close()
+            If i_MakerCode = -1 Or i_MakerCode = -99 Then
+                Msg.Text = "MakerCode の設定が不正です"
+                Exit Sub
+            End If
+        End If
         Dim sqlTran As System.Data.SqlClient.SqlTransaction = DBConn.BeginTransaction()
         DBCommand.Transaction = sqlTran
-
         Try
             'Header登録
             DBCommand.CommandType = CommandType.Text
@@ -236,14 +303,37 @@
                 End While
             End If
             DBReader.Close()
-
-            'MsgBox(i_RFQNumber)
-            'OK正常に取得できていることを確認した。
-
-
-
-
+            If Enq_Quantity1 = True Then
+                If RFQLine(i_RFQNumber, EnqQuantity_1.Text, EnqUnit_1.SelectedValue, EnqPiece_1.Text, SupplierItemNumber_1.Text) = -1 Then
+                    Msg.Text = "Enq-Quantity の設定が不正です"
+                    sqlTran.Rollback()
+                    Exit Sub
+                End If
+            End If
+            If Enq_Quantity2 = True Then
+                If RFQLine(i_RFQNumber, EnqQuantity_2.Text, EnqUnit_2.SelectedValue, EnqPiece_2.Text, SupplierItemNumber_2.Text) = -1 Then
+                    Msg.Text = "Enq-Quantity の設定が不正です"
+                    sqlTran.Rollback()
+                    Exit Sub
+                End If
+            End If
+            If Enq_Quantity3 = True Then
+                If RFQLine(i_RFQNumber, EnqQuantity_3.Text, EnqUnit_3.SelectedValue, EnqPiece_3.Text, SupplierItemNumber_3.Text) = -1 Then
+                    Msg.Text = "Enq-Quantity の設定が不正です"
+                    sqlTran.Rollback()
+                    Exit Sub
+                End If
+            End If
+            If Enq_Quantity4 = True Then
+                If RFQLine(i_RFQNumber, EnqQuantity_4.Text, EnqUnit_4.SelectedValue, EnqPiece_4.Text, SupplierItemNumber_4.Text) = -1 Then
+                    Msg.Text = "Enq-Quantity の設定が不正です"
+                    sqlTran.Rollback()
+                    Exit Sub
+                End If
+            End If
+            Msg.Text = ""
             sqlTran.Commit()
+            Response.Redirect("./RFQUpdate.aspx")
         Catch ex As Exception
             sqlTran.Rollback()
             Throw
@@ -251,10 +341,43 @@
             DBCommand.Dispose()
         End Try
     End Sub
+    Private Function RFQLine(ByVal ID As Integer, ByVal EnqQuantity As Decimal, ByVal EnqUnitCode As String, ByVal EnqPiece As Integer, ByVal SupplierItemNumber As String) As Integer
+        Dim i_Result As Integer
+        RFQLine = -1
+        If Integer.TryParse(EnqPiece, i_Result) = False Then
+            Exit Function
+        End If
 
+        DBCommand.CommandText = "INSERT INTO RFQLine " _
+                      & "(RFQNumber, EnqQuantity, EnqUnitCode, EnqPiece, SupplierItemNumber, CreatedBy, UpdatedBy) " _
+                      & "VALUES(@RFQNumber, @EnqQuantity, @EnqUnitCode, @EnqPiece, " _
+                      & "@SupplierItemNumber, @CreatedByLine, @UpdatedByLine); "
+        Dim param1 As System.Data.SqlClient.SqlParameter
+        Dim param2 As System.Data.SqlClient.SqlParameter
+        Dim param3 As System.Data.SqlClient.SqlParameter
+        Dim param4 As System.Data.SqlClient.SqlParameter
+        Dim param5 As System.Data.SqlClient.SqlParameter
+        Dim param6 As System.Data.SqlClient.SqlParameter
+        Dim param7 As System.Data.SqlClient.SqlParameter
 
+        param1 = DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int)
+        param2 = DBCommand.Parameters.Add("@EnqQuantity", SqlDbType.Decimal)
+        param3 = DBCommand.Parameters.Add("@EnqUnitCode", SqlDbType.VarChar, 5)
+        param4 = DBCommand.Parameters.Add("@EnqPiece", SqlDbType.Int)
+        param5 = DBCommand.Parameters.Add("@SupplierItemNumber", SqlDbType.VarChar, 128)
+        param6 = DBCommand.Parameters.Add("@CreatedByLine", SqlDbType.Int)
+        param7 = DBCommand.Parameters.Add("@UpdatedByLine", SqlDbType.Int)
 
+        param1.Value = ID
+        param2.Value = EnqQuantity
+        param3.Value = EnqUnitCode
+        param4.Value = EnqPiece
+        param5.Value = IIf(SupplierItemNumber = "", System.DBNull.Value, SupplierItemNumber)
+        param6.Value = CInt(Session("UserID"))
+        param7.Value = CInt(Session("UserID"))
+        DBCommand.ExecuteNonQuery()
+        DBCommand.Dispose()
 
-
-
+        RFQLine = 0
+    End Function
 End Class
