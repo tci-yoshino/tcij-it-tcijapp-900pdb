@@ -21,6 +21,7 @@ window.onload = function() {
         opener.document.getElementById('ProductNumber').value=code
         opener.document.getElementById('ProductName').value=name
       }
+      window.close();
     }
 
     -->

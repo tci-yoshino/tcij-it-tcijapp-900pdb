@@ -23,6 +23,7 @@ window.onload = function() {
         opener.document.getElementById('SupplierCode').value=code
         opener.document.getElementById('SupplierName').value=name
        }
+       window.close();
     }
 
     -->

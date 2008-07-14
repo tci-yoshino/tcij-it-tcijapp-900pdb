@@ -28,12 +28,14 @@ window.onload = function() {
           opener.document.getElementById('QuoLocation').selectedIndex = location
         }
       }
+      window.close();
     }
 
     -->
     </script>
 </head>
 <body>
+	
 	<!-- Main Content Area -->
 	<div id="content">
 		<div class="tabs"></div>
