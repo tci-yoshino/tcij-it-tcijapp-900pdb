@@ -20,7 +20,12 @@ window.onload = function() {
       if(opener){
         var name = name3 + " " + name4;
         if (name3 == "") name = name4;
-        opener.document.getElementById('SupplierCode').value=code
+        if(opener.document.getElementById('Supplier')){
+          opener.document.getElementById('Supplier').value=code
+        }
+        if(opener.document.getElementById('SupplierCode')){
+          opener.document.getElementById('SupplierCode').value=code
+        }
         opener.document.getElementById('SupplierName').value=name
        }
        window.close();
