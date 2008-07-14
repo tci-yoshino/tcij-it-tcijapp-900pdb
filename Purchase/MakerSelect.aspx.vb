@@ -17,12 +17,21 @@
         st_Code = Trim(st_Code)
         st_Name = Trim(st_Name)
 
-        ' 全角を半角に変換
-        st_Code = StrConv(st_Code, VbStrConv.Narrow)
+        ' URL デコード
+        st_Code = HttpUtility.UrlDecode(st_Code)
+        st_Name = HttpUtility.UrlDecode(st_Name)
 
         ' 検索ブロックの TextBox の値を書き換え
         Code.Text = st_Code
         Name.Text = st_Name
+
+        ' 全角を半角に変換
+        st_Code = StrConv(st_Code, VbStrConv.Narrow)
+
+        ' 半角英数チェック
+        If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
+            st_Code = ""
+        End If
 
         ' Supplier List のデータをクリア
         SupplierList.Items.Clear()
