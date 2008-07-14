@@ -78,7 +78,7 @@ window.onload = function() {
                     <h3 style="font-style:italic">No match found.</h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name3")%>','<%#Eval("Name4")%>');">
+                    <tr onclick="returnValues('<%#Eval("SupplierCode")%>','<%#Eval("Name3")%>','<%#Eval("Name4")%>');">
                         <td><asp:Label ID="SupplierCode" runat="server" Text='<%#Eval("SupplierCode")%>' /></td>
                         <td>
                           <asp:Label ID="SupplierName3" runat="server" Text='<%#Eval("Name3")%> ' />
