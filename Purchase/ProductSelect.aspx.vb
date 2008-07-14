@@ -25,14 +25,14 @@
         st_CASNumber = Trim(st_CASNumber)
         st_ProductName = Trim(st_ProductName)
 
-        ' 全角を半角に変換
-        st_ProductNumber = StrConv(st_ProductNumber, VbStrConv.Narrow)
-        st_CASNumber = StrConv(st_CASNumber, VbStrConv.Narrow)
-
         ' 検索ブロックの TextBox の値を書き換え
         ProductNumber.Text = st_ProductNumber
         CASNumber.Text = st_CASNumber
         ProductName.Text = st_ProductName
+
+        ' 全角を半角に変換
+        st_ProductNumber = StrConv(st_ProductNumber, VbStrConv.Narrow)
+        st_CASNumber = StrConv(st_CASNumber, VbStrConv.Narrow)
 
         ' Supplier List のデータをクリア
         ProductList.Items.Clear()
