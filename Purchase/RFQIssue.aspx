@@ -235,16 +235,16 @@
 		</form>
 		<script language ="javascript" type="text/javascript">
 		function ProductSelect_onclick() {
-    		var ProductNumber = document.getElementById('ProductNumber').value;
+    		var ProductNumber = encodeURIComponent(document.getElementById('ProductNumber').value);
 	    	popup('./ProductSelect.aspx?ProductNumber=' + ProductNumber);
 		}
 		function SupplierSelect_onclick() {
-    		var SupplierCode = document.getElementById('SupplierCode').value;
-    		var EnqLocation = document.getElementById('EnqLocation').value;
+    		var SupplierCode = encodeURIComponent(document.getElementById('SupplierCode').value);
+    		var EnqLocation = encodeURIComponent(document.getElementById('EnqLocation').value);
 	    	popup('./RFQSupplierSelect.aspx?Code=' + SupplierCode + '&Location=' + EnqLocation);
 		}
 		function MakerSelect_onclick() {
-    		var MakerCode = document.getElementById('MakerCode').value;
+    		var MakerCode = encodeURIComponent(document.getElementById('MakerCode').value);
 	    	popup('./MakerSelect.aspx?Code=' + MakerCode);
 		}
 		</script>
