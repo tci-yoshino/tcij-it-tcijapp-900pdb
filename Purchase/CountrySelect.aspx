@@ -25,9 +25,8 @@ function returnValues(code, name){
   if(opener){
     opener.document.getElementById('Code').value=code
     opener.document.getElementById('Name').value=name
-    window.close();
   }
-
+  window.close();
 }
 
 -->
