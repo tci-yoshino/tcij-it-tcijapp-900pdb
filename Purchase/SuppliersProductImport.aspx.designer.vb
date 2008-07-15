@@ -95,4 +95,22 @@ Partial Public Class SuppliersProductImport
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents SrcSupplierProduct As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
+    '''ProductID コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents ProductID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''ImportFileName コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents ImportFileName As Global.System.Web.UI.WebControls.HiddenField
 End Class

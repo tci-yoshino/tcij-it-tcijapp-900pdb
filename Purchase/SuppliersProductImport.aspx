@@ -10,13 +10,14 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
 </head>
 <body>
+
+        <form id="ExcelImportForm" runat="server">
     <!-- Main Content Area -->
     <div id="content">
         <div class="tabs"></div>
 
         <h3>Excel Import to Suppliers Product</h3>
 
-        <form id="ExcelImportForm" runat="server">
             <div class="main">
                 <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 
@@ -42,32 +43,21 @@
             <hr />
 
             <div class="list">
-                <asp:GridView ID="SupplierProductList" runat="server" DataSourceID="SrcSupplierProduct">
-                    <Columns>
-                        <asp:BoundField HeaderText="CAS Number" />
-                        <asp:BoundField HeaderText="Supplier Item Number" />
-                        <asp:BoundField HeaderText="Supplier Item Name" />
-                        <asp:BoundField HeaderText="Note" />
-                        <asp:BoundField HeaderText="TCI Product Number" />
-                        <asp:BoundField HeaderText="EHS Status" />
-                        <asp:BoundField HeaderText="Proposal Dept" />
-                        <asp:BoundField HeaderText="Proc.Dept / Manu.Dept" />
-                        <asp:BoundField HeaderText="AD" />
-                        <asp:BoundField HeaderText="AF" />
-                        <asp:BoundField HeaderText="WA" />
-                        <asp:BoundField HeaderText="KA" />
-                    </Columns>
+                <asp:GridView ID="SupplierProductList" runat="server">
                 </asp:GridView>
 
                 <div class="btns">
-                    <asp:Button ID="Import" runat="server" Text="Import" />
+                    <asp:Button ID="Import" runat="server" Text="Import" Visible="False" />
                 </div>
             </div>
-        </form>
     </div><!-- Main Content Area END -->
     <asp:SqlDataSource ID="SrcSupplierProduct" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
     
+                <asp:HiddenField ID="ProductID" runat="server" />
+                <asp:HiddenField ID="ImportFileName" runat="server" />
+    
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
-</body>
+        </form>
+    </body>
 </html>
