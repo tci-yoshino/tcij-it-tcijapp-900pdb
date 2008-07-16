@@ -33,26 +33,26 @@
                 <ItemTemplate>
                     <tr>
                         <th class="subhead" colspan="2">
-                            RFQ Reference Number : <asp:HyperLink ID="RFQUpdate" runat="server" NavigateUrl="./RFQUpdate.aspx"><asp:label id="RFQNumber" runat="server" Text=""></asp:label></asp:HyperLink>
-                            <span class="indent"><em><asp:label id="RFQCorrespondence" runat="server" Text=""></asp:label></em></span>
+                            RFQ Reference Number : <asp:HyperLink ID="RFQUpdate" runat="server" NavigateUrl='<%# "./RFQUpdate.aspx?RFQNumber=" & Eval("RFQNumber")%>'><asp:label id="RFQNumber" runat="server" Text=""><%# Eval("RFQNumber")%></asp:label></asp:HyperLink>
+                            <span class="indent"><em><asp:label id="RFQCorrespondence" runat="server" Text=""><%# Eval("RFQCorres")%></asp:label></em></span>
                         </th>
                         <th class="subhead" colspan="4">
-                            <asp:label id="RFQStatusChangeDate" runat="server" Text=""></asp:label><span class="indent"><asp:label id="RFQStatus" runat="server" Text=""></asp:label></span>
+                            <asp:label id="RFQStatusChangeDate" runat="server" Text=""><%# Eval("StatusChangeDate")%></asp:label><span class="indent"><asp:label id="RFQStatus" runat="server" Text=""><%# Eval("Status")%></asp:label></span>
                         </th>
                     </tr>
                     <tr>
                         <th style="width:17%">Product Number / Name</th>
-                        <td style="width:33%"><asp:label id="ProductNumber" runat="server" Text=""></asp:label><span class="indent"><asp:label id="ProductName" runat="server" Text=""></asp:label></span></td>
+                        <td style="width:33%"><asp:label id="ProductNumber" runat="server" Text=""><%# Eval("ProductNumber")%></asp:label><span class="indent"><asp:label id="ProductName" runat="server" Text=""><%# Eval("ProductName")%></asp:label></span></td>
                         <th style="width:10%">Purpose</th>
-                        <td style="width:12%"><asp:label id="Purpose" runat="server" Text=""></asp:label></td>
+                        <td style="width:12%"><asp:label id="Purpose" runat="server" Text=""><%# Eval("Purpose")%></asp:label></td>
                         <th style="width:10%">Quo-User</th>
-                        <td style="width:18%"><asp:label id="QuoUser" runat="server" Text=""></asp:label><span class="indent">(<asp:label id="QuoLocation" runat="server" Text=""></asp:label>)</span></td>
+                        <td style="width:18%"><asp:label id="QuoUser" runat="server" Text=""><%# Eval("QuoUserName")%></asp:label><span class="indent">(<asp:label id="QuoLocation" runat="server" Text=""><%# Eval("QuoLocationName")%></asp:label>)</span></td>
                     </tr>
                     <tr>
                         <th>Supplier Name</th>
-                        <td><asp:label id="SupplierName" runat="server" Text=""></asp:label></td>
+                        <td><asp:label id="SupplierName" runat="server" Text=""><%# Eval("SupplierName")%></asp:label></td>
                         <th>Maker Name</th>
-                        <td colspan="3"><asp:label id="MakerName" runat="server" Text=""></asp:label></td>
+                        <td colspan="3"><asp:label id="MakerName" runat="server" Text=""><%# Eval("MakerName")%></asp:label></td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>
