@@ -53,32 +53,30 @@
                     If Not TypeOf DBReader("QuoName") Is DBNull Then ProductName.Text = DBReader("QuoName")
                 End If
                 DBReader.Close()
-                SrcSupplierProduct.SelectCommand = "SELECT dbo.Supplier_Product.SupplierCode, ISNULL(dbo.Supplier.Name3, '') + N' ' + ISNULL(dbo.Supplier.Name4, '') AS [SupplierName], dbo.Supplier_Product.SupplierItemNumber, dbo.Supplier_Product.Note, REPLACE(CONVERT(char, Supplier_Product.UpdateDate, 111), '/', '-') AS UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&Supplier='+rtrim(ltrim(str(Supplier_Product.SupplierCode)))+'&Product=" + Request.QueryString("ProductID") + "&Return=SP' AS Url, 'javascript:deleteLine('+rtrim(ltrim(str(Supplier_Product.SupplierCode)))+')' AS DelUrl " & _
+                SrcSupplierProduct.SelectCommand = "SELECT dbo.Supplier_Product.SupplierCode, ISNULL(dbo.Supplier.Name3, '') + N' ' + ISNULL(dbo.Supplier.Name4, '') AS [SupplierName], dbo.Supplier_Product.SupplierItemNumber, dbo.Supplier_Product.Note, REPLACE(CONVERT(char, Supplier_Product.UpdateDate, 111), '/', '-') AS UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&Supplier='+rtrim(ltrim(str(Supplier_Product.SupplierCode)))+'&Product=" + Request.QueryString("ProductID") + "&Return=SP' AS Url " & _
                                                    "FROM dbo.Supplier_Product LEFT OUTER JOIN dbo.Supplier ON dbo.Supplier_Product.SupplierCode = dbo.Supplier.SupplierCode " & _
                                                    "WHERE (dbo.Supplier_Product.ProductID = " + Request.QueryString("ProductID") + ")"
                 SupplierProductList.DataBind()
             End If
         Else
-            'SrcSupplierProduct.SelectCommand = "SELECT dbo.Supplier_Product.SupplierCode, ISNULL(dbo.Supplier.Name3, '') + N' ' + ISNULL(dbo.Supplier.Name4, '') AS [SupplierName], dbo.Supplier_Product.SupplierItemNumber, dbo.Supplier_Product.Note, REPLACE(CONVERT(char, Supplier_Product.UpdateDate, 111), '/', '-') AS UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&Supplier='+rtrim(ltrim(str(Supplier_Product.SupplierCode)))+'&Product=" + Request.QueryString("ProductID") + "&Return=SP' AS Url, './SuppliersProductSetting.aspx?Action=Delete&Supplier='+rtrim(ltrim(str(Supplier_Product.SupplierCode)))+'&ProductID=" + Request.QueryString("ProductID") + "' AS DelUrl " & _
-            '                                 "FROM dbo.Supplier_Product LEFT OUTER JOIN dbo.Supplier ON dbo.Supplier_Product.SupplierCode = dbo.Supplier.SupplierCode " & _
-            '                                 "WHERE (dbo.Supplier_Product.ProductID = '')"
-            'SupplierProductList.DataBind()
+            SrcSupplierProduct.SelectCommand = ""
+            SupplierProductList.DataBind()
             Msg.Text = "ProductIDが設定されていません"
         End If
 
     End Sub
 
     Private Sub Page_PreRenderComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRenderComplete
-        If Request.QueryString("Action") = "Delete" Then
+        If Request.Form("Action") = "Delete" Then
             '[指定レコード削除]-----------------------------------------------------------------
-            DBCommand.CommandText = "DELETE Supplier_Product WHERE SupplierCode=" + Request.QueryString("Supplier") + " AND ProductID=" + Request.QueryString("ProductID")
+            DBCommand.CommandText = "DELETE Supplier_Product WHERE SupplierCode=" + Request.Form("SupplierCode") + " AND ProductID=" + Request.QueryString("ProductID")
             DBCommand.ExecuteNonQuery()
             Url = "./SupplierListByProduct.aspx?ProductID=" & Request.QueryString("ProductID")
             Response.Redirect(Url)
         End If
 
         '[New Suppliers ProductのURL設定]------------------------------------------------------------
-        AddUrl = "./SuppliersProductSetting.aspx?Product=" + Request.QueryString("ProductID")
+        AddUrl = "./SuppliersProductSetting.aspx?Product=" + Request.QueryString("ProductID") + "&Return=SP"
         ProductID = Request.QueryString("ProductID")
     End Sub
 End Class

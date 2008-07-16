@@ -11,13 +11,11 @@
     <script type="text/javascript">
 <!--
 function deleteLine(code) {
-    if (!confirm("It can't be restored once deleted.\nAre you sure to delete this entry?")) {
-        return false;
+    if (confirm("It can't be restored once deleted.\nAre you sure to delete this entry?")) {
+      document.forms["DeleteForm"].SupplierCode.value = code;
+      document.forms["DeleteForm"].submit();
+      return true;
     }
-    document.DeleteForm.SupplierCode = code;
-    document.DeleteForm.submit();
-
-    return true;
 }
 //-->
     </script>
@@ -45,10 +43,10 @@ function deleteLine(code) {
         </div>
 
         <div class="list">
-            <form id="DeleteForm" action="" method="post">
-                <input type="hidden" id="ProductID" value='<%=ProductID  %>' />
-                <input type="hidden" id="SupplierCode" />
-                <input type="hidden" id="Action" value="Delete" />
+            <form id="DeleteForm" runat="server" action="" method="post">
+                <input type="hidden" runat="server" id="ProductID" value='<%=ProductID  %>' />
+                <input type="hidden" runat="server" id="SupplierCode" />
+                <input type="hidden" runat="server" id="Action" value="Delete" />
             </form>
         
             <asp:ListView ID="SupplierProductList" runat="server" DataSourceID="SrcSupplierProduct">
