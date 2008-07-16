@@ -16,15 +16,6 @@ Option Explicit On
 Partial Public Class ProductListBySupplier
 
     '''<summary>
-    '''form1 コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents form1 As Global.System.Web.UI.HtmlControls.HtmlForm
-
-    '''<summary>
     '''Msg コントロール。
     '''</summary>
     '''<remarks>
@@ -52,6 +43,33 @@ Partial Public Class ProductListBySupplier
     Protected WithEvents SupplierName As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
+    '''DeleteForm コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents DeleteForm As Global.System.Web.UI.HtmlControls.HtmlForm
+
+    '''<summary>
+    '''ProductID コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents ProductID As Global.System.Web.UI.HtmlControls.HtmlInputHidden
+
+    '''<summary>
+    '''Action コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Action As Global.System.Web.UI.HtmlControls.HtmlInputHidden
+
+    '''<summary>
     '''SupplierProductList コントロール。
     '''</summary>
     '''<remarks>
@@ -68,13 +86,4 @@ Partial Public Class ProductListBySupplier
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents SrcSupplierProduct As Global.System.Web.UI.WebControls.SqlDataSource
-
-    '''<summary>
-    '''JobNaiyo コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents JobNaiyo As Global.System.Web.UI.WebControls.HiddenField
 End Class

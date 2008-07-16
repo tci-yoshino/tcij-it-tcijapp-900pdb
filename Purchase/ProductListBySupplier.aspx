@@ -8,9 +8,19 @@
     <link rel="stylesheet" href="./CSS/Style.css" type="text/css" media="screen,print" />
     <script type="text/javascript" src="./JS/Common.js"></script>
     <script type="text/javascript" src="./JS/Colorful.js"></script>
+    <script type="text/javascript">
+<!--
+function deleteLine(code) {
+    if (confirm("It can't be restored once deleted.\nAre you sure to delete this entry?")) {
+      document.forms["DeleteForm"].ProductID.value = code;
+      document.forms["DeleteForm"].submit();
+      return true;
+    }
+}
+//-->
+    </script>
 </head>
 <body>
-    <form id="form1" runat="server">
     <!-- Main Content Area -->
     <div id="content">
         <div class="tabs"><a href="<%=AddUrl %>">New Suppliers Product</a> | <a href="<%=ImpUrl %>">Excel Import</a></div>
@@ -33,6 +43,11 @@
         </div>
 
         <div class="list">
+            <form id="DeleteForm" runat="server" action="" method="post">
+                <input type="hidden" runat="server" id="ProductID" />
+                <input type="hidden" runat="server" id="Action" value="Delete" />
+            </form>
+            
             <asp:ListView ID="SupplierProductList" runat="server" DataSourceID="SrcSupplierProduct">
                 <LayoutTemplate>
                     <table ID="itemPlaceholderContainer" runat="server" border="0" style="">
@@ -61,8 +76,8 @@
                         <td><asp:Label ID="UpdateDate" runat="server" Text='<%# Eval("UpdateDate") %>' /></td>
                         <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl='<%# Eval("Url") %>'>Edit</asp:HyperLink></td>
                         <td>
-                            <asp:HyperLink ID="Delete" runat="server" NavigateUrl='<%# Eval("DelUrl") %>'>Delete</asp:HyperLink>
-                            <asp:HiddenField ID="ProductID" runat="server" Value='<%# Eval("ProductID") %>' />
+                            <asp:HyperLink ID="Delete" runat="server" NavigateUrl='<%# "javascript:deleteLine(" & Eval("ProductID") & ");" %>'>Delete</asp:HyperLink>
+                            
                         </td>
                     </tr>
                 </ItemTemplate>
@@ -85,7 +100,6 @@ FROM                     dbo.Supplier_Product LEFT OUTER JOIN
 
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
-    <asp:HiddenField ID="JobNaiyo" runat="server" />
-</form>
+  <!--   -->
 </body>
 </html>
