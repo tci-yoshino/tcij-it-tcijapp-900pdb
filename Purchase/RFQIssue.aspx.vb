@@ -96,7 +96,7 @@
         Dim Enq_Quantity3 As Boolean = False
         Dim Enq_Quantity4 As Boolean = False
         Dim i_Result As Integer
-
+        Msg.Text = ""
         If Request.QueryString("Action") <> "Issue" Then
             Exit Sub
         End If
@@ -138,7 +138,7 @@
         End If
         '入力項目チェックLine
         If EnqQuantity_1.Text <> "" And EnqUnit_1.SelectedValue <> "" And EnqPiece_1.Text <> "" Then
-            If IsNumeric(EnqQuantity_1.Text) = False Or IsNumeric(EnqPiece_1.Text) = False Then
+            If IsNumeric(EnqQuantity_1.Text) = False Or Integer.TryParse(EnqPiece_1.Text, i_Result) = False Then
                 Bo_UnLine = True
             Else
                 Enq_Quantity1 = True
@@ -149,7 +149,7 @@
             Bo_UnLine = True
         End If
         If EnqQuantity_2.Text <> "" And EnqUnit_2.SelectedValue <> "" And EnqPiece_2.Text <> "" Then
-            If IsNumeric(EnqQuantity_2.Text) = False Or IsNumeric(EnqPiece_2.Text) = False Then
+            If IsNumeric(EnqQuantity_2.Text) = False Or Integer.TryParse(EnqPiece_2.Text, i_Result) = False Then
                 Bo_UnLine = True
             Else
                 Enq_Quantity2 = True
@@ -160,7 +160,7 @@
             Bo_UnLine = True
         End If
         If EnqQuantity_3.Text <> "" And EnqUnit_3.SelectedValue <> "" And EnqPiece_3.Text <> "" Then
-            If IsNumeric(EnqQuantity_3.Text) = False Or IsNumeric(EnqPiece_3.Text) = False Then
+            If IsNumeric(EnqQuantity_3.Text) = False Or Integer.TryParse(EnqPiece_3.Text, i_Result) = False Then
                 Bo_UnLine = True
             Else
                 Enq_Quantity3 = True
@@ -171,7 +171,7 @@
             Bo_UnLine = True
         End If
         If EnqQuantity_4.Text <> "" And EnqUnit_4.SelectedValue <> "" And EnqPiece_4.Text <> "" Then
-            If IsNumeric(EnqQuantity_4.Text) = False Or IsNumeric(EnqPiece_4.Text) = False Then
+            If IsNumeric(EnqQuantity_4.Text) = False Or Integer.TryParse(EnqPiece_4.Text, i_Result) = False Then
                 Bo_UnLine = True
             Else
                 Enq_Quantity4 = True
@@ -288,10 +288,10 @@
             param6.Value = SupplierCode.Text
             param7.Value = IIf(IsNumeric(MakerCode.Text) = True, MakerCode.Text, System.DBNull.Value)
             param8.Value = Purpose.SelectedValue
-            param9.Value = RequiredPurity.Text
-            param10.Value = RequiredQMMethod.Text
-            param11.Value = RequiredSpecification.Text
-            param12.Value = Comment.Text
+            param9.Value = IIf(Trim(RequiredPurity.Text) = "", System.DBNull.Value, RequiredPurity.Text)
+            param10.Value = IIf(Trim(RequiredQMMethod.Text) = "", System.DBNull.Value, RequiredQMMethod.Text)
+            param11.Value = IIf(Trim(RequiredSpecification.Text) = "", System.DBNull.Value, RequiredSpecification.Text)
+            param12.Value = IIf(Trim(Comment.Text) = "", System.DBNull.Value, Comment.Text)
             param13.Value = IIf(QuoLocation.SelectedValue = "Direct", "N", IIf(IsNumeric(QuoUser.SelectedValue) = True, "A", ""))
             param14.Value = CInt(Session("UserID"))
             param15.Value = CInt(Session("UserID"))
@@ -303,37 +303,48 @@
                 End While
             End If
             DBReader.Close()
+            DBCommand.CommandText = "INSERT INTO RFQLine " _
+              & "(RFQNumber, EnqQuantity, EnqUnitCode, EnqPiece, SupplierItemNumber, CreatedBy, UpdatedBy) " _
+              & "VALUES(@RFQNumber, @EnqQuantity, @EnqUnitCode, @EnqPiece, " _
+              & "@SupplierItemNumber, @CreatedBy, @UpdatedBy); "
+
+            param1 = DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int)
+            param2 = DBCommand.Parameters.Add("@EnqQuantity", SqlDbType.Decimal)
+            param3 = DBCommand.Parameters.Add("@EnqUnitCode", SqlDbType.VarChar, 5)
+            param4 = DBCommand.Parameters.Add("@EnqPiece", SqlDbType.Int)
+            param5 = DBCommand.Parameters.Add("@SupplierItemNumber", SqlDbType.VarChar, 128)
+            param1.Value = i_RFQNumber
+
             If Enq_Quantity1 = True Then
-                If RFQLine(i_RFQNumber, EnqQuantity_1.Text, EnqUnit_1.SelectedValue, EnqPiece_1.Text, SupplierItemNumber_1.Text) = -1 Then
-                    Msg.Text = "Enq-Quantity の設定が不正です"
-                    sqlTran.Rollback()
-                    Exit Sub
-                End If
+                param2.Value = EnqQuantity_1.Text
+                param3.Value = EnqUnit_1.SelectedValue
+                param4.Value = EnqPiece_1.Text
+                param5.Value = IIf(SupplierItemNumber_1.Text = "", System.DBNull.Value, SupplierItemNumber_1.Text)
+                DBCommand.ExecuteNonQuery()
             End If
             If Enq_Quantity2 = True Then
-                If RFQLine(i_RFQNumber, EnqQuantity_2.Text, EnqUnit_2.SelectedValue, EnqPiece_2.Text, SupplierItemNumber_2.Text) = -1 Then
-                    Msg.Text = "Enq-Quantity の設定が不正です"
-                    sqlTran.Rollback()
-                    Exit Sub
-                End If
+                param2.Value = EnqQuantity_2.Text
+                param3.Value = EnqUnit_2.SelectedValue
+                param4.Value = EnqPiece_2.Text
+                param5.Value = IIf(SupplierItemNumber_2.Text = "", System.DBNull.Value, SupplierItemNumber_2.Text)
+                DBCommand.ExecuteNonQuery()
             End If
             If Enq_Quantity3 = True Then
-                If RFQLine(i_RFQNumber, EnqQuantity_3.Text, EnqUnit_3.SelectedValue, EnqPiece_3.Text, SupplierItemNumber_3.Text) = -1 Then
-                    Msg.Text = "Enq-Quantity の設定が不正です"
-                    sqlTran.Rollback()
-                    Exit Sub
-                End If
+                param2.Value = EnqQuantity_3.Text
+                param3.Value = EnqUnit_3.SelectedValue
+                param4.Value = EnqPiece_3.Text
+                param5.Value = IIf(SupplierItemNumber_3.Text = "", System.DBNull.Value, SupplierItemNumber_3.Text)
+                DBCommand.ExecuteNonQuery()
             End If
             If Enq_Quantity4 = True Then
-                If RFQLine(i_RFQNumber, EnqQuantity_4.Text, EnqUnit_4.SelectedValue, EnqPiece_4.Text, SupplierItemNumber_4.Text) = -1 Then
-                    Msg.Text = "Enq-Quantity の設定が不正です"
-                    sqlTran.Rollback()
-                    Exit Sub
-                End If
+                param2.Value = EnqQuantity_4.Text
+                param3.Value = EnqUnit_4.SelectedValue
+                param4.Value = EnqPiece_4.Text
+                param5.Value = IIf(SupplierItemNumber_4.Text = "", System.DBNull.Value, SupplierItemNumber_4.Text)
+                DBCommand.ExecuteNonQuery()
             End If
-            Msg.Text = ""
             sqlTran.Commit()
-            Response.Redirect("./RFQUpdate.aspx")
+            Response.Redirect("RFQUpdate.aspx", False)
         Catch ex As Exception
             sqlTran.Rollback()
             Throw
@@ -341,43 +352,4 @@
             DBCommand.Dispose()
         End Try
     End Sub
-    Private Function RFQLine(ByVal ID As Integer, ByVal EnqQuantity As Decimal, ByVal EnqUnitCode As String, ByVal EnqPiece As Integer, ByVal SupplierItemNumber As String) As Integer
-        Dim i_Result As Integer
-        RFQLine = -1
-        If Integer.TryParse(EnqPiece, i_Result) = False Then
-            Exit Function
-        End If
-
-        DBCommand.CommandText = "INSERT INTO RFQLine " _
-                      & "(RFQNumber, EnqQuantity, EnqUnitCode, EnqPiece, SupplierItemNumber, CreatedBy, UpdatedBy) " _
-                      & "VALUES(@RFQNumber, @EnqQuantity, @EnqUnitCode, @EnqPiece, " _
-                      & "@SupplierItemNumber, @CreatedByLine, @UpdatedByLine); "
-        Dim param1 As System.Data.SqlClient.SqlParameter
-        Dim param2 As System.Data.SqlClient.SqlParameter
-        Dim param3 As System.Data.SqlClient.SqlParameter
-        Dim param4 As System.Data.SqlClient.SqlParameter
-        Dim param5 As System.Data.SqlClient.SqlParameter
-        Dim param6 As System.Data.SqlClient.SqlParameter
-        Dim param7 As System.Data.SqlClient.SqlParameter
-
-        param1 = DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int)
-        param2 = DBCommand.Parameters.Add("@EnqQuantity", SqlDbType.Decimal)
-        param3 = DBCommand.Parameters.Add("@EnqUnitCode", SqlDbType.VarChar, 5)
-        param4 = DBCommand.Parameters.Add("@EnqPiece", SqlDbType.Int)
-        param5 = DBCommand.Parameters.Add("@SupplierItemNumber", SqlDbType.VarChar, 128)
-        param6 = DBCommand.Parameters.Add("@CreatedByLine", SqlDbType.Int)
-        param7 = DBCommand.Parameters.Add("@UpdatedByLine", SqlDbType.Int)
-
-        param1.Value = ID
-        param2.Value = EnqQuantity
-        param3.Value = EnqUnitCode
-        param4.Value = EnqPiece
-        param5.Value = IIf(SupplierItemNumber = "", System.DBNull.Value, SupplierItemNumber)
-        param6.Value = CInt(Session("UserID"))
-        param7.Value = CInt(Session("UserID"))
-        DBCommand.ExecuteNonQuery()
-        DBCommand.Dispose()
-
-        RFQLine = 0
-    End Function
 End Class
