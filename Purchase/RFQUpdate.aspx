@@ -73,15 +73,27 @@
                     <tr>
                         <th>Payment Terms : </th>
                         <td>
-                            <asp:DropDownList ID="PaymentTerm" runat="server">
+                            <asp:DropDownList ID="PaymentTerm" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_PaymentTerms" DataTextField="Text" 
+                                DataValueField="PaymentTermCode">
                             </asp:DropDownList>
+                            <asp:SqlDataSource ID="SDS_RFQUpdate_PaymentTerms" runat="server" 
+                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+                                SelectCommand="SELECT PaymentTermCode, Text FROM s_PaymentTerm ">
+                            </asp:SqlDataSource>
                         </td>
                     </tr>
                     <tr>
                         <th>Handling Fee / Shipment Cost : </th>
                         <td>
-                            <asp:DropDownList ID="ShippingHandlingCurrency" runat="server">
+                            <asp:DropDownList ID="ShippingHandlingCurrency" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_Currency" DataTextField="CurrencyCode" 
+                                DataValueField="CurrencyCode">
                             </asp:DropDownList>
+                            <asp:SqlDataSource ID="SDS_RFQUpdate_Currency" runat="server" 
+                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+                                SelectCommand="SELECT [CurrencyCode] FROM [PurchasingCurrency]">
+                            </asp:SqlDataSource>
                             <asp:TextBox ID="TextBox1" runat="server" Width="5em" MaxLength="21" CssClass="number"></asp:TextBox>
                         </td>
                     </tr>
@@ -113,8 +125,18 @@
                     <tr>
                         <th>Quo-User <span class="required">*</span> : </th>
                         <td>
-                            <asp:DropDownList ID="QuoUser" runat="server">
+                            <asp:DropDownList ID="QuoUser" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_QuoUser" DataTextField="Name" 
+                                DataValueField="UserID">
                             </asp:DropDownList>
+                            <asp:SqlDataSource ID="SDS_RFQUpdate_QuoUser" runat="server" 
+                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+                                SelectCommand="SELECT UserID, Name FROM v_User WHERE (LocationName = @Location)">
+                                <SelectParameters>
+                                    <asp:ControlParameter ControlID="QuoLocation" Name="Location" 
+                                        PropertyName="Text" />
+                                </SelectParameters>
+                            </asp:SqlDataSource>
                             (<asp:Label ID="QuoLocation" runat="server" Text=""></asp:Label>)
                         </td>
                     </tr>

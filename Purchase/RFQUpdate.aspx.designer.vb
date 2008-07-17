@@ -178,6 +178,15 @@ Partial Public Class RFQUpdate
     Protected WithEvents PaymentTerm As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
+    '''SDS_RFQUpdate_PaymentTerms コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SDS_RFQUpdate_PaymentTerms As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
     '''ShippingHandlingCurrency コントロール。
     '''</summary>
     '''<remarks>
@@ -185,6 +194,15 @@ Partial Public Class RFQUpdate
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents ShippingHandlingCurrency As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''SDS_RFQUpdate_Currency コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SDS_RFQUpdate_Currency As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
     '''TextBox1 コントロール。
@@ -275,6 +293,15 @@ Partial Public Class RFQUpdate
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents QuoUser As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''SDS_RFQUpdate_QuoUser コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SDS_RFQUpdate_QuoUser As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
     '''QuoLocation コントロール。
