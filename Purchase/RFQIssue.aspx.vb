@@ -344,7 +344,7 @@
                 DBCommand.ExecuteNonQuery()
             End If
             sqlTran.Commit()
-            Response.Redirect("RFQUpdate.aspx", False)
+            Response.Redirect("RFQUpdate.aspx?RFQNumber=" & i_RFQNumber, False)
         Catch ex As Exception
             sqlTran.Rollback()
             Throw
