@@ -34,7 +34,9 @@
 						<th>Supplier Code <span class="required">*</span> : </th>
 						<td>
 						    <asp:TextBox ID="SupplierCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
-						    <asp:ImageButton ID="SupplierSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="popup('./SupplierSelect.aspx')" />
+						    <asp:ImageButton ID="SupplierSelect" runat="server" 
+                                ImageUrl="./Image/Search.gif" CssClass="magnify" 
+                                OnClientClick="return SupplierSelect_onclick()" />
 						</td>
 					</tr>
 					<tr>
@@ -56,7 +58,8 @@
 						<th>Maker Code : </th>
 						<td>
 						    <asp:TextBox ID="MakerCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
-						    <asp:ImageButton ID="MakerSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="popup('./MakerSelect.aspx')" />
+						    <asp:ImageButton ID="MakerSelect" runat="server" ImageUrl="./Image/Search.gif" 
+                                CssClass="magnify" OnClientClick="return MakerSelect_onclick()" />
 						</td>
 					</tr>
 					<tr>
@@ -75,11 +78,12 @@
                         <td>
                             <asp:DropDownList ID="PaymentTerm" runat="server" 
                                 DataSourceID="SDS_RFQUpdate_PaymentTerms" DataTextField="Text" 
-                                DataValueField="PaymentTermCode">
+                                DataValueField="PaymentTermCode" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                             <asp:SqlDataSource ID="SDS_RFQUpdate_PaymentTerms" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-                                SelectCommand="SELECT PaymentTermCode, Text FROM s_PaymentTerm ">
+                                SelectCommand="SELECT TOP (20) PaymentTermCode, Text FROM s_PaymentTerm">
                             </asp:SqlDataSource>
                         </td>
                     </tr>
@@ -88,7 +92,8 @@
                         <td>
                             <asp:DropDownList ID="ShippingHandlingCurrency" runat="server" 
                                 DataSourceID="SDS_RFQUpdate_Currency" DataTextField="CurrencyCode" 
-                                DataValueField="CurrencyCode">
+                                DataValueField="CurrencyCode" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                             <asp:SqlDataSource ID="SDS_RFQUpdate_Currency" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
@@ -173,31 +178,53 @@
                         <td>
                             <asp:Label ID="EnqQuantity_1" runat="server" Text=""></asp:Label> <asp:Label ID="EnqUnit_1" runat="server" Text=""></asp:Label> x <asp:Label ID="EnqPiece_1" runat="server" Text=""></asp:Label></td>
                         <td>
-                            <asp:DropDownList ID="Currency_1" runat="server">
+                            <asp:DropDownList ID="Currency_1" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_Currency" DataTextField="CurrencyCode" 
+                                DataValueField="CurrencyCode" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                         </td>
                         <td><asp:TextBox ID="UnitPrice_1" runat="server" Width="5em" MaxLength="18" CssClass="number"></asp:TextBox></td>
                         <td><asp:TextBox ID="QuoPer_1" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox></td>
                         <td>
-                            <asp:DropDownList ID="QuoUnit_1" runat="server">
+                            <asp:DropDownList ID="QuoUnit_1" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_Unit" DataTextField="UnitCode" 
+                                DataValueField="UnitCode" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
+                            <asp:SqlDataSource ID="SDS_RFQUpdate_Unit" runat="server" 
+                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+                                SelectCommand="SELECT [UnitCode] FROM [PurchasingUnit]"></asp:SqlDataSource>
                         </td>
                         <td><asp:TextBox ID="LeadTime_1" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="SupplierItemNumber_1" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
-                        <td rowspan="2"><asp:HyperLink ID="POIssue_1" runat="server" NavigateUrl="./POIssue.aspx">PO Issue</asp:HyperLink></td>
+                        <td rowspan="2"><asp:HyperLink ID="POIssue_1" runat="server"  NavigateUrl="./POIssue.aspx">PO Issue</asp:HyperLink></td>
                     </tr>
                     <tr>
                         <td>
-                            <asp:DropDownList ID="Incoterms_1" runat="server">
+                            <asp:DropDownList ID="Incoterms_1" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_Incoterms" DataTextField="IncotermsCode" 
+                                DataValueField="IncotermsCode" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
+                            <asp:SqlDataSource ID="SDS_RFQUpdate_Incoterms" runat="server" 
+                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+                                SelectCommand="SELECT IncotermsCode FROM s_Incoterms"></asp:SqlDataSource>
                         </td>
                         <td colspan="2"><asp:TextBox ID="DeliveryTerm_1" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="Purity_1" runat="server" Width="5em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="QMMethod_1" runat="server" Width="5em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="Packing_1" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td>
-                            <asp:DropDownList ID="NoOfferReason_1" runat="server">
+                            <asp:DropDownList ID="NoOfferReason_1" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_NoOffer" DataTextField="Text" 
+                                DataValueField="NoOfferReasonCode" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
+                            <asp:SqlDataSource ID="SDS_RFQUpdate_NoOffer" runat="server" 
+                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+                                SelectCommand="SELECT [NoOfferReasonCode], [Text] FROM [NoOfferReason]">
+                            </asp:SqlDataSource>
                         </td>
                     </tr>
                     <tr>
@@ -205,13 +232,19 @@
                         <td>
                             <asp:Label ID="EnqQuantity_2" runat="server" Text=""></asp:Label> <asp:Label ID="EnqUnit_2" runat="server" Text=""></asp:Label> x <asp:Label ID="EnqPiece_2" runat="server" Text=""></asp:Label></td>
                         <td>
-                            <asp:DropDownList ID="Currency_2" runat="server">
+                            <asp:DropDownList ID="Currency_2" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_Currency" DataTextField="CurrencyCode" 
+                                DataValueField="CurrencyCode" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                         </td>
                         <td><asp:TextBox ID="UnitPrice_2" runat="server" Width="5em" MaxLength="18" CssClass="number"></asp:TextBox></td>
                         <td><asp:TextBox ID="QuoPer_2" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox></td>
                         <td>
-                            <asp:DropDownList ID="QuoUnit_2" runat="server">
+                            <asp:DropDownList ID="QuoUnit_2" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_Unit" DataTextField="UnitCode" 
+                                DataValueField="UnitCode" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                         </td>
                         <td><asp:TextBox ID="LeadTime_2" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
@@ -220,7 +253,10 @@
                     </tr>
                     <tr>
                         <td>
-                            <asp:DropDownList ID="Incoterms_2" runat="server">
+                            <asp:DropDownList ID="Incoterms_2" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_Incoterms" DataTextField="IncotermsCode" 
+                                DataValueField="IncotermsCode" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                         </td>
                         <td colspan="2"><asp:TextBox ID="DeliveryTerm_2" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
@@ -228,7 +264,10 @@
                         <td><asp:TextBox ID="QMMethod_2" runat="server" Width="5em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="Packing_2" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td>
-                            <asp:DropDownList ID="NoOfferReason_2" runat="server">
+                            <asp:DropDownList ID="NoOfferReason_2" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_NoOffer" DataTextField="Text" 
+                                DataValueField="NoOfferReasonCode" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                         </td>
                     </tr>
@@ -237,13 +276,19 @@
                         <td>
                             <asp:Label ID="EnqQuantity_3" runat="server" Text=""></asp:Label> <asp:Label ID="EnqUnit_3" runat="server" Text=""></asp:Label> x <asp:Label ID="EnqPiece_3" runat="server" Text=""></asp:Label></td>
                         <td>
-                            <asp:DropDownList ID="Currency_3" runat="server">
+                            <asp:DropDownList ID="Currency_3" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_Currency" DataTextField="CurrencyCode" 
+                                DataValueField="CurrencyCode" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                         </td>
                         <td><asp:TextBox ID="UnitPrice_3" runat="server" Width="5em" MaxLength="18" CssClass="number"></asp:TextBox></td>
                         <td><asp:TextBox ID="QuoPer_3" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox></td>
                         <td>
-                            <asp:DropDownList ID="QuoUnit_3" runat="server">
+                            <asp:DropDownList ID="QuoUnit_3" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_Unit" DataTextField="UnitCode" 
+                                DataValueField="UnitCode" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                         </td>
                         <td><asp:TextBox ID="LeadTime_3" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
@@ -252,7 +297,10 @@
                     </tr>
                     <tr>
                         <td>
-                            <asp:DropDownList ID="Incoterms_3" runat="server">
+                            <asp:DropDownList ID="Incoterms_3" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_Incoterms" DataTextField="IncotermsCode" 
+                                DataValueField="IncotermsCode" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                         </td>
                         <td colspan="2"><asp:TextBox ID="DeliveryTerm_3" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
@@ -260,7 +308,10 @@
                         <td><asp:TextBox ID="QMMethod_3" runat="server" Width="5em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="Packing_3" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td>
-                            <asp:DropDownList ID="NoOfferReason_3" runat="server">
+                            <asp:DropDownList ID="NoOfferReason_3" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_NoOffer" DataTextField="Text" 
+                                DataValueField="NoOfferReasonCode" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                         </td>
                     </tr>
@@ -269,13 +320,19 @@
                         <td>
                             <asp:Label ID="EnqQuantity_4" runat="server" Text=""></asp:Label> <asp:Label ID="EnqUnit_4" runat="server" Text=""></asp:Label> x <asp:Label ID="EnqPiece_4" runat="server" Text=""></asp:Label></td>
                         <td>
-                            <asp:DropDownList ID="Currency_4" runat="server">
+                            <asp:DropDownList ID="Currency_4" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_Currency" DataTextField="CurrencyCode" 
+                                DataValueField="CurrencyCode" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                         </td>
                         <td><asp:TextBox ID="UnitPrice_4" runat="server" Width="5em" MaxLength="18" CssClass="number"></asp:TextBox></td>
                         <td><asp:TextBox ID="QuoPer_4" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox></td>
                         <td>
-                            <asp:DropDownList ID="QuoUnit_4" runat="server">
+                            <asp:DropDownList ID="QuoUnit_4" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_Unit" DataTextField="UnitCode" 
+                                DataValueField="UnitCode" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                         </td>
                         <td><asp:TextBox ID="LeadTime_4" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
@@ -284,7 +341,10 @@
                     </tr>
                     <tr>
                         <td>
-                            <asp:DropDownList ID="Incoterms_4" runat="server">
+                            <asp:DropDownList ID="Incoterms_4" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_Incoterms" DataTextField="IncotermsCode" 
+                                DataValueField="IncotermsCode" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                         </td>
                         <td colspan="2"><asp:TextBox ID="DeliveryTerm_4" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
@@ -292,7 +352,10 @@
                         <td><asp:TextBox ID="QMMethod_4" runat="server" Width="5em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="Packing_4" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td>
-                            <asp:DropDownList ID="NoOfferReason_4" runat="server">
+                            <asp:DropDownList ID="NoOfferReason_4" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_NoOffer" DataTextField="Text" 
+                                DataValueField="NoOfferReasonCode" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                         </td>
                     </tr>
@@ -301,6 +364,10 @@
                 <div class="btns">
                     <strong>Status : </strong>
                     <asp:DropDownList ID="RFQStatus" runat="server">
+                        <asp:ListItem></asp:ListItem>
+                        <asp:ListItem>Enquired</asp:ListItem>
+                        <asp:ListItem>Partly-quoted</asp:ListItem>
+                        <asp:ListItem>Quoted</asp:ListItem>
                     </asp:DropDownList>
                     <asp:Button ID="Update" runat="server" Text="Update" />
                     <span class="indent"></span>
@@ -309,7 +376,17 @@
             </div>
         </form>
     </div><!-- Main Content Area END -->
-
+		<script language ="javascript" type="text/javascript">
+		function SupplierSelect_onclick() {
+    		var SupplierCode = encodeURIComponent(document.getElementById('SupplierCode').value);
+    		var EnqLocation = encodeURIComponent(document.getElementById('EnqLocation').value);
+	    	popup('./RFQSupplierSelect.aspx?Code=' + SupplierCode + '&Location=' + EnqLocation);
+		}
+		function MakerSelect_onclick() {
+    		var MakerCode = encodeURIComponent(document.getElementById('MakerCode').value);
+	    	popup('./MakerSelect.aspx?Code=' + MakerCode);
+		}
+		</script>
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
 </body>

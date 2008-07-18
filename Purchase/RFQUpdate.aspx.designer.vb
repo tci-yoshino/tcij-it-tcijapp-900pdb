@@ -385,6 +385,15 @@ Partial Public Class RFQUpdate
     Protected WithEvents QuoUnit_1 As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
+    '''SDS_RFQUpdate_Unit コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SDS_RFQUpdate_Unit As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
     '''LeadTime_1 コントロール。
     '''</summary>
     '''<remarks>
@@ -419,6 +428,15 @@ Partial Public Class RFQUpdate
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Incoterms_1 As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''SDS_RFQUpdate_Incoterms コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SDS_RFQUpdate_Incoterms As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
     '''DeliveryTerm_1 コントロール。
@@ -464,6 +482,15 @@ Partial Public Class RFQUpdate
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents NoOfferReason_1 As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''SDS_RFQUpdate_NoOffer コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SDS_RFQUpdate_NoOffer As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
     '''EnqQuantity_2 コントロール。
