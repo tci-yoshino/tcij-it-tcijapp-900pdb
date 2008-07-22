@@ -24,7 +24,7 @@
                     <tr>
                         <th>User : </th>
                         <td>
-                            <asp:DropDownList ID="UID" runat="server">
+                            <asp:DropDownList ID="UserID" runat="server">
                             </asp:DropDownList>
                         </td>
                         <td><asp:Button ID="Switch" runat="server" Text="Switch" /></td>

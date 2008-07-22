@@ -25,13 +25,13 @@ Partial Public Class MyTask
     Protected WithEvents SwitchForm As Global.System.Web.UI.HtmlControls.HtmlForm
 
     '''<summary>
-    '''UID コントロール。
+    '''UserID コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents UID As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents UserID As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
     '''Switch コントロール。
