@@ -8,6 +8,23 @@
     <link rel="stylesheet" href="./CSS/Style.css" type="text/css" media="screen,print" />
     <script type="text/javascript" src="./JS/Common.js"></script>
     <script type="text/javascript" src="./JS/Colorful.js"></script>
+        <script type="text/javascript">
+<!--
+function set_Action(action){
+  if (action == "Preview") {
+    document.forms["ExcelImportForm"].Action.value = action
+    document.forms["ExcelImportForm"].submit();
+    return true;
+  }else if(action == "Import"){
+    document.forms["ExcelImportForm"].Action.value = action
+    document.forms["ExcelImportForm"].submit();
+    return true;
+  }else{
+    return false;
+  }
+}
+//-->
+    </script>
 </head>
 <body>
 
@@ -33,7 +50,7 @@
                     <tr>
                         <th>File : </th>
                         <td><asp:FileUpload ID="File" runat="server" /> 
-                            <asp:Button ID="Preview" runat="server" Text="Preview" /></td>
+                            <asp:Button ID="Preview" runat="server" Text="Preview" onclientclick="javascript:set_Action('Preview');" /></td>
                     </tr>
                 </table>
 
@@ -43,18 +60,25 @@
             <hr />
 
             <div class="list">
-                <asp:GridView ID="SupplierProductList" runat="server">
+                <asp:GridView ID="SupplierProductList" runat="server" DataKeyNames="CAS Number">
+                    <Columns>
+                        <asp:CommandField EditText="Edit" ShowEditButton="True" />
+                    </Columns>
                 </asp:GridView>
 
                 <div class="btns">
-                    <asp:Button ID="Import" runat="server" Text="Import" Visible="False" />
+                    <asp:Button ID="Import" runat="server" Text="Import" Visible="False" onclientclick="javascript:set_Action('Import');" />
                 </div>
             </div>
     </div><!-- Main Content Area END -->
-    <asp:SqlDataSource ID="SrcSupplierProduct" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="SrcSupplierProduct" runat="server" 
+        ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" SelectCommand="SELECT                  ProductID, ProductNumber, JapaneseName, ChineseName, CASNumber
+FROM                     dbo.Product
+WHERE                   (ProductID &lt; 100)"></asp:SqlDataSource>
     
                 <asp:HiddenField ID="ProductID" runat="server" />
                 <asp:HiddenField ID="ImportFileName" runat="server" />
+                <input type="hidden" id ="Action" runat="server" value="" />
     
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
