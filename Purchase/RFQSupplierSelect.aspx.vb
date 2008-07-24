@@ -7,6 +7,7 @@
     Public st_Name As String
     Public st_Location As String
     Public st_Errorr_Meggage As String = ""
+    Const DIRECT As String = "Direct"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -145,7 +146,7 @@
                     End If
 
                     If IsDBNull(dataSet.Tables("SupplierList").Rows(i).Item("QuoLocationCode")) Then
-                        dataSet.Tables("SupplierList").Rows(i).Item("QuoLocationCode") = "Direct"
+                        dataSet.Tables("SupplierList").Rows(i).Item("QuoLocationCode") = DIRECT
                     End If
                 Next i
             End Using
