@@ -21,6 +21,7 @@
         <h3>RFQ</h3>
 
         <div class="list">
+            <p class="attention"><asp:Label ID="ErrorMessages" runat="server"></asp:Label></p>
             <asp:ListView ID="RFQList" runat="server" DataSourceID="SrcRFQ" DataKeyNames="RFQNumber">
                 <LayoutTemplate>
                     <table ID="itemPlaceholderContainer" runat="server" border="0" style="">
@@ -34,35 +35,36 @@
                 <ItemTemplate>
                     <tr>
                         <th class="subhead" colspan="2">
-                            RFQ Reference Number : <asp:HyperLink ID="RFQUpdate" runat="server" NavigateUrl="./RFQUpdate.aspx"><asp:Label ID="RFQNumber" runat="server" Text=""><%#Eval("RFQNumber")%></asp:Label></asp:HyperLink>
+                            RFQ Reference Number : <asp:HyperLink ID="RFQUpdate" runat="server" NavigateUrl='<%# "./RFQUpdate.aspx?RFQNumber=" & Eval("RFQNumber")%>'><asp:Label ID="RFQNumber" runat="server" Text='<%#Eval("RFQNumber")%>'></asp:Label></asp:HyperLink>
                         </th>
                         <th class="subhead" colspan="2">
-                            <asp:Label ID="RFQStatusChangeDate" runat="server" Text=""><%#Eval("StatusChangeDate")%></asp:Label><span class="indent"><asp:Label ID="RFQStatus" runat="server" Text=""><%#Eval("Status")%></asp:Label></span>
+                            <asp:Label ID="RFQStatusChangeDate" runat="server" Text='<%#Eval("StatusChangeDate")%>'></asp:Label><span class="indent"><asp:Label ID="RFQStatus" runat="server" Text='<%#Eval("Status")%>'></asp:Label></span>
                         </th>
                         <th class="subhead" colspan="2" style="text-align:right">
                             Assign to : <asp:DropDownList ID="QuoUser" runat="server" DataSourceID="SrcQuo" DataTextField="Name" DataValueField="UserID"></asp:DropDownList>
-                            <asp:Button ID="Assign" runat="server" Text="Assign" CommandArgument='<%#Eval("UpdateDate") %>' />
+                            <asp:HiddenField runat="server" ID="UpdateDate" Value='<%#Eval("UpdateDate")%>' />
+                            <asp:Button ID="Assign" runat="server" Text="Assign" CommandArgument='<%#Container.DataItemIndex %>' />
                         </th>
                     </tr>
                     <tr>
                         <th style="width:17%">Product Number / Name</th>
                         <td style="width:33%">
-                            <asp:Label ID="ProductNumber" runat="server" Text=""><%#Eval("ProductNumber")%></asp:Label>
-                            <span class="indent"><asp:Label ID="ProductName" runat="server" Text=""><%#Eval("ProductName")%></asp:Label></span>
+                            <asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label>
+                            <span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Eval("ProductName")%>'></asp:Label></span>
                         </td>
                         <th style="width:10%">Purpose</th>
-                        <td style="width:12%"><asp:Label ID="Purpose" runat="server" Text=""><%#Eval("Purpose")%></asp:Label></td>
+                        <td style="width:12%"><asp:Label ID="Purpose" runat="server" Text='<%#Eval("Purpose")%>'></asp:Label></td>
                         <th style="width:10%">Enq-User</th>
                         <td style="width:18%">
-                            <asp:Label ID="EnqUser" runat="server" Text=""><%#Eval("EnqUserName")%></asp:Label>
-                            <span class="indent">(<asp:Label ID="EnqLocation" runat="server" Text=""><%#Eval("EnqLocationName")%></asp:Label>)</span>
+                            <asp:Label ID="EnqUser" runat="server" Text='<%#Eval("EnqUserName")%>'></asp:Label>
+                            <span class="indent">(<asp:Label ID="EnqLocation" runat="server" Text='<%#Eval("EnqLocationName")%>'></asp:Label>)</span>
                         </td>
                     </tr>
                     <tr>
                         <th>Supplier Name</th>
-                        <td><asp:Label ID="SupplierName" runat="server" Text=""><%#Eval("SupplierName")%></asp:Label></td>
+                        <td><asp:Label ID="SupplierName" runat="server" Text='<%#Eval("SupplierName")%>'></asp:Label></td>
                         <th>Maker Name</th>
-                        <td colspan="3"><asp:Label ID="MakerName" runat="server" Text=""><%#Eval("MakerName")%></asp:Label></td>
+                        <td colspan="3"><asp:Label ID="MakerName" runat="server" Text='<%#Eval("MakerName")%>'></asp:Label></td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>
@@ -86,33 +88,34 @@
                 <ItemTemplate>
                     <tr>
                         <th class="subhead" colspan="2">
-                            PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl="./POUpdate.aspx"><asp:Label ID="PONumber" runat="server" Text=""><%#Eval("PONumber")%></asp:Label></asp:HyperLink>
+                            PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber")%>'><asp:Label ID="PONumber" runat="server" Text='<%#Eval("PONumber")%>'></asp:Label></asp:HyperLink>
                         </th>
                         <th class="subhead">
-                            <asp:Label ID="POStatusChangeDate" runat="server" Text=""><%#Eval("StatusChangeDate")%></asp:Label>
-                            <span class="indent"><asp:Label ID="POStatus" runat="server" Text=""><%#Eval("Status")%></asp:Label></span>
+                            <asp:Label ID="POStatusChangeDate" runat="server" Text='<%#Eval("StatusChangeDate")%>'></asp:Label>
+                            <span class="indent"><asp:Label ID="POStatus" runat="server" Text='<%#Eval("Status")%>'></asp:Label></span>
                         </th>
                         <th class="subhead" style="text-align:right">
                             Assign to : <asp:DropDownList ID="SOUser" runat="server" DataSourceID="SrcQuo" DataTextField="Name" DataValueField="UserID"></asp:DropDownList>
-                            <asp:Button ID="Assign" runat="server" Text="Assign" />
+                            <asp:HiddenField runat="server" ID="UpdateDate" Value='<%#Eval("UpdateDate")%>' />
+                            <asp:Button ID="Assign" runat="server" Text="Assign" CommandArgument='<%#Container.DataItemIndex %>' />
                         </th>
                     </tr>
                     <tr>
                         <th style="width:17%">Product Number / Name</th>
-                        <td style="width:33%"><asp:Label ID="ProductNumber" runat="server" Text=""><%#Eval("ProductNumber")%></asp:Label><span class="indent"><asp:Label ID="ProductName" runat="server" Text=""><%#Eval("ProductName")%></asp:Label></span></td>
+                        <td style="width:33%"><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label><span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Eval("ProductName")%>'></asp:Label></span></td>
                         <th style="width:17%">PO-User</th>
-                        <td style="width:33%"><asp:Label ID="POUser" runat="server" Text=""><%#Eval("POUserName")%></asp:Label><span class="indent">(<asp:Label ID="POLocation" runat="server" Text=""><%#Eval("POLocationName")%></asp:Label>)</span></td>
+                        <td style="width:33%"><asp:Label ID="POUser" runat="server" Text='<%#Eval("POUserName")%>'></asp:Label><span class="indent">(<asp:Label ID="POLocation" runat="server" Text='<%#Eval("POLocationName")%>'></asp:Label>)</span></td>
                     </tr>
                     <tr>
                         <th>Supplier Name</th>
-                        <td><asp:Label ID="SupplierName" runat="server" Text=""><%#Eval("SupplierName")%></asp:Label></td>
+                        <td><asp:Label ID="SupplierName" runat="server" Text='<%#Eval("SupplierName")%>'></asp:Label></td>
                         <th>Maker Name</th>
-                        <td><asp:Label ID="MakerName" runat="server" Text=""><%#Eval("MakerName")%></asp:Label></td>
+                        <td><asp:Label ID="MakerName" runat="server" Text='<%#Eval("MakerName")%>'></asp:Label></td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>
         </div>
-        <asp:HiddenField ID="Action" Value="Assign" />
+        <asp:HiddenField runat="server" ID="Action" Value="Assign" />
     </form>
     </div><!-- Main Content Area END -->
     <asp:SqlDataSource ID="SrcRFQ" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
