@@ -375,4 +375,8 @@
 
     End Sub
 
+    Private Sub Page_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload
+        DBConn.Close()
+        DBConn2.Close()
+    End Sub
 End Class

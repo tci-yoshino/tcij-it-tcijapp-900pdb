@@ -79,4 +79,8 @@
         AddUrl = "./SuppliersProductSetting.aspx?Product=" + Request.QueryString("ProductID") + "&Return=SP"
         ProductID = Request.QueryString("ProductID")
     End Sub
+
+    Private Sub Page_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload
+        DBConn.Close()
+    End Sub
 End Class

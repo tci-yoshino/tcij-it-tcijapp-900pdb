@@ -81,5 +81,8 @@
         ImpUrl = "./SuppliersProductImport.aspx?Supplier=" & SupplierCode.Text.ToString
     End Sub
 
+    Private Sub Page_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload
+        DBConn.Close()
+    End Sub
 End Class
 

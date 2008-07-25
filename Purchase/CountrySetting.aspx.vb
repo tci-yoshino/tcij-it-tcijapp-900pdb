@@ -195,4 +195,7 @@
         ActNai = "CountrySelect.aspx_Open"
     End Sub
 
+    Private Sub CountrySetting_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload
+        DBConn.Close()
+    End Sub
 End Class
