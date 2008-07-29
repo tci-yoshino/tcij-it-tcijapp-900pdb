@@ -83,7 +83,8 @@
                             </asp:DropDownList>
                             <asp:SqlDataSource ID="SDS_RFQUpdate_PaymentTerms" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-                                SelectCommand="SELECT TOP (20) PaymentTermCode, Text FROM s_PaymentTerm">
+                                
+                                SelectCommand="SELECT PaymentTermCode, Text FROM PurchasingPaymentTerm ORDER BY PaymentTermCode">
                             </asp:SqlDataSource>
                         </td>
                     </tr>
