@@ -13,8 +13,8 @@
         DBCommand = DBConn.CreateCommand()
         If IsPostBack = False Then
             'パラメータチェック
-            If Request.QueryString("ProductID") <> "" Then
-                st_ProductID = Request.QueryString("ProductID")
+            If Request.QueryString("ProductID") <> "" Or Request.Form("ProductID") <> "" Then
+                st_ProductID = IIf(Request.QueryString("ProductID") <> "", Request.QueryString("ProductID"), Request.Form("ProductID"))
                 If IsNumeric(st_ProductID) Then
                     DBCommand.CommandText = "Select ProductNumber, Name FROM Product WHERE ProductID = @st_ProductID"
                     DBCommand.Parameters.Add("st_ProductID", SqlDbType.Int).Value = CInt(st_ProductID)
@@ -32,8 +32,8 @@
                     DBReader.Close()
                 End If
             End If
-            If Request.QueryString("SupplierCode") <> "" Then
-                st_SupplierCode = Request.QueryString("SupplierCode")
+            If Request.QueryString("SupplierCode") <> "" Or Request.Form("SupplierCode") <> "" Then
+                st_SupplierCode = IIf(Request.QueryString("SupplierCode") <> "", Request.QueryString("SupplierCode"), Request.Form("SupplierCode"))
                 If IsNumeric(st_SupplierCode) Then
                     DBCommand.CommandText = "SELECT SupplierCode, R3SupplierCode, ISNULL(Name3, '') + ISNULL(Name4, '') AS SupplierName, CountryCode FROM Supplier WHERE SupplierCode = @st_SupplierCode"
                     DBCommand.Parameters.Add("st_SupplierCode", SqlDbType.Int).Value = CInt(st_SupplierCode)
@@ -346,7 +346,9 @@
             sqlTran.Commit()
             Response.Redirect("RFQUpdate.aspx?RFQNumber=" & i_RFQNumber, False)
         Catch ex As Exception
-            sqlTran.Rollback()
+            If IsNothing(sqlTran.Connection) = False Then
+                sqlTran.Rollback()
+            End If
             Throw
         Finally
             DBCommand.Dispose()
