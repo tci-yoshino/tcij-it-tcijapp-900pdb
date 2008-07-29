@@ -12,7 +12,7 @@
         DBConn.Open()
         DBCommand = DBConn.CreateCommand()
         If IsPostBack = False Then
-            'パラメータチェック
+            '他画面から取得するパラメータのチェック
             If Request.QueryString("ProductID") <> "" Or Request.Form("ProductID") <> "" Then
                 st_ProductID = IIf(Request.QueryString("ProductID") <> "", Request.QueryString("ProductID"), Request.Form("ProductID"))
                 If IsNumeric(st_ProductID) Then
@@ -72,13 +72,14 @@
 
     Private Sub Page_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
         If IsPostBack = False Then
+            'Issueボタンクリック時にPostBackするActionを追記する。
             Issue.PostBackUrl = "~/RFQIssue.aspx?Action=Issue"
         End If
     End Sub
 
     Private Sub Page_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload
+        'DB切断
         DBConn.Close()
-
     End Sub
 
     Protected Sub Issue_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Issue.Click
@@ -297,12 +298,16 @@
             param15.Value = CInt(Session("UserID"))
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
+            'Header登録と登録時のIDを取得
             If DBReader.HasRows = True Then
                 While DBReader.Read
+                    'ID取得部分
                     i_RFQNumber = IIf(IsNumeric(DBReader("RFQNumber").ToString) = True, CInt(DBReader("RFQNumber").ToString), -99)
                 End While
             End If
             DBReader.Close()
+            'Line登録
+            '登録用SQL文作成
             DBCommand.CommandText = "INSERT INTO RFQLine " _
               & "(RFQNumber, EnqQuantity, EnqUnitCode, EnqPiece, SupplierItemNumber, CreatedBy, UpdatedBy) " _
               & "VALUES(@RFQNumber, @EnqQuantity, @EnqUnitCode, @EnqPiece, " _
@@ -314,7 +319,7 @@
             param4 = DBCommand.Parameters.Add("@EnqPiece", SqlDbType.Int)
             param5 = DBCommand.Parameters.Add("@SupplierItemNumber", SqlDbType.VarChar, 128)
             param1.Value = i_RFQNumber
-
+            '画面内各行の入力欄が条件を満たしていたらTrueになっているため、Trueの行を登録する。
             If Enq_Quantity1 = True Then
                 param2.Value = EnqQuantity_1.Text
                 param3.Value = EnqUnit_1.SelectedValue
@@ -347,6 +352,7 @@
             Response.Redirect("RFQUpdate.aspx?RFQNumber=" & i_RFQNumber, False)
         Catch ex As Exception
             If IsNothing(sqlTran.Connection) = False Then
+                'コミット後の処理があるため、コミットしてなかったらロールバックする。
                 sqlTran.Rollback()
             End If
             Throw
