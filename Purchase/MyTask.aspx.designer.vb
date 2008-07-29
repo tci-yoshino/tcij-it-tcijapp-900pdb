@@ -52,13 +52,31 @@ Partial Public Class MyTask
     Protected WithEvents RFQList As Global.System.Web.UI.WebControls.ListView
 
     '''<summary>
-    '''POList コントロール。
+    '''POList_Overdue コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents POList As Global.System.Web.UI.WebControls.ListView
+    Protected WithEvents POList_Overdue As Global.System.Web.UI.WebControls.ListView
+
+    '''<summary>
+    '''POList_PPI コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents POList_PPI As Global.System.Web.UI.WebControls.ListView
+
+    '''<summary>
+    '''POList_Par コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents POList_Par As Global.System.Web.UI.WebControls.ListView
 
     '''<summary>
     '''SrcRFQ コントロール。
@@ -70,11 +88,29 @@ Partial Public Class MyTask
     Protected WithEvents SrcRFQ As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
-    '''SrcPO コントロール。
+    '''SrcPO_Overdue コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents SrcPO As Global.System.Web.UI.WebControls.SqlDataSource
+    Protected WithEvents SrcPO_Overdue As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
+    '''SrcPO_PPI コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SrcPO_PPI As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
+    '''SrcPO_Par コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SrcPO_Par As Global.System.Web.UI.WebControls.SqlDataSource
 End Class
