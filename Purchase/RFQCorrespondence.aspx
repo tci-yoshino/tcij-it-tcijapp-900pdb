@@ -55,74 +55,62 @@
         <div class="main">
             <asp:ListView ID="RFQHistory" runat="server" DataSourceID="SrcRFQHistory">
                 <AlternatingItemTemplate>
-                    <table class="zebra2">
-                        <tr>
-                            <th style="width:20%">Status : </th>
-                            <td style="width:65%"><strong><asp:Label ID="Status" runat="server" Text='' /></strong></td>
-                            <td style="width:15%" rowspan="4">
-                                <asp:HyperLink ID="Check" runat="server">
-                                <asp:Image ID="ImgCheck" runat="server" ImageUrl="./Image/Check.gif" />Check</asp:HyperLink>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Date : </th>
-                            <td><asp:Label ID="CreateDate" runat="server" Text='' /></td>
-                        </tr>
-                        <tr>
-                            <th>Sender : </th>
-                            <td><asp:Label ID="CreatedBy" runat="server" Text='' /><span class="indent">(<asp:Label ID="Location" runat="server" Text='' />)</span></td>
-                        </tr>
-                        <tr>
-                            <th>Addressee : </th>
-                            <td><asp:Label ID="RcptUser" runat="server" Text='' /><span class="indent">(<asp:Label ID="RcptLocation" runat="server" Text='' />)</span></td>
-                        </tr>
-                        <tr>
-                            <th>Note : </th>
-                            <td><asp:Label ID="Note" runat="server" Text='' /></td>
-                        </tr>
-                    </table>
+                    <span style="background-color: #FFF8DC;">Status:
+                    <asp:Label ID="StatusLabel" runat="server" Text='<%# Eval("Status") %>' />
+                    <br />
+                    Date:
+                    <asp:Label ID="DateLabel" runat="server" Text='<%# Eval("Date") %>' />
+                    <br />
+                    Sender:
+                    <asp:Label ID="SenderLabel" runat="server" Text='<%# Eval("Sender") %>' />
+                    <br />
+                    Addressee:
+                    <asp:Label ID="AddresseeLabel" runat="server" Text='<%# Eval("Addressee") %>' />
+                    <br />
+                    Notes:
+                    <asp:Label ID="NotesLabel" runat="server" Text='<%# Eval("Notes") %>' />
+                    <br />
+                    <br />
+                    </span>
                 </AlternatingItemTemplate>
                 <LayoutTemplate>
-                    <div ID="itemPlaceholderContainer" runat="server">
-                        <div ID="itemPlaceholder" runat="server">
-                        </div>
+                    <div ID="itemPlaceholderContainer" runat="server" 
+                        style="font-family: Verdana, Arial, Helvetica, sans-serif;">
+                        <span ID="itemPlaceholder" runat="server" />
+                    </div>
+                    <div style="text-align: center;background-color: #CCCCCC;font-family: Verdana, Arial, Helvetica, sans-serif;color: #000000;">
                     </div>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
-                    <h3 style="font-style:italic">No data found.</h3>
+                  <span>データは返されませんでした。</span>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <table class="zebra1">
-                        <tr>
-                            <th style="width:20%">Status : </th>
-                            <td style="width:65%"><strong><asp:Label ID="Status" runat="server" Text='' /></strong></td>
-                            <td style="width:15%" rowspan="4">
-                                <asp:HyperLink ID="Check" runat="server">
-                                <asp:Image ID="ImgCheck" runat="server" ImageUrl="./Image/Check.gif" />Check</asp:HyperLink>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Date : </th>
-                            <td><asp:Label ID="CreateDate" runat="server" Text='' /></td>
-                        </tr>
-                        <tr>
-                            <th>Sender : </th>
-                            <td><asp:Label ID="CreatedBy" runat="server" Text='' /><span class="indent">(<asp:Label ID="Location" runat="server" Text='' />)</span></td>
-                        </tr>
-                        <tr>
-                            <th>Addressee : </th>
-                            <td><asp:Label ID="RcptUser" runat="server" Text='' /><span class="indent">(<asp:Label ID="RcptLocation" runat="server" Text='' />)</span></td>
-                        </tr>
-                        <tr>
-                            <th>Note : </th>
-                            <td><asp:Label ID="Note" runat="server" Text='' /></td>
-                        </tr>
-                    </table>
+                    <span style="background-color: #DCDCDC;color: #000000;">Status:
+                    <asp:Label ID="StatusLabel" runat="server" Text='<%# Eval("Status") %>' />
+                    <br />
+                    Date:
+                    <asp:Label ID="DateLabel" runat="server" Text='<%# Eval("Date") %>' />
+                    <br />
+                    Sender:
+                    <asp:Label ID="SenderLabel" runat="server" Text='<%# Eval("Sender") %>' />
+                    <br />
+                    Addressee:
+                    <asp:Label ID="AddresseeLabel" runat="server" Text='<%# Eval("Addressee") %>' />
+                    <br />
+                    Notes:
+                    <asp:Label ID="NotesLabel" runat="server" Text='<%# Eval("Notes") %>' />
+                    <br />
+                    <br />
+                    </span>
                 </ItemTemplate>
             </asp:ListView>
         </div>
     </div><!-- Main Content Area END -->
-    <asp:SqlDataSource ID="SrcRFQHistory" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="SrcRFQHistory" runat="server" 
+    ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" SelectCommand="SELECT dbo.RFQStatus.Text AS Status, dbo.RFQHistory.StatusChangeDate AS Date,  dbo.v_User.Name + '      (' + dbo.v_User.LocationName + ')' AS Sender, v_User_1.Name AS Addressee, dbo.RFQHistory.Note AS Notes
+FROM dbo.RFQHistory INNER JOIN dbo.RFQStatus ON dbo.RFQHistory.RFQStatusCode = dbo.RFQStatus.RFQStatusCode LEFT OUTER JOIN dbo.v_User AS v_User_1 ON dbo.RFQHistory.RcptUserID = v_User_1.UserID LEFT OUTER JOIN dbo.v_User ON dbo.RFQHistory.CreatedBy = dbo.v_User.UserID
+WHERE (dbo.RFQHistory.RFQNumber = '1000000001')
+ORDER BY dbo.RFQHistory.RFQHistoryNumber DESC"></asp:SqlDataSource>
     
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
