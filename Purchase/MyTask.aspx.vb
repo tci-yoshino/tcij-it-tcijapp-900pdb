@@ -2,6 +2,7 @@
     Inherits CommonPage
 
     Public st_UserID As String
+    Public stb_PONumbers As StringBuilder = New StringBuilder ' PONumber を格納するオブジェクト。この値を見て、重複するPONumber を除外する。
     Public DBConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -93,59 +94,108 @@
 
     Protected Sub Switch_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Switch.Click
 
+        ' 前回の SQL パラメータを削除
+        SrcRFQ.SelectParameters.Clear()
+        SrcPO_Overdue.SelectParameters.Clear()
+        SrcPO_PPI.SelectParameters.Clear()
+        SrcPO_Par.SelectParameters.Clear()
+
         ' SQL パラメータ設定
         SrcRFQ.SelectParameters.Add("UserID", st_UserID)
         SrcPO_Overdue.SelectParameters.Add("UserID", st_UserID)
         SrcPO_PPI.SelectParameters.Add("UserID", st_UserID)
         SrcPO_Par.SelectParameters.Add("UserID", st_UserID)
 
-        ' クエリ設定
+        ' 見積一覧データ取得、バインド
         SrcRFQ.SelectCommand = _
               "SELECT RH.RFQNumber, RH.StatusChangeDate, RH.Status, RH.ProductNumber, RH.ProductName, " _
-            & "       RH.Purpose, RH.QuoUserName, RH.QuoLocationName, " _
-            & "       RH.SupplierName, RH.MakerName, RR.RFQCorres " _
+            & "       RH.Purpose, RH.QuoUserName, RH.QuoLocationName, RH.EnqUserName, RH.EnqLocationName, " _
+            & "       RH.SupplierName, RH.MakerName, RR.RFQCorres AS RFQCorrespondence " _
             & "FROM v_RFQHeader AS RH LEFT OUTER JOIN " _
             & "     v_RFQReminder AS RR ON RH.RFQNumber = RR.RFQNumber AND RR.RcptUserID = @UserID " _
             & "WHERE EnqUserID = @UserID " _
             & "ORDER BY StatusSortOrder, StatusChangeDate "
+        RFQList.DataSourceID = "SrcRFQ"
+        RFQList.DataBind()
 
+        ' 購買発注一覧データ取得、バインド
+        ' SrcPO_PPI の NOT IN () には、SrcPO_Overdue で取得した PONumber が入る。
+        ' SrcPO_Par の NOT IN () には、SrcPO_Overdue, SrcPO_PPI で取得した PONumber が入る。
+        ' 取得した PONumber が空の場合は '' が入る。(重複を避けるための処理)
         SrcPO_Overdue.SelectCommand = _
               "SELECT PONumber, StatusChangeDate, Status, ProductNumber, ProductName," _
-            & "       PODate, POUserName, POLocationName, SupploerName, MalerName,DelivaryDate, " _
-            & "       OrderQuantity, OrderUnitCode, CurrencyCode,  'Overdue' as POCorrespondesnce " _
+            & "       PODate, POUserName, POLocationName, SupplierName, MakerName, DeliveryDate, " _
+            & "       OrderQuantity, OrderUnitCode, CurrencyCode, UnitPrice, PerQuantity, PerUnitCode, 'Overdue' as POCorrespondence " _
             & "FROM v_PO " _
             & "WHERE POUserID = @UserID " _
             & "  AND DueDate < GETDATE() " _
             & "  AND ((ParPONumber IS NULL) AND (StatusSortOrder <= 11) " _
-            & "        OR (ParPONumber IS NOT NULL) AND (StatusCode = 'CPI')) "
+            & "        OR (ParPONumber IS NOT NULL) AND (StatusCode = 'CPI')) " _
+            & "ORDER BY DueDate ASC "
+        POList_Overdue.DataSourceID = "SrcPO_Overdue"
+        POList_Overdue.DataBind()
 
         SrcPO_PPI.SelectCommand = _
-              "SELECT  " _
-            & "  PONumber, POUserID, SOUserID, DueDate, ParPONumber, StatusSortOrder, StatusCode, Status, Status as POCorrespondesnce " _
+              "SELECT PONumber, StatusChangeDate, Status, ProductNumber, ProductName," _
+            & "       PODate, POUserName, POLocationName, SupplierName, MakerName,DeliveryDate, " _
+            & "       OrderQuantity, OrderUnitCode, CurrencyCode, UnitPrice, PerQuantity, PerUnitCode, Status as POCorrespondence " _
             & "FROM v_PO " _
             & "WHERE SOUserID = @UserID " _
-            & "  AND StatusCode = 'PPI' "
+            & "  AND StatusCode = 'PPI' " _
+            & "  AND PONumber NOT IN (" & IIf(String.IsNullOrEmpty(stb_PONumbers.ToString), "''", stb_PONumbers.ToString.Trim(",")) & ") "
+        POList_PPI.DataSourceID = "SrcPO_PPI"
+        POList_PPI.DataBind()
 
         SrcPO_Par.SelectCommand = _
-              "SELECT  " _
-            & "  v_PO.PONumber, v_PO.POUserID, v_PO.SOUserID, v_PO.DueDate, v_PO.ParPONumber, v_PO.StatusSortOrder, v_PO.StatusCode, v_PO.Status, v_POReminder.POCorres as POCorrespondesnce " _
-            & "FROM v_PO INNER JOIN " _
-            & "     v_POReminder ON v_POReminder.PONumber = v_PO.PONumber AND v_POReminder.RcptUserID = @UserID " _
-            & "WHERE ((v_PO.SOUserID = @UserID) OR (v_PO.POUserID = @UserID)) " _
-            & "  AND v_PO.ParPONumber IS NULL " _
-            & "ORDER BY v_PO.StatusSortOrder ASC "
+              "SELECT P.PONumber, P.StatusChangeDate, P.Status, P.ProductNumber, P.ProductName," _
+            & "       P.PODate, P.POUserName, P.POLocationName, P.SupplierName, P.MakerName, P.DeliveryDate, " _
+            & "       P.OrderQuantity, P.OrderUnitCode, P.CurrencyCode, P.UnitPrice, P.PerQuantity, P.PerUnitCode, PR.POCorres as POCorrespondence " _
+            & "FROM v_PO AS P INNER JOIN " _
+            & "     v_POReminder AS PR ON PR.PONumber = P.PONumber AND PR.RcptUserID = @UserID " _
+            & "WHERE ((P.SOUserID = @UserID) OR (P.POUserID = @UserID)) " _
+            & "  AND P.ParPONumber IS NULL " _
+            & "  AND P.PONumber NOT IN (" & IIf(String.IsNullOrEmpty(stb_PONumbers.ToString), "''", stb_PONumbers.ToString.Trim(",")) & ") " _
+            & "ORDER BY P.StatusSortOrder ASC "
+        POList_Par.DataSourceID = "SrcPO_Par"
+        POList_Par.DataBind()
 
 
     End Sub
 
+    ' POList_Overdue と POList_PPI のバインド終了時に PONumber を取得
+    Protected Sub GetPONumber_Overdue(ByVal sender As Object, ByVal e As EventArgs) Handles POList_Overdue.DataBound, POList_PPI.DataBound
+
+        Dim lv As ListView = CType(sender, ListView)
+        Dim label As Label = New Label
+
+        If lv.Items.Count > 0 Then
+            For i As Integer = 0 To lv.Items.Count - 1
+                label.Text = CType(lv.Items(i).FindControl("PONumber"), Label).Text
+                stb_PONumbers.Append(", " & label.Text)
+            Next i
+        End If
+
+    End Sub
+
+
+
+    ' POList_Par の項目バインド時にその項目の子データがあった場合は取得する
     Protected Sub GetChildPO(ByVal sender As Object, ByVal e As EventArgs) Handles POList_Par.ItemDataBound
 
-        Dim ds As DataSet = New DataSet
-        ds.Tables.Add("child")
+        Dim lv As ListView = CType(CType(e, ListViewItemEventArgs).Item.FindControl("POList_Chi"), ListView)
+        Dim src As SqlDataSource = CType(CType(e, ListViewItemEventArgs).Item.FindControl("SrcPO_Chi"), SqlDataSource)
+        Dim label As Label = CType(CType(e, System.Web.UI.WebControls.ListViewItemEventArgs).Item.FindControl("PONumber"), Label)
 
-
-
-
+        src.SelectParameters.Clear()
+        src.SelectParameters.Add("PONumber", label.Text)
+        src.SelectCommand = _
+              "SELECT PONumber, StatusChangeDate, Status, ProductNumber, ProductName," _
+            & "       PODate, POUserName, POLocationName, SupplierName, MakerName, DeliveryDate, " _
+            & "       OrderQuantity, OrderUnitCode, CurrencyCode, UnitPrice, PerQuantity, PerUnitCode, 'Overdue' as POCorrespondence " _
+            & "FROM v_PO " _
+            & "WHERE ParPONumber = @PONumber "
+        lv.DataSourceID = src.ID
+        lv.DataBind()
     End Sub
 
 End Class
