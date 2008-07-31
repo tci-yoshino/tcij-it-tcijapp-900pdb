@@ -87,12 +87,14 @@
             End Try
         End If
 
-
+        If Not IsPostBack Then
+            Switch_Click()
+        End If
 
 
     End Sub
 
-    Protected Sub Switch_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Switch.Click
+    Protected Sub Switch_Click()
 
         ' 前回の SQL パラメータを削除
         SrcRFQ.SelectParameters.Clear()
@@ -108,12 +110,13 @@
 
         ' 見積一覧データ取得、バインド
         SrcRFQ.SelectCommand = _
-              "SELECT RH.RFQNumber, RH.StatusChangeDate, RH.Status, RH.ProductNumber, RH.ProductName, " _
+              "SELECT RH.RFQNumber, RH.StatusChangeDate, RH.Status, RH.ProductNumber, RH.ProductName AS ProductName, " _
             & "       RH.Purpose, RH.QuoUserName, RH.QuoLocationName, RH.EnqUserName, RH.EnqLocationName, " _
             & "       RH.SupplierName, RH.MakerName, RR.RFQCorres AS RFQCorrespondence " _
             & "FROM v_RFQHeader AS RH LEFT OUTER JOIN " _
             & "     v_RFQReminder AS RR ON RH.RFQNumber = RR.RFQNumber AND RR.RcptUserID = @UserID " _
             & "WHERE EnqUserID = @UserID " _
+            & "  AND StatusCode NOT IN ('Q','C') " _
             & "ORDER BY StatusSortOrder, StatusChangeDate "
         RFQList.DataSourceID = "SrcRFQ"
         RFQList.DataBind()
@@ -123,7 +126,7 @@
         ' SrcPO_Par の NOT IN () には、SrcPO_Overdue, SrcPO_PPI で取得した PONumber が入る。
         ' 取得した PONumber が空の場合は '' が入る。(重複を避けるための処理)
         SrcPO_Overdue.SelectCommand = _
-              "SELECT PONumber, StatusChangeDate, Status, ProductNumber, ProductName," _
+              "SELECT PONumber, StatusChangeDate, Status, ProductNumber, ProductName, " _
             & "       PODate, POUserName, POLocationName, SupplierName, MakerName, DeliveryDate, " _
             & "       OrderQuantity, OrderUnitCode, CurrencyCode, UnitPrice, PerQuantity, PerUnitCode, 'Overdue' as POCorrespondence " _
             & "FROM v_PO " _
@@ -136,7 +139,7 @@
         POList_Overdue.DataBind()
 
         SrcPO_PPI.SelectCommand = _
-              "SELECT PONumber, StatusChangeDate, Status, ProductNumber, ProductName," _
+              "SELECT PONumber, StatusChangeDate, Status, ProductNumber, ProductName, " _
             & "       PODate, POUserName, POLocationName, SupplierName, MakerName,DeliveryDate, " _
             & "       OrderQuantity, OrderUnitCode, CurrencyCode, UnitPrice, PerQuantity, PerUnitCode, Status as POCorrespondence " _
             & "FROM v_PO " _
@@ -147,7 +150,7 @@
         POList_PPI.DataBind()
 
         SrcPO_Par.SelectCommand = _
-              "SELECT P.PONumber, P.StatusChangeDate, P.Status, P.ProductNumber, P.ProductName," _
+              "SELECT P.PONumber, P.StatusChangeDate, P.Status, P.ProductNumber, P.ProductName, " _
             & "       P.PODate, P.POUserName, P.POLocationName, P.SupplierName, P.MakerName, P.DeliveryDate, " _
             & "       P.OrderQuantity, P.OrderUnitCode, P.CurrencyCode, P.UnitPrice, P.PerQuantity, P.PerUnitCode, PR.POCorres as POCorrespondence " _
             & "FROM v_PO AS P INNER JOIN " _
@@ -158,7 +161,6 @@
             & "ORDER BY P.StatusSortOrder ASC "
         POList_Par.DataSourceID = "SrcPO_Par"
         POList_Par.DataBind()
-
 
     End Sub
 
@@ -177,8 +179,6 @@
 
     End Sub
 
-
-
     ' POList_Par の項目バインド時にその項目の子データがあった場合は取得する
     Protected Sub GetChildPO(ByVal sender As Object, ByVal e As EventArgs) Handles POList_Par.ItemDataBound
 
@@ -189,7 +189,7 @@
         src.SelectParameters.Clear()
         src.SelectParameters.Add("PONumber", label.Text)
         src.SelectCommand = _
-              "SELECT PONumber, StatusChangeDate, Status, ProductNumber, ProductName," _
+              "SELECT PONumber, StatusChangeDate, Status, ProductNumber, ProductName, " _
             & "       PODate, POUserName, POLocationName, SupplierName, MakerName, DeliveryDate, " _
             & "       OrderQuantity, OrderUnitCode, CurrencyCode, UnitPrice, PerQuantity, PerUnitCode, 'Overdue' as POCorrespondence " _
             & "FROM v_PO " _
