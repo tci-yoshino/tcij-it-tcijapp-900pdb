@@ -13,4 +13,27 @@
     Public Shared ReadOnly ERR_REQUIRED_FIELD As String = " must be specified."
     Public Shared ReadOnly ERR_INCORRECT_FORMAT As String = " is not in the correct format."
     Public Shared ReadOnly ERR_INVALID_DATE As String = " is an invalid date."
+
+    Public Shared Function GetLocalTime(ByVal LocationCode As String, Optional ByVal DatabaseTime As Date = Nothing) As String
+        Dim st_ErrMsg As String = ""
+        Dim da_Date As Date = IIf(DatabaseTime = Nothing, Now, DatabaseTime)
+
+        If TCICommon.Func.ConvertDate(da_Date, LOCATION_JP, LocationCode, st_ErrMsg) < 0 Then
+            Throw New Exception(String.Format("TCICommon.ConvertDate: {0}", st_ErrMsg))
+        End If
+
+        Return Format(da_Date, DATE_FORMAT)
+
+    End Function
+
+    Public Function GetDatabaseTime(ByVal LocationCode As String, Optional ByVal LocalTime As Date = Nothing) As String
+        Dim st_ErrMsg As String = ""
+        Dim da_Date As Date = IIf(LocalTime = Nothing, Now, LocalTime)
+
+        If TCICommon.Func.ConvertDate(da_Date, LocationCode, LOCATION_JP, st_ErrMsg) < 0 Then
+            Throw New Exception(String.Format("TCICommon.ConvertDate: {0}", st_ErrMsg))
+        End If
+
+        Return Format(da_Date, DATE_FORMAT)
+    End Function
 End Class
