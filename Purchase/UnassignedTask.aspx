@@ -38,7 +38,7 @@
                             RFQ Reference Number : <asp:HyperLink ID="RFQUpdate" runat="server" NavigateUrl='<%# "./RFQUpdate.aspx?RFQNumber=" & Eval("RFQNumber")%>'><asp:Label ID="RFQNumber" runat="server" Text='<%#Eval("RFQNumber")%>'></asp:Label></asp:HyperLink>
                         </th>
                         <th class="subhead" colspan="2">
-                            <asp:Label ID="RFQStatusChangeDate" runat="server" Text='<%#Eval("StatusChangeDate")%>'></asp:Label><span class="indent"><asp:Label ID="RFQStatus" runat="server" Text='<%#Eval("Status")%>'></asp:Label></span>
+                            <asp:Label ID="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"))%>'></asp:Label><span class="indent"><asp:Label ID="RFQStatus" runat="server" Text='<%#Eval("Status")%>'></asp:Label></span>
                         </th>
                         <th class="subhead" colspan="2" style="text-align:right">
                             Assign to : <asp:DropDownList ID="QuoUser" runat="server" DataSourceID="SrcQuo" DataTextField="Name" DataValueField="UserID"></asp:DropDownList>
@@ -50,7 +50,7 @@
                         <th style="width:17%">Product Number / Name</th>
                         <td style="width:33%">
                             <asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label>
-                            <span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Eval("ProductName")%>'></asp:Label></span>
+                            <span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#If(Eval("ProductName").ToString.Length > 35, Eval("ProductName").ToString.Substring(0, 35) & "...", Eval("ProductName"))%>'></asp:Label></span>
                         </td>
                         <th style="width:10%">Purpose</th>
                         <td style="width:12%"><asp:Label ID="Purpose" runat="server" Text='<%#Eval("Purpose")%>'></asp:Label></td>
@@ -91,18 +91,18 @@
                             PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber")%>'><asp:Label ID="PONumber" runat="server" Text='<%#Eval("PONumber")%>'></asp:Label></asp:HyperLink>
                         </th>
                         <th class="subhead">
-                            <asp:Label ID="POStatusChangeDate" runat="server" Text='<%#Eval("StatusChangeDate")%>'></asp:Label>
+                            <asp:Label ID="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"))%>'></asp:Label>
                             <span class="indent"><asp:Label ID="POStatus" runat="server" Text='<%#Eval("Status")%>'></asp:Label></span>
                         </th>
                         <th class="subhead" style="text-align:right">
                             Assign to : <asp:DropDownList ID="SOUser" runat="server" DataSourceID="SrcQuo" DataTextField="Name" DataValueField="UserID"></asp:DropDownList>
                             <asp:HiddenField runat="server" ID="UpdateDate" Value='<%#Eval("UpdateDate")%>' />
-                            <asp:Button ID="Assign" runat="server" Text="Assign" CommandArgument='<%#Container.DataItemIndex %>' />
+                            <asp:Button ID="Assign" runat="server" Text="Assign" />
                         </th>
                     </tr>
                     <tr>
                         <th style="width:17%">Product Number / Name</th>
-                        <td style="width:33%"><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label><span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Eval("ProductName")%>'></asp:Label></span></td>
+                        <td style="width:33%"><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label><span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#If(Eval("ProductName").ToString.Length > 35, Eval("ProductName").ToString.Substring(0, 35) & "...", Eval("ProductName"))%>'></asp:Label></span></td>
                         <th style="width:17%">PO-User</th>
                         <td style="width:33%"><asp:Label ID="POUser" runat="server" Text='<%#Eval("POUserName")%>'></asp:Label><span class="indent">(<asp:Label ID="POLocation" runat="server" Text='<%#Eval("POLocationName")%>'></asp:Label>)</span></td>
                     </tr>
