@@ -8,67 +8,92 @@ Public Class CommonPage
     Inherits Page
 
     Protected Overrides Sub OnLoad(ByVal e As System.EventArgs)
-        Dim st_action As String = ""
-        Dim st_scriptName As String = ""
-        Dim st_accountName As String = ""
-        Dim st_buf() As String
-        Dim settings As ConnectionStringSettings
-        Dim dbConnection As New SqlConnection
-        Dim dbCommand As SqlClient.SqlCommand
-        Dim dbReader As SqlDataReader
+        Dim st_Action As String = ""
+        Dim st_ScriptName As String = ""
+        Dim st_AccountName As String = ""
+        Dim st_Buf() As String
+        Dim setting As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
+        Dim sqlConn As SqlConnection = New SqlConnection(setting.ConnectionString)
+        Dim sqlAdapter As SqlDataAdapter
+        Dim sqlCmd As SqlCommand
+        Dim ds As DataSet = New DataSet
 
         ' User authorization process
         If Request.RequestType = "POST" Then
-            st_action = IIf(Request.Form("Action") = Nothing, "", Request.Form("Action"))
+            st_Action = IIf(Request.Form("Action") = Nothing, "", Request.Form("Action"))
         ElseIf Request.RequestType = "GET" Then
-            st_action = IIf(Request.QueryString("Action") = Nothing, "", Request.QueryString("Action"))
+            st_Action = IIf(Request.QueryString("Action") = Nothing, "", Request.QueryString("Action"))
         End If
 
-        st_buf = Split(Request.FilePath, "/")
-        st_scriptName = st_buf(st_buf.Length - 1)
-
-        settings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
-        dbConnection.ConnectionString = settings.ConnectionString
-
-        dbConnection.Open()
-        dbCommand = dbConnection.CreateCommand
+        st_Buf = Split(Request.FilePath, "/")
+        st_ScriptName = st_Buf(st_Buf.Length - 1)
 
         If Session("UserID") = Nothing Then
-            st_buf = Split(Request.ServerVariables("LOGON_USER"), "\")
-            st_accountName = st_buf(st_buf.Length - 1)
+            st_Buf = Split(Request.ServerVariables("LOGON_USER"), "\")
+            st_AccountName = st_Buf(st_Buf.Length - 1)
 
-            dbCommand.CommandText = "SELECT UserID, LocationCode, RoleCode, PrivilegeLevel FROM v_User WHERE AccountName = @AccountName"
-            dbCommand.Parameters.Add("AccountName", SqlDbType.NVarChar).Value = st_accountName
+            sqlAdapter = New SqlDataAdapter
+            sqlCmd = New SqlCommand( _
+"SELECT " & _
+"  PU.UserID, " & _
+"  U.AD_GivenName + ' ' + U.AD_Surname AS UserName, " & _
+"  U.LocationCode, " & _
+"  L.Name AS LocationName, " & _
+"  PU.RoleCode, " & _
+"  PU.PrivilegeLevel, " & _
+"  PU.isAdmin " & _
+"FROM " & _
+"  PurchasingUser AS PU, " & _
+"  s_User AS U, " & _
+"  s_Location AS L " & _
+"WHERE " & _
+"  PU.UserID = U.UserID " & _
+"  AND U.LocationCode = L.LocationCode " & _
+"  AND U.AD_AccountName = @AccountName", sqlConn)
+            sqlAdapter.SelectCommand = sqlCmd
+            sqlCmd.Parameters.Add("AccountName", SqlDbType.NVarChar).Value = st_AccountName
 
-            dbReader = dbCommand.ExecuteReader()
-            If dbReader.Read = False Then
+            sqlAdapter.Fill(ds, "User")
+            If ds.Tables("User").Rows.Count = 0 Then
                 ' Authorization failed
                 Response.Redirect("AuthError.html")
             End If
 
-            Session("UserID") = dbReader("UserID").ToString
-            Session("LocationCode") = dbReader("LocationCode").ToString
-            Session("Purchase.RoleCode") = dbReader("RoleCode").ToString
-            Session("Purchase.PrivilegeLevel") = dbReader("PrivilegeLevel").ToString
-
-            dbCommand.Dispose()
-            dbReader.Close()
+            Session("UserID") = ds.Tables("User").Rows(0)("UserID").ToString
+            Session("UserName") = ds.Tables("User").Rows(0)("UserName").ToString
+            Session("LocationCode") = ds.Tables("User").Rows(0)("LocationCode").ToString
+            Session("LocationName") = ds.Tables("User").Rows(0)("LocationName").ToString
+            Session("Purchase.RoleCode") = ds.Tables("User").Rows(0)("RoleCode").ToString
+            Session("Purchase.PrivilegeLevel") = ds.Tables("User").Rows(0)("PrivilegeLevel").ToString
+            Session("Purchase.isAdmin") = ds.Tables("User").Rows(0)("isAdmin").ToString
         End If
 
-        dbCommand.CommandText = "SELECT 1 FROM Privilege AS P, Role_Privilege AS RP WHERE RP.RoleCode = @RoleCode AND RP.PrivilegeCode = P.PrivilegeCode AND P.ScriptName = @ScriptName AND ISNULL(P.Action, '') = @Action"
-        dbCommand.Parameters.Add("RoleCode", SqlDbType.VarChar).Value = IIf(Session("Purchase.RoleCode") = Nothing, "", Session("Purchase.RoleCode"))
-        dbCommand.Parameters.Add("ScriptName", SqlDbType.VarChar).Value = st_scriptName
-        dbCommand.Parameters.Add("Action", SqlDbType.VarChar).Value = st_action
+        If Session("Purchase.isAdmin") = "1" Then
+            ' Nothing to do
+        Else
+            sqlAdapter = New SqlDataAdapter
+            sqlCmd = New SqlCommand( _
+"SELECT " & _
+"  1 " & _
+"FROM " & _
+"  Privilege AS P, " & _
+"  Role_Privilege AS RP " & _
+"WHERE " & _
+"  RP.RoleCode = @RoleCode " & _
+"  AND RP.PrivilegeCode = P.PrivilegeCode " & _
+"  AND P.ScriptName = @ScriptName " & _
+"  AND ISNULL(P.Action, '') = @Action", sqlConn)
+            sqlAdapter.SelectCommand = sqlCmd
+            sqlCmd.Parameters.Add("RoleCode", SqlDbType.VarChar).Value = IIf(Session("Purchase.RoleCode") = Nothing, "", Session("Purchase.RoleCode"))
+            sqlCmd.Parameters.Add("ScriptName", SqlDbType.VarChar).Value = st_ScriptName
+            sqlCmd.Parameters.Add("Action", SqlDbType.VarChar).Value = st_Action
 
-        dbReader = dbCommand.ExecuteReader()
-        If dbReader.Read = False Then
-            ' Authorization failed
-            Response.Redirect("AuthError.html")
+            sqlAdapter.Fill(ds, "Priv")
+            If ds.Tables("Priv").Rows.Count = 0 Then
+                ' Authorization failed
+                Response.Redirect("AuthError.html")
+            End If
         End If
-
-        dbCommand.Dispose()
-        dbReader.Close()
-        dbConnection.Close()
 
         ' Call the base class's OnLoad method
         MyBase.OnLoad(e)
