@@ -115,7 +115,7 @@
             & "       RH.SupplierName, RH.MakerName, RR.RFQCorres AS RFQCorrespondence " _
             & "FROM v_RFQHeader AS RH LEFT OUTER JOIN " _
             & "     v_RFQReminder AS RR ON RH.RFQNumber = RR.RFQNumber AND RR.RcptUserID = @UserID " _
-            & "WHERE EnqUserID = @UserID " _
+            & "WHERE QuoUserID = @UserID " _
             & "  AND StatusCode NOT IN ('Q','C') " _
             & "ORDER BY StatusSortOrder, StatusChangeDate "
         RFQList.DataSourceID = "SrcRFQ"
