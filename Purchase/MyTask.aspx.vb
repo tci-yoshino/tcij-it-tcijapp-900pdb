@@ -189,11 +189,13 @@
         src.SelectParameters.Clear()
         src.SelectParameters.Add("PONumber", label.Text)
         src.SelectCommand = _
-              "SELECT PONumber, StatusChangeDate, Status, ProductNumber, ProductName, " _
-            & "       PODate, POUserName, POLocationName, SupplierName, MakerName, DeliveryDate, " _
-            & "       OrderQuantity, OrderUnitCode, CurrencyCode, UnitPrice, PerQuantity, PerUnitCode, 'Overdue' as POCorrespondence " _
-            & "FROM v_PO " _
-            & "WHERE ParPONumber = @PONumber "
+              "SELECT P.PONumber, P.StatusChangeDate, P.Status, P.ProductNumber, P.ProductName, " _
+            & "       P.PODate, P.POUserName, P.POLocationName, P.SupplierName, P.MakerName, P.DeliveryDate, " _
+            & "       P.OrderQuantity, P.OrderUnitCode, P.CurrencyCode, P.UnitPrice, P.PerQuantity, P.PerUnitCode, PR.POCorres as POCorrespondence " _
+            & "FROM v_PO AS P LEFT OUTER JOIN " _
+            & "     v_POReminder AS PR ON PR.PONumber = P.PONumber " _
+            & "WHERE P.ParPONumber = @PONumber " _
+            & "ORDER BY P.StatusSortOrder ASC "
         lv.DataSourceID = src.ID
         lv.DataBind()
     End Sub
