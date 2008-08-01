@@ -38,4 +38,16 @@
 
     End Function
 
+    Public Function SafeSqlLiteral(ByVal SqlString As String) As String
+
+        Return SqlString.Replace("'", "''")
+
+    End Function
+
+    Public Function SafeSqlLikeClauseLiteral(ByVal SqlString As String) As String
+
+        Return SqlString.Replace("'", "''").Replace("[", "[[]").Replace("%", "[%]").Replace("_", "[_]")
+
+    End Function
+
 End Class
