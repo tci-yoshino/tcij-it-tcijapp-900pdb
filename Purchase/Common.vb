@@ -9,10 +9,13 @@
     Public Shared ReadOnly DATE_REGEX As String = "\d{4}-\d{1,2}-\d{1,2}"
     Public Shared ReadOnly DATE_REGEX_OPTIONAL As String = "\d{4}-\d{1,2}-\d{1,2}|"
 
+    Public Shared ReadOnly MSG_NO_DATA_FOUND As String = "No data found."
+
     Public Shared ReadOnly ERR_INVALID_PARAMETER As String = "SYSTEM ERROR: Invalid parameter supplied."
     Public Shared ReadOnly ERR_REQUIRED_FIELD As String = " must be specified."
     Public Shared ReadOnly ERR_INCORRECT_FORMAT As String = " is not in the correct format."
     Public Shared ReadOnly ERR_INVALID_DATE As String = " is an invalid date."
+    Public Shared ReadOnly ERR_NO_MATCH_FOUND As String = "No match found."
 
     Public Shared Function GetLocalTime(ByVal LocationCode As String, ByVal DatabaseTime As Date) As String
         Dim st_ErrMsg As String = ""
