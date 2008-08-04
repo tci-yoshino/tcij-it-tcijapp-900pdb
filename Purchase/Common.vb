@@ -29,7 +29,7 @@
 
     End Function
 
-    Public Function GetDatabaseTime(ByVal LocationCode As String, ByVal LocalTime As Date) As String
+    Public Shared Function GetDatabaseTime(ByVal LocationCode As String, ByVal LocalTime As Date) As String
         Dim st_ErrMsg As String = ""
         Dim da_Date As Date = LocalTime
 
@@ -41,13 +41,13 @@
 
     End Function
 
-    Public Function SafeSqlLiteral(ByVal SqlString As String) As String
+    Public Shared Function SafeSqlLiteral(ByVal SqlString As String) As String
 
         Return SqlString.Replace("'", "''")
 
     End Function
 
-    Public Function SafeSqlLikeClauseLiteral(ByVal SqlString As String) As String
+    Public Shared Function SafeSqlLikeClauseLiteral(ByVal SqlString As String) As String
 
         Return SqlString.Replace("'", "''").Replace("[", "[[]").Replace("%", "[%]").Replace("_", "[_]")
 
