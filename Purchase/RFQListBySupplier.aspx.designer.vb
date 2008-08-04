@@ -70,13 +70,13 @@ Partial Public Class RFQListBySupplier
     Protected WithEvents PostalCode As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
-    '''Country コントロール。
+    '''CountryName コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents Country As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents CountryName As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
     '''Telephone コントロール。
@@ -97,13 +97,13 @@ Partial Public Class RFQListBySupplier
     Protected WithEvents Fax As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
-    '''HyperLink1 コントロール。
+    '''EmailLink コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents HyperLink1 As Global.System.Web.UI.WebControls.HyperLink
+    Protected WithEvents EmailLink As Global.System.Web.UI.WebControls.HyperLink
 
     '''<summary>
     '''Email コントロール。

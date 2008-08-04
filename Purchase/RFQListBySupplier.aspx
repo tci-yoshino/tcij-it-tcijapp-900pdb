@@ -14,7 +14,7 @@
     <div id="content">
         <div class="tabs">
             <a href="./RFQIssue.aspx">RFQ Issue</a>
-            | <a href="#" onClick="popup('./SupplierSetting.aspx')">Supplier Setting</a>
+            | <a href="#" onclick="popup('./SupplierSetting.aspx')">Supplier Setting</a>
         </div>
 
         <h3><asp:Label ID="SupplierCode" runat="server" Text=""></asp:Label><span class="indent"><asp:Label ID="SupplierName" runat="server" Text=""></asp:Label></span></h3>
@@ -23,12 +23,12 @@
             <p>
                 <strong>Address : </strong><asp:Label ID="Address1" runat="server" Text=""></asp:Label> <asp:Label ID="Address2" runat="server" Text=""></asp:Label> <asp:Label ID="Address3" runat="server" Text=""></asp:Label>
                 <strong class="indent">Postal Code : </strong><asp:Label ID="PostalCode" runat="server" Text=""></asp:Label>
-                <strong class="indent">Country : </strong><asp:Label ID="Country" runat="server" Text=""></asp:Label>
+                <strong class="indent">Country : </strong><asp:Label ID="CountryName" runat="server" Text=""></asp:Label>
             </p>
             <p>
                 <strong>Telephone : </strong><asp:Label ID="Telephone" runat="server" Text=""></asp:Label>
                 <strong class="indent">Fax : </strong><asp:Label ID="Fax" runat="server" Text=""></asp:Label>
-                <strong class="indent">E-mail : </strong><asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl=""><asp:Label ID="Email" runat="server" Text=""></asp:Label></asp:HyperLink>
+                <strong class="indent">E-mail : </strong><asp:HyperLink ID="EmailLink" runat="server" NavigateUrl=""><asp:Label ID="Email" runat="server" Text=""></asp:Label></asp:HyperLink>
                 <strong class="indent">Website : </strong><asp:HyperLink ID="WebsiteLink" runat="server" NavigateUrl="" Target="_blank"><asp:Label ID="Website" runat="server" Text=""></asp:Label></asp:HyperLink>
             </p>
         </div>
