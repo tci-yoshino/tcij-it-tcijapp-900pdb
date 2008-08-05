@@ -10,7 +10,11 @@
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         ' パラメータ Code, Name を取得
-        st_Code = IIf(Not (IsPostBack) And Not (String.IsNullOrEmpty(Request.QueryString("Code"))), Request.QueryString("Code"), Request.Form("Code"))
+        If Request.RequestType = "POST" Then
+            st_Code = IIf(Request.Form("Code") = Nothing, "", Request.Form("Code"))
+        ElseIf Request.RequestType = "GET" Then
+            st_Code = IIf(Request.QueryString("Code") = Nothing, "", Request.QueryString("Code"))
+        End If
         st_Name = Request.Form("Name")
 
         ' 空白除去

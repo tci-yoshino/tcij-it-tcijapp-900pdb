@@ -11,13 +11,13 @@
 
         ' パラメータを取得
         If Request.RequestType = "POST" Then
-            st_ProductNumber = Request.Form("ProductNumber")
-            st_CASNumber = Request.Form("CASNumber")
-            st_ProductName = Request.Form("ProductName")
-        Else
-            st_ProductNumber = Request.QueryString("ProductNumber")
-            st_CASNumber = Request.QueryString("CASNumber")
-            st_ProductName = Request.QueryString("ProductName")
+            st_ProductNumber = IIf(Request.Form("ProductNumber") = Nothing, "", Request.Form("ProductNumber"))
+            st_CASNumber = IIf(Request.Form("CASNumber") = Nothing, "", Request.Form("CASNumber"))
+            st_ProductName = IIf(Request.Form("ProductName") = Nothing, "", Request.Form("ProductName"))
+        ElseIf Request.RequestType = "GET" Then
+            st_ProductNumber = IIf(Request.QueryString("ProductNumber") = Nothing, "", Request.QueryString("ProductNumber"))
+            st_CASNumber = IIf(Request.QueryString("CASNumber") = Nothing, "", Request.QueryString("CASNumber"))
+            st_ProductName = IIf(Request.QueryString("ProductName") = Nothing, "", Request.QueryString("ProductName"))
         End If
 
         ' 空白除去

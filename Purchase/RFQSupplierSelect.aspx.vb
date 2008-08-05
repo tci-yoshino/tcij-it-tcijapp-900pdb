@@ -12,7 +12,11 @@
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         ' パラメータ Location を取得
-        st_Location = IIf(Not (IsPostBack) And Not (String.IsNullOrEmpty(Request.QueryString("Location"))), Request.QueryString("Location"), Request.Form("Location"))
+        If Request.RequestType = "POST" Then
+            st_Location = IIf(Request.Form("Location") = Nothing, "", Request.Form("Location"))
+        ElseIf Request.RequestType = "GET" Then
+            st_Location = IIf(Request.QueryString("Location") = Nothing, "", Request.QueryString("Location"))
+        End If
         st_Location = Trim(st_Location)  ' 空白除去
 
         If String.IsNullOrEmpty(st_Location) Then
@@ -23,7 +27,11 @@
         Else
 
             ' パラメータ Code, Name を取得
-            st_Code = IIf(Not (IsPostBack) And Not (String.IsNullOrEmpty(Request.QueryString("Code"))), Request.QueryString("Code"), Request.Form("Code"))
+            If Request.RequestType = "POST" Then
+                st_Code = IIf(Request.Form("Code") = Nothing, "", Request.Form("Code"))
+            ElseIf Request.RequestType = "GET" Then
+                st_Code = IIf(Request.QueryString("Code") = Nothing, "", Request.QueryString("Code"))
+            End If
             st_Name = Request.Form("Name")
 
             ' URL デコード
