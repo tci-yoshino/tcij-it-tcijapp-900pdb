@@ -100,7 +100,7 @@
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
                                 SelectCommand="SELECT [CurrencyCode] FROM [PurchasingCurrency]">
                             </asp:SqlDataSource>
-                            <asp:TextBox ID="TextBox1" runat="server" Width="5em" MaxLength="21" CssClass="number"></asp:TextBox>
+                            <asp:TextBox ID="ShippingHandlingFee" runat="server" Width="5em" MaxLength="21" CssClass="number"></asp:TextBox>
                         </td>
                     </tr>
                 </table>

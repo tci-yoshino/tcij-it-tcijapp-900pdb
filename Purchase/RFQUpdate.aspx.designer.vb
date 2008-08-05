@@ -205,13 +205,13 @@ Partial Public Class RFQUpdate
     Protected WithEvents SDS_RFQUpdate_Currency As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
-    '''TextBox1 コントロール。
+    '''ShippingHandlingFee コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents TextBox1 As Global.System.Web.UI.WebControls.TextBox
+    Protected WithEvents ShippingHandlingFee As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
     '''Purpose コントロール。
