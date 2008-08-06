@@ -66,15 +66,18 @@
         SrcRFQHeader.SelectParameters.Clear()
         SrcRFQHeader.SelectParameters.Add("SupplierCode", st_SupplierCode)
         SrcRFQHeader.SelectCommand = _
-              "SELECT RFQNumber, QuotedDate, StatusChangeDate, Status, " _
-            & "       ProductNumber,ProductName,SupplierName, " _
-            & "       Purpose, MakerName, " _
-            & "       SupplierItemName, ShippingHandlingFee, ShippingHandlingCurrencyCode, " _
-            & "       EnqUserName, EnqLocationName, QuoUserName, QuoLocationName, Comment " _
-            & "FROM v_RFQHeader " _
-            & "WHERE SupplierCode = @SupplierCode " _
-            & "   OR MakerCode = @SupplierCode " _
-            & "ORDER BY QuotedDate ASC, StatusChangeDate DESC, RFQNumber ASC "
+              "SELECT RH.RFQNumber, RH.QuotedDate, RH.StatusChangeDate, RH.Status, " _
+            & "       RH.ProductNumber,RH.ProductName, RH.SupplierName, " _
+            & "       RH.Purpose, RH.MakerName, " _
+            & "       RH.SupplierItemName, RH.ShippingHandlingFee, RH.ShippingHandlingCurrencyCode, " _
+            & "       RH.EnqUserName, RH.EnqLocationName, RH.QuoUserName, RH.QuoLocationName, RH.Comment, " _
+            & "       C.[Name] AS MakerCountryName, CS.[Name] AS SupplierCountryName " _
+            & "FROM v_RFQHeader AS RH LEFT OUTER JOIN " _
+            & "     s_Country AS C ON C.CountryCode = RH.MakerCountryCode, " _
+            & "     S_Country AS CS " _
+            & "WHERE (RH.SupplierCode = @SupplierCode OR RH.MakerCode = @SupplierCode) " _
+            & "  AND (CS.CountryCode = RH.SupplierCountryCode) " _
+            & "ORDER BY QuotedDate ASC, StatusChangeDate DESC, RFQNumber ASC"
 
     End Sub
 
@@ -86,7 +89,7 @@
         src.SelectParameters.Clear()
         src.SelectParameters.Add("RFQNumber", label.Text)
         src.SelectCommand = _
-              "SELECT distinct RL.RFQNumber, RL.EnqQuantity, RL.EnqUnitCode, RL.EnqPiece, " _
+              "SELECT distinct RL.RFQLineNumber, RL.EnqQuantity, RL.EnqUnitCode, RL.EnqPiece, " _
             & "       RL.CurrencyCode, RL.UnitPrice, RL.QuoPer, RL.QuoUnitCode, " _
             & "       RL.LeadTime, RL.Packing, RL.Purity, RL.QMMethod, " _
             & "       PO.RFQLineNumber AS PO " _
