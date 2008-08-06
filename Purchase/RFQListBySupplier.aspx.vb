@@ -81,7 +81,7 @@
 
     End Sub
 
-    Protected Sub test(ByVal sender As Object, ByVal e As EventArgs) Handles RFQHeaderList.ItemDataBound
+    Protected Sub GetRFQLine(ByVal sender As Object, ByVal e As EventArgs) Handles RFQHeaderList.ItemDataBound
         Dim lv As ListView = CType(CType(e, ListViewItemEventArgs).Item.FindControl("RFQLineList"), ListView)
         Dim src As SqlDataSource = CType(CType(e, ListViewItemEventArgs).Item.FindControl("SrcRFQLine"), SqlDataSource)
         Dim label As Label = CType(CType(e, System.Web.UI.WebControls.ListViewItemEventArgs).Item.FindControl("RFQNumber"), Label)
