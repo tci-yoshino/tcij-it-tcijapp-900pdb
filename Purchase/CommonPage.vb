@@ -47,7 +47,8 @@ Public Class CommonPage
 "  s_User AS U, " & _
 "  s_Location AS L " & _
 "WHERE " & _
-"  PU.UserID = U.UserID " & _
+"  PU.isDisabled = 0" & _
+"  AND PU.UserID = U.UserID " & _
 "  AND U.LocationCode = L.LocationCode " & _
 "  AND U.AD_AccountName = @AccountName", sqlConn)
             sqlAdapter.SelectCommand = sqlCmd
