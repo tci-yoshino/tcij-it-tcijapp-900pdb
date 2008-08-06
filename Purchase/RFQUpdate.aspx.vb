@@ -27,12 +27,22 @@
             Close.PostBackUrl = "~/RFQUpdate.aspx?Action=Close"
         End If
     End Sub
+
     Private Sub FormDataSet()
         'Dim DBDataset As DataSet
         Dim st_RFQNumber As String
         Dim DBReader As System.Data.SqlClient.SqlDataReader
-        If Request.QueryString("RFQNumber") <> "" Or Request.Form("RFQNumber") <> "" Then
+
+        Dim testRFQNumber As String = "1000000023"
+
+
+
+        '        If Request.QueryString("RFQNumber") <> "" Or Request.Form("RFQNumber") <> "" Then
+        If Request.QueryString("RFQNumber") <> "" Or Request.Form("RFQNumber") <> "" Or testRFQNumber <> "" Then
             st_RFQNumber = IIf(Request.QueryString("RFQNumber") <> "", Request.QueryString("RFQNumber"), Request.Form("RFQNumber"))
+            If st_RFQNumber = "" Then       'test用
+                st_RFQNumber = testRFQNumber
+            End If
             If IsNumeric(st_RFQNumber) Then
                 DBCommand.CommandText = "Select * From v_RFQHeader Where RFQNumber = @i_RFQNumber"
                 DBCommand.Parameters.Add("i_RFQNumber", SqlDbType.Int).Value = CInt(st_RFQNumber)
@@ -40,6 +50,7 @@
                 DBCommand.Dispose()
                 If DBReader.HasRows = True Then
                     While DBReader.Read
+                        'Left
                         RFQNumber.Text = st_RFQNumber
                         CurrentRFQStatus.Text = DBReader("Status").ToString
                         ProductNumber.Text = DBReader("ProductNumber").ToString
@@ -56,7 +67,27 @@
                         PaymentTerm.SelectedValue = DBReader("PaymentTermCode").ToString
                         ShippingHandlingCurrency.SelectedValue = DBReader("ShippingHandlingCurrencyCode").ToString
                         ShippingHandlingFee.Text = DBReader("ShippingHandlingFee").ToString
+                        'Right
+                        Purpose.Text = DBReader("Purpose").ToString
+                        RequiredPurity.Text = DBReader("RequiredPurity").ToString
+                        RequiredQMMethod.Text = DBReader("RequiredQMMethod").ToString
+                        RequiredSpecification.Text = DBReader("RequiredSpecification").ToString
+                        If DBReader("SpecSheet").ToString = True Then
+                            SpecSheet.Checked = True
+                            SpecSheet.Text = "yes"
+                        Else
+                            SpecSheet.Checked = False
+                            SpecSheet.Text = "no"
+                        End If
+                        Specification.Text = DBReader("Specification").ToString
+                        EnqUser.Text = DBReader("EnqUserName").ToString
+                        EnqLocation.Text = DBReader("EnqLocationName").ToString
 
+                        QuoLocation.Text = DBReader("QuoLocationName").ToString
+                        SDS_RFQUpdate_QuoUser.DataBind()
+                        QuoUser.DataBind()
+                        QuoUser.SelectedValue = DBReader("QuoUserID").ToString
+                        Comment.Text = DBReader("Comment").ToString
 
                     End While
                 End If
@@ -64,5 +95,6 @@
             End If
         End If
     End Sub
+
 
 End Class
