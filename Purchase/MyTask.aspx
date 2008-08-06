@@ -110,9 +110,9 @@
                             <th>Delivery Date</th>
                             <td><asp:label id="DeliveryDate" runat="server" Text='<%#If(IsDBNull(Eval("DeliveryDate")), Eval("DeliveryDate"), Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("DeliveryDate")))%>'></asp:label></td>
                             <th>Order Quantity</th>
-                            <td><asp:label id="OrderQuantity" runat="server" Text='<%# Eval("OrderQuantity") %>'></asp:label> <asp:label id="OrderUnit" runat="server" Text='<%# Eval("OrderUnitCode") %>'></asp:label></td>
+                            <td><asp:label id="OrderQuantity" runat="server" Text='<%#Eval("OrderQuantity","{0:G29}")%>'></asp:label> <asp:label id="OrderUnit" runat="server" Text='<%# Eval("OrderUnitCode") %>'></asp:label></td>
                             <th>Price</th>
-                            <td><asp:label id="Currency" runat="server" Text='<%# Eval("CurrencyCode") %>'></asp:label> <asp:label id="UnitPrice" runat="server" Text='<%# Eval("UnitPrice") %>'></asp:label> / <asp:label id="PerQuantity" runat="server" Text='<%# Eval("PerQuantity") %>'></asp:label> <asp:label id="PerUnit" runat="server" Text='<%# Eval("PerUnitCode") %>'></asp:label></td>
+                            <td><asp:label id="Currency" runat="server" Text='<%# Eval("CurrencyCode") %>'></asp:label> <asp:label id="UnitPrice" runat="server" Text='<%# Eval("UnitPrice","{0:G29}") %>'></asp:label> / <asp:label id="PerQuantity" runat="server" Text='<%# Eval("PerQuantity","{0:G29}") %>'></asp:label> <asp:label id="PerUnit" runat="server" Text='<%# Eval("PerUnitCode") %>'></asp:label></td>
                         </tr>
                     </table>
                 </ItemTemplate>
@@ -148,9 +148,9 @@
                             <th>Delivery Date</th>
                             <td><asp:label id="DeliveryDate" runat="server" Text='<%#If(IsDBNull(Eval("DeliveryDate")), Eval("DeliveryDate"), Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("DeliveryDate")))%>'></asp:label></td>
                             <th>Order Quantity</th>
-                            <td><asp:label id="OrderQuantity" runat="server" Text='<%# Eval("OrderQuantity") %>'></asp:label> <asp:label id="OrderUnit" runat="server" Text='<%# Eval("OrderUnitCode") %>'></asp:label></td>
+                            <td><asp:label id="OrderQuantity" runat="server" Text='<%# Eval("OrderQuantity","{0:G29}") %>'></asp:label> <asp:label id="OrderUnit" runat="server" Text='<%# Eval("OrderUnitCode") %>'></asp:label></td>
                             <th>Price</th>
-                            <td><asp:label id="Currency" runat="server" Text='<%# Eval("CurrencyCode") %>'></asp:label> <asp:label id="UnitPrice" runat="server" Text='<%# Eval("UnitPrice") %>'></asp:label> / <asp:label id="PerQuantity" runat="server" Text='<%# Eval("PerQuantity") %>'></asp:label> <asp:label id="PerUnit" runat="server" Text='<%# Eval("PerUnitCode") %>'></asp:label></td>
+                            <td><asp:label id="Currency" runat="server" Text='<%# Eval("CurrencyCode") %>'></asp:label> <asp:label id="UnitPrice" runat="server" Text='<%# Eval("UnitPrice","{0:G29}") %>'></asp:label> / <asp:label id="PerQuantity" runat="server" Text='<%# Eval("PerQuantity","{0:G29}") %>'></asp:label> <asp:label id="PerUnit" runat="server" Text='<%# Eval("PerUnitCode") %>'></asp:label></td>
                         </tr>
                     </table>
                 </ItemTemplate>
@@ -186,9 +186,9 @@
                             <th>Delivery Date</th>
                             <td><asp:label id="DeliveryDate" runat="server" Text='<%#If(IsDBNull(Eval("DeliveryDate")), Eval("DeliveryDate"), Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("DeliveryDate")))%>'></asp:label></td>
                             <th>Order Quantity</th>
-                            <td><asp:label id="OrderQuantity" runat="server" Text='<%# Eval("OrderQuantity") %>'></asp:label> <asp:label id="OrderUnit" runat="server" Text='<%# Eval("OrderUnitCode") %>'></asp:label></td>
+                            <td><asp:label id="OrderQuantity" runat="server" Text='<%# Eval("OrderQuantity","{0:G29}") %>'></asp:label> <asp:label id="OrderUnit" runat="server" Text='<%# Eval("OrderUnitCode") %>'></asp:label></td>
                             <th>Price</th>
-                            <td><asp:label id="Currency" runat="server" Text='<%# Eval("CurrencyCode") %>'></asp:label> <asp:label id="UnitPrice" runat="server" Text='<%# Eval("UnitPrice") %>'></asp:label> / <asp:label id="PerQuantity" runat="server" Text='<%# Eval("PerQuantity") %>'></asp:label> <asp:label id="PerUnit" runat="server" Text='<%# Eval("PerUnitCode") %>'></asp:label></td>
+                            <td><asp:label id="Currency" runat="server" Text='<%# Eval("CurrencyCode") %>'></asp:label> <asp:label id="UnitPrice" runat="server" Text='<%# Eval("UnitPrice","{0:G29}") %>'></asp:label> / <asp:label id="PerQuantity" runat="server" Text='<%# Eval("PerQuantity","{0:G29}") %>'></asp:label> <asp:label id="PerUnit" runat="server" Text='<%# Eval("PerUnitCode") %>'></asp:label></td>
                         </tr>
                     </table>
                         <asp:ListView ID="POList_Chi" runat="server">
@@ -222,9 +222,9 @@
                                     <th>Delivery Date</th>
                                     <td><asp:label id="DeliveryDate" runat="server" Text='<%#If(IsDBNull(Eval("DeliveryDate")), Eval("DeliveryDate"), Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("DeliveryDate")))%>'></asp:label></td>
                                     <th>Order Quantity</th>
-                                    <td><asp:label id="OrderQuantity" runat="server" Text='<%# Eval("OrderQuantity") %>'></asp:label> <asp:label id="OrderUnit" runat="server" Text='<%# Eval("OrderUnitCode") %>'></asp:label></td>
+                                    <td><asp:label id="OrderQuantity" runat="server" Text='<%# Eval("OrderQuantity","{0:G29}") %>'></asp:label> <asp:label id="OrderUnit" runat="server" Text='<%# Eval("OrderUnitCode") %>'></asp:label></td>
                                     <th>Price</th>
-                                    <td><asp:label id="Currency" runat="server" Text='<%# Eval("CurrencyCode") %>'></asp:label> <asp:label id="UnitPrice" runat="server" Text='<%# Eval("UnitPrice") %>'></asp:label> / <asp:label id="PerQuantity" runat="server" Text='<%# Eval("PerQuantity") %>'></asp:label> <asp:label id="PerUnit" runat="server" Text='<%# Eval("PerUnitCode") %>'></asp:label></td>
+                                    <td><asp:label id="Currency" runat="server" Text='<%# Eval("CurrencyCode") %>'></asp:label> <asp:label id="UnitPrice" runat="server" Text='<%# Eval("UnitPrice","{0:G29}") %>'></asp:label> / <asp:label id="PerQuantity" runat="server" Text='<%# Eval("PerQuantity","{0:G29}") %>'></asp:label> <asp:label id="PerUnit" runat="server" Text='<%# Eval("PerUnitCode") %>'></asp:label></td>
                                 </tr>
                             </table>
                         </ItemTemplate>
