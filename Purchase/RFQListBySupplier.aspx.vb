@@ -1,6 +1,7 @@
 ﻿Public Partial Class RFQListBySupplier
     Inherits CommonPage
     Public st_SupplierCode As String
+    Public i_DataNum As Integer = 0 ' 0 の場合は Supplier Data が無いと判断し、 Data not found. を表示する。
     Public DBConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
 
 
@@ -14,8 +15,11 @@
             st_SupplierCode = IIf(Request.QueryString("SupplierCode") = Nothing, "", Request.QueryString("SupplierCode"))
         End If
 
-        If st_SupplierCode = "" Then
-            Msg.Text = "Supplier Code が指定されていない、または存在しない Supplier Code が指定されています。"
+        ' 空白除去
+        st_SupplierCode = st_SupplierCode.Trim
+
+        If st_SupplierCode = "" Or IsNumeric(st_SupplierCode) = False Then
+            Msg.Text = "Supplier Code が指定されていません。"
             Exit Sub
         End If
 
@@ -27,7 +31,7 @@
                     & "       Address1, Address2, Address3, PostalCode, Telephone, Fax, Email, " _
                     & "       Website, v_Country.CountryName " _
                     & "FROM Supplier,v_Country " _
-                    & "WHERE SupplierCode = '1' " _
+                    & "WHERE SupplierCode = @SupplierCode " _
                     & "  AND Supplier.CountryCode = v_Country.CountryCode"
                 Dim command As New SqlClient.SqlCommand(st_query, connection)
                 connection.Open()
@@ -37,50 +41,57 @@
 
                 ' SqlDataReader を生成し、検索処理を実行。
                 Dim reader As SqlClient.SqlDataReader = command.ExecuteReader()
-                ' データを一行読込む
-                reader.Read()
-                ' 読込んだデータを各 Label に設定。（aspx 側でできないだろうか？）
-                SupplierCode.Text = reader("SupplierCode")
-                SupplierName.Text = IIf(IsDBNull(reader("Name3")) Or IsDBNull(reader("Name4")), reader("Name3") & reader("Name4"), reader("Name3") & " " & reader("Name4"))
-                Address1.Text = IIf(IsDBNull(reader("Address1")), "", reader("Address1"))
-                Address2.Text = IIf(IsDBNull(reader("Address2")), "", reader("Address2"))
-                Address3.Text = IIf(IsDBNull(reader("Address3")), "", reader("Address3"))
-                PostalCode.Text = IIf(IsDBNull(reader("PostalCode")), "", reader("PostalCode"))
-                Telephone.Text = IIf(IsDBNull(reader("Telephone")), "", reader("Telephone"))
-                Fax.Text = IIf(IsDBNull(reader("Fax")), "", reader("Fax"))
-                Email.Text = IIf(IsDBNull(reader("Email")), "", reader("Email"))
-                EmailLink.NavigateUrl = IIf(IsDBNull(reader("Email")), "", reader("Email"))
-                Website.Text = IIf(IsDBNull(reader("Website")), "", reader("Website"))
-                WebsiteLink.NavigateUrl = IIf(IsDBNull(reader("Website")), "", reader("Website"))
-                CountryName.Text = IIf(IsDBNull(reader("CountryName")), "", reader("CountryName"))
+
+                If reader.HasRows Then
+
+                    i_DataNum = 1
+                    reader.Read()
+
+                    ' 読込んだデータを各 Label に設定。（aspx 側でできないだろうか？）
+                    SupplierCode.Text = reader("SupplierCode")
+                    SupplierName.Text = IIf(IsDBNull(reader("Name3")) Or IsDBNull(reader("Name4")), reader("Name3") & reader("Name4"), reader("Name3") & " " & reader("Name4"))
+                    Address1.Text = IIf(IsDBNull(reader("Address1")), "", reader("Address1"))
+                    Address2.Text = IIf(IsDBNull(reader("Address2")), "", reader("Address2"))
+                    Address3.Text = IIf(IsDBNull(reader("Address3")), "", reader("Address3"))
+                    PostalCode.Text = IIf(IsDBNull(reader("PostalCode")), "", reader("PostalCode"))
+                    Telephone.Text = IIf(IsDBNull(reader("Telephone")), "", reader("Telephone"))
+                    Fax.Text = IIf(IsDBNull(reader("Fax")), "", reader("Fax"))
+                    Email.Text = IIf(IsDBNull(reader("Email")), "", reader("Email"))
+                    EmailLink.NavigateUrl = IIf(IsDBNull(reader("Email")), "", reader("Email"))
+                    Website.Text = IIf(IsDBNull(reader("Website")), "", reader("Website"))
+                    WebsiteLink.NavigateUrl = IIf(IsDBNull(reader("Website")), "", reader("Website"))
+                    CountryName.Text = IIf(IsDBNull(reader("CountryName")), "", reader("CountryName"))
+
+                    ' RFQHeader 取得
+                    SrcRFQHeader.SelectParameters.Clear()
+                    SrcRFQHeader.SelectParameters.Add("SupplierCode", st_SupplierCode)
+                    SrcRFQHeader.SelectCommand = _
+                          "SELECT RH.RFQNumber, RH.QuotedDate, RH.StatusChangeDate, RH.Status, " _
+                        & "       RH.ProductNumber,RH.ProductName, RH.SupplierName, " _
+                        & "       RH.Purpose, RH.MakerName, " _
+                        & "       RH.SupplierItemName, RH.ShippingHandlingFee, RH.ShippingHandlingCurrencyCode, " _
+                        & "       RH.EnqUserName, RH.EnqLocationName, RH.QuoUserName, RH.QuoLocationName, RH.Comment, " _
+                        & "       C.[Name] AS MakerCountryName, CS.[Name] AS SupplierCountryName " _
+                        & "FROM v_RFQHeader AS RH LEFT OUTER JOIN " _
+                        & "     s_Country AS C ON C.CountryCode = RH.MakerCountryCode, " _
+                        & "     S_Country AS CS " _
+                        & "WHERE (RH.SupplierCode = @SupplierCode OR RH.MakerCode = @SupplierCode) " _
+                        & "  AND (CS.CountryCode = RH.SupplierCountryCode) " _
+                        & "ORDER BY QuotedDate ASC, StatusChangeDate DESC, RFQNumber ASC"
+                Else
+                    Exit Sub
+                End If
 
                 reader.Close()
-
             End Using
         Catch ex As Exception
             'Exception をスローする
             Throw
         End Try
 
-        ' RFQHeader 取得。
-        SrcRFQHeader.SelectParameters.Clear()
-        SrcRFQHeader.SelectParameters.Add("SupplierCode", st_SupplierCode)
-        SrcRFQHeader.SelectCommand = _
-              "SELECT RH.RFQNumber, RH.QuotedDate, RH.StatusChangeDate, RH.Status, " _
-            & "       RH.ProductNumber,RH.ProductName, RH.SupplierName, " _
-            & "       RH.Purpose, RH.MakerName, " _
-            & "       RH.SupplierItemName, RH.ShippingHandlingFee, RH.ShippingHandlingCurrencyCode, " _
-            & "       RH.EnqUserName, RH.EnqLocationName, RH.QuoUserName, RH.QuoLocationName, RH.Comment, " _
-            & "       C.[Name] AS MakerCountryName, CS.[Name] AS SupplierCountryName " _
-            & "FROM v_RFQHeader AS RH LEFT OUTER JOIN " _
-            & "     s_Country AS C ON C.CountryCode = RH.MakerCountryCode, " _
-            & "     S_Country AS CS " _
-            & "WHERE (RH.SupplierCode = @SupplierCode OR RH.MakerCode = @SupplierCode) " _
-            & "  AND (CS.CountryCode = RH.SupplierCountryCode) " _
-            & "ORDER BY QuotedDate ASC, StatusChangeDate DESC, RFQNumber ASC"
-
     End Sub
 
+    ' RFQLine を取得する。(RFQHeader 項目バインド時に発生)
     Protected Sub GetRFQLine(ByVal sender As Object, ByVal e As EventArgs) Handles RFQHeaderList.ItemDataBound
         Dim lv As ListView = CType(CType(e, ListViewItemEventArgs).Item.FindControl("RFQLineList"), ListView)
         Dim src As SqlDataSource = CType(CType(e, ListViewItemEventArgs).Item.FindControl("SrcRFQLine"), SqlDataSource)

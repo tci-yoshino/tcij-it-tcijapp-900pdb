@@ -15,7 +15,10 @@
         <div class="main">
             <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
         </div>
-<%  If Not String.IsNullOrEmpty(st_SupplierCode) Then%>
+<%  If st_SupplierCode <> "" And IsNumeric(st_SupplierCode) = True Then%>
+    <%If i_DataNum = 0 Then%>
+        <h3 style="font-style:italic">No data found.</h3>
+    <%Else%>
         <div class="tabs">
             <a href="./RFQIssue.aspx?SupplierCode=<%=st_SupplierCode %>">RFQ Issue</a>
             | <a href="#" onclick="popup('./SupplierSetting.aspx?SupplierCode=<%=st_SupplierCode %>')">Supplier Setting</a>
@@ -129,6 +132,7 @@
             </asp:ListView>
         </div>
     </div><!-- Main Content Area END -->
+    <% End If%>
 <%  End If%>
     <asp:SqlDataSource ID="SrcRFQHeader" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
 
