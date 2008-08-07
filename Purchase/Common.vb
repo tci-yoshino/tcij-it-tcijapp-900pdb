@@ -64,4 +64,40 @@
 
     End Function
 
+    Public Shared Function ConvertEmptyStringToNull(ByVal str As String) As Object
+
+        Return IIf(Trim(str) = "", System.DBNull.Value, str)
+
+    End Function
+
+    Public Shared Function ConvertStringToDate(ByVal str As String) As Object
+
+        If Trim(str) = "" Then
+            Return System.DBNull.Value
+        End If
+
+        Return CDate(str)
+
+    End Function
+
+    Public Shared Function ConvertStringToDec(ByVal str As String) As Object
+
+        If Trim(str) = "" Then
+            Return System.DBNull.Value
+        End If
+
+        Return CDec(str)
+
+    End Function
+
+    Public Shared Function ConvertStringToInt(ByVal str As String) As Object
+
+        If Trim(str) = "" Then
+            Return System.DBNull.Value
+        End If
+
+        Return CInt(str)
+
+    End Function
+
 End Class
