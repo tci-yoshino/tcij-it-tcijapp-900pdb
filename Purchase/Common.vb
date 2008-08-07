@@ -41,6 +41,23 @@
 
     End Function
 
+    Public Shared Function GetDatabaseTime(ByVal LocationCode As String, ByVal Localtime As String) As Object
+        Dim st_ErrMsg As String = ""
+        Dim da_Date As Date
+
+        da_Date = ConvertStringToDate(Localtime)
+        If IsDBNull(da_Date) Then
+            Return System.DBNull.Value
+        End If
+
+        If TCICommon.Func.ConvertDate(da_Date, LocationCode, LOCATION_JP, st_ErrMsg) < 0 Then
+            Throw New Exception(String.Format("TCICommon.ConvertDate: {0}", st_ErrMsg))
+        End If
+
+        Return da_Date
+
+    End Function
+
     Public Shared Function CutShort(ByVal str As String) As String
         Dim st_Continue As String = "..."
 
