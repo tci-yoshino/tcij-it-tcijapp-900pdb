@@ -31,12 +31,13 @@
                     </tr>
                     <tr>
                         <th>RFQ Reference Number : </th>
-                        <td><asp:TextBox ID="RFQ" runat="server" Width="7em" MaxLength="10"></asp:TextBox></td>
+                        <td><asp:TextBox ID="RFQ" runat="server" Width="7em" MaxLength="10" Height="21px"></asp:TextBox></td>
                     </tr>
                 </table>
                 
                 <asp:Button ID="Search" runat="server" Text="Search" />
-                <input type="button" value="Clear" />
+                <input type="button" value="Clear" onclick="clearForm('SearchForm')"/>
+                <asp:HiddenField ID="Action" runat="server" value="Search" />
             </form>
         </div>
 
@@ -59,8 +60,14 @@
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr>
-                        <td><asp:Label ID="ProductNumber" runat="server" Text='' /></td>
-                        <td><asp:Label ID="ProductName" runat="server" Text='' /></td>
+                        <td>
+                        <asp:HyperLink ID="ProductNumber" runat="server" NavigateUrl='<%#Eval("RFQNumber","./RFQListByProduct.aspx?Code={0}")%>' Text = '<%#Eval("ProductNumber")%>' />
+                        <%-- <asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>' /> --%>                        
+                        </td>
+                        <td>
+                        <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl='<%#Eval("RFQNumber","./RFQListByProduct.aspx?Code={0}")%>' Text='<%#Eval("ProductName")%>' />
+                        <%-- <asp:Label ID="ProductName" runat="server" Text='<%#Eval("ProductName")%>' /> --%>
+                        </td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>
