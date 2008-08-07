@@ -10,6 +10,8 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
 </head>
 <body>
+
+            <form id="RFQCorresForm" runat="server">
     <!-- Main Content Area -->
     <div id="content">
         <div class="tabs"></div>
@@ -19,7 +21,6 @@
         <div class="main">
             <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 
-            <form id="RFQCorresForm" runat="server">
                 <table>
                     <tr>
                         <th>Addressee <span class="required">*</span> : </th>
@@ -45,12 +46,13 @@
                 <div class="btns">
                     <asp:Button ID="Send" runat="server" Text="Send" />
                 </div>
-            </form>
         </div>
 
         <hr />
 
-        <h3>Correspondence History</h3>
+        <h3>Correspondence History<asp:HiddenField ID="Action" runat="server" 
+                Value="Send" />
+                        </h3>
 
         <div class="main">
             <asp:ListView ID="RFQHistory" runat="server" DataSourceID="SrcRFQHistory">
@@ -83,31 +85,41 @@
                     </table>
                 </AlternatingItemTemplate>
                 <LayoutTemplate>
-                    <div ID="itemPlaceholderContainer" runat="server">
-                        <span ID="itemPlaceholder" runat="server" />
+                  <div ID="itemPlaceholderContainer" runat="server">
+                        <div ID="itemPlaceholder" runat="server">
+                        </div>
                     </div>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
                     <h3 style="font-style:italic">No data found.</h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <span style="background-color: #DCDCDC;color: #000000;">Status:
-                    <asp:Label ID="StatusLabel" runat="server" Text='<%# Eval("Status") %>' />
-                    <br />
-                    Date:
-                    <asp:Label ID="DateLabel" runat="server" Text='<%# Eval("Date") %>' />
-                    <br />
-                    Sender:
-                    <asp:Label ID="SenderLabel" runat="server" Text='<%# Eval("Sender") %>' />
-                    <br />
-                    Addressee:
-                    <asp:Label ID="AddresseeLabel" runat="server" Text='<%# Eval("Addressee") %>' />
-                    <br />
-                    Notes:
-                    <asp:Label ID="NotesLabel" runat="server" Text='<%# Eval("Notes") %>' />
-                    <br />
-                    <br />
-                    </span>
+                    <table class="zebra1">
+                        <tr>
+                            <th style="width:20%">Status:</th>
+                            <td style="width:65%"><asp:Label ID="StatusLabel" runat="server" Text='<%# Eval("Status") %>' /></td>
+                            <td style="width:15%" rowspan="4">
+                                <asp:HyperLink ID="Check" runat="server">
+                                <asp:Image ID="ImgCheck" runat="server" ImageUrl="./Image/Check.gif" />Check</asp:HyperLink>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Date:</th>
+                            <td><asp:Label ID="DateLabel" runat="server" Text='<%# Eval("Date") %>' /></td>
+                        </tr>
+                        <tr>
+                            <th>Sender:</th>
+                            <td><asp:Label ID="SenderLabel" runat="server" Text='<%# Eval("Sender") %>' /></td>
+                        </tr>
+                        <tr>
+                            <th>Addressee:</th>
+                            <td><asp:Label ID="AddresseeLabel" runat="server" Text='<%# Eval("Addressee") %>' /></td>
+                        </tr>
+                        <tr>
+                            <th>Notes:</th>
+                            <td><asp:Label ID="NotesLabel" runat="server" Text='<%# Eval("Notes") %>' /></td>
+                        </tr>
+                    </table>
                 </ItemTemplate>
             </asp:ListView>
         </div>
@@ -120,5 +132,6 @@ ORDER BY dbo.RFQHistory.RFQHistoryNumber DESC"></asp:SqlDataSource>
     
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
-</body>
+            </form>
+        </body>
 </html>
