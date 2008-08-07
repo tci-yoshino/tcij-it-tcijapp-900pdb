@@ -41,6 +41,17 @@
 
     End Function
 
+    Public Shared Function CutShort(ByVal str As String) As String
+        Dim st_Continue As String = "..."
+
+        If str.Length <= 40 Then
+            Return str
+        End If
+
+        Return str.Substring(0, 40) + st_Continue
+
+    End Function
+
     Public Shared Function SafeSqlLiteral(ByVal SqlString As String) As String
 
         Return SqlString.Replace("'", "''")
