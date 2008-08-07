@@ -116,7 +116,8 @@ Partial Public Class POIssue
 
     Protected Sub Issue_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Issue.Click
         Dim sqlCmd As SqlCommand
-        Dim i_AffectedRows As Integer
+        Dim sqlReader As SqlDataReader
+        Dim st_PONumber As String = ""
 
         If String.IsNullOrEmpty(st_Action) Then
             Msg.Text = ERR_INVALID_PARAMETER
@@ -208,7 +209,9 @@ Partial Public Class POIssue
 "  @ParPONumber, " & _
 "  @CreatedBy, " & _
 "  @UpdatedBy " & _
-")", sqlConn)
+"); " & _
+"SELECT PONumber FROM PO WHERE PONumber = SCOPE_IDENTITY()", sqlConn)
+
         sqlCmd.Parameters.Add("@R3PONumber", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(R3PONumber.Text)
         sqlCmd.Parameters.Add("@R3POLineNumber", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(R3POLineNumber.Text)
         sqlCmd.Parameters.Add("@PODate", SqlDbType.DateTime).Value = ConvertStringToDate(PODate.Text)
@@ -250,12 +253,18 @@ Partial Public Class POIssue
         sqlCmd.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = CInt(Session("UserID"))
 
         sqlConn.Open()
-        i_AffectedRows = sqlCmd.ExecuteNonQuery
+        sqlReader = sqlCmd.ExecuteReader
+        While sqlReader.Read
+            st_PONumber = CType(sqlReader("PONumber"), String)
+        End While
+        sqlReader.Close()
         sqlConn.Close()
 
-        If i_AffectedRows = 0 Then
+        If st_PONumber = "" Then
             Throw New Exception("POIssue.Issue_Click: 購買発注データの作成に失敗しましたが、エラーが検出されませんでした。")
         End If
+
+        Response.Redirect(String.Format("POUpdate.aspx?PONumber={0}", st_PONumber))
 
     End Sub
 
