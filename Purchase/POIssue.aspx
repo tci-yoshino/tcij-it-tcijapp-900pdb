@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" >
-<head id="Head1" runat="server">
+<head runat="server">
     <title>Purchase DB</title>
     <link rel="stylesheet" href="./CSS/Style.css" type="text/css" media="screen,print" />
     <script type="text/javascript" src="./JS/Common.js"></script>
@@ -20,12 +20,18 @@
             <div class="main">
                 <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 
-<%  If Not String.IsNullOrEmpty(st_rfqLineNumber) Then%>
+<%  If Not String.IsNullOrEmpty(st_RFQLineNumber) And Not String.IsNullOrEmpty(UnitPrice.Text) Then%>
                 <table class="left">
                     <tr>
                         <th>RFQ Reference Number : </th>
                         <td><asp:Label ID="RFQNumber" runat="server" Text=""></asp:Label></td>
                     </tr>
+    <% If Not String.IsNullOrEmpty(st_ParPONumber) Then%>
+                    <tr>
+                        <th>Par-PO Number : </th>
+                        <td><asp:Label ID="ParPONumber" runat="server" Text=""></asp:Label></td>
+                    </tr>
+    <% End If%>
                     <tr>
                         <th>R/3 PO Number : </th>
                         <td>
@@ -40,9 +46,16 @@
                     <tr>
                         <th>PO-User <span class="required">*</span> : </th>
                         <td>
-                            <asp:DropDownList ID="POUser" runat="server" DataSourceID="SrcUser">
+                            <asp:DropDownList ID="POUser" runat="server" DataSourceID="SrcUser" 
+                                DataTextField="Name" DataValueField="UserID">
                             </asp:DropDownList>
-                            <asp:SqlDataSource ID="SrcUser" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+                            <asp:SqlDataSource ID="SrcUser" runat="server" 
+                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"
+                                SelectCommand="SELECT UserID, Name FROM v_User WHERE LocationCode = @LocationCode ORDER BY Name">
+                                <SelectParameters>
+                                    <asp:SessionParameter Name="LocationCode" SessionField="LocationCode" />
+                                </SelectParameters>
+                            </asp:SqlDataSource>
                             (<asp:Label ID="POLocation" runat="server" Text=""></asp:Label>)
                         </td>
                     </tr>
@@ -54,10 +67,13 @@
                     <tr>
                         <th>Order Quantity <span class="required">*</span> : </th>
                         <td>
-                            <asp:TextBox ID="OrderQuantity" runat="server" Width="5em" MaxLength="10"></asp:TextBox>
-                            <asp:DropDownList ID="OrderUnit" runat="server" DataSourceID="SrcUnit">
+                            <asp:TextBox ID="OrderQuantity" runat="server" Width="5em" MaxLength="10" class="number"></asp:TextBox>
+                            <asp:DropDownList ID="OrderUnit" runat="server" DataSourceID="SrcUnit" 
+                                DataTextField="UnitCode" DataValueField="UnitCode">
                             </asp:DropDownList>
-                            <asp:SqlDataSource ID="SrcUnit" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+                            <asp:SqlDataSource ID="SrcUnit" runat="server" 
+                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+                                SelectCommand="SELECT [UnitCode] FROM [PurchasingUnit] ORDER BY [UnitCode]"></asp:SqlDataSource>
                         </td>
                     </tr>
                     <tr>
@@ -69,12 +85,20 @@
                         <td><asp:Label ID="Currency" runat="server" Text=""></asp:Label> <asp:Label ID="UnitPrice" runat="server" Text=""></asp:Label> / <asp:Label ID="PerQuantity" runat="server" Text=""></asp:Label> <asp:Label ID="PerUnit" runat="server" Text=""></asp:Label></td>
                     </tr>
                     <tr>
-                        <th>R/3 Supplier Code : </th>
-                        <td><asp:Label ID="R3SupplierCode" runat="server" Text=""></asp:Label></td>
-                    </tr>
-                    <tr>
                         <th>R/3 Supplier Name : </th>
-                        <td><asp:Label ID="R3SupplierName" runat="server" Text=""></asp:Label></td>
+                        <td>
+                            <asp:DropDownList ID="Supplier" runat="server" DataSourceID="SrcSupplier" 
+                                DataTextField="Name" DataValueField="SupplierCode">
+                            </asp:DropDownList>
+                            <asp:SqlDataSource ID="SrcSupplier" runat="server" 
+                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"
+                                SelectCommand="SELECT SupplierCode, LTRIM(RTRIM(ISNULL(Name1, '') + ' ' + ISNULL(Name2, ''))) AS Name FROM Supplier WHERE SupplierCode = @SupplierCode UNION SELECT SupplierCode, LTRIM(RTRIM(ISNULL(Name1, '') + ' ' + ISNULL(Name2, ''))) AS Name FROM Supplier WHERE LocationCode = @LocationCode">
+                                <SelectParameters>
+                                    <asp:Parameter Name="SupplierCode" />
+                                    <asp:Parameter Name="LocationCode" />
+                                </SelectParameters>
+                            </asp:SqlDataSource>
+                        </td>
                     </tr>
                     <tr>
                         <th>R/3 Maker Code : </th>
@@ -99,9 +123,13 @@
                     <tr>
                         <th>Purpose : </th>
                         <td>
-                            <asp:DropDownList ID="Purpose" runat="server" DataSourceID="SrcPurpose">
+                            <asp:DropDownList ID="Purpose" runat="server" DataSourceID="SrcPurpose" 
+                                DataTextField="Text" DataValueField="PurposeCode" AppendDataBoundItems="true">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
-                            <asp:SqlDataSource ID="SrcPurpose" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+                            <asp:SqlDataSource ID="SrcPurpose" runat="server" 
+                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+                                SelectCommand="SELECT [PurposeCode], [Text] FROM [Purpose] ORDER BY [SortOrder]"></asp:SqlDataSource>
                         </td>
                     </tr>
                     <tr>
@@ -168,12 +196,20 @@
                         <td><asp:TextBox ID="PurchasingRequisitionNumber" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
                     </tr>
                 </table>
-                <asp:HiddenField ID="RFQLineNumber" runat="server" />
-                <asp:HiddenField ID="Action" runat="server" Value="Issue" />
                 
                 <div class="btns">
                     <asp:Button ID="Issue" runat="server" Text="Issue" />
                 </div>
+                
+                <asp:HiddenField ID="RFQLineNumber" runat="server" />
+                <asp:HiddenField ID="POLocationCode" runat="server" />
+                <asp:HiddenField ID="SOLocationCode" runat="server" />
+                <asp:HiddenField ID="ProductID" runat="server" />
+                <asp:HiddenField ID="SupplierCode" runat="server" />
+                <asp:HiddenField ID="MakerCode" runat="server" />
+                <asp:HiddenField ID="PaymentTermCode" runat="server" />
+                <asp:HiddenField ID="IncotermsCode" runat="server" />
+                <asp:HiddenField ID="Action" runat="server" Value="Issue" />
 <% End If%>
             </div>
         </form>

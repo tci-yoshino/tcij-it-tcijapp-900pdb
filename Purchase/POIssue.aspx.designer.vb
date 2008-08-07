@@ -16,15 +16,6 @@ Option Explicit On
 Partial Public Class POIssue
 
     '''<summary>
-    '''Head1 コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents Head1 As Global.System.Web.UI.HtmlControls.HtmlHead
-
-    '''<summary>
     '''POForm コントロール。
     '''</summary>
     '''<remarks>
@@ -50,6 +41,15 @@ Partial Public Class POIssue
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents RFQNumber As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
+    '''ParPONumber コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents ParPONumber As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
     '''R3PONumber コントロール。
@@ -196,22 +196,22 @@ Partial Public Class POIssue
     Protected WithEvents PerUnit As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
-    '''R3SupplierCode コントロール。
+    '''Supplier コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents R3SupplierCode As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents Supplier As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
-    '''R3SupplierName コントロール。
+    '''SrcSupplier コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents R3SupplierName As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents SrcSupplier As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
     '''R3MakerCode コントロール。
@@ -412,6 +412,15 @@ Partial Public Class POIssue
     Protected WithEvents PurchasingRequisitionNumber As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
+    '''Issue コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Issue As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
     '''RFQLineNumber コントロール。
     '''</summary>
     '''<remarks>
@@ -421,6 +430,69 @@ Partial Public Class POIssue
     Protected WithEvents RFQLineNumber As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
+    '''POLocationCode コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents POLocationCode As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''SOLocationCode コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SOLocationCode As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''ProductID コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents ProductID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''SupplierCode コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SupplierCode As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''MakerCode コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents MakerCode As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''PaymentTermCode コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents PaymentTermCode As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''IncotermsCode コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents IncotermsCode As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''Action コントロール。
     '''</summary>
     '''<remarks>
@@ -428,13 +500,4 @@ Partial Public Class POIssue
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
-
-    '''<summary>
-    '''Issue コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents Issue As Global.System.Web.UI.WebControls.Button
 End Class
