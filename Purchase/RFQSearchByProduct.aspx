@@ -65,7 +65,7 @@
                         <%-- <asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>' /> --%>                        
                         </td>
                         <td>
-                        <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl='<%#Eval("RFQNumber","./RFQListByProduct.aspx?Code={0}")%>' Text='<%#Eval("ProductName")%>' />
+                        <asp:HyperLink ID="ProductName" runat="server" NavigateUrl='<%#Eval("RFQNumber","./RFQListByProduct.aspx?Code={0}")%>' Text='<%#Eval("ProductName")%>' />
                         <%-- <asp:Label ID="ProductName" runat="server" Text='<%#Eval("ProductName")%>' /> --%>
                         </td>
                     </tr>

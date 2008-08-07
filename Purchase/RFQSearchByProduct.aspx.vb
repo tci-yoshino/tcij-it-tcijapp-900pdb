@@ -1,26 +1,47 @@
-﻿Public Partial Class RFQSearchByProduct
+﻿''' <summary>
+''' RFQSearchByProductクラス
+''' </summary>
+''' <remarks>商品から見積依頼を検索します。</remarks>
+Partial Public Class RFQSearchByProduct
     Inherits CommonPage
 
-    ''必須項目漏れのエラーメッセージ定数です。
+    ''' <summary>
+    ''' 必須項目漏れのエラーメッセージ定数です。
+    ''' </summary>
+    ''' <remarks></remarks>
     Const MSG_REQUIED_PRODUCT_NUMBER = "Product Numberを入力してください"
 
-    ''検索キー構造体です。
+    ''' <summary>
+    ''' RFQ検索キー構造体です。
+    ''' </summary>
+    ''' <remarks></remarks>
     Structure SearchKey
         Dim Code As String
         Dim CAS As String
         Dim RFQ As String
     End Structure
 
+    ''' <summary>
+    ''' このクラスのロードイベントです。
+    ''' </summary>
+    ''' <param name="sender">ASP.NETの既定値</param>
+    ''' <param name="e">ASP.NETの既定値</param>
+    ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         'ポストバック以外の時は結果表示リストを非表示にします（No match found表示防止）
-        ProductList.Visible = IsPostBack 
+        ProductList.Visible = IsPostBack
 
         SrcProduct.SelectCommand = ""
 
     End Sub
 
-    '' 検索ボタンのクリックイベントです。
+    ''' <summary>
+    ''' 検索ボタンのクリックイベントです。
+    ''' </summary>
+    ''' <param name="sender">ASP.NETの既定値</param>
+    ''' <param name="e">ASP.NETの既定値</param>
+    ''' <remarks></remarks>
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
         '必須入力項目のチェック
         If Code.Text.Trim = String.Empty Then
@@ -42,7 +63,11 @@
 
     End Sub
 
-    ''検索実行関数です。
+    ''' <summary>
+    ''' RFQの検索を行います。
+    ''' </summary>
+    ''' <param name="st_SearchKey">RFQ検索キー構造体</param>
+    ''' <remarks></remarks>
     Private Sub SearchRFQ(ByVal st_SearchKey As SearchKey)
 
         'SQL文字列の生成
@@ -56,7 +81,13 @@
 
     End Sub
 
-    ''RFQ検索SQL文字列を生成します。
+
+    ''' <summary>
+    ''' RFQ検索SQL文字列を生成します。
+    ''' </summary>
+    ''' <param name="st_SearchKey">RFQ検索キー構造体</param>
+    ''' <returns>生成したSQL文字列</returns>
+    ''' <remarks></remarks>
     Private Function CreateRFQSelectSQL(ByVal st_SearchKey As SearchKey) As String
 
         Dim sb_SQL As New Text.StringBuilder
@@ -98,7 +129,12 @@
 
     End Function
 
-    ''RFQ検索キーをDatasetへバインドします。
+    ''' <summary>
+    ''' RFQ検索キーをSqlDataSourceへバインドします。
+    ''' </summary>
+    ''' <param name="st_SearchKey">RFQ検索キー構造体</param>
+    ''' <param name="ds_SrcProduct">対象SqlDataSource</param>
+    ''' <remarks></remarks>
     Private Sub SetRFQSelectSQLParames(ByVal st_SearchKey As SearchKey, ByRef ds_SrcProduct As SqlDataSource)
 
         ds_SrcProduct.SelectParameters.Clear()
