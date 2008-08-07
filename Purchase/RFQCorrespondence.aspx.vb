@@ -94,7 +94,7 @@
     End Sub
 
     Private Sub Page_PreRenderComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRenderComplete
-        SrcRFQHistory.SelectCommand = "SELECT dbo.RFQStatus.Text AS Status, dbo.RFQHistory.StatusChangeDate AS Date, dbo.v_User.Name + '          (' + dbo.v_User.LocationName + ')' AS Sender, v_User_1.Name + '          (' + dbo.v_User.LocationName + ')' AS Addressee, dbo.RFQHistory.Note AS Notes " & _
+        SrcRFQHistory.SelectCommand = "SELECT dbo.RFQStatus.Text AS Status, dbo.RFQHistory.CreateDate AS Date, dbo.v_User.Name + '          (' + dbo.v_User.LocationName + ')' AS Sender, v_User_1.Name + '          (' + dbo.v_User.LocationName + ')' AS Addressee, dbo.RFQHistory.Note AS Notes " & _
                                                "FROM dbo.RFQHistory INNER JOIN dbo.RFQStatus ON dbo.RFQHistory.RFQStatusCode = dbo.RFQStatus.RFQStatusCode LEFT OUTER JOIN dbo.v_User AS v_User_1 ON dbo.RFQHistory.RcptUserID = v_User_1.UserID LEFT OUTER JOIN dbo.v_User ON dbo.RFQHistory.CreatedBy = dbo.v_User.UserID " & _
                                                "WHERE (dbo.RFQHistory.RFQNumber = " & RFQNumber & ") " & _
                                                "ORDER BY dbo.RFQHistory.RFQHistoryNumber DESC"

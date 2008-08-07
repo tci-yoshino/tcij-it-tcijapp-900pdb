@@ -62,8 +62,8 @@
                             <th style="width:20%">Status:</th>
                             <td style="width:65%"><asp:Label ID="StatusLabel" runat="server" Text='<%# Eval("Status") %>' /></td>
                             <td style="width:15%" rowspan="4">
-                                <asp:HyperLink ID="Check" runat="server">
-                                <asp:Image ID="ImgCheck" runat="server" ImageUrl="./Image/Check.gif" />Check</asp:HyperLink>
+                                <asp:LinkButton ID="Check" runat="server">
+                                <asp:Image ID="ImgCheck" runat="server" ImageUrl="./Image/Check.gif" />Check</asp:LinkButton>
                             </td>
                         </tr>
                         <tr>
@@ -99,8 +99,8 @@
                             <th style="width:20%">Status:</th>
                             <td style="width:65%"><asp:Label ID="StatusLabel" runat="server" Text='<%# Eval("Status") %>' /></td>
                             <td style="width:15%" rowspan="4">
-                                <asp:HyperLink ID="Check" runat="server">
-                                <asp:Image ID="ImgCheck" runat="server" ImageUrl="./Image/Check.gif" />Check</asp:HyperLink>
+                                <asp:LinkButton ID="Check" runat="server">
+                                <asp:Image ID="ImgCheck" runat="server" ImageUrl="./Image/Check.gif" />Check</asp:LinkButton>
                             </td>
                         </tr>
                         <tr>
@@ -125,7 +125,7 @@
         </div>
     </div><!-- Main Content Area END -->
     <asp:SqlDataSource ID="SrcRFQHistory" runat="server" 
-    ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" SelectCommand="SELECT dbo.RFQStatus.Text AS Status, dbo.RFQHistory.StatusChangeDate AS Date,  dbo.v_User.Name + '      (' + dbo.v_User.LocationName + ')' AS Sender, v_User_1.Name AS Addressee, dbo.RFQHistory.Note AS Notes
+    ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" SelectCommand="SELECT dbo.RFQStatus.Text AS Status, dbo.RFQHistory.CreateDate AS Date,  dbo.v_User.Name + '      (' + dbo.v_User.LocationName + ')' AS Sender, v_User_1.Name AS Addressee, dbo.RFQHistory.Note AS Notes
 FROM dbo.RFQHistory INNER JOIN dbo.RFQStatus ON dbo.RFQHistory.RFQStatusCode = dbo.RFQStatus.RFQStatusCode LEFT OUTER JOIN dbo.v_User AS v_User_1 ON dbo.RFQHistory.RcptUserID = v_User_1.UserID LEFT OUTER JOIN dbo.v_User ON dbo.RFQHistory.CreatedBy = dbo.v_User.UserID
 WHERE (dbo.RFQHistory.RFQNumber = '1000000001')
 ORDER BY dbo.RFQHistory.RFQHistoryNumber DESC"></asp:SqlDataSource>
