@@ -74,56 +74,35 @@
         End If
     End Sub
 
-    Private Sub Page_PreRenderComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRenderComplete
-        'SupplierProductList.Columns(9).ItemStyle.HorizontalAlign = HorizontalAlign.Center
-
-        'If IsPostBack = True Then
-        '    SupplierProductList.Columns(0).ItemStyle.BackColor = Drawing.Color.Red
-        'End If
-    End Sub
-
     Protected Sub Preview_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Preview.Click
         Msg.Text = ""
-        '[Preview実行環境確認]--------------------------------------------------------------
-        If IO.Path.GetFileName(File.PostedFile.FileName) = "" Then
-            SupplierProductList.DataSourceID = ""
-            SupplierProductList.DataSource = ""
-            SupplierProductList.DataBind()
-            Import.Visible = False
-            Msg.Text = "読込みファイルが設定されていません"
-            Exit Sub
-        End If
-
-        'Action確認]------------------------------------------------------------------------
+        '[Action確認]------------------------------------------------------------------------
         If Request.Form("Action") <> "Preview" Then
             Msg.Text = "Previewできる環境でありません"
             Exit Sub
         End If
 
-        '[読込みファイルがEXCELか確認]------------------------------------------------------
-        If Request.Files("File").ContentType <> "application/vnd.ms-excel" Then
-            Msg.Text = "読込みファイルはEXCELでありません"
+        '[Preview実行環境確認]--------------------------------------------------------------
+        If IO.Path.GetFileName(File.PostedFile.FileName) <> "" Then
+            '[読込みファイルがEXCELか確認]------------------------------------------------------
+            If Request.Files("File").ContentType <> "application/vnd.ms-excel" Then
+                SupplierProductListClear()
+                Msg.Text = "読込みファイルはEXCELでありません"
+                Exit Sub
+            Else
+                ImportFileName.Value = IO.Path.GetFileName(File.PostedFile.FileName)
+            End If
+        Else
+            SupplierProductListClear()
+            Msg.Text = "読込みファイルが設定されていません"
             Exit Sub
         End If
 
-        '[作成Table名の決定]----------------------------------------------------------------
-        ImportFileName.Value = "D:\\temp\\G_System4\ID_" & Session("UserID") & IO.Path.GetFileName(File.PostedFile.FileName)
-
-        '[作成Tableがある場合削除する]------------------------------------------------------
-        If Dir(ImportFileName.Value) <> "" Then
-            Kill(ImportFileName.Value)
-        End If
-
-        '[指定ルートにTableを登録する]------------------------------------------------------
-        If File.PostedFile.FileName <> "" Then
-            File.PostedFile.SaveAs(ImportFileName.Value)
-        End If
-
         '[読込みファイルをGridViewに必要項目を付加して表示]---------------------------------
-        Dim st_ProductNumber As String = ""
-        Dim st_Status As String = ""
-        Dim st_ProposalDept As String = ""
-        Dim st_ProcumentDept As String = ""
+        Dim st_ProductNumber As String = ""     'SupplierProductListに表示するProductNumber
+        Dim st_Status As String = ""            'SupplierProductListに表示するStatus(最終的にはs_EhsPhraseのENai)
+        Dim st_ProposalDept As String = ""      'SupplierProductListに表示するProposalDept(最終的にはs_EhsPhraseのENai)
+        Dim st_ProcumentDept As String = ""     'SupplierProductListに表示するProcumentDept(最終的にはs_EhsPhraseのENai)
         Dim ds As New DataSet()
         Dim table As DataTable
         Dim i As Integer
@@ -136,7 +115,6 @@
         Using da As New OleDb.OleDbDataAdapter(sql, conStr.ConnectionString)
             da.Fill(ds, "Sheet1")
         End Using
-
         table = ds.Tables("Sheet1")
         table.Columns.Add("TCI Product Number", Type.GetType("System.String"))
         table.Columns.Add("EHS Status", Type.GetType("System.String"))
@@ -147,6 +125,7 @@
         table.Columns.Add("WA", Type.GetType("System.String"))
         table.Columns.Add("KA", Type.GetType("System.String"))
 
+        '[4社の取扱状況表示]----------------------------------------------------------------
         For i = 0 To table.Rows.Count - 1
             DBCommand.CommandText = "SELECT ALDRICH, ALFA, WAKO, KANTO FROM dbo.v_CompetitorProduct WHERE CASNumber = N'" & table.Rows(i).Item("CAS Number") & "'"
             DBReader = DBCommand.ExecuteReader()
@@ -160,10 +139,11 @@
             DBReader.Close()
         Next i
 
-        SupplierProductList.DataSourceID = ""
+        '[SupplierProductListの表示]--------------------------------------------------------
         SupplierProductList.DataSource = table
         SupplierProductList.DataBind()
 
+        '[付加項目にデータをセットする]-----------------------------------------------------
         For i = 0 To SupplierProductList.Rows.Count - 1
             DBCommand.CommandText = "SELECT ProductNumber,Status,ProposalDept,ProcumentDept FROM dbo.Product WHERE CASNumber = '" & table.Rows(i).Item("CAS Number") & "'"
             DBReader = DBCommand.ExecuteReader()
@@ -175,71 +155,44 @@
                 If Not TypeOf DBReader("Status") Is DBNull Then st_Status = DBReader("Status") Else st_Status = ""
                 If Not TypeOf DBReader("ProposalDept") Is DBNull Then st_ProposalDept = DBReader("ProposalDept") Else st_ProposalDept = ""
                 If Not TypeOf DBReader("ProcumentDept") Is DBNull Then st_ProcumentDept = DBReader("ProcumentDept") Else st_ProcumentDept = ""
-                '[ProductNumberのセット]------------------------------------------------------------
+                '[Statusのデータ取得]---------------------------------------------------------------
+                DBCommand2.CommandText = "SELECT ENai FROM dbo.s_EhsPhrase WHERE PhID = N'" & st_Status & "'"
+                DBReader2 = DBCommand2.ExecuteReader()
+                DBCommand2.Dispose()
+                st_Status = "-"
+                If DBReader2.Read = True Then
+                    st_Status = DBReader2("ENai")
+                End If
+                DBReader2.Close()
+                '[ProposalDeptのデータ取得]---------------------------------------------------------
+                DBCommand2.CommandText = "SELECT ENai FROM dbo.s_EhsPhrase WHERE PhID = N'" & st_ProposalDept & "'"
+                DBReader2 = DBCommand2.ExecuteReader()
+                DBCommand2.Dispose()
+                st_ProposalDept = "-"
+                If DBReader2.Read = True Then
+                    st_ProposalDept = DBReader2("ENai")
+                End If
+                DBReader2.Close()
+                '[ProcumentDeptのセット]------------------------------------------------------------
+                DBCommand2.CommandText = "SELECT ENai FROM dbo.s_EhsPhrase WHERE PhID = N'" & st_ProcumentDept & "'"
+                DBReader2 = DBCommand2.ExecuteReader()
+                DBCommand2.Dispose()
+                st_ProcumentDept = "-"
+                If DBReader2.Read = True Then
+                    st_ProcumentDept = DBReader2("ENai")
+                End If
+                DBReader2.Close()
+                '[SupplierProductListに追加項目表示]------------------------------------------------
                 If CntA = 1 Then
                     SupplierProductList.Rows(i).Cells(5).Text = st_ProductNumber
+                    SupplierProductList.Rows(i).Cells(6).Text = st_Status
+                    SupplierProductList.Rows(i).Cells(7).Text = st_ProposalDept
+                    SupplierProductList.Rows(i).Cells(8).Text = st_ProcumentDept
                 Else
                     SupplierProductList.Rows(i).Cells(5).Text = SupplierProductList.Rows(i).Cells(5).Text & "<br>" & st_ProductNumber
-                End If
-                '[Statusのセット]-------------------------------------------------------------------
-                If st_Status <> "" Then
-                    DBCommand2.CommandText = "SELECT ENai FROM dbo.s_EhsPhrase WHERE PhID = N'" & st_Status & "'"
-                    DBReader2 = DBCommand2.ExecuteReader()
-                    DBCommand2.Dispose()
-                    If DBReader2.Read = True Then
-                        If CntA = 1 Then
-                            SupplierProductList.Rows(i).Cells(6).Text = DBReader2("ENai")
-                        Else
-                            SupplierProductList.Rows(i).Cells(6).Text = SupplierProductList.Rows(i).Cells(6).Text & "<br>" & DBReader2("ENai")
-                        End If
-                    End If
-                    DBReader2.Close()
-                Else
-                    If CntA = 1 Then
-                        SupplierProductList.Rows(i).Cells(6).Text = "-"
-                    Else
-                        SupplierProductList.Rows(i).Cells(6).Text = SupplierProductList.Rows(i).Cells(6).Text & "<br>" & "-"
-                    End If
-                End If
-                '[ProposalDeptのセット]-------------------------------------------------------------
-                If st_ProposalDept <> "" Then
-                    DBCommand2.CommandText = "SELECT ENai FROM dbo.s_EhsPhrase WHERE PhID = N'" & st_ProposalDept & "'"
-                    DBReader2 = DBCommand2.ExecuteReader()
-                    DBCommand2.Dispose()
-                    If DBReader2.Read = True Then
-                        If CntA = 1 Then
-                            SupplierProductList.Rows(i).Cells(7).Text = DBReader2("ENai")
-                        Else
-                            SupplierProductList.Rows(i).Cells(7).Text = SupplierProductList.Rows(i).Cells(7).Text & "<br>" & DBReader2("ENai")
-                        End If
-                    End If
-                    DBReader2.Close()
-                Else
-                    If CntA = 1 Then
-                        SupplierProductList.Rows(i).Cells(7).Text = "-"
-                    Else
-                        SupplierProductList.Rows(i).Cells(7).Text = SupplierProductList.Rows(i).Cells(7).Text & "<br>" & "-"
-                    End If
-                End If
-                '[ProcumentDeptのセット]------------------------------------------------------------
-                If st_ProcumentDept <> "" Then
-                    DBCommand2.CommandText = "SELECT ENai FROM dbo.s_EhsPhrase WHERE PhID = N'" & st_ProcumentDept & "'"
-                    DBReader2 = DBCommand2.ExecuteReader()
-                    DBCommand2.Dispose()
-                    If DBReader2.Read = True Then
-                        If CntA = 1 Then
-                            SupplierProductList.Rows(i).Cells(8).Text = DBReader2("ENai")
-                        Else
-                            SupplierProductList.Rows(i).Cells(8).Text = SupplierProductList.Rows(i).Cells(8).Text & "<br>" & DBReader2("ENai")
-                        End If
-                    End If
-                    DBReader2.Close()
-                Else
-                    If CntA = 1 Then
-                        SupplierProductList.Rows(i).Cells(8).Text = "-"
-                    Else
-                        SupplierProductList.Rows(i).Cells(8).Text = SupplierProductList.Rows(i).Cells(8).Text & "<br>" & "-"
-                    End If
+                    SupplierProductList.Rows(i).Cells(6).Text = SupplierProductList.Rows(i).Cells(6).Text & "<br>" & st_Status
+                    SupplierProductList.Rows(i).Cells(7).Text = SupplierProductList.Rows(i).Cells(7).Text & "<br>" & st_ProposalDept
+                    SupplierProductList.Rows(i).Cells(8).Text = SupplierProductList.Rows(i).Cells(8).Text & "<br>" & st_ProcumentDept
                 End If
             Loop
             DBReader.Close()
@@ -260,9 +213,6 @@
 
         '[Import.Visibleの設定]---------------------------------------------------------
         If Msg.Text.ToString = "" Then Import.Visible = True Else Import.Visible = False
-
-        '[作成したTableを削除する]------------------------------------------------------
-        Kill(ImportFileName.Value)
     End Sub
 
     Protected Sub Import_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Import.Click
@@ -371,12 +321,15 @@
         Response.Redirect("./ProductListBySupplier.aspx?Supplier=" & SupplierCode.Text.ToString)
     End Sub
 
-    Private Sub up(ByVal sender As Object, ByVal e As EventArgs) Handles SupplierProductList.RowEditing
-
-    End Sub
-
     Private Sub Page_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload
         DBConn.Close()
         DBConn2.Close()
+    End Sub
+
+    Public Sub SupplierProductListClear()
+        SupplierProductList.DataSourceID = ""
+        SupplierProductList.DataSource = ""
+        SupplierProductList.DataBind()
+        Import.Visible = False
     End Sub
 End Class
