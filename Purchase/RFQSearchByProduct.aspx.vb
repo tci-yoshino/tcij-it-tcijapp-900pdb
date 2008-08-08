@@ -29,10 +29,10 @@ Partial Public Class RFQSearchByProduct
     ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
-        'ポストバック以外の時は結果表示リストを非表示にします（No match found表示防止）
+        'No match found表示防止
         ProductList.Visible = IsPostBack
 
-        SrcProduct.SelectCommand = ""
+        SrcProduct.SelectCommand = String.Empty
 
     End Sub
 
@@ -43,9 +43,9 @@ Partial Public Class RFQSearchByProduct
     ''' <param name="e">ASP.NETの既定値</param>
     ''' <remarks></remarks>
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
+
         '必須入力項目のチェック
         If Code.Text.Trim = String.Empty Then
-            '必須入力項目漏れの警告表示
             Msg.Text = MSG_REQUIED_PRODUCT_NUMBER
             Exit Sub
         Else
@@ -70,13 +70,11 @@ Partial Public Class RFQSearchByProduct
     ''' <remarks></remarks>
     Private Sub SearchRFQ(ByVal st_SearchKey As SearchKey)
 
-        'SQL文字列の生成
         Dim st_SQL As String = CreateRFQSelectSQL(st_SearchKey)
         SrcProduct.SelectCommand = st_SQL
 
-        'バインド変数のバインド
         SetRFQSelectSQLParames(st_SearchKey, SrcProduct)
-        '結果の画面表示
+
         ProductList.DataBind()
 
     End Sub

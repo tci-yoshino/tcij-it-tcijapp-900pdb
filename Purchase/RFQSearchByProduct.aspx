@@ -61,12 +61,10 @@
                 <ItemTemplate>
                     <tr>
                         <td>
-                        <asp:HyperLink ID="ProductNumber" runat="server" NavigateUrl='<%#Eval("RFQNumber","./RFQListByProduct.aspx?Code={0}")%>' Text = '<%#Eval("ProductNumber")%>' />
-                        <%-- <asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>' /> --%>                        
+                        <asp:HyperLink ID="ProductNumber" runat="server" NavigateUrl='<%#Eval("ProductNumber","./RFQListByProduct.aspx?ProductID={0}")%>' Text = '<%#Eval("ProductNumber")%>' />
                         </td>
                         <td>
-                        <asp:HyperLink ID="ProductName" runat="server" NavigateUrl='<%#Eval("RFQNumber","./RFQListByProduct.aspx?Code={0}")%>' Text='<%#Eval("ProductName")%>' />
-                        <%-- <asp:Label ID="ProductName" runat="server" Text='<%#Eval("ProductName")%>' /> --%>
+                        <asp:HyperLink ID="ProductName" runat="server" NavigateUrl='<%#Eval("ProductNumber","./RFQListByProduct.aspx?ProductID={0}")%>' Text='<%#Eval("ProductName")%>' />
                         </td>
                     </tr>
                 </ItemTemplate>
