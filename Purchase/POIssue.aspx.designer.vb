@@ -439,15 +439,6 @@ Partial Public Class POIssue
     Protected WithEvents POLocationCode As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
-    '''SOLocationCode コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents SOLocationCode As Global.System.Web.UI.WebControls.HiddenField
-
-    '''<summary>
     '''ProductID コントロール。
     '''</summary>
     '''<remarks>
@@ -455,15 +446,6 @@ Partial Public Class POIssue
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents ProductID As Global.System.Web.UI.WebControls.HiddenField
-
-    '''<summary>
-    '''SupplierCode コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents SupplierCode As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
     '''MakerCode コントロール。
