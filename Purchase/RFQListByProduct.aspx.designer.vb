@@ -77,13 +77,4 @@ Partial Public Class RFQListByProduct
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents SrcRFQHeader As Global.System.Web.UI.WebControls.SqlDataSource
-
-    '''<summary>
-    '''SrcRFQLine コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents SrcRFQLine As Global.System.Web.UI.WebControls.SqlDataSource
 End Class
