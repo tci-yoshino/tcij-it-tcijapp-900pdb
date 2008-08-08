@@ -52,13 +52,13 @@
                 ' SQLパラメータ設定
                 SrcRFQ.UpdateParameters.Add("RFQNumber", CType(e.Item.FindControl("RFQNumber"), Label).Text)
                 SrcRFQ.UpdateParameters.Add("QuoUserID", CType(e.Item.FindControl("QuoUser"), DropDownList).SelectedValue)
-                SrcRFQ.UpdateParameters.Add("UpdateBy", Session("UserID"))
+                SrcRFQ.UpdateParameters.Add("UpdatedBy", Session("UserID"))
                 SrcRFQ.UpdateParameters.Add("UpdateDate", CType(e.Item.FindControl("UpdateDate"), HiddenField).Value)
 
                 ' Update 文作成
                 SrcRFQ.UpdateCommand = _
                       "UPDATE RFQHeader " _
-                    & "SET QuoUserID = @QuoUserID, RFQStatusCode = 'A', UpdateDate = GETDATE(), UpdatedBy = @UpdateBy " _
+                    & "SET QuoUserID = @QuoUserID, RFQStatusCode = 'A', UpdateDate = GETDATE(), UpdatedBy = @UpdatedBy " _
                     & "WHERE RFQNumber = @RFQNumber " _
                     & "  AND CONVERT(VARCHAR, UpdateDate, 120) = @UpdateDate "
 
@@ -72,13 +72,13 @@
                 ' SQLパラメータ設定
                 SrcPO.UpdateParameters.Add("PONumber", CType(e.Item.FindControl("PONumber"), Label).Text)
                 SrcPO.UpdateParameters.Add("SOUserID", CType(e.Item.FindControl("SOUser"), DropDownList).SelectedValue)
-                SrcPO.UpdateParameters.Add("UpdateBy", Session("UserID"))
+                SrcPO.UpdateParameters.Add("UpdatedBy", Session("UserID"))
                 SrcPO.UpdateParameters.Add("UpdateDate", CType(e.Item.FindControl("UpdateDate"), HiddenField).Value)
 
                 ' Update 文作成
                 SrcPO.UpdateCommand = _
                       "UPDATE PO " _
-                    & "SET SOUserID = @SOUserID, UpdateDate = GETDATE(), UpdatedBy = @UpdateBy " _
+                    & "SET SOUserID = @SOUserID, UpdateDate = GETDATE(), UpdatedBy = @UpdatedBy " _
                     & "WHERE PONumber = @PONumber " _
                     & "  AND CONVERT(VARCHAR, UpdateDate, 120) = @UpdateDate "
 
