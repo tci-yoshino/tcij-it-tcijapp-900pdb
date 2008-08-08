@@ -203,9 +203,7 @@
                 
                 <asp:HiddenField ID="RFQLineNumber" runat="server" />
                 <asp:HiddenField ID="POLocationCode" runat="server" />
-                <asp:HiddenField ID="SOLocationCode" runat="server" />
                 <asp:HiddenField ID="ProductID" runat="server" />
-                <asp:HiddenField ID="SupplierCode" runat="server" />
                 <asp:HiddenField ID="MakerCode" runat="server" />
                 <asp:HiddenField ID="PaymentTermCode" runat="server" />
                 <asp:HiddenField ID="IncotermsCode" runat="server" />

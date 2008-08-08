@@ -20,6 +20,7 @@ Partial Public Class POIssue
         Dim do_OrderQuantity As Double = 0
         Dim do_PerQuantity As Double = 0
         Dim do_UnitPrice As Double = 0
+        Dim st_LocationCode As String = ""
 
         st_RFQLineNumber = IIf(Request.RequestType = "POST", Request.Form("RFQLineNumber"), Request.QueryString("RFQLineNumber"))
         st_ParPONumber = IIf(Request.RequestType = "POST", Request.Form("ParPONumber"), Request.QueryString("ParPONumber"))
@@ -65,9 +66,9 @@ Partial Public Class POIssue
 "  v_RFQLine " & _
 "WHERE " & _
 "  RFQLineNumber = @RFQLineNumber", sqlConn)
+
             sqlAdapter.SelectCommand = sqlCmd
             sqlCmd.Parameters.Add("@RFQLineNumber", SqlDbType.Int).Value = st_RFQLineNumber
-
             sqlAdapter.Fill(ds, "RFQLine")
 
             If IsDBNull(ds.Tables("RFQLine").Rows(0)("UnitPrice")) Then
@@ -100,23 +101,28 @@ Partial Public Class POIssue
 
             RFQLineNumber.Value = st_RFQLineNumber
             POLocationCode.Value = Session("LocationCode")
-            SOLocationCode.Value = IIf(IsDBNull(ds.Tables("RFQLine").Rows(0)("QuoLocationCode")), Session("LocationCode"), ds.Tables("RFQLine").Rows(0)("QuoLocationCode").ToString)
             ProductID.Value = ds.Tables("RFQLine").Rows(0)("ProductID").ToString
-            SupplierCode.Value = ds.Tables("RFQLine").Rows(0)("SupplierCode").ToString
             MakerCode.Value = ds.Tables("RFQLine").Rows(0)("MakerCode").ToString
             PaymentTermCode.Value = ds.Tables("RFQLine").Rows(0)("PaymentTermCode").ToString
             IncotermsCode.Value = ds.Tables("RFQLine").Rows(0)("IncotermsCode").ToString
 
             SrcSupplier.SelectParameters.Clear()
-            SrcSupplier.SelectParameters.Add("SupplierCode", SupplierCode.Value)
-            SrcSupplier.SelectParameters.Add("LocationCode", SOLocationCode.Value)
+            SrcSupplier.SelectParameters.Add("SupplierCode", ds.Tables("RFQLine").Rows(0)("SupplierCode").ToString)
+            st_LocationCode = ds.Tables("RFQLine").Rows(0)("QuoLocationCode").ToString
+            If (st_LocationCode = Session("LocationCode")) Or (st_LocationCode = "") Then
+                st_LocationCode = "#%@$\"
+            End If
+            SrcSupplier.SelectParameters.Add("LocationCode", st_LocationCode)
         End If
 
     End Sub
 
     Protected Sub Issue_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Issue.Click
+        Dim sqlAdapter As SqlDataAdapter
+        Dim ds As DataSet = New DataSet
         Dim sqlCmd As SqlCommand
         Dim sqlReader As SqlDataReader
+        Dim st_SOLocationCode As String = ""
         Dim st_PONumber As String = ""
 
         If String.IsNullOrEmpty(st_Action) Then
@@ -127,6 +133,16 @@ Partial Public Class POIssue
         If ValidateField() = False Then
             Exit Sub
         End If
+
+        sqlAdapter = New SqlDataAdapter
+        sqlCmd = New SqlCommand( _
+"SELECT LocationCode FROM Supplier WHERE SupplierCode = @SupplierCode", sqlConn)
+
+        sqlAdapter.SelectCommand = sqlCmd
+        sqlCmd.Parameters.Add("@SupplierCode", SqlDbType.VarChar).Value = Supplier.SelectedValue
+        sqlAdapter.Fill(ds, "Supplier")
+
+        st_SOLocationCode = ds.Tables("Supplier").Rows(0)("LocationCode").ToString
 
         sqlCmd = New SqlCommand( _
 "INSERT INTO PO ( " & _
@@ -217,9 +233,9 @@ Partial Public Class POIssue
         sqlCmd.Parameters.Add("@PODate", SqlDbType.DateTime).Value = GetDatabaseTime(Session("LocationCode"), PODate.Text)
         sqlCmd.Parameters.Add("@POLocationCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(POLocationCode.Value)
         sqlCmd.Parameters.Add("@POUserID", SqlDbType.Int).Value = ConvertStringToInt(POUser.SelectedValue)
-        sqlCmd.Parameters.Add("@SOLocationCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(SOLocationCode.Value)
+        sqlCmd.Parameters.Add("@SOLocationCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(st_SOLocationCode)
         sqlCmd.Parameters.Add("@ProductID", SqlDbType.Int).Value = ConvertStringToInt(ConvertEmptyStringToNull(ProductID.Value))
-        sqlCmd.Parameters.Add("@SupplierCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(SupplierCode.Value)
+        sqlCmd.Parameters.Add("@SupplierCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(Supplier.SelectedValue)
         sqlCmd.Parameters.Add("@MakerCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(MakerCode.Value)
         sqlCmd.Parameters.Add("@OrderQuantity", SqlDbType.Decimal).Value = ConvertStringToDec(OrderQuantity.Text)
         sqlCmd.Parameters.Add("@OrderUnitCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(OrderUnit.SelectedValue)
