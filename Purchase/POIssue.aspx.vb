@@ -71,6 +71,11 @@ Partial Public Class POIssue
             sqlCmd.Parameters.Add("@RFQLineNumber", SqlDbType.Int).Value = st_RFQLineNumber
             sqlAdapter.Fill(ds, "RFQLine")
 
+            If ds.Tables("RFQLine").Rows.Count = 0 Then
+                Msg.Text = "RFQ record does not exist."
+                Exit Sub
+            End If
+
             If IsDBNull(ds.Tables("RFQLine").Rows(0)("UnitPrice")) Then
                 Msg.Text = "Quotation reply does not exist."
                 Exit Sub
