@@ -211,32 +211,12 @@ Partial Public Class RFQIssue
             Msg.Text = "ProductNumber の設定が不正です"
             Exit Sub
         End If
-        DBCommand.CommandText = "SELECT SupplierCode FROM Supplier WHERE (SupplierCode = @st_SupplierCode)"
-        DBCommand.Parameters.Add("st_SupplierCode", SqlDbType.Int).Value = CInt(SupplierCode.Text)
-        DBReader = DBCommand.ExecuteReader()
-        DBCommand.Dispose()
-        If DBReader.HasRows = True Then
-            While DBReader.Read
-                i_SupplierCode = IIf(IsNumeric(DBReader("SupplierCode").ToString) = True, CInt(DBReader("SupplierCode").ToString), -99)
-            End While
-        End If
-        DBReader.Close()
-        If i_SupplierCode = -1 Or i_SupplierCode = -99 Then
+        If RFQSupplierCheck(SupplierCode.Text) = False Then
             Msg.Text = "SupplierCode の設定が不正です"
             Exit Sub
         End If
         If MakerCode.Text <> "" Then
-            DBCommand.CommandText = "SELECT SupplierCode FROM Supplier WHERE (SupplierCode = @st_MakerCode)"
-            DBCommand.Parameters.Add("st_MakerCode", SqlDbType.Int).Value = CInt(MakerCode.Text)
-            DBReader = DBCommand.ExecuteReader()
-            DBCommand.Dispose()
-            If DBReader.HasRows = True Then
-                While DBReader.Read
-                    i_MakerCode = IIf(IsNumeric(DBReader("SupplierCode").ToString) = True, CInt(DBReader("SupplierCode").ToString), -99)
-                End While
-            End If
-            DBReader.Close()
-            If i_MakerCode = -1 Or i_MakerCode = -99 Then
+            If RFQSupplierCheck(MakerCode.Text) = False Then
                 Msg.Text = "MakerCode の設定が不正です"
                 Exit Sub
             End If
@@ -334,4 +314,30 @@ Partial Public Class RFQIssue
             DBCommand.Dispose()
         End Try
     End Sub
+    Public Function RFQSupplierCheck(ByVal SupplierCode As String) As Boolean
+        'Supplier 存在チェック
+        RFQSupplierCheck = False
+        Dim RFQConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
+        Dim RFQConn As New SqlConnection
+        Dim RFQCom As SqlCommand
+        Dim RFQRead As SqlDataReader
+        Dim i As Integer
+
+        If Integer.TryParse(SupplierCode, i) = False Then
+            Exit Function
+        End If
+        RFQConn.ConnectionString = RFQConnectString.ConnectionString
+        RFQConn.Open()
+        RFQCom = RFQConn.CreateCommand()
+
+        RFQCom.CommandText = "SELECT SupplierCode FROM Supplier WHERE (SupplierCode = @st_SupplierCode)"
+        RFQCom.Parameters.Add("st_SupplierCode", SqlDbType.Int).Value = CInt(SupplierCode)
+        RFQRead = RFQCom.ExecuteReader()
+        RFQCom.Dispose()
+        If RFQRead.HasRows = True Then
+            RFQSupplierCheck = True
+        End If
+        RFQRead.Close()
+        RFQConn.Close()
+    End Function
 End Class
