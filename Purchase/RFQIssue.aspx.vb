@@ -1,13 +1,14 @@
-﻿Public Partial Class RFQIssue
+﻿Imports System.Data.SqlClient
+Partial Public Class RFQIssue
     Inherits CommonPage
     Public DBConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
-    Public DBConn As New System.Data.SqlClient.SqlConnection
-    Public DBCommand As System.Data.SqlClient.SqlCommand
+    Public DBConn As New SqlConnection
+    Public DBCommand As SqlCommand
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Dim st_ProductID As String = ""
         Dim st_SupplierCode As String = ""
-        Dim DBReader As System.Data.SqlClient.SqlDataReader
+        Dim DBReader As SqlDataReader
         DBConn.ConnectionString = DBConnectString.ConnectionString
         DBConn.Open()
         DBCommand = DBConn.CreateCommand()
@@ -53,6 +54,10 @@
                     DBReader.Close()
                 End If
             End If
+            EnqLocation.SelectedValue = Session("LocationCode").ToString
+            EnqLocation.DataBind()
+            EnqUser.DataBind()
+            EnqUser.SelectedValue = Session("UserID").ToString
         Else
             'ReadOnly項目の再設定
             ProductName.Text = Request.Form("ProductName").ToString
@@ -83,7 +88,7 @@
     End Sub
 
     Protected Sub Issue_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Issue.Click
-        Dim DBReader As System.Data.SqlClient.SqlDataReader
+        Dim DBReader As SqlDataReader
         Dim i As Integer = 0
         Dim st_Indispensability As String = ""
         Dim Bo_Line As Boolean = False
@@ -249,53 +254,22 @@
                                   & "@ProductID, @SupplierCode, @MakerCode, @PurposeCode, @RequiredPurity, " _
                                   & "@RequiredQMMethod, @RequiredSpecification, @Comment, @RFQStatusCode, @CreatedBy, @UpdatedBy); " _
                                   & " SELECT RFQNumber FROM RFQHeader WHERE (RFQNumber = SCOPE_IDENTITY())"
-            Dim param1 As System.Data.SqlClient.SqlParameter
-            Dim param2 As System.Data.SqlClient.SqlParameter
-            Dim param3 As System.Data.SqlClient.SqlParameter
-            Dim param4 As System.Data.SqlClient.SqlParameter
-            Dim param5 As System.Data.SqlClient.SqlParameter
-            Dim param6 As System.Data.SqlClient.SqlParameter
-            Dim param7 As System.Data.SqlClient.SqlParameter
-            Dim param8 As System.Data.SqlClient.SqlParameter
-            Dim param9 As System.Data.SqlClient.SqlParameter
-            Dim param10 As System.Data.SqlClient.SqlParameter
-            Dim param11 As System.Data.SqlClient.SqlParameter
-            Dim param12 As System.Data.SqlClient.SqlParameter
-            Dim param13 As System.Data.SqlClient.SqlParameter
-            Dim param14 As System.Data.SqlClient.SqlParameter
-            Dim param15 As System.Data.SqlClient.SqlParameter
 
-            param1 = DBCommand.Parameters.Add("@EnqLocationCode", SqlDbType.VarChar, 5)
-            param2 = DBCommand.Parameters.Add("@EnqUserID", SqlDbType.Int)
-            param3 = DBCommand.Parameters.Add("@QuoLocationCode", SqlDbType.VarChar, 5)
-            param4 = DBCommand.Parameters.Add("@QuoUserID", SqlDbType.Int)
-            param5 = DBCommand.Parameters.Add("@ProductID", SqlDbType.Int)
-            param6 = DBCommand.Parameters.Add("@SupplierCode", SqlDbType.Int)
-            param7 = DBCommand.Parameters.Add("@MakerCode", SqlDbType.Int)
-            param8 = DBCommand.Parameters.Add("@PurposeCode", SqlDbType.VarChar, 5)
-            param9 = DBCommand.Parameters.Add("@RequiredPurity", SqlDbType.NVarChar, 255)
-            param10 = DBCommand.Parameters.Add("@RequiredQMMethod", SqlDbType.NVarChar, 255)
-            param11 = DBCommand.Parameters.Add("@RequiredSpecification", SqlDbType.NVarChar, 255)
-            param12 = DBCommand.Parameters.Add("@Comment", SqlDbType.NVarChar, 3000)
-            param13 = DBCommand.Parameters.Add("@RFQStatusCode", SqlDbType.VarChar, 5)
-            param14 = DBCommand.Parameters.Add("@CreatedBy", SqlDbType.Int)
-            param15 = DBCommand.Parameters.Add("@UpdatedBy", SqlDbType.Int)
-
-            param1.Value = EnqLocation.SelectedValue
-            param2.Value = EnqUser.SelectedValue
-            param3.Value = IIf(QuoLocation.SelectedValue = "Direct", System.DBNull.Value, QuoLocation.SelectedValue)
-            param4.Value = IIf(IsNumeric(QuoUser.SelectedValue) = True, QuoUser.SelectedValue, System.DBNull.Value)
-            param5.Value = i_ProductID
-            param6.Value = SupplierCode.Text
-            param7.Value = IIf(IsNumeric(MakerCode.Text) = True, MakerCode.Text, System.DBNull.Value)
-            param8.Value = Purpose.SelectedValue
-            param9.Value = IIf(Trim(RequiredPurity.Text) = "", System.DBNull.Value, RequiredPurity.Text)
-            param10.Value = IIf(Trim(RequiredQMMethod.Text) = "", System.DBNull.Value, RequiredQMMethod.Text)
-            param11.Value = IIf(Trim(RequiredSpecification.Text) = "", System.DBNull.Value, RequiredSpecification.Text)
-            param12.Value = IIf(Trim(Comment.Text) = "", System.DBNull.Value, Comment.Text)
-            param13.Value = IIf(QuoLocation.SelectedValue = "Direct", "N", IIf(IsNumeric(QuoUser.SelectedValue) = True, "A", ""))
-            param14.Value = CInt(Session("UserID"))
-            param15.Value = CInt(Session("UserID"))
+            DBCommand.Parameters.Add("@EnqLocationCode", SqlDbType.VarChar, 5).Value = EnqLocation.SelectedValue
+            DBCommand.Parameters.Add("@EnqUserID", SqlDbType.Int).Value = EnqUser.SelectedValue
+            DBCommand.Parameters.Add("@QuoLocationCode", SqlDbType.VarChar, 5).Value = IIf(QuoLocation.SelectedValue = "Direct", System.DBNull.Value, QuoLocation.SelectedValue)
+            DBCommand.Parameters.Add("@QuoUserID", SqlDbType.Int).Value = IIf(IsNumeric(QuoUser.SelectedValue) = True, QuoUser.SelectedValue, System.DBNull.Value)
+            DBCommand.Parameters.Add("@ProductID", SqlDbType.Int).Value = i_ProductID
+            DBCommand.Parameters.Add("@SupplierCode", SqlDbType.Int).Value = SupplierCode.Text
+            DBCommand.Parameters.Add("@MakerCode", SqlDbType.Int).Value = IIf(IsNumeric(MakerCode.Text) = True, MakerCode.Text, System.DBNull.Value)
+            DBCommand.Parameters.Add("@PurposeCode", SqlDbType.VarChar, 5).Value = Purpose.SelectedValue
+            DBCommand.Parameters.Add("@RequiredPurity", SqlDbType.NVarChar, 255).Value = IIf(Trim(RequiredPurity.Text) = "", System.DBNull.Value, RequiredPurity.Text)
+            DBCommand.Parameters.Add("@RequiredQMMethod", SqlDbType.NVarChar, 255).Value = IIf(Trim(RequiredQMMethod.Text) = "", System.DBNull.Value, RequiredQMMethod.Text)
+            DBCommand.Parameters.Add("@RequiredSpecification", SqlDbType.NVarChar, 255).Value = IIf(Trim(RequiredSpecification.Text) = "", System.DBNull.Value, RequiredSpecification.Text)
+            DBCommand.Parameters.Add("@Comment", SqlDbType.NVarChar, 3000).Value = IIf(Trim(Comment.Text) = "", System.DBNull.Value, Comment.Text)
+            DBCommand.Parameters.Add("@RFQStatusCode", SqlDbType.VarChar, 5).Value = IIf(QuoLocation.SelectedValue = "Direct", "N", IIf(IsNumeric(QuoUser.SelectedValue) = True, "A", ""))
+            DBCommand.Parameters.Add("@CreatedBy", SqlDbType.Int).Value = CInt(Session("UserID"))
+            DBCommand.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = CInt(Session("UserID"))
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             'Header登録と登録時のIDを取得
@@ -313,11 +287,11 @@
               & "VALUES(@RFQNumber, @EnqQuantity, @EnqUnitCode, @EnqPiece, " _
               & "@SupplierItemNumber, @CreatedBy, @UpdatedBy); "
 
-            param1 = DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int)
-            param2 = DBCommand.Parameters.Add("@EnqQuantity", SqlDbType.Decimal)
-            param3 = DBCommand.Parameters.Add("@EnqUnitCode", SqlDbType.VarChar, 5)
-            param4 = DBCommand.Parameters.Add("@EnqPiece", SqlDbType.Int)
-            param5 = DBCommand.Parameters.Add("@SupplierItemNumber", SqlDbType.VarChar, 128)
+            Dim param1 As SqlParameter = DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int)
+            Dim param2 As SqlParameter = DBCommand.Parameters.Add("@EnqQuantity", SqlDbType.Decimal)
+            Dim param3 As SqlParameter = DBCommand.Parameters.Add("@EnqUnitCode", SqlDbType.VarChar, 5)
+            Dim param4 As SqlParameter = DBCommand.Parameters.Add("@EnqPiece", SqlDbType.Int)
+            Dim param5 As SqlParameter = DBCommand.Parameters.Add("@SupplierItemNumber", SqlDbType.VarChar, 128)
             param1.Value = i_RFQNumber
             '画面内各行の入力欄が条件を満たしていたらTrueになっているため、Trueの行を登録する。
             If Enq_Quantity1 = True Then
