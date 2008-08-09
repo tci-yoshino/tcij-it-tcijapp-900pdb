@@ -12,7 +12,7 @@
 <body>
     <!-- Main Content Area -->
     <div id="content">
-        <div class="tabs"><a href="#" onclick="popup('./RFQCorrespondence.aspx')">RFQ Correspondence / History</a></div>
+        <div class="tabs"><a href="#" onclick="return Correspondence_onclick()">RFQ Correspondence / History</a></div>
 
         <h3>Quotation Reply</h3>
 
@@ -98,7 +98,8 @@
                             </asp:DropDownList>
                             <asp:SqlDataSource ID="SDS_RFQUpdate_Currency" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-                                SelectCommand="SELECT [CurrencyCode] FROM [PurchasingCurrency]">
+                                
+                                SelectCommand="SELECT [CurrencyCode] FROM [PurchasingCurrency] ORDER BY [CurrencyCode]">
                             </asp:SqlDataSource>
                             <asp:TextBox ID="ShippingHandlingFee" runat="server" Width="5em" MaxLength="21" CssClass="number"></asp:TextBox>
                         </td>
@@ -119,7 +120,8 @@
                         <th>Required Specification : </th><td><asp:Label ID="RequiredSpecification" runat="server" Text=""></asp:Label></td>
                     </tr>
                     <tr>
-                        <th>Spec Sheet : </th><td><asp:CheckBox ID="SpecSheet" runat="server" Text="yes" /></td>
+                        <th>Spec Sheet : </th><td><asp:CheckBox ID="SpecSheet" runat="server" 
+                            Text="yes" AutoPostBack="True" /></td>
                     </tr>
                     <tr>
                         <th>Specification : </th>
@@ -137,7 +139,8 @@
                             </asp:DropDownList>
                             <asp:SqlDataSource ID="SDS_RFQUpdate_QuoUser" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-                                SelectCommand="SELECT UserID, Name FROM v_User WHERE (LocationName = @Location)">
+                                
+                                SelectCommand="SELECT UserID, Name FROM v_User WHERE (LocationName = @Location) ORDER BY Name ">
                                 <SelectParameters>
                                     <asp:ControlParameter ControlID="QuoLocation" Name="Location" 
                                         PropertyName="Text" />
@@ -195,11 +198,13 @@
                             </asp:DropDownList>
                             <asp:SqlDataSource ID="SDS_RFQUpdate_Unit" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-                                SelectCommand="SELECT [UnitCode] FROM [PurchasingUnit]"></asp:SqlDataSource>
+                                
+                                SelectCommand="SELECT [UnitCode] FROM [PurchasingUnit] ORDER BY [UnitCode]"></asp:SqlDataSource>
                         </td>
                         <td><asp:TextBox ID="LeadTime_1" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="SupplierItemNumber_1" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
-                        <td rowspan="2"><asp:HyperLink ID="POIssue_1" runat="server"  NavigateUrl="./POIssue.aspx">PO Issue</asp:HyperLink></td>
+                        <td rowspan="2"><asp:HyperLink ID="POIssue_1" runat="server"  
+                                NavigateUrl="./POIssue.aspx" Visible="False">PO Issue</asp:HyperLink></td>
                     </tr>
                     <tr>
                         <td>
@@ -210,7 +215,8 @@
                             </asp:DropDownList>
                             <asp:SqlDataSource ID="SDS_RFQUpdate_Incoterms" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-                                SelectCommand="SELECT IncotermsCode FROM s_Incoterms"></asp:SqlDataSource>
+                                
+                                SelectCommand="SELECT IncotermsCode FROM s_Incoterms ORDER BY IncotermsCode "></asp:SqlDataSource>
                         </td>
                         <td colspan="2"><asp:TextBox ID="DeliveryTerm_1" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="Purity_1" runat="server" Width="5em" MaxLength="255"></asp:TextBox></td>
@@ -224,7 +230,8 @@
                             </asp:DropDownList>
                             <asp:SqlDataSource ID="SDS_RFQUpdate_NoOffer" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-                                SelectCommand="SELECT [NoOfferReasonCode], [Text] FROM [NoOfferReason]">
+                                
+                                SelectCommand="SELECT [NoOfferReasonCode], [Text] FROM [NoOfferReason] ORDER BY [SortOrder]">
                             </asp:SqlDataSource>
                         </td>
                     </tr>
@@ -250,7 +257,8 @@
                         </td>
                         <td><asp:TextBox ID="LeadTime_2" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="SupplierItemNumber_2" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
-                        <td rowspan="2"><asp:HyperLink ID="POIssue_2" runat="server" NavigateUrl="./POIssue.aspx">PO Issue</asp:HyperLink></td>
+                        <td rowspan="2"><asp:HyperLink ID="POIssue_2" runat="server" 
+                                NavigateUrl="./POIssue.aspx" Visible="False">PO Issue</asp:HyperLink></td>
                     </tr>
                     <tr>
                         <td>
@@ -294,7 +302,8 @@
                         </td>
                         <td><asp:TextBox ID="LeadTime_3" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="SupplierItemNumber_3" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
-                        <td rowspan="2"><asp:HyperLink ID="POIssue_3" runat="server" NavigateUrl="./POIssue.aspx">PO Issue</asp:HyperLink></td>
+                        <td rowspan="2"><asp:HyperLink ID="POIssue_3" runat="server" 
+                                NavigateUrl="./POIssue.aspx" Visible="False">PO Issue</asp:HyperLink></td>
                     </tr>
                     <tr>
                         <td>
@@ -338,7 +347,8 @@
                         </td>
                         <td><asp:TextBox ID="LeadTime_4" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="SupplierItemNumber_4" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
-                        <td rowspan="2"><asp:HyperLink ID="POIssue_4" runat="server" NavigateUrl="./POIssue.aspx">PO Issue</asp:HyperLink></td>
+                        <td rowspan="2"><asp:HyperLink ID="POIssue_4" runat="server" 
+                                NavigateUrl="./POIssue.aspx" Visible="False">PO Issue</asp:HyperLink></td>
                     </tr>
                     <tr>
                         <td>
@@ -366,13 +376,14 @@
                     <strong>Status : </strong>
                     <asp:DropDownList ID="RFQStatus" runat="server">
                         <asp:ListItem></asp:ListItem>
-                        <asp:ListItem>Enquired</asp:ListItem>
-                        <asp:ListItem>Partly-quoted</asp:ListItem>
-                        <asp:ListItem>Quoted</asp:ListItem>
+                        <asp:ListItem Value="E">Enquired</asp:ListItem>
+                        <asp:ListItem Value="PQ">Partly-quoted</asp:ListItem>
+                        <asp:ListItem Value="Q">Quoted</asp:ListItem>
                     </asp:DropDownList>
                     <asp:Button ID="Update" runat="server" Text="Update" />
                     <span class="indent"></span>
                     <asp:Button ID="Close" runat="server" Text="Close" />
+                    <asp:HiddenField ID="QuotedDate" runat="server" />
                 </div>
             </div>
         </form>
@@ -387,6 +398,10 @@
     		var MakerCode = encodeURIComponent(document.getElementById('MakerCode').value);
 	    	popup('./MakerSelect.aspx?Code=' + MakerCode);
 		}
+        function Correspondence_onclick() {
+    		var RFQNumber = encodeURIComponent(document.getElementById('RFQNumber').value);
+	    	popup('./RFQCorrespondence.aspx?RFQNumber=' + RFQNumber);
+        }
 		</script>
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->

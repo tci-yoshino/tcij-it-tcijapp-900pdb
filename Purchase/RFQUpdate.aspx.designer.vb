@@ -950,4 +950,13 @@ Partial Public Class RFQUpdate
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Close As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''QuotedDate コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents QuotedDate As Global.System.Web.UI.WebControls.HiddenField
 End Class
