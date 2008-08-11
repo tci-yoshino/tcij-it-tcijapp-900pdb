@@ -204,7 +204,9 @@
                         <td><asp:TextBox ID="LeadTime_1" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="SupplierItemNumber_1" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
                         <td rowspan="2"><asp:HyperLink ID="POIssue_1" runat="server"  
-                                NavigateUrl="./POIssue.aspx" Visible="False">PO Issue</asp:HyperLink></td>
+                                NavigateUrl="./POIssue.aspx" Visible="False">PO Issue</asp:HyperLink>
+                            <asp:HiddenField ID="LineNumber1" runat="server" />
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -258,7 +260,9 @@
                         <td><asp:TextBox ID="LeadTime_2" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="SupplierItemNumber_2" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
                         <td rowspan="2"><asp:HyperLink ID="POIssue_2" runat="server" 
-                                NavigateUrl="./POIssue.aspx" Visible="False">PO Issue</asp:HyperLink></td>
+                                NavigateUrl="./POIssue.aspx" Visible="False">PO Issue</asp:HyperLink>
+                            <asp:HiddenField ID="LineNumber2" runat="server" />
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -303,7 +307,9 @@
                         <td><asp:TextBox ID="LeadTime_3" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="SupplierItemNumber_3" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
                         <td rowspan="2"><asp:HyperLink ID="POIssue_3" runat="server" 
-                                NavigateUrl="./POIssue.aspx" Visible="False">PO Issue</asp:HyperLink></td>
+                                NavigateUrl="./POIssue.aspx" Visible="False">PO Issue</asp:HyperLink>
+                            <asp:HiddenField ID="LineNumber3" runat="server" />
+                        </td>
                     </tr>
                     <tr>
                         <td>
@@ -348,7 +354,9 @@
                         <td><asp:TextBox ID="LeadTime_4" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="SupplierItemNumber_4" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
                         <td rowspan="2"><asp:HyperLink ID="POIssue_4" runat="server" 
-                                NavigateUrl="./POIssue.aspx" Visible="False">PO Issue</asp:HyperLink></td>
+                                NavigateUrl="./POIssue.aspx" Visible="False">PO Issue</asp:HyperLink>
+                            <asp:HiddenField ID="LineNumber4" runat="server" />
+                        </td>
                     </tr>
                     <tr>
                         <td>

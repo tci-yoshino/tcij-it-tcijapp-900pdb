@@ -421,6 +421,15 @@ Partial Public Class RFQUpdate
     Protected WithEvents POIssue_1 As Global.System.Web.UI.WebControls.HyperLink
 
     '''<summary>
+    '''LineNumber1 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents LineNumber1 As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''Incoterms_1 コントロール。
     '''</summary>
     '''<remarks>
@@ -583,6 +592,15 @@ Partial Public Class RFQUpdate
     Protected WithEvents POIssue_2 As Global.System.Web.UI.WebControls.HyperLink
 
     '''<summary>
+    '''LineNumber2 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents LineNumber2 As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''Incoterms_2 コントロール。
     '''</summary>
     '''<remarks>
@@ -727,6 +745,15 @@ Partial Public Class RFQUpdate
     Protected WithEvents POIssue_3 As Global.System.Web.UI.WebControls.HyperLink
 
     '''<summary>
+    '''LineNumber3 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents LineNumber3 As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''Incoterms_3 コントロール。
     '''</summary>
     '''<remarks>
@@ -869,6 +896,15 @@ Partial Public Class RFQUpdate
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents POIssue_4 As Global.System.Web.UI.WebControls.HyperLink
+
+    '''<summary>
+    '''LineNumber4 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents LineNumber4 As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
     '''Incoterms_4 コントロール。
