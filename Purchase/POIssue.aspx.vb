@@ -317,6 +317,11 @@ Partial Public Class POIssue
         If OrderQuantity.Text = "" Or OrderUnit.SelectedValue = "" Then
             Msg.Text = "Order Quantity" & ERR_REQUIRED_FIELD
             Return False
+        Else
+            If Not Regex.IsMatch(OrderQuantity.Text, DECIMAL_7_3_REGEX) Then
+                Msg.Text = "Order Quantity" & ERR_INVALID_NUMBER
+                Return False
+            End If
         End If
 
         ' Delivery Date (Optional)

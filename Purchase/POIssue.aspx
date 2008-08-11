@@ -67,7 +67,7 @@
                     <tr>
                         <th>Order Quantity <span class="required">*</span> : </th>
                         <td>
-                            <asp:TextBox ID="OrderQuantity" runat="server" Width="5em" MaxLength="10" class="number"></asp:TextBox>
+                            <asp:TextBox ID="OrderQuantity" runat="server" Width="5em" MaxLength="11" class="number"></asp:TextBox>
                             <asp:DropDownList ID="OrderUnit" runat="server" DataSourceID="SrcUnit" 
                                 DataTextField="UnitCode" DataValueField="UnitCode">
                             </asp:DropDownList>
