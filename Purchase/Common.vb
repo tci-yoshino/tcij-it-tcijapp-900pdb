@@ -8,6 +8,14 @@
 
     Public Shared ReadOnly DATE_REGEX As String = "\d{4}-\d{1,2}-\d{1,2}"
     Public Shared ReadOnly DATE_REGEX_OPTIONAL As String = "\d{4}-\d{1,2}-\d{1,2}|"
+    Public Shared ReadOnly DECIMAL_10_3_REGEX As String = "^\d{1,10}(|\.)$|^\d{0,10}\.\d{1,3}$"
+    Public Shared ReadOnly DECIMAL_10_3_REGEX_OPTIONAL As String = "^\d{1,10}(|\.)$|^\d{0,10}\.\d{1,3}$|^$"
+    Public Shared ReadOnly DECIMAL_7_3_REGEX As String = "^\d{1,7}(|\.)$|^\d{0,7}\.\d{1,3}$"
+    Public Shared ReadOnly DECIMAL_7_3_REGEX_OPTIONAL As String = "^\d{1,7}(|\.)$|^\d{0,7}\.\d{1,3}$|^$"
+    Public Shared ReadOnly DECIMAL_5_3_REGEX As String = "^\d{1,5}(|\.)$|^\d{0,5}\.\d{1,3}$"
+    Public Shared ReadOnly DECIMAL_5_3_REGEX_OPTIONAL As String = "^\d{1,5}(|\.)$|^\d{0,5}\.\d{1,3}$|^$"
+    Public Shared ReadOnly INT_5_REGEX As String = "^\d{1,5}$"
+    Public Shared ReadOnly INT_5_REGEX_OPTIONAL As String = "^\d{1,5}$|^$"
 
     Public Shared ReadOnly MSG_NO_DATA_FOUND As String = "No data found."
 
@@ -15,6 +23,7 @@
     Public Shared ReadOnly ERR_REQUIRED_FIELD As String = " must be specified."
     Public Shared ReadOnly ERR_INCORRECT_FORMAT As String = " is not in the correct format."
     Public Shared ReadOnly ERR_INVALID_DATE As String = " is an invalid date."
+    Public Shared ReadOnly ERR_INVALID_NUMBER As String = " is an invalid number."
     Public Shared ReadOnly ERR_NO_MATCH_FOUND As String = "No match found."
 
     Public Shared Function GetLocalTime(ByVal LocationCode As String, ByVal DatabaseTime As Date) As String
