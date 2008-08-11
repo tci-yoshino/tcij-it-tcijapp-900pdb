@@ -1,7 +1,7 @@
 ﻿''' <summary>
 ''' RFQSearchByProductクラス
 ''' </summary>
-''' <remarks>商品から見積依頼を検索します。</remarks>
+''' <remarks>製品から見積依頼を検索します。</remarks>
 Partial Public Class RFQSearchByProduct
     Inherits CommonPage
 

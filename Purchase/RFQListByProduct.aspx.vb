@@ -1,9 +1,21 @@
 ﻿Imports System.Data.SqlClient
 
+''' <summary>
+''' RFQListByProductクラス
+''' </summary>
+''' <remarks>製品からRFQ一覧を表示します</remarks>
 Partial Public Class RFQListByProduct
     Inherits CommonPage
 
+    Public st_ProductID As String
+    Public i_DataNum As Integer = 0 ' 0 の場合は Supplier Data が無いと判断し、 Data not found. を表示する。
     Public DBConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
+
+    ''' <summary>
+    ''' 必須項目漏れのエラーメッセージ定数です。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Const MSG_REQUIED_PRODUCT_NUMBER = "Product Number が指定されていません。"
 
     ''' <summary>
     ''' このページのロードイベントです。
@@ -15,7 +27,23 @@ Partial Public Class RFQListByProduct
 
         If Request.QueryString("ProductID") <> String.Empty Then
 
-            Dim st_ProductID As String = Request.QueryString("ProductID")
+            st_ProductID = Request.QueryString("ProductID")
+
+            ' パラメータ取得
+            If Request.RequestType = "POST" Then
+                st_ProductID = IIf(Request.Form("ProductID") = Nothing, "", Request.Form("ProductID"))
+            ElseIf Request.RequestType = "GET" Then
+                st_ProductID = IIf(Request.QueryString("ProductID") = Nothing, "", Request.QueryString("ProductID"))
+            End If
+
+            ' 空白除去
+            st_ProductID = st_ProductID.Trim()
+
+            If st_ProductID = "" Or IsNumeric(st_ProductID) = False Then
+                Msg.Text = MSG_REQUIED_PRODUCT_NUMBER
+                Exit Sub
+            End If
+
             SearchProduct(st_ProductID)
             SearchRFQHeader(st_ProductID)
         End If
@@ -23,9 +51,9 @@ Partial Public Class RFQListByProduct
     End Sub
 
     ''' <summary>
-    ''' 商品の検索を行います。
+    ''' 製品の検索を行います。
     ''' </summary>
-    ''' <param name="st_ProductID">商品ID</param>
+    ''' <param name="st_ProductID">製品ID</param>
     ''' <remarks></remarks>
     Private Sub SearchProduct(ByVal st_ProductID)
 
@@ -39,6 +67,7 @@ Partial Public Class RFQListByProduct
             Dim reader As SqlClient.SqlDataReader = command.ExecuteReader()
 
             If reader.Read() Then
+                i_DataNum = 1
                 ProductNumber.Text = dbObjToStr(reader("ProductNumber"))
                 QuoName.Text = dbObjToStr(reader("QuoName"))
                 ProductName.Text = dbObjToStr(reader("Name"))
@@ -53,7 +82,7 @@ Partial Public Class RFQListByProduct
     ''' <summary>
     ''' 見積依頼の検索を行います。
     ''' </summary>
-    ''' <param name="st_ProductID">商品ID</param>
+    ''' <param name="st_ProductID">製品ID</param>
     ''' <remarks></remarks>
     Private Sub SearchRFQHeader(ByVal st_ProductID)
 
@@ -84,7 +113,7 @@ Partial Public Class RFQListByProduct
 
 
     ''' <summary>
-    ''' 商品検索SQL文字列を生成します。
+    ''' 製品検索SQL文字列を生成します。
     ''' </summary>
     ''' <returns></returns>
     ''' <remarks></remarks>
@@ -126,11 +155,11 @@ Partial Public Class RFQListByProduct
         sb_SQL.Append("	rfh.QuotedDate, ")
         sb_SQL.Append("	rfh.SupplierName, ")
         sb_SQL.Append("	rfh.MakerCountryCode, ")
-        sb_SQL.Append("	mcry.CountryName AS MakerCountryName, ")
+        sb_SQL.Append("	mcry.Name AS MakerCountryName, ")
         sb_SQL.Append("	rfh.Purpose, ")
         sb_SQL.Append("	rfh.MakerName, ")
         sb_SQL.Append("	rfh.SupplierCountryCode, ")
-        sb_SQL.Append("	scry.CountryName AS SupplierCountryName, ")
+        sb_SQL.Append("	scry.Name AS SupplierCountryName, ")
         sb_SQL.Append("	rfh.SupplierItemName, ")
         sb_SQL.Append("	rfh.ShippingHandlingCurrencyCode,")
         sb_SQL.Append("	rfh.ShippingHandlingFee, ")
@@ -142,15 +171,17 @@ Partial Public Class RFQListByProduct
         sb_SQL.Append("FROM ")
         sb_SQL.Append("	v_RFQHeader rfh ")
         sb_SQL.Append("LEFT JOIN ")
-        sb_SQL.Append("	v_Country mcry ")
+        sb_SQL.Append("	s_Country mcry ")
         sb_SQL.Append("ON ")
-        sb_SQL.Append("	rfh.MakerCountryCode = mcry.CountryCode ")
-        sb_SQL.Append("LEFT JOIN ")
-        sb_SQL.Append("	v_Country scry ")
-        sb_SQL.Append("ON ")
-        sb_SQL.Append("	rfh.SupplierCountryCode = scry.CountryCode ")
+        sb_SQL.Append("	rfh.MakerCountryCode = mcry.CountryCode, ")
+        sb_SQL.Append("	s_Country scry ")
         sb_SQL.Append("WHERE ")
-        sb_SQL.Append("	ProductID = @ProductID ")
+        sb_SQL.Append("	rfh.SupplierCountryCode = scry.CountryCode ")
+        sb_SQL.Append("	AND ProductID = @ProductID ")
+        sb_SQL.Append("ORDER BY ")
+        sb_SQL.Append(" rfh.QuotedDate DESC, ")
+        sb_SQL.Append(" rfh.StatusChangeDate DESC, ")
+        sb_SQL.Append(" rfh.RFQNumber ASC")
 
         Return sb_SQL.ToString()
 
@@ -201,9 +232,11 @@ Partial Public Class RFQListByProduct
     ''' <param name="obj">対象となるオブジェクト</param>
     ''' <returns>変換したオブジェクト</returns>
     ''' <remarks></remarks>
-    Public Function dbObjToObj(ByVal obj As Object) As Object
+    Public Shared Function dbObjToObj(ByVal obj As Object) As Object
         Return dbObjToObj(obj, "")
     End Function
+
+#Region "DB読み込み時変換関数"
 
     ''' <summary>
     ''' DBNullオブジェクトを空白文字列オブジェクトにします。
@@ -212,7 +245,7 @@ Partial Public Class RFQListByProduct
     ''' <param name="retObj">DBNullの時に置き換えるオブジェクト</param>
     ''' <returns>変換したオブジェクト</returns>
     ''' <remarks></remarks>
-    Public Function dbObjToObj(ByVal obj As Object, ByVal retObj As Object) As Object
+    Public Shared Function dbObjToObj(ByVal obj As Object, ByVal retObj As Object) As Object
         If IsDBNull(obj) Then
             Return retObj
         End If
@@ -230,7 +263,7 @@ Partial Public Class RFQListByProduct
     ''' <param name="obj">対象となるオブジェクト</param>
     ''' <returns>変換したオブジェクト</returns>
     ''' <remarks></remarks>
-    Public Function dbObjToStr(ByVal obj As Object) As String
+    Public Shared Function dbObjToStr(ByVal obj As Object) As String
         Return CType(dbObjToObj(obj, ""), String)
     End Function
 
@@ -241,8 +274,11 @@ Partial Public Class RFQListByProduct
     ''' <param name="defaultStr">DBNullの時に置き換える文字列</param>
     ''' <returns>変換したオブジェクト</returns>
     ''' <remarks></remarks>
-    Public Function dbObjToStr(ByVal obj As Object, ByVal defaultStr As String) As String
+    Public Shared Function dbObjToStr(ByVal obj As Object, ByVal defaultStr As String) As String
         Return CType(dbObjToObj(obj, defaultStr), String)
     End Function
+
+#End Region
+
 
 End Class

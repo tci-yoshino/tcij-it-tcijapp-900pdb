@@ -11,9 +11,16 @@
 </head>
 <body>
     <div id="content">
+        <div class="main">
+            <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
+        </div>
+<%  If st_ProductID <> "" And IsNumeric(st_ProductID) = True Then%>
+    <%If i_DataNum = 0 Then%>
+        <h3 style="font-style:italic">No data found.</h3>
+    <%Else%>
         <div class="tabs">
-            <a href="./RFQIssue.aspx">RFQ Issue</a>
-            | <a href="#" onclick="popup('./ProductSetting.aspx')">Product Setting</a>
+            <a href="./RFQIssue.aspx?ProductID=<%=st_ProductID %>">RFQ Issue</a>            
+            | <a href="#" onclick="popup('./ProductSetting.aspx?Action=Edit&ProductID=<%=st_ProductID %>')">Product Setting</a>
         </div>
 
         <h3><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label><span class="indent"><asp:Label ID="QuoName" runat="server" Text='<%#Eval("QuoName")%>'></asp:Label></span></h3>
@@ -114,6 +121,8 @@
             </asp:ListView>
         </div>
     </div><!-- Main Content Area END -->
+    <% End If%>
+<%  End If%>
     <asp:SqlDataSource ID="SrcRFQHeader" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
 
     <!-- Footer -->
