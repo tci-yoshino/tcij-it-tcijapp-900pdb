@@ -102,10 +102,10 @@ Partial Public Class RFQListByProduct
     Protected Sub GetRFQLine(ByVal sender As Object, ByVal e As EventArgs) Handles RFQHeaderList.ItemDataBound
         Dim lv As ListView = CType(CType(e, ListViewItemEventArgs).Item.FindControl("RFQLineList"), ListView)
         Dim src As SqlDataSource = CType(CType(e, ListViewItemEventArgs).Item.FindControl("SrcRFQLine"), SqlDataSource)
-        Dim label As Label = CType(CType(e, System.Web.UI.WebControls.ListViewItemEventArgs).Item.FindControl("RFQNumber"), Label)
+        Dim link As HyperLink = CType(CType(e, System.Web.UI.WebControls.ListViewItemEventArgs).Item.FindControl("RFQNumber"), HyperLink)
 
         src.SelectParameters.Clear()
-        src.SelectParameters.Add("RFQNumber", label.Text)
+        src.SelectParameters.Add("RFQNumber", link.Text)
         src.SelectCommand = CreateRFQLineSelectSQL()
         lv.DataSourceID = src.ID
         lv.DataBind()
@@ -218,13 +218,14 @@ Partial Public Class RFQListByProduct
         sb_SQL.Append("	PO ")
         sb_SQL.Append("	ON ")
         sb_SQL.Append("PO.RFQLineNumber = RL.RFQLineNumber ")
-
         sb_SQL.Append("WHERE ")
         sb_SQL.Append("	RFQNumber = @RFQNumber ")
 
         Return sb_SQL.ToString()
 
     End Function
+
+#Region "DB読み込み時変換関数"
 
     ''' <summary>
     ''' DBNullオブジェクトを空白文字列オブジェクトにします。
@@ -235,8 +236,6 @@ Partial Public Class RFQListByProduct
     Public Shared Function dbObjToObj(ByVal obj As Object) As Object
         Return dbObjToObj(obj, "")
     End Function
-
-#Region "DB読み込み時変換関数"
 
     ''' <summary>
     ''' DBNullオブジェクトを空白文字列オブジェクトにします。
@@ -261,7 +260,7 @@ Partial Public Class RFQListByProduct
     ''' DBNullオブジェクトをStringにします。
     ''' </summary>
     ''' <param name="obj">対象となるオブジェクト</param>
-    ''' <returns>変換したオブジェクト</returns>
+    ''' <returns>変換したString文字列</returns>
     ''' <remarks></remarks>
     Public Shared Function dbObjToStr(ByVal obj As Object) As String
         Return CType(dbObjToObj(obj, ""), String)
@@ -272,7 +271,7 @@ Partial Public Class RFQListByProduct
     ''' </summary>
     ''' <param name="obj">対象となるオブジェクト</param>
     ''' <param name="defaultStr">DBNullの時に置き換える文字列</param>
-    ''' <returns>変換したオブジェクト</returns>
+    ''' <returns>変換したString文字列</returns>
     ''' <remarks></remarks>
     Public Shared Function dbObjToStr(ByVal obj As Object, ByVal defaultStr As String) As String
         Return CType(dbObjToObj(obj, defaultStr), String)

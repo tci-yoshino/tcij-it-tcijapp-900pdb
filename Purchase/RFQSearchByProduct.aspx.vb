@@ -92,7 +92,8 @@ Partial Public Class RFQSearchByProduct
 
         'SQL文字列の作成
         sb_SQL.Append("SELECT ")
-        sb_SQL.Append("	rfh.RFQNumber, ")
+        'sb_SQL.Append("	rfh.RFQNumber, ")
+        sb_SQL.Append("	DISTINCT ")
         sb_SQL.Append("	rfh.ProductID, ")
         sb_SQL.Append("	rfh.ProductNumber, ")
         sb_SQL.Append("	rfh.ProductName ")
