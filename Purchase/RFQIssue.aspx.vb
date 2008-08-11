@@ -54,10 +54,16 @@ Partial Public Class RFQIssue
                     DBReader.Close()
                 End If
             End If
+            'ドロップダウン初期設定
             EnqLocation.SelectedValue = Session("LocationCode").ToString
             EnqLocation.DataBind()
             EnqUser.DataBind()
             EnqUser.SelectedValue = Session("UserID").ToString
+            QuoLocation.SelectedValue = Session("LocationCode").ToString
+            QuoLocation.DataBind()
+            QuoUser.DataBind()
+            QuoUser.SelectedValue = Session("UserID").ToString
+            QuoLocation.SelectedItem.Text = "Direct"
         Else
             'ReadOnly項目の再設定
             ProductName.Text = Request.Form("ProductName").ToString
@@ -73,6 +79,10 @@ Partial Public Class RFQIssue
                 ProductNumber.Text = Request.Form("ProductNumber").ToString
             End If
         End If
+        'Quo-Location
+        'If QuoLocation.SelectedValue = Session("LocationCode") Then
+        '    QuoLocation.DataTextField
+        'End If
     End Sub
 
     Private Sub Page_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
@@ -340,4 +350,12 @@ Partial Public Class RFQIssue
         RFQRead.Close()
         RFQConn.Close()
     End Function
+
+    Protected Sub EnqLocation_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles EnqLocation.SelectedIndexChanged
+        'EnqLocationの変更をQuoLocationと連動させる。
+        QuoLocation.SelectedValue = EnqLocation.SelectedValue
+        QuoLocation.DataBind()
+        QuoUser.DataBind()
+        QuoLocation.SelectedItem.Text = "Direct"
+    End Sub
 End Class

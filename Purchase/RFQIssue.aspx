@@ -108,7 +108,7 @@
 					<tr>
 						<th>Quo-Location <span class="required">*</span> : </th>
 						<td>
-                            <asp:DropDownList ID="QuoLocation" runat="server" AppendDataBoundItems="True" 
+                            <asp:DropDownList ID="QuoLocation" runat="server" 
                                 AutoPostBack="True" DataSourceID="SDS_RFQIssue_Loc" DataTextField="Name" 
                                 DataValueField="LocationCode">
                                 <asp:ListItem>Direct</asp:ListItem>
