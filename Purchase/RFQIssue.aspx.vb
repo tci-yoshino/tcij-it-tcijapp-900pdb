@@ -1,4 +1,5 @@
 ﻿Imports System.Data.SqlClient
+Imports Purchase.Common
 Partial Public Class RFQIssue
     Inherits CommonPage
     Public DBConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
@@ -63,7 +64,7 @@ Partial Public Class RFQIssue
             QuoLocation.DataBind()
             QuoUser.DataBind()
             QuoUser.SelectedValue = Session("UserID").ToString
-            QuoLocation.SelectedItem.Text = "Direct"
+            'QuoLocation.SelectedItem.Text = "Direct"
         Else
             'ReadOnly項目の再設定
             ProductName.Text = Request.Form("ProductName").ToString
@@ -154,7 +155,7 @@ Partial Public Class RFQIssue
         End If
         '入力項目チェックLine
         If EnqQuantity_1.Text <> "" And EnqUnit_1.SelectedValue <> "" And EnqPiece_1.Text <> "" Then
-            If IsNumeric(EnqQuantity_1.Text) = False Or Integer.TryParse(EnqPiece_1.Text, i_Result) = False Then
+            If Regex.IsMatch(EnqQuantity_1.Text, DECIMAL_7_3_REGEX) = False Or Integer.TryParse(EnqPiece_1.Text, i_Result) = False Then
                 Bo_UnLine = True
             Else
                 Enq_Quantity1 = True
@@ -165,7 +166,7 @@ Partial Public Class RFQIssue
             Bo_UnLine = True
         End If
         If EnqQuantity_2.Text <> "" And EnqUnit_2.SelectedValue <> "" And EnqPiece_2.Text <> "" Then
-            If IsNumeric(EnqQuantity_2.Text) = False Or Integer.TryParse(EnqPiece_2.Text, i_Result) = False Then
+            If Regex.IsMatch(EnqQuantity_2.Text, DECIMAL_7_3_REGEX) = False Or Integer.TryParse(EnqPiece_2.Text, i_Result) = False Then
                 Bo_UnLine = True
             Else
                 Enq_Quantity2 = True
@@ -176,7 +177,7 @@ Partial Public Class RFQIssue
             Bo_UnLine = True
         End If
         If EnqQuantity_3.Text <> "" And EnqUnit_3.SelectedValue <> "" And EnqPiece_3.Text <> "" Then
-            If IsNumeric(EnqQuantity_3.Text) = False Or Integer.TryParse(EnqPiece_3.Text, i_Result) = False Then
+            If Regex.IsMatch(EnqQuantity_3.Text, DECIMAL_7_3_REGEX) = False Or Integer.TryParse(EnqPiece_3.Text, i_Result) = False Then
                 Bo_UnLine = True
             Else
                 Enq_Quantity3 = True
@@ -187,7 +188,7 @@ Partial Public Class RFQIssue
             Bo_UnLine = True
         End If
         If EnqQuantity_4.Text <> "" And EnqUnit_4.SelectedValue <> "" And EnqPiece_4.Text <> "" Then
-            If IsNumeric(EnqQuantity_4.Text) = False Or Integer.TryParse(EnqPiece_4.Text, i_Result) = False Then
+            If Regex.IsMatch(EnqQuantity_4.Text, DECIMAL_7_3_REGEX) = False Or Integer.TryParse(EnqPiece_4.Text, i_Result) = False Then
                 Bo_UnLine = True
             Else
                 Enq_Quantity4 = True
