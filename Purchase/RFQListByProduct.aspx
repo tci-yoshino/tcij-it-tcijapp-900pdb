@@ -23,13 +23,13 @@
             | <a href="#" onclick="popup('./ProductSetting.aspx?Action=Edit&ProductID=<%=st_ProductID %>')">Product Setting</a>
         </div>
 
-        <h3><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label><span class="indent"><asp:Label ID="QuoName" runat="server" Text='<%#Eval("QuoName")%>'></asp:Label></span></h3>
+        <h3><asp:Label ID="ProductNumber" runat="server" Text=''></asp:Label><span class="indent"><asp:Label ID="QuoName" runat="server" Text=''></asp:Label></span></h3>
 
         <div class="main">
             <p>
-                <strong>Product Name : </strong><asp:Label ID="ProductName" runat="server" Text='<%#Eval("ProductName")%>'></asp:Label>
-                <strong class="indent">CAS Number : </strong><asp:Label ID="CASNumber" runat="server" Text='<%#Eval("CASNumber")%>'></asp:Label>
-                <strong class="indent">Molecular Formula : </strong><asp:Label ID="MolecularFormula" runat="server" Text='<%#Eval("MolecularFormula")%>'></asp:Label>
+                <strong>Product Name : </strong><asp:Label ID="ProductName" runat="server" Text=''></asp:Label>
+                <strong class="indent">CAS Number : </strong><asp:Label ID="CASNumber" runat="server" Text=''></asp:Label>
+                <strong class="indent">Molecular Formula : </strong><asp:Label ID="MolecularFormula" runat="server" Text=''></asp:Label>
             </p>
         </div>
 

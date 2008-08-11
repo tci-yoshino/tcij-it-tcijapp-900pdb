@@ -69,7 +69,11 @@ Partial Public Class RFQListByProduct
             If reader.Read() Then
                 i_DataNum = 1
                 ProductNumber.Text = dbObjToStr(reader("ProductNumber"))
-                QuoName.Text = dbObjToStr(reader("QuoName"))
+                If Not IsDBNull(reader("QuoName")) Then
+                    QuoName.Text = dbObjToStr(reader("QuoName"))
+                Else
+                    QuoName.Text = dbObjToStr(reader("Name"))
+                End If
                 ProductName.Text = dbObjToStr(reader("Name"))
                 CASNumber.Text = dbObjToStr(reader("CASNumber"))
                 MolecularFormula.Text = dbObjToStr(reader("MolecularFormula"))
@@ -199,6 +203,7 @@ Partial Public Class RFQListByProduct
 
         'SQL文字列の作成
         sb_SQL.Append("SELECT ")
+        sb_SQL.Append("	DISTINCT ")
         sb_SQL.Append("	rl.RFQLineNumber, ")
         sb_SQL.Append("	rl.EnqQuantity, ")
         sb_SQL.Append("	rl.EnqUnitCode, ")
