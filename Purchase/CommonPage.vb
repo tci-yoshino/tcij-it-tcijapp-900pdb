@@ -66,10 +66,10 @@ Public Class CommonPage
             Session("LocationName") = ds.Tables("User").Rows(0)("LocationName").ToString
             Session("Purchase.RoleCode") = ds.Tables("User").Rows(0)("RoleCode").ToString
             Session("Purchase.PrivilegeLevel") = ds.Tables("User").Rows(0)("PrivilegeLevel").ToString
-            Session("Purchase.isAdmin") = ds.Tables("User").Rows(0)("isAdmin").ToString
+            Session("Purchase.isAdmin") = IIf(ds.Tables("User").Rows(0)("isAdmin").ToString = "True", True, False)
         End If
 
-        If Session("Purchase.isAdmin") = "1" Then
+        If Session("Purchase.isAdmin") Then
             ' Nothing to do
         Else
             sqlAdapter = New SqlDataAdapter
