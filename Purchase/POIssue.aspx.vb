@@ -84,7 +84,9 @@ Partial Public Class POIssue
             RFQNumber.Text = ds.Tables("RFQLine").Rows(0)("RFQNumber").ToString
             ParPONumber.Text = st_ParPONumber
             PODate.Text = GetLocalTime(Session("LocationCode"), Now)
-            POUser.SelectedValue = Session("UserID")
+            If Not Session("Purchase.isAdmin") Then
+                POUser.SelectedValue = Session("UserID")
+            End If
             POLocation.Text = Session("LocationName")
             ProductNumber.Text = ds.Tables("RFQLine").Rows(0)("ProductNumber").ToString
             ProductName.Text = CutShort(ds.Tables("RFQLine").Rows(0)("ProductName").ToString)
@@ -130,7 +132,7 @@ Partial Public Class POIssue
         Dim st_SOLocationCode As String = ""
         Dim st_PONumber As String = ""
 
-        If String.IsNullOrEmpty(st_Action) Then
+        If st_Action <> "Issue" Then
             Msg.Text = ERR_INVALID_PARAMETER
             Exit Sub
         End If
