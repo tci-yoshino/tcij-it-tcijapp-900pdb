@@ -10,13 +10,14 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
 </head>
 <body>
+
+        <form id="RFQForm" runat="server">
     <!-- Main Content Area -->
     <div id="content">
         <div class="tabs"><a href="#" onclick="return Correspondence_onclick()">RFQ Correspondence / History</a></div>
 
         <h3>Quotation Reply</h3>
 
-        <form id="RFQForm" runat="server">
             <div class="main">
                 <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
             
@@ -392,9 +393,9 @@
                     <span class="indent"></span>
                     <asp:Button ID="Close" runat="server" Text="Close" />
                     <asp:HiddenField ID="QuotedDate" runat="server" />
+                    <asp:HiddenField ID="UpdateDate" runat="server" />
                 </div>
             </div>
-        </form>
     </div><!-- Main Content Area END -->
 		<script language ="javascript" type="text/javascript">
 		function SupplierSelect_onclick() {
@@ -413,5 +414,6 @@
 		</script>
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
-</body>
+        </form>
+    </body>
 </html>

@@ -35,7 +35,7 @@ Partial Public Class RFQUpdate
     Private Sub FormDataSet()
         Dim DS As DataSet = New DataSet
         Dim st_RFQNumber As String
-        Dim testRFQNumber As String = "1000000030"
+        Dim testRFQNumber As String = "1000000042"
 
         '        If Request.QueryString("RFQNumber") <> "" Or Request.Form("RFQNumber") <> "" Then
         If Request.QueryString("RFQNumber") <> "" Or Request.Form("RFQNumber") <> "" Or testRFQNumber <> "" Then
@@ -73,7 +73,7 @@ Partial Public Class RFQUpdate
                 SupplierItemName.Text = DS.Tables("RFQHeader").Rows(0)("SupplierItemName").ToString
                 PaymentTerm.SelectedValue = DS.Tables("RFQHeader").Rows(0)("PaymentTermCode").ToString
                 ShippingHandlingCurrency.SelectedValue = DS.Tables("RFQHeader").Rows(0)("ShippingHandlingCurrencyCode").ToString
-                ShippingHandlingFee.Text = DS.Tables("RFQHeader").Rows(0)("ShippingHandlingFee").ToString
+                ShippingHandlingFee.Text = Single.Parse(DS.Tables("RFQHeader").Rows(0)("ShippingHandlingFee").ToString)
                 'Right
                 Purpose.Text = DS.Tables("RFQHeader").Rows(0)("Purpose").ToString
                 RequiredPurity.Text = DS.Tables("RFQHeader").Rows(0)("RequiredPurity").ToString
@@ -102,6 +102,7 @@ Partial Public Class RFQUpdate
                 RFQStatus.SelectedValue = DS.Tables("RFQHeader").Rows(0)("StatusCode").ToString
                 'Hidden
                 QuotedDate.Value = DS.Tables("RFQHeader").Rows(0)("QuotedDate").ToString
+                UpdateDate.Value = DS.Tables("RFQHeader").Rows(0)("UpdateDate").ToString
                 'Line
                 DBCommand = New SqlCommand("Select * From v_RFQLine Where RFQNumber = @i_RFQNumber Order by RFQLineNumber", DBConn)
                 DBCommand.Parameters.Add("i_RFQNumber", SqlDbType.Int).Value = CInt(st_RFQNumber)
@@ -120,14 +121,14 @@ Partial Public Class RFQUpdate
                 For i = 0 To DS.Tables("RFQLine").Rows.Count - 1
                     Select Case i
                         Case 0
-                            EnqQuantity_1.Text = CSng(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
+                            EnqQuantity_1.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
                             EnqUnit_1.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
                             EnqPiece_1.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
                             Incoterms_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
                             Currency_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
-                            UnitPrice_1.Text = DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString
+                            UnitPrice_1.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
                             DeliveryTerm_1.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
-                            QuoPer_1.Text = DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString
+                            QuoPer_1.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
                             Purity_1.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
                             QuoUnit_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
                             QMMethod_1.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
@@ -139,14 +140,14 @@ Partial Public Class RFQUpdate
                             POIssue_1.NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
                             LineNumber1.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
                         Case 1
-                            EnqQuantity_2.Text = CSng(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
+                            EnqQuantity_2.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
                             EnqUnit_2.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
                             EnqPiece_2.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
                             Incoterms_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
                             Currency_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
-                            UnitPrice_2.Text = DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString
+                            UnitPrice_2.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
                             DeliveryTerm_2.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
-                            QuoPer_2.Text = DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString
+                            QuoPer_2.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
                             Purity_2.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
                             QuoUnit_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
                             QMMethod_2.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
@@ -158,14 +159,14 @@ Partial Public Class RFQUpdate
                             POIssue_2.NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
                             LineNumber2.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
                         Case 2
-                            EnqQuantity_3.Text = CSng(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
+                            EnqQuantity_3.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
                             EnqUnit_3.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
                             EnqPiece_3.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
                             Incoterms_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
                             Currency_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
-                            UnitPrice_3.Text = DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString
+                            UnitPrice_3.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
                             DeliveryTerm_3.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
-                            QuoPer_3.Text = DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString
+                            QuoPer_3.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
                             Purity_3.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
                             QuoUnit_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
                             QMMethod_3.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
@@ -177,14 +178,14 @@ Partial Public Class RFQUpdate
                             POIssue_3.NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
                             LineNumber3.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
                         Case 3
-                            EnqQuantity_4.Text = CSng(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
+                            EnqQuantity_4.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
                             EnqUnit_4.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
                             EnqPiece_4.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
                             Incoterms_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
                             Currency_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
-                            UnitPrice_4.Text = DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString
+                            UnitPrice_4.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
                             DeliveryTerm_4.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
-                            QuoPer_4.Text = DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString
+                            QuoPer_4.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
                             Purity_4.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
                             QuoUnit_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
                             QMMethod_4.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
@@ -234,6 +235,7 @@ Partial Public Class RFQUpdate
     Protected Sub Update_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Update.Click
         Dim RFQStatusCode As String = ""
         Dim st_QuotedDate As String = ""
+        Dim DBReader As SqlDataReader
         If Request.QueryString("Action") <> "Update" Then
             Exit Sub
         End If
@@ -253,7 +255,19 @@ Partial Public Class RFQUpdate
             '入力された項目の型をチェックする(DB登録時にエラーになるもののみ)
             Exit Sub
         End If
-
+        '他セッションでの更新チェック
+        DBCommand.CommandText = "SELECT RFQNumber FROM RFQHeader WHERE (RFQNumber = @RFQNumber)  AND (UpdateDate = @UpdateDate)"
+        DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = Integer.Parse(RFQNumber.Text)
+        DBCommand.Parameters.Add("@UpdateDate", SqlDbType.DateTime).Value = Date.Parse(UpdateDate.Value)
+        DBReader = DBCommand.ExecuteReader()
+        DBCommand.Parameters.Clear()
+        DBCommand.Dispose()
+        If DBReader.HasRows = False Then
+            '他セッションで更新済のため処理を抜ける。
+            Msg.Text = "このデータは他のユーザーによって編集されました。その内容を確認し再度編集をお願いします"
+            Exit Sub
+        End If
+        DBReader.Close()
         '更新処理
         Dim sqlTran As System.Data.SqlClient.SqlTransaction = DBConn.BeginTransaction()
         DBCommand.Transaction = sqlTran
@@ -278,20 +292,20 @@ Partial Public Class RFQUpdate
             & "ShippingHandlingCurrencyCode = @ShippingHandlingCurrencyCode, PaymentTermCode = @PaymentTermCode," _
             & "Comment = @Comment, UpdatedBy = @UpdatedBy, UpdateDate = @UpdateDate" & RFQStatusCode & st_QuotedDate _
             & " Where RFQNumber = @RFQNumber "
-            DBCommand.Parameters.Add("@QuoUserID", SqlDbType.Int).Value = QuoUser.SelectedValue
-            DBCommand.Parameters.Add("@SupplierCode", SqlDbType.Int).Value = SupplierCode.Text
-            DBCommand.Parameters.Add("@MakerCode", SqlDbType.Int).Value = MakerCode.Text
+            DBCommand.Parameters.Add("@QuoUserID", SqlDbType.Int).Value = ConvertStringToInt(QuoUser.SelectedValue)
+            DBCommand.Parameters.Add("@SupplierCode", SqlDbType.Int).Value = Integer.Parse(SupplierCode.Text)
+            DBCommand.Parameters.Add("@MakerCode", SqlDbType.Int).Value = ConvertStringToInt(MakerCode.Text)
             DBCommand.Parameters.Add("@SpecSheet", SqlDbType.Bit).Value = SpecSheet.Checked
-            DBCommand.Parameters.Add("@Specification", SqlDbType.NVarChar).Value = Specification.Text
-            DBCommand.Parameters.Add("@SupplierContactPerson", SqlDbType.NVarChar).Value = SupplierContactPerson.Text
-            DBCommand.Parameters.Add("@SupplierItemName", SqlDbType.NVarChar).Value = SupplierItemName.Text
-            DBCommand.Parameters.Add("@ShippingHandlingFee", SqlDbType.Decimal).Value = ShippingHandlingFee.Text
-            DBCommand.Parameters.Add("@ShippingHandlingCurrencyCode", SqlDbType.VarChar).Value = ShippingHandlingCurrency.Text
-            DBCommand.Parameters.Add("@PaymentTermCode", SqlDbType.VarChar).Value = PaymentTerm.SelectedValue
-            DBCommand.Parameters.Add("@Comment", SqlDbType.NVarChar).Value = Comment.Text
-            DBCommand.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = CInt(Session("UserID"))
-            DBCommand.Parameters.Add("@UpdateDate", SqlDbType.Int).Value = Now()
-            DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = RFQNumber.Text
+            DBCommand.Parameters.Add("@Specification", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(Specification.Text)
+            DBCommand.Parameters.Add("@SupplierContactPerson", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(SupplierContactPerson.Text)
+            DBCommand.Parameters.Add("@SupplierItemName", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(SupplierItemName.Text)
+            DBCommand.Parameters.Add("@ShippingHandlingFee", SqlDbType.Decimal).Value = ConvertStringToDec(ShippingHandlingFee.Text)
+            DBCommand.Parameters.Add("@ShippingHandlingCurrencyCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(ShippingHandlingCurrency.Text)
+            DBCommand.Parameters.Add("@PaymentTermCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(PaymentTerm.SelectedValue)
+            DBCommand.Parameters.Add("@Comment", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(Comment.Text)
+            DBCommand.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = Integer.Parse(Session("UserID"))
+            DBCommand.Parameters.Add("@UpdateDate", SqlDbType.DateTime).Value = Now()
+
             DBCommand.ExecuteNonQuery()
             DBCommand.Parameters.Clear()
             DBCommand.Dispose()
@@ -315,72 +329,72 @@ Partial Public Class RFQUpdate
             Dim param11 As SqlParameter = DBCommand.Parameters.Add("@Purity", SqlDbType.NVarChar)
             Dim param12 As SqlParameter = DBCommand.Parameters.Add("@QMMethod", SqlDbType.NVarChar)
             Dim param13 As SqlParameter = DBCommand.Parameters.Add("@NoOfferReasonCode", SqlDbType.VarChar)
-            DBCommand.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = CInt(Session("UserID"))
-            DBCommand.Parameters.Add("@UpdateDate", SqlDbType.Int).Value = Now()
+            DBCommand.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = Integer.Parse(Session("UserID"))
+            DBCommand.Parameters.Add("@UpdateDate", SqlDbType.DateTime).Value = Now()
             If EnqQuantity_1.Text <> "" Then
                 'RFQIssueで登録されたデータのみ更新可
                 param1.Value = Integer.Parse(LineNumber1.Value)
-                param2.Value = IIf(Currency_1.SelectedValue = "", System.DBNull.Value, Currency_1.SelectedValue)
-                param3.Value = IIf(UnitPrice_1.Text = "", System.DBNull.Value, Decimal.Parse(UnitPrice_1.Text))
-                param4.Value = IIf(QuoPer_1.Text = "", System.DBNull.Value, Decimal.Parse(QuoPer_1.Text))
-                param5.Value = IIf(QuoUnit_1.SelectedValue = "", System.DBNull.Value, QuoUnit_1.SelectedValue)
-                param6.Value = IIf(LeadTime_1.Text = "", System.DBNull.Value, LeadTime_1.Text)
-                param7.Value = IIf(SupplierItemNumber_1.Text = "", System.DBNull.Value, SupplierItemNumber_1.Text)
-                param8.Value = IIf(Incoterms_1.SelectedValue = "", System.DBNull.Value, Incoterms_1.SelectedValue)
-                param9.Value = IIf(DeliveryTerm_1.Text = "", System.DBNull.Value, DeliveryTerm_1.Text)
-                param10.Value = IIf(Packing_1.Text = "", System.DBNull.Value, Packing_1.Text)
-                param11.Value = IIf(Purity_1.Text = "", System.DBNull.Value, Purity_1.Text)
-                param12.Value = IIf(QMMethod_1.Text = "", System.DBNull.Value, QMMethod_1.Text)
-                param13.Value = IIf(NoOfferReason_1.SelectedValue = "", System.DBNull.Value, NoOfferReason_1.SelectedValue)
+                param2.Value = ConvertEmptyStringToNull(Currency_1.SelectedValue)
+                param3.Value = ConvertStringToDec(UnitPrice_1.Text)
+                param4.Value = ConvertStringToDec(QuoPer_1.Text)
+                param5.Value = ConvertEmptyStringToNull(QuoUnit_1.SelectedValue)
+                param6.Value = ConvertEmptyStringToNull(LeadTime_1.Text)
+                param7.Value = ConvertEmptyStringToNull(SupplierItemNumber_1.Text)
+                param8.Value = ConvertEmptyStringToNull(Incoterms_1.SelectedValue)
+                param9.Value = ConvertEmptyStringToNull(DeliveryTerm_1.Text)
+                param10.Value = ConvertEmptyStringToNull(Packing_1.Text)
+                param11.Value = ConvertEmptyStringToNull(Purity_1.Text)
+                param12.Value = ConvertEmptyStringToNull(QMMethod_1.Text)
+                param13.Value = ConvertEmptyStringToNull(NoOfferReason_1.SelectedValue)
                 DBCommand.ExecuteNonQuery()
             End If
 
             If EnqQuantity_2.Text <> "" Then
                 param1.Value = Integer.Parse(LineNumber2.Value)
-                param2.Value = IIf(Currency_2.SelectedValue = "", System.DBNull.Value, Currency_2.SelectedValue)
-                param3.Value = IIf(UnitPrice_2.Text = "", System.DBNull.Value, Decimal.Parse(UnitPrice_2.Text))
-                param4.Value = IIf(QuoPer_2.Text = "", System.DBNull.Value, Decimal.Parse(QuoPer_2.Text))
-                param5.Value = IIf(QuoUnit_2.SelectedValue = "", System.DBNull.Value, QuoUnit_2.SelectedValue)
-                param6.Value = IIf(LeadTime_2.Text = "", System.DBNull.Value, LeadTime_2.Text)
-                param7.Value = IIf(SupplierItemNumber_2.Text = "", System.DBNull.Value, SupplierItemNumber_2.Text)
-                param8.Value = IIf(Incoterms_2.SelectedValue = "", System.DBNull.Value, Incoterms_2.SelectedValue)
-                param9.Value = IIf(DeliveryTerm_2.Text = "", System.DBNull.Value, DeliveryTerm_2.Text)
-                param10.Value = IIf(Packing_2.Text = "", System.DBNull.Value, Packing_2.Text)
-                param11.Value = IIf(Purity_2.Text = "", System.DBNull.Value, Purity_2.Text)
-                param12.Value = IIf(QMMethod_2.Text = "", System.DBNull.Value, QMMethod_2.Text)
-                param13.Value = IIf(NoOfferReason_2.SelectedValue = "", System.DBNull.Value, NoOfferReason_2.SelectedValue)
+                param2.Value = ConvertEmptyStringToNull(Currency_2.SelectedValue)
+                param3.Value = ConvertStringToDec(UnitPrice_2.Text)
+                param4.Value = ConvertStringToDec(QuoPer_2.Text)
+                param5.Value = ConvertEmptyStringToNull(QuoUnit_2.SelectedValue)
+                param6.Value = ConvertEmptyStringToNull(LeadTime_2.Text)
+                param7.Value = ConvertEmptyStringToNull(SupplierItemNumber_2.Text)
+                param8.Value = ConvertEmptyStringToNull(Incoterms_2.SelectedValue)
+                param9.Value = ConvertEmptyStringToNull(DeliveryTerm_2.Text)
+                param10.Value = ConvertEmptyStringToNull(Packing_2.Text)
+                param11.Value = ConvertEmptyStringToNull(Purity_2.Text)
+                param12.Value = ConvertEmptyStringToNull(QMMethod_2.Text)
+                param13.Value = ConvertEmptyStringToNull(NoOfferReason_2.SelectedValue)
                 DBCommand.ExecuteNonQuery()
             End If
             If EnqQuantity_3.Text <> "" Then
                 param1.Value = Integer.Parse(LineNumber3.Value)
-                param2.Value = IIf(Currency_3.SelectedValue = "", System.DBNull.Value, Currency_3.SelectedValue)
-                param3.Value = IIf(UnitPrice_3.Text = "", System.DBNull.Value, Decimal.Parse(UnitPrice_3.Text))
-                param4.Value = IIf(QuoPer_3.Text = "", System.DBNull.Value, Decimal.Parse(QuoPer_3.Text))
-                param5.Value = IIf(QuoUnit_3.SelectedValue = "", System.DBNull.Value, QuoUnit_3.SelectedValue)
-                param6.Value = IIf(LeadTime_3.Text = "", System.DBNull.Value, LeadTime_3.Text)
-                param7.Value = IIf(SupplierItemNumber_3.Text = "", System.DBNull.Value, SupplierItemNumber_3.Text)
-                param8.Value = IIf(Incoterms_3.SelectedValue = "", System.DBNull.Value, Incoterms_3.SelectedValue)
-                param9.Value = IIf(DeliveryTerm_3.Text = "", System.DBNull.Value, DeliveryTerm_3.Text)
-                param10.Value = IIf(Packing_3.Text = "", System.DBNull.Value, Packing_3.Text)
-                param11.Value = IIf(Purity_3.Text = "", System.DBNull.Value, Purity_3.Text)
-                param12.Value = IIf(QMMethod_3.Text = "", System.DBNull.Value, QMMethod_3.Text)
-                param13.Value = IIf(NoOfferReason_3.SelectedValue = "", System.DBNull.Value, NoOfferReason_3.SelectedValue)
+                param2.Value = ConvertEmptyStringToNull(Currency_3.SelectedValue)
+                param3.Value = ConvertStringToDec(UnitPrice_3.Text)
+                param4.Value = ConvertStringToDec(QuoPer_3.Text)
+                param5.Value = ConvertEmptyStringToNull(QuoUnit_3.SelectedValue)
+                param6.Value = ConvertEmptyStringToNull(LeadTime_3.Text)
+                param7.Value = ConvertEmptyStringToNull(SupplierItemNumber_3.Text)
+                param8.Value = ConvertEmptyStringToNull(Incoterms_3.SelectedValue)
+                param9.Value = ConvertEmptyStringToNull(DeliveryTerm_3.Text)
+                param10.Value = ConvertEmptyStringToNull(Packing_3.Text)
+                param11.Value = ConvertEmptyStringToNull(Purity_3.Text)
+                param12.Value = ConvertEmptyStringToNull(QMMethod_3.Text)
+                param13.Value = ConvertEmptyStringToNull(NoOfferReason_3.SelectedValue)
                 DBCommand.ExecuteNonQuery()
             End If
             If EnqQuantity_4.Text <> "" Then
                 param1.Value = Integer.Parse(LineNumber4.Value)
-                param2.Value = IIf(Currency_4.SelectedValue = "", System.DBNull.Value, Currency_4.SelectedValue)
-                param3.Value = IIf(UnitPrice_4.Text = "", System.DBNull.Value, Decimal.Parse(UnitPrice_4.Text))
-                param4.Value = IIf(QuoPer_4.Text = "", System.DBNull.Value, Decimal.Parse(QuoPer_4.Text))
-                param5.Value = IIf(QuoUnit_4.SelectedValue = "", System.DBNull.Value, QuoUnit_4.SelectedValue)
-                param6.Value = IIf(LeadTime_4.Text = "", System.DBNull.Value, LeadTime_4.Text)
-                param7.Value = IIf(SupplierItemNumber_4.Text = "", System.DBNull.Value, SupplierItemNumber_4.Text)
-                param8.Value = IIf(Incoterms_4.SelectedValue = "", System.DBNull.Value, Incoterms_4.SelectedValue)
-                param9.Value = IIf(DeliveryTerm_4.Text = "", System.DBNull.Value, DeliveryTerm_4.Text)
-                param10.Value = IIf(Packing_4.Text = "", System.DBNull.Value, Packing_4.Text)
-                param11.Value = IIf(Purity_4.Text = "", System.DBNull.Value, Purity_4.Text)
-                param12.Value = IIf(QMMethod_4.Text = "", System.DBNull.Value, QMMethod_4.Text)
-                param13.Value = IIf(NoOfferReason_4.SelectedValue = "", System.DBNull.Value, NoOfferReason_4.SelectedValue)
+                param2.Value = ConvertEmptyStringToNull(Currency_4.SelectedValue)
+                param3.Value = ConvertStringToDec(UnitPrice_4.Text)
+                param4.Value = ConvertStringToDec(QuoPer_4.Text)
+                param5.Value = ConvertEmptyStringToNull(QuoUnit_4.SelectedValue)
+                param6.Value = ConvertEmptyStringToNull(LeadTime_4.Text)
+                param7.Value = ConvertEmptyStringToNull(SupplierItemNumber_4.Text)
+                param8.Value = ConvertEmptyStringToNull(Incoterms_4.SelectedValue)
+                param9.Value = ConvertEmptyStringToNull(DeliveryTerm_4.Text)
+                param10.Value = ConvertEmptyStringToNull(Packing_4.Text)
+                param11.Value = ConvertEmptyStringToNull(Purity_4.Text)
+                param12.Value = ConvertEmptyStringToNull(QMMethod_4.Text)
+                param13.Value = ConvertEmptyStringToNull(NoOfferReason_4.SelectedValue)
                 DBCommand.ExecuteNonQuery()
             End If
             sqlTran.Commit()
@@ -429,7 +443,6 @@ Partial Public Class RFQUpdate
         RFQConn.Close()
     End Function
     Private Function ItemCheck() As Boolean
-        Dim i As Integer
 
         ItemCheck = False
         '型チェック
