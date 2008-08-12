@@ -56,7 +56,7 @@
                                     <asp:SessionParameter Name="LocationCode" SessionField="LocationCode" />
                                 </SelectParameters>
                             </asp:SqlDataSource>
-                            (<asp:Label ID="POLocation" runat="server" Text=""></asp:Label>)
+                            (<asp:Label ID="POLocationName" runat="server" Text=""></asp:Label>)
                         </td>
                     </tr>
                     <tr>
@@ -82,7 +82,7 @@
                     </tr>
                     <tr>
                         <th>Price : </th>
-                        <td><asp:Label ID="Currency" runat="server" Text=""></asp:Label> <asp:Label ID="UnitPrice" runat="server" Text=""></asp:Label> / <asp:Label ID="PerQuantity" runat="server" Text=""></asp:Label> <asp:Label ID="PerUnit" runat="server" Text=""></asp:Label></td>
+                        <td><asp:Label ID="CurrencyCode" runat="server" Text=""></asp:Label> <asp:Label ID="UnitPrice" runat="server" Text=""></asp:Label> / <asp:Label ID="PerQuantity" runat="server" Text=""></asp:Label> <asp:Label ID="PerUnit" runat="server" Text=""></asp:Label></td>
                     </tr>
                     <tr>
                         <th>R/3 Supplier Name : </th>

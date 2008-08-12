@@ -97,13 +97,13 @@ Partial Public Class POIssue
     Protected WithEvents SrcUser As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
-    '''POLocation コントロール。
+    '''POLocationName コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents POLocation As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents POLocationName As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
     '''ProductNumber コントロール。
@@ -160,13 +160,13 @@ Partial Public Class POIssue
     Protected WithEvents DeliveryDate As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
-    '''Currency コントロール。
+    '''CurrencyCode コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents Currency As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents CurrencyCode As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
     '''UnitPrice コントロール。

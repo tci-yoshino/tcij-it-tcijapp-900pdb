@@ -87,13 +87,13 @@ Partial Public Class POIssue
             If Not Session("Purchase.isAdmin") Then
                 POUser.SelectedValue = Session("UserID")
             End If
-            POLocation.Text = Session("LocationName")
+            POLocationName.Text = Session("LocationName")
             ProductNumber.Text = ds.Tables("RFQLine").Rows(0)("ProductNumber").ToString
             ProductName.Text = CutShort(ds.Tables("RFQLine").Rows(0)("ProductName").ToString)
             do_OrderQuantity = ds.Tables("RFQLine").Rows(0)("EnqQuantity") * ds.Tables("RFQLine").Rows(0)("EnqPiece")
             OrderQuantity.Text = do_OrderQuantity.ToString("G29")
             OrderUnit.SelectedValue = ds.Tables("RFQLine").Rows(0)("EnqUnitCode").ToString
-            Currency.Text = ds.Tables("RFQLine").Rows(0)("CurrencyCode").ToString
+            CurrencyCode.Text = ds.Tables("RFQLine").Rows(0)("CurrencyCode").ToString
             do_UnitPrice = ds.Tables("RFQLine").Rows(0)("UnitPrice")
             UnitPrice.Text = do_UnitPrice.ToString("G29")
             do_PerQuantity = ds.Tables("RFQLine").Rows(0)("QuoPer")
@@ -247,7 +247,7 @@ Partial Public Class POIssue
         sqlCmd.Parameters.Add("@OrderQuantity", SqlDbType.Decimal).Value = ConvertStringToDec(OrderQuantity.Text)
         sqlCmd.Parameters.Add("@OrderUnitCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(OrderUnit.SelectedValue)
         sqlCmd.Parameters.Add("@DeliveryDate", SqlDbType.DateTime).Value = GetDatabaseTime(Session("LocationCode"), DeliveryDate.Text)
-        sqlCmd.Parameters.Add("@CurrencyCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(Currency.Text)
+        sqlCmd.Parameters.Add("@CurrencyCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(CurrencyCode.Text)
         sqlCmd.Parameters.Add("@UnitPrice", SqlDbType.Decimal).Value = ConvertStringToDec(UnitPrice.Text)
         sqlCmd.Parameters.Add("@PerQuantity", SqlDbType.Decimal).Value = ConvertStringToDec(PerQuantity.Text)
         sqlCmd.Parameters.Add("@PerUnitCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(PerUnit.Text)
