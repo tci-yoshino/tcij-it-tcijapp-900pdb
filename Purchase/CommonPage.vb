@@ -1,12 +1,27 @@
-﻿Imports System
+﻿Option Strict On
+
+Imports System
 Imports System.Collections
 Imports System.Web.UI
 Imports System.Web.UI.WebControls
 Imports System.Data.SqlClient
 
+''' <summary>
+''' CommonPage クラス
+''' </summary>
+''' <remarks>各 Page クラスはこのクラスを継承しなければならない。</remarks>
 Public Class CommonPage
     Inherits Page
 
+    ''' <summary>
+    ''' Page_Load イベントを処理する。
+    ''' </summary>
+    ''' <param name="e">イベントデータ (既定パラメータ)</param>
+    ''' <remarks>
+    ''' セッション UserID が格納されていない場合は、再認定を行う。
+    ''' さらに、リクエストされた URL からスクリプト名を取得し、パラメータ Action の値と組み合わせて
+    ''' 権限チェックを行う。管理者においては、このチェックをスルーする。
+    ''' </remarks>
     Protected Overrides Sub OnLoad(ByVal e As System.EventArgs)
         Dim st_Action As String = ""
         Dim st_ScriptName As String = ""
@@ -20,15 +35,17 @@ Public Class CommonPage
 
         ' User authorization process
         If Request.RequestType = "POST" Then
-            st_Action = IIf(Request.Form("Action") = Nothing, "", Request.Form("Action"))
+            st_Action = IIf(Request.Form("Action") Is Nothing, "", Request.Form("Action")).ToString
         ElseIf Request.RequestType = "GET" Then
-            st_Action = IIf(Request.QueryString("Action") = Nothing, "", Request.QueryString("Action"))
+            st_Action = IIf(Request.QueryString("Action") Is Nothing, "", Request.QueryString("Action")).ToString
+        Else
+            Throw New Exception("CommonPage.OnLoad: Bad Request Type.")
         End If
 
         st_Buf = Split(Request.FilePath, "/")
         st_ScriptName = st_Buf(st_Buf.Length - 1)
 
-        If Session("UserID") = Nothing Then
+        If Session("UserID") Is Nothing Then
             st_Buf = Split(Request.ServerVariables("LOGON_USER"), "\")
             st_AccountName = st_Buf(st_Buf.Length - 1)
 
@@ -69,7 +86,7 @@ Public Class CommonPage
             Session("Purchase.isAdmin") = IIf(ds.Tables("User").Rows(0)("isAdmin").ToString = "True", True, False)
         End If
 
-        If Session("Purchase.isAdmin") Then
+        If CType(Session("Purchase.isAdmin"), Boolean) Then
             ' Nothing to do
         Else
             sqlAdapter = New SqlDataAdapter
@@ -85,7 +102,7 @@ Public Class CommonPage
 "  AND P.ScriptName = @ScriptName " & _
 "  AND ISNULL(P.Action, '') = @Action", sqlConn)
             sqlAdapter.SelectCommand = sqlCmd
-            sqlCmd.Parameters.Add("RoleCode", SqlDbType.VarChar).Value = IIf(Session("Purchase.RoleCode") = Nothing, "", Session("Purchase.RoleCode"))
+            sqlCmd.Parameters.Add("RoleCode", SqlDbType.VarChar).Value = IIf(Session("Purchase.RoleCode") Is Nothing, "", Session("Purchase.RoleCode"))
             sqlCmd.Parameters.Add("ScriptName", SqlDbType.VarChar).Value = st_ScriptName
             sqlCmd.Parameters.Add("Action", SqlDbType.VarChar).Value = st_Action
 
