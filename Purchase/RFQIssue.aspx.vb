@@ -229,10 +229,17 @@ Partial Public Class RFQIssue
 
 
 
-        If Bo_Line = False Then
+        If Enq_Quantity1 = False And Enq_Quantity2 = False And _
+            Enq_Quantity3 = False And Enq_Quantity4 = False Then
+
             Msg.Text = "Enq-Quantity を設定して下さい"
             Exit Sub
         End If
+
+        'If Bo_Line = False Then
+        '    Msg.Text = "Enq-Quantity を設定して下さい"
+        '    Exit Sub
+        'End If
         If Bo_UnLine = True Then
             Msg.Text = "Enq-Quantity の設定が不正です"
             Exit Sub
@@ -356,6 +363,15 @@ Partial Public Class RFQIssue
             DBCommand.Dispose()
         End Try
     End Sub
+
+    Private Sub SetParamForRFQLine(byval param2 As SqlParameter,byval param3 As SqlParameter,byval param4 As SqlParameter,byval param5 As SqlParameter)
+        param2.Value = EnqQuantity_1.Text
+        param3.Value = EnqUnit_1.SelectedValue
+        param4.Value = EnqPiece_1.Text
+        param5.Value = IIf(SupplierItemNumber_1.Text = "", System.DBNull.Value, SupplierItemNumber_1.Text)
+        DBCommand.ExecuteNonQuery()
+    End Sub
+
     Public Function RFQSupplierCheck(ByVal SupplierCode As String) As Boolean
         'Supplier 存在チェック
         RFQSupplierCheck = False
@@ -413,7 +429,7 @@ Partial Public Class RFQIssue
         End If
 
         '数量入力の必須チェック
-        If EnqPiece.Trim <> String.Empty Then
+        If EnqPiece.Trim = String.Empty Then
             Return False
         End If
 
@@ -424,7 +440,7 @@ Partial Public Class RFQIssue
 
         '数量入力の整数チェック
         Dim i_Result As Integer = 0
-        If Integer.TryParse(EnqPiece.Trim, i_Result) = True Then
+        If Integer.TryParse(EnqPiece.Trim, i_Result) = False Then
             Return False
         End If
 
