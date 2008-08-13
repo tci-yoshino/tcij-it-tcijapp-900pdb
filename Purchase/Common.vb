@@ -1,4 +1,12 @@
-﻿Public Class Common
+﻿Option Strict On
+
+''' <summary>
+''' Common クラス
+''' </summary>
+''' <remarks>共通の定数および関数を定義する。</remarks>
+Public Class Common
+    Public Shared ReadOnly DB_CONNECT_STRING As String = ConfigurationManager.ConnectionStrings("DatabaseConnect").ConnectionString
+
     Public Shared ReadOnly LOCATION_JP As String = "JP"
 
     Public Shared ReadOnly DIRECT As String = "Direct"
@@ -62,7 +70,7 @@
             Return System.DBNull.Value
         End If
 
-        If TCICommon.Func.ConvertDate(obj_Date, LocationCode, LOCATION_JP, st_ErrMsg) < 0 Then
+        If TCICommon.Func.ConvertDate(CDate(obj_Date), LocationCode, LOCATION_JP, st_ErrMsg) < 0 Then
             Throw New Exception(String.Format("TCICommon.ConvertDate: {0}", st_ErrMsg))
         End If
 
@@ -105,7 +113,7 @@
             Return System.DBNull.Value
         End If
 
-        Return CDate(str)
+        Return CDate("#" & str & "#")
 
     End Function
 
