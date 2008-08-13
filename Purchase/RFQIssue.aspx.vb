@@ -153,51 +153,82 @@ Partial Public Class RFQIssue
             Msg.Text = "MakerCode の設定が不正です"
             Exit Sub
         End If
+
         '入力項目チェックLine
-        If EnqQuantity_1.Text <> "" And EnqUnit_1.SelectedValue <> "" And EnqPiece_1.Text <> "" Then
-            If Regex.IsMatch(EnqQuantity_1.Text, DECIMAL_7_3_REGEX) = False Or Integer.TryParse(EnqPiece_1.Text, i_Result) = False Then
-                Bo_UnLine = True
-            Else
-                Enq_Quantity1 = True
-            End If
-            Bo_Line = True
-        ElseIf EnqQuantity_1.Text = "" And EnqUnit_1.SelectedValue = "" And EnqPiece_1.Text = "" Then
-        Else
+        Enq_Quantity1 = IsAllInputOfRFQList(EnqQuantity_1.Text, EnqUnit_1.SelectedValue, EnqPiece_1.Text)
+        Dim bo_UnLine_1 = IsAllNullOfRFQList(EnqQuantity_1.Text, EnqUnit_1.SelectedValue, EnqPiece_1.Text)
+        If Enq_Quantity1 = False And bo_UnLine_1 = False Then
             Bo_UnLine = True
         End If
-        If EnqQuantity_2.Text <> "" And EnqUnit_2.SelectedValue <> "" And EnqPiece_2.Text <> "" Then
-            If Regex.IsMatch(EnqQuantity_2.Text, DECIMAL_7_3_REGEX) = False Or Integer.TryParse(EnqPiece_2.Text, i_Result) = False Then
-                Bo_UnLine = True
-            Else
-                Enq_Quantity2 = True
-            End If
-            Bo_Line = True
-        ElseIf EnqQuantity_2.Text = "" And EnqUnit_2.SelectedValue = "" And EnqPiece_2.Text = "" Then
-        Else
+
+        Enq_Quantity2 = IsAllInputOfRFQList(EnqQuantity_2.Text, EnqUnit_2.SelectedValue, EnqPiece_2.Text)
+        Dim bo_UnLine_2 = IsAllNullOfRFQList(EnqQuantity_2.Text, EnqUnit_2.SelectedValue, EnqPiece_2.Text)
+        If Enq_Quantity2 = False And bo_UnLine_2 = False Then
             Bo_UnLine = True
         End If
-        If EnqQuantity_3.Text <> "" And EnqUnit_3.SelectedValue <> "" And EnqPiece_3.Text <> "" Then
-            If Regex.IsMatch(EnqQuantity_3.Text, DECIMAL_7_3_REGEX) = False Or Integer.TryParse(EnqPiece_3.Text, i_Result) = False Then
-                Bo_UnLine = True
-            Else
-                Enq_Quantity3 = True
-            End If
-            Bo_Line = True
-        ElseIf EnqQuantity_3.Text = "" And EnqUnit_3.SelectedValue = "" And EnqPiece_3.Text = "" Then
-        Else
+
+        Enq_Quantity3 = IsAllInputOfRFQList(EnqQuantity_3.Text, EnqUnit_3.SelectedValue, EnqPiece_3.Text)
+        Dim bo_UnLine_3 = IsAllNullOfRFQList(EnqQuantity_3.Text, EnqUnit_3.SelectedValue, EnqPiece_3.Text)
+        If Enq_Quantity3 = False And bo_UnLine_3 = False Then
             Bo_UnLine = True
         End If
-        If EnqQuantity_4.Text <> "" And EnqUnit_4.SelectedValue <> "" And EnqPiece_4.Text <> "" Then
-            If Regex.IsMatch(EnqQuantity_4.Text, DECIMAL_7_3_REGEX) = False Or Integer.TryParse(EnqPiece_4.Text, i_Result) = False Then
-                Bo_UnLine = True
-            Else
-                Enq_Quantity4 = True
-            End If
-            Bo_Line = True
-        ElseIf EnqQuantity_4.Text = "" And EnqUnit_4.SelectedValue = "" And EnqPiece_4.Text = "" Then
-        Else
+
+        Enq_Quantity4 = IsAllInputOfRFQList(EnqQuantity_4.Text, EnqUnit_4.SelectedValue, EnqPiece_4.Text)
+        Dim bo_UnLine_4 = IsAllNullOfRFQList(EnqQuantity_4.Text, EnqUnit_4.SelectedValue, EnqPiece_4.Text)
+        If Enq_Quantity4 = False And bo_UnLine_4 = False Then
             Bo_UnLine = True
         End If
+
+
+        '入力項目チェックLine
+
+        'If EnqQuantity_1.Text <> "" And EnqUnit_1.SelectedValue <> "" And EnqPiece_1.Text <> "" Then
+        '    If Regex.IsMatch(EnqQuantity_1.Text, DECIMAL_7_3_REGEX) = False Or Integer.TryParse(EnqPiece_1.Text, i_Result) = False Then
+        '        Bo_UnLine = True
+        '    Else
+        '        Enq_Quantity1 = True
+        '    End If
+        '    Bo_Line = True
+        'ElseIf EnqQuantity_1.Text = "" And EnqUnit_1.SelectedValue = "" And EnqPiece_1.Text = "" Then
+        'Else
+        '    Bo_UnLine = True
+        'End If
+        'If EnqQuantity_2.Text <> "" And EnqUnit_2.SelectedValue <> "" And EnqPiece_2.Text <> "" Then
+        '    If Regex.IsMatch(EnqQuantity_2.Text, DECIMAL_7_3_REGEX) = False Or Integer.TryParse(EnqPiece_2.Text, i_Result) = False Then
+        '        Bo_UnLine = True
+        '    Else
+        '        Enq_Quantity2 = True
+        '    End If
+        '    Bo_Line = True
+        'ElseIf EnqQuantity_2.Text = "" And EnqUnit_2.SelectedValue = "" And EnqPiece_2.Text = "" Then
+        'Else
+        '    Bo_UnLine = True
+        'End If
+        'If EnqQuantity_3.Text <> "" And EnqUnit_3.SelectedValue <> "" And EnqPiece_3.Text <> "" Then
+        '    If Regex.IsMatch(EnqQuantity_3.Text, DECIMAL_7_3_REGEX) = False Or Integer.TryParse(EnqPiece_3.Text, i_Result) = False Then
+        '        Bo_UnLine = True
+        '    Else
+        '        Enq_Quantity3 = True
+        '    End If
+        '    Bo_Line = True
+        'ElseIf EnqQuantity_3.Text = "" And EnqUnit_3.SelectedValue = "" And EnqPiece_3.Text = "" Then
+        'Else
+        '    Bo_UnLine = True
+        'End If
+        'If EnqQuantity_4.Text <> "" And EnqUnit_4.SelectedValue <> "" And EnqPiece_4.Text <> "" Then
+        '    If Regex.IsMatch(EnqQuantity_4.Text, DECIMAL_7_3_REGEX) = False Or Integer.TryParse(EnqPiece_4.Text, i_Result) = False Then
+        '        Bo_UnLine = True
+        '    Else
+        '        Enq_Quantity4 = True
+        '    End If
+        '    Bo_Line = True
+        'ElseIf EnqQuantity_4.Text = "" And EnqUnit_4.SelectedValue = "" And EnqPiece_4.Text = "" Then
+        'Else
+        '    Bo_UnLine = True
+        'End If
+
+
+
         If Bo_Line = False Then
             Msg.Text = "Enq-Quantity を設定して下さい"
             Exit Sub
@@ -359,4 +390,45 @@ Partial Public Class RFQIssue
         QuoUser.DataBind()
         QuoLocation.SelectedItem.Text = "Direct"
     End Sub
+
+    Private Function IsAllNullOfRFQList(ByVal EnqQuantity As String, ByVal EnqUnit As String, ByVal EnqPiece As String) As Boolean
+        '全ての項目が空白かチェック
+        If EnqQuantity.Trim = String.Empty And EnqUnit.Trim = String.Empty And EnqPiece.Trim = String.Empty Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    Private Function IsAllInputOfRFQList(ByVal EnqQuantity As String, ByVal EnqUnit As String, ByVal EnqPiece As String) As Boolean
+
+        '量入力の必須チェック
+        If EnqQuantity.Trim = String.Empty Then
+            Return False
+        End If
+
+        '単位入力の必須チェック
+        If EnqUnit.Trim = String.Empty Then
+            Return False
+        End If
+
+        '数量入力の必須チェック
+        If EnqPiece.Trim <> String.Empty Then
+            Return False
+        End If
+
+        '量入力の書式チェック
+        If Regex.IsMatch(EnqQuantity.Trim, DECIMAL_7_3_REGEX) = False Then
+            Return False
+        End If
+
+        '数量入力の整数チェック
+        Dim i_Result As Integer = 0
+        If Integer.TryParse(EnqPiece.Trim, i_Result) = True Then
+            Return False
+        End If
+
+        Return True
+    End Function
+
 End Class
