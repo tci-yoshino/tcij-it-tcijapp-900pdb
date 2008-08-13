@@ -1,4 +1,6 @@
-﻿''' <summary>
+﻿Option Explicit On
+
+''' <summary>
 ''' RFQSearchByProductクラス
 ''' </summary>
 ''' <remarks>製品から見積依頼を検索します。</remarks>
@@ -30,7 +32,11 @@ Partial Public Class RFQSearchByProduct
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         'No match found表示防止
-        ProductList.Visible = IsPostBack
+        If IsPostBack Then
+            ProductList.Visible = True
+        Else
+            ProductList.Visible = False
+        End If
 
         SrcProduct.SelectCommand = String.Empty
 
@@ -70,10 +76,10 @@ Partial Public Class RFQSearchByProduct
     ''' <remarks></remarks>
     Private Sub SearchRFQ(ByVal st_SearchKey As SearchKey)
 
-        Dim st_SQL As String = CreateRFQSelectSQL(st_SearchKey)
+        Dim st_SQL As String = CreateSQLSentence(st_SearchKey)
         SrcProduct.SelectCommand = st_SQL
 
-        SetRFQSelectSQLParames(st_SearchKey, SrcProduct)
+        SetParamesToSQL(st_SearchKey, SrcProduct)
 
         ProductList.DataBind()
 
@@ -86,7 +92,7 @@ Partial Public Class RFQSearchByProduct
     ''' <param name="st_SearchKey">RFQ検索キー構造体</param>
     ''' <returns>生成したSQL文字列</returns>
     ''' <remarks></remarks>
-    Private Function CreateRFQSelectSQL(ByVal st_SearchKey As SearchKey) As String
+    Private Function CreateSQLSentence(ByVal st_SearchKey As SearchKey) As String
 
         Dim sb_SQL As New Text.StringBuilder
 
@@ -135,7 +141,7 @@ Partial Public Class RFQSearchByProduct
     ''' <param name="st_SearchKey">RFQ検索キー構造体</param>
     ''' <param name="ds_SrcProduct">対象SqlDataSource</param>
     ''' <remarks></remarks>
-    Private Sub SetRFQSelectSQLParames(ByVal st_SearchKey As SearchKey, ByRef ds_SrcProduct As SqlDataSource)
+    Private Sub SetParamesToSQL(ByVal st_SearchKey As SearchKey, ByRef ds_SrcProduct As SqlDataSource)
 
         ds_SrcProduct.SelectParameters.Clear()
         If st_SearchKey.Code <> String.Empty Then
