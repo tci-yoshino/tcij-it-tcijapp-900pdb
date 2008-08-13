@@ -7,130 +7,124 @@
 Public Class Common
 
     ''' <summary>
-    ''' データベース接続文字列
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Shared ReadOnly DB_CONNECT_STRING As String = ConfigurationManager.ConnectionStrings("DatabaseConnect").ConnectionString
-
-    ''' <summary>
     ''' 拠点コードがダイレクトであることを表す文字列
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly DIRECT As String = "Direct"
+    Public Const DIRECT As String = "Direct"
 
     ''' <summary>
     ''' 日付フォーマット (時刻なし)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly DATE_FORMAT As String = "yyyy-MM-dd"
+    Public Const DATE_FORMAT As String = "yyyy-MM-dd"
 
     ''' <summary>
     ''' 日付フォーマット (時刻あり)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly DATETIME_FORMAT As String = "yyyy-MM-dd HH:mm:ss"
+    Public Const DATETIME_FORMAT As String = "yyyy-MM-dd HH:mm:ss"
 
     ''' <summary>
     ''' 日付フォーマット正規表現 (必須)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly DATE_REGEX As String = "\d{4}-\d{1,2}-\d{1,2}"
+    Public Const DATE_REGEX As String = "\d{4}-\d{1,2}-\d{1,2}"
 
     ''' <summary>
     ''' 日付フォーマット正規表現 (任意)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly DATE_REGEX_OPTIONAL As String = "\d{4}-\d{1,2}-\d{1,2}|"
+    Public Const DATE_REGEX_OPTIONAL As String = "\d{4}-\d{1,2}-\d{1,2}|"
 
     ''' <summary>
     ''' 数値フォーマット正規表現 (整数 10 桁, 小数 3 桁。必須)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly DECIMAL_10_3_REGEX As String = "^\d{1,10}(|\.)$|^\d{0,10}\.\d{1,3}$"
+    Public Const DECIMAL_10_3_REGEX As String = "^\d{1,10}(|\.)$|^\d{0,10}\.\d{1,3}$"
 
     ''' <summary>
     ''' 数値フォーマット正規表現 (整数 10 桁, 小数 3 桁。任意)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly DECIMAL_10_3_REGEX_OPTIONAL As String = "^\d{1,10}(|\.)$|^\d{0,10}\.\d{1,3}$|^$"
+    Public Const DECIMAL_10_3_REGEX_OPTIONAL As String = "^\d{1,10}(|\.)$|^\d{0,10}\.\d{1,3}$|^$"
 
     ''' <summary>
     ''' 数値フォーマット正規表現 (整数 7 桁, 小数 3 桁。必須)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly DECIMAL_7_3_REGEX As String = "^\d{1,7}(|\.)$|^\d{0,7}\.\d{1,3}$"
+    Public Const DECIMAL_7_3_REGEX As String = "^\d{1,7}(|\.)$|^\d{0,7}\.\d{1,3}$"
 
     ''' <summary>
     ''' 数値フォーマット正規表現 (整数 7 桁, 小数 3 桁。任意)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly DECIMAL_7_3_REGEX_OPTIONAL As String = "^\d{1,7}(|\.)$|^\d{0,7}\.\d{1,3}$|^$"
+    Public Const DECIMAL_7_3_REGEX_OPTIONAL As String = "^\d{1,7}(|\.)$|^\d{0,7}\.\d{1,3}$|^$"
 
     ''' <summary>
     ''' 数値フォーマット正規表現 (整数 5 桁, 小数 3 桁。必須)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly DECIMAL_5_3_REGEX As String = "^\d{1,5}(|\.)$|^\d{0,5}\.\d{1,3}$"
+    Public Const DECIMAL_5_3_REGEX As String = "^\d{1,5}(|\.)$|^\d{0,5}\.\d{1,3}$"
 
     ''' <summary>
     ''' 数値フォーマット正規表現 (整数 5 桁, 小数 3 桁。任意)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly DECIMAL_5_3_REGEX_OPTIONAL As String = "^\d{1,5}(|\.)$|^\d{0,5}\.\d{1,3}$|^$"
+    Public Const DECIMAL_5_3_REGEX_OPTIONAL As String = "^\d{1,5}(|\.)$|^\d{0,5}\.\d{1,3}$|^$"
 
     ''' <summary>
     ''' 数値フォーマット正規表現 (整数 5 桁。必須)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly INT_5_REGEX As String = "^\d{1,5}$"
+    Public Const INT_5_REGEX As String = "^\d{1,5}$"
 
     ''' <summary>
     ''' 数値フォーマット正規表現 (整数 5 桁。任意)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly INT_5_REGEX_OPTIONAL As String = "^\d{1,5}$|^$"
+    Public Const INT_5_REGEX_OPTIONAL As String = "^\d{1,5}$|^$"
 
     ''' <summary>
     ''' メッセージ 「レコードはありません」
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly MSG_NO_DATA_FOUND As String = "No data found."
+    Public Const MSG_NO_DATA_FOUND As String = "No data found."
 
     ''' <summary>
     ''' エラーメッセージ 「不正なパラメータを受け取りました」
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly ERR_INVALID_PARAMETER As String = "SYSTEM ERROR: Invalid parameter supplied."
+    Public Const ERR_INVALID_PARAMETER As String = "SYSTEM ERROR: Invalid parameter supplied."
 
     ''' <summary>
     ''' エラーメッセージ 「○○は必須入力項目です」
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly ERR_REQUIRED_FIELD As String = " must be specified."
+    Public Const ERR_REQUIRED_FIELD As String = " must be specified."
 
     ''' <summary>
     ''' エラーメッセージ 「○○は正しいフォーマットではありません」
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly ERR_INCORRECT_FORMAT As String = " is not in the correct format."
+    Public Const ERR_INCORRECT_FORMAT As String = " is not in the correct format."
 
     ''' <summary>
     ''' エラーメッセージ 「○○はカレンダーにない日付です」
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly ERR_INVALID_DATE As String = " is an invalid date."
+    Public Const ERR_INVALID_DATE As String = " is an invalid date."
 
     ''' <summary>
     ''' エラーメッセージ 「○○は数値として不正です」
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly ERR_INVALID_NUMBER As String = " is an invalid number."
+    Public Const ERR_INVALID_NUMBER As String = " is an invalid number."
 
     ''' <summary>
     ''' エラーメッセージ 「検索条件に一致するレコードがありません」
     ''' </summary>
     ''' <remarks></remarks>
-    Public Shared ReadOnly ERR_NO_MATCH_FOUND As String = "No match found."
+    Public Const ERR_NO_MATCH_FOUND As String = "No match found."
 
     Private Const LOCATION_JP As String = "JP"
 
