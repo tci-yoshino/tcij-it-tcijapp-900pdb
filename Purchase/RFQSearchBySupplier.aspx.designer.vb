@@ -34,31 +34,31 @@ Partial Public Class RFQSearchBySupplier
     Protected WithEvents SearchForm As Global.System.Web.UI.HtmlControls.HtmlForm
 
     '''<summary>
-    '''Code コントロール。
+    '''SupplierCode コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents Code As Global.System.Web.UI.WebControls.TextBox
+    Protected WithEvents SupplierCode As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
-    '''R3Code コントロール。
+    '''R3SupplierCode コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents R3Code As Global.System.Web.UI.WebControls.TextBox
+    Protected WithEvents R3SupplierCode As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
-    '''Name コントロール。
+    '''SupplierName コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents Name As Global.System.Web.UI.WebControls.TextBox
+    Protected WithEvents SupplierName As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
     '''Country コントロール。

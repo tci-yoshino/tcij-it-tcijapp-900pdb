@@ -23,15 +23,15 @@
                 <table>
 					<tr>
 						<th>Supplier Code : </th>
-						<td><asp:TextBox ID="Code" runat="server" Width="7em" MaxLength="5"></asp:TextBox></td>
+						<td><asp:TextBox ID="SupplierCode" runat="server" Width="7em" MaxLength="5"></asp:TextBox></td>
 					</tr>
 					<tr>
 						<th>R/3 Supplier Code : </th>
-						<td><asp:TextBox ID="R3Code" runat="server" Width="7em" MaxLength="10"></asp:TextBox></td>
+						<td><asp:TextBox ID="R3SupplierCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox></td>
 					</tr>
 					<tr>
 						<th>Supplier Name : </th>
-						<td><asp:TextBox ID="Name" runat="server" Width="21em" MaxLength="255"></asp:TextBox> (Partial text match)</td>
+						<td><asp:TextBox ID="SupplierName" runat="server" Width="21em" MaxLength="255"></asp:TextBox> (Partial text match)</td>
 					</tr>
                     <tr>
                         <th>Country : </th>
