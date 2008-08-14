@@ -17,6 +17,7 @@
         <h3>RFQ Select</h3>
 
         <div class="main">
+            <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
             <table>
                 <tr>
                     <th>Product Number / Name : </th>
@@ -112,7 +113,7 @@
                 </asp:ListView>
                 
                 <div class="btns">
-                    <asp:Button ID="Next" runat="server" Text="Next" />
+                    <asp:Button ID="NextPage" runat="server" Text="Next" />
                 </div>
             </form>
         </div>

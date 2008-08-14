@@ -16,6 +16,15 @@ Option Explicit On
 Partial Public Class RFQSelect
 
     '''<summary>
+    '''Msg コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
     '''ProductNumber コントロール。
     '''</summary>
     '''<remarks>
@@ -70,13 +79,13 @@ Partial Public Class RFQSelect
     Protected WithEvents RFQHeaderList As Global.System.Web.UI.WebControls.ListView
 
     '''<summary>
-    '''Next コントロール。
+    '''NextPage コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents [Next] As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents NextPage As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
     '''SrcRFQHeader コントロール。
