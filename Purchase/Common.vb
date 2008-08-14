@@ -7,6 +7,12 @@
 Public Class Common
 
     ''' <summary>
+    ''' データベース接続文字列
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Shared ReadOnly DB_CONNECT_STRING As String = ConfigurationManager.ConnectionStrings("DatabaseConnect").ConnectionString
+
+    ''' <summary>
     ''' 拠点コードがダイレクトであることを表す文字列
     ''' </summary>
     ''' <remarks></remarks>
@@ -295,4 +301,19 @@ Public Class Common
 
     End Function
 
+    'Public Shared Function SupplierCheck(ByVal SupplierCode As String) As Boolean
+
+    '    Try
+    '        Using connection As New SqlClient.SqlConnection(DB_CONNECT_STRING)
+
+
+    '        End Using
+    '    Catch ex As Exception
+    '        Throw
+    '    End Try
+
+
+
+
+    'End Function
 End Class
