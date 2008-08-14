@@ -11,11 +11,12 @@
     <script type="text/javascript">
     <!--
 
-window.onload = function() {
-   colorful.set();
-   changeCellColor("SupplierList_itemPlaceholderContainer")
-   
-}
+    window.onload = function() {
+       colorful.set();
+       changeCellColor("SupplierList_itemPlaceholderContainer")
+       
+    }
+    
     function returnValues(code, r3code, name3, name4, countryCode, location){
       if(opener){
         var name = name3 + " " + name4;
@@ -25,10 +26,10 @@ window.onload = function() {
         opener.document.getElementById('SupplierName').value=name
         opener.document.getElementById('SupplierCountry').value=countryCode
         if(opener.document.getElementById('QuoLocation')){
-          opener.document.getElementById('QuoLocation').selectedIndex = location
+          opener.document.getElementById('QuoLocation').value = location
         }
       }
-      window.close();
+      //window.close();
     }
 
     -->
@@ -58,6 +59,7 @@ window.onload = function() {
 				</table>
 
 				<asp:HiddenField ID="Location" runat="server" Value="" />
+				<asp:HiddenField ID="Postback" runat="server" />
 				<asp:Button ID="Search" runat="server" Text="Search" />
 				<input type="button" value="Clear" onclick="clearForm('SearchForm')" />
 			</form>
@@ -66,7 +68,7 @@ window.onload = function() {
 		<hr />
 
         <div class="list">
-            <asp:ListView ID="SupplierList" runat="server" AutoGenerateColumns="False">
+            <asp:ListView ID="SupplierList" runat="server">
                 <LayoutTemplate>
                     <table ID="itemPlaceholderContainer" runat="server">
                         <tr id="Tr1" runat="server">
@@ -82,7 +84,7 @@ window.onload = function() {
                     <h3 style="font-style:italic">No match found.</h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onclick="returnValues('<%#Eval("SupplierCode")%>','<%#Eval("R3SupplierCode") %>','<%#Eval("Name3")%>','<%#Eval("Name4")%>','<%#Eval("CountryCode") %>','<%#Eval("QuoLocationCode") %>');">
+                    <tr onclick="returnValues('<%#Eval("SupplierCode")%>','<%#Eval("R3SupplierCode") %>','<%#Eval("Name3")%>','<%#Eval("Name4")%>','<%#Eval("CountryCode") %>','<%#If(Eval("QuoLocationCode") = Purchase.Common.DIRECT, st_Location, Eval("QuoLocationCode"))%>');<%=st_js_postback %>">
                         <td><asp:Label ID="SupplierCode" runat="server" Text='<%#Eval("SupplierCode")%>' /></td>
                         <td>
                           <asp:Label ID="SupplierName3" runat="server" Text='<%#Eval("Name3")%>' />&nbsp;
