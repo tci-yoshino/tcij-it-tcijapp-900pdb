@@ -14,6 +14,9 @@ Partial Public Class RFQIssue
         DBConn.Open()
         DBCommand = DBConn.CreateCommand()
         If IsPostBack = False Then
+            'Issueボタンクリック時にPostBackするActionを追記する。
+            Issue.PostBackUrl = "~/RFQIssue.aspx?Action=Issue"
+
             '他画面から取得するパラメータのチェック
             If Request.QueryString("ProductID") <> "" Or Request.Form("ProductID") <> "" Then
                 st_ProductID = IIf(Request.QueryString("ProductID") <> "", Request.QueryString("ProductID"), Request.Form("ProductID"))
@@ -79,12 +82,12 @@ Partial Public Class RFQIssue
 
     End Sub
 
-    Private Sub Page_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
-        If IsPostBack = False Then
-            'Issueボタンクリック時にPostBackするActionを追記する。
-            Issue.PostBackUrl = "~/RFQIssue.aspx?Action=Issue"
-        End If
-    End Sub
+    'Private Sub Page_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
+    '    If IsPostBack = False Then
+    '        'Issueボタンクリック時にPostBackするActionを追記する。
+    '        Issue.PostBackUrl = "~/RFQIssue.aspx?Action=Issue"
+    '    End If
+    'End Sub
 
     Private Sub Page_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload
         'DB切断
@@ -390,8 +393,8 @@ Partial Public Class RFQIssue
         End If
         RFQRead.Close()
         RFQConn.Close()
-    End Function
 
+    End Function
 
 
     Private Function IsAllNullOfRFQList(ByVal EnqQuantity As String, ByVal EnqUnit As String, ByVal EnqPiece As String) As Boolean
