@@ -58,13 +58,7 @@ Partial Public Class RFQIssue
             'ドロップダウン初期設定
             EnqLocation.SelectedValue = Session("LocationCode").ToString
             EnqLocation.DataBind()
-            EnqUser.DataBind()
             EnqUser.SelectedValue = Session("UserID").ToString
-            QuoLocation.SelectedValue = Session("LocationCode").ToString
-            QuoLocation.DataBind()
-            QuoUser.DataBind()
-            QuoUser.SelectedValue = Session("UserID").ToString
-            'QuoLocation.SelectedItem.Text = "Direct"
         Else
             'ReadOnly項目の再設定
             ProductName.Text = Request.Form("ProductName").ToString
@@ -80,12 +74,9 @@ Partial Public Class RFQIssue
                 ProductNumber.Text = Request.Form("ProductNumber").ToString
             End If
         End If
-        'SupplierSelect.OnClientClick = String.Format("window.open(""RFQSupplierSelect.aspx?postback={0}"");  return false;", Server.UrlEncode(ClientScript.GetPostBackEventReference(SupplierSelect, String.Empty)))
+        'RFQSupplierSelect 画面へ遷移する際のパラメータを一部セットする。
         SupplierSelect.OnClientClick = String.Format("return SupplierSelect_onclick(""" & Server.UrlEncode(ClientScript.GetPostBackEventReference(SupplierSelect, String.Empty)) & """)")
-        'Quo-Location
-        'If QuoLocation.SelectedValue = Session("LocationCode") Then
-        '    QuoLocation.DataTextField
-        'End If
+
     End Sub
 
     Private Sub Page_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
@@ -401,13 +392,7 @@ Partial Public Class RFQIssue
         RFQConn.Close()
     End Function
 
-    Protected Sub EnqLocation_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles EnqLocation.SelectedIndexChanged
-        'EnqLocationの変更をQuoLocationと連動させる。
-        QuoLocation.SelectedValue = EnqLocation.SelectedValue
-        QuoLocation.DataBind()
-        QuoUser.DataBind()
-        QuoLocation.SelectedItem.Text = "Direct"
-    End Sub
+
 
     Private Function IsAllNullOfRFQList(ByVal EnqQuantity As String, ByVal EnqUnit As String, ByVal EnqPiece As String) As Boolean
         '全ての項目が空白かチェック
@@ -449,7 +434,12 @@ Partial Public Class RFQIssue
         Return True
     End Function
 
-    Protected Sub QuoLocation_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles QuoLocation.SelectedIndexChanged
 
+    Protected Sub QuoLocation_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles QuoLocation.SelectedIndexChanged
+        'QuoUser ドロップダウンリストの初期化
+        QuoUser.Items.Clear()
+        QuoUser.Items.Add(String.Empty)
+        'QuoUser.DataBind()
+        '1行目に空行を追加する。
     End Sub
 End Class

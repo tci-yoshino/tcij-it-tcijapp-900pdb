@@ -119,7 +119,8 @@
 						<th>Quo-User : </th>
 						<td>
                             <asp:DropDownList ID="QuoUser" runat="server" DataSourceID="SDS_RFQIssue_Que_U" 
-                                DataTextField="Name" DataValueField="UserID">
+                                DataTextField="Name" DataValueField="UserID" AppendDataBoundItems="True">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
 						    <asp:SqlDataSource ID="SDS_RFQIssue_Que_U" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
