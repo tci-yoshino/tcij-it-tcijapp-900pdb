@@ -238,10 +238,10 @@
     		var ProductNumber = encodeURIComponent(document.getElementById('ProductNumber').value);
 	    	popup('./ProductSelect.aspx?ProductNumber=' + ProductNumber);
 		}
-		function SupplierSelect_onclick() {
+		function SupplierSelect_onclick(Postback) {
     		var SupplierCode = encodeURIComponent(document.getElementById('SupplierCode').value);
     		var EnqLocation = encodeURIComponent(document.getElementById('EnqLocation').value);
-	    	popup('./RFQSupplierSelect.aspx?Code=' + SupplierCode + '&Location=' + EnqLocation);
+	    	popup('./RFQSupplierSelect.aspx?Code=' + SupplierCode + '&Location=' + EnqLocation + '&Postback=' + Postback);
 		}
 		function MakerSelect_onclick() {
     		var MakerCode = encodeURIComponent(document.getElementById('MakerCode').value);

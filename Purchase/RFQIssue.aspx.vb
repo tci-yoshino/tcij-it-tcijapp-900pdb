@@ -80,6 +80,8 @@ Partial Public Class RFQIssue
                 ProductNumber.Text = Request.Form("ProductNumber").ToString
             End If
         End If
+        'SupplierSelect.OnClientClick = String.Format("window.open(""RFQSupplierSelect.aspx?postback={0}"");  return false;", Server.UrlEncode(ClientScript.GetPostBackEventReference(SupplierSelect, String.Empty)))
+        SupplierSelect.OnClientClick = String.Format("return SupplierSelect_onclick(""" & Server.UrlEncode(ClientScript.GetPostBackEventReference(SupplierSelect, String.Empty)) & """)")
         'Quo-Location
         'If QuoLocation.SelectedValue = Session("LocationCode") Then
         '    QuoLocation.DataTextField
@@ -447,4 +449,7 @@ Partial Public Class RFQIssue
         Return True
     End Function
 
+    Protected Sub QuoLocation_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles QuoLocation.SelectedIndexChanged
+
+    End Sub
 End Class
