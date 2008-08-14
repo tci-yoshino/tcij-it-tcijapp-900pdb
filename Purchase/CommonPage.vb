@@ -13,6 +13,8 @@ Imports System.Data.SqlClient
 Public Class CommonPage
     Inherits Page
 
+    Protected ReadOnly DB_CONNECT_STRING As String = ConfigurationManager.ConnectionStrings("DatabaseConnect").ConnectionString
+
     ''' <summary>
     ''' Page_Load イベントを処理する。
     ''' </summary>
@@ -23,9 +25,9 @@ Public Class CommonPage
     ''' 権限チェックを行う。管理者においては、このチェックをスルーする。
     ''' </remarks>
     Protected Overrides Sub OnLoad(ByVal e As System.EventArgs)
-        Dim st_Action As String = ""
-        Dim st_ScriptName As String = ""
-        Dim st_AccountName As String = ""
+        Dim st_Action As String = String.Empty
+        Dim st_ScriptName As String = String.Empty
+        Dim st_AccountName As String = String.Empty
         Dim st_Buf() As String
         Dim setting As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
         Dim sqlConn As SqlConnection = New SqlConnection(setting.ConnectionString)
@@ -35,15 +37,17 @@ Public Class CommonPage
 
         ' User authorization process
         If Request.RequestType = "POST" Then
-            st_Action = IIf(Request.Form("Action") Is Nothing, "", Request.Form("Action")).ToString
+            st_Action = IIf(Request.Form("Action") Is Nothing, String.Empty, Request.Form("Action")).ToString
         ElseIf Request.RequestType = "GET" Then
-            st_Action = IIf(Request.QueryString("Action") Is Nothing, "", Request.QueryString("Action")).ToString
+            st_Action = IIf(Request.QueryString("Action") Is Nothing, String.Empty, Request.QueryString("Action")).ToString
         Else
             Throw New Exception("CommonPage.OnLoad: Bad Request Type.")
         End If
 
         st_Buf = Split(Request.FilePath, "/")
         st_ScriptName = st_Buf(st_Buf.Length - 1)
+
+        'st_ScriptName = System.IO.Path.GetFileNameWithoutExtension(Request.Url.ToString)
 
         If Session("UserID") Is Nothing Then
             st_Buf = Split(Request.ServerVariables("LOGON_USER"), "\")
@@ -68,6 +72,7 @@ Public Class CommonPage
 "  AND PU.UserID = U.UserID " & _
 "  AND U.LocationCode = L.LocationCode " & _
 "  AND U.AD_AccountName = @AccountName", sqlConn)
+
             sqlAdapter.SelectCommand = sqlCmd
             sqlCmd.Parameters.Add("AccountName", SqlDbType.NVarChar).Value = st_AccountName
 
@@ -101,8 +106,9 @@ Public Class CommonPage
 "  AND RP.PrivilegeCode = P.PrivilegeCode " & _
 "  AND P.ScriptName = @ScriptName " & _
 "  AND ISNULL(P.Action, '') = @Action", sqlConn)
+
             sqlAdapter.SelectCommand = sqlCmd
-            sqlCmd.Parameters.Add("RoleCode", SqlDbType.VarChar).Value = IIf(Session("Purchase.RoleCode") Is Nothing, "", Session("Purchase.RoleCode"))
+            sqlCmd.Parameters.Add("RoleCode", SqlDbType.VarChar).Value = IIf(Session("Purchase.RoleCode") Is Nothing, String.Empty, Session("Purchase.RoleCode"))
             sqlCmd.Parameters.Add("ScriptName", SqlDbType.VarChar).Value = st_ScriptName
             sqlCmd.Parameters.Add("Action", SqlDbType.VarChar).Value = st_Action
 
