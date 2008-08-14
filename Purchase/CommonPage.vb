@@ -13,6 +13,10 @@ Imports System.Data.SqlClient
 Public Class CommonPage
     Inherits Page
 
+    ''' <summary>
+    ''' データベース接続文字列
+    ''' </summary>
+    ''' <remarks></remarks>
     Protected ReadOnly DB_CONNECT_STRING As String = ConfigurationManager.ConnectionStrings("DatabaseConnect").ConnectionString
 
     ''' <summary>
