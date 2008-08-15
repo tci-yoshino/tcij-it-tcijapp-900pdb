@@ -47,30 +47,30 @@
                     <ItemTemplate>
                         <table>
                             <tr>
-                                <th class="subhead" colspan="2">RFQ Reference Number : <asp:Label ID="RFQNumber" runat="server" Text=""></asp:Label></th>
-                                <th class="subhead" colspan="2">Quoted Date : <asp:Label ID="QuotedDate" runat="server" Text=""></asp:Label></th>
+                                <th class="subhead" colspan="2">RFQ Reference Number : <asp:Label ID="RFQNumber" runat="server" Text='<%#Eval("RFQNumber")%>'></asp:Label></th>
+                                <th class="subhead" colspan="2">Quoted Date : <asp:Label ID="QuotedDate" runat="server" Text='<%#Eval("QuotedDate") %>'></asp:Label></th>
                             </tr>
                             <tr>
                                 <th style="width:17%">Purpose</th>
-                                <td style="width:33%"><asp:Label ID="Purpose" runat="server" Text=""></asp:Label></td>
+                                <td style="width:33%"><asp:Label ID="Purpose" runat="server" Text='<%#Eval("Purpose") %>'></asp:Label></td>
                                 <th style="width:17%">Handling Fee / Shipment Cost</th>
-                                <td style="width:33%"><asp:Label ID="ShippingHandlingCurrency" runat="server" Text=""></asp:Label> <asp:Label ID="ShippingHandlingFee" runat="server" Text=""></asp:Label></td>
+                                <td style="width:33%"><asp:Label ID="ShippingHandlingCurrency" runat="server" Text='<%#Eval("ShippingHandlingCurrencyCode") %>'></asp:Label> <asp:Label ID="ShippingHandlingFee" runat="server" Text='<%#Eval("ShippingHandlingFee") %>'></asp:Label></td>
                             </tr>
                             <tr>
                                 <th>Maker Name / Country</th>
-                                <td><asp:Label ID="MakerName" runat="server" Text=""></asp:Label><span class="indent">(<asp:Label ID="MakerCountry" runat="server" Text=""></asp:Label>)</span></td>
+                                <td><asp:Label ID="MakerName" runat="server" Text='<%#Eval("MakerName") %>'></asp:Label><span class="indent">(<asp:Label ID="MakerCountry" runat="server" Text='<%#Eval("MakerCountryName") %>'></asp:Label>)</span></td>
                                 <th>Supplier Item Name</th>
-                                <td><asp:Label ID="SupplierItemName" runat="server" Text=""></asp:Label></td>
+                                <td><asp:Label ID="SupplierItemName" runat="server" Text='<%#Eval("SupplierItemName") %>'></asp:Label></td>
                             </tr>
                             <tr>
                                 <th>Enq-User / Location</th>
-                                <td><asp:Label ID="EnqUser" runat="server" Text=""></asp:Label><span class="indent">(<asp:Label ID="EnqLocation" runat="server" Text=""></asp:Label>)</span></td>
+                                <td><asp:Label ID="EnqUser" runat="server" Text='<%#Eval("EnqUserName") %>'></asp:Label><span class="indent">(<asp:Label ID="EnqLocation" runat="server" Text='<%#Eval("EnqLocationName") %>'></asp:Label>)</span></td>
                                 <th>Quo-User / Location</th>
-                                <td><asp:Label ID="QuoUser" runat="server" Text=""></asp:Label><span class="indent">(<asp:Label ID="QuoLocation" runat="server" Text=""></asp:Label>)</span></td>
+                                <td><asp:Label ID="QuoUser" runat="server" Text='<%#Eval("QuoUserName") %>'></asp:Label><span class="indent">(<asp:Label ID="QuoLocation" runat="server" Text='<%#Eval("QuoLocationName") %>'></asp:Label>)</span></td>
                             </tr>
                             <tr>
                                 <th>Comment</th>
-                                <td colspan="3"><asp:Label ID="Comment" runat="server" Text=""></asp:Label></td>
+                                <td colspan="3"><asp:Label ID="Comment" runat="server" Text='<%#Eval("Comment") %>'></asp:Label></td>
                             </tr>
                         </table>
 
@@ -97,29 +97,32 @@
                                 <h3 style="font-style:italic">No data found.</h3>
                             </EmptyDataTemplate>
                             <ItemTemplate>
+                              <tr>
                                 <th><asp:RadioButton ID="Select" runat="server" GroupName="Select" /></th>
-                                <th><asp:Label ID="Seq" runat="server" Text=""></asp:Label></th>
-                                <td><asp:Label ID="EnqQuantity" runat="server" Text=""></asp:Label> <asp:Label ID="EnqUnit" runat="server" Text=""></asp:Label> x <asp:Label ID="EnqPiece" runat="server" Text=""></asp:Label></td>
-                                <td><asp:Label ID="Currency" runat="server" Text=""></asp:Label></td>
-                                <td class="number"><asp:Label ID="UnitPrice" runat="server" Text=""></asp:Label></td>
-                                <td class="number"><asp:Label ID="QuoPer" runat="server" Text=""></asp:Label> <asp:Label ID="QuoUnit" runat="server" Text=""></asp:Label></td>
-                                <td><asp:Label ID="LeadTime" runat="server" Text=""></asp:Label></td>
-                                <td><asp:Label ID="Packing" runat="server" Text=""></asp:Label></td>
-                                <td><asp:Label ID="Purity" runat="server" Text=""></asp:Label></td>
-                                <td><asp:Label ID="QMMethod" runat="server" Text=""></asp:Label></td>
+                                <th><asp:Label ID="Seq" runat="server" Text='<%#Container.DataItemIndex + 1 %>'></asp:Label></th>
+                                <td><asp:Label ID="EnqQuantity" runat="server" Text='<%#Eval("EnqQuantity") %>'></asp:Label> <asp:Label ID="EnqUnit" runat="server" Text='<%#Eval("EnqUnitCode") %>'></asp:Label> x <asp:Label ID="EnqPiece" runat="server" Text='<%#Eval("EnqPiece") %>'></asp:Label></td>
+                                <td><asp:Label ID="Currency" runat="server" Text='<%#Eval("CurrencyCode") %>'></asp:Label></td>
+                                <td class="number"><asp:Label ID="UnitPrice" runat="server" Text='<%#Eval("UnitPrice") %>'></asp:Label></td>
+                                <td class="number"><asp:Label ID="QuoPer" runat="server" Text='<%#Eval("QuoPer") %>'></asp:Label> <asp:Label ID="QuoUnit" runat="server" Text='<%#Eval("QuoUnitCode") %>'></asp:Label></td>
+                                <td><asp:Label ID="LeadTime" runat="server" Text='<%#Eval("LeadTime") %>'></asp:Label></td>
+                                <td><asp:Label ID="Packing" runat="server" Text='<%#Eval("Packing") %>'></asp:Label></td>
+                                <td><asp:Label ID="Purity" runat="server" Text='<%#Eval("Purity") %>'></asp:Label></td>
+                                <td><asp:Label ID="QMMethod" runat="server" Text='<%#Eval("QMMethod") %>'></asp:Label></td>
+                              </tr>
                             </ItemTemplate>
                         </asp:ListView>
+                        <asp:SqlDataSource ID="SrcRFQLine" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
                     </ItemTemplate>
                 </asp:ListView>
                 
                 <div class="btns">
                     <asp:Button ID="NextPage" runat="server" Text="Next" />
                 </div>
+                <asp:HiddenField runat="server" ID="ParPONumber" Value="" />
             </form>
         </div>
     </div><!-- Main Content Area END -->
     <asp:SqlDataSource ID="SrcRFQHeader" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
-    <asp:SqlDataSource ID="SrcRFQLine" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
 
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
