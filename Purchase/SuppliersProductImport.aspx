@@ -60,12 +60,31 @@ function set_Action(action){
             <hr />
 
             <div class="list">
-                <asp:GridView ID="SupplierProductList" runat="server" DataKeyNames="CAS Number">
+                <asp:GridView ID="SupplierProductList" runat="server" 
+                    AutoGenerateColumns="False">
                     <Columns>
-                        <asp:CommandField EditText="Edit" ShowEditButton="True" />
+                        <asp:TemplateField HeaderText="CAS Number">
+                            <ItemTemplate>
+                                <asp:TextBox ID="TextBox1" runat="server" Text='<%# Eval("CAS Number") %>'></asp:TextBox>
+                                
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:BoundField HeaderText="Supplier Item Number" 
+                            DataField="Supplier Item Number" />
+                        <asp:BoundField HeaderText="Supplier Item Name" 
+                            DataField="Supplier Item Name" />
+                        <asp:BoundField HeaderText="Note" DataField="Note" />
+                        <asp:BoundField HeaderText="TCI Product Number" />
+                        <asp:BoundField HeaderText="EHS Status" />
+                        <asp:BoundField HeaderText="Proposal Dept" />
+                        <asp:BoundField HeaderText="Proc.Dept / Manu.Dept" />
+                        <asp:BoundField HeaderText="AD" DataField="AD" />
+                        <asp:BoundField HeaderText="AF" DataField="AF" />
+                        <asp:BoundField HeaderText="WA" DataField="WA" />
+                        <asp:BoundField HeaderText="KA" DataField="KA" />
                     </Columns>
                 </asp:GridView>
-
+                
                 <div class="btns">
                     <asp:Button ID="Import" runat="server" Text="Import" Visible="False" onclientclick="javascript:set_Action('Import');" />
                 </div>

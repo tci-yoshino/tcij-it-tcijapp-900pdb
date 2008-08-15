@@ -1,5 +1,9 @@
-﻿Public Partial Class SuppliersProductImport
+﻿Imports System.Data.SqlClient
+Imports Purchase.Common
+
+Partial Public Class SuppliersProductImport
     Inherits CommonPage
+
 
 #Region " Web フォーム デザイナで生成されたコード "
     '*****（Region内は変更しないこと）*****
@@ -46,6 +50,12 @@
         Me.SqlConnection2.ConnectionString = settings.ConnectionString
     End Sub
 
+    ''' <summary>
+    ''' このページのロードイベントです。
+    ''' </summary>
+    ''' <param name="sender">ASP.NETの規定値</param>
+    ''' <param name="e">ASP.NETの規定値</param>
+    ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Set_DBConnectingString()
         DBConn = Me.SqlConnection1
@@ -55,24 +65,51 @@
         DBConn2.Open()
         DBCommand2 = DBConn2.CreateCommand()
 
-        If Request.QueryString("Supplier") <> "" Then
-            If IsPostBack = False Then
-                SupplierCode.Text = Request.QueryString("Supplier")
-                DBCommand.CommandText = "SELECT Name3 FROM Supplier WHERE (SupplierCode = '" & SupplierCode.Text.ToString & "')"
-                DBReader = DBCommand.ExecuteReader()
-                DBCommand.Dispose()
-                If DBReader.Read = True Then
-                    SupplierName.Text = DBReader("Name3")
-                End If
-                DBReader.Close()
+        If IsPostBack = False Then
+            If Request.QueryString("Supplier") <> "" Then
+                Dim st_SupplierCode = Request.QueryString("Supplier").ToString()
+                SupplierCode.Text = st_SupplierCode
+                SupplierName.Text = GetSupplierNameBySupplierCode(st_SupplierCode)
+            Else
+                Msg.Text = "SupplierCodeが設定されていません"
+                File.Visible = False
+                Preview.Visible = False
+                Import.Visible = False
             End If
-        Else
-            Msg.Text = "SupplierCodeが設定されていません"
-            File.Visible = False
-            Preview.Visible = False
-            Import.Visible = False
         End If
     End Sub
+
+    ''' <summary>
+    ''' サプライヤーコードからサプライヤーの名称を取得します。
+    ''' </summary>
+    ''' <param name="SupplierCode">サプライヤーコード</param>
+    ''' <returns>サプライヤーの名称</returns>
+    ''' <remarks></remarks>
+    Private Function GetSupplierNameBySupplierCode(ByVal SupplierCode As String) As String
+        Dim st_supplierName As String = String.Empty
+        Dim conn As SqlConnection = Nothing
+        Try
+            conn = New SqlConnection(DB_CONNECT_STRING)
+            Dim cmd As SqlCommand = conn.CreateCommand()
+
+            cmd.CommandText = "SELECT Name3 FROM Supplier WHERE SupplierCode = @SupplierCode"
+            cmd.Parameters.AddWithValue("SupplierCode", SupplierCode)
+
+            conn.Open()
+            Dim dr As SqlDataReader = cmd.ExecuteReader()
+            If dr.Read = True Then
+                st_supplierName = dr("Name3").ToString()
+            End If
+        Catch ex As Exception
+            Throw
+        Finally
+            If Not conn Is Nothing Then
+                conn.Close()
+            End If
+        End Try
+        Return st_supplierName
+    End Function
+
 
     Protected Sub Preview_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Preview.Click
         Msg.Text = ""
@@ -155,44 +192,39 @@
                 If Not TypeOf DBReader("Status") Is DBNull Then st_Status = DBReader("Status") Else st_Status = ""
                 If Not TypeOf DBReader("ProposalDept") Is DBNull Then st_ProposalDept = DBReader("ProposalDept") Else st_ProposalDept = ""
                 If Not TypeOf DBReader("ProcumentDept") Is DBNull Then st_ProcumentDept = DBReader("ProcumentDept") Else st_ProcumentDept = ""
+
+
                 '[Statusのデータ取得]---------------------------------------------------------------
-                DBCommand2.CommandText = "SELECT ENai FROM dbo.s_EhsPhrase WHERE PhID = N'" & st_Status & "'"
-                DBReader2 = DBCommand2.ExecuteReader()
-                DBCommand2.Dispose()
-                st_Status = "-"
-                If DBReader2.Read = True Then
-                    st_Status = DBReader2("ENai")
-                End If
-                DBReader2.Close()
+                st_Status = GetEhsPhraseNameByPhID(st_Status)
+
                 '[ProposalDeptのデータ取得]---------------------------------------------------------
-                DBCommand2.CommandText = "SELECT ENai FROM dbo.s_EhsPhrase WHERE PhID = N'" & st_ProposalDept & "'"
-                DBReader2 = DBCommand2.ExecuteReader()
-                DBCommand2.Dispose()
-                st_ProposalDept = "-"
-                If DBReader2.Read = True Then
-                    st_ProposalDept = DBReader2("ENai")
-                End If
-                DBReader2.Close()
+                st_ProposalDept = GetEhsPhraseNameByPhID(st_ProposalDept)
+
                 '[ProcumentDeptのセット]------------------------------------------------------------
-                DBCommand2.CommandText = "SELECT ENai FROM dbo.s_EhsPhrase WHERE PhID = N'" & st_ProcumentDept & "'"
-                DBReader2 = DBCommand2.ExecuteReader()
-                DBCommand2.Dispose()
-                st_ProcumentDept = "-"
-                If DBReader2.Read = True Then
-                    st_ProcumentDept = DBReader2("ENai")
-                End If
-                DBReader2.Close()
+                st_ProcumentDept = GetEhsPhraseNameByPhID(st_ProcumentDept)
+
+
+                'Dim st_Separator As String = String.Empty
+                'If CntA > 1 Then
+                '    st_Separator = "<br>"
+                'End If
+                'SupplierProductList.Rows(i).Cells(4).Text &= st_Separator & st_ProductNumber
+                'SupplierProductList.Rows(i).Cells(5).Text &= st_Separator & st_Status
+                'SupplierProductList.Rows(i).Cells(6).Text &= st_Separator & st_ProposalDept
+                'SupplierProductList.Rows(i).Cells(7).Text &= st_Separator & st_ProcumentDept
+
+
                 '[SupplierProductListに追加項目表示]------------------------------------------------
                 If CntA = 1 Then
-                    SupplierProductList.Rows(i).Cells(5).Text = st_ProductNumber
-                    SupplierProductList.Rows(i).Cells(6).Text = st_Status
-                    SupplierProductList.Rows(i).Cells(7).Text = st_ProposalDept
-                    SupplierProductList.Rows(i).Cells(8).Text = st_ProcumentDept
+                    SupplierProductList.Rows(i).Cells(4).Text = st_ProductNumber
+                    SupplierProductList.Rows(i).Cells(5).Text = st_Status
+                    SupplierProductList.Rows(i).Cells(6).Text = st_ProposalDept
+                    SupplierProductList.Rows(i).Cells(7).Text = st_ProcumentDept
                 Else
-                    SupplierProductList.Rows(i).Cells(5).Text = SupplierProductList.Rows(i).Cells(5).Text & "<br>" & st_ProductNumber
-                    SupplierProductList.Rows(i).Cells(6).Text = SupplierProductList.Rows(i).Cells(6).Text & "<br>" & st_Status
-                    SupplierProductList.Rows(i).Cells(7).Text = SupplierProductList.Rows(i).Cells(7).Text & "<br>" & st_ProposalDept
-                    SupplierProductList.Rows(i).Cells(8).Text = SupplierProductList.Rows(i).Cells(8).Text & "<br>" & st_ProcumentDept
+                    SupplierProductList.Rows(i).Cells(4).Text = SupplierProductList.Rows(i).Cells(4).Text & "<br>" & st_ProductNumber
+                    SupplierProductList.Rows(i).Cells(5).Text = SupplierProductList.Rows(i).Cells(5).Text & "<br>" & st_Status
+                    SupplierProductList.Rows(i).Cells(6).Text = SupplierProductList.Rows(i).Cells(6).Text & "<br>" & st_ProposalDept
+                    SupplierProductList.Rows(i).Cells(7).Text = SupplierProductList.Rows(i).Cells(7).Text & "<br>" & st_ProcumentDept
                 End If
             Loop
             DBReader.Close()
@@ -200,20 +232,59 @@
             '[CASNumberチェック]-------------------------------------------------------------
             If TCICommon.Func.IsCASNumber(table.Rows(i).Item("CAS Number")) = False Then
                 Msg.Text = "ERROR CAS_Number"
-                SupplierProductList.Rows(i).Cells(1).ForeColor = Drawing.Color.Red
-                Exit For
+
+                'TODO 16進表記からSystem.Drawing.Colorへの変換処理が必要
+                Dim i_CellsCount As Integer = 0
+                For i_CellsCount = 0 To SupplierProductList.Rows(i).Cells.Count - 1
+                    SupplierProductList.Rows(i).Cells(i_CellsCount).BackColor = Drawing.Color.Red
+                Next
+                Continue For
             End If
 
             '[AD,AF,WA,KAにイメージ挿入]-----------------------------------------------------
+            If SupplierProductList.Rows(i).Cells(8).Text = "1" Then SupplierProductList.Rows(i).Cells(8).Text = "<img src=""./Image/Check.gif"" />" Else SupplierProductList.Rows(i).Cells(8).Text = ""
             If SupplierProductList.Rows(i).Cells(9).Text = "1" Then SupplierProductList.Rows(i).Cells(9).Text = "<img src=""./Image/Check.gif"" />" Else SupplierProductList.Rows(i).Cells(9).Text = ""
             If SupplierProductList.Rows(i).Cells(10).Text = "1" Then SupplierProductList.Rows(i).Cells(10).Text = "<img src=""./Image/Check.gif"" />" Else SupplierProductList.Rows(i).Cells(10).Text = ""
             If SupplierProductList.Rows(i).Cells(11).Text = "1" Then SupplierProductList.Rows(i).Cells(11).Text = "<img src=""./Image/Check.gif"" />" Else SupplierProductList.Rows(i).Cells(11).Text = ""
-            If SupplierProductList.Rows(i).Cells(12).Text = "1" Then SupplierProductList.Rows(i).Cells(12).Text = "<img src=""./Image/Check.gif"" />" Else SupplierProductList.Rows(i).Cells(12).Text = ""
         Next i
 
         '[Import.Visibleの設定]---------------------------------------------------------
-        If Msg.Text.ToString = "" Then Import.Visible = True Else Import.Visible = False
+        'If Msg.Text.ToString = "" Then Import.Visible = True Else Import.Visible = False
     End Sub
+
+    ''' <summary>
+    ''' PhIDからEhsPhraseの英名を取得します。
+    ''' </summary>
+    ''' <param name="PhID">PhID</param>
+    ''' <returns>EhsPhraseの英名</returns>
+    ''' <remarks></remarks>
+    Private Function GetEhsPhraseNameByPhID(ByVal PhID As String) As String
+        Dim st_EhsPhraseName As String = String.Empty
+        Dim conn As SqlConnection = Nothing
+        Try
+            conn = New SqlConnection(DB_CONNECT_STRING)
+            Dim cmd As SqlCommand = conn.CreateCommand()
+
+            cmd.CommandText = "SELECT ENai FROM dbo.s_EhsPhrase WHERE PhID = @PhID"
+            cmd.Parameters.AddWithValue("PhID", PhID)
+
+            conn.Open()
+            Dim dr As SqlDataReader = cmd.ExecuteReader()
+            If dr.Read = True Then
+                st_EhsPhraseName = dr("ENai").ToString()
+            Else
+                st_EhsPhraseName = "-"
+            End If
+        Catch ex As Exception
+            Throw
+        Finally
+            If Not conn Is Nothing Then
+                conn.Close()
+            End If
+        End Try
+        Return st_EhsPhraseName
+    End Function
+
 
     Protected Sub Import_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Import.Click
         '[Data Import]------------------------------------------------------------------
@@ -332,4 +403,5 @@
         SupplierProductList.DataBind()
         Import.Visible = False
     End Sub
+
 End Class
