@@ -79,15 +79,6 @@ Partial Public Class RFQSelect
     Protected WithEvents RFQHeaderList As Global.System.Web.UI.WebControls.ListView
 
     '''<summary>
-    '''NextPage コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents NextPage As Global.System.Web.UI.WebControls.Button
-
-    '''<summary>
     '''ParPONumber コントロール。
     '''</summary>
     '''<remarks>
@@ -95,6 +86,15 @@ Partial Public Class RFQSelect
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents ParPONumber As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''Action コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
     '''SrcRFQHeader コントロール。

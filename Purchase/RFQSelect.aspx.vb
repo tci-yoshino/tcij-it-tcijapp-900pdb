@@ -219,15 +219,41 @@
     End Sub
 
     ' NextPage ボタンクリック処理
-    Protected Sub Next_Click(ByVal sender As Object, ByVal e As EventArgs) Handles NextPage.Click
+    Protected Sub Next_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+        Dim st_Action As String = "" ' Action 格納変数
+        Dim st_ParPONumber As String = ""
+        Dim st_RFQLineData() As String ' LineNumber と UnitPrice を格納
 
-        ' パラメータチェック。取得できない・"Next" で無い場合はエラー
+        ' パラメータ取得
+        If Request.RequestType = "POST" Then
+            st_Action = IIf(Request.Form("Action") = Nothing, "", Request.Form("Action"))
+            st_ParPONumber = IIf(Request.Form("ParPONumber") = Nothing, "", Request.Form("ParPONumber"))
+        ElseIf Request.RequestType = "GET" Then
+            st_Action = IIf(Request.QueryString("Action") = Nothing, "", Request.QueryString("Action"))
+            st_ParPONumber = IIf(Request.QueryString("ParPONumber") = Nothing, "", Request.QueryString("ParPONumber"))
+        End If
 
-        ' チェックされた RFQLine のデータを取得。取得できない場合はエラー
+        st_RFQLineData = Split(CType(sender, Button).CommandArgument, ",")
 
-        ' Price の値が無い場合はエラー
+        ' パラメータチェック
+        ' 取得できない・"Next" で無い場合はエラー
+        If String.IsNullOrEmpty(st_action) Or st_action <> "Next" Then
+            Msg.Text = MSG_REQUIED_ACTION
+            Exit Sub
+        End If
+        'ParPONumber が取得できない場合はエラー
+        If String.IsNullOrEmpty(st_ParPONumber) Then
+            Msg.Text = MSG_REQUIED_ACTION
+            Exit Sub
+        End If
+        ' RFQLine のデータが取得できない場合はエラー
+        If String.IsNullOrEmpty(st_RFQLineData(0)) Or String.IsNullOrEmpty(st_RFQLineData(1)) Then
+            Msg.Text = MSG_REQUIED_ACTION
+            Exit Sub
+        End If
 
         ' POIssue.aspx に遷移
+        Response.Redirect("POIssue.aspx?ParPONumber=" & st_ParPONumber & "&RFQLineNumber=" & st_RFQLineData(0))
 
     End Sub
 

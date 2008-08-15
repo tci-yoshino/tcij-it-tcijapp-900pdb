@@ -98,7 +98,7 @@
                             </EmptyDataTemplate>
                             <ItemTemplate>
                               <tr>
-                                <th><asp:RadioButton ID="Select" runat="server" GroupName="Select" /></th>
+                                <th><asp:Button ID="Next" runat="server" Text="Select" OnClick="Next_Click" CommandArgument='<%#Eval("RFQLineNumber") & "," & Eval("UnitPrice") %>' /></th>
                                 <th><asp:Label ID="Seq" runat="server" Text='<%#Container.DataItemIndex + 1 %>'></asp:Label></th>
                                 <td><asp:Label ID="EnqQuantity" runat="server" Text='<%#Eval("EnqQuantity") %>'></asp:Label> <asp:Label ID="EnqUnit" runat="server" Text='<%#Eval("EnqUnitCode") %>'></asp:Label> x <asp:Label ID="EnqPiece" runat="server" Text='<%#Eval("EnqPiece") %>'></asp:Label></td>
                                 <td><asp:Label ID="Currency" runat="server" Text='<%#Eval("CurrencyCode") %>'></asp:Label></td>
@@ -115,10 +115,8 @@
                     </ItemTemplate>
                 </asp:ListView>
                 
-                <div class="btns">
-                    <asp:Button ID="NextPage" runat="server" Text="Next" />
-                </div>
                 <asp:HiddenField runat="server" ID="ParPONumber" Value="" />
+                <asp:HiddenField runat="server" ID="Action" Value="Next" />
             </form>
         </div>
     </div><!-- Main Content Area END -->
