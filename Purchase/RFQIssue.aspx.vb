@@ -48,32 +48,10 @@ Partial Public Class RFQIssue
         If CheckRFQLine(Enq_Quantity1, Enq_Quantity2, Enq_Quantity3, Enq_Quantity4) = False Then
             Exit Sub
         End If
+        If CheckInsertColumn() = False Then
+            Exit Sub
+        End If
 
-        '入力内容のチェック
-        DBCommand.CommandText = "SELECT ProductID FROM Product WHERE (ProductNumber = @st_ProductNumber)"
-        DBCommand.Parameters.Add("st_ProductNumber", SqlDbType.VarChar, 32).Value = ProductNumber.Text
-        DBReader = DBCommand.ExecuteReader()
-        DBCommand.Dispose()
-        If DBReader.HasRows = True Then
-            While DBReader.Read
-                i_ProductID = IIf(IsNumeric(DBReader("ProductID").ToString) = True, Integer.Parse(DBReader("ProductID").ToString), -99)
-            End While
-        End If
-        DBReader.Close()
-        If i_ProductID = -1 Or i_ProductID = -99 Then
-            Msg.Text = "ProductNumber の設定が不正です"
-            Exit Sub
-        End If
-        If RFQSupplierCheck(SupplierCode.Text) = False Then
-            Msg.Text = "SupplierCode の設定が不正です"
-            Exit Sub
-        End If
-        If MakerCode.Text <> "" Then
-            If RFQSupplierCheck(MakerCode.Text) = False Then
-                Msg.Text = "MakerCode の設定が不正です"
-                Exit Sub
-            End If
-        End If
         Dim sqlTran As System.Data.SqlClient.SqlTransaction = DBConn.BeginTransaction()
         DBCommand.Transaction = sqlTran
         Try
@@ -156,16 +134,14 @@ Partial Public Class RFQIssue
                 DBCommand.ExecuteNonQuery()
             End If
             sqlTran.Commit()
-            Response.Redirect("RFQUpdate.aspx?RFQNumber=" & i_RFQNumber, False)
+
         Catch ex As Exception
-            If IsNothing(sqlTran.Connection) = False Then
-                'コミット後の処理があるため、コミットしてなかったらロールバックする。
-                sqlTran.Rollback()
-            End If
+            sqlTran.Rollback()
             Throw
         Finally
             DBCommand.Dispose()
         End Try
+        Response.Redirect("RFQUpdate.aspx?RFQNumber=" & i_RFQNumber, False)
     End Sub
 
     Private Sub SetParamForRFQLine(ByVal param2 As SqlParameter, ByVal param3 As SqlParameter, ByVal param4 As SqlParameter, ByVal param5 As SqlParameter)
@@ -176,33 +152,33 @@ Partial Public Class RFQIssue
         DBCommand.ExecuteNonQuery()
     End Sub
 
-    Public Function RFQSupplierCheck(ByVal SupplierCode As String) As Boolean
-        'Supplier 存在チェック
-        RFQSupplierCheck = False
-        Dim RFQConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
-        Dim RFQConn As New SqlConnection
-        Dim RFQCom As SqlCommand
-        Dim RFQRead As SqlDataReader
-        Dim i As Integer
+    'Private Function RFQSupplierCheck(ByVal SupplierCode As String) As Boolean
+    '    'Supplier 存在チェック
+    '    RFQSupplierCheck = False
+    '    Dim RFQConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
+    '    Dim RFQConn As New SqlConnection
+    '    Dim RFQCom As SqlCommand
+    '    Dim RFQRead As SqlDataReader
+    '    Dim i As Integer
 
-        If Integer.TryParse(SupplierCode, i) = False Then
-            Exit Function
-        End If
-        RFQConn.ConnectionString = RFQConnectString.ConnectionString
-        RFQConn.Open()
-        RFQCom = RFQConn.CreateCommand()
+    '    If Integer.TryParse(SupplierCode, i) = False Then
+    '        Exit Function
+    '    End If
+    '    RFQConn.ConnectionString = RFQConnectString.ConnectionString
+    '    RFQConn.Open()
+    '    RFQCom = RFQConn.CreateCommand()
 
-        RFQCom.CommandText = "SELECT SupplierCode FROM Supplier WHERE (SupplierCode = @st_SupplierCode)"
-        RFQCom.Parameters.Add("st_SupplierCode", SqlDbType.Int).Value = Integer.Parse(SupplierCode)
-        RFQRead = RFQCom.ExecuteReader()
-        RFQCom.Dispose()
-        If RFQRead.HasRows = True Then
-            RFQSupplierCheck = True
-        End If
-        RFQRead.Close()
-        RFQConn.Close()
+    '    RFQCom.CommandText = "SELECT SupplierCode FROM Supplier WHERE (SupplierCode = @st_SupplierCode)"
+    '    RFQCom.Parameters.Add("st_SupplierCode", SqlDbType.Int).Value = Integer.Parse(SupplierCode)
+    '    RFQRead = RFQCom.ExecuteReader()
+    '    RFQCom.Dispose()
+    '    If RFQRead.HasRows = True Then
+    '        RFQSupplierCheck = True
+    '    End If
+    '    RFQRead.Close()
+    '    RFQConn.Close()
 
-    End Function
+    'End Function
 
 
     Private Function IsAllNullOfRFQList(ByVal EnqQuantity As String, ByVal EnqUnit As String, ByVal EnqPiece As String) As Boolean
@@ -238,7 +214,7 @@ Partial Public Class RFQIssue
 
         '数量入力の整数チェック
         Dim i_Result As Integer = 0
-        If Integer.TryParse(EnqPiece.Trim, i_Result) = False Then
+        If Regex.IsMatch(EnqPiece.Trim, INT_5_REGEX) = False Then
             Return False
         End If
 
@@ -378,8 +354,9 @@ Partial Public Class RFQIssue
         Return True
     End Function
     Private Function CheckRFQLine(ByRef Enq_Quantity1 As Boolean, ByRef Enq_Quantity2 As Boolean, ByRef Enq_Quantity3 As Boolean, ByRef Enq_Quantity4 As Boolean) As Boolean
-        Dim Bo_UnLine As Boolean = False
         '入力項目チェックLine
+        Dim Bo_UnLine As Boolean = False
+
         Enq_Quantity1 = IsAllInputOfRFQList(EnqQuantity_1.Text, EnqUnit_1.SelectedValue, EnqPiece_1.Text)
         Dim bo_UnLine_1 = IsAllNullOfRFQList(EnqQuantity_1.Text, EnqUnit_1.SelectedValue, EnqPiece_1.Text)
         If Enq_Quantity1 = False And bo_UnLine_1 = False Then
@@ -408,12 +385,69 @@ Partial Public Class RFQIssue
             Enq_Quantity3 = False And Enq_Quantity4 = False Then
 
             Msg.Text = "Enq-Quantity を設定して下さい"
-            Exit Function
+            Return False
         End If
 
         If Bo_UnLine = True Then
             Msg.Text = "Enq-Quantity の設定が不正です"
-            Exit Function
+            Return False
         End If
+        Return True
+    End Function
+    Private Function CheckInsertColumn() As Boolean
+        'Insert内容の入力チェック
+        '入力内容のチェック
+        Dim st_Product As String = "Product"
+        Dim st_ProductKey As String = "ProductNumber"
+        Dim st_Supplier As String = "Supplier"
+        Dim st_SupplierKey As String = "SupplierCode"
+        'ProductNumberのチェック
+        If ExistenceConfirmation(st_Product, st_ProductKey, ProductNumber.Text) = False Then
+            Msg.Text = "ProductNumber の設定が不正です"
+            Return False
+        End If
+        'Supplierのチェック
+        If ExistenceConfirmation(st_Supplier, st_SupplierKey, SupplierCode.Text) = False Then
+            Msg.Text = "SupplierCode の設定が不正です"
+            Return False
+        End If
+        'Makerのチェック
+        If MakerCode.Text <> "" Then
+            If ExistenceConfirmation(st_Supplier, st_SupplierKey, MakerCode.Text) = False Then
+                Msg.Text = "MakerCode の設定が不正です"
+                Return False
+            End If
+        End If
+        Return True
+    End Function
+    Private Function ExistenceConfirmation(ByVal TableName As String, ByVal TableField As String, ByVal CheckData As Object) As Boolean
+        'DB汎用存在確認チェック
+        Dim st_SQLCommand As String = String.Empty
+        st_SQLCommand = "SELECT COUNT(*) AS RecordCount FROM " & TableName & " WHERE " & TableField & " = @CheckData"
+        'st_SQLCommand = "SELECT COUNT(*) AS RecordCount FROM @TableName WHERE @TableField = @CheckData"
+        Try
+            Using DBConn As New SqlClient.SqlConnection(DB_CONNECT_STRING), _
+            DBCommand As SqlCommand = DBConn.CreateCommand()
+                DBConn.Open()
+                Dim i As Integer = 0
+                DBCommand.CommandText = st_SQLCommand
+                'DBCommand.Parameters.AddWithValue("TableName", TableName)
+                'DBCommand.Parameters.AddWithValue("TableField", TableField)
+                DBCommand.Parameters.AddWithValue("CheckData", CheckData)
+
+                Using DBReader As SqlClient.SqlDataReader = DBCommand.ExecuteReader()
+                    If DBReader.HasRows = True Then
+                        While DBReader.Read
+                            If DBReader("RecordCount").ToString > 0 Then
+                                Return True
+                            End If
+                        End While
+                    End If
+                End Using
+            End Using
+        Catch ex As Exception
+            Throw
+        End Try
+        Return False
     End Function
 End Class
