@@ -95,7 +95,6 @@ function set_Action(action){
 FROM                     dbo.Product
 WHERE                   (ProductID &lt; 100)"></asp:SqlDataSource>
     
-                <asp:HiddenField ID="ProductID" runat="server" />
                 <asp:HiddenField ID="ImportFileName" runat="server" />
                 <input type="hidden" id ="Action" runat="server" value="" />
     
