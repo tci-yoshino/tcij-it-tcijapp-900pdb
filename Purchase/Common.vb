@@ -1,4 +1,5 @@
 ﻿Option Strict On
+Imports System.Data.SqlClient
 
 ''' <summary>
 ''' Common クラス
@@ -301,19 +302,35 @@ Public Class Common
 
     End Function
 
-    'Public Shared Function SupplierCheck(ByVal SupplierCode As String) As Boolean
+    ''' <summary>
+    ''' 指定した条件でテーブルにデータが存在するかを返します。
+    ''' </summary>
+    ''' <param name="TableName">検索対象のテーブル名</param>
+    ''' <param name="TableField">検索条件フィールド名</param>
+    ''' <param name="CheckData">検索条件の値</param>
+    ''' <returns>データが一件以上ある場合はTrue ない場合はFalseを返します。</returns>
+    ''' <remarks></remarks>
+    Public Shared Function ExistenceConfirmation(ByVal TableName As String, ByVal TableField As String, ByVal CheckData As String) As Boolean
+        '汎用存在確認チェック
+        Dim st_SQLCommand As String = String.Empty
+        st_SQLCommand = String.Format("SELECT COUNT(*) AS RecordCount FROM {0} WHERE {1} = @CheckData", _
+                                    SafeSqlLiteral(TableName), SafeSqlLiteral(TableField))
+        Try
+            Using DBConn As New SqlClient.SqlConnection(DB_CONNECT_STRING), _
+            DBCommand As SqlCommand = DBConn.CreateCommand()
+                DBConn.Open()
+                DBCommand.CommandText = st_SQLCommand
+                DBCommand.Parameters.AddWithValue("CheckData", CheckData)
 
-    '    Try
-    '        Using connection As New SqlClient.SqlConnection(DB_CONNECT_STRING)
+                Dim i_RecordCount As Integer = Convert.ToInt32(DBCommand.ExecuteScalar)
+                If i_RecordCount > 0 Then
+                    Return True
+                End If
+            End Using
+        Catch ex As Exception
+            Throw
+        End Try
+        Return False
+    End Function
 
-
-    '        End Using
-    '    Catch ex As Exception
-    '        Throw
-    '    End Try
-
-
-
-
-    'End Function
 End Class
