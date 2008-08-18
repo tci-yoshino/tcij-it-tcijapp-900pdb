@@ -35,17 +35,14 @@ Public Class CommonPage
 
         ' User authorization process
         If Request.RequestType = "POST" Then
-            st_Action = IIf(Request.Form("Action") Is Nothing, String.Empty, Request.Form("Action")).ToString
+            st_Action = IIf(Request.Form("Action") = Nothing, String.Empty, Request.Form("Action")).ToString
         ElseIf Request.RequestType = "GET" Then
-            st_Action = IIf(Request.QueryString("Action") Is Nothing, String.Empty, Request.QueryString("Action")).ToString
+            st_Action = IIf(Request.QueryString("Action") = Nothing, String.Empty, Request.QueryString("Action")).ToString
         Else
             Throw New Exception("CommonPage.OnLoad: Bad Request Type.")
         End If
 
-        st_Buf = Split(Request.FilePath, "/")
-        st_ScriptName = st_Buf(st_Buf.Length - 1)
-
-        'st_ScriptName = System.IO.Path.GetFileNameWithoutExtension(Request.Url.ToString)
+        st_ScriptName = System.IO.Path.GetFileNameWithoutExtension(Request.Url.ToString)
 
         If Session("UserID") Is Nothing Then
             st_Buf = Split(Request.ServerVariables("LOGON_USER"), "\")
