@@ -20,7 +20,7 @@
 
 			<div class="main">
 			    <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
-			    
+			    <%  If Parameter = True Then%>
 				<table class="left">
 					<tr>
 						<th>Enq-Location <span class="required">*</span> : </th>
@@ -43,10 +43,12 @@
                             </asp:DropDownList>
 						    <asp:SqlDataSource ID="SDS_RFQIssue_Enq_U" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-                                SelectCommand="SELECT [UserID], [Name] FROM [v_User] WHERE ([LocationCode] = @LocationCode) ORDER BY [Name]">
+                                
+                                SelectCommand="SELECT [UserID], [Name] FROM [v_User] WHERE (([LocationCode] = @LocationCode) AND ([isDisabled] = @isDisabled)) ORDER BY [Name]">
                                 <SelectParameters>
                                     <asp:ControlParameter ControlID="EnqLocation" Name="LocationCode" 
                                         PropertyName="SelectedValue" Type="String" />
+                                    <asp:Parameter DefaultValue="False" Name="isDisabled" Type="Boolean" />
                                 </SelectParameters>
                             </asp:SqlDataSource>
 						</td>
@@ -124,10 +126,12 @@
                             </asp:DropDownList>
 						    <asp:SqlDataSource ID="SDS_RFQIssue_Que_U" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-                                SelectCommand="SELECT [UserID], [Name] FROM [v_User] WHERE ([LocationCode] = @LocationCode) ORDER BY [Name]">
+                                
+                                SelectCommand="SELECT [UserID], [Name] FROM [v_User] WHERE (([LocationCode] = @LocationCode) AND ([isDisabled] = @isDisabled)) ORDER BY [Name]">
                                 <SelectParameters>
                                     <asp:ControlParameter ControlID="QuoLocation" Name="LocationCode" 
                                         PropertyName="SelectedValue" Type="String" />
+                                    <asp:Parameter DefaultValue="False" Name="isDisabled" Type="Boolean" />
                                 </SelectParameters>
                             </asp:SqlDataSource>
 						</td>
@@ -228,6 +232,7 @@
 				<div class="btns">
                     <asp:Button ID="Issue" runat="server" Text="Issue" />
 				</div>
+				<% End If%>
 			</div>
 	</div><!-- Main Content Area END -->
     
