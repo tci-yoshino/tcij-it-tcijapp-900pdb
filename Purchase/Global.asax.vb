@@ -21,6 +21,15 @@ Public Class Global_asax
         ' 使用の認証時に呼び出されます。
     End Sub
 
+    ''' <summary>
+    ''' エラーイベントを処理する。
+    ''' </summary>
+    ''' <param name="sender">オブジェクトデータ (既定パラメータ)</param>
+    ''' <param name="e">イベントデータ (既定パラメータ)</param>
+    ''' <remarks>
+    ''' アプリケーションで発生した例外を、Web.config に定義した
+    ''' 担当者のメールアドレス宛てに通知し、処理を SystemError.aspx に委譲する。
+    ''' </remarks>
     Sub Application_Error(ByVal sender As Object, ByVal e As EventArgs)
         ' エラーの発生時に呼び出されます。
         Dim context As HttpContext = DirectCast(sender, HttpApplication).Context
