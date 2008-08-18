@@ -201,8 +201,8 @@
                         <ItemTemplate>
                             <table class="child">
                                 <tr>
-                                    <th class="subhead" colspan="2">Chi-PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber") %>'><asp:label id="PONumber" runat="server" Text='<%# Eval("PONumber") %>'></asp:label></asp:HyperLink><span class="indent"><em><asp:label id="POCorrespondence" runat="server" Text='<%# Eval("POCorrespondence") %>'></asp:label></em></span></th>
-                                    <th class="subhead" colspan="4"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"))%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%# Eval("Status") %>'></asp:label></span></th>
+                                    <th class="subhead" colspan="2">Chi-PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber") %>'><asp:label id="PONumber" runat="server" Text='<%# Eval("PONumber") %>'></asp:label></asp:HyperLink></th>
+                                    <th class="subhead" colspan="4"></th>
                                 </tr>
                                 <tr>
                                     <th style="width:17%">Product Number / Name</th>

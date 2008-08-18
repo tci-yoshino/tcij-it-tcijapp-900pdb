@@ -1,9 +1,9 @@
 ﻿Public Partial Class MyTask
     Inherits CommonPage
 
-    Public st_UserID As String
-    Public stb_PONumbers As StringBuilder = New StringBuilder ' PONumber を格納するオブジェクト。この値を見て、重複するPONumber を除外する。
-    Public DBConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
+    Private st_UserID As String
+    Private stb_PONumbers As StringBuilder = New StringBuilder ' PONumber を格納するオブジェクト。この値を見て、重複するPONumber を除外する。
+    Private DBConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -165,7 +165,7 @@
     End Sub
 
     ' POList_Overdue と POList_PPI のバインド終了時に PONumber を取得
-    Protected Sub GetPONumber_Overdue(ByVal sender As Object, ByVal e As EventArgs) Handles POList_Overdue.DataBound, POList_PPI.DataBound
+    Protected Sub Get_PONumber_Overdue(ByVal sender As Object, ByVal e As EventArgs) Handles POList_Overdue.DataBound, POList_PPI.DataBound
 
         Dim lv As ListView = CType(sender, ListView)
         Dim label As Label = New Label
@@ -180,20 +180,19 @@
     End Sub
 
     ' POList_Par の項目バインド時にその項目の子データがあった場合は取得する
-    Protected Sub GetChildPO(ByVal sender As Object, ByVal e As EventArgs) Handles POList_Par.ItemDataBound
+    Protected Sub Set_ChildPO(ByVal sender As Object, ByVal e As EventArgs) Handles POList_Par.ItemDataBound
 
-        Dim lv As ListView = CType(CType(e, ListViewItemEventArgs).Item.FindControl("POList_Chi"), ListView)
-        Dim src As SqlDataSource = CType(CType(e, ListViewItemEventArgs).Item.FindControl("SrcPO_Chi"), SqlDataSource)
-        Dim label As Label = CType(CType(e, System.Web.UI.WebControls.ListViewItemEventArgs).Item.FindControl("PONumber"), Label)
+        Dim lv As ListView = DirectCast(DirectCast(e, ListViewItemEventArgs).Item.FindControl("POList_Chi"), ListView)
+        Dim src As SqlDataSource = DirectCast(DirectCast(e, ListViewItemEventArgs).Item.FindControl("SrcPO_Chi"), SqlDataSource)
+        Dim label As Label = DirectCast(DirectCast(e, ListViewItemEventArgs).Item.FindControl("PONumber"), Label)
 
         src.SelectParameters.Clear()
         src.SelectParameters.Add("PONumber", label.Text)
         src.SelectCommand = _
-              "SELECT P.PONumber, P.StatusChangeDate, P.Status, P.ProductNumber, P.ProductName, " _
+              "SELECT P.PONumber, P.ProductNumber, P.ProductName, " _
             & "       P.PODate, P.POUserName, P.POLocationName, P.SupplierName, P.MakerName, P.DeliveryDate, " _
-            & "       P.OrderQuantity, P.OrderUnitCode, P.CurrencyCode, P.UnitPrice, P.PerQuantity, P.PerUnitCode, PR.POCorres as POCorrespondence " _
-            & "FROM v_PO AS P LEFT OUTER JOIN " _
-            & "     v_POReminder AS PR ON PR.PONumber = P.PONumber " _
+            & "       P.OrderQuantity, P.OrderUnitCode, P.CurrencyCode, P.UnitPrice, P.PerQuantity, P.PerUnitCode " _
+            & "FROM v_PO AS P " _
             & "WHERE P.ParPONumber = @PONumber " _
             & "ORDER BY P.StatusSortOrder ASC "
         lv.DataSourceID = src.ID
