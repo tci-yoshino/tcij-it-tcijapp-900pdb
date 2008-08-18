@@ -98,7 +98,7 @@
                             </EmptyDataTemplate>
                             <ItemTemplate>
                               <tr>
-                                <th><asp:Button ID="Next" runat="server" Text="Select" OnClick="Next_Click" CommandArgument='<%#Eval("RFQLineNumber") & "," & Eval("UnitPrice") %>' /></th>
+                                <th><%#If(IsDBNull(Eval("UnitPrice")), "Select", "<a href=""POIssue.aspx?ParPONumber=" & st_ParPONumber & "&RFQLineNumber=" & Eval("RFQLineNumber") & """>Select</a>")%></th>
                                 <th><asp:Label ID="Seq" runat="server" Text='<%#Container.DataItemIndex + 1 %>'></asp:Label></th>
                                 <td><asp:Label ID="EnqQuantity" runat="server" Text='<%#Eval("EnqQuantity") %>'></asp:Label> <asp:Label ID="EnqUnit" runat="server" Text='<%#Eval("EnqUnitCode") %>'></asp:Label> x <asp:Label ID="EnqPiece" runat="server" Text='<%#Eval("EnqPiece") %>'></asp:Label></td>
                                 <td><asp:Label ID="Currency" runat="server" Text='<%#Eval("CurrencyCode") %>'></asp:Label></td>
