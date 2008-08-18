@@ -18,6 +18,7 @@
 
         <div class="main">
             <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
+            <%If RFQHeaderList.Visible Then%>
             <table>
                 <tr>
                     <th>Product Number / Name : </th>
@@ -28,6 +29,7 @@
                     <td><asp:Label ID="SupplierName" runat="server" Text=""></asp:Label><span class="indent">(<asp:Label ID="Country" runat="server" Text=""></asp:Label>)</span></td>
                 </tr>
             </table>
+            <%End If%>
         </div>
 
         <hr />
