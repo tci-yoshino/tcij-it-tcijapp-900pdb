@@ -249,7 +249,7 @@ Public Class Common
     ''' <remarks></remarks>
     Public Shared Function ConvertEmptyStringToNull(ByVal str As String) As Object
 
-        Return IIf(Trim(str) Is String.Empty, System.DBNull.Value, str)
+        Return IIf(Trim(str) = String.Empty, System.DBNull.Value, str)
 
     End Function
 
@@ -261,7 +261,7 @@ Public Class Common
     ''' <remarks></remarks>
     Public Shared Function ConvertStringToDate(ByVal str As String) As Object
 
-        If Trim(str) Is String.Empty Then
+        If Trim(str) = String.Empty Then
             Return System.DBNull.Value
         End If
 
@@ -277,7 +277,7 @@ Public Class Common
     ''' <remarks></remarks>
     Public Shared Function ConvertStringToDec(ByVal str As String) As Object
 
-        If Trim(str) Is String.Empty Then
+        If Trim(str) = String.Empty Then
             Return System.DBNull.Value
         End If
 
@@ -293,7 +293,7 @@ Public Class Common
     ''' <remarks></remarks>
     Public Shared Function ConvertStringToInt(ByVal str As String) As Object
 
-        If Trim(str) Is String.Empty Then
+        If Trim(str) = String.Empty Then
             Return System.DBNull.Value
         End If
 
