@@ -1,21 +1,16 @@
 ﻿Public Partial Class RFQSelect
     Inherits CommonPage
     ' 変数宣言
-    Private DBConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
+    Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
     Protected st_ParPONumber As String = "" ' aspx 側で読むため、Protected にする
     Private st_ProductID As String = ""
     Private st_SupplierCode As String = ""
     Private st_MakerCode As String = ""
 
-    ' 定数宣言
-    Private Const MSG_REQUIED_ParPONumber = "購買発注番号が指定されていません。"
-
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         ' コントロール初期化
         Msg.Text = ""
-        SelectForm.Visible = True
-        RFQHeaderList.Visible = True
 
         ' パラメータ取得
         If Request.RequestType = "POST" Then
@@ -27,14 +22,10 @@
         ' 空白除去
         st_ParPONumber = st_ParPONumber.Trim
 
-        ' HiddenField に設定
-        ParPONumber.Value = st_ParPONumber
-        st_ParPONumber = st_ParPONumber
-
         ' パラメータを取得できなかった場合はエラー終了
         If String.IsNullOrEmpty(st_ParPONumber) Then
-            Msg.Text = MSG_REQUIED_ParPONumber
-            SelectForm.Visible = False
+            Msg.Text = Common.ERR_INVALID_PARAMETER
+            st_ParPONumber = ""
             Exit Sub
         End If
 
@@ -42,7 +33,7 @@
         Set_ParPOData(st_ParPONumber, st_ProductID, st_SupplierCode, st_MakerCode)
         If String.IsNullOrEmpty(st_SupplierCode) Then
             Msg.Text = Common.ERR_NO_MATCH_FOUND
-            SelectForm.Visible = False
+            st_ParPONumber = ""
             Exit Sub
         End If
 

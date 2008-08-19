@@ -15,10 +15,12 @@
         <div class="tabs"></div>
 
         <h3>RFQ Select</h3>
-
         <div class="main">
             <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
-            <%If RFQHeaderList.Visible Then%>
+        </div>
+
+        <%If Not String.IsNullOrEmpty(st_ParPONumber) Then%>
+        <div class="main">
             <table>
                 <tr>
                     <th>Product Number / Name : </th>
@@ -29,7 +31,6 @@
                     <td><asp:Label ID="SupplierName" runat="server" Text=""></asp:Label><span class="indent">(<asp:Label ID="Country" runat="server" Text=""></asp:Label>)</span></td>
                 </tr>
             </table>
-            <%End If%>
         </div>
 
         <hr />
@@ -44,7 +45,7 @@
                         </div>
                     </LayoutTemplate>
                     <EmptyDataTemplate>
-                        <h3 style="font-style:italic">No data found.</h3>
+                        <h3 style="font-style:italic"><%=Purchase.Common.MSG_NO_DATA_FOUND%></h3>
                     </EmptyDataTemplate>
                     <ItemTemplate>
                         <table>
@@ -96,7 +97,7 @@
                                 </table>
                             </LayoutTemplate>
                             <EmptyDataTemplate>
-                                <h3 style="font-style:italic">No data found.</h3>
+                                <h3 style="font-style:italic"><%=Purchase.Common.MSG_NO_DATA_FOUND%></h3>
                             </EmptyDataTemplate>
                             <ItemTemplate>
                               <tr>
@@ -117,11 +118,12 @@
                     </ItemTemplate>
                 </asp:ListView>
                 
-                <asp:HiddenField runat="server" ID="ParPONumber" Value="" />
+                <asp:HiddenField runat="server" ID="ParPONumber" Value='<%=st_ParPONumber %>' />
                 <asp:HiddenField runat="server" ID="Action" Value="Next" />
             </form>
         </div>
     </div><!-- Main Content Area END -->
+    <%End If%>
     <asp:SqlDataSource ID="SrcRFQHeader" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
 
     <!-- Footer -->
