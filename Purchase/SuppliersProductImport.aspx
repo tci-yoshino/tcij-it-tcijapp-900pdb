@@ -65,8 +65,7 @@ function set_Action(action){
                     <Columns>
                         <asp:TemplateField HeaderText="CAS Number">
                             <ItemTemplate>
-                                <asp:TextBox ID="CASNumber" runat="server" Text='<%# Eval("CAS Number") %>'></asp:TextBox>
-                                
+                                <asp:TextBox ID="CASNumber" runat="server" Text='<%# Eval("CAS Number") %>'></asp:TextBox>                                
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:BoundField HeaderText="Supplier Item Number" 
@@ -74,14 +73,41 @@ function set_Action(action){
                         <asp:BoundField HeaderText="Supplier Item Name" 
                             DataField="Supplier Item Name" />
                         <asp:BoundField HeaderText="Note" DataField="Note" />
-                        <asp:BoundField HeaderText="TCI Product Number" />
+
+                        <asp:TemplateField HeaderText="TCI Product Number">
+                            <ItemTemplate>
+                                <%#Eval("TCI Product Number")%>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
                         <asp:BoundField HeaderText="EHS Status" />
                         <asp:BoundField HeaderText="Proposal Dept" />
                         <asp:BoundField HeaderText="Proc.Dept / Manu.Dept" />
-                        <asp:BoundField HeaderText="AD" DataField="AD" />
-                        <asp:BoundField HeaderText="AF" DataField="AF" />
-                        <asp:BoundField HeaderText="WA" DataField="WA" />
-                        <asp:BoundField HeaderText="KA" DataField="KA" />
+
+                        <asp:TemplateField HeaderText="AD">
+                            <ItemTemplate>
+                                <%#Eval("AD")%>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        
+                        <asp:TemplateField HeaderText="AF">
+                            <ItemTemplate>
+                                <%#Eval("AF")%>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+                        <asp:TemplateField HeaderText="WA">
+                            <ItemTemplate>
+                                <%#Eval("WA")%>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="KA">
+                            <ItemTemplate>
+                                <%#Eval("KA")%>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+
+
                     </Columns>
                 </asp:GridView>
                 

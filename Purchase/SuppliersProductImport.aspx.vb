@@ -84,12 +84,12 @@ Partial Public Class SuppliersProductImport
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         If IsPostBack = False Then
-            'If True Then
-            If Request.QueryString("Supplier") <> "" Then
-                Dim st_SupplierCode = Request.QueryString("Supplier").ToString()
+            If True Then
+                'If Request.QueryString("Supplier") <> "" Then
+                'Dim st_SupplierCode = Request.QueryString("Supplier").ToString()
 
                 'テスト実行用ダミーコード
-                'Dim st_SupplierCode As String = 1
+                Dim st_SupplierCode As String = 1
 
                 SupplierCode.Text = st_SupplierCode
                 SupplierName.Text = GetSupplierNameBySupplierCode(st_SupplierCode)
@@ -726,7 +726,7 @@ Partial Public Class SuppliersProductImport
     ''' <param name="ProductID"></param>
     ''' <param name="SupplierItemNumber"></param>
     ''' <param name="Note"></param>
-    ''' <param name="UpdateBy"></param>
+    ''' <param name="CreatedBy"></param>
     ''' <param name="Conn">SqlConnnectionオブジェクト</param>
     ''' <remarks>トランザクション有効化のため、生成済みのSqlConnectionを参照渡しで受けます</remarks>
     Private Sub InsertSupplierProduct(ByVal SupplierCode As String, ByVal ProductID As String, _
@@ -793,7 +793,7 @@ Partial Public Class SuppliersProductImport
     ''' </summary>
     ''' <param name="SupplierItemNumber"></param>
     ''' <param name="Note"></param>
-    ''' <param name="UpdateBy"></param>
+    ''' <param name="UpdatedBy"></param>
     ''' <param name="ProductID"></param>
     ''' <param name="Conn">SqlConnnectionオブジェクト</param>
     ''' <remarks>トランザクション有効化のため、生成済みのSqlConnectionを参照渡しで受けます</remarks>
