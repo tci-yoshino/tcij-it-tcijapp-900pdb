@@ -5,12 +5,12 @@ Partial Public Class RFQIssue
     Private DBConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
     Private DBConn As New SqlConnection
     Private DBCommand As SqlCommand
-    '入力値不正エラー
+    'エラーメッセージ(入力値不正)
     Private Const ERR_INCORRECT_SUPPLIERCODE As String = "SupplierCode" & ERR_INCORRECT_FORMAT
     Private Const ERR_INCORRECT_MAKERCODE As String = "MakerCode" & ERR_INCORRECT_FORMAT
     Private Const ERR_INCORRECT_ENQQUANTITY As String = "Enq-Quantity" & ERR_INCORRECT_FORMAT
     Private Const ERR_INCORRECT_PRODUCTNUMBER As String = "ProductNumber" & ERR_INCORRECT_FORMAT
-    '必須入力項目エラー
+    'エラーメッセージ(必須入力項目なし)
     Private Const ERR_REQUIRED_ENQLOCATION As String = "Enq-Location" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_ENQUSER As String = "Enq-User" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_PRODUCTNUMBER As String = "ProductNumber" & ERR_REQUIRED_FIELD
@@ -262,12 +262,7 @@ Partial Public Class RFQIssue
                         SupplierCode.Text = DBReader("SupplierCode").ToString
                         R3SupplierCode.Text = DBReader("R3SupplierCode").ToString
                         SupplierName.Text = DBReader("SupplierName").ToString
-                        SupplierCountry.Text = DBReader("CountryCode").ToString
-
-                        'Supplierの国名とそれに対応するQuoLocationを設定する。
-                        'ちょっと後でご相談する。
-
-
+                        Call SetCountryName(DBReader("CountryCode").ToString)
                     End While
                     SupplierCode.ReadOnly = True
                     SupplierCode.CssClass = "readonly"
@@ -402,8 +397,6 @@ Partial Public Class RFQIssue
         'Insert内容の入力チェック ProductNumberからProductIDを取得して返す。
         '入力内容のチェック
         Dim DBReader As SqlDataReader
-        Dim st_Product As String = "Product"
-        Dim st_ProductKey As String = "ProductNumber"
         Dim st_Supplier As String = "Supplier"
         Dim st_SupplierKey As String = "SupplierCode"
         'ProductNumberのチェック
@@ -435,4 +428,30 @@ Partial Public Class RFQIssue
         End If
         Return True
     End Function
+    Private Sub SetCountryName(ByVal Code As String)
+        Dim st_CountryName As String = String.Empty
+        Dim st_DefaultQuoLocationName As String = String.Empty
+
+        'SupplierCountryName取得
+        Dim st_SQLCommand As String = String.Empty
+        st_SQLCommand = "SELECT CountryName, DefaultQuoLocationCode FROM v_Country WHERE CountryCode = @st_CountryCode"
+        Try
+            Using DBConnection As New SqlClient.SqlConnection(DB_CONNECT_STRING), _
+            DBSQLCommand As SqlCommand = DBConnection.CreateCommand()
+                DBConnection.Open()
+                DBSQLCommand.CommandText = st_SQLCommand
+                DBSQLCommand.Parameters.AddWithValue("st_CountryCode", Code)
+                Dim DBSQLDataReader As SqlDataReader
+                DBSQLDataReader = DBSQLCommand.ExecuteReader()
+                If DBSQLDataReader.HasRows = True Then
+                    While DBSQLDataReader.Read
+                        SupplierCountry.Text = DBSQLDataReader("CountryName").ToString
+                        QuoLocation.SelectedValue = DBSQLDataReader("DefaultQuoLocationCode").ToString
+                    End While
+                End If
+            End Using
+        Catch ex As Exception
+            Throw
+        End Try
+    End Sub
 End Class
