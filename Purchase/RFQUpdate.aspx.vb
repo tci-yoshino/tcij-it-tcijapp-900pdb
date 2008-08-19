@@ -7,55 +7,71 @@ Partial Public Class RFQUpdate
     Public DBConn As New System.Data.SqlClient.SqlConnection
     Public DBCommand As System.Data.SqlClient.SqlCommand
     Public DBAdapter As System.Data.SqlClient.SqlDataAdapter
+    'エラーメッセージ(入力値不正)
+    Private Const ERR_INCORRECT_SUPPLIERCODE As String = "SupplierCode" & ERR_INCORRECT_FORMAT
+    Private Const ERR_INCORRECT_MAKERCODE As String = "MakerCode" & ERR_INCORRECT_FORMAT
+    Private Const ERR_INCORRECT_SHIPPINGHANDLINGFEE As String = "ShippingHandlingFee" & ERR_INCORRECT_FORMAT
+    Private Const ERR_INCORRECT_UNITPRICE As String = "UnitPrice" & ERR_INCORRECT_FORMAT
+
+    'Private Const ERR_INCORRECT_UNITPRICE As String = "UnitPrice" & ERR_INCORRECT_FORMAT
+    'Private Const ERR_INCORRECT_UNITPRICE As String = "UnitPrice" & ERR_INCORRECT_FORMAT
+    'Private Const ERR_INCORRECT_UNITPRICE As String = "UnitPrice" & ERR_INCORRECT_FORMAT
+    'Private Const ERR_INCORRECT_UNITPRICE As String = "UnitPrice" & ERR_INCORRECT_FORMAT
+    'Private Const ERR_INCORRECT_UNITPRICE As String = "UnitPrice" & ERR_INCORRECT_FORMAT
+
+
+
+
+    'エラーメッセージ(必須入力項目なし)
+    Private Const ERR_REQUIRED_ENQLOCATION As String = "Enq-Location" & ERR_REQUIRED_FIELD
+    Private Const ERR_REQUIRED_ENQUSER As String = "Enq-User" & ERR_REQUIRED_FIELD
+    Private Const ERR_REQUIRED_PRODUCTNUMBER As String = "ProductNumber" & ERR_REQUIRED_FIELD
+    Private Const ERR_REQUIRED_SUPPLIERCODE As String = "SupplierCode" & ERR_REQUIRED_FIELD
+    Private Const ERR_REQUIRED_QUOLOCATION As String = "Quo-Location" & ERR_REQUIRED_FIELD
+    Private Const ERR_REQUIRED_PURPOSE As String = "Purpose" & ERR_REQUIRED_FIELD
+    Private Const ERR_REQUIRED_ENQQUANTITY As String = "Enq-Quantity" & ERR_REQUIRED_FIELD
+    Protected Parameter As Boolean = True
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         DBConn.ConnectionString = DBConnectString.ConnectionString
         DBConn.Open()
         DBCommand = DBConn.CreateCommand()
 
         If IsPostBack = False Then
-            Call FormDataSet()
+            Call SetPostBackUrl()
+            If FormDataSet() = False Then
+                Msg.Text = ERR_INVALID_PARAMETER
+                '画面上の入力項目を隠す。
+                Parameter = False
+                Exit Sub
+            End If
 
         Else
-            'ReadOnly項目の再設定
-            R3SupplierCode.Text = Request.Form("R3SupplierCode").ToString
-            SupplierName.Text = Request.Form("SupplierName").ToString
-            SupplierCountry.Text = Request.Form("SupplierCountry").ToString
-            MakerName.Text = Request.Form("MakerName").ToString
-            MakerCountry.Text = Request.Form("MakerCountry").ToString
+            Call SetReadOnlyItems()
         End If
     End Sub
 
-    Private Sub Page_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
-        If IsPostBack = False Then
-            Update.PostBackUrl = "~/RFQUpdate.aspx?Action=Update"
-            Close.PostBackUrl = "~/RFQUpdate.aspx?Action=Close"
-        End If
-    End Sub
-
-    Private Sub FormDataSet()
+    Private Function FormDataSet() As Boolean
         Dim DS As DataSet = New DataSet
-        Dim st_RFQNumber As String
-        Dim testRFQNumber As String = "1000000042"
-
-        '        If Request.QueryString("RFQNumber") <> "" Or Request.Form("RFQNumber") <> "" Then
-        If Request.QueryString("RFQNumber") <> "" Or Request.Form("RFQNumber") <> "" Or testRFQNumber <> "" Then
+        Dim st_RFQNumber As String = String.Empty
+        Dim de_ShippingHandlingFee As Decimal
+        If Request.QueryString("RFQNumber") <> "" Or Request.Form("RFQNumber") <> "" Then
             st_RFQNumber = IIf(Request.QueryString("RFQNumber") <> "", Request.QueryString("RFQNumber"), Request.Form("RFQNumber"))
-            If st_RFQNumber = "" Then       'test用
-                st_RFQNumber = testRFQNumber
-            End If
             If IsNumeric(st_RFQNumber) Then
-                DBCommand = New SqlCommand("Select * From v_RFQHeader Where RFQNumber = @i_RFQNumber", DBConn)
-                DBCommand.Parameters.Add("i_RFQNumber", SqlDbType.Int).Value = CInt(st_RFQNumber)
+                DBCommand = New SqlCommand("Select " _
+& "EnqLocationName, EnqUserName, QuoLocationName, QuoUserID, QuoUserName, ProductNumber, " _
+& "ProductName, SupplierCode, R3SupplierCode, SupplierName, SupplierCountryCode, MakerCode, " _
+& "MakerName, MakerCountryCode, SupplierContactPerson, PaymentTermCode, RequiredPurity, " _
+& "RequiredQMMethod, RequiredSpecification, SpecSheet, Specification, Purpose, SupplierItemName, " _
+& "ShippingHandlingFee, ShippingHandlingCurrencyCode, Comment, QuotedDate, StatusCode, " _
+& "UpdateDate, Status, StatusChangeDate " _
+& " From v_RFQHeader Where RFQNumber = @i_RFQNumber", DBConn)
+                DBCommand.Parameters.Add("i_RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
                 DBAdapter = New SqlDataAdapter
                 DBAdapter.SelectCommand = DBCommand
-
                 DBAdapter.Fill(DS, "RFQHeader")
-                DBCommand.Dispose()
-
                 If DS.Tables("RFQHeader").Rows.Count = 0 Then
                     'RFQNumber 不正
-                    Msg.Text = "RFQの情報が見つかりません。"
-                    Exit Sub
+                    Return False
                 End If
                 'Left
                 RFQNumber.Text = st_RFQNumber
@@ -73,7 +89,14 @@ Partial Public Class RFQUpdate
                 SupplierItemName.Text = DS.Tables("RFQHeader").Rows(0)("SupplierItemName").ToString
                 PaymentTerm.SelectedValue = DS.Tables("RFQHeader").Rows(0)("PaymentTermCode").ToString
                 ShippingHandlingCurrency.SelectedValue = DS.Tables("RFQHeader").Rows(0)("ShippingHandlingCurrencyCode").ToString
-                ShippingHandlingFee.Text = Single.Parse(DS.Tables("RFQHeader").Rows(0)("ShippingHandlingFee").ToString)
+                'Decimal対応
+                If IsDBNull(DS.Tables("RFQHeader").Rows(0)("ShippingHandlingFee")) = True Then
+                    ShippingHandlingFee.Text = String.Empty
+                Else
+                    de_ShippingHandlingFee = DS.Tables("RFQHeader").Rows(0)("ShippingHandlingFee")
+                    ShippingHandlingFee.Text = de_ShippingHandlingFee.ToString("G29")
+                End If
+                
                 'Right
                 Purpose.Text = DS.Tables("RFQHeader").Rows(0)("Purpose").ToString
                 RequiredPurity.Text = DS.Tables("RFQHeader").Rows(0)("RequiredPurity").ToString
@@ -104,8 +127,12 @@ Partial Public Class RFQUpdate
                 QuotedDate.Value = DS.Tables("RFQHeader").Rows(0)("QuotedDate").ToString
                 UpdateDate.Value = DS.Tables("RFQHeader").Rows(0)("UpdateDate").ToString
                 'Line
-                DBCommand = New SqlCommand("Select * From v_RFQLine Where RFQNumber = @i_RFQNumber Order by RFQLineNumber", DBConn)
-                DBCommand.Parameters.Add("i_RFQNumber", SqlDbType.Int).Value = CInt(st_RFQNumber)
+                DBCommand = New SqlCommand("Select " _
+& "RFQLineNumber, EnqQuantity, EnqUnitCode, EnqPiece, CurrencyCode, " _
+& "UnitPrice, QuoPer, QuoUnitCode, LeadTime, SupplierItemNumber, " _
+& "IncotermsCode, DeliveryTerm, Packing, Purity, QMMethod, NoOfferReasonCode" _
+& " From v_RFQLine Where RFQNumber = @i_RFQNumber Order by RFQLineNumber", DBConn)
+                DBCommand.Parameters.Add("i_RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
                 DBAdapter.SelectCommand = DBCommand
 
                 DBAdapter.Fill(DS, "RFQLine")
@@ -113,8 +140,7 @@ Partial Public Class RFQUpdate
 
                 If DS.Tables("RFQLine").Rows.Count = 0 Then
                     'RFQNumber 不正
-                    Msg.Text = "RFQの明細情報が見つかりません。"
-                    Exit Sub
+                    Return False
                 End If
 
                 Dim i As Integer
@@ -204,7 +230,8 @@ Partial Public Class RFQUpdate
 
             End If
         End If
-    End Sub
+        Return True
+    End Function
     Private Sub Page_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload
         DBConn.Close()
     End Sub
@@ -232,6 +259,27 @@ Partial Public Class RFQUpdate
         DBReader.Close()
     End Function
 
+
+    Private Function CheckSupplierCode() As Boolean
+        'Supplier,Makerの入力内容のチェック
+        Dim st_Supplier As String = "Supplier"
+        Dim st_SupplierKey As String = "SupplierCode"
+
+        'Supplierのチェック
+        If ExistenceConfirmation(st_Supplier, st_SupplierKey, SupplierCode.Text) = False Then
+            Msg.Text = ERR_INCORRECT_SUPPLIERCODE
+            Return False
+        End If
+        'Makerのチェック
+        If MakerCode.Text <> "" Then
+            If ExistenceConfirmation(st_Supplier, st_SupplierKey, MakerCode.Text) = False Then
+                Msg.Text = ERR_INCORRECT_MAKERCODE
+                Return False
+            End If
+        End If
+        Return True
+    End Function
+
     Protected Sub Update_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Update.Click
         Dim RFQStatusCode As String = ""
         Dim st_QuotedDate As String = ""
@@ -240,15 +288,8 @@ Partial Public Class RFQUpdate
             Exit Sub
         End If
 
-        If RFQSupplierCheck(SupplierCode.Text) = False Then
-            Msg.Text = "SupplierCode の設定が不正です"
+        If CheckSupplierCode() = False Then
             Exit Sub
-        End If
-        If MakerCode.Text <> "" Then
-            If RFQSupplierCheck(MakerCode.Text) = False Then
-                Msg.Text = "MakerCode の設定が不正です"
-                Exit Sub
-            End If
         End If
 
         If ItemCheck() = False Then
@@ -411,51 +452,26 @@ Partial Public Class RFQUpdate
             Exit Sub
         End If
         DBCommand.CommandText = "UPDATE RFQHeader SET RFQStatusCode = 'C' WHERE (RFQNumber = @RFQNumber)"
-        DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = CInt(RFQNumber.Text)
+        DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = Integer.Parse(RFQNumber.Text)
         DBCommand.ExecuteNonQuery()
         DBCommand.Parameters.Clear()
         DBCommand.Dispose()
     End Sub
-    Public Function RFQSupplierCheck(ByVal SupplierCode As String) As Boolean
-        'Supplier 存在チェック
-        RFQSupplierCheck = False
-        Dim RFQConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
-        Dim RFQConn As New SqlConnection
-        Dim RFQCom As SqlCommand
-        Dim RFQRead As SqlDataReader
-        Dim i As Integer
 
-        If Integer.TryParse(SupplierCode, i) = False Then
-            Exit Function
-        End If
-        RFQConn.ConnectionString = RFQConnectString.ConnectionString
-        RFQConn.Open()
-        RFQCom = RFQConn.CreateCommand()
-
-        RFQCom.CommandText = "SELECT SupplierCode FROM Supplier WHERE (SupplierCode = @st_SupplierCode)"
-        RFQCom.Parameters.Add("st_SupplierCode", SqlDbType.Int).Value = CInt(SupplierCode)
-        RFQRead = RFQCom.ExecuteReader()
-        RFQCom.Dispose()
-        If RFQRead.HasRows = True Then
-            RFQSupplierCheck = True
-        End If
-        RFQRead.Close()
-        RFQConn.Close()
-    End Function
     Private Function ItemCheck() As Boolean
 
         ItemCheck = False
         '型チェック
         If ShippingHandlingFee.Text <> "" Then
             If Not Regex.IsMatch(ShippingHandlingFee.Text, DECIMAL_10_3_REGEX) Then
-                Msg.Text = "ShippingHandlingFee の設定が不正です"
+                Msg.Text = ERR_INCORRECT_SHIPPINGHANDLINGFEE
                 Exit Function
             End If
         End If
 
         If UnitPrice_1.Text <> "" Then
             If Not Regex.IsMatch(UnitPrice_1.Text, DECIMAL_10_3_REGEX) Then
-                Msg.Text = "UnitPrice の設定が不正です"
+                Msg.Text = ERR_INCORRECT_UNITPRICE
                 Exit Function
             End If
         End If
@@ -505,4 +521,19 @@ Partial Public Class RFQUpdate
         ItemCheck = True
 
     End Function
+    Private Sub SetReadOnlyItems()
+        'ReadOnly項目の再設定
+        R3SupplierCode.Text = Request.Form("R3SupplierCode").ToString
+        SupplierName.Text = Request.Form("SupplierName").ToString
+        SupplierCountry.Text = Request.Form("SupplierCountry").ToString
+        MakerName.Text = Request.Form("MakerName").ToString
+        MakerCountry.Text = Request.Form("MakerCountry").ToString
+    End Sub
+    Private Sub SetPostBackUrl()
+        'ボタンクリック時にPostBackするActionを追記する。
+        If IsPostBack = False Then
+            Update.PostBackUrl = "~/RFQUpdate.aspx?Action=Update"
+            Close.PostBackUrl = "~/RFQUpdate.aspx?Action=Close"
+        End If
+    End Sub
 End Class

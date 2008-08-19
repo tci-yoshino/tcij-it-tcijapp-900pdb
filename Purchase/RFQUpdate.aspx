@@ -45,7 +45,7 @@
 						<td><asp:TextBox ID="R3SupplierCode" runat="server" Width="7em" MaxLength="10" ReadOnly="true" CssClass="readonly"></asp:TextBox></td>
 					</tr>
 					<tr>
-						<th>Supplier Name / Country <span class="required">*</span> : </th>
+						<th>Supplier Name / Country : </th>
 						<td>
 						    <asp:TextBox ID="SupplierName" runat="server" Width="21em" ReadOnly="true" CssClass="readonly"></asp:TextBox>
 						    <asp:TextBox ID="SupplierCountry" runat="server" Width="4em" ReadOnly="true" CssClass="readonly"></asp:TextBox>
