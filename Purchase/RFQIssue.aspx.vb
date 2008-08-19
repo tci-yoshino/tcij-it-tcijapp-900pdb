@@ -237,7 +237,7 @@ Partial Public Class RFQIssue
                 If DBReader.HasRows = True Then
                     While DBReader.Read
                         ProductNumber.Text = DBReader("ProductNumber").ToString
-                        ProductName.Text = DBReader("Name").ToString
+                        ProductName.Text = CutShort(DBReader("Name").ToString)
                     End While
                     ProductNumber.ReadOnly = True
                     ProductNumber.CssClass = "readonly"
@@ -271,8 +271,9 @@ Partial Public Class RFQIssue
                     Return False
                 End If
                 DBReader.Close()
+            Else
+                Return False
             End If
-            Return False
         End If
         Return True
     End Function
