@@ -29,7 +29,7 @@ Partial Public Class SuppliersProductImport
     ''' エラー表示メッセージ定数です。
     ''' </summary>
     ''' <remarks></remarks>
-    Const MSG_CNAT_PREVIEW_ENV As String = "Previewできる環境でありません"
+    Const MSG_CANT_PREVIEW_ENV As String = "Previewできる環境でありません"
     Const MSG_CANT_IMPORT_ENV As String = "Importできる環境でありません"
     Const MSG_NOT_EXCEL_FILE As String = "読込みファイルはEXCELでありません"
     Const MSG_NOT_FILE_SET As String = "読込みファイルが設定されていません"
@@ -419,9 +419,9 @@ Partial Public Class SuppliersProductImport
             Dim dr As SqlDataReader = cmd.ExecuteReader()
             If dr.Read() Then
                 competitorProduct.ALDRICH = dr("ALDRICH").ToString()
-                competitorProduct.ALDRICH = dr("ALFA").ToString()
-                competitorProduct.ALDRICH = dr("WAKO").ToString()
-                competitorProduct.ALDRICH = dr("KANTO").ToString()
+                competitorProduct.ALFA = dr("ALFA").ToString()
+                competitorProduct.WAKO = dr("WAKO").ToString()
+                competitorProduct.KANTO = dr("KANTO").ToString()
             End If
 
             Return competitorProduct
@@ -449,7 +449,7 @@ Partial Public Class SuppliersProductImport
         End If
 
         'CASNumberのValidate 
-        If SetCASErrorColorToSupplierProductList() <> 0 Then
+        If SetCASErrorColorToSupplierProductList() > 0 Then
             Msg.Text = MSG_ERR_CAS_NUMBER
             Exit Sub
         End If
