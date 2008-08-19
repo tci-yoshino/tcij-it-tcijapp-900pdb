@@ -114,7 +114,7 @@ Partial Public Class SuppliersProductImport
 
         'Actionパラメータの確認
         If Request.Form("Action") <> "Preview" Then
-            Msg.Text = MSG_CNAT_PREVIEW_ENV
+            Msg.Text = MSG_CANT_PREVIEW_ENV
             Exit Sub
         End If
 
