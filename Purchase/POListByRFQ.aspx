@@ -15,7 +15,12 @@
         <div class="tabs"></div>
 
         <h3>PO List</h3>
+        
+        <div class="main">
+          <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
+        </div>
 
+<%  If Not String.IsNullOrEmpty(st_RFQNumber) Then%>
         <div class="list">
             <asp:ListView ID="POList" runat="server" DataSourceID="SrcPO">
                 <LayoutTemplate>
@@ -25,40 +30,41 @@
                     </div>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
-                    <h3 style="font-style:italic">No data found.</h3>
+                    <h3 style="font-style:italic"><%=Purchase.Common.MSG_NO_DATA_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <table>
                         <tr>
-                            <th class="subhead" colspan="2">PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl="./POUpdate.aspx"><asp:label id="PONumber" runat="server" Text=""></asp:label></asp:HyperLink><span class="indent"></span></th>
-                            <th class="subhead" colspan="4"><asp:label id="POStatusChangeDate" runat="server" Text=""></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text=""></asp:label></span></th>
+                            <th class="subhead" colspan="2">PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%#"./POUpdate.aspx?PONumber=" & Eval("PONumber")%>'><asp:label id="PONumber" runat="server" Text='<%#Eval("PONumber")%>'></asp:label></asp:HyperLink><span class="indent"></span></th>
+                            <th class="subhead" colspan="4"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Eval("StatusChangeDate")%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%#Eval("Status")%>'></asp:label></span></th>
                         </tr>
                         <tr>
                             <th style="width:17%">Product Number / Name</th>
-                            <td style="width:33%"><asp:label id="ProductNumber" runat="server" Text=""></asp:label><span class="indent"><asp:label id="ProductName" runat="server" Text=""></asp:label></span></td>
+                            <td style="width:33%"><asp:label id="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:label><span class="indent"><asp:label id="ProductName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("ProductName"))%>'></asp:label></span></td>
                             <th style="width:10%">PO Date</th>
-                            <td style="width:12%"><asp:label id="PODate" runat="server" Text=""></asp:label></td>
+                            <td style="width:12%"><asp:label id="PODate" runat="server" Text='<%#Eval("PODate")%>'></asp:label></td>
                             <th style="width:10%">PO-User</th>
-                            <td style="width:18%"><asp:label id="POUser" runat="server" Text=""></asp:label><span class="indent">(<asp:label id="POLocation" runat="server" Text=""></asp:label>)</span></td>
+                            <td style="width:18%"><asp:label id="POUser" runat="server" Text='<%#Eval("POUserName")%>'></asp:label><span class="indent">(<asp:label id="POLocation" runat="server" Text='<%#Eval("POLocationName")%>'></asp:label>)</span></td>
                         </tr>
                         <tr>
                             <th>Supplier Name</th>
-                            <td><asp:label id="SupplierName" runat="server" Text=""></asp:label></td>
+                            <td><asp:label id="SupplierName" runat="server" Text='<%#Eval("SupplierName")%>'></asp:label></td>
                             <th>Maker Name</th>
-                            <td colspan="3"><asp:label id="MakerName" runat="server" Text=""></asp:label></td>
+                            <td colspan="3"><asp:label id="MakerName" runat="server" Text='<%#Eval("MakerName")%>'></asp:label></td>
                         </tr>
                         <tr>
                             <th>Delivery Date</th>
-                            <td><asp:label id="DeliveryDate" runat="server" Text=""></asp:label></td>
+                            <td><asp:label id="DeliveryDate" runat="server" Text='<%#Eval("DeliveryDate")%>'></asp:label></td>
                             <th>Order Quantity</th>
-                            <td><asp:label id="OrderQuantity" runat="server" Text=""></asp:label> <asp:label id="OrderUnit" runat="server" Text=""></asp:label> x <asp:label id="OrderPiece" runat="server" Text=""></asp:label></td>
+                            <td><asp:label id="OrderQuantity" runat="server" Text='<%#Eval("OrderQuantity")%>'></asp:label> <asp:label id="OrderUnit" runat="server" Text='<%#Eval("OrderUnitCode")%>'></asp:label></td>
                             <th>Price</th>
-                            <td><asp:label id="Currency" runat="server" Text=""></asp:label> <asp:label id="UnitPrice" runat="server" Text=""></asp:label> / <asp:label id="PerQuantity" runat="server" Text=""></asp:label> <asp:label id="PerUnit" runat="server" Text=""></asp:label></td>
+                            <td><asp:label id="Currency" runat="server" Text='<%#Eval("CurrencyCode")%>'></asp:label> <asp:label id="UnitPrice" runat="server" Text='<%#Eval("UnitPrice")%>'></asp:label> / <asp:label id="PerQuantity" runat="server" Text='<%#Eval("PerQuantity")%>'></asp:label> <asp:label id="PerUnit" runat="server" Text='<%#Eval("PerUnitCode")%>'></asp:label></td>
                         </tr>
                     </table>
                 </ItemTemplate>
             </asp:ListView>
         </div>
+<%  End If%>
     </div><!-- Main Content Area END -->
     <asp:SqlDataSource ID="SrcPO" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
 
