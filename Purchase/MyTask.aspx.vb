@@ -1,11 +1,17 @@
 ﻿Public Partial Class MyTask
     Inherits CommonPage
 
-    Private st_UserID As String
+    Protected st_Action As String = "" ' aspx 側で読むため、Protected にする
+    Private st_UserID As String = ""
     Private stb_PONumbers As StringBuilder = New StringBuilder ' PONumber を格納するオブジェクト。この値を見て、重複するPONumber を除外する。
-    Private DBConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
+    Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
+
+    Const ACTION_SWITCH As String = "Switch"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
+        ' コントロール初期化
+        Msg.Text = ""
 
         ' パラメータ UserID 取得
         If Request.RequestType = "POST" Then
@@ -95,6 +101,20 @@
     End Sub
 
     Protected Sub Switch_Click()
+
+        ' パラメータ取得
+        If Request.RequestType = "POST" Then
+            st_Action = IIf(String.IsNullOrEmpty(Request.Form("Action")), "", Request.Form("Action"))
+        ElseIf Request.RequestType = "GET" Then
+            st_Action = IIf(String.IsNullOrEmpty(Request.QueryString("Action")), "", Request.QueryString("Action"))
+        End If
+
+        ' Action チェック
+        If IsPostBack And ((String.IsNullOrEmpty(st_Action)) Or st_Action <> ACTION_SWITCH) Then
+            Msg.Text = Common.ERR_INVALID_PARAMETER
+            st_Action = ""
+            Exit Sub
+        End If
 
         ' 前回の SQL パラメータを削除
         SrcRFQ.SelectParameters.Clear()

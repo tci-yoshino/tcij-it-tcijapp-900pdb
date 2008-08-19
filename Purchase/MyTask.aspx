@@ -16,8 +16,7 @@
     </div><!-- Sub Navigation END -->
 
     <!-- Main Content Area -->
-    <div id="content">
-
+    <div id="content">       
         <div class="main switch">
             <form ID="SwitchForm" runat="server">
                 <table style="margin-bottom:0">
@@ -30,9 +29,16 @@
                         <td><asp:Button ID="Switch" runat="server" Text="Switch" OnClick="Switch_Click" /></td>
                     </tr>
                 </table>
+                <asp:HiddenField runat="server" ID="Action" Value="Switch" />
             </form>
         </div>
 
+       <div class="main">
+            <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
+       </div>
+
+<%  If (IsPostBack) And (String.IsNullOrEmpty(st_Action)) Then%>
+<%Else%>
         <h3>RFQ</h3>
 
         <div class="list">
@@ -237,6 +243,7 @@
             <h3 style="font-style:italic">No data found.</h3>
         <% End If%>
         </div>
+<%End If%>
     </div><!-- Main Content Area END -->
     <asp:SqlDataSource ID="SrcRFQ" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
     <asp:SqlDataSource ID="SrcPO_Overdue" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
