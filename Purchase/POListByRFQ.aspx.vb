@@ -33,7 +33,9 @@
             & "FROM " _
             & "  v_PO " _
             & "WHERE " _
-            & "  RFQNumber = @RFQNumber "
+            & "  RFQNumber = @RFQNumber " _
+            & "ORDER BY " _
+            & "  StatusSortOrder ASC "
 
     End Sub
 
