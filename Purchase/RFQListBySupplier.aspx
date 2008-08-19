@@ -15,9 +15,9 @@
         <div class="main">
             <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
         </div>
-<%  If st_SupplierCode <> "" And IsNumeric(st_SupplierCode) = True Then%>
+<%  If Not String.IsNullOrEmpty(st_SupplierCode) Then%>
     <%If i_DataNum = 0 Then%>
-        <h3 style="font-style:italic">No data found.</h3>
+        <h3 style="font-style:italic"><%=Purchase.Common.MSG_NO_DATA_FOUND%></h3>
     <%Else%>
         <div class="tabs">
             <a href="./RFQIssue.aspx?SupplierCode=<%=st_SupplierCode %>">RFQ Issue</a>
@@ -51,12 +51,12 @@
                     </div>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
-                    <h3 style="font-style:italic">No data found.</h3>
+                    <h3 style="font-style:italic"><%=Purchase.Common.MSG_NO_DATA_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <table>
                         <tr>
-                            <th class="subhead" colspan="2">RFQ Reference Number : <a href="./RFQUpdate.aspx"><asp:Label ID="RFQNumber" runat="server" Text='<%#Eval("RFQNumber")%>'></asp:Label></a></th>
+                            <th class="subhead" colspan="2">RFQ Reference Number : <a href='<%#"./RFQUpdate.aspx?RFQNumber=" & Eval("RFQNumber")%>'><asp:Label ID="RFQNumber" runat="server" Text='<%#Eval("RFQNumber")%>'></asp:Label></a></th>
                             <th class="subhead" colspan="2">Quoted Date : <asp:Label ID="QuotedDate" runat="server" Text=''><%#If(IsDBNull(Eval("QuotedDate")), "", Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("QuotedDate")))%></asp:Label></th>
                             <th class="subhead" colspan="2"><asp:Label ID="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"))%>'></asp:Label><span class="indent"><asp:Label ID="RFQStatus" runat="server" Text='<%#Eval("Status")%>'></asp:Label></span></th>
                         </tr>
@@ -110,7 +110,7 @@
                             </table>
                         </LayoutTemplate>
                         <EmptyDataTemplate>
-                            <h3 style="font-style:italic">No data found.</h3>
+                            <h3 style="font-style:italic"><%=Purchase.Common.MSG_NO_DATA_FOUND%></h3>
                         </EmptyDataTemplate>
                         <ItemTemplate>
                         <tr ID="itemPlaceholder" runat="server">

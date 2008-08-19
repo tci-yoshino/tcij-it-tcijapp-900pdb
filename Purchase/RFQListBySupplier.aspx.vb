@@ -1,8 +1,8 @@
 ﻿Public Partial Class RFQListBySupplier
     Inherits CommonPage
-    Public st_SupplierCode As String
-    Public i_DataNum As Integer = 0 ' 0 の場合は Supplier Data が無いと判断し、 Data not found. を表示する。
-    Public DBConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
+    Protected st_SupplierCode As String ' aspx 側で読むため、Protected にする
+    Protected i_DataNum As Integer = 0 ' 0 の場合は Supplier Data が無いと判断し、 Data not found. を表示する。
+    Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
 
 
 
@@ -19,7 +19,8 @@
         st_SupplierCode = st_SupplierCode.Trim
 
         If st_SupplierCode = "" Or IsNumeric(st_SupplierCode) = False Then
-            Msg.Text = "Supplier Code が指定されていません。"
+            st_SupplierCode = ""
+            Msg.Text = Common.ERR_INVALID_PARAMETER
             Exit Sub
         End If
 
