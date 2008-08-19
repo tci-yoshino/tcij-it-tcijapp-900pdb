@@ -65,7 +65,7 @@ function set_Action(action){
                     <Columns>
                         <asp:TemplateField HeaderText="CAS Number">
                             <ItemTemplate>
-                                <asp:TextBox ID="TextBox1" runat="server" Text='<%# Eval("CAS Number") %>'></asp:TextBox>
+                                <asp:TextBox ID="CASNumber" runat="server" Text='<%# Eval("CAS Number") %>'></asp:TextBox>
                                 
                             </ItemTemplate>
                         </asp:TemplateField>
@@ -86,7 +86,8 @@ function set_Action(action){
                 </asp:GridView>
                 
                 <div class="btns">
-                    <asp:Button ID="Import" runat="server" Text="Import" Visible="False" onclientclick="javascript:set_Action('Import');" />
+                    <asp:Button ID="Import" runat="server" Text="Import" 
+                        onclientclick="javascript:set_Action('Import');" />
                 </div>
             </div>
     </div><!-- Main Content Area END -->

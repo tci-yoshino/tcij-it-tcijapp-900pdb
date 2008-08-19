@@ -1,4 +1,6 @@
-﻿Imports System.Data.SqlClient
+﻿Option Explicit On
+
+Imports System.Data.SqlClient
 Imports Purchase.Common
 Imports TCICommon.Func
 
@@ -33,6 +35,16 @@ Partial Public Class SuppliersProductImport
     Const MSG_NOT_FILE_SET As String = "読込みファイルが設定されていません"
     Const MSG_NO_SUPPLIER_CODE As String = "SupplierCodeが設定されていません"
     Const MSG_ERR_CAS_NUMBER As String = "ERROR CAS_Number"
+
+    ''' <summary>
+    ''' SupplierProductList列位置定数
+    ''' </summary>
+    ''' <remarks></remarks>
+    Const COL_POS_CAS As Integer = 0
+    Const COL_POS_ITEM_NUMBER As Integer = 1
+    Const COL_POS_ITEM_NAME As Integer = 2
+    Const COL_POS_NOTE As Integer = 3
+
 
     'Stringの型タイプ定数です。
     Private ReadOnly TYPE_OF_STRING As System.Type = Type.GetType("System.String")
@@ -72,12 +84,12 @@ Partial Public Class SuppliersProductImport
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         If IsPostBack = False Then
-            'If Request.QueryString("Supplier") <> "" Then
-            If True Then
-                'Dim st_SupplierCode = Request.QueryString("Supplier").ToString()
+            'If True Then
+            If Request.QueryString("Supplier") <> "" Then
+                Dim st_SupplierCode = Request.QueryString("Supplier").ToString()
 
                 'テスト実行用ダミーコード
-                Dim st_SupplierCode As String = 1
+                'Dim st_SupplierCode As String = 1
 
                 SupplierCode.Text = st_SupplierCode
                 SupplierName.Text = GetSupplierNameBySupplierCode(st_SupplierCode)
@@ -121,10 +133,12 @@ Partial Public Class SuppliersProductImport
             Exit Sub
         End If
 
-        'ImportFileName.Value = IO.Path.GetFileName(File.PostedFile.FileName)
-
         Dim st_ExcelFileName As String = Request.Files("File").FileName
         ViewSupplierProductList(st_ExcelFileName)
+
+        If SupplierProductList.Rows.Count > 0 Then
+            Import.Visible = True
+        End If
 
     End Sub
 
@@ -141,7 +155,6 @@ Partial Public Class SuppliersProductImport
         Import.Visible = False
 
     End Sub
-
 
 
     ''' <summary>
@@ -204,18 +217,26 @@ Partial Public Class SuppliersProductImport
     End Function
 
     ''' <summary>
-    ''' SupplierProductListのCASNumberエラー行をカラー表示します。
+    ''' SupplierProductListのCASNumberエラー行をカラー表示し、エラー数を返します。
     ''' </summary>
+    '''<returns>エラー行数</returns>
     ''' <remarks></remarks>
-    Private Sub SetCASErrorColorToSupplierProductList()
+    Private Function SetCASErrorColorToSupplierProductList() As Integer
 
+        Dim i_ErrCount As Integer = 0
         For Each row As GridViewRow In SupplierProductList.Rows
-            If Not IsCASNumber(row.Cells(0).Text) Then
-                row.CssClass = "attention"
-            End If
-        Next
 
-    End Sub
+            Dim st_CAS = CType(row.FindControl("CASNumber"), TextBox).Text
+
+            If Not IsCASNumber(st_CAS) And st_CAS <> String.Empty Then
+                row.CssClass = "attention"
+                i_ErrCount += 1
+            End If
+
+        Next
+        Return i_ErrCount
+
+    End Function
 
 
     ''' <summary>
@@ -427,10 +448,18 @@ Partial Public Class SuppliersProductImport
             Exit Sub
         End If
 
+        'CASNumberのValidate 
+        If SetCASErrorColorToSupplierProductList() <> 0 Then
+            Msg.Text = MSG_ERR_CAS_NUMBER
+            Exit Sub
+        End If
+
+        'インポート処理の実行
         ImportData()
 
-        Response.Redirect("./ProductListBySupplier.aspx?Supplier=" & SupplierCode.Text.ToString)
+        Response.Redirect("./ProductListBySupplier.aspx?Supplier=" & SupplierCode.Text)
     End Sub
+
 
     ''' <summary>
     ''' 画面に表示された値をデータベースにインポートします。
@@ -446,15 +475,22 @@ Partial Public Class SuppliersProductImport
         Dim st_UserID As String = Session("UserID").ToString()
         Dim st_SupplierCode As String = SupplierCode.Text
 
-
         Dim conn As SqlConnection = New SqlConnection(DB_CONNECT_STRING)
+        conn.Open()
+
+        Dim sqlTran As SqlTransaction = Nothing
         For Each vrow As GridViewRow In SupplierProductList.Rows
-            Dim sqlTran As System.Data.SqlClient.SqlTransaction = conn.BeginTransaction()
+            sqlTran = conn.BeginTransaction()
             Try
-                st_CAS = vrow.Cells(1).Text()
-                st_ItemNo = vrow.Cells(2).Text()
-                st_ItemName = vrow.Cells(3).Text()
-                st_Note = vrow.Cells(4).Text()
+                st_CAS = CType(vrow.FindControl("CASNumber"), TextBox).Text
+                st_ItemNo = vrow.Cells(COL_POS_ITEM_NUMBER).Text()
+                st_ItemName = vrow.Cells(COL_POS_ITEM_NAME).Text()
+                st_Note = vrow.Cells(COL_POS_NOTE).Text()
+
+                'CAS番号を空白にした場合は処理対象外とします。
+                If st_CAS = String.Empty Then
+                    Continue For
+                End If
 
                 Dim dt As DataTable = GetDataTableFromProduct(st_CAS)
                 If dt.Rows.Count > 0 Then
@@ -462,24 +498,25 @@ Partial Public Class SuppliersProductImport
                         st_ProductID = rw("ProductID").ToString()
 
                         If rw("NumberType").ToString() = "CAS" Then
-                            UpdateProduct(st_CAS, st_UserID, st_ProductID, st_CAS, conn)
+                            UpdateProduct(st_CAS, st_UserID, st_ProductID, st_CAS, conn, sqlTran)
                         End If
 
                         If ExistsSupplierProductData(st_ProductID, SupplierCode.Text) Then
-                            UpdateSupplierProduct(st_ItemNo, st_Note, st_UserID, st_SupplierCode, st_ProductID, conn)
+                            UpdateSupplierProduct(st_ItemNo, st_Note, st_UserID, st_SupplierCode, st_ProductID, conn, sqlTran)
                         Else
-                            InsertSupplierProduct(SupplierCode.Text(), st_ProductID, st_ItemNo, st_Note, st_UserID, conn)
+                            InsertSupplierProduct(SupplierCode.Text(), st_ProductID, st_ItemNo, st_Note, st_UserID, conn, sqlTran)
 
                         End If
                     Next
                 Else
-                    st_ProductID = InsertProduct(st_CAS, st_ItemName, st_CAS, st_UserID, conn)
-                    InsertSupplierProduct(st_SupplierCode, st_ProductID, st_ItemNo, st_Note, st_UserID, conn)
+                    st_ProductID = InsertProduct(st_CAS, st_ItemName, st_CAS, st_UserID, conn, sqlTran)
+                    InsertSupplierProduct(st_SupplierCode, st_ProductID, st_ItemNo, st_Note, st_UserID, conn, sqlTran)
 
                 End If
                 sqlTran.Commit()
             Catch ex As Exception
                 sqlTran.Rollback()
+                Throw
             End Try
         Next
 
@@ -487,7 +524,7 @@ Partial Public Class SuppliersProductImport
 
 
     ''' <summary>
-    ''' Productテーブルから指定したCASNumberのデータテーブルを取得します。
+    ''' Productテーブルから指定したCASNumberのデータをDataTableで取得します。
     ''' </summary>
     ''' <param name="CASNumber"></param>
     ''' <returns>生成したDataTableオブジェクト</returns>
@@ -564,25 +601,28 @@ Partial Public Class SuppliersProductImport
     ''' <returns>取得したProductID</returns>
     ''' <remarks>トランザクション有効化のため、生成済みのSqlConnectionを参照渡しで受けます</remarks>
     Private Function InsertProduct(ByVal ProductNumber As String, ByVal Name As String, _
-        ByVal CASNumber As String, ByVal CreatedBy As String, ByRef Conn As SqlConnection) As String
+        ByVal CASNumber As String, ByVal CreatedBy As String, ByRef Conn As SqlConnection, _
+        ByRef SqlTran As SqlTransaction) As String
 
         Dim cmd As SqlCommand = Conn.CreateCommand()
+        cmd.Transaction = SqlTran
 
-        cmd.CommandText = CreateSQLForInsertSupplierProduct()
-        cmd.Parameters.AddWithValue("ProductNumber", ProductNumber)
-        cmd.Parameters.AddWithValue("Name", Name)
-        cmd.Parameters.AddWithValue("CASNumber", CASNumber)
-        cmd.Parameters.AddWithValue("CreatedBy", CreatedBy)
-        cmd.Parameters.AddWithValue("UpdatedBy", CreatedBy)
+        cmd.CommandText = CreateSQLForInsertProduct()
+        cmd.Parameters.AddWithValue("ProductNumber", ConvertEmptyStringToNull(ProductNumber))
+        cmd.Parameters.AddWithValue("Name", ConvertEmptyStringToNull(Name))
+        cmd.Parameters.AddWithValue("CASNumber", ConvertEmptyStringToNull(CASNumber))
+        cmd.Parameters.AddWithValue("CreatedBy", ConvertStringToInt(CreatedBy))
+        cmd.Parameters.AddWithValue("UpdatedBy", ConvertStringToInt(CreatedBy))
 
-        If Not Conn.State <> ConnectionState.Open Then
+        If Conn.State <> ConnectionState.Open Then
             Conn.Open()
         End If
 
         cmd.ExecuteNonQuery()
 
         '挿入した行の一意IDを取得します。
-        Dim st_SQL As String = "Select SCOPE_IDENTITY() AS ID"
+        Dim st_SQL As String = "Select @@IDENTITY AS ID"
+        'Dim st_SQL As String = "Select SCOPE_IDENTITY() AS ID"
         cmd.CommandText = st_SQL
         Dim st_ProductID As String = cmd.ExecuteScalar().ToString()
 
@@ -638,17 +678,18 @@ Partial Public Class SuppliersProductImport
     ''' <remarks>トランザクション有効化のため、生成済みのSqlConnectionを参照渡しで受けます</remarks>
     Private Sub UpdateProduct(ByVal Name As String, ByVal UpdateBy As String, _
                               ByVal ProductID As String, ByVal CASNumber As String, _
-                              ByRef Conn As SqlConnection)
+                              ByRef Conn As SqlConnection, ByRef SqlTran As SqlTransaction)
 
         Dim cmd As SqlCommand = Conn.CreateCommand()
+        cmd.Transaction = SqlTran
 
         cmd.CommandText = CreateSQLForUpdateProduct()
-        cmd.Parameters.AddWithValue("Name", Name)
-        cmd.Parameters.AddWithValue("UpdatedBy", UpdateBy)
-        cmd.Parameters.AddWithValue("ProductID", ProductID)
-        cmd.Parameters.AddWithValue("CASNumber", CASNumber)
+        cmd.Parameters.AddWithValue("Name", ConvertEmptyStringToNull(Name))
+        cmd.Parameters.AddWithValue("UpdatedBy", ConvertStringToInt(UpdateBy))
+        cmd.Parameters.AddWithValue("ProductID", ConvertStringToInt(ProductID))
+        cmd.Parameters.AddWithValue("CASNumber", ConvertEmptyStringToNull(CASNumber))
 
-        If Not Conn.State <> ConnectionState.Open Then
+        If Conn.State <> ConnectionState.Open Then
             Conn.Open()
         End If
 
@@ -690,18 +731,23 @@ Partial Public Class SuppliersProductImport
     ''' <remarks>トランザクション有効化のため、生成済みのSqlConnectionを参照渡しで受けます</remarks>
     Private Sub InsertSupplierProduct(ByVal SupplierCode As String, ByVal ProductID As String, _
                                       ByVal SupplierItemNumber As String, ByVal Note As String, _
-                                      ByVal UpdateBy As String, ByRef Conn As SqlConnection)
+                                      ByVal CreatedBy As String, ByRef Conn As SqlConnection, _
+                                      ByRef SqlTran As SqlTransaction)
 
         Dim cmd As SqlCommand = Conn.CreateCommand()
+        cmd.Transaction = SqlTran
 
-        cmd.CommandText = CreateSQLForUpdateSupplierProduct()
-        cmd.Parameters.AddWithValue("SupplierCode", SupplierCode)
-        cmd.Parameters.AddWithValue("ProductID", ProductID)
-        cmd.Parameters.AddWithValue("SupplierItemNumber", SupplierItemNumber)
-        cmd.Parameters.AddWithValue("Note", Note)
-        cmd.Parameters.AddWithValue("UpdatedBy", UpdateBy)
+        cmd.CommandText = CreateSQLForInsertSupplierProduct()
+        cmd.Parameters.AddWithValue("SupplierCode", ConvertStringToInt(SupplierCode))
+        cmd.Parameters.AddWithValue("ProductID", ConvertStringToInt(ProductID))
+        cmd.Parameters.AddWithValue("SupplierItemNumber", ConvertEmptyStringToNull(SupplierItemNumber))
+        cmd.Parameters.AddWithValue("Note", ConvertEmptyStringToNull(Note))
+        cmd.Parameters.AddWithValue("CreatedBy", ConvertStringToInt(CreatedBy))
+        cmd.Parameters.AddWithValue("UpdatedBy", ConvertStringToInt(CreatedBy))
 
-        Conn.Open()
+        If Conn.State <> ConnectionState.Open Then
+            Conn.Open()
+        End If
         cmd.ExecuteNonQuery()
 
     End Sub
@@ -752,19 +798,23 @@ Partial Public Class SuppliersProductImport
     ''' <param name="Conn">SqlConnnectionオブジェクト</param>
     ''' <remarks>トランザクション有効化のため、生成済みのSqlConnectionを参照渡しで受けます</remarks>
     Private Sub UpdateSupplierProduct(ByVal SupplierItemNumber As String, ByVal Note As String, _
-                                      ByVal UpdateBy As String, ByVal SupplierCode As String, _
-                                      ByVal ProductID As String, ByRef Conn As SqlConnection)
+                                      ByVal UpdatedBy As String, ByVal SupplierCode As String, _
+                                      ByVal ProductID As String, ByRef Conn As SqlConnection, _
+                                      ByRef SqlTran As SqlTransaction)
 
         Dim cmd As SqlCommand = Conn.CreateCommand()
+        cmd.Transaction = SqlTran
 
         cmd.CommandText = CreateSQLForUpdateSupplierProduct()
-        cmd.Parameters.AddWithValue("SupplierItemNumber", "")
-        cmd.Parameters.AddWithValue("Note", "")
-        cmd.Parameters.AddWithValue("UpdatedBy", "")
-        cmd.Parameters.AddWithValue("SupplierCode", "")
-        cmd.Parameters.AddWithValue("ProductID", "")
+        cmd.Parameters.AddWithValue("SupplierItemNumber", ConvertEmptyStringToNull(SupplierItemNumber))
+        cmd.Parameters.AddWithValue("Note", ConvertEmptyStringToNull(Note))
+        cmd.Parameters.AddWithValue("UpdatedBy", ConvertStringToInt(UpdatedBy))
+        cmd.Parameters.AddWithValue("SupplierCode", ConvertStringToInt(SupplierCode))
+        cmd.Parameters.AddWithValue("ProductID", ConvertStringToInt(ProductID))
 
-        Conn.Open()
+        If Conn.State <> ConnectionState.Open Then
+            Conn.Open()
+        End If
         cmd.ExecuteNonQuery()
 
     End Sub
@@ -783,7 +833,7 @@ Partial Public Class SuppliersProductImport
         sb_SQL.Append("SET ")
         sb_SQL.Append("	SupplierItemNumber = @SupplierItemNumber, ")
         sb_SQL.Append("	Note = @Note, ")
-        sb_SQL.Append("	UpdatedBy= @UpdateBy, ")
+        sb_SQL.Append("	UpdatedBy= @UpdatedBy, ")
         sb_SQL.Append("	UpdateDate= GETDATE() ")
         sb_SQL.Append("WHERE ")
         sb_SQL.Append("	SupplierCode = @SupplierCode ")
