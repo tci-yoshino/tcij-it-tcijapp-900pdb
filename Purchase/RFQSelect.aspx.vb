@@ -79,72 +79,64 @@
 
     ' 製品情報を取得し、aspx のラベルにセットする
     Protected Sub Set_ProductData(ByVal ProductID As String)
-        Try
-            Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
-                Dim st_query As String = _
-                      "SELECT " _
-                    & "  ProductNumber, ISNULL(Name, QuoName) AS ProductName " _
-                    & "FROM " _
-                    & "  Product " _
-                    & "WHERE " _
-                    & "  (ProductID = @ProductID)"
-                Dim command As New SqlClient.SqlCommand(st_query, connection)
-                connection.Open()
+        Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
+            Dim st_query As String = _
+                  "SELECT " _
+                & "  ProductNumber, ISNULL(Name, QuoName) AS ProductName " _
+                & "FROM " _
+                & "  Product " _
+                & "WHERE " _
+                & "  (ProductID = @ProductID)"
+            Dim command As New SqlClient.SqlCommand(st_query, connection)
+            connection.Open()
 
-                ' Add param
-                command.Parameters.AddWithValue("ProductID", ProductID)
+            ' Add param
+            command.Parameters.AddWithValue("ProductID", ProductID)
 
-                ' Search
-                Dim reader As SqlClient.SqlDataReader = command.ExecuteReader()
+            ' Search
+            Dim reader As SqlClient.SqlDataReader = command.ExecuteReader()
 
-                ' Label ctrl にデータをセット
-                reader.Read()
-                ProductNumber.Text = IIf(IsDBNull(reader("ProductNumber")), "", reader("ProductNumber"))
-                ProductName.Text = IIf(IsDBNull(reader("ProductName")), "", reader("ProductName"))
+            ' Label ctrl にデータをセット
+            reader.Read()
+            ProductNumber.Text = IIf(IsDBNull(reader("ProductNumber")), "", reader("ProductNumber"))
+            ProductName.Text = IIf(IsDBNull(reader("ProductName")), "", reader("ProductName"))
 
-                reader.Close()
-            End Using
-        Catch ex As Exception
-            Throw
-        End Try
+            reader.Close()
+        End Using
     End Sub
 
     ' 仕入先情報取得し、aspx のラベルにセットする
     Protected Sub Set_SupplierData(ByVal SuppplierCode As String)
-        Try
-            Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
-                Dim st_query As String = _
-                      "SELECT " _
-                    & "  Name3, Name4, s_Country.[Name] AS CountryName " _
-                    & "FROM " _
-                    & "  Supplier, s_Country " _
-                    & "WHERE " _
-                    & "  (SupplierCode = @SupplierCode) " _
-                    & "  AND (Supplier.CountryCode = s_Country.CountryCode)"
+        Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
+            Dim st_query As String = _
+                  "SELECT " _
+                & "  Name3, Name4, s_Country.[Name] AS CountryName " _
+                & "FROM " _
+                & "  Supplier, s_Country " _
+                & "WHERE " _
+                & "  (SupplierCode = @SupplierCode) " _
+                & "  AND (Supplier.CountryCode = s_Country.CountryCode)"
 
-                Dim command As New SqlClient.SqlCommand(st_query, connection)
-                connection.Open()
+            Dim command As New SqlClient.SqlCommand(st_query, connection)
+            connection.Open()
 
-                ' Add param
-                command.Parameters.AddWithValue("SupplierCode", SuppplierCode)
+            ' Add param
+            command.Parameters.AddWithValue("SupplierCode", SuppplierCode)
 
-                ' Search
-                Dim reader As SqlClient.SqlDataReader = command.ExecuteReader()
+            ' Search
+            Dim reader As SqlClient.SqlDataReader = command.ExecuteReader()
 
-                ' Label ctrl にデータをセット
-                reader.Read()
-                Country.Text = IIf(IsDBNull(reader("CountryName")), "", reader("CountryName"))
-                If IsDBNull(reader("Name3")) Then
-                    SupplierName.Text = reader("Name4")
-                Else
-                    SupplierName.Text = reader("Name3") & " " & reader("Name4")
-                End If
+            ' Label ctrl にデータをセット
+            reader.Read()
+            Country.Text = IIf(IsDBNull(reader("CountryName")), "", reader("CountryName"))
+            If IsDBNull(reader("Name3")) Then
+                SupplierName.Text = reader("Name4")
+            Else
+                SupplierName.Text = reader("Name3") & " " & reader("Name4")
+            End If
 
-                reader.Close()
-            End Using
-        Catch ex As Exception
-            Throw
-        End Try
+            reader.Close()
+        End Using
     End Sub
 
     ' RFQHeader を取得するためのクエリを SQL データソースコントロールに設定する
