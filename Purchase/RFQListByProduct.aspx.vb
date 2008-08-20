@@ -1,4 +1,9 @@
-﻿Imports System.Data.SqlClient
+﻿Option Explicit On
+Option Infer Off
+Option Strict On
+
+Imports System.Data.SqlClient
+Imports Purchase.Common
 
 ''' <summary>
 ''' RFQListByProductクラス
@@ -7,15 +12,14 @@
 Partial Public Class RFQListByProduct
     Inherits CommonPage
 
-    Public st_ProductID As String
-    Public i_DataNum As Integer = 0 ' 0 の場合は Supplier Data が無いと判断し、 Data not found. を表示する。
-    Public DBConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
+    Protected st_ProductID As String
+    Protected i_DataNum As Integer = 0 ' 0 の場合は Supplier Data が無いと判断し、 Data not found. を表示する。
 
     ''' <summary>
     ''' 必須項目漏れのエラーメッセージ定数です。
     ''' </summary>
     ''' <remarks></remarks>
-    Const MSG_REQUIED_PRODUCT_NUMBER = "Product Number が指定されていません。"
+    Const MSG_REQUIED_PRODUCT_NUMBER As String = "Product Number が指定されていません。"
 
     ''' <summary>
     ''' このページのロードイベントです。
@@ -31,9 +35,9 @@ Partial Public Class RFQListByProduct
 
             ' パラメータ取得
             If Request.RequestType = "POST" Then
-                st_ProductID = IIf(Request.Form("ProductID") = Nothing, "", Request.Form("ProductID"))
+                st_ProductID = CType(IIf(Request.Form("ProductID") = Nothing, "", Request.Form("ProductID")), String)
             ElseIf Request.RequestType = "GET" Then
-                st_ProductID = IIf(Request.QueryString("ProductID") = Nothing, "", Request.QueryString("ProductID"))
+                st_ProductID = CType(IIf(Request.QueryString("ProductID") = Nothing, "", Request.QueryString("ProductID")), String)
             End If
 
             ' 空白除去
@@ -55,9 +59,9 @@ Partial Public Class RFQListByProduct
     ''' </summary>
     ''' <param name="st_ProductID">製品ID</param>
     ''' <remarks></remarks>
-    Private Sub SearchProduct(ByVal st_ProductID)
+    Private Sub SearchProduct(ByVal st_ProductID As String)
 
-        Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
+        Using connection As New SqlClient.SqlConnection(DB_CONNECT_STRING)
 
             Dim command As New SqlClient.SqlCommand(CreateProductHeaderSelectSQL(), connection)
             connection.Open()
@@ -68,15 +72,15 @@ Partial Public Class RFQListByProduct
 
             If reader.Read() Then
                 i_DataNum = 1
-                ProductNumber.Text = dbObjToStr(reader("ProductNumber"))
+                ProductNumber.Text = reader("ProductNumber").ToString()
                 If Not IsDBNull(reader("QuoName")) Then
-                    QuoName.Text = dbObjToStr(reader("QuoName"))
+                    QuoName.Text = reader("QuoName").ToString()
                 Else
-                    QuoName.Text = dbObjToStr(reader("Name"))
+                    QuoName.Text = reader("Name").ToString()
                 End If
-                ProductName.Text = dbObjToStr(reader("Name"))
-                CASNumber.Text = dbObjToStr(reader("CASNumber"))
-                MolecularFormula.Text = dbObjToStr(reader("MolecularFormula"))
+                ProductName.Text = reader("Name").ToString()
+                CASNumber.Text = reader("CASNumber").ToString()
+                MolecularFormula.Text = reader("MolecularFormula").ToString()
             End If
             reader.Close()
         End Using
@@ -88,7 +92,7 @@ Partial Public Class RFQListByProduct
     ''' </summary>
     ''' <param name="st_ProductID">製品ID</param>
     ''' <remarks></remarks>
-    Private Sub SearchRFQHeader(ByVal st_ProductID)
+    Private Sub SearchRFQHeader(ByVal st_ProductID As String)
 
         SrcRFQHeader.SelectCommand = CreateRFQHeaderSelectSQL()
         SrcRFQHeader.SelectParameters.Add("ProductID", st_ProductID)
@@ -230,59 +234,6 @@ Partial Public Class RFQListByProduct
 
     End Function
 
-#Region "DB読み込み時変換関数"
-
-    ''' <summary>
-    ''' DBNullオブジェクトを空白文字列オブジェクトにします。
-    ''' </summary>
-    ''' <param name="obj">対象となるオブジェクト</param>
-    ''' <returns>変換したオブジェクト</returns>
-    ''' <remarks></remarks>
-    Public Shared Function dbObjToObj(ByVal obj As Object) As Object
-        Return dbObjToObj(obj, "")
-    End Function
-
-    ''' <summary>
-    ''' DBNullオブジェクトを空白文字列オブジェクトにします。
-    ''' </summary>
-    ''' <param name="obj">対象となるオブジェクト</param>
-    ''' <param name="retObj">DBNullの時に置き換えるオブジェクト</param>
-    ''' <returns>変換したオブジェクト</returns>
-    ''' <remarks></remarks>
-    Public Shared Function dbObjToObj(ByVal obj As Object, ByVal retObj As Object) As Object
-        If IsDBNull(obj) Then
-            Return retObj
-        End If
-
-        If obj = Nothing Then
-            Return retObj
-        End If
-
-        Return obj
-    End Function
-
-    ''' <summary>
-    ''' DBNullオブジェクトをStringにします。
-    ''' </summary>
-    ''' <param name="obj">対象となるオブジェクト</param>
-    ''' <returns>変換したString文字列</returns>
-    ''' <remarks></remarks>
-    Public Shared Function dbObjToStr(ByVal obj As Object) As String
-        Return CType(dbObjToObj(obj, ""), String)
-    End Function
-
-    ''' <summary>
-    ''' DBNullオブジェクトをStringにします。
-    ''' </summary>
-    ''' <param name="obj">対象となるオブジェクト</param>
-    ''' <param name="defaultStr">DBNullの時に置き換える文字列</param>
-    ''' <returns>変換したString文字列</returns>
-    ''' <remarks></remarks>
-    Public Shared Function dbObjToStr(ByVal obj As Object, ByVal defaultStr As String) As String
-        Return CType(dbObjToObj(obj, defaultStr), String)
-    End Function
-
-#End Region
 
 
 End Class
