@@ -12,24 +12,14 @@ Partial Public Class RFQUpdate
     Private Const ERR_INCORRECT_MAKERCODE As String = "MakerCode" & ERR_INCORRECT_FORMAT
     Private Const ERR_INCORRECT_SHIPPINGHANDLINGFEE As String = "ShippingHandlingFee" & ERR_INCORRECT_FORMAT
     Private Const ERR_INCORRECT_UNITPRICE As String = "UnitPrice" & ERR_INCORRECT_FORMAT
-
-    'Private Const ERR_INCORRECT_UNITPRICE As String = "UnitPrice" & ERR_INCORRECT_FORMAT
-    'Private Const ERR_INCORRECT_UNITPRICE As String = "UnitPrice" & ERR_INCORRECT_FORMAT
-    'Private Const ERR_INCORRECT_UNITPRICE As String = "UnitPrice" & ERR_INCORRECT_FORMAT
-    'Private Const ERR_INCORRECT_UNITPRICE As String = "UnitPrice" & ERR_INCORRECT_FORMAT
-    'Private Const ERR_INCORRECT_UNITPRICE As String = "UnitPrice" & ERR_INCORRECT_FORMAT
-
-
-
-
-    'エラーメッセージ(必須入力項目なし)
-    Private Const ERR_REQUIRED_ENQLOCATION As String = "Enq-Location" & ERR_REQUIRED_FIELD
-    Private Const ERR_REQUIRED_ENQUSER As String = "Enq-User" & ERR_REQUIRED_FIELD
-    Private Const ERR_REQUIRED_PRODUCTNUMBER As String = "ProductNumber" & ERR_REQUIRED_FIELD
+    Private Const ERR_INCORRECT_QUOPER As String = "Quo-Per" & ERR_INCORRECT_FORMAT
+    'エラーメッセージ(必須入力項目)
     Private Const ERR_REQUIRED_SUPPLIERCODE As String = "SupplierCode" & ERR_REQUIRED_FIELD
-    Private Const ERR_REQUIRED_QUOLOCATION As String = "Quo-Location" & ERR_REQUIRED_FIELD
-    Private Const ERR_REQUIRED_PURPOSE As String = "Purpose" & ERR_REQUIRED_FIELD
-    Private Const ERR_REQUIRED_ENQQUANTITY As String = "Enq-Quantity" & ERR_REQUIRED_FIELD
+    Private Const ERR_REQUIRED_QUOUSER As String = "Quo-User" & ERR_REQUIRED_FIELD
+    'エラーメッセージ(他ユーザ更新)
+    Private Const ERR_ALREADY_UPDATED As String = "このデータは他のユーザーによって編集されました。その内容を確認し再度編集をお願いします。"
+
+    '画面表示フラグ
     Protected Parameter As Boolean = True
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         DBConn.ConnectionString = DBConnectString.ConnectionString
@@ -44,7 +34,6 @@ Partial Public Class RFQUpdate
                 Parameter = False
                 Exit Sub
             End If
-
         Else
             Call SetReadOnlyItems()
         End If
@@ -53,7 +42,6 @@ Partial Public Class RFQUpdate
     Private Function FormDataSet() As Boolean
         Dim DS As DataSet = New DataSet
         Dim st_RFQNumber As String = String.Empty
-        Dim de_Check As Decimal
         If Request.QueryString("RFQNumber") <> "" Or Request.Form("RFQNumber") <> "" Then
             st_RFQNumber = IIf(Request.QueryString("RFQNumber") <> "", Request.QueryString("RFQNumber"), Request.Form("RFQNumber"))
             If IsNumeric(st_RFQNumber) Then
@@ -112,7 +100,7 @@ Partial Public Class RFQUpdate
                     QuoLocation.Text = DS.Tables("RFQHeader").Rows(0)("QuoLocationName").ToString
                 End If
                 SDS_RFQUpdate_QuoUser.DataBind()
-                QuoUser.DataBind()
+                'QuoUser.DataBind()     '要不要を検討する。
                 Comment.Text = DS.Tables("RFQHeader").Rows(0)("Comment").ToString
                 'Under
                 RFQStatus.SelectedValue = DS.Tables("RFQHeader").Rows(0)("StatusCode").ToString
@@ -148,7 +136,6 @@ Partial Public Class RFQUpdate
                             UnitPrice_1.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
                             DeliveryTerm_1.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
                             QuoPer_1.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
-                            'QuoPer_1.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
                             Purity_1.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
                             QuoUnit_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
                             QMMethod_1.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
@@ -221,7 +208,6 @@ Partial Public Class RFQUpdate
                     End Select
                 Next
                 DS.Clear()
-
             End If
         End If
         Return True
@@ -299,7 +285,7 @@ Partial Public Class RFQUpdate
         DBCommand.Dispose()
         If DBReader.HasRows = False Then
             '他セッションで更新済のため処理を抜ける。
-            Msg.Text = "このデータは他のユーザーによって編集されました。その内容を確認し再度編集をお願いします"
+            Msg.Text = ERR_ALREADY_UPDATED
             Exit Sub
         End If
         DBReader.Close()
@@ -471,44 +457,44 @@ Partial Public Class RFQUpdate
         End If
         If UnitPrice_2.Text <> "" Then
             If Not Regex.IsMatch(UnitPrice_2.Text, DECIMAL_10_3_REGEX) Then
-                Msg.Text = "UnitPrice の設定が不正です"
+                Msg.Text = ERR_INCORRECT_UNITPRICE
                 Exit Function
             End If
         End If
         If UnitPrice_3.Text <> "" Then
             If Not Regex.IsMatch(UnitPrice_3.Text, DECIMAL_10_3_REGEX) Then
-                Msg.Text = "UnitPrice の設定が不正です"
+                Msg.Text = ERR_INCORRECT_UNITPRICE
                 Exit Function
             End If
         End If
         If UnitPrice_4.Text <> "" Then
             If Not Regex.IsMatch(UnitPrice_4.Text, DECIMAL_10_3_REGEX) Then
-                Msg.Text = "UnitPrice の設定が不正です"
+                Msg.Text = ERR_INCORRECT_UNITPRICE
                 Exit Function
             End If
         End If
 
         If QuoPer_1.Text <> "" Then
             If Not Regex.IsMatch(QuoPer_1.Text, DECIMAL_5_3_REGEX) Then
-                Msg.Text = "Quoper の設定が不正です"
+                Msg.Text = ERR_INCORRECT_QUOPER
                 Exit Function
             End If
         End If
         If QuoPer_2.Text <> "" Then
             If Not Regex.IsMatch(QuoPer_2.Text, DECIMAL_5_3_REGEX) Then
-                Msg.Text = "Quoper の設定が不正です"
+                Msg.Text = ERR_INCORRECT_QUOPER
                 Exit Function
             End If
         End If
         If QuoPer_3.Text <> "" Then
             If Not Regex.IsMatch(QuoPer_3.Text, DECIMAL_5_3_REGEX) Then
-                Msg.Text = "Quoper の設定が不正です"
+                Msg.Text = ERR_INCORRECT_QUOPER
                 Exit Function
             End If
         End If
         If QuoPer_4.Text <> "" Then
             If Not Regex.IsMatch(QuoPer_4.Text, DECIMAL_5_3_REGEX) Then
-                Msg.Text = "Quoper の設定が不正です"
+                Msg.Text = ERR_INCORRECT_QUOPER
                 Exit Function
             End If
         End If
