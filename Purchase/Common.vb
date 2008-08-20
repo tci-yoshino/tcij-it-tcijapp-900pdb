@@ -333,4 +333,34 @@ Public Class Common
         Return False
     End Function
 
+    ''' <summary>
+    ''' 更新するレコードの更新日が指定した更新日と同一であるかを示します。
+    ''' </summary>
+    ''' <param name="TableName">検索対象のテーブル名</param>
+    ''' <param name="TableField">検索条件フィールド名</param>
+    ''' <param name="CheckData">検索条件の値</param>
+    ''' <param name="UpdateDate">検索条件の更新日(yyyy-mm-dd hh:mi:ss)</param>
+    ''' <returns>更新日が同一である場合は True 、そうでない場合は False を返します。</returns>
+    ''' <remarks></remarks>
+    Public Shared Function isLatestData(ByVal TableName As String, ByVal TableField As String, ByVal CheckData As String, ByVal UpdateDate As String) As Boolean
+        '汎用存在確認チェック
+        Dim st_SQLCommand As String = String.Empty
+        st_SQLCommand = String.Format("SELECT COUNT(*) AS RecordCount FROM {0} WHERE {1} = @CheckData AND CONVERT(VARCHAR,UpdateDate,120) = @UpdateDate ", _
+                                    SafeSqlLiteral(TableName), SafeSqlLiteral(TableField))
+        Using DBConn As New SqlClient.SqlConnection(DB_CONNECT_STRING), _
+            DBCommand As SqlClient.SqlCommand = DBConn.CreateCommand()
+            DBConn.Open()
+            DBCommand.CommandText = st_SQLCommand
+            DBCommand.Parameters.AddWithValue("CheckData", CheckData)
+            DBCommand.Parameters.AddWithValue("UpdateDate", UpdateDate)
+
+            Dim i_RecordCount As Integer = Convert.ToInt32(DBCommand.ExecuteScalar)
+            If i_RecordCount > 0 Then
+                Return True
+            End If
+        End Using
+
+        Return False
+    End Function
+
 End Class
