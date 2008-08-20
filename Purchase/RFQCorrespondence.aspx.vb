@@ -1,104 +1,137 @@
-﻿Public Partial Class RFQCorrespondence
+﻿
+Option Explicit On
+
+Imports System.Data.SqlClient
+Imports Purchase.Common
+Imports TCICommon.Func
+
+Partial Public Class RFQCorrespondence
     Inherits CommonPage
 
-#Region " Region "
-    <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Me.SqlConnection1 = New System.Data.SqlClient.SqlConnection
-        Me.SqlConnection1.FireInfoMessageEventOnUserErrors = False
-    End Sub
-
-    Protected WithEvents SqlConnection1 As System.Data.SqlClient.SqlConnection
-
-    Private Sub Page_Init(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Init
-        InitializeComponent()
-    End Sub
-#End Region
-
-    Dim DBConnString As String                              '接続文字列	
-    Dim DBConn As New System.Data.SqlClient.SqlConnection   'データベースコネクション	
-    Dim DBCommand As System.Data.SqlClient.SqlCommand       'データベースコマンド	
-    Dim DBReader As System.Data.SqlClient.SqlDataReader     'データリーダー	
     Dim st_SqlStr As String = ""
     '***************************************************************************************************
-    Dim RFQNumber As Integer = 1000000001
+    Dim RFQNumber As Integer = 1000000048
     '***************************************************************************************************
 
-    Sub Set_DBConnectingString()
-        Dim settings As ConnectionStringSettings
-        '[接続文字列を設定ファイル(Web.config)から取得]---------------------------------------------
-        settings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
-        If Not settings Is Nothing Then
-            '[接続文字列をイミディエイトに出力]-----------------------------------------------------
-            Debug.Print(settings.ConnectionString)
-        End If
-        '[sqlConnectionに接続文字列を設定]----------------------------------------------------------
-        Me.SqlConnection1.ConnectionString = settings.ConnectionString
-    End Sub
-
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        Set_DBConnectingString()
-        DBConn = Me.SqlConnection1
-        DBConn.Open()
-        DBCommand = DBConn.CreateCommand()
-
         If IsPostBack = False Then
             '[DefaultでEnqUser.Checked設定]-------------------------------------------------------------
             EnqUser.Checked = True
 
+            '[Connectionの定義]-------------------------------------------------------------------------
+            Dim conn As SqlConnection = Nothing
+
             '[CorresTitle設定]--------------------------------------------------------------------------
-            DBCommand.CommandText = "SELECT RFQCorresCode, Text FROM dbo.RFQCorres Order BY SortOrder"
-            DBReader = DBCommand.ExecuteReader()
-            DBCommand.Dispose()
-            CorresTitle.Items.Clear()
-            Do Until DBReader.Read = False
-                CorresTitle.Items.Add(New ListItem(DBReader("Text"), DBReader("RFQCorresCode")))
-            Loop
-            DBReader.Close()
+            Try
+                conn = New SqlConnection(DB_CONNECT_STRING)
+                Dim cmd As SqlCommand = conn.CreateCommand()
+                cmd.CommandText = "SELECT RFQCorresCode, Text FROM dbo.RFQCorres Order BY SortOrder"
+                conn.Open()
+                Dim dr As SqlDataReader = cmd.ExecuteReader
+                EnqUser.Text = ""
+                Do Until dr.Read = False
+                    CorresTitle.Items.Add(New ListItem(dr("Text"), dr("RFQCorresCode")))
+                Loop
+            Finally
+                If Not conn Is Nothing Then conn.Close()
+            End Try
 
             '[EnqUser.Textの設定]-----------------------------------------------------------------------
-            DBCommand.CommandText = "SELECT v_User.Name FROM RFQHeader LEFT OUTER JOIN v_User ON RFQHeader.EnqUserID = v_User.UserID WHERE (RFQHeader.RFQNumber = " & RFQNumber & ")"
-            DBReader = DBCommand.ExecuteReader()
-            DBCommand.Dispose()
-            If DBReader.Read = True Then
-                EnqUser.Text = DBReader("Name")
-            End If
-            DBReader.Close()
+            Try
+                conn = New SqlConnection(DB_CONNECT_STRING)
+                Dim cmd As SqlCommand = conn.CreateCommand()
+                cmd.CommandText = "SELECT v_User.Name FROM RFQHeader LEFT OUTER JOIN v_User ON RFQHeader.EnqUserID = v_User.UserID WHERE (RFQHeader.RFQNumber = @RFQNumber)"
+                cmd.Parameters.AddWithValue("RFQNumber", RFQNumber)
+                conn.Open()
+                Dim dr As SqlDataReader = cmd.ExecuteReader
+                EnqUser.Text = ""
+                If dr.Read = True Then
+                    If Not TypeOf dr("Name") Is DBNull Then EnqUser.Text = dr("Name")
+                End If
+            Finally
+                If Not conn Is Nothing Then conn.Close()
+            End Try
 
             '[EnqLocation.Textの設定]-------------------------------------------------------------------
-            DBCommand.CommandText = "SELECT s_Location.Name FROM RFQHeader LEFT OUTER JOIN s_Location ON RFQHeader.EnqLocationCode = s_Location.LocationCode WHERE (RFQHeader.RFQNumber = " & RFQNumber & ")"
-            DBReader = DBCommand.ExecuteReader()
-            DBCommand.Dispose()
-            If DBReader.Read = True Then
-                EnqLocation.Text = "(" & DBReader("Name") & ")"
-            End If
-            DBReader.Close()
+            Try
+                conn = New SqlConnection(DB_CONNECT_STRING)
+                Dim cmd As SqlCommand = conn.CreateCommand()
+                cmd.CommandText = "SELECT s_Location.Name FROM RFQHeader LEFT OUTER JOIN s_Location ON RFQHeader.EnqLocationCode = s_Location.LocationCode WHERE (RFQHeader.RFQNumber = @RFQNumber)"
+                cmd.Parameters.AddWithValue("RFQNumber", RFQNumber)
+                conn.Open()
+                Dim dr As SqlDataReader = cmd.ExecuteReader
+                EnqLocation.Text = ""
+                If dr.Read = True Then
+                    If Not TypeOf dr("Name") Is DBNull Then EnqLocation.Text = "(" + dr("Name") + ")"
+                End If
+            Finally
+                If Not conn Is Nothing Then conn.Close()
+            End Try
 
             '[QuoUser.Textの設定]-----------------------------------------------------------------------
-            DBCommand.CommandText = "SELECT v_User.Name FROM RFQHeader LEFT OUTER JOIN v_User ON RFQHeader.QuoUserID = v_User.UserID WHERE (RFQHeader.RFQNumber = " & RFQNumber & ")"
-            DBReader = DBCommand.ExecuteReader()
-            DBCommand.Dispose()
-            If DBReader.Read = True Then
-                QuoUser.Text = DBReader("Name")
-            End If
-            DBReader.Close()
+            Try
+                conn = New SqlConnection(DB_CONNECT_STRING)
+                Dim cmd As SqlCommand = conn.CreateCommand()
+                cmd.CommandText = "SELECT v_User.Name FROM RFQHeader LEFT OUTER JOIN v_User ON RFQHeader.QuoUserID = v_User.UserID WHERE (RFQHeader.RFQNumber = @RFQNumber)"
+                cmd.Parameters.AddWithValue("RFQNumber", RFQNumber)
+                conn.Open()
+                Dim dr As SqlDataReader = cmd.ExecuteReader
+                QuoUser.Text = ""
+                If dr.Read = True Then
+                    If Not TypeOf dr("Name") Is DBNull Then QuoUser.Text = dr("Name")
+                End If
+            Finally
+                If Not conn Is Nothing Then conn.Close()
+            End Try
 
             '[QuoLocation.Textの設定]-------------------------------------------------------------------
-            DBCommand.CommandText = "SELECT s_Location.Name FROM RFQHeader LEFT OUTER JOIN s_Location ON RFQHeader.QuoLocationCode = s_Location.LocationCode WHERE (RFQHeader.RFQNumber = " & RFQNumber & ")"
-            DBReader = DBCommand.ExecuteReader()
-            DBCommand.Dispose()
-            If DBReader.Read = True Then
-                QuoLocation.Text = "(" & DBReader("Name") & ")"
-            End If
-            DBReader.Close()
+            Try
+                conn = New SqlConnection(DB_CONNECT_STRING)
+                Dim cmd As SqlCommand = conn.CreateCommand()
+                cmd.CommandText = "SELECT s_Location.Name FROM RFQHeader LEFT OUTER JOIN s_Location ON RFQHeader.QuoLocationCode = s_Location.LocationCode WHERE (RFQHeader.RFQNumber = @RFQNumber)"
+                cmd.Parameters.AddWithValue("RFQNumber", RFQNumber)
+                conn.Open()
+                Dim dr As SqlDataReader = cmd.ExecuteReader
+                QuoLocation.Text = ""
+                If dr.Read = True Then
+                    If Not TypeOf dr("Name") Is DBNull Then QuoLocation.Text = "(" + dr("Name") + ")"
+                End If
+            Finally
+                If Not conn Is Nothing Then conn.Close()
+            End Try
+
+            '[QuoUserが設定されていない場合は選択できないようにする]------------------------------------
+            If QuoUser.Text.ToString = "" Then QuoUser.Enabled = False : QuoLocation.Enabled = False
+        End If
+
+        '[SrcRFQHistoryにSelectCommand設定]-------------------------------------------------------------
+        SrcRFQHistory.SelectCommand = "SELECT dbo.RFQStatus.Text AS Status, dbo.RFQHistory.CreateDate AS Date, dbo.v_User.Name + '          (' + dbo.v_User.LocationName + ')' AS Sender, v_User_1.Name + '          (' + dbo.v_User.LocationName + ')' AS Addressee, dbo.RFQHistory.Note AS Notes, isChecked, RcptUserID, RFQHistoryNumber " & _
+                                              "FROM dbo.RFQHistory INNER JOIN dbo.RFQStatus ON dbo.RFQHistory.RFQStatusCode = dbo.RFQStatus.RFQStatusCode LEFT OUTER JOIN dbo.v_User AS v_User_1 ON dbo.RFQHistory.RcptUserID = v_User_1.UserID LEFT OUTER JOIN dbo.v_User ON dbo.RFQHistory.CreatedBy = dbo.v_User.UserID " & _
+                                              "WHERE (dbo.RFQHistory.RFQNumber = " & RFQNumber & ") " & _
+                                              "ORDER BY dbo.RFQHistory.RFQHistoryNumber DESC"
+
+    End Sub
+
+    Private Sub Set_isChecked(ByVal sender As Object, ByVal e As EventArgs) Handles RFQHistory.ItemDataBound
+        '[RFQHistoryの行編集]-------------------------------------------------------------------
+        Dim lb As LinkButton = DirectCast(DirectCast(DirectCast(e, ListViewItemEventArgs).Item.FindControl("Check"), System.Web.UI.Control), LinkButton)
+        Dim isChecked As HiddenField = DirectCast(DirectCast(DirectCast(e, ListViewItemEventArgs).Item.FindControl("ischecked"), System.Web.UI.Control), HiddenField)
+        Dim RcptUserID As HiddenField = DirectCast(DirectCast(DirectCast(e, ListViewItemEventArgs).Item.FindControl("RcptUserID"), System.Web.UI.Control), HiddenField)
+        If isChecked.Value = "False" And RcptUserID.Value = Session("UserID") Then
+            lb.Visible = True
+        Else
+            lb.Visible = False
         End If
     End Sub
 
-    Private Sub Page_PreRenderComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRenderComplete
-        SrcRFQHistory.SelectCommand = "SELECT dbo.RFQStatus.Text AS Status, dbo.RFQHistory.CreateDate AS Date, dbo.v_User.Name + '          (' + dbo.v_User.LocationName + ')' AS Sender, v_User_1.Name + '          (' + dbo.v_User.LocationName + ')' AS Addressee, dbo.RFQHistory.Note AS Notes " & _
-                                               "FROM dbo.RFQHistory INNER JOIN dbo.RFQStatus ON dbo.RFQHistory.RFQStatusCode = dbo.RFQStatus.RFQStatusCode LEFT OUTER JOIN dbo.v_User AS v_User_1 ON dbo.RFQHistory.RcptUserID = v_User_1.UserID LEFT OUTER JOIN dbo.v_User ON dbo.RFQHistory.CreatedBy = dbo.v_User.UserID " & _
-                                               "WHERE (dbo.RFQHistory.RFQNumber = " & RFQNumber & ") " & _
-                                               "ORDER BY dbo.RFQHistory.RFQHistoryNumber DESC"
-        SrcRFQHistory.DataBind()
+    Private Sub UpdateChecked(ByVal sender As Object, ByVal e As EventArgs) Handles RFQHistory.ItemCommand
+        If Request.QueryString("Action") = "Check" Then
+            Dim RFQHistoryNumber As HiddenField = DirectCast(DirectCast(DirectCast(e, ListViewCommandEventArgs).Item.FindControl("RFQHistoryNumber"), System.Web.UI.Control), HiddenField)
+            SrcRFQHistory.UpdateCommand = "UPDATE RFQHistory SET isChecked=1 WHERE RFQHistoryNumber='" & RFQHistoryNumber.Value & "'"
+            SrcRFQHistory.Update()
+        Else
+            Msg.Text = Common.ERR_INVALID_PARAMETER
+        End If
     End Sub
 
     Protected Sub Send_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Send.Click
@@ -107,22 +140,28 @@
         Dim st_LocationCode As String = ""
         Dim st_UserID As String = ""
         '[Send実行確認]---------------------------------------------------------------------------------
-        If Action.Value <> "Send" Then
-            Msg.Text = "Sendは拒否されました"
-            Exit Sub
+        If Request.QueryString("Action") <> "Send" Then
+            Msg.Text = Common.ERR_INVALID_PARAMETER
         End If
 
+        '[Connectionの定義]-------------------------------------------------------------------------
+        Dim conn As SqlConnection = Nothing
+
         '[パラメータRFQNumberと同一の最大RFQHistoryNumberのレコードを検索]------------------------------
-        DBCommand.CommandText = "SELECT RFQStatusCode, StatusChangeDate FROM dbo.RFQHistory WHERE (RFQHistoryNumber = (SELECT MAX(RFQHistoryNumber) AS MaxNo FROM dbo.RFQHistory AS RFQHistory_1 WHERE (RFQNumber = 1000000001)))"
-        DBReader = DBCommand.ExecuteReader()
-        If DBReader.Read = True Then
-            st_RFQStatusCode = DBReader("RFQStatusCode")
-            st_StatusChangeDate = DBReader("StatusChangeDate")
-        Else
-            Msg.Text = "Sendは拒否されました"
-            Exit Sub
-        End If
-        DBReader.Close()
+        Try
+            conn = New SqlConnection(DB_CONNECT_STRING)
+            Dim cmd As SqlCommand = conn.CreateCommand()
+            cmd.CommandText = "SELECT RFQStatusCode, StatusChangeDate FROM dbo.RFQHistory WHERE (RFQHistoryNumber = (SELECT MAX(RFQHistoryNumber) AS MaxNo FROM dbo.RFQHistory AS RFQHistory_1 WHERE (RFQNumber = @RFQNumber)))"
+            cmd.Parameters.AddWithValue("RFQNumber", RFQNumber)
+            conn.Open()
+            Dim dr As SqlDataReader = cmd.ExecuteReader
+            If dr.Read = True Then
+                st_RFQStatusCode = dr("RFQStatusCode")
+                st_StatusChangeDate = dr("StatusChangeDate")
+            End If
+        Finally
+            If Not conn Is Nothing Then conn.Close()
+        End Try
 
         '[選択したUser,Locationを記憶する]--------------------------------------------------------------
         If EnqUser.Checked = True Then
@@ -132,20 +171,36 @@
             st_UserID = QuoUser.Text.ToString
             st_LocationCode = QuoLocation.Text.ToString
         End If
-        DBCommand.CommandText = "SELECT v_User.UserID FROM dbo.v_User WHERE (Name = '" & st_UserID & "')"
-        DBReader = DBCommand.ExecuteReader()
-        DBCommand.Dispose()
-        If DBReader.Read = True Then
-            st_UserID = DBReader("UserID")
-        End If
-        DBReader.Close()
-        DBCommand.CommandText = "SELECT LocationCode FROM dbo.s_Location WHERE (Name = '" & Mid(st_LocationCode, 2, Len(st_LocationCode) - 2) & "')"
-        DBReader = DBCommand.ExecuteReader()
-        DBCommand.Dispose()
-        If DBReader.Read = True Then
-            st_LocationCode = DBReader("LocationCode")
-        End If
-        DBReader.Close()
+
+        '[選択したUserのUserIDを取得する]---------------------------------------------------------------
+        Try
+            conn = New SqlConnection(DB_CONNECT_STRING)
+            Dim cmd As SqlCommand = conn.CreateCommand()
+            cmd.CommandText = "SELECT v_User.UserID FROM dbo.v_User WHERE (Name = @Name)"
+            cmd.Parameters.AddWithValue("Name", st_UserID)
+            conn.Open()
+            Dim dr As SqlDataReader = cmd.ExecuteReader
+            If dr.Read = True Then
+                st_UserID = dr("UserID")
+            End If
+        Finally
+            If Not conn Is Nothing Then conn.Close()
+        End Try
+
+        '[選択したLocationのLocationCodeを取得する]-----------------------------------------------------
+        Try
+            conn = New SqlConnection(DB_CONNECT_STRING)
+            Dim cmd As SqlCommand = conn.CreateCommand()
+            cmd.CommandText = "SELECT LocationCode FROM dbo.s_Location WHERE (Name = @Name)"
+            cmd.Parameters.AddWithValue("Name", Mid(st_LocationCode, 2, Len(st_LocationCode) - 2))
+            conn.Open()
+            Dim dr As SqlDataReader = cmd.ExecuteReader
+            If dr.Read = True Then
+                st_LocationCode = dr("LocationCode")
+            End If
+        Finally
+            If Not conn Is Nothing Then conn.Close()
+        End Try
 
         '[RFQHistory(を新規登録)]-----------------------------------------------------------------------
         st_SqlStr = "INSERT INTO RFQHistory (RFQNumber,RFQStatusCode,StatusChangeDate,RFQCorresCode,Note,SendLocationCode,SendUserID,RcptLocationCode,RcptUserID,isChecked,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ("
@@ -160,8 +215,8 @@
         st_SqlStr = st_SqlStr + st_UserID + ","
         st_SqlStr = st_SqlStr + "0,"
         st_SqlStr = st_SqlStr + Session("UserID") + ",'" + Now() + "'," + Session("UserID") + ",'" + Now() + "')"
-        DBCommand.CommandText = st_SqlStr
-        DBCommand.ExecuteNonQuery()
+        SrcRFQHistory.InsertCommand = st_SqlStr
+        SrcRFQHistory.Insert()
         Msg.Text = "表示データを登録しました"
     End Sub
 

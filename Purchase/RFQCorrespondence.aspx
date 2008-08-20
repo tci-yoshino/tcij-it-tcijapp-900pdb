@@ -44,15 +44,14 @@
                 </table>
    
                 <div class="btns">
-                    <asp:Button ID="Send" runat="server" Text="Send" />
+                    <asp:Button ID="Send" runat="server" Text="Send" 
+                        PostBackUrl="RFQCorrespondence.aspx?Action=Send" />
                 </div>
         </div>
 
         <hr />
 
-        <h3>Correspondence History<asp:HiddenField ID="Action" runat="server" 
-                Value="Send" />
-                        </h3>
+        <h3>Correspondence History</h3>
 
         <div class="main">
             <asp:ListView ID="RFQHistory" runat="server" DataSourceID="SrcRFQHistory">
@@ -62,8 +61,9 @@
                             <th style="width:20%">Status:</th>
                             <td style="width:65%"><asp:Label ID="StatusLabel" runat="server" Text='<%# Eval("Status") %>' /></td>
                             <td style="width:15%" rowspan="4">
-                                <asp:LinkButton ID="Check" runat="server">
-                                <asp:Image ID="ImgCheck" runat="server" ImageUrl="./Image/Check.gif" />Check</asp:LinkButton>
+                                <asp:LinkButton ID="Check" runat="server" PostBackUrl="RFQCorrespondence.aspx?Action=Check">
+                                  <asp:Image ID="ImgCheck" runat="server" ImageUrl="./Image/Check.gif" />Check
+                                </asp:LinkButton>
                             </td>
                         </tr>
                         <tr>
@@ -83,6 +83,9 @@
                             <td><asp:Label ID="NotesLabel" runat="server" Text='<%# Eval("Notes") %>' /></td>
                         </tr>
                     </table>
+                    <asp:HiddenField ID="ischecked" runat="server" Value='<%# Eval("isChecked") %>' />
+                    <asp:HiddenField ID="RcptUserID" runat="server" Value='<%# Eval("RcptUserID") %>' />
+                    <asp:HiddenField ID="RFQHistoryNumber" runat="server" Value='<%# Eval("RFQHistoryNumber") %>' />
                 </AlternatingItemTemplate>
                 <LayoutTemplate>
                   <div ID="itemPlaceholderContainer" runat="server">
@@ -99,7 +102,7 @@
                             <th style="width:20%">Status:</th>
                             <td style="width:65%"><asp:Label ID="StatusLabel" runat="server" Text='<%# Eval("Status") %>' /></td>
                             <td style="width:15%" rowspan="4">
-                                <asp:LinkButton ID="Check" runat="server">
+                                <asp:LinkButton ID="Check" runat="server" PostBackUrl="RFQCorrespondence.aspx?Action=Check">
                                 <asp:Image ID="ImgCheck" runat="server" ImageUrl="./Image/Check.gif" />Check</asp:LinkButton>
                             </td>
                         </tr>
@@ -120,6 +123,9 @@
                             <td><asp:Label ID="NotesLabel" runat="server" Text='<%# Eval("Notes") %>' /></td>
                         </tr>
                     </table>
+                    <asp:HiddenField ID="ischecked" runat="server" Value='<%# Eval("isChecked") %>' />
+                    <asp:HiddenField ID="RcptUserID" runat="server" Value='<%# Eval("RcptUserID") %>' />
+                    <asp:HiddenField ID="RFQHistoryNumber" runat="server" Value='<%# Eval("RFQHistoryNumber") %>' />
                 </ItemTemplate>
             </asp:ListView>
         </div>
