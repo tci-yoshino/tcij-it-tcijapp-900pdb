@@ -53,7 +53,7 @@ Partial Public Class RFQUpdate
     Private Function FormDataSet() As Boolean
         Dim DS As DataSet = New DataSet
         Dim st_RFQNumber As String = String.Empty
-        Dim de_ShippingHandlingFee As Decimal
+        Dim de_Check As Decimal
         If Request.QueryString("RFQNumber") <> "" Or Request.Form("RFQNumber") <> "" Then
             st_RFQNumber = IIf(Request.QueryString("RFQNumber") <> "", Request.QueryString("RFQNumber"), Request.Form("RFQNumber"))
             If IsNumeric(st_RFQNumber) Then
@@ -89,14 +89,7 @@ Partial Public Class RFQUpdate
                 SupplierItemName.Text = DS.Tables("RFQHeader").Rows(0)("SupplierItemName").ToString
                 PaymentTerm.SelectedValue = DS.Tables("RFQHeader").Rows(0)("PaymentTermCode").ToString
                 ShippingHandlingCurrency.SelectedValue = DS.Tables("RFQHeader").Rows(0)("ShippingHandlingCurrencyCode").ToString
-                'Decimal対応
-                If IsDBNull(DS.Tables("RFQHeader").Rows(0)("ShippingHandlingFee")) = True Then
-                    ShippingHandlingFee.Text = String.Empty
-                Else
-                    de_ShippingHandlingFee = DS.Tables("RFQHeader").Rows(0)("ShippingHandlingFee")
-                    ShippingHandlingFee.Text = de_ShippingHandlingFee.ToString("G29")
-                End If
-                
+                ShippingHandlingFee.Text = SetNullORDecimal(DS.Tables("RFQHeader").Rows(0)("ShippingHandlingFee").ToString)
                 'Right
                 Purpose.Text = DS.Tables("RFQHeader").Rows(0)("Purpose").ToString
                 RequiredPurity.Text = DS.Tables("RFQHeader").Rows(0)("RequiredPurity").ToString
@@ -147,14 +140,15 @@ Partial Public Class RFQUpdate
                 For i = 0 To DS.Tables("RFQLine").Rows.Count - 1
                     Select Case i
                         Case 0
-                            EnqQuantity_1.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
+                            EnqQuantity_1.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
                             EnqUnit_1.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
                             EnqPiece_1.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
                             Incoterms_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
                             Currency_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
-                            UnitPrice_1.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
+                            UnitPrice_1.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
                             DeliveryTerm_1.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
-                            QuoPer_1.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
+                            QuoPer_1.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
+                            'QuoPer_1.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
                             Purity_1.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
                             QuoUnit_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
                             QMMethod_1.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
@@ -166,14 +160,14 @@ Partial Public Class RFQUpdate
                             POIssue_1.NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
                             LineNumber1.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
                         Case 1
-                            EnqQuantity_2.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
+                            EnqQuantity_2.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
                             EnqUnit_2.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
                             EnqPiece_2.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
                             Incoterms_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
                             Currency_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
-                            UnitPrice_2.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
+                            UnitPrice_2.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
                             DeliveryTerm_2.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
-                            QuoPer_2.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
+                            QuoPer_2.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
                             Purity_2.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
                             QuoUnit_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
                             QMMethod_2.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
@@ -185,14 +179,14 @@ Partial Public Class RFQUpdate
                             POIssue_2.NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
                             LineNumber2.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
                         Case 2
-                            EnqQuantity_3.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
+                            EnqQuantity_3.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
                             EnqUnit_3.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
                             EnqPiece_3.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
                             Incoterms_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
                             Currency_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
-                            UnitPrice_3.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
+                            UnitPrice_3.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
                             DeliveryTerm_3.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
-                            QuoPer_3.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
+                            QuoPer_3.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
                             Purity_3.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
                             QuoUnit_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
                             QMMethod_3.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
@@ -204,14 +198,14 @@ Partial Public Class RFQUpdate
                             POIssue_3.NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
                             LineNumber3.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
                         Case 3
-                            EnqQuantity_4.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
+                            EnqQuantity_4.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
                             EnqUnit_4.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
                             EnqPiece_4.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
                             Incoterms_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
                             Currency_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
-                            UnitPrice_4.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
+                            UnitPrice_4.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
                             DeliveryTerm_4.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
-                            QuoPer_4.Text = Single.Parse(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
+                            QuoPer_4.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
                             Purity_4.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
                             QuoUnit_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
                             QMMethod_4.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
@@ -536,4 +530,16 @@ Partial Public Class RFQUpdate
             Close.PostBackUrl = "~/RFQUpdate.aspx?Action=Close"
         End If
     End Sub
+    Private Function SetNullORDecimal(ByVal str As String) As String
+        Dim de_Str As Decimal
+        If IsDBNull(str) = True Or str = String.Empty Then
+            Return String.Empty
+        Else
+            If Decimal.TryParse(str, de_Str) = True Then
+                Return de_Str.ToString("G29")
+            Else
+                Return str
+            End If
+        End If
+    End Function
 End Class
