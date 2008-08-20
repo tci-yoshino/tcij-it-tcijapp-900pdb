@@ -21,7 +21,7 @@
         <h3>RFQ</h3>
 
         <div class="list">
-            <p class="attention"><asp:Label ID="ErrorMessages" runat="server"></asp:Label></p>
+            <p class="attention"><asp:Label ID="Msg" runat="server"></asp:Label></p>
             <asp:ListView ID="RFQList" runat="server" DataSourceID="SrcRFQ" DataKeyNames="RFQNumber">
                 <LayoutTemplate>
                     <table ID="itemPlaceholderContainer" runat="server" border="0" style="">
@@ -30,7 +30,7 @@
                     </table>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
-                    <h3 style="font-style:italic">No data found.</h3>
+                    <h3 style="font-style:italic"><%=Purchase.Common.MSG_NO_DATA_FOUND %></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr>
@@ -41,16 +41,16 @@
                             <asp:Label ID="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"))%>'></asp:Label><span class="indent"><asp:Label ID="RFQStatus" runat="server" Text='<%#Eval("Status")%>'></asp:Label></span>
                         </th>
                         <th class="subhead" colspan="2" style="text-align:right">
-                            Assign to : <asp:DropDownList ID="QuoUser" runat="server" DataSourceID="SrcQuo" DataTextField="Name" DataValueField="UserID"></asp:DropDownList>
+                            Assign to : <asp:DropDownList ID="QuoUser" runat="server" DataSourceID="SrcUser" DataTextField="Name" DataValueField="UserID"></asp:DropDownList>
                             <asp:HiddenField runat="server" ID="UpdateDate" Value='<%#Eval("UpdateDate")%>' />
-                            <asp:Button ID="Assign" runat="server" Text="Assign" CommandArgument='<%#Container.DataItemIndex %>' />
+                            <asp:Button ID="Assign" runat="server" Text="Assign" CommandArgument="" />
                         </th>
                     </tr>
                     <tr>
                         <th style="width:17%">Product Number / Name</th>
                         <td style="width:33%">
                             <asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label>
-                            <span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#If(Eval("ProductName").ToString.Length > 35, Eval("ProductName").ToString.Substring(0, 35) & "...", Eval("ProductName"))%>'></asp:Label></span>
+                            <span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("ProductName")) %>'></asp:Label></span>
                         </td>
                         <th style="width:10%">Purpose</th>
                         <td style="width:12%"><asp:Label ID="Purpose" runat="server" Text='<%#Eval("Purpose")%>'></asp:Label></td>
@@ -83,7 +83,7 @@
                     </table>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
-                    <h3 style="font-style:italic">No data found.</h3>
+                    <h3 style="font-style:italic"><%=Purchase.Common.MSG_NO_DATA_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr>
@@ -95,14 +95,14 @@
                             <span class="indent"><asp:Label ID="POStatus" runat="server" Text='<%#Eval("Status")%>'></asp:Label></span>
                         </th>
                         <th class="subhead" style="text-align:right">
-                            Assign to : <asp:DropDownList ID="SOUser" runat="server" DataSourceID="SrcQuo" DataTextField="Name" DataValueField="UserID"></asp:DropDownList>
+                            Assign to : <asp:DropDownList ID="SOUser" runat="server" DataSourceID="SrcUser" DataTextField="Name" DataValueField="UserID"></asp:DropDownList>
                             <asp:HiddenField runat="server" ID="UpdateDate" Value='<%#Eval("UpdateDate")%>' />
                             <asp:Button ID="Assign" runat="server" Text="Assign" />
                         </th>
                     </tr>
                     <tr>
                         <th style="width:17%">Product Number / Name</th>
-                        <td style="width:33%"><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label><span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#If(Eval("ProductName").ToString.Length > 35, Eval("ProductName").ToString.Substring(0, 35) & "...", Eval("ProductName"))%>'></asp:Label></span></td>
+                        <td style="width:33%"><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label><span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("ProductName")) %>'></asp:Label></span></td>
                         <th style="width:17%">PO-User</th>
                         <td style="width:33%"><asp:Label ID="POUser" runat="server" Text='<%#Eval("POUserName")%>'></asp:Label><span class="indent">(<asp:Label ID="POLocation" runat="server" Text='<%#Eval("POLocationName")%>'></asp:Label>)</span></td>
                     </tr>
@@ -120,7 +120,7 @@
     </div><!-- Main Content Area END -->
     <asp:SqlDataSource ID="SrcRFQ" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
     <asp:SqlDataSource ID="SrcPO" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
-	<asp:SqlDataSource ID="SrcQuo" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+	<asp:SqlDataSource ID="SrcUser" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
 
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->

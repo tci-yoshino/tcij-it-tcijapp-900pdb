@@ -25,13 +25,13 @@ Partial Public Class UnassignedTask
     Protected WithEvents list As Global.System.Web.UI.HtmlControls.HtmlForm
 
     '''<summary>
-    '''ErrorMessages コントロール。
+    '''Msg コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents ErrorMessages As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
     '''RFQList コントロール。
@@ -79,11 +79,11 @@ Partial Public Class UnassignedTask
     Protected WithEvents SrcPO As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
-    '''SrcQuo コントロール。
+    '''SrcUser コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents SrcQuo As Global.System.Web.UI.WebControls.SqlDataSource
+    Protected WithEvents SrcUser As Global.System.Web.UI.WebControls.SqlDataSource
 End Class
