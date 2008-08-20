@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Configuration>
-  <SupplierImport>Data Source=TDB1;User ID=Purchase;Password=n061t@kun;Persist Security Info=True;</SupplierImport>
-</Configuration>
