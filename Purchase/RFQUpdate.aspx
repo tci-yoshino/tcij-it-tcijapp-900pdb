@@ -20,7 +20,7 @@
 
             <div class="main">
                 <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
-            
+                <%  If Parameter = True Then%>
                 <table class="left">
                     <tr>
                         <th>RFQ Reference Number : </th><td><asp:Label ID="RFQNumber" runat="server" Text=""></asp:Label></td>
@@ -395,6 +395,7 @@
                     <asp:HiddenField ID="QuotedDate" runat="server" />
                     <asp:HiddenField ID="UpdateDate" runat="server" />
                 </div>
+				<% End If%>                
             </div>
     </div><!-- Main Content Area END -->
 		<script language ="javascript" type="text/javascript">
