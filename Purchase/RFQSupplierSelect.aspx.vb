@@ -72,12 +72,8 @@
             st_Code = ""
         End If
 
-        ' Supplier List のデータをクリア
-        SupplierList.Items.Clear()
-        SupplierList.DataBind()
-
-        ' ポストバックではない 且つ GET が 空, notiong 以外なら仕入先リスト取得関数を実行
-        If Not (IsPostBack) And Not (String.IsNullOrEmpty(Request.QueryString("Code"))) Then
+        ' GET 且つ QueryString("Code") が送信されている場合は検索処理を実行
+        If (Request.RequestType = "GET") And (Not String.IsNullOrEmpty(Request.QueryString("Code"))) Then
             Dim dataSet As DataSet = New DataSet("Supplier")
             Get_Supplier_Data(dataSet, DBConnectString.ConnectionString)
             SupplierList.DataSource = dataSet.Tables("SupplierList")
@@ -109,12 +105,20 @@
 
     Public Sub Get_Supplier_Data(ByRef ds As DataSet, ByVal connectionString As String)
 
-        ' WHERE 分の分岐
-        Dim st_where As String = " WHERE(Supplier.SupplierCode = @Code) AND (ISNULL(Supplier.Name1,'') + ' ' + ISNULL(Supplier.Name2,'') LIKE N'%' + @Name + '%') "
-        If Not String.IsNullOrEmpty(st_Code) And String.IsNullOrEmpty(st_Name) Then
-            st_where = " WHERE(Supplier.SupplierCode = @Code) "
-        ElseIf String.IsNullOrEmpty(st_Code) And Not String.IsNullOrEmpty(st_Name) Then
-            st_where = "  WHERE(ISNULL(Supplier.Name1,'') + ' ' + ISNULL(Supplier.Name2,'') LIKE N'%' + @Name + '%')  "
+        ' Where 句の生成
+        Dim st_where As String = ""
+        If Not String.IsNullOrEmpty(st_Code) Then
+            st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
+            st_where = st_where & " Supplier.SupplierCode = @Code "
+        End If
+        If Not String.IsNullOrEmpty(st_Name) Then
+            st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
+            st_where = st_where & " ISNULL(Supplier.Name1,'') + ' ' + ISNULL(Supplier.Name2,'') LIKE N'%' + @Name + '%' "
+        End If
+
+        ' Where 句が生成できなかった場合は検索処理を行わずに処理を終了する
+        If String.IsNullOrEmpty(st_where) Then
+            Exit Sub
         End If
 
         ' 仕入先リスト取得
@@ -123,21 +127,24 @@
         ' レコードが存在していて NULL なのか、存在していなくて NULL なのかの判断ができないため、
         ' IrregularRFQLocation.SupplierCode を取得し、この値が NULL の場合はレコードが取得「できなかった」と判断する。
         Dim st_query As String = _
-              "SELECT " _
+               "SELECT " _
             & "  Supplier.SupplierCode, Supplier.R3SupplierCode, Supplier.Name3, Supplier.Name4, Supplier.CountryCode, " _
             & "  IrregularRFQLocation.SupplierCode AS IrregularSupplierCode, " _
             & "  PurchasingCountry.DefaultQuoLocationCode, " _
-            & "  IrregularRFQLocation.QuoLocationCode AS IrregularQuoLocationCode " _
-            & "FROM  " _
+            & "  IrregularRFQLocation.QuoLocationCode AS IrregularQuoLocationCode, " _
+            & "  s_Country.[Name] AS CountryName " _
+            & "FROM " _
             & "  Supplier " _
-            & "    JOIN PurchasingCountry " _
+            & "    INNER JOIN s_Country " _
+            & "      ON Supplier.CountryCode = s_Country.CountryCode " _
+            & "    INNER JOIN PurchasingCountry " _
             & "      ON Supplier.CountryCode = PurchasingCountry.CountryCode " _
-            & "    LEFT OUTER JOIN IrregularRFQLocation  " _
-            & "      ON Supplier.SupplierCode = IrregularRFQLocation.SupplierCode  " _
+            & "    LEFT OUTER JOIN IrregularRFQLocation " _
+            & "      ON Supplier.SupplierCode = IrregularRFQLocation.SupplierCode " _
             & "         AND IrregularRFQLocation.EnqLocationCode = @Location " _
-            & st_where _
-            & "ORDER BY  " _
-            & "  Supplier.SupplierCode, Supplier.Name3 "
+            & "WHERE " & st_where _
+            & "ORDER BY " _
+            & "  Supplier.SupplierCode, Supplier.Name3"
 
         Using connection As New SqlClient.SqlConnection(connectionString)
 
@@ -151,7 +158,7 @@
 
             ' SQL SELECT パラメータの追加
             command.Parameters.AddWithValue("Code", st_Code)
-            command.Parameters.AddWithValue("Name", st_Name)
+            command.Parameters.AddWithValue("Name", Common.SafeSqlLikeClauseLiteral(st_Name))
             command.Parameters.AddWithValue("Location", st_Location)
 
             ' データベースからデータを取得
