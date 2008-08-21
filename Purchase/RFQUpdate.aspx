@@ -409,7 +409,7 @@
 	    	popup('./MakerSelect.aspx?Code=' + MakerCode);
 		}
         function Correspondence_onclick() {
-    		var RFQNumber = encodeURIComponent(document.getElementById('RFQNumber').value);
+    		var RFQNumber = encodeURIComponent(document.getElementById('RFQNumber').innerHTML);
 	    	popup('./RFQCorrespondence.aspx?RFQNumber=' + RFQNumber);
         }
 		</script>
