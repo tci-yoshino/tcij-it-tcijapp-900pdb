@@ -68,4 +68,13 @@ Partial Public Class MakerSelect
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents SupplierList As Global.System.Web.UI.WebControls.ListView
+
+    '''<summary>
+    '''SrcMaker コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SrcMaker As Global.System.Web.UI.WebControls.SqlDataSource
 End Class
