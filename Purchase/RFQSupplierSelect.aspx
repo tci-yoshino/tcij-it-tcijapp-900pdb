@@ -84,7 +84,7 @@
                     <h3 style="font-style:italic">No match found.</h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onclick="returnValues('<%#Eval("SupplierCode")%>','<%#Eval("R3SupplierCode") %>','<%#Eval("Name3")%>','<%#Eval("Name4")%>','<%#Eval("CountryCode") %>','<%#If(Eval("QuoLocationCode") = Purchase.Common.DIRECT, st_Location, Eval("QuoLocationCode"))%>');<%=st_js_postback %>">
+                    <tr onclick="returnValues('<%#Eval("SupplierCode")%>','<%#Eval("R3SupplierCode") %>','<%# Replace(Eval("Name3").ToString(), "'", "\'")%>','<%#Replace(Purchase.POUpdate.DBObjToString(Eval("Name4")), "'", "\'")%>','<%#Eval("CountryCode") %>','<%#If(Eval("QuoLocationCode") = Purchase.Common.DIRECT, st_Location, Eval("QuoLocationCode"))%>');<%=st_js_postback %>">
                         <td><asp:Label ID="SupplierCode" runat="server" Text='<%#Eval("SupplierCode")%>' /></td>
                         <td>
                           <asp:Label ID="SupplierName3" runat="server" Text='<%#Eval("Name3")%>' />&nbsp;

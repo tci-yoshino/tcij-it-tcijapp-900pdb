@@ -12,7 +12,7 @@
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
-        ' パラメータを取得。空の場合はエラーメッセージを表示して終了
+        ' パラメータを取得
         If Request.RequestType = "POST" Then
             st_Location = IIf(String.IsNullOrEmpty(Request.Form("Location")), "", Request.Form("Location"))
         ElseIf Request.RequestType = "GET" Then
@@ -22,60 +22,69 @@
         ' 空白除去
         st_Location = st_Location.Trim
 
+        ' 見積依頼拠点が取得できない場合はエラーメッセージを表示して終了
         If String.IsNullOrEmpty(st_Location) Then
             ErrorMessages.Text = MSG_REQUIED_EnqLocation
             SearchForm.Visible = False
             Exit Sub
-        Else
+        End If
 
-            ' パラメータを取得
-            If Request.RequestType = "POST" Then
-                st_Code = IIf(String.IsNullOrEmpty(Request.Form("Code")), "", Request.Form("Code"))
-                st_Name = IIf(String.IsNullOrEmpty(Request.Form("Name")), "", Request.Form("Name"))
-                ' 親画面から送信された ASP.NET が自動生成する JavaScript の関数を取得。
-                ' この関数はポストバックを強制的に発生させる。
-                ' 当プログラムでは、検索結果を親画面に渡した後に親画面の見積もり回答拠点のユーザ名プルダウンコントロールを更新するために用いている。
-                st_js_postback = String.Format("window.opener.{0}; window.close(); return false;", HttpUtility.UrlDecode(Request.Form("Postback")))
-            ElseIf Request.RequestType = "GET" Then
-                st_Code = IIf(String.IsNullOrEmpty(Request.QueryString("Code")), "", Request.QueryString("Code"))
+        ' パラメータを取得
+        If Request.RequestType = "POST" Then
+            st_Code = IIf(String.IsNullOrEmpty(Request.Form("Code")), "", Request.Form("Code"))
+            st_Name = IIf(String.IsNullOrEmpty(Request.Form("Name")), "", Request.Form("Name"))
+            ' 親画面から送信された ASP.NET が自動生成する JavaScript の関数を取得。
+            ' この関数はポストバックを強制的に発生させる。
+            ' 当プログラムでは、検索結果を親画面に渡した後に親画面の見積もり回答拠点のユーザ名プルダウンコントロールを更新するために用いている。
+            If String.IsNullOrEmpty(Request.QueryString("Postback")) Then
+                st_js_postback = "window.close();"
+            Else
                 st_js_postback = String.Format("window.opener.{0}; window.close(); return false;", HttpUtility.UrlDecode(Request.QueryString("Postback")))
             End If
-
-            ' URL デコード
-            st_Code = HttpUtility.UrlDecode(st_Code)
-            st_Name = HttpUtility.UrlDecode(st_Name)
-
-            ' 空白除去
-            st_Code = st_Code.Trim
-            st_Name = st_Name.Trim
-
-            ' 検索ブロックの TextBox の値を書き換え
-            Code.Text = st_Code
-            Name.Text = st_Name
-            Location.Value = st_Location
-            Postback.Value = Request.QueryString("Postback")
-
-            ' 全角を半角に変換
-            st_Code = StrConv(st_Code, VbStrConv.Narrow)
-
-            ' 半角英数チェック
-            If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
-                st_Code = ""
+        ElseIf Request.RequestType = "GET" Then
+            st_Code = IIf(String.IsNullOrEmpty(Request.QueryString("Code")), "", Request.QueryString("Code"))
+            If String.IsNullOrEmpty(Request.QueryString("Postback")) Then
+                st_js_postback = "window.close();"
+            Else
+                st_js_postback = String.Format("window.opener.{0}; window.close(); return false;", HttpUtility.UrlDecode(Request.QueryString("Postback")))
             End If
-
-            ' Supplier List のデータをクリア
-            SupplierList.Items.Clear()
-            SupplierList.DataBind()
-
-            ' ポストバックではない 且つ GET が 空, notiong 以外なら仕入先リスト取得関数を実行
-            If Not (IsPostBack) And Not (String.IsNullOrEmpty(Request.QueryString("Code"))) Then
-                Dim dataSet As DataSet = New DataSet("Supplier")
-                Get_Supplier_Data(dataSet, DBConnectString.ConnectionString)
-                SupplierList.DataSource = dataSet.Tables("SupplierList")
-                SupplierList.DataBind()
-            End If
-
         End If
+
+        ' URL デコード
+        st_Code = HttpUtility.UrlDecode(st_Code)
+        st_Name = HttpUtility.UrlDecode(st_Name)
+
+        ' 空白除去
+        st_Code = st_Code.Trim
+        st_Name = st_Name.Trim
+
+        ' 検索ブロックの TextBox の値を書き換え
+        Code.Text = st_Code
+        Name.Text = st_Name
+        Location.Value = st_Location
+        Postback.Value = Request.QueryString("Postback")
+
+        ' 全角を半角に変換
+        st_Code = StrConv(st_Code, VbStrConv.Narrow)
+
+        ' 半角英数チェック
+        If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
+            st_Code = ""
+        End If
+
+        ' Supplier List のデータをクリア
+        SupplierList.Items.Clear()
+        SupplierList.DataBind()
+
+        ' ポストバックではない 且つ GET が 空, notiong 以外なら仕入先リスト取得関数を実行
+        If Not (IsPostBack) And Not (String.IsNullOrEmpty(Request.QueryString("Code"))) Then
+            Dim dataSet As DataSet = New DataSet("Supplier")
+            Get_Supplier_Data(dataSet, DBConnectString.ConnectionString)
+            SupplierList.DataSource = dataSet.Tables("SupplierList")
+            SupplierList.DataBind()
+        End If
+
+
     End Sub
 
     ' Search ボタンクリック処理
@@ -130,30 +139,25 @@
             & "ORDER BY  " _
             & "  Supplier.SupplierCode, Supplier.Name3 "
 
-        Try
-            Using connection As New SqlClient.SqlConnection(connectionString)
+        Using connection As New SqlClient.SqlConnection(connectionString)
 
-                ' 接続情報、アダプタ、SQLコマンド オブジェクトの生成
-                Dim adapter As New SqlClient.SqlDataAdapter()
-                Dim command As New SqlClient.SqlCommand(st_query, connection)
+            ' 接続情報、アダプタ、SQLコマンド オブジェクトの生成
+            Dim adapter As New SqlClient.SqlDataAdapter()
+            Dim command As New SqlClient.SqlCommand(st_query, connection)
 
-                ' DataSet にテーブルとカラムを追加
-                ds.Tables.Add("SupplierList")
-                ds.Tables("SupplierList").Columns.Add("QuoLocationCode", Type.GetType("System.String"))
+            ' DataSet にテーブルとカラムを追加
+            ds.Tables.Add("SupplierList")
+            ds.Tables("SupplierList").Columns.Add("QuoLocationCode", Type.GetType("System.String"))
 
-                ' SQL SELECT パラメータの追加
-                command.Parameters.AddWithValue("Code", st_Code)
-                command.Parameters.AddWithValue("Name", st_Name)
-                command.Parameters.AddWithValue("Location", st_Location)
+            ' SQL SELECT パラメータの追加
+            command.Parameters.AddWithValue("Code", st_Code)
+            command.Parameters.AddWithValue("Name", st_Name)
+            command.Parameters.AddWithValue("Location", st_Location)
 
-                ' データベースからデータを取得
-                adapter.SelectCommand = command
-                adapter.Fill(ds.Tables("SupplierList"))
-            End Using
-        Catch ex As Exception
-            'Exception をスローする
-            Throw
-        End Try
+            ' データベースからデータを取得
+            adapter.SelectCommand = command
+            adapter.Fill(ds.Tables("SupplierList"))
+        End Using
 
         ' 見積回答拠点コード取得
         For i As Integer = 0 To ds.Tables("SupplierList").Rows.Count - 1
