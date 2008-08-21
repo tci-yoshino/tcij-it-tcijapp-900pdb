@@ -20,7 +20,8 @@ Partial Public Class RFQUpdate
     Private Const ERR_ALREADY_UPDATED As String = "このデータは他のユーザーによって編集されました。その内容を確認し再度編集をお願いします。"
     'エラーメッセージ(更新処理失敗)
     Private Const ERR_GET_RFQDATA_FAILURE As String = "RFQ データの取得に失敗しましたが、エラーが検出されませんでした。"
-
+    'エラーメッセージ(他拠点情報更新)
+    Private Const ERR_ANOTHER_LOCATION As String = "他拠点間のRFQ情報は更新できません。"
     '画面表示フラグ
     Protected Parameter As Boolean = True
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -74,7 +75,10 @@ Partial Public Class RFQUpdate
         If CheckUpdatedate() = False Then
             Exit Sub
         End If
-
+        '更新可能拠点の確認
+        If CheckLocation() = False Then
+            Exit Sub
+        End If
         '更新処理
         Dim sqlTran As System.Data.SqlClient.SqlTransaction = DBConn.BeginTransaction()
         DBCommand.Transaction = sqlTran
@@ -224,6 +228,10 @@ Partial Public Class RFQUpdate
         End If
         '他セッションでの更新チェック
         If CheckUpdatedate() = False Then
+            Exit Sub
+        End If
+        '更新可能拠点の確認
+        If CheckLocation() = False Then
             Exit Sub
         End If
         DBCommand.CommandText = "UPDATE RFQHeader SET RFQStatusCode = 'C', UpdatedBy = @UpdatedBy, UpdateDate = GETDATE() WHERE (RFQNumber = @RFQNumber)"
@@ -579,5 +587,15 @@ Partial Public Class RFQUpdate
                 End If
             End If
         End Using
+    End Function
+
+    Private Function CheckLocation() As Boolean
+        If Session("Purchase.isAdmin") = False Then
+            If Session("LocationName") <> EnqLocation.Text And Session("LocationName") <> QuoLocation.Text Then
+                Msg.Text = ERR_ANOTHER_LOCATION
+                Return False
+            End If
+        End If
+        Return True
     End Function
 End Class
