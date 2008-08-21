@@ -12,8 +12,19 @@ Imports System.Data.SqlClient
 Partial Public Class POUpdate
     Inherits CommonPage
 
+#Region "変数、定数定義"
+
     Protected st_PONumber As String
     Protected st_Action As String
+
+    ''' <summary>
+    ''' エラー定数です。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Const ERR_LOCATION_INCONSITENT As String = "拠点が一致しません。"
+    Const ERR_DATA_REMOVED_BY_OTHER As String = "このデータは他のユーザーによって削除されました。"
+    Const ERR_DATA_CHAGED_BY_OTHER As String = "このデータは他のユーザーによって編集されました。その内容を確認し再度編集をお願いします"
+
 
     ''' <summary>
     ''' POデータを格納する構造体です。
@@ -86,8 +97,9 @@ Partial Public Class POUpdate
         Public CreateDate As DateTime?
         Public UpdatedBy As Integer?
         Public UpdateDate As DateTime?
-
     End Structure
+
+#End Region
 
 
     ''' <summary>
@@ -98,14 +110,20 @@ Partial Public Class POUpdate
     ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
+        If Not (Request.QueryString("Action") Is Nothing) Then
+            st_Action = Request.QueryString("Action").ToString()
+        ElseIf Not (Request.Form("Action") Is Nothing) Then
+            st_Action = Request.Form("Action").ToString()
+        End If
 
-        st_Action = CStr(IIf(Request.RequestType = "POST", Request.Form("Action").ToString(), _
-                             Request.QueryString("Action").ToString()))
+        If Not (Request.QueryString("PONumber") Is Nothing) Then
+            st_PONumber = Request.QueryString("PONumber").ToString()
+        ElseIf Not (Request.Form("PONumber") Is Nothing) Then
+            st_PONumber = Request.Form("PONumber").ToString()
+        End If
 
-        st_PONumber = CStr(IIf(Request.RequestType = "POST", Request.Form("PONumber").ToString(), _
-                             Request.QueryString("PONumber").ToString()))
+        'TODO ダミーコードです。要削除
         st_PONumber = "1000000011"
-
 
         If IsPostBack = False Then
             If IsNumeric(st_PONumber) = False Then
@@ -117,11 +135,15 @@ Partial Public Class POUpdate
                 Msg.Text = MSG_NO_DATA_FOUND
                 Exit Sub
             End If
-
-
             ClearForm()
             ViewPOInformationToForm(CInt(st_PONumber))
+
+            ChiPOIssue.NavigateUrl = String.Format("./POIssue.aspx?PONumber={0}", st_PONumber)
+
         End If
+
+
+
 
     End Sub
 
@@ -133,54 +155,171 @@ Partial Public Class POUpdate
     ''' <remarks></remarks>
     Protected Sub Update_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Update.Click
 
-        If st_Action <> "Update" Then
-            Msg.Text = ERR_INVALID_PARAMETER
+        If ValidateForUpdate() = False Then
             Exit Sub
         End If
 
-        If IsNumeric(PO.Value) = False Then
-            Msg.Text = ERR_INVALID_PARAMETER
+        If ValidateCommon() = False Then
             Exit Sub
         End If
 
         Dim i_PONumber As Integer = CInt(PO.Value)
 
-        Dim POInformation As POInformationType = SelectPOInformation(i_PONumber)
-        If CBool(Session("Purchase.isAdmin")) = False And POInformation.POLocationCode <> Session("LocationCode").ToString() Then
-            Msg.Text = "拠点が一致しません。"
-            Exit Sub
-        End If
-
-        If ExistsPO(i_PONumber.ToString()) = False Then
-            Msg.Text = "このデータは他のユーザーによって削除されました。"
-            Exit Sub
-        End If
-
-        'TODO 更新確認値の代入
-        If isLatestData("PO", "PONumber", i_PONumber.ToString(), "") = False Then
-            Msg.Text = "このデータは他のユーザーによって編集されました。その内容を確認し再度編集をお願いします"
-            Exit Sub
-        End If
-
         UpdatePOInfomationFromForm(i_PONumber)
+        Msg.Text = String.Empty
+
+        ViewPOInformationToForm(i_PONumber)
 
     End Sub
 
-
     ''' <summary>
-    ''' キャンセルボタンのクリックイベントです。
+    ''' Cancelボタンのクリックイベントです。
     ''' </summary>
     ''' <param name="sender">ASP.NETの既定値</param>
     ''' <param name="e">ASP.NETの既定値</param>
     ''' <remarks></remarks>
     Protected Sub Cancell_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Cancell.Click
 
-        '部分更新仕様
+        If ValidateForUpdate() = False Then
+            Exit Sub
+        End If
 
+        If Not ValidateDateTextBox(CancellationDate) Then
+            Msg.Text = "CancellationDate" & ERR_INCORRECT_FORMAT
+            Exit Sub
+        End If
 
+        Dim i_PONumber As Integer = CInt(PO.Value)
+
+        CancelPOInfomationFromForm(i_PONumber)
+        Msg.Text = String.Empty
+
+        ViewPOInformationToForm(i_PONumber)
     End Sub
 
+    ''' <summary>
+    ''' Update,Cancel共通検証
+    ''' </summary>
+    ''' <returns>正当なときはTrue 不正なときはFalseを返します。</returns>
+    ''' <remarks></remarks>
+    Private Function ValidateCommon() As Boolean
 
+        If Not ValidateDateTextBox(DeliveryDate) Then
+            Msg.Text = "DeliveryDate" & ERR_INCORRECT_FORMAT
+            Return False
+        End If
+
+        If Not ValidateDateTextBox(DueDate) Then
+            Msg.Text = "DueDate" & ERR_INCORRECT_FORMAT
+            Return False
+        End If
+
+        If Not ValidateDateTextBox(GoodsArrivedDate) Then
+            Msg.Text = "GoodsArrivedDate" & ERR_INCORRECT_FORMAT
+            Return False
+        End If
+
+        If Not ValidateDateTextBox(InvoceReceivedDate) Then
+            Msg.Text = "InvoiceReceivedDate" & ERR_INCORRECT_FORMAT
+            Return False
+        End If
+
+        If Not ValidateDateTextBox(ImportCustomClearanceDate) Then
+            Msg.Text = "ImportCustomClearanceDate" & ERR_INCORRECT_FORMAT
+            Return False
+        End If
+
+        If Not ValidateDateTextBox(QMFinishDate) Then
+            Msg.Text = "QMFinishDate" & ERR_INCORRECT_FORMAT
+            Return False
+        End If
+
+        If Not ValidateDateTextBox(ScheduledExportDate) Then
+            Msg.Text = "ScheduledExportDate" & ERR_INCORRECT_FORMAT
+            Return False
+        End If
+
+        If Not ValidateDateTextBox(CancellationDate) Then
+            Msg.Text = "CancellationDate" & ERR_INCORRECT_FORMAT
+            Return False
+        End If
+        Return True
+
+    End Function
+
+    ''' <summary>
+    ''' 日付型テキストボックスの正当性を評価します。
+    ''' </summary>
+    ''' <param name="TargetObject">対象となるTexrBoxオブジェクト</param>
+    ''' <returns>正当なときはTrue 不正なときはFalseを返します</returns>
+    ''' <remarks>評価対象の文字列が空のときはTrueと判定されます。</remarks>
+    Private Function ValidateDateTextBox(ByVal TargetObject As TextBox) As Boolean
+
+        Return ValidateDateTextBox(TargetObject, True)
+
+    End Function
+
+    ''' <summary>
+    ''' 日付型テキストボックスの正当性を評価します。
+    ''' </summary>
+    ''' <param name="TargetObject">対象となるTexrBoxオブジェクト</param>
+    ''' <param name="AllowEmpty">空の文字列を許すかを設定します。Trueは許可 Falseは不許可 </param>
+    ''' <returns>正当なときはTrue 不正なときはFalseを返します</returns>
+    ''' <remarks></remarks>
+    Private Function ValidateDateTextBox(ByVal TargetObject As TextBox, ByVal AllowEmpty As Boolean) As Boolean
+
+        If AllowEmpty And TargetObject.Text.Trim = String.Empty Then
+            Return True
+        End If
+
+        If Not Regex.IsMatch(TargetObject.Text, DATE_REGEX_OPTIONAL) Then
+            Return False
+        End If
+
+        If Not IsDate(TargetObject.Text.Trim) Then
+            Return False
+        End If
+        Return True
+    End Function
+
+
+    ''' <summary>
+    ''' 更新時のパラメータ、設定値の正当性チェックを行います。
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Private Function ValidateForUpdate() As Boolean
+
+        If st_Action <> "Update" Then
+            Msg.Text = ERR_INVALID_PARAMETER
+            Return False
+        End If
+
+        If IsNumeric(PO.Value) = False Then
+            Msg.Text = ERR_INVALID_PARAMETER
+            Return False
+        End If
+
+        Dim i_PONumber As Integer = CInt(PO.Value)
+
+        Dim POInformation As POInformationType = SelectPOInformation(i_PONumber)
+        If CBool(Session("Purchase.isAdmin")) = False And POInformation.POLocationCode <> Session("LocationCode").ToString() Then
+            Msg.Text = ERR_LOCATION_INCONSITENT
+            Return False
+        End If
+
+        If ExistsPO(i_PONumber.ToString()) = False Then
+            Msg.Text = ERR_DATA_REMOVED_BY_OTHER
+            Return False
+        End If
+
+        If isLatestData("PO", "PONumber", i_PONumber.ToString(), UpdateDate.Value) = False Then
+            Msg.Text = ERR_DATA_CHAGED_BY_OTHER
+            Return False
+        End If
+        Return True
+
+    End Function
 
 
     ''' <summary>
@@ -236,45 +375,25 @@ Partial Public Class POUpdate
     ''' <summary>
     ''' 指定されたPOのデータが存在するかを取得します。
     ''' </summary>
-    ''' <param name="PONumber">POの一意ID</param>
+    ''' <param name="PONumber">POテーブルの一意ID</param>
     ''' <returns>存在するときはTure 存在しないときはFalse</returns>
     ''' <remarks></remarks>
     Private Function ExistsPO(ByVal PONumber As String) As Boolean
-        Return ExistenceConfirmation("v_PO", "PONumber", ID)
+
+        Return ExistenceConfirmation("v_PO", "PONumber", PONumber)
+
     End Function
 
-    ''' <summary>
-    ''' 指定されたPOのデータの更新日付を取得します。
-    ''' </summary>
-    ''' <param name="ID">POの一意ID</param>
-    ''' <returns>取得した更新日付 データが見つからないときはエラーが発生します。</returns>
-    ''' <remarks></remarks>
-    Private Function GetUpdateDate(ByVal ID As String) As DateTime
-        Throw New ApplicationException("This method is'nt maked.")
-    End Function
-
-    ''' <summary>
-    ''' 指定されたPOのデータの更新日付を文字列型で取得します。
-    ''' </summary>
-    ''' <param name="PONumber">POの一意ID</param>
-    ''' <returns>取得した更新日付を示す文字列 データが見つからないときはエラーが発生します。</returns>
-    ''' <remarks></remarks>
-    Private Function GetUpdateDateString(ByVal PONumber As String) As String
-        Throw New ApplicationException("This method is'nt maked.")
-    End Function
 
     ''' <summary>
     ''' 指定されたPOデータを画面に表示します。
     ''' </summary>
-    ''' <param name="PONumber"></param>
+    ''' <param name="PONumber">POテーブルの一意ID</param>
     ''' <remarks></remarks>
     Private Sub ViewPOInformationToForm(ByVal PONumber As Integer)
 
         PO.Value = PONumber.ToString()
-
         Dim POInformation As POInformationType = SelectPOInformation(PONumber)
-
-        '画面に取得値を代入
 
         'フォーム左段
         RFQNumber.Text = POInformation.RFQNumber.ToString()
@@ -319,38 +438,86 @@ Partial Public Class POUpdate
         PurchasingRequisitionNumber.Text = POInformation.PurchasingRequisitionNumber
         CancellationDate.Text = NullableDateToString(POInformation.CancellationDate, DATE_FORMAT)
 
+        UpdateDate.Value = GetUpdateDate("PO", "PONumber", POInformation.PONumber.ToString())
+
     End Sub
 
     ''' <summary>
-    ''' 画面上のPOデータをDBへ保存します。
+    ''' Cancelアクション時のデータをPOテーブルに保存します。
     ''' </summary>
-    ''' <param name="PONumber"></param>
+    ''' <param name="PONumber">POテーブルの一意ID</param>
     ''' <remarks></remarks>
-    Private Sub UpdatePOInfomationFromForm(ByVal PONumber As Integer)
-
+    Private Sub CancelPOInfomationFromForm(ByVal PONumber As Integer)
 
         Dim POInformation As POInformationType = SelectPOInformation(PONumber)
 
+        If CancellationDate.Text.Trim() = String.Empty Then
+            CancellationDate.Text = GetDatabaseCurrentTime.ToString(DATE_FORMAT)
+        End If
+
+        POInformation.CancellationDate = StrToNullableDateTime(CancellationDate.Text)
+        POInformation.isCancelled = False
+
+        UpdatePOInfomation(POInformation)
+
+    End Sub
+
+    ''' <summary>
+    ''' Updateアクション時のデータをPOテーブルに保存します。
+    ''' </summary>
+    ''' <param name="PONumber">POテーブルの一意ID</param>
+    ''' <remarks></remarks>
+    Private Sub UpdatePOInfomationFromForm(ByVal PONumber As Integer)
+        Dim POInformation As POInformationType = SelectPOInformation(PONumber)
+
         'フォーム左段
-        POInformation.R3PONumber = StrToNullableString(R3PONumber.Text)
-        POInformation.DeliveryDate = StrToNullableDateTime(DeliveryDate.Text)
+        POInformation.R3PONumber = StrToNullableString(R3PONumber.Text.Trim())
+        POInformation.DeliveryDate = StrToNullableDateTime(DeliveryDate.Text.Trim())
 
         'フォーム右段
-        POInformation.DueDate = StrToNullableDateTime(DueDate.Text)
-        POInformation.GoodsArrivedDate = StrToNullableDateTime(GoodsArrivedDate.Text)
-        POInformation.LotNumber = StrToNullableString(LotNumber.Text)
-        POInformation.InvoiceReceivedDate = StrToNullableDateTime(InvoceReceivedDate.Text)
-        POInformation.ImportCustomClearanceDate = StrToNullableDateTime(ImportCustomClearanceDate.Text)
-        POInformation.QMStartingDate = StrToNullableDateTime(QMStartingDate.Text)
-        POInformation.QMFinishDate = StrToNullableDateTime(QMFinishDate.Text)
-        POInformation.QMResult = StrToNullableString(QMResult.Text)
-        POInformation.RequestQuantity = StrToNullableString(RequestQuantity.Text)
-        POInformation.ScheduledExportDate = StrToNullableDateTime(ScheduledExportDate.Text)
-        POInformation.PurchasingRequisitionNumber = StrToNullableString(PurchasingRequisitionNumber.Text)
-        POInformation.CancellationDate = StrToNullableDateTime(CancellationDate.Text)
+        POInformation.DueDate = StrToNullableDateTime(DueDate.Text.Trim())
+        POInformation.GoodsArrivedDate = StrToNullableDateTime(GoodsArrivedDate.Text.Trim())
+        POInformation.LotNumber = StrToNullableString(LotNumber.Text.Trim())
+        POInformation.InvoiceReceivedDate = StrToNullableDateTime(InvoceReceivedDate.Text.Trim())
+        POInformation.ImportCustomClearanceDate = StrToNullableDateTime(ImportCustomClearanceDate.Text.Trim())
+        POInformation.QMStartingDate = StrToNullableDateTime(QMStartingDate.Text.Trim())
+        POInformation.QMFinishDate = StrToNullableDateTime(QMFinishDate.Text.Trim())
+        POInformation.QMResult = StrToNullableString(QMResult.Text.Trim())
+        POInformation.RequestQuantity = StrToNullableString(RequestQuantity.Text.Trim())
+        POInformation.ScheduledExportDate = StrToNullableDateTime(ScheduledExportDate.Text.Trim())
+        POInformation.PurchasingRequisitionNumber = StrToNullableString(PurchasingRequisitionNumber.Text.Trim())
+        POInformation.CancellationDate = StrToNullableDateTime(CancellationDate.Text.Trim())
 
         UpdatePOInfomation(POInformation)
     End Sub
+
+    ''' <summary>
+    ''' データベースから現在の時刻を取得します。
+    ''' </summary>
+    ''' <returns>取得した時刻</returns>
+    ''' <remarks></remarks>
+    Private Function GetDatabaseCurrentTime() As DateTime
+
+        Dim dt_Current As DateTime = New DateTime()
+        Dim conn As SqlConnection = Nothing
+        Try
+            conn = New SqlConnection(DB_CONNECT_STRING)
+            Dim cmd As SqlCommand = conn.CreateCommand()
+
+            cmd.CommandText = "SELECT GETDATE() "
+
+            conn.Open()
+            dt_Current = CType(cmd.ExecuteScalar(), DateTime)
+
+        Finally
+            If Not conn Is Nothing Then
+                conn.Close()
+            End If
+        End Try
+        Return dt_Current
+
+    End Function
+
 
     ''' <summary>
     ''' POテーブルのデータを取得します。
@@ -452,7 +619,7 @@ Partial Public Class POUpdate
     End Function
 
     ''' <summary>
-    ''' PO取得SQK文字列を生成します。
+    ''' POデータ取得SQK文字列を生成します。
     ''' </summary>
     ''' <returns>生成した文字列</returns>
     ''' <remarks></remarks>
@@ -605,7 +772,7 @@ Partial Public Class POUpdate
     End Sub
 
     ''' <summary>
-    ''' PO更新SQL文字列を生成します。
+    ''' POテーブル更新SQL文字列を生成します。
     ''' </summary>
     ''' <returns>生成した文字列</returns>
     ''' <remarks></remarks>
@@ -671,17 +838,6 @@ Partial Public Class POUpdate
     Public Shared Function DBObjToString(ByVal value As Object) As String
         Return DBObjToString(value, String.Empty)
     End Function
-
-    ''' <summary>
-    ''' DBオブジェクトをSystem.stringに変換します。
-    ''' </summary>
-    ''' <param name="value">対象となる System.object</param>
-    ''' <returns>変換したSystem.string 。DBNullの場合はstring.Emptyを返します。</returns>
-    Public Shared Function DBObjToObj(ByVal value As Object) As Object
-        Return DBObjToString(value, String.Empty)
-    End Function
-
-
 
     ''' <summary>
     ''' DBオブジェクトをSystem.stringに変換します。
@@ -887,16 +1043,6 @@ Partial Public Class POUpdate
     ''' <returns>変換したstring 文字列</returns>
     Public Shared Function NullableDateToString(ByVal value As DateTime?) As String
         Return NullableDateToString(value, "yyyy/MM/dd")
-    End Function
-
-    ''' <summary>
-    ''' 整数に変換可能かを返します。
-    ''' </summary>
-    ''' <param name="value">検証対象となるsystem.string</param>
-    ''' <returns>整数に変換が可能であればtrue、不可能ならfalse</returns>
-    Public Shared Function IsNumeric(ByVal value As String) As Boolean
-        Dim i As Integer
-        Return Integer.TryParse(value, i)
     End Function
 
     ''' <summary>

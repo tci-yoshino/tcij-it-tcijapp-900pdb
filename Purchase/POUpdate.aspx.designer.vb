@@ -421,6 +421,15 @@ Partial Public Class POUpdate
     Protected WithEvents PO As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
+    '''Action コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''Update コントロール。
     '''</summary>
     '''<remarks>

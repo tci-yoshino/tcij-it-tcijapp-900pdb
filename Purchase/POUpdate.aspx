@@ -162,6 +162,7 @@
                 </table>
 				<asp:HiddenField ID="UpdateDate" runat="server" />
 				<asp:HiddenField ID="PO" runat="server" />
+				<asp:HiddenField ID="Action" value="Update" runat="server" />
 
                 <div class="btns">
                     <asp:Button ID="Update" runat="server" Text="Update" />
