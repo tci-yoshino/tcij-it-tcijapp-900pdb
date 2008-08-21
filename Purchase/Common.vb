@@ -334,6 +334,33 @@ Public Class Common
     End Function
 
     ''' <summary>
+    ''' レコードの更新日を yyyy-mm-dd hh:mi:ss 形式の文字列で取得します。
+    ''' </summary>
+    ''' <param name="TableName">検索対象のテーブル名</param>
+    ''' <param name="TableField">検索条件フィールド名</param>
+    ''' <param name="CheckData">検索条件の値</param>
+    ''' <returns>更新日</returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetUpdateDate(ByVal TableName As String, ByVal TableField As String, ByVal CheckData As String) As String
+
+        Dim st_SQLCommand As String = String.Empty
+        Dim i_RecordCount As String = ""
+
+        st_SQLCommand = String.Format("SELECT CONVERT(VARCHAR,UpdateDate,120) AS RecordCount FROM {0} WHERE {1} = @CheckData ", _
+                                    SafeSqlLiteral(TableName), SafeSqlLiteral(TableField))
+        Using DBConn As New SqlClient.SqlConnection(DB_CONNECT_STRING), _
+            DBCommand As SqlClient.SqlCommand = DBConn.CreateCommand()
+            DBCommand.CommandText = st_SQLCommand
+            DBCommand.Parameters.AddWithValue("CheckData", CheckData)
+
+            DBConn.Open()
+            i_RecordCount = Convert.ToString(DBCommand.ExecuteScalar)
+        End Using
+
+        Return i_RecordCount
+    End Function
+
+    ''' <summary>
     ''' 更新するレコードの更新日が指定した更新日と同一であるかを示します。
     ''' </summary>
     ''' <param name="TableName">検索対象のテーブル名</param>
@@ -343,7 +370,7 @@ Public Class Common
     ''' <returns>更新日が同一である場合は True 、そうでない場合は False を返します。</returns>
     ''' <remarks></remarks>
     Public Shared Function isLatestData(ByVal TableName As String, ByVal TableField As String, ByVal CheckData As String, ByVal UpdateDate As String) As Boolean
-        '汎用存在確認チェック
+
         Dim st_SQLCommand As String = String.Empty
         st_SQLCommand = String.Format("SELECT COUNT(*) AS RecordCount FROM {0} WHERE {1} = @CheckData AND CONVERT(VARCHAR,UpdateDate,120) = @UpdateDate ", _
                                     SafeSqlLiteral(TableName), SafeSqlLiteral(TableField))
