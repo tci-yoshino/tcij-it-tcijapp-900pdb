@@ -77,8 +77,8 @@
             Dim dataSet As DataSet = New DataSet("Supplier")
             Get_Supplier_Data(dataSet, DBConnectString.ConnectionString)
             SupplierList.DataSource = dataSet.Tables("SupplierList")
-            SupplierList.DataBind()
         End If
+        SupplierList.DataBind()
 
     End Sub
 
