@@ -63,7 +63,7 @@ window.onload = function() {
 		<hr />
 
         <div class="list">
-            <asp:ListView ID="SupplierList" runat="server" AutoGenerateColumns="False">
+            <asp:ListView ID="SupplierList" runat="server" DataSourceID="SrcSupplier">
                 <LayoutTemplate>
                     <table ID="itemPlaceholderContainer" runat="server">
                         <tr id="Tr1" runat="server">
@@ -78,10 +78,10 @@ window.onload = function() {
                     <h3 style="font-style:italic">No match found.</h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onclick="returnValues('<%#Eval("SupplierCode")%>','<%#Eval("Name3")%>','<%#Eval("Name4")%>');">
+                    <tr onclick="returnValues('<%#Eval("SupplierCode")%>','<%# Replace(Eval("Name3").ToString(), "'", "\'")%>','<%#Replace(Eval("Name4").ToString(), "'", "\'")%>');">
                         <td><asp:Label ID="SupplierCode" runat="server" Text='<%#Eval("SupplierCode")%>' /></td>
                         <td>
-                          <asp:Label ID="SupplierName3" runat="server" Text='<%#Eval("Name3")%> ' />
+                          <asp:Label ID="SupplierName3" runat="server" Text='<%#Eval("Name3")%>' />&nbsp;
                           <asp:Label ID="SupplierName4" runat="server" Text='<%#Eval("Name4")%>' />
                         </td>
                     </tr>
@@ -89,6 +89,7 @@ window.onload = function() {
             </asp:ListView>
         </div>
     </div><!-- Main Content Area END -->
+    <asp:SqlDataSource ID="SrcSupplier" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
 
 
 </body>
