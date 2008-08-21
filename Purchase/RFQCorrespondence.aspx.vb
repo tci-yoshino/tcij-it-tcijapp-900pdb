@@ -1,5 +1,4 @@
-﻿
-Option Explicit On
+﻿Option Explicit On
 
 Imports System.Data.SqlClient
 Imports Purchase.Common
@@ -9,17 +8,22 @@ Partial Public Class RFQCorrespondence
     Inherits CommonPage
 
     Dim st_SqlStr As String = ""
-    '***************************************************************************************************
-    Dim RFQNumber As Integer = 1000000048
-    '***************************************************************************************************
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If IsPostBack = False Then
-            '[DefaultでEnqUser.Checked設定]-------------------------------------------------------------
-            EnqUser.Checked = True
+            '[RFQNumberの取込]--------------------------------------------------------------------------
+            If Request.QueryString("RFQNumber") <> "" Then
+                hd_RFQNumber.Value = Request.QueryString("RFQNumber")
+            Else
+                Msg.Text = Common.ERR_INVALID_PARAMETER
+                Exit Sub
+            End If
 
             '[Connectionの定義]-------------------------------------------------------------------------
             Dim conn As SqlConnection = Nothing
+
+            '[DefaultでEnqUser.Checked設定]-------------------------------------------------------------
+            EnqUser.Checked = True
 
             '[CorresTitle設定]--------------------------------------------------------------------------
             Try
@@ -41,7 +45,7 @@ Partial Public Class RFQCorrespondence
                 conn = New SqlConnection(DB_CONNECT_STRING)
                 Dim cmd As SqlCommand = conn.CreateCommand()
                 cmd.CommandText = "SELECT v_User.Name FROM RFQHeader LEFT OUTER JOIN v_User ON RFQHeader.EnqUserID = v_User.UserID WHERE (RFQHeader.RFQNumber = @RFQNumber)"
-                cmd.Parameters.AddWithValue("RFQNumber", RFQNumber)
+                cmd.Parameters.AddWithValue("RFQNumber", hd_RFQNumber.Value)
                 conn.Open()
                 Dim dr As SqlDataReader = cmd.ExecuteReader
                 EnqUser.Text = ""
@@ -57,7 +61,7 @@ Partial Public Class RFQCorrespondence
                 conn = New SqlConnection(DB_CONNECT_STRING)
                 Dim cmd As SqlCommand = conn.CreateCommand()
                 cmd.CommandText = "SELECT s_Location.Name FROM RFQHeader LEFT OUTER JOIN s_Location ON RFQHeader.EnqLocationCode = s_Location.LocationCode WHERE (RFQHeader.RFQNumber = @RFQNumber)"
-                cmd.Parameters.AddWithValue("RFQNumber", RFQNumber)
+                cmd.Parameters.AddWithValue("RFQNumber", hd_RFQNumber.Value)
                 conn.Open()
                 Dim dr As SqlDataReader = cmd.ExecuteReader
                 EnqLocation.Text = ""
@@ -73,7 +77,7 @@ Partial Public Class RFQCorrespondence
                 conn = New SqlConnection(DB_CONNECT_STRING)
                 Dim cmd As SqlCommand = conn.CreateCommand()
                 cmd.CommandText = "SELECT v_User.Name FROM RFQHeader LEFT OUTER JOIN v_User ON RFQHeader.QuoUserID = v_User.UserID WHERE (RFQHeader.RFQNumber = @RFQNumber)"
-                cmd.Parameters.AddWithValue("RFQNumber", RFQNumber)
+                cmd.Parameters.AddWithValue("RFQNumber", hd_RFQNumber.Value)
                 conn.Open()
                 Dim dr As SqlDataReader = cmd.ExecuteReader
                 QuoUser.Text = ""
@@ -89,7 +93,7 @@ Partial Public Class RFQCorrespondence
                 conn = New SqlConnection(DB_CONNECT_STRING)
                 Dim cmd As SqlCommand = conn.CreateCommand()
                 cmd.CommandText = "SELECT s_Location.Name FROM RFQHeader LEFT OUTER JOIN s_Location ON RFQHeader.QuoLocationCode = s_Location.LocationCode WHERE (RFQHeader.RFQNumber = @RFQNumber)"
-                cmd.Parameters.AddWithValue("RFQNumber", RFQNumber)
+                cmd.Parameters.AddWithValue("RFQNumber", hd_RFQNumber.Value)
                 conn.Open()
                 Dim dr As SqlDataReader = cmd.ExecuteReader
                 QuoLocation.Text = ""
@@ -105,11 +109,10 @@ Partial Public Class RFQCorrespondence
         End If
 
         '[SrcRFQHistoryにSelectCommand設定]-------------------------------------------------------------
-        SrcRFQHistory.SelectCommand = "SELECT dbo.RFQStatus.Text AS Status, dbo.RFQHistory.CreateDate AS Date, dbo.v_User.Name + '          (' + dbo.v_User.LocationName + ')' AS Sender, v_User_1.Name + '          (' + dbo.v_User.LocationName + ')' AS Addressee, dbo.RFQHistory.Note AS Notes, isChecked, RcptUserID, RFQHistoryNumber " & _
-                                              "FROM dbo.RFQHistory INNER JOIN dbo.RFQStatus ON dbo.RFQHistory.RFQStatusCode = dbo.RFQStatus.RFQStatusCode LEFT OUTER JOIN dbo.v_User AS v_User_1 ON dbo.RFQHistory.RcptUserID = v_User_1.UserID LEFT OUTER JOIN dbo.v_User ON dbo.RFQHistory.CreatedBy = dbo.v_User.UserID " & _
-                                              "WHERE (dbo.RFQHistory.RFQNumber = " & RFQNumber & ") " & _
-                                              "ORDER BY dbo.RFQHistory.RFQHistoryNumber DESC"
-
+        SrcRFQHistory.SelectCommand = "SELECT dbo.RFQStatus.Text AS Status, dbo.RFQHistory.CreateDate AS Date, dbo.v_User.Name + '          (' + dbo.v_User.LocationName + ')' AS Sender, v_User_1.Name + '          (' + dbo.v_User.LocationName + ')' AS Addressee, dbo.RFQHistory.Note AS Notes, dbo.RFQHistory.isChecked, dbo.RFQHistory.RcptUserID, dbo.RFQHistory.RFQHistoryNumber " & _
+                                      "FROM dbo.RFQHistory LEFT OUTER JOIN dbo.RFQStatus ON dbo.RFQHistory.RFQStatusCode = dbo.RFQStatus.RFQStatusCode LEFT OUTER JOIN dbo.v_User AS v_User_1 ON dbo.RFQHistory.RcptUserID = v_User_1.UserID LEFT OUTER JOIN dbo.v_User ON dbo.RFQHistory.CreatedBy = dbo.v_User.UserID " & _
+                                      "WHERE (dbo.RFQHistory.RFQNumber = " & hd_RFQNumber.Value & ") " & _
+                                      "ORDER BY dbo.RFQHistory.RFQHistoryNumber DESC"
     End Sub
 
     Private Sub Set_isChecked(ByVal sender As Object, ByVal e As EventArgs) Handles RFQHistory.ItemDataBound
@@ -152,7 +155,7 @@ Partial Public Class RFQCorrespondence
             conn = New SqlConnection(DB_CONNECT_STRING)
             Dim cmd As SqlCommand = conn.CreateCommand()
             cmd.CommandText = "SELECT RFQStatusCode, StatusChangeDate FROM dbo.RFQHistory WHERE (RFQHistoryNumber = (SELECT MAX(RFQHistoryNumber) AS MaxNo FROM dbo.RFQHistory AS RFQHistory_1 WHERE (RFQNumber = @RFQNumber)))"
-            cmd.Parameters.AddWithValue("RFQNumber", RFQNumber)
+            cmd.Parameters.AddWithValue("RFQNumber", hd_RFQNumber.Value)
             conn.Open()
             Dim dr As SqlDataReader = cmd.ExecuteReader
             If dr.Read = True Then
@@ -204,7 +207,7 @@ Partial Public Class RFQCorrespondence
 
         '[RFQHistory(を新規登録)]-----------------------------------------------------------------------
         st_SqlStr = "INSERT INTO RFQHistory (RFQNumber,RFQStatusCode,StatusChangeDate,RFQCorresCode,Note,SendLocationCode,SendUserID,RcptLocationCode,RcptUserID,isChecked,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ("
-        st_SqlStr = st_SqlStr + "'" + Trim(Str(RFQNumber)) + "',"
+        st_SqlStr = st_SqlStr + "'" + Trim(Str(hd_RFQNumber.Value)) + "',"
         st_SqlStr = st_SqlStr + "'" + st_RFQStatusCode + "',"
         st_SqlStr = st_SqlStr + "'" + st_StatusChangeDate + "',"
         st_SqlStr = st_SqlStr + "'" + CorresTitle.SelectedValue + "',"

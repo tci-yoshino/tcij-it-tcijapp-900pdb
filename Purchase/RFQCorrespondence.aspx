@@ -138,6 +138,7 @@ ORDER BY dbo.RFQHistory.RFQHistoryNumber DESC"></asp:SqlDataSource>
     
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
+            <asp:HiddenField ID="hd_RFQNumber" runat="server" />
             </form>
         </body>
 </html>

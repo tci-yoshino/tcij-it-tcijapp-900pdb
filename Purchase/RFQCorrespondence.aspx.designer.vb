@@ -113,4 +113,13 @@ Partial Public Class RFQCorrespondence
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents SrcRFQHistory As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
+    '''hd_RFQNumber コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents hd_RFQNumber As Global.System.Web.UI.WebControls.HiddenField
 End Class
