@@ -160,9 +160,11 @@
                         <td style="text-align:right"><asp:HyperLink ID="ChiPOIssue" runat="server" NavigateUrl="./POIssue.aspx">Chi-PO Issue</asp:HyperLink></td>
                     </tr>
                 </table>
+				<asp:HiddenField ID="UpdateDate" runat="server" />
+				<asp:HiddenField ID="PO" runat="server" />
 
                 <div class="btns">
-                    <asp:Button ID="Issue" runat="server" Text="Issue" />
+                    <asp:Button ID="Update" runat="server" Text="Update" />
                     <span class="indent"></span>
                     <asp:Button ID="Cancell" runat="server" Text="Cancell" />
                 </div>
