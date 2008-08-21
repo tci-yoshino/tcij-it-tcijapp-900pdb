@@ -58,7 +58,7 @@
         st_Code = st_Code.Trim
         st_Name = st_Name.Trim
 
-        ' 検索ブロックの TextBox の値を書き換え
+        ' コントロール設定
         Code.Text = st_Code
         Name.Text = st_Name
         Location.Value = st_Location
@@ -67,7 +67,7 @@
         ' 全角を半角に変換
         st_Code = StrConv(st_Code, VbStrConv.Narrow)
 
-        ' 半角英数チェック
+        ' 半角数値チェック
         If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
             st_Code = ""
         End If
@@ -80,18 +80,14 @@
             SupplierList.DataBind()
         End If
 
-
     End Sub
 
     ' Search ボタンクリック処理
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
-        ' st_Code と st_Name があれば仕入先リスト取得関数を実行
-        If Not String.IsNullOrEmpty(st_Code) Or Not String.IsNullOrEmpty(st_Name) Then
-            Dim dataSet As DataSet = New DataSet("Supplier")
-            Get_Supplier_Data(dataSet, DBConnectString.ConnectionString)
-            SupplierList.DataSource = dataSet.Tables("SupplierList")
-            SupplierList.DataBind()
-        End If
+        Dim dataSet As DataSet = New DataSet("Supplier")
+        Get_Supplier_Data(dataSet, DBConnectString.ConnectionString)
+        SupplierList.DataSource = dataSet.Tables("SupplierList")
+        SupplierList.DataBind()
     End Sub
 
     ' 仕入先リスト取得関数
@@ -118,6 +114,7 @@
 
         ' Where 句が生成できなかった場合は検索処理を行わずに処理を終了する
         If String.IsNullOrEmpty(st_where) Then
+            SupplierList.DataBind()
             Exit Sub
         End If
 
@@ -157,9 +154,9 @@
             ds.Tables("SupplierList").Columns.Add("QuoLocationCode", Type.GetType("System.String"))
 
             ' SQL SELECT パラメータの追加
-            command.Parameters.AddWithValue("Code", st_Code)
+            command.Parameters.AddWithValue("Code", Common.SafeSqlLiteral(st_Code))
             command.Parameters.AddWithValue("Name", Common.SafeSqlLikeClauseLiteral(st_Name))
-            command.Parameters.AddWithValue("Location", st_Location)
+            command.Parameters.AddWithValue("Location", Common.SafeSqlLiteral(st_Location))
 
             ' データベースからデータを取得
             adapter.SelectCommand = command
