@@ -30,7 +30,6 @@
             & "  AND VP.SOUserID IS NULL " _
             & "ORDER BY VP.PONumber "
 
-
         SrcUser.SelectCommand = "SELECT UserID, Name FROM v_User WHERE isDisabled = 0 AND LocationCode = '" & Session("LocationCode") & "' "
 
     End Sub
@@ -100,7 +99,7 @@
         End If
 
         ' Update Chack
-        If Not Common.isLatestData("RFQHeader", "RFQNumber", st_PONumber, st_UpdateDate) Then
+        If Not Common.isLatestData("PO", "PONumber", st_PONumber, st_UpdateDate) Then
             Msg.Text = ERR_UPDATE
             POList.DataBind()
             Exit Sub
@@ -119,6 +118,18 @@
             & "WHERE PONumber = @PONumber "
         SrcPO.Update()
 
+    End Sub
+
+    ' 更新日取得
+    Private Sub SetRFQUpdateDate(ByVal sender As Object, ByVal e As ListViewItemEventArgs) Handles RFQList.ItemDataBound
+        Dim st_RFQNumber As String = CType(e.Item.FindControl("RFQNumber"), Label).Text
+        CType(e.Item.FindControl("UpdateDate"), HiddenField).Value = Common.GetUpdateDate("RFQHeader", "RFQNumber", st_RFQNumber)
+    End Sub
+
+    ' 更新日取得
+    Private Sub SetPOUpdateDate(ByVal sender As Object, ByVal e As ListViewItemEventArgs) Handles POList.ItemDataBound
+        Dim st_PONumber As String = CType(e.Item.FindControl("PONumber"), Label).Text
+        CType(e.Item.FindControl("UpdateDate"), HiddenField).Value = Common.GetUpdateDate("PO", "PONumber", st_PONumber)
     End Sub
 
 End Class

@@ -42,7 +42,7 @@
                         </th>
                         <th class="subhead" colspan="2" style="text-align:right">
                             Assign to : <asp:DropDownList ID="QuoUser" runat="server" DataSourceID="SrcUser" DataTextField="Name" DataValueField="UserID"></asp:DropDownList>
-                            <asp:HiddenField runat="server" ID="UpdateDate" Value='<%#Eval("UpdateDate")%>' />
+                            <asp:HiddenField runat="server" ID="UpdateDate" Value="" />
                             <asp:Button ID="Assign" runat="server" Text="Assign" CommandArgument="" />
                         </th>
                     </tr>
@@ -96,7 +96,7 @@
                         </th>
                         <th class="subhead" style="text-align:right">
                             Assign to : <asp:DropDownList ID="SOUser" runat="server" DataSourceID="SrcUser" DataTextField="Name" DataValueField="UserID"></asp:DropDownList>
-                            <asp:HiddenField runat="server" ID="UpdateDate" Value='<%#Eval("UpdateDate")%>' />
+                            <asp:HiddenField runat="server" ID="UpdateDate" Value="" />
                             <asp:Button ID="Assign" runat="server" Text="Assign" />
                         </th>
                     </tr>
