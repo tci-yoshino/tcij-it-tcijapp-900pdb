@@ -41,193 +41,10 @@ Partial Public Class RFQUpdate
         End If
     End Sub
 
-    Private Function FormDataSet() As Boolean
-        Dim DS As DataSet = New DataSet
-        Dim st_RFQNumber As String = String.Empty
-        If IsPostBack = False Then
-            If Request.QueryString("RFQNumber") <> "" Or Request.Form("RFQNumber") <> "" Then
-                st_RFQNumber = IIf(Request.QueryString("RFQNumber") <> "", Request.QueryString("RFQNumber"), Request.Form("RFQNumber"))
-            Else
-                'パラメータが渡されない場合、エラーメッセージの表示はPage_Loadで行う。
-                Return False
-            End If
-        Else
-            st_RFQNumber = RFQNumber.Text
-        End If
-        
-        If IsNumeric(st_RFQNumber) Then
-            DBCommand = New SqlCommand("Select " _
-& "EnqLocationName, EnqUserName, QuoLocationName, QuoUserID, QuoUserName, ProductNumber, " _
-& "ProductName, SupplierCode, R3SupplierCode, SupplierName, SupplierCountryCode, MakerCode, " _
-& "MakerName, MakerCountryCode, SupplierContactPerson, PaymentTermCode, RequiredPurity, " _
-& "RequiredQMMethod, RequiredSpecification, SpecSheet, Specification, Purpose, SupplierItemName, " _
-& "ShippingHandlingFee, ShippingHandlingCurrencyCode, Comment, QuotedDate, StatusCode, " _
-& "UpdateDate, Status, StatusChangeDate " _
-& " From v_RFQHeader Where RFQNumber = @i_RFQNumber", DBConn)
-            DBCommand.Parameters.Add("i_RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
-            DBAdapter = New SqlDataAdapter
-            DBAdapter.SelectCommand = DBCommand
-            DBAdapter.Fill(DS, "RFQHeader")
-            If DS.Tables("RFQHeader").Rows.Count = 0 Then
-                'RFQNumber 不正
-                Return False
-            End If
-            'Left
-            RFQNumber.Text = st_RFQNumber
-            CurrentRFQStatus.Text = DS.Tables("RFQHeader").Rows(0)("Status").ToString
-            ProductNumber.Text = DS.Tables("RFQHeader").Rows(0)("ProductNumber").ToString
-            ProductName.Text = DS.Tables("RFQHeader").Rows(0)("ProductName").ToString
-            SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString
-            R3SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("R3SupplierCode").ToString
-            SupplierName.Text = DS.Tables("RFQHeader").Rows(0)("SupplierName").ToString
-            SupplierCountry.Text = GetContryName(DS.Tables("RFQHeader").Rows(0)("SupplierCountryCode").ToString)
-            SupplierContactPerson.Text = DS.Tables("RFQHeader").Rows(0)("SupplierContactPerson").ToString
-            MakerCode.Text = DS.Tables("RFQHeader").Rows(0)("MakerCode").ToString
-            MakerName.Text = DS.Tables("RFQHeader").Rows(0)("MakerName").ToString
-            MakerCountry.Text = GetContryName(DS.Tables("RFQHeader").Rows(0)("MakerCountryCode").ToString)
-            SupplierItemName.Text = DS.Tables("RFQHeader").Rows(0)("SupplierItemName").ToString
-            PaymentTerm.SelectedValue = DS.Tables("RFQHeader").Rows(0)("PaymentTermCode").ToString
-            ShippingHandlingCurrency.SelectedValue = DS.Tables("RFQHeader").Rows(0)("ShippingHandlingCurrencyCode").ToString
-            ShippingHandlingFee.Text = SetNullORDecimal(DS.Tables("RFQHeader").Rows(0)("ShippingHandlingFee").ToString)
-            'Right
-            Purpose.Text = DS.Tables("RFQHeader").Rows(0)("Purpose").ToString
-            RequiredPurity.Text = DS.Tables("RFQHeader").Rows(0)("RequiredPurity").ToString
-            RequiredQMMethod.Text = DS.Tables("RFQHeader").Rows(0)("RequiredQMMethod").ToString
-            RequiredSpecification.Text = DS.Tables("RFQHeader").Rows(0)("RequiredSpecification").ToString
-            If DS.Tables("RFQHeader").Rows(0)("SpecSheet").ToString = True Then
-                SpecSheet.Checked = True
-                SpecSheet.Text = "yes"
-            Else
-                SpecSheet.Checked = False
-                SpecSheet.Text = "no"
-            End If
-            Specification.Text = DS.Tables("RFQHeader").Rows(0)("Specification").ToString
-            EnqUser.Text = DS.Tables("RFQHeader").Rows(0)("EnqUserName").ToString
-            EnqLocation.Text = DS.Tables("RFQHeader").Rows(0)("EnqLocationName").ToString
-
-            If DS.Tables("RFQHeader").Rows(0)("QuoLocationName").ToString = "" Then
-                QuoLocation.Text = EnqLocation.Text
-            Else
-                QuoLocation.Text = DS.Tables("RFQHeader").Rows(0)("QuoLocationName").ToString
-            End If
-            SDS_RFQUpdate_QuoUser.DataBind()
-            'QuoUser.DataBind()     '要不要を検討する。
-            If IsDBNull(DS.Tables("RFQHeader").Rows(0)("QuoUserID")) = False Then
-                QuoUser.SelectedValue = DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString
-            End If
-            Comment.Text = DS.Tables("RFQHeader").Rows(0)("Comment").ToString
-            'Under
-            RFQStatus.SelectedValue = DS.Tables("RFQHeader").Rows(0)("StatusCode").ToString
-            'Hidden
-            QuotedDate.Value = DS.Tables("RFQHeader").Rows(0)("QuotedDate").ToString
-            UpdateDate.Value = DS.Tables("RFQHeader").Rows(0)("UpdateDate").ToString
-            'Line
-            DBCommand = New SqlCommand("Select " _
-& "RFQLineNumber, EnqQuantity, EnqUnitCode, EnqPiece, CurrencyCode, " _
-& "UnitPrice, QuoPer, QuoUnitCode, LeadTime, SupplierItemNumber, " _
-& "IncotermsCode, DeliveryTerm, Packing, Purity, QMMethod, NoOfferReasonCode" _
-& " From v_RFQLine Where RFQNumber = @i_RFQNumber Order by RFQLineNumber", DBConn)
-            DBCommand.Parameters.Add("i_RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
-            DBAdapter.SelectCommand = DBCommand
-
-            DBAdapter.Fill(DS, "RFQLine")
-            DBCommand.Dispose()
-
-            If DS.Tables("RFQLine").Rows.Count = 0 Then
-                'RFQNumber 不正
-                Return False
-            End If
-
-            Dim i As Integer
-            For i = 0 To DS.Tables("RFQLine").Rows.Count - 1
-                Select Case i
-                    Case 0
-                        EnqQuantity_1.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
-                        EnqUnit_1.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
-                        EnqPiece_1.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
-                        Incoterms_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
-                        Currency_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
-                        UnitPrice_1.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
-                        DeliveryTerm_1.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
-                        QuoPer_1.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
-                        Purity_1.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
-                        QuoUnit_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
-                        QMMethod_1.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
-                        LeadTime_1.Text = DS.Tables("RFQLine").Rows(i).Item("LeadTime").ToString
-                        Packing_1.Text = DS.Tables("RFQLine").Rows(i).Item("Packing").ToString
-                        SupplierItemNumber_1.Text = DS.Tables("RFQLine").Rows(i).Item("SupplierItemNumber").ToString
-                        NoOfferReason_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("NoOfferReasonCode").ToString
-                        POIssue_1.Visible = True
-                        POIssue_1.NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
-                        LineNumber1.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
-                    Case 1
-                        EnqQuantity_2.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
-                        EnqUnit_2.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
-                        EnqPiece_2.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
-                        Incoterms_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
-                        Currency_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
-                        UnitPrice_2.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
-                        DeliveryTerm_2.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
-                        QuoPer_2.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
-                        Purity_2.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
-                        QuoUnit_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
-                        QMMethod_2.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
-                        LeadTime_2.Text = DS.Tables("RFQLine").Rows(i).Item("LeadTime").ToString
-                        Packing_2.Text = DS.Tables("RFQLine").Rows(i).Item("Packing").ToString
-                        SupplierItemNumber_2.Text = DS.Tables("RFQLine").Rows(i).Item("SupplierItemNumber").ToString
-                        NoOfferReason_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("NoOfferReasonCode").ToString
-                        POIssue_2.Visible = True
-                        POIssue_2.NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
-                        LineNumber2.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
-                    Case 2
-                        EnqQuantity_3.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
-                        EnqUnit_3.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
-                        EnqPiece_3.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
-                        Incoterms_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
-                        Currency_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
-                        UnitPrice_3.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
-                        DeliveryTerm_3.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
-                        QuoPer_3.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
-                        Purity_3.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
-                        QuoUnit_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
-                        QMMethod_3.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
-                        LeadTime_3.Text = DS.Tables("RFQLine").Rows(i).Item("LeadTime").ToString
-                        Packing_3.Text = DS.Tables("RFQLine").Rows(i).Item("Packing").ToString
-                        SupplierItemNumber_3.Text = DS.Tables("RFQLine").Rows(i).Item("SupplierItemNumber").ToString
-                        NoOfferReason_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("NoOfferReasonCode").ToString
-                        POIssue_3.Visible = True
-                        POIssue_3.NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
-                        LineNumber3.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
-                    Case 3
-                        EnqQuantity_4.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
-                        EnqUnit_4.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
-                        EnqPiece_4.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
-                        Incoterms_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
-                        Currency_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
-                        UnitPrice_4.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
-                        DeliveryTerm_4.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
-                        QuoPer_4.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
-                        Purity_4.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
-                        QuoUnit_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
-                        QMMethod_4.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
-                        LeadTime_4.Text = DS.Tables("RFQLine").Rows(i).Item("LeadTime").ToString
-                        Packing_4.Text = DS.Tables("RFQLine").Rows(i).Item("Packing").ToString
-                        SupplierItemNumber_4.Text = DS.Tables("RFQLine").Rows(i).Item("SupplierItemNumber").ToString
-                        NoOfferReason_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("NoOfferReasonCode").ToString
-                        POIssue_4.Visible = True
-                        POIssue_4.NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
-                        LineNumber4.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
-                    Case Else
-                        '処理無し
-                End Select
-            Next
-            DS.Clear()
-        End If
-        Return True
-    End Function
     Private Sub Page_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload
         DBConn.Close()
     End Sub
+
     Protected Sub SpecSheet_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs) Handles SpecSheet.CheckedChanged
         If SpecSheet.Checked = True Then
             SpecSheet.Text = "yes"
@@ -235,41 +52,6 @@ Partial Public Class RFQUpdate
             SpecSheet.Text = "no"
         End If
     End Sub
-    Private Function GetContryName(ByVal Code As String) As String
-        Dim DBReader As SqlDataReader
-        GetContryName = ""
-        DBCommand.CommandText = "SELECT CountryName FROM v_Country WHERE (CountryCode = @CountryCode)"
-        DBCommand.Parameters.Add("@CountryCode", SqlDbType.NVarChar).Value = Code
-        DBReader = DBCommand.ExecuteReader()
-        DBCommand.Parameters.Clear()
-        DBCommand.Dispose()
-        If DBReader.HasRows = True Then
-            While DBReader.Read
-                GetContryName = DBReader("CountryName").ToString
-            End While
-        End If
-        DBReader.Close()
-    End Function
-
-    Private Function CheckSupplierCode() As Boolean
-        'Supplier,Makerの入力内容のチェック
-        Dim st_Supplier As String = "Supplier"
-        Dim st_SupplierKey As String = "SupplierCode"
-
-        'Supplierのチェック
-        If ExistenceConfirmation(st_Supplier, st_SupplierKey, SupplierCode.Text) = False Then
-            Msg.Text = ERR_INCORRECT_SUPPLIERCODE
-            Return False
-        End If
-        'Makerのチェック
-        If MakerCode.Text <> "" Then
-            If ExistenceConfirmation(st_Supplier, st_SupplierKey, MakerCode.Text) = False Then
-                Msg.Text = ERR_INCORRECT_MAKERCODE
-                Return False
-            End If
-        End If
-        Return True
-    End Function
 
     Protected Sub Update_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Update.Click
         Dim RFQStatusCode As String = ""
@@ -459,6 +241,191 @@ Partial Public Class RFQUpdate
         End If
     End Sub
 
+    Private Function FormDataSet() As Boolean
+        Dim DS As DataSet = New DataSet
+        Dim st_RFQNumber As String = String.Empty
+        If IsPostBack = False Then
+            If Request.QueryString("RFQNumber") <> "" Or Request.Form("RFQNumber") <> "" Then
+                st_RFQNumber = IIf(Request.QueryString("RFQNumber") <> "", Request.QueryString("RFQNumber"), Request.Form("RFQNumber"))
+            Else
+                'パラメータが渡されない場合、エラーメッセージの表示はPage_Loadで行う。
+                Return False
+            End If
+        Else
+            st_RFQNumber = RFQNumber.Text
+        End If
+
+        If IsNumeric(st_RFQNumber) Then
+            DBCommand = New SqlCommand("Select " _
+& "EnqLocationName, EnqUserName, QuoLocationName, QuoUserID, QuoUserName, ProductNumber, " _
+& "ProductName, SupplierCode, R3SupplierCode, SupplierName, SupplierCountryCode, MakerCode, " _
+& "MakerName, MakerCountryCode, SupplierContactPerson, PaymentTermCode, RequiredPurity, " _
+& "RequiredQMMethod, RequiredSpecification, SpecSheet, Specification, Purpose, SupplierItemName, " _
+& "ShippingHandlingFee, ShippingHandlingCurrencyCode, Comment, QuotedDate, StatusCode, " _
+& "UpdateDate, Status, StatusChangeDate " _
+& " From v_RFQHeader Where RFQNumber = @i_RFQNumber", DBConn)
+            DBCommand.Parameters.Add("i_RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
+            DBAdapter = New SqlDataAdapter
+            DBAdapter.SelectCommand = DBCommand
+            DBAdapter.Fill(DS, "RFQHeader")
+            If DS.Tables("RFQHeader").Rows.Count = 0 Then
+                'RFQNumber 不正
+                Return False
+            End If
+            'Left
+            RFQNumber.Text = st_RFQNumber
+            CurrentRFQStatus.Text = DS.Tables("RFQHeader").Rows(0)("Status").ToString
+            ProductNumber.Text = DS.Tables("RFQHeader").Rows(0)("ProductNumber").ToString
+            ProductName.Text = DS.Tables("RFQHeader").Rows(0)("ProductName").ToString
+            SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString
+            R3SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("R3SupplierCode").ToString
+            SupplierName.Text = DS.Tables("RFQHeader").Rows(0)("SupplierName").ToString
+            SupplierCountry.Text = GetContryName(DS.Tables("RFQHeader").Rows(0)("SupplierCountryCode").ToString)
+            SupplierContactPerson.Text = DS.Tables("RFQHeader").Rows(0)("SupplierContactPerson").ToString
+            MakerCode.Text = DS.Tables("RFQHeader").Rows(0)("MakerCode").ToString
+            MakerName.Text = DS.Tables("RFQHeader").Rows(0)("MakerName").ToString
+            MakerCountry.Text = GetContryName(DS.Tables("RFQHeader").Rows(0)("MakerCountryCode").ToString)
+            SupplierItemName.Text = DS.Tables("RFQHeader").Rows(0)("SupplierItemName").ToString
+            PaymentTerm.SelectedValue = DS.Tables("RFQHeader").Rows(0)("PaymentTermCode").ToString
+            ShippingHandlingCurrency.SelectedValue = DS.Tables("RFQHeader").Rows(0)("ShippingHandlingCurrencyCode").ToString
+            ShippingHandlingFee.Text = SetNullORDecimal(DS.Tables("RFQHeader").Rows(0)("ShippingHandlingFee").ToString)
+            'Right
+            Purpose.Text = DS.Tables("RFQHeader").Rows(0)("Purpose").ToString
+            RequiredPurity.Text = DS.Tables("RFQHeader").Rows(0)("RequiredPurity").ToString
+            RequiredQMMethod.Text = DS.Tables("RFQHeader").Rows(0)("RequiredQMMethod").ToString
+            RequiredSpecification.Text = DS.Tables("RFQHeader").Rows(0)("RequiredSpecification").ToString
+            If DS.Tables("RFQHeader").Rows(0)("SpecSheet").ToString = True Then
+                SpecSheet.Checked = True
+                SpecSheet.Text = "yes"
+            Else
+                SpecSheet.Checked = False
+                SpecSheet.Text = "no"
+            End If
+            Specification.Text = DS.Tables("RFQHeader").Rows(0)("Specification").ToString
+            EnqUser.Text = DS.Tables("RFQHeader").Rows(0)("EnqUserName").ToString
+            EnqLocation.Text = DS.Tables("RFQHeader").Rows(0)("EnqLocationName").ToString
+
+            If DS.Tables("RFQHeader").Rows(0)("QuoLocationName").ToString = "" Then
+                QuoLocation.Text = EnqLocation.Text
+            Else
+                QuoLocation.Text = DS.Tables("RFQHeader").Rows(0)("QuoLocationName").ToString
+            End If
+            SDS_RFQUpdate_QuoUser.DataBind()
+            'QuoUser.DataBind()     '要不要を検討する。
+            If IsDBNull(DS.Tables("RFQHeader").Rows(0)("QuoUserID")) = False Then
+                QuoUser.SelectedValue = DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString
+            End If
+            Comment.Text = DS.Tables("RFQHeader").Rows(0)("Comment").ToString
+            'Under
+            RFQStatus.SelectedValue = DS.Tables("RFQHeader").Rows(0)("StatusCode").ToString
+            'Hidden
+            QuotedDate.Value = DS.Tables("RFQHeader").Rows(0)("QuotedDate").ToString
+            UpdateDate.Value = DS.Tables("RFQHeader").Rows(0)("UpdateDate").ToString
+            'Line
+            DBCommand = New SqlCommand("Select " _
+& "RFQLineNumber, EnqQuantity, EnqUnitCode, EnqPiece, CurrencyCode, " _
+& "UnitPrice, QuoPer, QuoUnitCode, LeadTime, SupplierItemNumber, " _
+& "IncotermsCode, DeliveryTerm, Packing, Purity, QMMethod, NoOfferReasonCode" _
+& " From v_RFQLine Where RFQNumber = @i_RFQNumber Order by RFQLineNumber", DBConn)
+            DBCommand.Parameters.Add("i_RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
+            DBAdapter.SelectCommand = DBCommand
+
+            DBAdapter.Fill(DS, "RFQLine")
+            DBCommand.Dispose()
+
+            If DS.Tables("RFQLine").Rows.Count = 0 Then
+                'RFQNumber 不正
+                Return False
+            End If
+
+            Dim i As Integer
+            For i = 0 To DS.Tables("RFQLine").Rows.Count - 1
+                Select Case i
+                    Case 0
+                        EnqQuantity_1.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
+                        EnqUnit_1.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
+                        EnqPiece_1.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
+                        Incoterms_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
+                        Currency_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
+                        UnitPrice_1.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
+                        DeliveryTerm_1.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
+                        QuoPer_1.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
+                        Purity_1.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
+                        QuoUnit_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
+                        QMMethod_1.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
+                        LeadTime_1.Text = DS.Tables("RFQLine").Rows(i).Item("LeadTime").ToString
+                        Packing_1.Text = DS.Tables("RFQLine").Rows(i).Item("Packing").ToString
+                        SupplierItemNumber_1.Text = DS.Tables("RFQLine").Rows(i).Item("SupplierItemNumber").ToString
+                        NoOfferReason_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("NoOfferReasonCode").ToString
+                        POIssue_1.Visible = True
+                        POIssue_1.NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
+                        LineNumber1.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
+                    Case 1
+                        EnqQuantity_2.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
+                        EnqUnit_2.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
+                        EnqPiece_2.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
+                        Incoterms_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
+                        Currency_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
+                        UnitPrice_2.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
+                        DeliveryTerm_2.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
+                        QuoPer_2.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
+                        Purity_2.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
+                        QuoUnit_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
+                        QMMethod_2.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
+                        LeadTime_2.Text = DS.Tables("RFQLine").Rows(i).Item("LeadTime").ToString
+                        Packing_2.Text = DS.Tables("RFQLine").Rows(i).Item("Packing").ToString
+                        SupplierItemNumber_2.Text = DS.Tables("RFQLine").Rows(i).Item("SupplierItemNumber").ToString
+                        NoOfferReason_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("NoOfferReasonCode").ToString
+                        POIssue_2.Visible = True
+                        POIssue_2.NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
+                        LineNumber2.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
+                    Case 2
+                        EnqQuantity_3.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
+                        EnqUnit_3.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
+                        EnqPiece_3.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
+                        Incoterms_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
+                        Currency_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
+                        UnitPrice_3.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
+                        DeliveryTerm_3.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
+                        QuoPer_3.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
+                        Purity_3.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
+                        QuoUnit_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
+                        QMMethod_3.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
+                        LeadTime_3.Text = DS.Tables("RFQLine").Rows(i).Item("LeadTime").ToString
+                        Packing_3.Text = DS.Tables("RFQLine").Rows(i).Item("Packing").ToString
+                        SupplierItemNumber_3.Text = DS.Tables("RFQLine").Rows(i).Item("SupplierItemNumber").ToString
+                        NoOfferReason_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("NoOfferReasonCode").ToString
+                        POIssue_3.Visible = True
+                        POIssue_3.NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
+                        LineNumber3.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
+                    Case 3
+                        EnqQuantity_4.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
+                        EnqUnit_4.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
+                        EnqPiece_4.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
+                        Incoterms_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
+                        Currency_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
+                        UnitPrice_4.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
+                        DeliveryTerm_4.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
+                        QuoPer_4.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
+                        Purity_4.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
+                        QuoUnit_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
+                        QMMethod_4.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
+                        LeadTime_4.Text = DS.Tables("RFQLine").Rows(i).Item("LeadTime").ToString
+                        Packing_4.Text = DS.Tables("RFQLine").Rows(i).Item("Packing").ToString
+                        SupplierItemNumber_4.Text = DS.Tables("RFQLine").Rows(i).Item("SupplierItemNumber").ToString
+                        NoOfferReason_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("NoOfferReasonCode").ToString
+                        POIssue_4.Visible = True
+                        POIssue_4.NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
+                        LineNumber4.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
+                    Case Else
+                        '処理無し
+                End Select
+            Next
+            DS.Clear()
+        End If
+        Return True
+    End Function
+
     Private Function ItemCheck() As Boolean
 
         ItemCheck = False
@@ -522,6 +489,7 @@ Partial Public Class RFQUpdate
         ItemCheck = True
 
     End Function
+
     Private Sub SetReadOnlyItems()
         'ReadOnly項目の再設定
         R3SupplierCode.Text = Request.Form("R3SupplierCode").ToString
@@ -530,6 +498,43 @@ Partial Public Class RFQUpdate
         MakerName.Text = Request.Form("MakerName").ToString
         MakerCountry.Text = Request.Form("MakerCountry").ToString
     End Sub
+
+    Private Function GetContryName(ByVal Code As String) As String
+        Dim DBReader As SqlDataReader
+        GetContryName = ""
+        DBCommand.CommandText = "SELECT CountryName FROM v_Country WHERE (CountryCode = @CountryCode)"
+        DBCommand.Parameters.Add("@CountryCode", SqlDbType.NVarChar).Value = Code
+        DBReader = DBCommand.ExecuteReader()
+        DBCommand.Parameters.Clear()
+        DBCommand.Dispose()
+        If DBReader.HasRows = True Then
+            While DBReader.Read
+                GetContryName = DBReader("CountryName").ToString
+            End While
+        End If
+        DBReader.Close()
+    End Function
+
+    Private Function CheckSupplierCode() As Boolean
+        'Supplier,Makerの入力内容のチェック
+        Dim st_Supplier As String = "Supplier"
+        Dim st_SupplierKey As String = "SupplierCode"
+
+        'Supplierのチェック
+        If ExistenceConfirmation(st_Supplier, st_SupplierKey, SupplierCode.Text) = False Then
+            Msg.Text = ERR_INCORRECT_SUPPLIERCODE
+            Return False
+        End If
+        'Makerのチェック
+        If MakerCode.Text <> "" Then
+            If ExistenceConfirmation(st_Supplier, st_SupplierKey, MakerCode.Text) = False Then
+                Msg.Text = ERR_INCORRECT_MAKERCODE
+                Return False
+            End If
+        End If
+        Return True
+    End Function
+
     Private Sub SetPostBackUrl()
         'ボタンクリック時にPostBackするActionを追記する。
         If IsPostBack = False Then
@@ -537,6 +542,7 @@ Partial Public Class RFQUpdate
             Close.PostBackUrl = "~/RFQUpdate.aspx?Action=Close"
         End If
     End Sub
+
     Private Function SetNullORDecimal(ByVal str As String) As String
         Dim de_Str As Decimal
         If IsDBNull(str) = True Or str = String.Empty Then
@@ -549,6 +555,7 @@ Partial Public Class RFQUpdate
             End If
         End If
     End Function
+
     Private Function CheckUpdatedate() As Boolean
         Using DBConn As New SqlClient.SqlConnection(DB_CONNECT_STRING), _
             DBCommand As SqlCommand = DBConn.CreateCommand()
