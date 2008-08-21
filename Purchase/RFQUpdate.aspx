@@ -401,7 +401,7 @@
 		<script language ="javascript" type="text/javascript">
 		function SupplierSelect_onclick() {
     		var SupplierCode = encodeURIComponent(document.getElementById('SupplierCode').value);
-    		var EnqLocation = encodeURIComponent(document.getElementById('EnqLocation').value);
+    		var EnqLocation = encodeURIComponent(document.getElementById('EnqLocation').innerHTML);
 	    	popup('./RFQSupplierSelect.aspx?Code=' + SupplierCode + '&Location=' + EnqLocation);
 		}
 		function MakerSelect_onclick() {

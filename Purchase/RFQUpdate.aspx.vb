@@ -274,10 +274,11 @@ Partial Public Class RFQUpdate
     Protected Sub Update_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Update.Click
         Dim RFQStatusCode As String = ""
         Dim st_QuotedDate As String = ""
+        Msg.Text = ""
         If Request.QueryString("Action") <> "Update" Then
+            Msg.Text = ERR_INVALID_PARAMETER
             Exit Sub
         End If
-
         If CheckSupplierCode() = False Then
             Exit Sub
         End If
