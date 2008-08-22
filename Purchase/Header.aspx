@@ -16,7 +16,7 @@
                 <td><h1>Purchase DB</h1></td>
             </tr>
         </table>
-        <p><strong>Logged in as : </strong><asp:Label ID="UserName" runat="server" Text=""></asp:Label><strong class="indent">Location : </strong><asp:Label ID="LocationName" runat="server" Text=""></asp:Label></p>
+        <p><strong>Logged in as : </strong><asp:Label ID="UserName" runat="server" Text=""><%=Session("UserName") %></asp:Label><strong class="indent">Location : </strong><asp:Label ID="LocationName" runat="server" Text=""><%=Session("LocationName") %></asp:Label></p>
     </div><!-- Header END -->
 
     <!-- Global Navigation -->
