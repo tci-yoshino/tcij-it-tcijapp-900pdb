@@ -234,6 +234,7 @@ Partial Public Class POUpdate
         'フォーム左段
         RFQNumber.Text = String.Empty
         R3PONumber.Text = String.Empty
+        R3POLineNumber.Text = String.Empty
         PODate.Text = String.Empty
         POUser.Text = String.Empty
         POLocation.Text = String.Empty
@@ -289,6 +290,7 @@ Partial Public Class POUpdate
         'フォーム左段
         RFQNumber.Text = POInformation.RFQNumber.ToString()
         R3PONumber.Text = POInformation.R3PONumber
+        R3POLineNumber.Text = POInformation.R3POLineNumber
         PODate.Text = GetLocalTime(POInformation.PODate)
         POUser.Text = POInformation.POUserName
         POLocation.Text = POInformation.POLocationName
@@ -362,6 +364,7 @@ Partial Public Class POUpdate
 
         'フォーム左段
         POInformation.R3PONumber = StrToNullableString(R3PONumber.Text.Trim())
+        POInformation.R3POLineNumber = StrToNullableString(R3POLineNumber.Text.Trim())
         POInformation.DeliveryDate = GetDatabaseTime(DeliveryDate.Text.Trim())
 
         'フォーム右段

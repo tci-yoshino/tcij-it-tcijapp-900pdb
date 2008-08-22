@@ -70,6 +70,15 @@ Partial Public Class POUpdate
     Protected WithEvents R3PONumber As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
+    '''R3POLineNumber コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents R3POLineNumber As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
     '''PODate コントロール。
     '''</summary>
     '''<remarks>
