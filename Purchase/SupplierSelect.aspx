@@ -42,7 +42,7 @@ window.onload = function() {
 		<h3>Supplier Select</h3>
 
 		<div class="main">
-			<p class="attention"><asp:Label ID="ErrorMessages" runat="server"></asp:Label></p>
+			<p class="attention"><asp:Label ID="Msg" runat="server"></asp:Label></p>
 			<form id="SearchForm" runat="server">
 				<table>
 					<tr>
