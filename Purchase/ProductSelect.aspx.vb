@@ -1,13 +1,17 @@
 ﻿Public Partial Class ProductSelect
     Inherits CommonPage
-    ' 接続文字列
-    Public DBConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
-    Public st_ProductNumber As String
-    Public st_CASNumber As String
-    Public st_ProductName As String
+
+    Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
+    Private st_ProductNumber As String = ""
+    Private st_CASNumber As String = ""
+    Private st_ProductName As String = ""
+    Const SEARCH_ACTION As String = "Search"
 
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
+        ' コントロール初期化
+        Msg.Text = ""
 
         ' パラメータを取得
         If Request.RequestType = "POST" Then
@@ -25,94 +29,89 @@
         st_CASNumber = Trim(st_CASNumber)
         st_ProductName = Trim(st_ProductName)
 
-        ' 検索ブロックの TextBox の値を書き換え
-        ProductNumber.Text = st_ProductNumber
-        CASNumber.Text = st_CASNumber
-        ProductName.Text = st_ProductName
+        ' URL デコード
+        st_ProductNumber = HttpUtility.UrlDecode(st_ProductNumber)
+        st_CASNumber = HttpUtility.UrlDecode(st_CASNumber)
+        st_ProductName = HttpUtility.UrlDecode(st_ProductName)
 
         ' 全角を半角に変換
         st_ProductNumber = StrConv(st_ProductNumber, VbStrConv.Narrow)
         st_CASNumber = StrConv(st_CASNumber, VbStrConv.Narrow)
 
-        ' Supplier List のデータをクリア
-        ProductList.Items.Clear()
-        ProductList.DataBind()
+        ' 小文字を大文字に変換
+        st_ProductNumber = StrConv(st_ProductNumber, VbStrConv.Uppercase)
 
-        ' ポストバックではない 且つ GET が 空 , notiong 以外なら実行
-        If Not IsPostBack Then
-            If Not String.IsNullOrEmpty(Request.QueryString("ProductNumber")) _
-            Or Not String.IsNullOrEmpty(Request.QueryString("CASNumber")) _
-            Or Not String.IsNullOrEmpty(Request.QueryString("ProductName")) Then
-                Dim dataSet As DataSet = New DataSet("Product")
-                dataSet.Tables.Add("ProductList")
-                Get_Product_List(dataSet, DBConnectString.ConnectionString)
-                ProductList.DataSource = dataSet.Tables("ProductList")
-                ProductList.DataBind()
+        ' コントロール設定
+        ProductNumber.Text = st_ProductNumber
+        CASNumber.Text = st_CASNumber
+        ProductName.Text = st_ProductName
+
+        ' パラメータチェック
+        If Not String.IsNullOrEmpty(st_ProductNumber) Then
+            If (Not TCICommon.Func.IsProductNumber(st_ProductNumber)) And _
+               (Not TCICommon.Func.IsNewProductNumber(st_ProductNumber)) And _
+               (Not TCICommon.Func.IsCASNumber(st_ProductNumber)) Then
+                st_ProductNumber = ""
+                Msg.Text = "Product Number" & Common.ERR_REQUIRED_FIELD
+                Exit Sub
+            End If
+        End If
+        If Not String.IsNullOrEmpty(st_CASNumber) Then
+            If Not TCICommon.Func.IsCASNumber(st_CASNumber) Then
+                st_ProductNumber = ""
+                Msg.Text = "CAS Number" & Common.ERR_REQUIRED_FIELD
+                Exit Sub
             End If
         End If
 
+        ' GET 且つ QueryString("st_ProductNumber") が送信されている場合は検索処理を実行
+        If (Request.RequestType = "GET") And (Not String.IsNullOrEmpty(Request.QueryString("ProductNumber"))) Then
+            SearchProductList()
+        End If
+
     End Sub
-
-
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
-        If Not String.IsNullOrEmpty(st_ProductNumber) _
-          Or Not String.IsNullOrEmpty(st_CASNumber) _
-          Or Not String.IsNullOrEmpty(st_ProductName) Then
-            Dim dataSet As DataSet = New DataSet("Product")
-            dataSet.Tables.Add("ProductList")
-            Get_Product_List(dataSet, DBConnectString.ConnectionString)
-            ProductList.DataSource = dataSet.Tables("ProductList")
-            ProductList.DataBind()
+        Dim st_Action As String = IIf(Request.QueryString("Action") = Nothing, "", Request.QueryString("Action"))
+
+        If st_Action = SEARCH_ACTION Then
+            SearchProductList()
         End If
     End Sub
 
 
-    Protected Function Get_Product_List(ByVal dataSet As DataSet, ByVal connectionString As String) As DataSet
+    Private Sub SearchProductList()
 
-        ' WHERE 分の分岐
-        Dim st_where_arr As New ArrayList()
+        SrcProduct.SelectParameters.Clear()
+
+        ' Where 句の生成
         Dim st_where As String = ""
-
-        If Not String.IsNullOrEmpty(st_ProductNumber) Then st_where_arr.Add("ProductNumber = @ProductNumber ")
-        If Not String.IsNullOrEmpty(st_CASNumber) Then st_where_arr.Add(" CASNumber = @CASNumber ")
-        If Not String.IsNullOrEmpty(st_ProductName) Then st_where_arr.Add(" (Name LIKE N'%' + @ProductName +'%' OR QuoName LIKE N'%' + @ProductName +'%') ")
-
-        st_where = st_where_arr.Item(0)
-        If st_where_arr.Count >= 2 Then
-            For i As Integer = 0 To st_where_arr.Count - 2
-                st_where = st_where & " AND " & st_where_arr.Item(i)
-            Next i
+        If Not String.IsNullOrEmpty(st_ProductNumber) Then
+            SrcProduct.SelectParameters.Add("ProductNumber", Common.SafeSqlLiteral(st_ProductNumber))
+            st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
+            st_where = st_where & " ProductNumber = @ProductNumber "
+        End If
+        If Not String.IsNullOrEmpty(st_CASNumber) Then
+            SrcProduct.SelectParameters.Add("CASNumber", Common.SafeSqlLiteral(st_CASNumber))
+            st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
+            st_where = st_where & " CASNumber = @CASNumber "
+        End If
+        If Not String.IsNullOrEmpty(st_ProductName) Then
+            SrcProduct.SelectParameters.Add("ProductName", Common.SafeSqlLikeClauseLiteral(st_ProductName))
+            st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
+            st_where = st_where & " (Name LIKE N'%' + @ProductName +'%' OR QuoName LIKE N'%' + @ProductName +'%') "
         End If
 
-        ' 製品リスト取得
-        Dim st_query As String = _
-          " SELECT [ProductID], [ProductNumber], ISNULL([QuoName],[Name]) AS [ProductName], [CASNumber]" _
-        & " FROM [Product] " _
-        & " WHERE " & st_where
+        ' Where 句が生成できなかった場合は検索処理を行わずに処理を終了する
+        If String.IsNullOrEmpty(st_where) Then
+            ProductList.DataBind()
+            Exit Sub
+        End If
 
-        Try
-            Using connection As New SqlClient.SqlConnection(connectionString)
+        SrcProduct.SelectCommand = _
+              " SELECT [ProductID], [ProductNumber], ISNULL([QuoName],[Name]) AS [ProductName], [CASNumber]" _
+            & " FROM [Product] " _
+            & " WHERE " & st_where
 
-                ' 接続情報、アダプタ、SQLコマンド オブジェクトの生成
-                Dim adapter As New SqlClient.SqlDataAdapter()
-                Dim command As New SqlClient.SqlCommand(st_query, connection)
-
-                ' SQL SELECT パラメータの追加
-                command.Parameters.AddWithValue("ProductNumber", st_ProductNumber)
-                command.Parameters.AddWithValue("CASNumber", st_CASNumber)
-                command.Parameters.AddWithValue("ProductName", st_ProductName)
-
-                ' データベースからデータを取得
-                adapter.SelectCommand = command
-                adapter.Fill(dataSet.Tables("ProductList"))
-            End Using
-        Catch ex As Exception
-            'Exception をスローする
-            Throw
-        End Try
-
-        Return dataSet
-
-    End Function
+    End Sub
 End Class
