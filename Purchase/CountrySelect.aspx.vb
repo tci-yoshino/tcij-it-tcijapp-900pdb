@@ -4,7 +4,7 @@
     Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
     Private st_Code As String = ""
     Private st_Name As String = ""
-    Private st_Action As String = ""
+    Const SEARCH_ACTION As String = "Search"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -45,9 +45,9 @@
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Search.Click
 
-        st_Action = IIf(Request.QueryString("Action") = Nothing, "", Request.QueryString("Action"))
+        Dim st_Action As String = IIf(Request.QueryString("Action") = Nothing, "", Request.QueryString("Action"))
 
-        If st_Action = "Search" Then
+        If st_Action = SEARCH_ACTION Then
             GetCountryList()
         End If
 
