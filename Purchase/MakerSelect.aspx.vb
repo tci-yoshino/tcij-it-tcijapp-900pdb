@@ -56,7 +56,7 @@
     End Sub
 
     ' 検索処理
-    Public Sub SearchSupplierList()
+    Private Sub SearchSupplierList()
 
         SrcMaker.SelectParameters.Clear()
 
