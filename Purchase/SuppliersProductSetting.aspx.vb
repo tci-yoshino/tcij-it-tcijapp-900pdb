@@ -20,6 +20,7 @@
     Dim DBConn As New System.Data.SqlClient.SqlConnection   'データベースコネクション	
     Dim DBCommand As System.Data.SqlClient.SqlCommand       'データベースコマンド	
     Dim DBReader As System.Data.SqlClient.SqlDataReader     'データリーダー	
+    Dim ActNai As String                                    '処理判断内容
     Public Url As String
     Public st_ProductID As String
 
@@ -95,6 +96,22 @@
             End If
         End If
     End Sub
+
+    Private Sub SupplierProductSetting_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
+        Dim wClient As String       'クライアントサイドの処理を格納する
+        Dim Type2 As Type = Me.GetType
+        wClient = Clientside()
+        If wClient <> "" Then
+            ClientScript.RegisterStartupScript(Type2, "startup", Chr(13) & Chr(10) & "<script language='JavaScript' type=text/javascript> " & wClient & " </script>")
+        End If
+    End Sub
+
+    Private Function Clientside()
+        Clientside = ""
+        If ActNai = "SupplierSelect.aspx_Open" Then
+            Clientside = "popup('SupplierSelect.aspx?code=" & Supplier.Text.ToString & "')"
+        End If
+    End Function
 
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
         If Request.Form("Action") = "Save" Then
@@ -188,5 +205,9 @@
 
     Private Sub Page_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload
         DBConn.Close()
+    End Sub
+
+    Protected Sub SupplierSelect_Click(ByVal sender As Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles SupplierSelect.Click
+        ActNai = "SupplierSelect.aspx_Open"
     End Sub
 End Class

@@ -26,7 +26,8 @@
                         <th>Supplier Code <span class="required">*</span> : </th>
                         <td>
 						    <asp:TextBox ID="Supplier" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
-						    <asp:ImageButton ID="SupplierSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="popup('./SupplierSelect.aspx')" />
+						    <asp:ImageButton ID="SupplierSelect" runat="server" 
+                                ImageUrl="./Image/Search.gif" CssClass="magnify" />
                         </td>
                     </tr>
                     <tr>
