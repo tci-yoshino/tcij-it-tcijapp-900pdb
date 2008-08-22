@@ -51,7 +51,7 @@ window.onload = function() {
 					</tr>
 				</table>
 
-				<asp:Button ID="Search" runat="server" Text="Search" />
+				<asp:Button ID="Search" runat="server" Text="Search" PostBackUrl="MakerSelect.aspx?Action=Search" />
 				<input type="button" value="Clear" onclick="clearForm('SearchForm')" />
 			</form>
 		</div>
