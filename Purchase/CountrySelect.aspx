@@ -40,9 +40,9 @@ function returnValues(code, name){
         <h3>Country Select</h3>
 
         <div class="main">
-            <p class="attention"></p>
+            <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 
-            <form id="Form1" runat="server">
+            <form id="CountryForm" runat="server">
                 <table>
                     <tr>
                         <th>Country Code : </th>
@@ -54,16 +54,15 @@ function returnValues(code, name){
                     </tr>
                 </table>
 
-                <asp:HiddenField ID="Action" runat="server" Value="Search" />
-                <asp:Button ID="Search" runat="server" Text="Search" />
-                <input type="button" value="Clear" onclick="clearForm('Form1')" />
+                <asp:Button ID="Search" runat="server" Text="Search" PostBackUrl="CountrySelect.aspx?Action=Search" />
+                <input type="button" value="Clear" onclick="clearForm('CountryForm')" />
             </form>
         </div>
 
         <hr />
 
         <div class="list">
-            <asp:ListView ID="CountryList" runat="server" AutoGenerateColumns="False">
+            <asp:ListView ID="CountryList" runat="server" DataSourceID="SrcCountry">
                 <LayoutTemplate>
                     <table ID="itemPlaceholderContainer" runat="server">
                         <tr runat="server">
@@ -75,20 +74,20 @@ function returnValues(code, name){
                     </table>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
-                    <h3 style="font-style:italic">No match found.</h3>
+                    <h3 style="font-style:italic"><%=Purchase.Common.MSG_NO_DATA_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
                 
-                    <tr onclick="returnValues('<%#Eval("CountryCode")%>','<%#Eval("Name")%>');">
-                        <td><asp:Label ID="CountryCode" runat="server" Text='' /><%#Eval("CountryCode")%></td>
-                        <td><asp:Label ID="CountryName" runat="server" Text='' /><%#Eval("Name")%></td>
+                    <tr onclick="returnValues('<%#Eval("CountryCode")%>','<%#Replace(Eval("Name").ToString(), "'", "\'")%>');">
+                        <td><asp:Label ID="CountryCode" runat="server" Text='<%#Eval("CountryCode")%>' /></td>
+                        <td><asp:Label ID="CountryName" runat="server" Text='<%#Eval("Name")%>' /></td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>
         </div>
 
     </div><!-- Main Content Area END -->
-    
+    <asp:SqlDataSource ID="SrcCountry" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
 </body>
 </html>
 
