@@ -3,12 +3,15 @@
 
     ' 接続文字列
     Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
-    Private st_Code As String = ""
-    Private st_Name As String = ""
-    Private st_Errorr_Meggage As String = ""
+    Private st_Code As String = String.Empty
+    Private st_Name As String = String.Empty
+    Private st_Errorr_Meggage As String = String.Empty
     Const SEARCH_ACTION As String = "Search"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
+        ' コントロール初期化
+        Msg.Text = ""
 
         ' パラメータを取得
         If Request.RequestType = "POST" Then
@@ -34,9 +37,13 @@
         Code.Text = st_Code
         Name.Text = st_Name
 
-        ' 半角英数チェック
-        If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
-            st_Code = ""
+        ' パラメータチェック
+        If Not String.IsNullOrEmpty(st_Code) Then
+            If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
+                st_Code = ""
+                Msg.Text = "Maker Code " & Common.ERR_INVALID_NUMBER
+                Exit Sub
+            End If
         End If
 
         ' GET 且つ QueryString("Code") が送信されている場合は検索処理を実行
@@ -61,7 +68,7 @@
         SrcMaker.SelectParameters.Clear()
 
         ' Where 句の生成
-        Dim st_where As String = ""
+        Dim st_where As String = String.Empty
         If Not String.IsNullOrEmpty(st_Code) Then
             SrcMaker.SelectParameters.Add("Code", Common.SafeSqlLiteral(st_Code))
             st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
