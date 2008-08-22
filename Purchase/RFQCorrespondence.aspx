@@ -59,7 +59,7 @@
                     <table class="zebra2">
                         <tr>
                             <th style="width:20%">Status:</th>
-                            <td style="width:65%"><asp:Label ID="StatusLabel" runat="server" Text='<%# Eval("Status") %>' /></td>
+                            <td style="width:65%"><asp:Label ID="StatusLabel" runat="server" Font-Bold="True" Text='<%# Eval("Status") %>' /></td>
                             <td style="width:15%" rowspan="4">
                                 <asp:LinkButton ID="Check" runat="server" PostBackUrl="RFQCorrespondence.aspx?Action=Check">
                                   <asp:Image ID="ImgCheck" runat="server" ImageUrl="./Image/Check.gif" />Check
@@ -80,7 +80,10 @@
                         </tr>
                         <tr>
                             <th>Notes:</th>
-                            <td><asp:Label ID="NotesLabel" runat="server" Text='<%# Eval("Notes") %>' /></td>
+                            <td>
+                                <asp:Label ID="TitleLabel" runat="server" ForeColor="Red" Font-Bold="True" Text='<%# Eval("Title") %>' /><br />
+                                <asp:Label ID="Label1" runat="server" Text='<%# Eval("Notes") %>' />
+                            </td>
                         </tr>
                     </table>
                     <asp:HiddenField ID="ischecked" runat="server" Value='<%# Eval("isChecked") %>' />
@@ -100,7 +103,7 @@
                     <table class="zebra1">
                         <tr>
                             <th style="width:20%">Status:</th>
-                            <td style="width:65%"><asp:Label ID="StatusLabel" runat="server" Text='<%# Eval("Status") %>' /></td>
+                            <td style="width:65%"><asp:Label ID="StatusLabel" runat="server" Font-Bold="True" Text='<%# Eval("Status") %>' /></td>
                             <td style="width:15%" rowspan="4">
                                 <asp:LinkButton ID="Check" runat="server" PostBackUrl="RFQCorrespondence.aspx?Action=Check">
                                 <asp:Image ID="ImgCheck" runat="server" ImageUrl="./Image/Check.gif" />Check</asp:LinkButton>
@@ -120,7 +123,10 @@
                         </tr>
                         <tr>
                             <th>Notes:</th>
-                            <td><asp:Label ID="NotesLabel" runat="server" Text='<%# Eval("Notes") %>' /></td>
+                            <td>
+                                <asp:Label ID="TitleLabel" runat="server" ForeColor="Red" Font-Bold="True" Text='<%# Eval("Title") %>' /><br />
+                                <asp:Label ID="Label1" runat="server" Text='<%# Eval("Notes") %>' />
+                            </td>
                         </tr>
                     </table>
                     <asp:HiddenField ID="ischecked" runat="server" Value='<%# Eval("isChecked") %>' />
@@ -131,10 +137,23 @@
         </div>
     </div><!-- Main Content Area END -->
     <asp:SqlDataSource ID="SrcRFQHistory" runat="server" 
-    ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" SelectCommand="SELECT dbo.RFQStatus.Text AS Status, dbo.RFQHistory.CreateDate AS Date,  dbo.v_User.Name + '      (' + dbo.v_User.LocationName + ')' AS Sender, v_User_1.Name AS Addressee, dbo.RFQHistory.Note AS Notes
-FROM dbo.RFQHistory INNER JOIN dbo.RFQStatus ON dbo.RFQHistory.RFQStatusCode = dbo.RFQStatus.RFQStatusCode LEFT OUTER JOIN dbo.v_User AS v_User_1 ON dbo.RFQHistory.RcptUserID = v_User_1.UserID LEFT OUTER JOIN dbo.v_User ON dbo.RFQHistory.CreatedBy = dbo.v_User.UserID
-WHERE (dbo.RFQHistory.RFQNumber = '1000000001')
-ORDER BY dbo.RFQHistory.RFQHistoryNumber DESC"></asp:SqlDataSource>
+    ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" SelectCommand="SELECT                  TOP (100) PERCENT dbo.RFQStatus.Text AS Status, dbo.RFQHistory.CreateDate AS Date, 
+                                  dbo.v_User.Name + '(' + dbo.s_Location.Name + ')' AS Sender, v_User_1.Name + '(' + s_Location_1.Name + ')' AS Addressee, 
+                                  dbo.RFQCorres.Text AS Title, dbo.RFQHistory.Note AS Notes, dbo.RFQHistory.isChecked, dbo.RFQHistory.RcptUserID, dbo.RFQHistory.RFQHistoryNumber
+FROM                     dbo.RFQHistory LEFT OUTER JOIN
+                                  dbo.RFQCorres ON dbo.RFQHistory.RFQCorresCode = dbo.RFQCorres.RFQCorresCode LEFT OUTER JOIN
+                                  dbo.s_Location AS s_Location_1 ON dbo.RFQHistory.RcptLocationCode = s_Location_1.LocationCode LEFT OUTER JOIN
+                                  dbo.s_Location ON dbo.RFQHistory.SendLocationCode = dbo.s_Location.LocationCode LEFT OUTER JOIN
+                                  dbo.v_User AS v_User_1 ON dbo.RFQHistory.RcptUserID = v_User_1.UserID LEFT OUTER JOIN
+                                  dbo.v_User ON dbo.RFQHistory.SendUserID = dbo.v_User.UserID LEFT OUTER JOIN
+                                  dbo.RFQStatus ON dbo.RFQHistory.RFQStatusCode = dbo.RFQStatus.RFQStatusCode
+WHERE (dbo.RFQHistory.RFQNumber = @RFQNumber)
+ORDER BY           dbo.RFQHistory.RFQHistoryNumber DESC">
+        <SelectParameters>
+            <asp:ControlParameter ControlID="hd_RFQNumber" Name="RFQNumber" 
+                PropertyName="Value" />
+        </SelectParameters>
+    </asp:SqlDataSource>
     
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->

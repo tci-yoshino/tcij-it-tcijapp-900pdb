@@ -15,6 +15,11 @@ Partial Public Class RFQCorrespondence
             If Request.QueryString("RFQNumber") <> "" Then
                 hd_RFQNumber.Value = Request.QueryString("RFQNumber")
             Else
+                EnqUser.Enabled = False
+                QuoUser.Enabled = False
+                CorresTitle.Enabled = False
+                CorresNote.Enabled = False
+                Send.Enabled = False
                 Msg.Text = Common.ERR_INVALID_PARAMETER
                 Exit Sub
             End If
@@ -109,10 +114,17 @@ Partial Public Class RFQCorrespondence
         End If
 
         '[SrcRFQHistoryにSelectCommand設定]-------------------------------------------------------------
-        SrcRFQHistory.SelectCommand = "SELECT dbo.RFQStatus.Text AS Status, dbo.RFQHistory.CreateDate AS Date, dbo.v_User.Name + '          (' + dbo.v_User.LocationName + ')' AS Sender, v_User_1.Name + '          (' + dbo.v_User.LocationName + ')' AS Addressee, dbo.RFQHistory.Note AS Notes, dbo.RFQHistory.isChecked, dbo.RFQHistory.RcptUserID, dbo.RFQHistory.RFQHistoryNumber " & _
-                                      "FROM dbo.RFQHistory LEFT OUTER JOIN dbo.RFQStatus ON dbo.RFQHistory.RFQStatusCode = dbo.RFQStatus.RFQStatusCode LEFT OUTER JOIN dbo.v_User AS v_User_1 ON dbo.RFQHistory.RcptUserID = v_User_1.UserID LEFT OUTER JOIN dbo.v_User ON dbo.RFQHistory.CreatedBy = dbo.v_User.UserID " & _
-                                      "WHERE (dbo.RFQHistory.RFQNumber = " & hd_RFQNumber.Value & ") " & _
+        SrcRFQHistory.SelectCommand = "SELECT dbo.RFQStatus.Text AS Status, dbo.RFQHistory.CreateDate AS Date, dbo.v_User.Name + '(' + dbo.s_Location.Name + ')' AS Sender, v_User_1.Name + '(' + s_Location_1.Name + ')' AS Addressee, dbo.RFQCorres.Text AS Title, dbo.RFQHistory.Note AS Notes, dbo.RFQHistory.isChecked, dbo.RFQHistory.RcptUserID, dbo.RFQHistory.RFQHistoryNumber " & _
+                                      "FROM dbo.RFQHistory LEFT OUTER JOIN " & _
+                                      "dbo.RFQCorres ON dbo.RFQHistory.RFQCorresCode = dbo.RFQCorres.RFQCorresCode LEFT OUTER JOIN " & _
+                                      "dbo.s_Location AS s_Location_1 ON dbo.RFQHistory.RcptLocationCode = s_Location_1.LocationCode LEFT OUTER JOIN " & _
+                                      "dbo.s_Location ON dbo.RFQHistory.SendLocationCode = dbo.s_Location.LocationCode LEFT OUTER JOIN " & _
+                                      "dbo.v_User AS v_User_1 ON dbo.RFQHistory.RcptUserID = v_User_1.UserID LEFT OUTER JOIN " & _
+                                      "dbo.v_User ON dbo.RFQHistory.SendUserID = dbo.v_User.UserID LEFT OUTER JOIN " & _
+                                      "dbo.RFQStatus ON dbo.RFQHistory.RFQStatusCode = dbo.RFQStatus.RFQStatusCode " & _
+                                      "WHERE (dbo.RFQHistory.RFQNumber = @RFQNumber) " & _
                                       "ORDER BY dbo.RFQHistory.RFQHistoryNumber DESC"
+
     End Sub
 
     Private Sub Set_isChecked(ByVal sender As Object, ByVal e As EventArgs) Handles RFQHistory.ItemDataBound
