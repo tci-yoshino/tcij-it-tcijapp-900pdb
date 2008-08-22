@@ -95,6 +95,20 @@
         </customErrors>
         -->
 
+        <!--
+              <trace>セクションは、実行中の各種パラメータの表示を可能にします。
+
+          <trace
+             enabled="true"
+             localOnly="true"
+             mostRecent="false"
+             pageOutput="true"
+             requestLimit="10"
+             traceMode="SortByTime"
+             writeToDiagnosticsTrace="false"
+          />
+          -->
+
       <httpHandlers>
         <remove verb="*" path="*.asmx"/>
         <add verb="*" path="*.asmx" validate="false" type="System.Web.Script.Services.ScriptHandlerFactory, System.Web.Extensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35"/>
