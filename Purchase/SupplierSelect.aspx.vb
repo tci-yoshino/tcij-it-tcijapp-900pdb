@@ -10,6 +10,9 @@
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
+        ' コントロール初期化
+        Msg.Text = ""
+
         ' パラメータを取得
         If Request.RequestType = "POST" Then
             st_Code = IIf(Request.Form("Code") = Nothing, "", Request.Form("Code"))
@@ -34,9 +37,13 @@
         Code.Text = st_Code
         Name.Text = st_Name
 
-        ' 半角英数チェック
-        If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
-            st_Code = String.Empty
+        ' パラメータチェック
+        If Not String.IsNullOrEmpty(st_Code) Then
+            If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
+                st_Code = String.Empty
+                Msg.Text = "Supplier Code " & Common.ERR_INVALID_NUMBER
+                Exit Sub
+            End If
         End If
 
         ' GET 且つ QueryString("Code") が送信されている場合は検索処理を実行
