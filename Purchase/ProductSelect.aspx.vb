@@ -52,14 +52,14 @@
                (Not TCICommon.Func.IsNewProductNumber(st_ProductNumber)) And _
                (Not TCICommon.Func.IsCASNumber(st_ProductNumber)) Then
                 st_ProductNumber = ""
-                Msg.Text = "Product Number" & Common.ERR_REQUIRED_FIELD
+                Msg.Text = "Product Number" & Common.ERR_INCORRECT_FORMAT
                 Exit Sub
             End If
         End If
         If Not String.IsNullOrEmpty(st_CASNumber) Then
             If Not TCICommon.Func.IsCASNumber(st_CASNumber) Then
                 st_ProductNumber = ""
-                Msg.Text = "CAS Number" & Common.ERR_REQUIRED_FIELD
+                Msg.Text = "CAS Number" & Common.ERR_INCORRECT_FORMAT
                 Exit Sub
             End If
         End If
