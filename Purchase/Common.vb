@@ -140,10 +140,12 @@ Public Class Common
     ''' </summary>
     ''' <param name="LocationCode">拠点コード</param>
     ''' <param name="DatabaseTime">データベース時間 (JST)</param>
+    ''' <param name="WithHMS">時刻情報が必要な場合は True を指定</param>
     ''' <returns>ローカル時間</returns>
     ''' <remarks></remarks>
-    Public Shared Function GetLocalTime(ByVal LocationCode As String, ByVal DatabaseTime As Date) As String
+    Public Shared Function GetLocalTime(ByVal LocationCode As String, ByVal DatabaseTime As Date, Optional ByVal WithHMS As Boolean = False) As String
         Dim st_ErrMsg As String = String.Empty
+        Dim st_Format As String = String.Empty
         Dim da_Date As Date = DatabaseTime
 
         If Not IsDate(da_Date) Then
@@ -154,7 +156,9 @@ Public Class Common
             Throw New Exception(String.Format("TCICommon.ConvertDate: {0}", st_ErrMsg))
         End If
 
-        Return Format(da_Date, DATE_FORMAT)
+        st_Format = IIf(WithHMS = True, DATETIME_FORMAT, DATE_FORMAT).ToString
+
+        Return Format(da_Date, st_Format)
 
     End Function
 
