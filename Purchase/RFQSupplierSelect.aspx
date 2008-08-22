@@ -44,7 +44,7 @@
 		<h3>Supplier Select</h3>
 
 		<div class="main">
-			<p class="attention"><asp:Label ID="ErrorMessages" runat="server"></asp:Label></p>
+			<p class="attention"><asp:Label ID="Msg" runat="server"></asp:Label></p>
 <%  If Not String.IsNullOrEmpty(st_Location) Then%>
 			<form id="SearchForm" runat="server">
 				<table>

@@ -16,13 +16,13 @@ Option Explicit On
 Partial Public Class RFQSupplierSelect
 
     '''<summary>
-    '''ErrorMessages コントロール。
+    '''Msg コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents ErrorMessages As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
     '''SearchForm コントロール。
