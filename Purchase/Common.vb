@@ -364,7 +364,7 @@ Public Class Common
             Dim reader As SqlClient.SqlDataReader = DBCommand.ExecuteReader()
 
             While reader.Read()
-                If i > 1 Then
+                If i >= 1 Then
                     Throw New Exception("Common.GetUpdateDate: 複数レコード取得されました。PrimaryKey には主キー名を指定してください。")
                     Exit While
                 End If
