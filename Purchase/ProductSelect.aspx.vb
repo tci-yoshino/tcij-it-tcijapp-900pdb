@@ -2,9 +2,9 @@
     Inherits CommonPage
 
     Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
-    Private st_ProductNumber As String = ""
-    Private st_CASNumber As String = ""
-    Private st_ProductName As String = ""
+    Private st_ProductNumber As String = String.Empty
+    Private st_CASNumber As String = String.Empty
+    Private st_ProductName As String = String.Empty
     Const SEARCH_ACTION As String = "Search"
 
 
@@ -51,14 +51,14 @@
             If (Not TCICommon.Func.IsProductNumber(st_ProductNumber)) And _
                (Not TCICommon.Func.IsNewProductNumber(st_ProductNumber)) And _
                (Not TCICommon.Func.IsCASNumber(st_ProductNumber)) Then
-                st_ProductNumber = ""
+                st_ProductNumber = String.Empty
                 Msg.Text = "Product Number" & Common.ERR_INCORRECT_FORMAT
                 Exit Sub
             End If
         End If
         If Not String.IsNullOrEmpty(st_CASNumber) Then
             If Not TCICommon.Func.IsCASNumber(st_CASNumber) Then
-                st_ProductNumber = ""
+                st_ProductNumber = String.Empty
                 Msg.Text = "CAS Number" & Common.ERR_INCORRECT_FORMAT
                 Exit Sub
             End If
@@ -85,7 +85,7 @@
         SrcProduct.SelectParameters.Clear()
 
         ' Where 句の生成
-        Dim st_where As String = ""
+        Dim st_where As String = String.Empty
         If Not String.IsNullOrEmpty(st_ProductNumber) Then
             SrcProduct.SelectParameters.Add("ProductNumber", Common.SafeSqlLiteral(st_ProductNumber))
             st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
