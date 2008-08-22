@@ -11,18 +11,20 @@ Partial Public Class POCorrespondence
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If IsPostBack = False Then
-            '[PONumberの取込]--------------------------------------------------------------------------
-            If Request.QueryString("PONumber") <> "" Then
-                hd_PONumber.Value = Request.QueryString("PONumber")
-            Else
-                POUser.Enabled = False
-                SOUser.Enabled = False
-                CorresTitle.Enabled = False
-                CorresNote.Enabled = False
-                Send.Enabled = False
-                Msg.Text = Common.ERR_INVALID_PARAMETER
-                Exit Sub
-            End If
+            ''[PONumberの取込]--------------------------------------------------------------------------
+            'If Request.QueryString("PONumber") <> "" Then
+            '    hd_PONumber.Value = Request.QueryString("PONumber")
+            'Else
+            '    POUser.Enabled = False
+            '    SOUser.Enabled = False
+            '    CorresTitle.Enabled = False
+            '    CorresNote.Enabled = False
+            '    Send.Enabled = False
+            '    Msg.Text = Common.ERR_INVALID_PARAMETER
+            '    Exit Sub
+            'End If
+
+            hd_PONumber.Value = "1000000011"
 
             '[Connectionの定義]-------------------------------------------------------------------------
             Dim conn As SqlConnection = Nothing
@@ -114,7 +116,7 @@ Partial Public Class POCorrespondence
         End If
 
         '[SrcPOHistoryにSelectCommand設定]-------------------------------------------------------------
-        SrcPOHistory.SelectCommand = "SELECT dbo.POStatus.Text AS Status, dbo.POHistory.CreateDate AS Date, dbo.v_User.Name + '(' + dbo.s_Location.Name + ')' AS Sender, v_User_1.Name + '(' + s_Location_1.Name + ')' AS Addressee, dbo.POCorres.Text AS Title, dbo.POHistory.Note AS Notes, dbo.POHistory.isChecked, dbo.POHistory.RcptUserID, dbo.POHistory.POHistoryNumber " & _
+        SrcPOHistory.SelectCommand = "SELECT dbo.POStatus.Text AS Status, dbo.POHistory.CreateDate AS Date, dbo.v_User.Name + '(' + dbo.s_Location.Name + ')' AS Sender, v_User_1.Name + '(' + s_Location_1.Name + ')' AS Addressee, dbo.POCorres.Text AS Title, REPLACE(dbo.POHistory.Note,Char(10),'<br>') AS Notes, dbo.POHistory.isChecked, dbo.POHistory.RcptUserID, dbo.POHistory.POHistoryNumber " & _
                                      "FROM dbo.POHistory LEFT OUTER JOIN " & _
                                      "dbo.POCorres ON dbo.POHistory.POCorresCode = dbo.POCorres.POCorresCode LEFT OUTER JOIN " & _
                                      "dbo.s_Location AS s_Location_1 ON dbo.POHistory.RcptLocationCode = s_Location_1.LocationCode LEFT OUTER JOIN " & _
