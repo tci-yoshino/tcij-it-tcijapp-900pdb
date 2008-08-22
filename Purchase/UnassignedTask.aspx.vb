@@ -36,20 +36,20 @@
 
     Protected Sub RFQAssign_Click(ByVal source As Object, ByVal e As ListViewCommandEventArgs) Handles RFQList.ItemCommand
 
-        Dim st_action As String = "" ' Action 格納変数
+        Dim st_Action As String = String.Empty ' Action 格納変数
         Dim st_RFQNumber As String = CType(e.Item.FindControl("RFQNumber"), Label).Text
         Dim st_UpdateDate As String = CType(e.Item.FindControl("UpdateDate"), HiddenField).Value
         Dim st_QuoUserID As String = CType(e.Item.FindControl("QuoUser"), DropDownList).SelectedValue
 
         ' Action 取得
         If Request.RequestType = "POST" Then
-            st_action = IIf(Request.Form("Action") = Nothing, "", Request.Form("Action"))
+            st_Action = IIf(Request.Form("Action") = Nothing, "", Request.Form("Action"))
         ElseIf Request.RequestType = "GET" Then
-            st_action = IIf(Request.QueryString("Action") = Nothing, "", Request.QueryString("Action"))
+            st_Action = IIf(Request.QueryString("Action") = Nothing, "", Request.QueryString("Action"))
         End If
 
         ' Action が "Assign"でない場合はエラー
-        If st_action <> ASSIGN_ACTION Then
+        If st_Action <> ASSIGN_ACTION Then
             Msg.Text = Common.ERR_INVALID_PARAMETER
             RFQList.DataBind()
             Exit Sub
