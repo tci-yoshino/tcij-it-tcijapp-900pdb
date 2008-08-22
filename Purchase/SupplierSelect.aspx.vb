@@ -3,20 +3,20 @@
 
     ' 接続文字列
     Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
-    Private st_Code As String = ""
-    Private st_Name As String = ""
-    Private st_Errorr_Meggage As String = ""
+    Private st_Code As String = String.Empty
+    Private st_Name As String = String.Empty
+    Private st_Errorr_Meggage As String = String.Empty
     Const SEARCH_ACTION As String = "Search"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         ' パラメータを取得
         If Request.RequestType = "POST" Then
-            st_Code = IIf(String.IsNullOrEmpty(Request.Form("Code")), "", Request.Form("Code"))
-            st_Name = IIf(String.IsNullOrEmpty(Request.Form("Name")), "", Request.Form("Name"))
+            st_Code = IIf(Request.Form("Code") = Nothing, "", Request.Form("Code"))
+            st_Name = IIf(Request.Form("Name") = Nothing, "", Request.Form("Name"))
         ElseIf Request.RequestType = "GET" Then
-            st_Code = IIf(String.IsNullOrEmpty(Request.QueryString("Code")), "", Request.QueryString("Code"))
-            st_Name = IIf(String.IsNullOrEmpty(Request.QueryString("Name")), "", Request.QueryString("Name"))
+            st_Code = IIf(Request.QueryString("Code") = Nothing, "", Request.QueryString("Code"))
+            st_Name = IIf(Request.QueryString("Name") = Nothing, "", Request.QueryString("Name"))
         End If
 
         ' 空白除去
@@ -36,11 +36,11 @@
 
         ' 半角英数チェック
         If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
-            st_Code = ""
+            st_Code = String.Empty
         End If
 
         ' GET 且つ QueryString("Code") が送信されている場合は検索処理を実行
-        If (Request.RequestType = "GET") And (Not String.IsNullOrEmpty(Request.QueryString("Code"))) Then
+        If (Request.RequestType = "GET") And (Request.QueryString("Code") = Nothing) Then
             GetSupplierList()
         End If
 
@@ -64,7 +64,7 @@
         SrcSupplier.SelectParameters.Clear()
 
         ' Where 句の生成
-        Dim st_where As String = ""
+        Dim st_where As String = String.Empty
         If Not String.IsNullOrEmpty(st_Code) Then
             SrcSupplier.SelectParameters.Add("Code", Common.SafeSqlLiteral(st_Code))
             st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
