@@ -41,7 +41,7 @@
 
         ' GET 且つ QueryString("Code") が送信されている場合は検索処理を実行
         If (Request.RequestType = "GET") And (Not String.IsNullOrEmpty(Request.QueryString("Code"))) Then
-            SearchSupplierList()
+            GetSupplierList()
         End If
 
     End Sub
@@ -52,14 +52,14 @@
         Dim st_Action As String = IIf(Request.QueryString("Action") = Nothing, "", Request.QueryString("Action"))
 
         If st_Action = SEARCH_ACTION Then
-            SearchSupplierList()
+            GetSupplierList()
         End If
 
     End Sub
 
 
     ' 検索処理
-    Private Sub SearchSupplierList()
+    Private Sub GetSupplierList()
 
         SrcSupplier.SelectParameters.Clear()
 
