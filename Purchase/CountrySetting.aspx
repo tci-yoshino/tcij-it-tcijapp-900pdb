@@ -27,7 +27,8 @@
 						<td>
 						    <asp:TextBox ID="Code" runat="server" Width="7em" MaxLength="5" ReadOnly="true" 
                                 CssClass="readonly" TabIndex="1"></asp:TextBox>
-						    <asp:ImageButton ID="Search" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" />
+						    <asp:ImageButton ID="Search" runat="server" ImageUrl="./Image/Search.gif" 
+                                CssClass="magnify" Width="18px" />
 						</td>
 					</tr>
 					<tr>
