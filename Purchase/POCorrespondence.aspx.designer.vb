@@ -16,15 +16,6 @@ Option Explicit On
 Partial Public Class POCorrespondence
 
     '''<summary>
-    '''Msg コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
-
-    '''<summary>
     '''POCorresForm コントロール。
     '''</summary>
     '''<remarks>
@@ -32,6 +23,15 @@ Partial Public Class POCorrespondence
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents POCorresForm As Global.System.Web.UI.HtmlControls.HtmlForm
+
+    '''<summary>
+    '''Msg コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
     '''POUser コントロール。
@@ -113,4 +113,13 @@ Partial Public Class POCorrespondence
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents SrcPOHistory As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
+    '''hd_PONumber コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents hd_PONumber As Global.System.Web.UI.WebControls.HiddenField
 End Class
