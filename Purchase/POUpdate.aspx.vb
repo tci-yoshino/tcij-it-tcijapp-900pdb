@@ -12,11 +12,15 @@ Imports System.Data.SqlClient
 Partial Public Class POUpdate
     Inherits CommonPage
 
-#Region "変数、定数定義"
+#Region "グローバル変数定義"
 
     Protected st_PONumber As String
     Protected st_Action As String
+    Protected b_FormVisible As Boolean = True
 
+#End Region
+
+#Region "定数定義"
     ''' <summary>
     ''' エラー定数です。
     ''' </summary>
@@ -25,7 +29,22 @@ Partial Public Class POUpdate
     Const ERR_DATA_REMOVED_BY_OTHER As String = "このデータは他のユーザーによって削除されました。"
     Const ERR_DATA_CHAGED_BY_OTHER As String = "このデータは他のユーザーによって編集されました。その内容を確認し再度編集をお願いします"
 
+    Const TABLE_NAME_PO As String = "PO"
+    Const VIEW_NAME_PO As String = "v_PO"
+    Const PK_NAME_PO As String = "PONumber"
 
+    Const QUERY_KEY_ACTION As String = "Action"
+    Const SESSION_KEY_ADMIN As String = "Purchase.isAdmin"
+    Const SESSION_KEY_LOCATION As String = "LocationCode"
+
+
+    Const ACTION_VALUE_UPDATE As String = "Update"
+    Const ACTION_VALUE_CANCEL As String = "Cancel"
+
+
+#End Region
+
+#Region "構造体定義"
     ''' <summary>
     ''' POデータを格納する構造体です。
     ''' </summary>
@@ -101,6 +120,7 @@ Partial Public Class POUpdate
 
 #End Region
 
+#Region "フォームイベント"
 
     ''' <summary>
     ''' このページのロードイベントです。
@@ -123,28 +143,28 @@ Partial Public Class POUpdate
         End If
 
         'TODO ダミーコードです。要削除
-        st_PONumber = "1000000011"
+        'st_PONumber = "1000000011"
+        'st_PONumber = "00011"
 
         If IsPostBack = False Then
             If IsNumeric(st_PONumber) = False Then
                 Msg.Text = ERR_INVALID_PARAMETER
+                b_FormVisible = False
                 Exit Sub
             End If
 
             If ExistsPO(st_PONumber) = False Then
                 Msg.Text = MSG_NO_DATA_FOUND
+                b_FormVisible = False
                 Exit Sub
             End If
             ClearForm()
             ViewPOInformationToForm(CInt(st_PONumber))
 
+            POCorrespondence.OnClientClick = String.Format("popup('./POCorrespondence.aspx?PONumber={0}')", st_PONumber)
             ChiPOIssue.NavigateUrl = String.Format("./POIssue.aspx?PONumber={0}", st_PONumber)
 
         End If
-
-
-
-
     End Sub
 
     ''' <summary>
@@ -197,6 +217,7 @@ Partial Public Class POUpdate
         ViewPOInformationToForm(i_PONumber)
     End Sub
 
+
     ''' <summary>
     ''' Update,Cancel共通検証
     ''' </summary>
@@ -247,6 +268,10 @@ Partial Public Class POUpdate
 
     End Function
 
+#End Region
+
+
+
     ''' <summary>
     ''' 日付型テキストボックスの正当性を評価します。
     ''' </summary>
@@ -290,7 +315,7 @@ Partial Public Class POUpdate
     ''' <remarks></remarks>
     Private Function ValidateForUpdate() As Boolean
 
-        If st_Action <> "Update" Then
+        If st_Action <> ACTION_VALUE_UPDATE Then
             Msg.Text = ERR_INVALID_PARAMETER
             Return False
         End If
@@ -303,7 +328,7 @@ Partial Public Class POUpdate
         Dim i_PONumber As Integer = CInt(PO.Value)
 
         Dim POInformation As POInformationType = SelectPOInformation(i_PONumber)
-        If CBool(Session("Purchase.isAdmin")) = False And POInformation.POLocationCode <> Session("LocationCode").ToString() Then
+        If CBool(Session(SESSION_KEY_ADMIN)) = False And POInformation.POLocationCode <> Session(SESSION_KEY_LOCATION).ToString() Then
             Msg.Text = ERR_LOCATION_INCONSITENT
             Return False
         End If
@@ -313,7 +338,7 @@ Partial Public Class POUpdate
             Return False
         End If
 
-        If isLatestData("PO", "PONumber", i_PONumber.ToString(), UpdateDate.Value) = False Then
+        If isLatestData(TABLE_NAME_PO, PK_NAME_PO, i_PONumber.ToString(), UpdateDate.Value) = False Then
             Msg.Text = ERR_DATA_CHAGED_BY_OTHER
             Return False
         End If
@@ -380,7 +405,7 @@ Partial Public Class POUpdate
     ''' <remarks></remarks>
     Private Function ExistsPO(ByVal PONumber As String) As Boolean
 
-        Return ExistenceConfirmation("v_PO", "PONumber", PONumber)
+        Return ExistenceConfirmation(TABLE_NAME_PO, PK_NAME_PO, PONumber)
 
     End Function
 
@@ -405,8 +430,7 @@ Partial Public Class POUpdate
         ProductName.Text = POInformation.ProductName
         OrderQuantity.Text = POInformation.OrderQuantity.ToString()
         OrderUnit.Text = POInformation.OrderUnitCode
-        'TODO 不明フィールド
-        'OrderPiece.Text = POInfomation.Order
+        OrderPiece.Text = POInformation.UnitPrice.ToString()
         DeliveryDate.Text = NullableDateToString(POInformation.DeliveryDate, DATE_FORMAT)
         Currency.Text = POInformation.CurrencyCode
         UnitPrice.Text = POInformation.UnitPrice.ToString()
@@ -438,7 +462,7 @@ Partial Public Class POUpdate
         PurchasingRequisitionNumber.Text = POInformation.PurchasingRequisitionNumber
         CancellationDate.Text = NullableDateToString(POInformation.CancellationDate, DATE_FORMAT)
 
-        UpdateDate.Value = GetUpdateDate("PO", "PONumber", POInformation.PONumber.ToString())
+        UpdateDate.Value = GetUpdateDate(TABLE_NAME_PO, PK_NAME_PO, POInformation.PONumber.ToString())
 
     End Sub
 
@@ -828,6 +852,23 @@ Partial Public Class POUpdate
         Return sb_SQL.ToString()
     End Function
 
+    ''' <summary>
+    ''' Nullable DecimalオブジェクトをPurchase表示書式に変換します。
+    ''' </summary>
+    ''' <param name="Value">対象となるNullable Decimalオブジェクト</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Private Function NullableDecimalToViewFormat(ByVal Value As Decimal?) As String
+        If Value Is Nothing Then
+            Return String.Empty
+        End If
+
+        Return CType(Value, Decimal).ToString("G29")
+
+    End Function
+
+
+
 #Region "DB読み込み時変換関数"
 
     ''' <summary>
@@ -1048,8 +1089,8 @@ Partial Public Class POUpdate
     ''' <summary>
     ''' 文字列をNullable DateTimeオブジェクトに変換します。
     ''' </summary>
-    ''' <param name="value"></param>
-    ''' <returns></returns>
+    ''' <param name="value">変換対象となるstring オブジェクト</param>
+    ''' <returns>変換対象となる DateTime? オブジェクト</returns>
     Public Shared Function StrToNullableDateTime(ByVal value As String) As DateTime?
         Dim dt As DateTime = New DateTime()
         If DateTime.TryParse(value, dt) Then
@@ -1061,10 +1102,10 @@ Partial Public Class POUpdate
 
 
     ''' <summary>
-    ''' 空白文字列をNothingオブジェクトに変換します。
+    ''' Systemn.String内の空白をNothingに変換します。
     ''' </summary>
-    ''' <param name="value"></param>
-    ''' <returns></returns>
+    ''' <param name="value">変換対象となるstring オブジェクト</param>
+    ''' <returns>Nothingを含んだString文字列</returns>
     Public Shared Function StrToNullableString(ByVal value As String) As String
         If String.IsNullOrEmpty(value) Then
             Return Nothing
@@ -1076,10 +1117,10 @@ Partial Public Class POUpdate
 
 
     ''' <summary>
-    ''' Nullable DateTimeオブジェクトをDB Nullableを含んだオブジェクトに変換します。
+    ''' Nullable DateTimeオブジェクト内をDBNullを含んだSystem.Objectオブジェクトに変換します。
     ''' </summary>
-    ''' <param name="value"></param>
-    ''' <returns></returns>
+    ''' <param name="value">対象となるDateTime? オブジェクト</param>
+    ''' <returns>DB Nullを含んだ System Object。</returns>
     Public Shared Function NullableDateTimeToDBDate(ByVal value As DateTime?) As Object
         If value Is Nothing Then
             Return DBNull.Value
@@ -1089,10 +1130,10 @@ Partial Public Class POUpdate
     End Function
 
     ''' <summary>
-    ''' Nullable System.StringをDBNullを含んだオブジェクトに変換します。
+    ''' Nullable System.StringオブジェクトをDBNullを含んだSystem.Objectオブジェクトに変換します。
     ''' </summary>
-    ''' <param name="value"></param>
-    ''' <returns></returns>
+    ''' <param name="value">対象となるSystem.String</param>
+    ''' <returns>DB Nullを含んだ System Object。</returns>
     Public Shared Function NullableStringToDBObject(ByVal value As String) As Object
         If String.IsNullOrEmpty(value) Then
             Return DBNull.Value
@@ -1104,10 +1145,10 @@ Partial Public Class POUpdate
 
 
     ''' <summary>
-    ''' Nullable 変数をDBNullを含んだオブジェクトに変換します。
+    ''' Nullable オブジェクトをDBNullを含んだSystem.Objectオブジェクトに変換します。
     ''' </summary>
-    ''' <param name="value"></param>
-    ''' <returns></returns>
+    ''' <param name="value">対象となるSystem.Object</param>
+    ''' <returns>DB Nullを含んだ System Object。</returns>
     Public Shared Function NullableVariableToDBObject(ByVal value As Object) As Object
         If value Is Nothing Then
             Return DBNull.Value
@@ -1121,8 +1162,8 @@ Partial Public Class POUpdate
     ''' <summary>
     ''' DBオブジェクトをNullable DateTimeオブジェクトに変換します。
     ''' </summary>
-    ''' <param name="value"></param>
-    ''' <returns></returns>
+    ''' <param name="value">対象となる System.Object</param>
+    ''' <returns>変換したNullable System.DateTime。</returns>
     Public Shared Function DBObjToNullableDateTime(ByVal value As Object) As DateTime?
         Dim dt As DateTime = New DateTime()
         If DateTime.TryParse(value.ToString(), dt) Then
@@ -1148,10 +1189,10 @@ Partial Public Class POUpdate
 
 
     ''' <summary>
-    ''' 文字列をDBNullを含んだintオブジェクトに変換します。
+    ''' Systemn.StringをSystem.Intの値を持ったDBオブジェクトへ変換します。
     ''' </summary>
-    ''' <param name="value"></param>
-    ''' <returns></returns>
+    ''' <param name="value">対象となる System.String</param>
+    ''' <returns>DB Nullを含んだ System Object。</returns>
     Public Shared Function StringToDBInt(ByVal value As String) As Object
         Dim obRet As Object = DBNull.Value
 
@@ -1162,8 +1203,6 @@ Partial Public Class POUpdate
         End If
         Return obRet
     End Function
-
-
 
 #End Region
 

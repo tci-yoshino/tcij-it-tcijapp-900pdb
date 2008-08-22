@@ -12,164 +12,168 @@
 <body>
     <!-- Main Content Area -->
     <div id="content">
-        <div class="tabs"><a href="#" onclick="popup('./POCorrespondence.aspx')">PO Correspondence / History</a></div>
-
-        <h3>PO Update</h3>
-
         <form id="POForm" runat="server">
+            <div class="tabs"><asp:LinkButton ID="POCorrespondence" runat="server">PO Correspondence / History</asp:LinkButton></div>
+            
+            <h3>PO Update</h3>
             <div class="main">
                 <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
-            
-                <table class="left">
-                    <tr>
-                        <th>RFQ Reference Number : </th>
-                        <td><asp:Label ID="RFQNumber" runat="server" Text=""></asp:Label></td>
-                    </tr>
-                    <tr>
-                        <th>R/3 PO Number : </th>
-                        <td><asp:TextBox ID="R3PONumber" runat="server" Width="10em" MaxLength="10"></asp:TextBox></td>
-                    </tr>
-                    <tr>
-                        <th>PO Date <span class="required">*</span> : </th>
-                        <td><asp:Label ID="PODate" runat="server" Text=""></asp:Label></td>
-                    </tr>
-                    <tr>
-                        <th>PO-User <span class="required">*</span> : </th>
-                        <td><asp:Label ID="POUser" runat="server" Text=""></asp:Label>
-                            <span class="indent">(<asp:Label ID="POLocation" runat="server" Text=""></asp:Label>)</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Product Number / Name : </th>
-                        <td><asp:Label ID="ProductNumber" runat="server" Text=""></asp:Label>
-                        <span class="indent"><asp:Label ID="ProductName" runat="server" Text=""></asp:Label></span></td>
-                    </tr>
-                    <tr>
-                        <th>Order Quantity <span class="required">*</span> : </th>
-                        <td><asp:Label ID="OrderQuantity" runat="server" Text=""></asp:Label> <asp:Label ID="OrderUnit" runat="server" Text=""></asp:Label> x <asp:Label ID="OrderPiece" runat="server" Text=""></asp:Label></td>
-                    </tr>
-                    <tr>
-                        <th>Delivery Date : </th>
-                        <td><asp:TextBox ID="DeliveryDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
-                    </tr>
-                    <tr>
-                        <th>Price : </th>
-                        <td><asp:Label ID="Currency" runat="server" Text=""></asp:Label> <asp:Label ID="UnitPrice" runat="server" Text=""></asp:Label> / <asp:Label ID="PerQuantity" runat="server" Text=""></asp:Label> <asp:Label ID="PerUnit" runat="server" Text=""></asp:Label></td>
-                    </tr>
-                    <tr>
-                        <th>R/3 Supplier Code : </th>
-                        <td><asp:Label ID="R3SupplierCode" runat="server" Text=""></asp:Label></td>
-                    </tr>
-                    <tr>
-                        <th>R/3 Supplier Name : </th>
-                        <td><asp:Label ID="R3SupplierName" runat="server" Text=""></asp:Label></td>
-                    </tr>
-                    <tr>
-                        <th>R/3 Maker Code : </th>
-                        <td><asp:Label ID="R3MakerCode" runat="server" Text=""></asp:Label></td>
-                    </tr>
-                    <tr>
-                        <th>R/3 Maker Name : </th>
-                        <td><asp:Label ID="R3MakerName" runat="server" Text=""></asp:Label></td>
-                    </tr>
-                    <tr>
-                        <th>Payment Terms : </th>
-                        <td><asp:Label ID="PaymentTerm" runat="server" Text=""></asp:Label></td>
-                    </tr>
-                    <tr>
-                        <th>Incoterms : </th>
-                        <td><asp:Label ID="Incoterms" runat="server" Text=""></asp:Label></td>
-                    </tr>
-                    <tr>
-                        <th>Terms of Delivery : </th>
-                        <td><asp:Label ID="DeliveryTerm" runat="server" Text=""></asp:Label></td>
-                    </tr>
-                    <tr>
-                        <th>Purpose : </th>
-                        <td><asp:Label ID="Purpose" runat="server" Text=""></asp:Label></td>
-                    </tr>
-                    <tr>
-                        <th>Raw Material for : </th>
-                        <td><asp:Label ID="RawMaterialFor" runat="server" Text=""></asp:Label></td>
-                    </tr>
-                    <tr>
-                        <th>Requested By : </th>
-                        <td><asp:Label ID="RequestedBy" runat="server" Text=""></asp:Label></td>
-                    </tr>
-                    <tr>
-                        <th>Supplier Item Number : </th>
-                        <td><asp:Label ID="SupplierItemNumber" runat="server" Text=""></asp:Label></td>
-                    </tr>
-                    <tr>
-                        <th>Supplier Lot Number : </th>
-                        <td><asp:Label ID="SupplierLotNumber" runat="server" Text=""></asp:Label></td>
-                    </tr>
-                </table>
 
-                <table>
-                    <tr>
-                        <th>Due Date : </th>
-                        <td><asp:TextBox ID="DueDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
-                    </tr>
-                    <tr>
-                        <th>Goods Arrived Date : </th>
-                        <td><asp:TextBox ID="GoodsArrivedDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
-                    </tr>
-                    <tr>
-                        <th>TCI Lot Number : </th>
-                        <td><asp:TextBox ID="LotNumber" runat="server" Width="10em" MaxLength="10"></asp:TextBox></td>
-                    </tr>
-                    <tr>
-                        <th>Commercial Invoice Received Date : </th>
-                        <td><asp:TextBox ID="InvoceReceivedDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
-                    </tr>
-                    <tr>
-                        <th>Import Custom Clearance Date : </th>
-                        <td><asp:TextBox ID="ImportCustomClearanceDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
-                    </tr>
-                    <tr>
-                        <th>QM Starting Date : </th>
-                        <td><asp:TextBox ID="QMStartingDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
-                    </tr>
-                    <tr>
-                        <th>QM Finish Date : </th>
-                        <td><asp:TextBox ID="QMFinishDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
-                    </tr>
-                    <tr>
-                        <th>QM Result : </th>
-                        <td><asp:TextBox ID="QMResult" runat="server" Width="15em" MaxLength="255"></asp:TextBox></td>
-                    </tr>
-                    <tr>
-                        <th>Chi-PO Request Quantity : </th>
-                        <td><asp:TextBox ID="RequestQuantity" runat="server" Width="15em" MaxLength="255"></asp:TextBox></td>
-                    </tr>
-                    <tr>
-                        <th>Scheduled Export Date : </th>
-                        <td><asp:TextBox ID="ScheduledExportDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
-                    </tr>
-                    <tr>
-                        <th>Purchasing Requisition Number : </th>
-                        <td><asp:TextBox ID="PurchasingRequisitionNumber" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
-                    </tr>
-                    <tr>
-                        <th>Order Cancellation Date : </th>
-                        <td><asp:TextBox ID="CancellationDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
-                    </tr>
-                    <tr>
-                        <th></th>
-                        <td style="text-align:right"><asp:HyperLink ID="ChiPOIssue" runat="server" NavigateUrl="./POIssue.aspx">Chi-PO Issue</asp:HyperLink></td>
-                    </tr>
-                </table>
-				<asp:HiddenField ID="UpdateDate" runat="server" />
-				<asp:HiddenField ID="PO" runat="server" />
-				<asp:HiddenField ID="Action" value="Update" runat="server" />
+            <%  If b_FormVisible Then%>
+                
+                    <table class="left">
+                        <tr>
+                            <th>RFQ Reference Number : </th>
+                            <td><asp:Label ID="RFQNumber" runat="server" Text=""></asp:Label></td>
+                        </tr>
+                        <tr>
+                            <th>R/3 PO Number : </th>
+                            <td><asp:TextBox ID="R3PONumber" runat="server" Width="10em" MaxLength="10"></asp:TextBox></td>
+                        </tr>
+                        <tr>
+                            <th>PO Date <span class="required">*</span> : </th>
+                            <td><asp:Label ID="PODate" runat="server" Text=""></asp:Label></td>
+                        </tr>
+                        <tr>
+                            <th>PO-User <span class="required">*</span> : </th>
+                            <td><asp:Label ID="POUser" runat="server" Text=""></asp:Label>
+                                <span class="indent">(<asp:Label ID="POLocation" runat="server" Text=""></asp:Label>)</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Product Number / Name : </th>
+                            <td><asp:Label ID="ProductNumber" runat="server" Text=""></asp:Label>
+                            <span class="indent"><asp:Label ID="ProductName" runat="server" Text=""></asp:Label></span></td>
+                        </tr>
+                        <tr>
+                            <th>Order Quantity <span class="required">*</span> : </th>
+                            <td><asp:Label ID="OrderQuantity" runat="server" Text=""></asp:Label> <asp:Label ID="OrderUnit" runat="server" Text=""></asp:Label> x <asp:Label ID="OrderPiece" runat="server" Text=""></asp:Label></td>
+                        </tr>
+                        <tr>
+                            <th>Delivery Date : </th>
+                            <td><asp:TextBox ID="DeliveryDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
+                        </tr>
+                        <tr>
+                            <th>Price : </th>
+                            <td><asp:Label ID="Currency" runat="server" Text=""></asp:Label> <asp:Label ID="UnitPrice" runat="server" Text=""></asp:Label> / <asp:Label ID="PerQuantity" runat="server" Text=""></asp:Label> <asp:Label ID="PerUnit" runat="server" Text=""></asp:Label></td>
+                        </tr>
+                        <tr>
+                            <th>R/3 Supplier Code : </th>
+                            <td><asp:Label ID="R3SupplierCode" runat="server" Text=""></asp:Label></td>
+                        </tr>
+                        <tr>
+                            <th>R/3 Supplier Name : </th>
+                            <td><asp:Label ID="R3SupplierName" runat="server" Text=""></asp:Label></td>
+                        </tr>
+                        <tr>
+                            <th>R/3 Maker Code : </th>
+                            <td><asp:Label ID="R3MakerCode" runat="server" Text=""></asp:Label></td>
+                        </tr>
+                        <tr>
+                            <th>R/3 Maker Name : </th>
+                            <td><asp:Label ID="R3MakerName" runat="server" Text=""></asp:Label></td>
+                        </tr>
+                        <tr>
+                            <th>Payment Terms : </th>
+                            <td><asp:Label ID="PaymentTerm" runat="server" Text=""></asp:Label></td>
+                        </tr>
+                        <tr>
+                            <th>Incoterms : </th>
+                            <td><asp:Label ID="Incoterms" runat="server" Text=""></asp:Label></td>
+                        </tr>
+                        <tr>
+                            <th>Terms of Delivery : </th>
+                            <td><asp:Label ID="DeliveryTerm" runat="server" Text=""></asp:Label></td>
+                        </tr>
+                        <tr>
+                            <th>Purpose : </th>
+                            <td><asp:Label ID="Purpose" runat="server" Text=""></asp:Label></td>
+                        </tr>
+                        <tr>
+                            <th>Raw Material for : </th>
+                            <td><asp:Label ID="RawMaterialFor" runat="server" Text=""></asp:Label></td>
+                        </tr>
+                        <tr>
+                            <th>Requested By : </th>
+                            <td><asp:Label ID="RequestedBy" runat="server" Text=""></asp:Label></td>
+                        </tr>
+                        <tr>
+                            <th>Supplier Item Number : </th>
+                            <td><asp:Label ID="SupplierItemNumber" runat="server" Text=""></asp:Label></td>
+                        </tr>
+                        <tr>
+                            <th>Supplier Lot Number : </th>
+                            <td><asp:Label ID="SupplierLotNumber" runat="server" Text=""></asp:Label></td>
+                        </tr>
+                    </table>
 
-                <div class="btns">
-                    <asp:Button ID="Update" runat="server" Text="Update" />
-                    <span class="indent"></span>
-                    <asp:Button ID="Cancell" runat="server" Text="Cancell" />
+                    <table>
+                        <tr>
+                            <th>Due Date : </th>
+                            <td><asp:TextBox ID="DueDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
+                        </tr>
+                        <tr>
+                            <th>Goods Arrived Date : </th>
+                            <td><asp:TextBox ID="GoodsArrivedDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
+                        </tr>
+                        <tr>
+                            <th>TCI Lot Number : </th>
+                            <td><asp:TextBox ID="LotNumber" runat="server" Width="10em" MaxLength="10"></asp:TextBox></td>
+                        </tr>
+                        <tr>
+                            <th>Commercial Invoice Received Date : </th>
+                            <td><asp:TextBox ID="InvoceReceivedDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
+                        </tr>
+                        <tr>
+                            <th>Import Custom Clearance Date : </th>
+                            <td><asp:TextBox ID="ImportCustomClearanceDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
+                        </tr>
+                        <tr>
+                            <th>QM Starting Date : </th>
+                            <td><asp:TextBox ID="QMStartingDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
+                        </tr>
+                        <tr>
+                            <th>QM Finish Date : </th>
+                            <td><asp:TextBox ID="QMFinishDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
+                        </tr>
+                        <tr>
+                            <th>QM Result : </th>
+                            <td><asp:TextBox ID="QMResult" runat="server" Width="15em" MaxLength="255"></asp:TextBox></td>
+                        </tr>
+                        <tr>
+                            <th>Chi-PO Request Quantity : </th>
+                            <td><asp:TextBox ID="RequestQuantity" runat="server" Width="15em" MaxLength="255"></asp:TextBox></td>
+                        </tr>
+                        <tr>
+                            <th>Scheduled Export Date : </th>
+                            <td><asp:TextBox ID="ScheduledExportDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
+                        </tr>
+                        <tr>
+                            <th>Purchasing Requisition Number : </th>
+                            <td><asp:TextBox ID="PurchasingRequisitionNumber" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
+                        </tr>
+                        <tr>
+                            <th>Order Cancellation Date : </th>
+                            <td><asp:TextBox ID="CancellationDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <td style="text-align:right"><asp:HyperLink ID="ChiPOIssue" runat="server" NavigateUrl="./POIssue.aspx">Chi-PO Issue</asp:HyperLink></td>
+                        </tr>
+                    </table>
+				    <asp:HiddenField ID="UpdateDate" runat="server" />
+				    <asp:HiddenField ID="PO" runat="server" />
+				    <asp:HiddenField ID="Action" value="Update" runat="server" />
+
+                    <div class="btns">
+                        <asp:Button ID="Update" runat="server" Text="Update" />
+                        <span class="indent"></span>
+                        <asp:Button ID="Cancell" runat="server" Text="Cancell" />
+                    </div>
                 </div>
-            </div>
+
+            <% End If%>
+
         </form>
 
     </div><!-- Main Content Area END -->
