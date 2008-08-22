@@ -337,31 +337,44 @@ Public Class Common
         Return False
     End Function
 
+
     ''' <summary>
     ''' レコードの更新日を yyyy-mm-dd hh:mi:ss 形式の文字列で取得します。
     ''' </summary>
     ''' <param name="TableName">検索対象のテーブル名</param>
-    ''' <param name="TableField">検索条件フィールド名</param>
-    ''' <param name="CheckData">検索条件の値</param>
+    ''' <param name="PrimaryKey">検索条件主キー名</param>
+    ''' <param name="PrimaryValue">検索条件主キーの値</param>
     ''' <returns>更新日</returns>
     ''' <remarks></remarks>
-    Public Shared Function GetUpdateDate(ByVal TableName As String, ByVal TableField As String, ByVal CheckData As String) As String
+    Public Shared Function GetUpdateDate(ByVal TableName As String, ByVal PrimaryKey As String, ByVal PrimaryValue As String) As String
 
         Dim st_SQLCommand As String = String.Empty
-        Dim i_RecordCount As String = ""
+        Dim st_UpdateDate As String = String.Empty
+        Dim i As Integer = 0
 
-        st_SQLCommand = String.Format("SELECT CONVERT(VARCHAR,UpdateDate,120) AS RecordCount FROM {0} WHERE {1} = @CheckData ", _
-                                    SafeSqlLiteral(TableName), SafeSqlLiteral(TableField))
-        Using DBConn As New SqlClient.SqlConnection(DB_CONNECT_STRING), _
-            DBCommand As SqlClient.SqlCommand = DBConn.CreateCommand()
+        st_SQLCommand = String.Format("SELECT CONVERT(VARCHAR,UpdateDate,120) AS UpdateDate FROM {0} WHERE {1} = @CheckData ", _
+                                    SafeSqlLiteral(TableName), SafeSqlLiteral(PrimaryKey))
+        Using DBConn As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING), _
+              DBCommand As SqlClient.SqlCommand = DBConn.CreateCommand()
+
             DBCommand.CommandText = st_SQLCommand
-            DBCommand.Parameters.AddWithValue("CheckData", CheckData)
+            DBCommand.Parameters.AddWithValue("CheckData", PrimaryValue)
 
             DBConn.Open()
-            i_RecordCount = Convert.ToString(DBCommand.ExecuteScalar)
+            Dim reader As SqlClient.SqlDataReader = DBCommand.ExecuteReader()
+
+            While reader.Read()
+                If i > 1 Then
+                    Throw New Exception("Common.GetUpdateDate: 複数レコード取得されました。PrimaryKey には主キー名を指定してください。")
+                    Exit While
+                End If
+                st_UpdateDate = reader("UpdateDate").ToString()
+                i += 1
+            End While
+            reader.Close()
         End Using
 
-        Return i_RecordCount
+        Return st_UpdateDate
     End Function
 
     ''' <summary>
@@ -379,12 +392,13 @@ Public Class Common
         st_SQLCommand = String.Format("SELECT COUNT(*) AS RecordCount FROM {0} WHERE {1} = @CheckData AND CONVERT(VARCHAR,UpdateDate,120) = @UpdateDate ", _
                                     SafeSqlLiteral(TableName), SafeSqlLiteral(TableField))
         Using DBConn As New SqlClient.SqlConnection(DB_CONNECT_STRING), _
-            DBCommand As SqlClient.SqlCommand = DBConn.CreateCommand()
-            DBConn.Open()
+              DBCommand As SqlClient.SqlCommand = DBConn.CreateCommand()
+
             DBCommand.CommandText = st_SQLCommand
             DBCommand.Parameters.AddWithValue("CheckData", CheckData)
             DBCommand.Parameters.AddWithValue("UpdateDate", UpdateDate)
 
+            DBConn.Open()
             Dim i_RecordCount As Integer = Convert.ToInt32(DBCommand.ExecuteScalar)
             If i_RecordCount > 0 Then
                 Return True
