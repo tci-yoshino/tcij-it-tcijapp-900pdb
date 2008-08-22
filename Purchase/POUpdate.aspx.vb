@@ -34,12 +34,16 @@ Partial Public Class POUpdate
     Const PK_NAME_PO As String = "PONumber"
 
     Const QUERY_KEY_ACTION As String = "Action"
+    Const QUERY_KEY_PO_NUMBER As String = "PONumber"
+
     Const SESSION_KEY_ADMIN As String = "Purchase.isAdmin"
     Const SESSION_KEY_LOCATION As String = "LocationCode"
 
 
     Const ACTION_VALUE_UPDATE As String = "Update"
     Const ACTION_VALUE_CANCEL As String = "Cancel"
+
+    Const FORMAT_DECIMAL As String = "G29"
 
 
 #End Region
@@ -130,16 +134,16 @@ Partial Public Class POUpdate
     ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
-        If Not (Request.QueryString("Action") Is Nothing) Then
-            st_Action = Request.QueryString("Action").ToString()
-        ElseIf Not (Request.Form("Action") Is Nothing) Then
-            st_Action = Request.Form("Action").ToString()
+        If Not (Request.QueryString(QUERY_KEY_ACTION) Is Nothing) Then
+            st_Action = Request.QueryString(QUERY_KEY_ACTION).ToString()
+        ElseIf Not (Request.Form(QUERY_KEY_ACTION) Is Nothing) Then
+            st_Action = Request.Form(QUERY_KEY_ACTION).ToString()
         End If
 
-        If Not (Request.QueryString("PONumber") Is Nothing) Then
-            st_PONumber = Request.QueryString("PONumber").ToString()
-        ElseIf Not (Request.Form("PONumber") Is Nothing) Then
-            st_PONumber = Request.Form("PONumber").ToString()
+        If Not (Request.QueryString(QUERY_KEY_PO_NUMBER) Is Nothing) Then
+            st_PONumber = Request.QueryString(QUERY_KEY_PO_NUMBER).ToString()
+        ElseIf Not (Request.Form(QUERY_KEY_PO_NUMBER) Is Nothing) Then
+            st_PONumber = Request.Form(QUERY_KEY_PO_NUMBER).ToString()
         End If
 
         'TODO ダミーコードです。要削除
@@ -205,7 +209,7 @@ Partial Public Class POUpdate
         End If
 
         If Not ValidateDateTextBox(CancellationDate) Then
-            Msg.Text = "CancellationDate" & ERR_INCORRECT_FORMAT
+            Msg.Text = "Cancellation Date" & ERR_INCORRECT_FORMAT
             Exit Sub
         End If
 
@@ -218,6 +222,166 @@ Partial Public Class POUpdate
     End Sub
 
 
+
+#End Region
+
+#Region "フォーム処理"
+    ''' <summary>
+    ''' フォームの表示・入力項目を初期化します。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub ClearForm()
+        'フォーム左段
+        RFQNumber.Text = String.Empty
+        R3PONumber.Text = String.Empty
+        PODate.Text = String.Empty
+        POUser.Text = String.Empty
+        POLocation.Text = String.Empty
+        ProductNumber.Text = String.Empty
+        ProductName.Text = String.Empty
+        OrderQuantity.Text = String.Empty
+        OrderUnit.Text = String.Empty
+        OrderPiece.Text = String.Empty
+        DeliveryDate.Text = String.Empty
+        Currency.Text = String.Empty
+        UnitPrice.Text = String.Empty
+        PerQuantity.Text = String.Empty
+        PerUnit.Text = String.Empty
+        R3SupplierCode.Text = String.Empty
+        R3SupplierName.Text = String.Empty
+        R3MakerCode.Text = String.Empty
+        R3MakerName.Text = String.Empty
+        PaymentTerm.Text = String.Empty
+        Incoterms.Text = String.Empty
+        DeliveryTerm.Text = String.Empty
+        Purpose.Text = String.Empty
+        RawMaterialFor.Text = String.Empty
+        RequestedBy.Text = String.Empty
+        SupplierItemNumber.Text = String.Empty
+        SupplierLotNumber.Text = String.Empty
+        'フォーム右段
+        DueDate.Text = String.Empty
+        GoodsArrivedDate.Text = String.Empty
+        LotNumber.Text = String.Empty
+        InvoceReceivedDate.Text = String.Empty
+        ImportCustomClearanceDate.Text = String.Empty
+        QMStartingDate.Text = String.Empty
+        QMFinishDate.Text = String.Empty
+        QMResult.Text = String.Empty
+        RequestQuantity.Text = String.Empty
+        ScheduledExportDate.Text = String.Empty
+        PurchasingRequisitionNumber.Text = String.Empty
+        CancellationDate.Text = String.Empty
+
+    End Sub
+
+
+    ''' <summary>
+    ''' 指定されたPOデータを画面に表示します。
+    ''' </summary>
+    ''' <param name="PONumber">POテーブルの一意ID</param>
+    ''' <remarks></remarks>
+    Private Sub ViewPOInformationToForm(ByVal PONumber As Integer)
+
+        PO.Value = PONumber.ToString()
+        Dim POInformation As POInformationType = SelectPOInformation(PONumber)
+
+        'フォーム左段
+        RFQNumber.Text = POInformation.RFQNumber.ToString()
+        R3PONumber.Text = POInformation.R3PONumber
+        PODate.Text = GetLocalTime(POInformation.PODate)
+        POUser.Text = POInformation.POUserName
+        POLocation.Text = POInformation.POLocationName
+        ProductNumber.Text = POInformation.ProductNumber
+        ProductName.Text = POInformation.ProductName
+        OrderQuantity.Text = NullableDecimalToString(POInformation.OrderQuantity, FORMAT_DECIMAL)
+        OrderUnit.Text = POInformation.OrderUnitCode
+        OrderPiece.Text = NullableDecimalToString(POInformation.UnitPrice, FORMAT_DECIMAL)
+        DeliveryDate.Text = GetLocalTime(POInformation.DeliveryDate)
+        Currency.Text = POInformation.CurrencyCode
+        UnitPrice.Text = NullableDecimalToString(POInformation.UnitPrice, FORMAT_DECIMAL)
+        PerQuantity.Text = NullableDecimalToString(POInformation.PerQuantity, FORMAT_DECIMAL)
+        PerUnit.Text = POInformation.PerUnitCode
+        R3SupplierCode.Text = POInformation.R3SupplierCode
+        R3SupplierName.Text = POInformation.R3SupplierName
+        R3MakerCode.Text = POInformation.R3MakerCode
+        R3MakerName.Text = POInformation.R3MakerName
+        PaymentTerm.Text = POInformation.PaymentTermText
+        Incoterms.Text = POInformation.IncotermsText
+        DeliveryTerm.Text = POInformation.DeliveryTerm
+        Purpose.Text = POInformation.PurposeText
+        RawMaterialFor.Text = POInformation.RawMaterialFor
+        RequestedBy.Text = POInformation.RequestedBy
+        SupplierItemNumber.Text = POInformation.SupplierItemNumber
+        SupplierLotNumber.Text = POInformation.SupplierLotNumber
+        'フォーム右段
+        DueDate.Text = GetLocalTime(POInformation.DueDate)
+        GoodsArrivedDate.Text = GetLocalTime(POInformation.GoodsArrivedDate)
+        LotNumber.Text = POInformation.LotNumber
+        InvoceReceivedDate.Text = GetLocalTime(POInformation.InvoiceReceivedDate)
+        ImportCustomClearanceDate.Text = GetLocalTime(POInformation.ImportCustomClearanceDate)
+        QMStartingDate.Text = GetLocalTime(POInformation.QMStartingDate)
+        QMFinishDate.Text = GetLocalTime(POInformation.QMFinishDate)
+        QMResult.Text = POInformation.QMResult
+        RequestQuantity.Text = POInformation.RequestQuantity
+        ScheduledExportDate.Text = GetLocalTime(POInformation.ScheduledExportDate)
+        PurchasingRequisitionNumber.Text = POInformation.PurchasingRequisitionNumber
+        CancellationDate.Text = GetLocalTime(POInformation.CancellationDate)
+
+        UpdateDate.Value = GetUpdateDate(TABLE_NAME_PO, PK_NAME_PO, POInformation.PONumber.ToString())
+
+    End Sub
+
+    ''' <summary>
+    ''' フォーム上のデータをPOテーブルに保存します。（Cancel）
+    ''' </summary>
+    ''' <param name="PONumber">POテーブルの一意ID</param>
+    ''' <remarks></remarks>
+    Private Sub CancelPOInfomationFromForm(ByVal PONumber As Integer)
+
+        Dim POInformation As POInformationType = SelectPOInformation(PONumber)
+
+        If CancellationDate.Text.Trim() = String.Empty Then
+            CancellationDate.Text = GetLocalTime(GetCurrentTime())
+        End If
+
+        POInformation.CancellationDate = StrToNullableDateTime(CancellationDate.Text)
+        POInformation.isCancelled = False
+
+        UpdatePOInfomation(POInformation)
+
+    End Sub
+
+    ''' <summary>
+    ''' フォーム上のデータをPOテーブルに保存します。(Update)
+    ''' </summary>
+    ''' <param name="PONumber">POテーブルの一意ID</param>
+    ''' <remarks></remarks>
+    Private Sub UpdatePOInfomationFromForm(ByVal PONumber As Integer)
+        Dim POInformation As POInformationType = SelectPOInformation(PONumber)
+
+        'フォーム左段
+        POInformation.R3PONumber = StrToNullableString(R3PONumber.Text.Trim())
+        POInformation.DeliveryDate = GetDatabaseTime(DeliveryDate.Text.Trim())
+
+        'フォーム右段
+        POInformation.DueDate = GetDatabaseTime(DueDate.Text.Trim())
+        POInformation.GoodsArrivedDate = GetDatabaseTime(GoodsArrivedDate.Text.Trim())
+        POInformation.LotNumber = StrToNullableString(LotNumber.Text.Trim())
+        POInformation.InvoiceReceivedDate = GetDatabaseTime(InvoceReceivedDate.Text.Trim())
+        POInformation.ImportCustomClearanceDate = GetDatabaseTime(ImportCustomClearanceDate.Text.Trim())
+        POInformation.QMStartingDate = GetDatabaseTime(QMStartingDate.Text.Trim())
+        POInformation.QMFinishDate = GetDatabaseTime(QMFinishDate.Text.Trim())
+        POInformation.QMResult = StrToNullableString(QMResult.Text.Trim())
+        POInformation.RequestQuantity = StrToNullableString(RequestQuantity.Text.Trim())
+        POInformation.ScheduledExportDate = GetDatabaseTime(ScheduledExportDate.Text.Trim())
+        POInformation.PurchasingRequisitionNumber = StrToNullableString(PurchasingRequisitionNumber.Text.Trim())
+        POInformation.CancellationDate = GetDatabaseTime(CancellationDate.Text.Trim())
+
+        UpdatePOInfomation(POInformation)
+    End Sub
+
+
     ''' <summary>
     ''' Update,Cancel共通検証
     ''' </summary>
@@ -226,37 +390,37 @@ Partial Public Class POUpdate
     Private Function ValidateCommon() As Boolean
 
         If Not ValidateDateTextBox(DeliveryDate) Then
-            Msg.Text = "DeliveryDate" & ERR_INCORRECT_FORMAT
+            Msg.Text = "Delivery Date" & ERR_INCORRECT_FORMAT
             Return False
         End If
 
         If Not ValidateDateTextBox(DueDate) Then
-            Msg.Text = "DueDate" & ERR_INCORRECT_FORMAT
+            Msg.Text = "Due Date" & ERR_INCORRECT_FORMAT
             Return False
         End If
 
         If Not ValidateDateTextBox(GoodsArrivedDate) Then
-            Msg.Text = "GoodsArrivedDate" & ERR_INCORRECT_FORMAT
+            Msg.Text = "Goods ArrivedDate" & ERR_INCORRECT_FORMAT
             Return False
         End If
 
         If Not ValidateDateTextBox(InvoceReceivedDate) Then
-            Msg.Text = "InvoiceReceivedDate" & ERR_INCORRECT_FORMAT
+            Msg.Text = "Invoice Received Date" & ERR_INCORRECT_FORMAT
             Return False
         End If
 
         If Not ValidateDateTextBox(ImportCustomClearanceDate) Then
-            Msg.Text = "ImportCustomClearanceDate" & ERR_INCORRECT_FORMAT
+            Msg.Text = "Import Custom Clearance Date" & ERR_INCORRECT_FORMAT
             Return False
         End If
 
         If Not ValidateDateTextBox(QMFinishDate) Then
-            Msg.Text = "QMFinishDate" & ERR_INCORRECT_FORMAT
+            Msg.Text = "QM Finish Date" & ERR_INCORRECT_FORMAT
             Return False
         End If
 
         If Not ValidateDateTextBox(ScheduledExportDate) Then
-            Msg.Text = "ScheduledExportDate" & ERR_INCORRECT_FORMAT
+            Msg.Text = "Scheduled Export Date" & ERR_INCORRECT_FORMAT
             Return False
         End If
 
@@ -267,10 +431,6 @@ Partial Public Class POUpdate
         Return True
 
     End Function
-
-#End Region
-
-
 
     ''' <summary>
     ''' 日付型テキストボックスの正当性を評価します。
@@ -346,57 +506,9 @@ Partial Public Class POUpdate
 
     End Function
 
+#End Region
 
-    ''' <summary>
-    ''' フォームの表示・入力項目を初期化します。
-    ''' </summary>
-    ''' <remarks></remarks>
-    Private Sub ClearForm()
-        'フォーム左段
-        RFQNumber.Text = String.Empty
-        R3PONumber.Text = String.Empty
-        PODate.Text = String.Empty
-        POUser.Text = String.Empty
-        POLocation.Text = String.Empty
-        ProductNumber.Text = String.Empty
-        ProductName.Text = String.Empty
-        OrderQuantity.Text = String.Empty
-        OrderUnit.Text = String.Empty
-        OrderPiece.Text = String.Empty
-        DeliveryDate.Text = String.Empty
-        Currency.Text = String.Empty
-        UnitPrice.Text = String.Empty
-        PerQuantity.Text = String.Empty
-        PerUnit.Text = String.Empty
-        R3SupplierCode.Text = String.Empty
-        R3SupplierName.Text = String.Empty
-        R3MakerCode.Text = String.Empty
-        R3MakerName.Text = String.Empty
-        PaymentTerm.Text = String.Empty
-        Incoterms.Text = String.Empty
-        DeliveryTerm.Text = String.Empty
-        Purpose.Text = String.Empty
-        RawMaterialFor.Text = String.Empty
-        RequestedBy.Text = String.Empty
-        SupplierItemNumber.Text = String.Empty
-        SupplierLotNumber.Text = String.Empty
-        'フォーム右段
-        DueDate.Text = String.Empty
-        GoodsArrivedDate.Text = String.Empty
-        LotNumber.Text = String.Empty
-        InvoceReceivedDate.Text = String.Empty
-        ImportCustomClearanceDate.Text = String.Empty
-        QMStartingDate.Text = String.Empty
-        QMFinishDate.Text = String.Empty
-        QMResult.Text = String.Empty
-        RequestQuantity.Text = String.Empty
-        ScheduledExportDate.Text = String.Empty
-        PurchasingRequisitionNumber.Text = String.Empty
-        CancellationDate.Text = String.Empty
-
-    End Sub
-
-
+#Region "クラス内共通処理"
     ''' <summary>
     ''' 指定されたPOのデータが存在するかを取得します。
     ''' </summary>
@@ -411,116 +523,58 @@ Partial Public Class POUpdate
 
 
     ''' <summary>
-    ''' 指定されたPOデータを画面に表示します。
+    ''' ローカル時間を取得する
     ''' </summary>
-    ''' <param name="PONumber">POテーブルの一意ID</param>
-    ''' <remarks></remarks>
-    Private Sub ViewPOInformationToForm(ByVal PONumber As Integer)
+    ''' <param name="DatabaseTime">データベース時間 (JST)</param>
+    ''' <returns>ローカル時間</returns>
+    ''' <remarks>Nullに対応したCommonのラッピング関数</remarks>
+    Private Function GetLocalTime(ByVal DataBaseTime As Date?) As String
+        If DataBaseTime Is Nothing Then
+            Return String.Empty
+        End If
+        Return Common.GetLocalTime(Session(SESSION_KEY_LOCATION).ToString(), CType(DataBaseTime, Date))
+    End Function
 
-        PO.Value = PONumber.ToString()
-        Dim POInformation As POInformationType = SelectPOInformation(PONumber)
-
-        'フォーム左段
-        RFQNumber.Text = POInformation.RFQNumber.ToString()
-        R3PONumber.Text = POInformation.R3PONumber
-        PODate.Text = NullableDateToString(POInformation.PODate, DATE_FORMAT)
-        POUser.Text = POInformation.POUserName
-        POLocation.Text = POInformation.POLocationName
-        ProductNumber.Text = POInformation.ProductNumber
-        ProductName.Text = POInformation.ProductName
-        OrderQuantity.Text = POInformation.OrderQuantity.ToString()
-        OrderUnit.Text = POInformation.OrderUnitCode
-        OrderPiece.Text = POInformation.UnitPrice.ToString()
-        DeliveryDate.Text = NullableDateToString(POInformation.DeliveryDate, DATE_FORMAT)
-        Currency.Text = POInformation.CurrencyCode
-        UnitPrice.Text = POInformation.UnitPrice.ToString()
-        PerQuantity.Text = POInformation.PerQuantity.ToString()
-        PerUnit.Text = POInformation.PerUnitCode
-        R3SupplierCode.Text = POInformation.R3SupplierCode
-        R3SupplierName.Text = POInformation.R3SupplierName
-        R3MakerCode.Text = POInformation.R3MakerCode
-        R3MakerName.Text = POInformation.R3MakerName
-        PaymentTerm.Text = POInformation.PaymentTermText
-        Incoterms.Text = POInformation.IncotermsText
-        DeliveryTerm.Text = POInformation.DeliveryTerm
-        Purpose.Text = POInformation.PurposeText
-        RawMaterialFor.Text = POInformation.RawMaterialFor
-        RequestedBy.Text = POInformation.RequestedBy
-        SupplierItemNumber.Text = POInformation.SupplierItemNumber
-        SupplierLotNumber.Text = POInformation.SupplierLotNumber
-        'フォーム右段
-        DueDate.Text = NullableDateToString(POInformation.DueDate, DATE_FORMAT)
-        GoodsArrivedDate.Text = NullableDateToString(POInformation.GoodsArrivedDate, DATE_FORMAT)
-        LotNumber.Text = POInformation.LotNumber
-        InvoceReceivedDate.Text = NullableDateToString(POInformation.InvoiceReceivedDate, DATE_FORMAT)
-        ImportCustomClearanceDate.Text = NullableDateToString(POInformation.ImportCustomClearanceDate, DATE_FORMAT)
-        QMStartingDate.Text = NullableDateToString(POInformation.QMStartingDate, DATE_FORMAT)
-        QMFinishDate.Text = NullableDateToString(POInformation.QMFinishDate, DATE_FORMAT)
-        QMResult.Text = POInformation.QMResult
-        RequestQuantity.Text = POInformation.RequestQuantity
-        ScheduledExportDate.Text = NullableDateToString(POInformation.ScheduledExportDate, DATE_FORMAT)
-        PurchasingRequisitionNumber.Text = POInformation.PurchasingRequisitionNumber
-        CancellationDate.Text = NullableDateToString(POInformation.CancellationDate, DATE_FORMAT)
-
-        UpdateDate.Value = GetUpdateDate(TABLE_NAME_PO, PK_NAME_PO, POInformation.PONumber.ToString())
-
-    End Sub
 
     ''' <summary>
-    ''' Cancelアクション時のデータをPOテーブルに保存します。
+    ''' データベース時間を取得する。
     ''' </summary>
-    ''' <param name="PONumber">POテーブルの一意ID</param>
-    ''' <remarks></remarks>
-    Private Sub CancelPOInfomationFromForm(ByVal PONumber As Integer)
+    ''' <param name="LocalTime">ローカル時間</param>
+    ''' <returns>データベース時間 (JST)</returns>
+    ''' <remarks>Nullに対応したCommonのラッピング関数</remarks>
+    Private Function GetDatabaseTime(ByVal LocalTime As Date?) As DateTime?
 
-        Dim POInformation As POInformationType = SelectPOInformation(PONumber)
-
-        If CancellationDate.Text.Trim() = String.Empty Then
-            CancellationDate.Text = GetDatabaseCurrentTime.ToString(DATE_FORMAT)
+        If LocalTime Is Nothing Then
+            Return Nothing
         End If
 
-        POInformation.CancellationDate = StrToNullableDateTime(CancellationDate.Text)
-        POInformation.isCancelled = False
+        Return CType(Common.GetDatabaseTime(Session(SESSION_KEY_LOCATION).ToString(), LocalTime.ToString()), Date)
 
-        UpdatePOInfomation(POInformation)
-
-    End Sub
+    End Function
 
     ''' <summary>
-    ''' Updateアクション時のデータをPOテーブルに保存します。
+    ''' データベース時間を取得する。
     ''' </summary>
-    ''' <param name="PONumber">POテーブルの一意ID</param>
-    ''' <remarks></remarks>
-    Private Sub UpdatePOInfomationFromForm(ByVal PONumber As Integer)
-        Dim POInformation As POInformationType = SelectPOInformation(PONumber)
+    ''' <param name="LocalTime">ローカル時間</param>
+    ''' <returns>データベース時間 (JST)</returns>
+    ''' <remarks>Nullに対応したCommonのラッピング関数</remarks>
+    Private Function GetDatabaseTime(ByVal LocalTime As String) As Date?
 
-        'フォーム左段
-        POInformation.R3PONumber = StrToNullableString(R3PONumber.Text.Trim())
-        POInformation.DeliveryDate = StrToNullableDateTime(DeliveryDate.Text.Trim())
+        If LocalTime.Trim = String.Empty Then
+            Return Nothing
+        End If
 
-        'フォーム右段
-        POInformation.DueDate = StrToNullableDateTime(DueDate.Text.Trim())
-        POInformation.GoodsArrivedDate = StrToNullableDateTime(GoodsArrivedDate.Text.Trim())
-        POInformation.LotNumber = StrToNullableString(LotNumber.Text.Trim())
-        POInformation.InvoiceReceivedDate = StrToNullableDateTime(InvoceReceivedDate.Text.Trim())
-        POInformation.ImportCustomClearanceDate = StrToNullableDateTime(ImportCustomClearanceDate.Text.Trim())
-        POInformation.QMStartingDate = StrToNullableDateTime(QMStartingDate.Text.Trim())
-        POInformation.QMFinishDate = StrToNullableDateTime(QMFinishDate.Text.Trim())
-        POInformation.QMResult = StrToNullableString(QMResult.Text.Trim())
-        POInformation.RequestQuantity = StrToNullableString(RequestQuantity.Text.Trim())
-        POInformation.ScheduledExportDate = StrToNullableDateTime(ScheduledExportDate.Text.Trim())
-        POInformation.PurchasingRequisitionNumber = StrToNullableString(PurchasingRequisitionNumber.Text.Trim())
-        POInformation.CancellationDate = StrToNullableDateTime(CancellationDate.Text.Trim())
+        Return CType(Common.GetDatabaseTime(Session(SESSION_KEY_LOCATION).ToString(), LocalTime), Date?)
 
-        UpdatePOInfomation(POInformation)
-    End Sub
+    End Function
+
 
     ''' <summary>
     ''' データベースから現在の時刻を取得します。
     ''' </summary>
     ''' <returns>取得した時刻</returns>
     ''' <remarks></remarks>
-    Private Function GetDatabaseCurrentTime() As DateTime
+    Private Function GetCurrentTime() As DateTime
 
         Dim dt_Current As DateTime = New DateTime()
         Dim conn As SqlConnection = Nothing
@@ -541,6 +595,10 @@ Partial Public Class POUpdate
         Return dt_Current
 
     End Function
+
+#End Region
+
+#Region "DB登録処理"
 
 
     ''' <summary>
@@ -851,26 +909,9 @@ Partial Public Class POUpdate
 
         Return sb_SQL.ToString()
     End Function
+#End Region
 
-    ''' <summary>
-    ''' Nullable DecimalオブジェクトをPurchase表示書式に変換します。
-    ''' </summary>
-    ''' <param name="Value">対象となるNullable Decimalオブジェクト</param>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Private Function NullableDecimalToViewFormat(ByVal Value As Decimal?) As String
-        If Value Is Nothing Then
-            Return String.Empty
-        End If
-
-        Return CType(Value, Decimal).ToString("G29")
-
-    End Function
-
-
-
-#Region "DB読み込み時変換関数"
-
+#Region "DBNull・.NET変数変換関数"
     ''' <summary>
     ''' DBオブジェクトをSystem.stringに変換します。
     ''' </summary>
@@ -1026,21 +1067,6 @@ Partial Public Class POUpdate
     End Function
 
     ''' <summary>
-    ''' DBオブジェクトをNullable System.Decimalに変換します。
-    ''' </summary>
-    ''' <param name="value">対象となる System.Object</param>
-    ''' <returns>変換したNullable System.Decimal。</returns>
-    Public Shared Function DBObjToNullableDecimal(ByVal value As Object) As Decimal?
-        If Convert.IsDBNull(value) Then
-            Return Nothing
-        Else
-            Return Convert.ToDecimal(value)
-        End If
-    End Function
-
-
-
-    ''' <summary>
     ''' DBオブジェクトをSystem.Doubleに変換します。
     ''' </summary>
     ''' <param name="value">対象となる System.Object</param>
@@ -1064,16 +1090,15 @@ Partial Public Class POUpdate
     End Function
 
     ''' <summary>
-    ''' Nullable DateTimeオブジェクトを文字列に変換します。
+    ''' DBオブジェクトをNullable System.Decimalに変換します。
     ''' </summary>
-    ''' <param name="value">変換対象となる DateTime? オブジェクト</param>
-    ''' <param name="format">書式指定文字列</param>
-    ''' <returns>変換したstring 文字列</returns>
-    Public Shared Function NullableDateToString(ByVal value As DateTime?, ByVal format As String) As String
-        If value.HasValue Then
-            Return (CType(value, DateTime).ToString(format))
+    ''' <param name="value">対象となる System.Object</param>
+    ''' <returns>変換したNullable System.Decimal。</returns>
+    Public Shared Function DBObjToNullableDecimal(ByVal value As Object) As Decimal?
+        If Convert.IsDBNull(value) Then
+            Return Nothing
         Else
-            Return String.Empty
+            Return Convert.ToDecimal(value)
         End If
     End Function
 
@@ -1099,22 +1124,6 @@ Partial Public Class POUpdate
             Return Nothing
         End If
     End Function
-
-
-    ''' <summary>
-    ''' Systemn.String内の空白をNothingに変換します。
-    ''' </summary>
-    ''' <param name="value">変換対象となるstring オブジェクト</param>
-    ''' <returns>Nothingを含んだString文字列</returns>
-    Public Shared Function StrToNullableString(ByVal value As String) As String
-        If String.IsNullOrEmpty(value) Then
-            Return Nothing
-        Else
-            Return value
-        End If
-    End Function
-
-
 
     ''' <summary>
     ''' Nullable DateTimeオブジェクト内をDBNullを含んだSystem.Objectオブジェクトに変換します。
@@ -1206,5 +1215,49 @@ Partial Public Class POUpdate
 
 #End Region
 
+#Region "Null・.NET変数変換関数"
+    ''' <summary>
+    ''' Nullable DateTimeオブジェクトを文字列に変換します。
+    ''' </summary>
+    ''' <param name="value">変換対象となる DateTime? オブジェクト</param>
+    ''' <param name="format">書式指定文字列</param>
+    ''' <returns>変換したstring 文字列</returns>
+    Public Shared Function NullableDateToString(ByVal value As DateTime?, ByVal format As String) As String
+        If value.HasValue Then
+            Return (CType(value, DateTime).ToString(format))
+        Else
+            Return String.Empty
+        End If
+    End Function
+
+    ''' <summary>
+    ''' Systemn.String内の空白をNothingに変換します。
+    ''' </summary>
+    ''' <param name="value">変換対象となるstring オブジェクト</param>
+    ''' <returns>Nothingを含んだString文字列</returns>
+    Public Shared Function StrToNullableString(ByVal value As String) As String
+        If String.IsNullOrEmpty(value) Then
+            Return Nothing
+        Else
+            Return value
+        End If
+    End Function
+
+    ''' <summary>
+    ''' Nullable Decimalオブジェクトを文字列に変換します。
+    ''' </summary>
+    ''' <param name="value">変換対象となる Decimal? オブジェクト</param>
+    ''' <param name="format">書式指定文字列</param>
+    ''' <returns>変換したstring 文字列</returns>
+    Private Function NullableDecimalToString(ByVal value As Decimal?, ByVal format As String) As String
+        If value Is Nothing Then
+            Return String.Empty
+        End If
+
+        Return CType(value, Decimal).ToString(format)
+
+    End Function
+
+#End Region
 
 End Class
