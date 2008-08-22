@@ -11,20 +11,18 @@ Partial Public Class POCorrespondence
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If IsPostBack = False Then
-            ''[PONumberの取込]--------------------------------------------------------------------------
-            'If Request.QueryString("PONumber") <> "" Then
-            '    hd_PONumber.Value = Request.QueryString("PONumber")
-            'Else
-            '    POUser.Enabled = False
-            '    SOUser.Enabled = False
-            '    CorresTitle.Enabled = False
-            '    CorresNote.Enabled = False
-            '    Send.Enabled = False
-            '    Msg.Text = Common.ERR_INVALID_PARAMETER
-            '    Exit Sub
-            'End If
-
-            hd_PONumber.Value = "1000000011"
+            '[PONumberの取込]--------------------------------------------------------------------------
+            If Request.QueryString("PONumber") <> "" Then
+                hd_PONumber.Value = Request.QueryString("PONumber")
+            Else
+                POUser.Enabled = False
+                SOUser.Enabled = False
+                CorresTitle.Enabled = False
+                CorresNote.Enabled = False
+                Send.Enabled = False
+                Msg.Text = Common.ERR_INVALID_PARAMETER
+                Exit Sub
+            End If
 
             '[Connectionの定義]-------------------------------------------------------------------------
             Dim conn As SqlConnection = Nothing
