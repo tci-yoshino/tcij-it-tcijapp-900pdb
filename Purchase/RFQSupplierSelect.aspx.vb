@@ -3,20 +3,23 @@
 
     ' 接続文字列
     Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
-    Protected st_Code As String = ""
-    Protected st_Name As String = ""
-    Protected st_Location As String = ""
-    Protected st_js_postback = "" ' do_Postback メソッドの取得
+    Protected st_Code As String = String.Empty
+    Protected st_Name As String = String.Empty
+    Protected st_Location As String = String.Empty
+    Protected st_js_postback = String.Empty ' do_Postback メソッドの取得
 
     Const MSG_REQUIED_EnqLocation = "見積依頼拠点コードが設定されていません。"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
+        ' コントロール初期化
+        Msg.Text = ""
+
         ' パラメータを取得
         If Request.RequestType = "POST" Then
-            st_Location = IIf(String.IsNullOrEmpty(Request.Form("Location")), "", Request.Form("Location"))
+            st_Location = IIf(Request.Form("Location") = Nothing, "", Request.Form("Location"))
         ElseIf Request.RequestType = "GET" Then
-            st_Location = IIf(String.IsNullOrEmpty(Request.QueryString("Location")), "", Request.QueryString("Location"))
+            st_Location = IIf(Request.QueryString("Location") = Nothing, "", Request.QueryString("Location"))
         End If
 
         ' 空白除去
@@ -24,15 +27,15 @@
 
         ' 見積依頼拠点が取得できない場合はエラーメッセージを表示して終了
         If String.IsNullOrEmpty(st_Location) Then
-            ErrorMessages.Text = MSG_REQUIED_EnqLocation
+            Msg.Text = MSG_REQUIED_EnqLocation
             SearchForm.Visible = False
             Exit Sub
         End If
 
         ' パラメータを取得
         If Request.RequestType = "POST" Then
-            st_Code = IIf(String.IsNullOrEmpty(Request.Form("Code")), "", Request.Form("Code"))
-            st_Name = IIf(String.IsNullOrEmpty(Request.Form("Name")), "", Request.Form("Name"))
+            st_Code = IIf(Request.Form("Code") = Nothing, "", Request.Form("Code"))
+            st_Name = IIf(Request.Form("Name") = Nothing, "", Request.Form("Name"))
             ' 親画面から送信された ASP.NET が自動生成する JavaScript の関数を取得。
             ' この関数はポストバックを強制的に発生させる。
             ' 当プログラムでは、検索結果を親画面に渡した後に親画面の見積もり回答拠点のユーザ名プルダウンコントロールを更新するために用いている。
@@ -58,24 +61,28 @@
         st_Code = st_Code.Trim
         st_Name = st_Name.Trim
 
+        ' 全角を半角に変換
+        st_Code = StrConv(st_Code, VbStrConv.Narrow)
+
         ' コントロール設定
         Code.Text = st_Code
         Name.Text = st_Name
         Location.Value = st_Location
         Postback.Value = Request.QueryString("Postback")
 
-        ' 全角を半角に変換
-        st_Code = StrConv(st_Code, VbStrConv.Narrow)
-
-        ' 半角数値チェック
-        If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
-            st_Code = ""
+        ' パラメータチェック
+        If Not String.IsNullOrEmpty(st_Code) Then
+            If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
+                st_Code = String.Empty
+                Msg.Text = "Supplier Code " & Common.ERR_INVALID_NUMBER
+                Exit Sub
+            End If
         End If
 
         ' GET 且つ QueryString("Code") が送信されている場合は検索処理を実行
         If (Request.RequestType = "GET") And (Not String.IsNullOrEmpty(Request.QueryString("Code"))) Then
             Dim dataSet As DataSet = New DataSet("Supplier")
-            Get_Supplier_Data(dataSet, DBConnectString.ConnectionString)
+            GetSupplierData(dataSet)
             SupplierList.DataSource = dataSet.Tables("SupplierList")
         End If
         SupplierList.DataBind()
@@ -85,7 +92,7 @@
     ' Search ボタンクリック処理
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
         Dim dataSet As DataSet = New DataSet("Supplier")
-        Get_Supplier_Data(dataSet, DBConnectString.ConnectionString)
+        GetSupplierData(dataSet)
         SupplierList.DataSource = dataSet.Tables("SupplierList")
         SupplierList.DataBind()
     End Sub
@@ -97,12 +104,10 @@
     ' [パラメータ]
     ' ByRef dataSet: 取得したデータをセットする DataSet オブジェクト。
     '                SupplierList というデータテーブルが追加される。
-    ' ByVal connectionString: 接続情報。文字列。
-
-    Public Sub Get_Supplier_Data(ByRef ds As DataSet, ByVal connectionString As String)
+    Private Sub GetSupplierData(ByRef ds As DataSet)
 
         ' Where 句の生成
-        Dim st_where As String = ""
+        Dim st_where As String = String.Empty
         If Not String.IsNullOrEmpty(st_Code) Then
             st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
             st_where = st_where & " Supplier.SupplierCode = @Code "
@@ -143,7 +148,7 @@
             & "ORDER BY " _
             & "  Supplier.SupplierCode, Supplier.Name3"
 
-        Using connection As New SqlClient.SqlConnection(connectionString)
+        Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
 
             ' 接続情報、アダプタ、SQLコマンド オブジェクトの生成
             Dim adapter As New SqlClient.SqlDataAdapter()
