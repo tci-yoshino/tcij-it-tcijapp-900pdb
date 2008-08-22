@@ -53,7 +53,7 @@ window.onload = function() {
 					</tr>
 				</table>
 
-				<asp:Button ID="Search" runat="server" Text="Search" />
+				<asp:Button ID="Search" runat="server" Text="Search" PostBackUrl="ProductSelect.aspx?Action=Search" />
 				<input type="button" value="Clear" onclick="clearForm('SearchForm')" />
 			</form>
 		</div>
@@ -61,7 +61,7 @@ window.onload = function() {
 		<hr />
 
         <div class="list">
-            <asp:ListView ID="ProductList" runat="server">
+            <asp:ListView ID="ProductList" runat="server" DataSourceID="SrcProduct">
                 <LayoutTemplate>
                     <table ID="itemPlaceholderContainer" runat="server">
                         <tr id="Tr1" runat="server">
@@ -73,10 +73,10 @@ window.onload = function() {
                     </table>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
-                    <h3 style="font-style:italic">No match found.</h3>
+                    <h3 style="font-style:italic"><%=Purchase.Common.MSG_NO_DATA_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onclick="returnValues('<%#Eval("ProductNumber")%>','<%#Eval("ProductName")%>')">
+                    <tr onclick="returnValues('<%#Eval("ProductNumber")%>','<%#Replace(Eval("ProductName").ToString(), "'", "\'")%>')">
                         <td><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>' /></td>
                         <td><asp:Label ID="ProductName" runat="server" Text='<%#Eval("ProductName")%>' /></td>
                     </tr>
@@ -84,5 +84,7 @@ window.onload = function() {
             </asp:ListView>
         </div>
     </div><!-- Main Content Area END -->
+    <asp:SqlDataSource ID="SrcProduct" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+
 </body>
 </html>

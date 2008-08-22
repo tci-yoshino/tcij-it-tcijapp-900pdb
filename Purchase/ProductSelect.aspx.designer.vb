@@ -77,4 +77,13 @@ Partial Public Class ProductSelect
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents ProductList As Global.System.Web.UI.WebControls.ListView
+
+    '''<summary>
+    '''SrcProduct コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SrcProduct As Global.System.Web.UI.WebControls.SqlDataSource
 End Class
