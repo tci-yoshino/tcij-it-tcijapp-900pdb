@@ -5,7 +5,6 @@
     Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
     Private st_Code As String = String.Empty
     Private st_Name As String = String.Empty
-    Private st_Errorr_Meggage As String = String.Empty
     Const SEARCH_ACTION As String = "Search"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -15,11 +14,11 @@
 
         ' パラメータを取得
         If Request.RequestType = "POST" Then
-            st_Code = IIf(String.IsNullOrEmpty(Request.Form("Code")), "", Request.Form("Code"))
-            st_Name = IIf(String.IsNullOrEmpty(Request.Form("Name")), "", Request.Form("Name"))
+            st_Code = IIf(Request.Form("Code") = Nothing, "", Request.Form("Code"))
+            st_Name = IIf(Request.Form("Name") = Nothing, "", Request.Form("Name"))
         ElseIf Request.RequestType = "GET" Then
-            st_Code = IIf(String.IsNullOrEmpty(Request.QueryString("Code")), "", Request.QueryString("Code"))
-            st_Name = IIf(String.IsNullOrEmpty(Request.QueryString("Name")), "", Request.QueryString("Name"))
+            st_Code = IIf(Request.QueryString("Code") = Nothing, "", Request.QueryString("Code"))
+            st_Name = IIf(Request.QueryString("Name") = Nothing, "", Request.QueryString("Name"))
         End If
 
         ' 空白除去
@@ -40,7 +39,7 @@
         ' パラメータチェック
         If Not String.IsNullOrEmpty(st_Code) Then
             If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
-                st_Code = ""
+                st_Code = Nothing
                 Msg.Text = "Maker Code " & Common.ERR_INVALID_NUMBER
                 Exit Sub
             End If
