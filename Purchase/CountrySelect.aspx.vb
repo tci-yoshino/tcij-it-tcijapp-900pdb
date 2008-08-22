@@ -2,8 +2,8 @@
     Inherits CommonPage
 
     Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
-    Private st_Code As String = ""
-    Private st_Name As String = ""
+    Private st_Code As String = String.Empty
+    Private st_Name As String = String.Empty
     Const SEARCH_ACTION As String = "Search"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -56,7 +56,7 @@
     ' 検索処理
     Protected Sub SearchCountryList()
 
-        Dim st_Where As String = ""
+        Dim st_Where As String = String.Empty
         SrcCountry.SelectParameters.Clear()
 
         ' Where 句の生成
