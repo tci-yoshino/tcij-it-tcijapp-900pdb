@@ -6,6 +6,7 @@
     Private st_Code As String = ""
     Private st_Name As String = ""
     Private st_Errorr_Meggage As String = ""
+    Const SEARCH_ACTION As String = "Search"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -15,7 +16,7 @@
             st_Name = IIf(String.IsNullOrEmpty(Request.Form("Name")), "", Request.Form("Name"))
         ElseIf Request.RequestType = "GET" Then
             st_Code = IIf(String.IsNullOrEmpty(Request.QueryString("Code")), "", Request.QueryString("Code"))
-            st_Name = IIf(String.IsNullOrEmpty(Request.Form("Name")), "", Request.Form("Name"))
+            st_Name = IIf(String.IsNullOrEmpty(Request.QueryString("Name")), "", Request.QueryString("Name"))
         End If
 
         ' 空白除去
@@ -26,12 +27,12 @@
         st_Code = HttpUtility.UrlDecode(st_Code)
         st_Name = HttpUtility.UrlDecode(st_Name)
 
+        ' 全角を半角に変換
+        st_Code = StrConv(st_Code, VbStrConv.Narrow)
+
         ' 検索ブロックの TextBox の値を書き換え
         Code.Text = st_Code
         Name.Text = st_Name
-
-        ' 全角を半角に変換
-        st_Code = StrConv(st_Code, VbStrConv.Narrow)
 
         ' 半角英数チェック
         If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
@@ -40,18 +41,22 @@
 
         ' GET 且つ QueryString("Code") が送信されている場合は検索処理を実行
         If (Request.RequestType = "GET") And (Not String.IsNullOrEmpty(Request.QueryString("Code"))) Then
-            Get_Supplier_Data()
+            SearchSupplierList()
         End If
 
     End Sub
 
     ' Search ボタンクリック処理
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
-        Get_Supplier_Data()
+        Dim st_Action As String = IIf(Request.QueryString("Action") = Nothing, "", Request.QueryString("Action"))
+
+        If st_Action = SEARCH_ACTION Then
+            SearchSupplierList()
+        End If
     End Sub
 
-    ' 仕入先リスト取得関数
-    Public Sub Get_Supplier_Data()
+    ' 検索処理
+    Public Sub SearchSupplierList()
 
         SrcMaker.SelectParameters.Clear()
 
@@ -74,7 +79,6 @@
             Exit Sub
         End If
 
-        ' 仕入先リスト取得
         SrcMaker.SelectCommand = _
               " SELECT SupplierCode, Name3, Name4, s_Country.[Name] AS CountryName " _
             & " FROM  Supplier " _
