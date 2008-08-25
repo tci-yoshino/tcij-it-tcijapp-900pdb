@@ -28,7 +28,8 @@
                         </tr>
                         <tr>
                             <th>R/3 PO Number : </th>
-                            <td><asp:TextBox ID="R3PONumber" runat="server" Width="10em" MaxLength="10"></asp:TextBox></td>
+                            <td><asp:TextBox ID="R3PONumber" runat="server" Width="10em" MaxLength="10"></asp:TextBox>
+                            <asp:TextBox ID="R3POLineNumber" runat="server" Width="5em" MaxLength="10"></asp:TextBox></td>
                         </tr>
                         <tr>
                             <th>PO Date <span class="required">*</span> : </th>

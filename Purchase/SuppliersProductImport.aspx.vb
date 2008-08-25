@@ -3,6 +3,8 @@
 Imports System.Data.SqlClient
 Imports Purchase.Common
 Imports TCICommon.Func
+Imports System.Web.Configuration
+
 
 Partial Public Class SuppliersProductImport
     Inherits CommonPage
@@ -11,14 +13,7 @@ Partial Public Class SuppliersProductImport
 #Region " Web フォーム デザイナで生成されたコード "
     '*****（Region内は変更しないこと）*****
     <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Me.SqlConnection1 = New System.Data.SqlClient.SqlConnection
-        Me.SqlConnection1.FireInfoMessageEventOnUserErrors = False
-        Me.SqlConnection2 = New System.Data.SqlClient.SqlConnection
-        Me.SqlConnection2.FireInfoMessageEventOnUserErrors = False
     End Sub
-
-    Protected WithEvents SqlConnection1 As System.Data.SqlClient.SqlConnection
-    Protected WithEvents SqlConnection2 As System.Data.SqlClient.SqlConnection
 
     Private Sub Page_Init(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Init
         InitializeComponent()
@@ -126,15 +121,29 @@ Partial Public Class SuppliersProductImport
             Exit Sub
         End If
 
+        Dim pf_UploadFile As HttpPostedFile = Request.Files("File")
+
         'ファイルタイプの確認(MIME)
-        If Request.Files("File").ContentType <> "application/vnd.ms-excel" Then
+        If pf_UploadFile.ContentType <> "application/vnd.ms-excel" Then
             ClearSupplierProductList()
             Msg.Text = MSG_NOT_EXCEL_FILE
             Exit Sub
         End If
 
-        Dim st_ExcelFileName As String = Request.Files("File").FileName
+        'temp Pathパスの設定
+        'TODO オリジナルネームの付与
+        Dim st_TempPath As String = ConfigurationManager.AppSettings("TempDir")
+        Dim st_ExcelFileName As String = st_TempPath & System.IO.Path.GetFileName(pf_UploadFile.FileName)
+        pf_UploadFile.SaveAs(st_ExcelFileName)
         ViewSupplierProductList(st_ExcelFileName)
+
+        'サーバ上のファイルを削除
+
+        '
+        If IO.File.Exists(st_ExcelFileName) = True Then
+
+        End If
+
 
         If SupplierProductList.Rows.Count > 0 Then
             Import.Visible = True
