@@ -10,9 +10,9 @@ Partial Public Class RFQUpdate
     'エラーメッセージ(入力値不正)
     Private Const ERR_INCORRECT_SUPPLIERCODE As String = "SupplierCode" & ERR_INCORRECT_FORMAT
     Private Const ERR_INCORRECT_MAKERCODE As String = "MakerCode" & ERR_INCORRECT_FORMAT
-    Private Const ERR_INCORRECT_SHIPPINGHANDLINGFEE As String = "ShippingHandlingFee" & ERR_INCORRECT_FORMAT
-    Private Const ERR_INCORRECT_UNITPRICE As String = "UnitPrice" & ERR_INCORRECT_FORMAT
-    Private Const ERR_INCORRECT_QUOPER As String = "Quo-Per" & ERR_INCORRECT_FORMAT
+    Private Const ERR_INCORRECT_SHIPPINGHANDLINGFEE As String = "ShippingHandlingFee" & ERR_INVALID_NUMBER
+    Private Const ERR_INCORRECT_UNITPRICE As String = "UnitPrice" & ERR_INVALID_NUMBER
+    Private Const ERR_INCORRECT_QUOPER As String = "Quo-Per" & ERR_INVALID_NUMBER
     Private Const ERR_INCORRECT_CURRENCY As String = "Currency Price Quo-Per Quo-Unit は全て入力、もしくは全て空白で登録してください。"
     'エラーメッセージ(必須入力項目)
     Private Const ERR_REQUIRED_SUPPLIERCODE As String = "SupplierCode" & ERR_REQUIRED_FIELD
