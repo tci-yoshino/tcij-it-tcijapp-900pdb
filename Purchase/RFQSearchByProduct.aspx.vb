@@ -90,7 +90,7 @@ Partial Public Class RFQSearchByProduct
 
         If st_ProductCode <> String.Empty Then
             Dim st_URI As String = "./RFQListByProduct.aspx?ProductID={0}"
-            st_URI = String.Format(st_URI, st_ProductCode, st_ProductCode)
+            st_URI = String.Format(st_URI, st_ProductCode)
             Response.Redirect(st_URI, False)
         Else
             ProductList.DataBind()
