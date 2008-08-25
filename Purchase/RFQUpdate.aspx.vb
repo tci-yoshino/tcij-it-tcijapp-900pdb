@@ -46,14 +46,6 @@ Partial Public Class RFQUpdate
         DBConn.Close()
     End Sub
 
-    Protected Sub SpecSheet_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs) Handles SpecSheet.CheckedChanged
-        If SpecSheet.Checked = True Then
-            SpecSheet.Text = "yes"
-        Else
-            SpecSheet.Text = "no"
-        End If
-    End Sub
-
     Protected Sub Update_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Update.Click
         Dim RFQStatusCode As String = ""
         Dim st_QuotedDate As String = ""

@@ -121,8 +121,9 @@
                         <th>Required Specification : </th><td><asp:Label ID="RequiredSpecification" runat="server" Text=""></asp:Label></td>
                     </tr>
                     <tr>
-                        <th>Spec Sheet : </th><td><asp:CheckBox ID="SpecSheet" runat="server" 
-                            Text="yes" AutoPostBack="True" /></td>
+                        <th>Spec Sheet : </th><td>
+                        <asp:CheckBox ID="SpecSheet" runat="server" 
+                            Text="yes" /></td>
                     </tr>
                     <tr>
                         <th>Specification : </th>
