@@ -20,7 +20,7 @@
           <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
         </div>
 
-<%  If Not String.IsNullOrEmpty(st_RFQNumber) Then%>
+<%  If Not String.IsNullOrEmpty(st_RFQLineNumber) Then%>
         <div class="list">
             <asp:ListView ID="POList" runat="server" DataSourceID="SrcPO">
                 <LayoutTemplate>
@@ -36,7 +36,7 @@
                     <table>
                         <tr>
                             <th class="subhead" colspan="2">PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%#"./POUpdate.aspx?PONumber=" & Eval("PONumber")%>'><asp:label id="PONumber" runat="server" Text='<%#Eval("PONumber")%>'></asp:label></asp:HyperLink><span class="indent"></span></th>
-                            <th class="subhead" colspan="4"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Eval("StatusChangeDate")%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%#Eval("Status")%>'></asp:label></span></th>
+                            <th class="subhead" colspan="4"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"),Eval("StatusChangeDate"))%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%#Eval("Status")%>'></asp:label></span></th>
                         </tr>
                         <tr>
                             <th style="width:17%">Product Number / Name</th>
