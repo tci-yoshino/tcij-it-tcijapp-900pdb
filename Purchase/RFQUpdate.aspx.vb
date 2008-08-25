@@ -13,6 +13,7 @@ Partial Public Class RFQUpdate
     Private Const ERR_INCORRECT_SHIPPINGHANDLINGFEE As String = "ShippingHandlingFee" & ERR_INCORRECT_FORMAT
     Private Const ERR_INCORRECT_UNITPRICE As String = "UnitPrice" & ERR_INCORRECT_FORMAT
     Private Const ERR_INCORRECT_QUOPER As String = "Quo-Per" & ERR_INCORRECT_FORMAT
+    Private Const ERR_INCORRECT_CURRENCY As String = "Currency Price Quo-Per Quo-Unit は全て入力、もしくは全て空白で登録してください。"
     'エラーメッセージ(必須入力項目)
     Private Const ERR_REQUIRED_SUPPLIERCODE As String = "SupplierCode" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_QUOUSER As String = "Quo-User" & ERR_REQUIRED_FIELD
@@ -47,17 +48,22 @@ Partial Public Class RFQUpdate
     End Sub
 
     Protected Sub Update_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Update.Click
-        Dim RFQStatusCode As String = ""
-        Dim st_QuotedDate As String = ""
-        Msg.Text = ""
+        Dim RFQStatusCode As String = String.Empty
+        Dim st_QuotedDate As String = String.Empty
+        Msg.Text = String.Empty
         If Request.QueryString("Action") <> "Update" Then
             Msg.Text = ERR_INVALID_PARAMETER
             Exit Sub
         End If
         If CheckSupplierCode() = False Then
+            'Supplier及びMakerの存在チェック
             Exit Sub
         End If
-
+        If LineCheck() = False Then
+            'Currency,Price,Quo-Per,Quo-Unitの入力チェック
+            Msg.Text = ERR_INCORRECT_CURRENCY
+            Exit Sub
+        End If
         If ItemCheck() = False Then
             '入力された項目の型をチェックする(DB登録時にエラーになるもののみ)
             Exit Sub
@@ -77,11 +83,11 @@ Partial Public Class RFQUpdate
         Try
             'RFQHeader の更新
             DBCommand.Parameters.Clear()
-            If RFQStatus.SelectedValue <> "" Then
+            If RFQStatus.SelectedValue <> String.Empty Then
                 RFQStatusCode = ", RFQStatusCode = @RFQStatusCode "
                 DBCommand.Parameters.Add("@RFQStatusCode", SqlDbType.NVarChar).Value = RFQStatus.SelectedValue
             End If
-            If QuotedDate.Value = "" Then
+            If QuotedDate.Value = String.Empty Then
                 'QuotedDateは初回のみ登録し上書きしない。登録条件はRFQStatusが「Q」or「PQ」
                 If RFQStatus.SelectedValue = "Q" Or RFQStatus.SelectedValue = "PQ" Then
                     st_QuotedDate = ", QuotedDate = @st_QuotedDate "
@@ -132,7 +138,7 @@ Partial Public Class RFQUpdate
             Dim param12 As SqlParameter = DBCommand.Parameters.Add("@QMMethod", SqlDbType.NVarChar)
             Dim param13 As SqlParameter = DBCommand.Parameters.Add("@NoOfferReasonCode", SqlDbType.VarChar)
             DBCommand.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = Integer.Parse(Session("UserID"))
-            If EnqQuantity_1.Text <> "" Then
+            If EnqQuantity_1.Text <> String.Empty Then
                 'RFQIssueで登録されたデータのみ更新可
                 param1.Value = Integer.Parse(LineNumber1.Value)
                 param2.Value = ConvertEmptyStringToNull(Currency_1.SelectedValue)
@@ -150,7 +156,7 @@ Partial Public Class RFQUpdate
                 DBCommand.ExecuteNonQuery()
             End If
 
-            If EnqQuantity_2.Text <> "" Then
+            If EnqQuantity_2.Text <> String.Empty" Then
                 param1.Value = Integer.Parse(LineNumber2.Value)
                 param2.Value = ConvertEmptyStringToNull(Currency_2.SelectedValue)
                 param3.Value = ConvertStringToDec(UnitPrice_2.Text)
@@ -166,7 +172,7 @@ Partial Public Class RFQUpdate
                 param13.Value = ConvertEmptyStringToNull(NoOfferReason_2.SelectedValue)
                 DBCommand.ExecuteNonQuery()
             End If
-            If EnqQuantity_3.Text <> "" Then
+            If EnqQuantity_3.Text <> String.Empty Then
                 param1.Value = Integer.Parse(LineNumber3.Value)
                 param2.Value = ConvertEmptyStringToNull(Currency_3.SelectedValue)
                 param3.Value = ConvertStringToDec(UnitPrice_3.Text)
@@ -182,7 +188,7 @@ Partial Public Class RFQUpdate
                 param13.Value = ConvertEmptyStringToNull(NoOfferReason_3.SelectedValue)
                 DBCommand.ExecuteNonQuery()
             End If
-            If EnqQuantity_4.Text <> "" Then
+            If EnqQuantity_4.Text <> String.Empty Then
                 param1.Value = Integer.Parse(LineNumber4.Value)
                 param2.Value = ConvertEmptyStringToNull(Currency_4.SelectedValue)
                 param3.Value = ConvertStringToDec(UnitPrice_4.Text)
@@ -245,8 +251,8 @@ Partial Public Class RFQUpdate
         Dim DS As DataSet = New DataSet
         Dim st_RFQNumber As String = String.Empty
         If IsPostBack = False Then
-            If Request.QueryString("RFQNumber") <> "" Or Request.Form("RFQNumber") <> "" Then
-                st_RFQNumber = IIf(Request.QueryString("RFQNumber") <> "", Request.QueryString("RFQNumber"), Request.Form("RFQNumber"))
+            If Request.QueryString("RFQNumber") <> String.Empty Or Request.Form("RFQNumber") <> String.Empty Then
+                st_RFQNumber = IIf(Request.QueryString("RFQNumber") <> String.Empty, Request.QueryString("RFQNumber"), Request.Form("RFQNumber"))
             Else
                 'パラメータが渡されない場合、エラーメッセージの表示はPage_Loadで行う。
                 Return False
@@ -305,7 +311,7 @@ Partial Public Class RFQUpdate
             EnqUser.Text = DS.Tables("RFQHeader").Rows(0)("EnqUserName").ToString
             EnqLocation.Text = DS.Tables("RFQHeader").Rows(0)("EnqLocationName").ToString
 
-            If DS.Tables("RFQHeader").Rows(0)("QuoLocationName").ToString = "" Then
+            If DS.Tables("RFQHeader").Rows(0)("QuoLocationName").ToString = String.Empty Then
                 QuoLocation.Text = EnqLocation.Text
             Else
                 QuoLocation.Text = DS.Tables("RFQHeader").Rows(0)("QuoLocationName").ToString
@@ -430,57 +436,57 @@ Partial Public Class RFQUpdate
 
         ItemCheck = False
         '型チェック
-        If ShippingHandlingFee.Text <> "" Then
+        If ShippingHandlingFee.Text <> String.Empty Then
             If Not Regex.IsMatch(ShippingHandlingFee.Text, DECIMAL_10_3_REGEX) Then
                 Msg.Text = ERR_INCORRECT_SHIPPINGHANDLINGFEE
                 Exit Function
             End If
         End If
 
-        If UnitPrice_1.Text <> "" Then
+        If UnitPrice_1.Text <> String.Empty Then
             If Not Regex.IsMatch(UnitPrice_1.Text, DECIMAL_10_3_REGEX) Then
                 Msg.Text = ERR_INCORRECT_UNITPRICE
                 Exit Function
             End If
         End If
-        If UnitPrice_2.Text <> "" Then
+        If UnitPrice_2.Text <> String.Empty Then
             If Not Regex.IsMatch(UnitPrice_2.Text, DECIMAL_10_3_REGEX) Then
                 Msg.Text = ERR_INCORRECT_UNITPRICE
                 Exit Function
             End If
         End If
-        If UnitPrice_3.Text <> "" Then
+        If UnitPrice_3.Text <> String.Empty Then
             If Not Regex.IsMatch(UnitPrice_3.Text, DECIMAL_10_3_REGEX) Then
                 Msg.Text = ERR_INCORRECT_UNITPRICE
                 Exit Function
             End If
         End If
-        If UnitPrice_4.Text <> "" Then
+        If UnitPrice_4.Text <> String.Empty Then
             If Not Regex.IsMatch(UnitPrice_4.Text, DECIMAL_10_3_REGEX) Then
                 Msg.Text = ERR_INCORRECT_UNITPRICE
                 Exit Function
             End If
         End If
 
-        If QuoPer_1.Text <> "" Then
+        If QuoPer_1.Text <> String.Empty Then
             If Not Regex.IsMatch(QuoPer_1.Text, DECIMAL_5_3_REGEX) Then
                 Msg.Text = ERR_INCORRECT_QUOPER
                 Exit Function
             End If
         End If
-        If QuoPer_2.Text <> "" Then
+        If QuoPer_2.Text <> String.Empty Then
             If Not Regex.IsMatch(QuoPer_2.Text, DECIMAL_5_3_REGEX) Then
                 Msg.Text = ERR_INCORRECT_QUOPER
                 Exit Function
             End If
         End If
-        If QuoPer_3.Text <> "" Then
+        If QuoPer_3.Text <> String.Empty Then
             If Not Regex.IsMatch(QuoPer_3.Text, DECIMAL_5_3_REGEX) Then
                 Msg.Text = ERR_INCORRECT_QUOPER
                 Exit Function
             End If
         End If
-        If QuoPer_4.Text <> "" Then
+        If QuoPer_4.Text <> String.Empty Then
             If Not Regex.IsMatch(QuoPer_4.Text, DECIMAL_5_3_REGEX) Then
                 Msg.Text = ERR_INCORRECT_QUOPER
                 Exit Function
@@ -501,7 +507,7 @@ Partial Public Class RFQUpdate
 
     Private Function GetContryName(ByVal Code As String) As String
         Dim DBReader As SqlDataReader
-        GetContryName = ""
+        GetContryName = String.Empty
         DBCommand.CommandText = "SELECT CountryName FROM v_Country WHERE (CountryCode = @CountryCode)"
         DBCommand.Parameters.Add("@CountryCode", SqlDbType.NVarChar).Value = Code
         DBReader = DBCommand.ExecuteReader()
@@ -526,7 +532,7 @@ Partial Public Class RFQUpdate
             Return False
         End If
         'Makerのチェック
-        If MakerCode.Text <> "" Then
+        If MakerCode.Text. <> String.Empty Then
             If ExistenceConfirmation(st_Supplier, st_SupplierKey, MakerCode.Text) = False Then
                 Msg.Text = ERR_INCORRECT_MAKERCODE
                 Return False
@@ -589,5 +595,36 @@ Partial Public Class RFQUpdate
             End If
         End If
         Return True
+    End Function
+    Private Function LineCheck() As Boolean
+        If CheckLineSet(Currency_1.SelectedValue, UnitPrice_1.Text, QuoPer_1.Text, QuoUnit_1.SelectedValue) = False Then
+            Return False
+        End If
+        If CheckLineSet(Currency_2.SelectedValue, UnitPrice_2.Text, QuoPer_2.Text, QuoUnit_2.SelectedValue) = False Then
+            Return False
+        End If
+        If CheckLineSet(Currency_3.SelectedValue, UnitPrice_3.Text, QuoPer_3.Text, QuoUnit_3.SelectedValue) = False Then
+            Return False
+        End If
+        If CheckLineSet(Currency_4.SelectedValue, UnitPrice_4.Text, QuoPer_4.Text, QuoUnit_4.SelectedValue) = False Then
+            Return False
+        End If
+        Return True
+    End Function
+    Private Function CheckLineSet(ByVal Currency As String, ByVal Price As String, ByVal QuoPer As String, ByVal QuoUnit As String) As Boolean
+        'RFQLineのCurrency,Price,QuoPer,QuoUnitはどこかが空白で更新することができない。
+        If Currency.Trim = String.Empty And Price.Trim = String.Empty And QuoPer.Trim = String.Empty And QuoUnit.Trim = String.Empty Then
+            Return True
+        ElseIf Currency.Trim = String.Empty Then
+            Return False
+        ElseIf Price.Trim = String.Empty Then
+            Return False
+        ElseIf QuoPer.Trim = String.Empty Then
+            Return False
+        ElseIf QuoUnit.Trim = String.Empty Then
+            Return False
+        Else
+            Return True
+        End If
     End Function
 End Class
