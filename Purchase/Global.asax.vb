@@ -47,8 +47,8 @@ Public Class Global_asax
 
                 mail.To.Add(New MailAddress(appSetting.GetValue("ErrorMailTo", GetType(String))))
                 mail.Subject = "[Purchase DB] Internal System Error"
-                mail.Body = String.Format("An unhandled exception occurred: {1}{0}{0}Message: {2}{0}{0}Stack Trace:{0}{3}{0}{0}User Agent:{0}{4}", _
-                    System.Environment.NewLine, context.Request.RawUrl, ex.Message, ex.StackTrace, context.Request.UserAgent)
+                mail.Body = String.Format("An unhandled exception occurred: {1}{0}{0}User: {2} {3}{0}{0}Message: {4}{0}{0}Stack Trace:{0}{5}{0}{0}User Agent:{0}{6}{0}{0}", _
+                    System.Environment.NewLine, context.Request.RawUrl, Session("UserID"), Session("UserName"), ex.Message, ex.StackTrace, context.Request.UserAgent)
                 mail.IsBodyHtml = False
 
                 Dim smtp As New SmtpClient
