@@ -1,10 +1,8 @@
 ﻿Public Partial Class RFQListBySupplier
     Inherits CommonPage
-    Protected st_SupplierCode As String ' aspx 側で読むため、Protected にする
+    Protected st_SupplierCode As String = String.Empty ' aspx 側で読むため、Protected にする
     Protected i_DataNum As Integer = 0 ' 0 の場合は Supplier Data が無いと判断し、 Data not found. を表示する。
     Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
-
-
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -19,76 +17,77 @@
         st_SupplierCode = st_SupplierCode.Trim
 
         If st_SupplierCode = "" Or IsNumeric(st_SupplierCode) = False Then
-            st_SupplierCode = ""
+            st_SupplierCode = String.Empty
             Msg.Text = Common.ERR_INVALID_PARAMETER
             Exit Sub
         End If
 
         ' Supplier 情報取得
-        Try
-            Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
-                Dim st_query As String = _
-                      "SELECT SupplierCode, Name3, Name4, " _
-                    & "       Address1, Address2, Address3, PostalCode, Telephone, Fax, Email, " _
-                    & "       Website, v_Country.CountryName " _
-                    & "FROM Supplier,v_Country " _
-                    & "WHERE SupplierCode = @SupplierCode " _
-                    & "  AND Supplier.CountryCode = v_Country.CountryCode"
-                Dim command As New SqlClient.SqlCommand(st_query, connection)
-                connection.Open()
+        Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
+            Dim st_query As String = _
+                  "SELECT SupplierCode, Name3, Name4, " _
+                & "       Address1, Address2, Address3, PostalCode, Telephone, Fax, Email, " _
+                & "       Website, v_Country.CountryName " _
+                & "FROM Supplier,v_Country " _
+                & "WHERE SupplierCode = @SupplierCode " _
+                & "  AND Supplier.CountryCode = v_Country.CountryCode"
+            Dim command As New SqlClient.SqlCommand(st_query, connection)
+            connection.Open()
 
-                ' SQL SELECT パラメータの追加
-                command.Parameters.AddWithValue("SupplierCode", st_SupplierCode)
+            ' SQL SELECT パラメータの追加
+            command.Parameters.AddWithValue("SupplierCode", st_SupplierCode)
 
-                ' SqlDataReader を生成し、検索処理を実行。
-                Dim reader As SqlClient.SqlDataReader = command.ExecuteReader()
+            ' SqlDataReader を生成し、検索処理を実行。
+            Dim reader As SqlClient.SqlDataReader = command.ExecuteReader()
 
-                If reader.HasRows Then
+            If reader.HasRows Then
 
-                    i_DataNum = 1
-                    reader.Read()
+                i_DataNum = 1
+                reader.Read()
 
-                    ' 読込んだデータを各 Label に設定。（aspx 側でできないだろうか？）
-                    SupplierCode.Text = reader("SupplierCode")
-                    SupplierName.Text = IIf(IsDBNull(reader("Name3")) Or IsDBNull(reader("Name4")), reader("Name3") & reader("Name4"), reader("Name3") & " " & reader("Name4"))
-                    Address1.Text = IIf(IsDBNull(reader("Address1")), "", reader("Address1"))
-                    Address2.Text = IIf(IsDBNull(reader("Address2")), "", reader("Address2"))
-                    Address3.Text = IIf(IsDBNull(reader("Address3")), "", reader("Address3"))
-                    PostalCode.Text = IIf(IsDBNull(reader("PostalCode")), "", reader("PostalCode"))
-                    Telephone.Text = IIf(IsDBNull(reader("Telephone")), "", reader("Telephone"))
-                    Fax.Text = IIf(IsDBNull(reader("Fax")), "", reader("Fax"))
-                    Email.Text = IIf(IsDBNull(reader("Email")), "", reader("Email"))
-                    EmailLink.NavigateUrl = IIf(IsDBNull(reader("Email")), "", reader("Email"))
-                    Website.Text = IIf(IsDBNull(reader("Website")), "", reader("Website"))
-                    WebsiteLink.NavigateUrl = IIf(IsDBNull(reader("Website")), "", reader("Website"))
-                    CountryName.Text = IIf(IsDBNull(reader("CountryName")), "", reader("CountryName"))
+                ' 読込んだデータを各 Label に設定。
+                SupplierCode.Text = reader("SupplierCode")
+                SupplierName.Text = reader("Name3").ToString() & " " & reader("Name4").ToString()
+                Address1.Text = reader("Address1").ToString()
+                Address2.Text = reader("Address2").ToString()
+                Address3.Text = reader("Address3").ToString()
+                PostalCode.Text = reader("PostalCode").ToString()
+                Telephone.Text = reader("Telephone").ToString()
+                Fax.Text = reader("Fax").ToString()
+                Email.Text = reader("Email").ToString()
+                EmailLink.NavigateUrl = reader("Email").ToString()
+                Website.Text = reader("Website").ToString()
+                WebsiteLink.NavigateUrl = reader("Website").ToString()
+                CountryName.Text = reader("CountryName").ToString()
 
-                    ' RFQHeader 取得
-                    SrcRFQHeader.SelectParameters.Clear()
-                    SrcRFQHeader.SelectParameters.Add("SupplierCode", st_SupplierCode)
-                    SrcRFQHeader.SelectCommand = _
-                          "SELECT RH.RFQNumber, RH.QuotedDate, RH.StatusChangeDate, RH.Status, " _
-                        & "       RH.ProductNumber,RH.ProductName, RH.SupplierName, " _
-                        & "       RH.Purpose, RH.MakerName, " _
-                        & "       RH.SupplierItemName, RH.ShippingHandlingFee, RH.ShippingHandlingCurrencyCode, " _
-                        & "       RH.EnqUserName, RH.EnqLocationName, RH.QuoUserName, RH.QuoLocationName, RH.Comment, " _
-                        & "       C.[Name] AS MakerCountryName, CS.[Name] AS SupplierCountryName " _
-                        & "FROM v_RFQHeader AS RH LEFT OUTER JOIN " _
-                        & "     s_Country AS C ON C.CountryCode = RH.MakerCountryCode, " _
-                        & "     S_Country AS CS " _
-                        & "WHERE (RH.SupplierCode = @SupplierCode OR RH.MakerCode = @SupplierCode) " _
-                        & "  AND (CS.CountryCode = RH.SupplierCountryCode) " _
-                        & "ORDER BY QuotedDate ASC, StatusChangeDate DESC, RFQNumber ASC"
-                Else
-                    Exit Sub
-                End If
+            Else
+                Exit Sub
+            End If
+            reader.Close()
+        End Using
 
-                reader.Close()
-            End Using
-        Catch ex As Exception
-            'Exception をスローする
-            Throw
-        End Try
+        ' RFQHeader 取得
+        If i_DataNum = 1 Then
+
+            SrcRFQHeader.SelectParameters.Clear()
+            SrcRFQHeader.SelectParameters.Add("SupplierCode", st_SupplierCode)
+            SrcRFQHeader.SelectCommand = _
+                  "SELECT " _
+                & "  RH.RFQNumber, RH.QuotedDate, RH.StatusChangeDate, RH.Status, " _
+                & "  RH.ProductNumber,RH.ProductName, RH.SupplierName, " _
+                & "  RH.Purpose, RH.MakerName, " _
+                & "  RH.SupplierItemName, RH.ShippingHandlingFee, RH.ShippingHandlingCurrencyCode, " _
+                & "  RH.EnqUserName, RH.EnqLocationName, RH.QuoUserName, RH.QuoLocationName, RH.Comment, " _
+                & "  C.[Name] AS MakerCountryName, CS.[Name] AS SupplierCountryName " _
+                & "FROM " _
+                & "  v_RFQHeader AS RH INNER JOIN " _
+                & "  s_Country AS CS ON CS.CountryCode = RH.SupplierCountryCode LEFT OUTER JOIN " _
+                & "  s_Country AS C ON C.CountryCode = RH.MakerCountryCode " _
+                & "WHERE " _
+                & "  (RH.SupplierCode = @SupplierCode OR RH.MakerCode = @SupplierCode) " _
+                & "ORDER BY " _
+                & "  QuotedDate ASC, StatusChangeDate DESC, RFQNumber ASC "
+        End If
 
     End Sub
 
