@@ -208,6 +208,7 @@ Partial Public Class RFQListByProduct
         'SQL文字列の作成
         sb_SQL.Append("SELECT ")
         sb_SQL.Append("	DISTINCT ")
+        sb_SQL.Append("	rl.RFQNumber, ")
         sb_SQL.Append("	rl.RFQLineNumber, ")
         sb_SQL.Append("	rl.EnqQuantity, ")
         sb_SQL.Append("	rl.EnqUnitCode, ")
