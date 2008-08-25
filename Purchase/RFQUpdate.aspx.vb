@@ -156,7 +156,7 @@ Partial Public Class RFQUpdate
                 DBCommand.ExecuteNonQuery()
             End If
 
-            If EnqQuantity_2.Text <> String.Empty" Then
+            If EnqQuantity_2.Text <> String.Empty Then
                 param1.Value = Integer.Parse(LineNumber2.Value)
                 param2.Value = ConvertEmptyStringToNull(Currency_2.SelectedValue)
                 param3.Value = ConvertStringToDec(UnitPrice_2.Text)
@@ -532,7 +532,7 @@ Partial Public Class RFQUpdate
             Return False
         End If
         'Makerのチェック
-        If MakerCode.Text. <> String.Empty Then
+        If MakerCode.Text <> String.Empty Then
             If ExistenceConfirmation(st_Supplier, st_SupplierKey, MakerCode.Text) = False Then
                 Msg.Text = ERR_INCORRECT_MAKERCODE
                 Return False
