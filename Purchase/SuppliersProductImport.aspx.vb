@@ -50,7 +50,7 @@ Partial Public Class SuppliersProductImport
     Private ReadOnly TYPE_OF_STRING As System.Type = Type.GetType("System.String")
 
     'チェック画像表示HTMLタグ定数です。
-    Const FILE_NAME_CHECK_IMAGE As String = "<img src=""./Image/Check.gif"" />"
+    Const FILE_NAME_CHECK_IMAGE As String = "<img src='./Image/Check.gif' />"
 
     ''' <summary>
     ''' 他社プロダクト構造体です。
@@ -281,7 +281,7 @@ Partial Public Class SuppliersProductImport
                 i_DataCount = 0
                 While dr.Read()
                     st_Separator = String.Empty
-                    If i_DataCount > 1 Then
+                    If i_DataCount > 0 Then
                         st_Separator = "<br/>"
                     End If
 
