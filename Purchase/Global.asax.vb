@@ -1,4 +1,6 @@
-﻿Imports System.Web.SessionState
+﻿Option Strict On
+
+Imports System.Web.SessionState
 Imports System.IO
 Imports System.Net.Mail
 
@@ -45,10 +47,10 @@ Public Class Global_asax
                 Dim mail As New MailMessage
                 Dim appSetting As New System.Configuration.AppSettingsReader()
 
-                mail.To.Add(New MailAddress(appSetting.GetValue("ErrorMailTo", GetType(String))))
+                mail.To.Add(New MailAddress(appSetting.GetValue("ErrorMailTo", GetType(String)).ToString))
                 mail.Subject = "[Purchase DB] Internal System Error"
-                mail.Body = String.Format("An unhandled exception occurred: {1}{0}{0}User: {2} {3}{0}{0}Message: {4}{0}{0}Stack Trace:{0}{5}{0}{0}User Agent:{0}{6}{0}{0}", _
-                    System.Environment.NewLine, context.Request.RawUrl, Session("UserID"), Session("UserName"), ex.Message, ex.StackTrace, context.Request.UserAgent)
+                mail.Body = String.Format("An unhandled exception occurred: {1}{0}{0}User: {2} ({3}){0}{0}Message: {4}{0}{0}Stack Trace:{0}{5}{0}{0}User Agent:{0}{6}{0}{0}", _
+                    System.Environment.NewLine, context.Request.RawUrl, Session("UserName"), Session("UserID"), ex.Message, ex.StackTrace, context.Request.UserAgent)
                 mail.IsBodyHtml = False
 
                 Dim smtp As New SmtpClient
