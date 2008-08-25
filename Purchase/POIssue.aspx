@@ -49,12 +49,7 @@
                             <asp:DropDownList ID="POUser" runat="server" DataSourceID="SrcUser" 
                                 DataTextField="Name" DataValueField="UserID">
                             </asp:DropDownList>
-                            <asp:SqlDataSource ID="SrcUser" runat="server" 
-                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"
-                                SelectCommand="SELECT UserID, Name FROM v_User WHERE LocationCode = @LocationCode ORDER BY Name">
-                                <SelectParameters>
-                                    <asp:SessionParameter Name="LocationCode" SessionField="LocationCode" />
-                                </SelectParameters>
+                            <asp:SqlDataSource ID="SrcUser" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>">
                             </asp:SqlDataSource>
                             (<asp:Label ID="POLocationName" runat="server" Text=""></asp:Label>)
                         </td>
@@ -71,9 +66,7 @@
                             <asp:DropDownList ID="OrderUnit" runat="server" DataSourceID="SrcUnit" 
                                 DataTextField="UnitCode" DataValueField="UnitCode">
                             </asp:DropDownList>
-                            <asp:SqlDataSource ID="SrcUnit" runat="server" 
-                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-                                SelectCommand="SELECT [UnitCode] FROM [PurchasingUnit] ORDER BY [UnitCode]"></asp:SqlDataSource>
+                            <asp:SqlDataSource ID="SrcUnit" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
                         </td>
                     </tr>
                     <tr>
@@ -90,14 +83,7 @@
                             <asp:DropDownList ID="Supplier" runat="server" DataSourceID="SrcSupplier" 
                                 DataTextField="Name" DataValueField="SupplierCode">
                             </asp:DropDownList>
-                            <asp:SqlDataSource ID="SrcSupplier" runat="server" 
-                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"
-                                SelectCommand="SELECT SupplierCode, LTRIM(RTRIM(ISNULL(Name1, '') + ' ' + ISNULL(Name2, ''))) AS Name FROM Supplier WHERE SupplierCode = @SupplierCode UNION SELECT SupplierCode, LTRIM(RTRIM(ISNULL(Name1, '') + ' ' + ISNULL(Name2, ''))) AS Name FROM Supplier WHERE LocationCode = @LocationCode">
-                                <SelectParameters>
-                                    <asp:Parameter Name="SupplierCode" />
-                                    <asp:Parameter Name="LocationCode" />
-                                </SelectParameters>
-                            </asp:SqlDataSource>
+                            <asp:SqlDataSource ID="SrcSupplier" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
                         </td>
                     </tr>
                     <tr>
@@ -127,9 +113,7 @@
                                 DataTextField="Text" DataValueField="PurposeCode" AppendDataBoundItems="true">
                                 <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
-                            <asp:SqlDataSource ID="SrcPurpose" runat="server" 
-                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-                                SelectCommand="SELECT [PurposeCode], [Text] FROM [Purpose] ORDER BY [SortOrder]"></asp:SqlDataSource>
+                            <asp:SqlDataSource ID="SrcPurpose" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
                         </td>
                     </tr>
                     <tr>
@@ -165,7 +149,7 @@
                     </tr>
                     <tr>
                         <th>Commercial Invoice Received Date : </th>
-                        <td><asp:TextBox ID="InvoceReceivedDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
+                        <td><asp:TextBox ID="InvoiceReceivedDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
                     </tr>
                     <tr>
                         <th>Import Custom Clearance Date : </th>

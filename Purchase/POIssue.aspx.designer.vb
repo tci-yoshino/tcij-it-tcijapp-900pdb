@@ -340,13 +340,13 @@ Partial Public Class POIssue
     Protected WithEvents LotNumber As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
-    '''InvoceReceivedDate コントロール。
+    '''InvoiceReceivedDate コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents InvoceReceivedDate As Global.System.Web.UI.WebControls.TextBox
+    Protected WithEvents InvoiceReceivedDate As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
     '''ImportCustomClearanceDate コントロール。
