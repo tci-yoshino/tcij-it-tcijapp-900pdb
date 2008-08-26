@@ -145,12 +145,7 @@
                     Msg.Text = "表示データを更新しました"
 
                     '[引き続き更新処理ができるようにUpdateDate設定]----------------------------------
-                    DBCommand.CommandText = "SELECT UpdateDate FROM dbo.Product WHERE (ProductID = " + ProductID.Value + ")"
-                    DBReader = DBCommand.ExecuteReader()
-                    DBCommand.Dispose()
-                    If DBReader.Read = True Then
-                        UpdateDate.Value = DBReader("UpdateDate") '[同時更新チェック用]
-                    End If
+                    UpdateDate.Value = Common.GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
                 Else
                     DBReader.Close()
                     Msg.Text = "このデータは他のユーザーによって編集されました。その内容を確認し再度編集をお願いします"
@@ -194,13 +189,8 @@
                     ProductID.Value = DBReader("ProductID")
                 End If
                 DBReader.Close()
-                '[引き続き更新処理ができるようにUpdateDate設定]----------------------------------
-                DBCommand.CommandText = "SELECT UpdateDate FROM dbo.Product WHERE (ProductID = " + ProductID.Value + ")"
-                DBReader = DBCommand.ExecuteReader()
-                DBCommand.Dispose()
-                If DBReader.Read = True Then
-                    UpdateDate.Value = DBReader("UpdateDate") '[同時更新チェック用]
-                End If
+                '[引き続き更新処理ができるようにUpdateDate設定]---------------------------------
+                UpdateDate.Value = Common.GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
                 stAction.Value = "Edit"
             End If
         End If
