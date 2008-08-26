@@ -1,12 +1,12 @@
 ﻿Public Partial Class MyTask
     Inherits CommonPage
 
-    Protected st_Action As String = "" ' aspx 側で読むため、Protected にする
-    Private st_UserID As String = ""
+    Protected st_Action As String = String.Empty ' aspx 側で読むため、Protected にする
+    Private st_UserID As String = String.Empty
     Private stb_PONumbers As StringBuilder = New StringBuilder ' PONumber を格納するオブジェクト。この値を見て、重複するPONumber を除外する。
     Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
 
-    Const ACTION_SWITCH As String = "Switch"
+    Const SWITCH_ACTION As String = "Switch"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -20,61 +20,40 @@
             st_UserID = IIf(Request.QueryString("UserID") = Nothing, "", Request.QueryString("UserID"))
         End If
 
-        If String.IsNullOrEmpty(st_UserID) Then st_UserID = Session("UserID")
+        If String.IsNullOrEmpty(st_UserID) Then
+            st_UserID = Session("UserID")
+        End If
 
         ' User 一覧取得
         Dim ds As DataSet = New DataSet
         ds.Tables.Add("UserID")
+
         If Session("Purchase.PrivilegeLevel") = "P" Then
-            Try
-                Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
-                    Dim st_query As String = "SELECT count(UserID) as count FROM v_User WHERE LocationCode = @LocationCode AND UserID = @UserID"
 
-                    Dim command As New SqlClient.SqlCommand(st_query, connection)
-                    connection.Open()
+            Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
 
-                    ' SQL SELECT パラメータの追加
-                    command.Parameters.AddWithValue("UserID", st_UserID)
-                    command.Parameters.AddWithValue("LocationCode", Session("LocationCode"))
+                Dim st_query As String = "SELECT count(UserID) as count FROM v_User WHERE LocationCode = @LocationCode AND UserID = @UserID"
+                Dim command As New SqlClient.SqlCommand(st_query, connection)
 
-                    ' SqlDataReader を生成し、検索処理を実行。
-                    Dim reader As SqlClient.SqlDataReader = command.ExecuteReader()
-                    ' 取得件数が 1 件以上の場合は True, 0 件の場合は False を取得。
-                    Dim b_hasrows As Boolean = reader.HasRows
-                    reader.Close()
+                ' SQL SELECT パラメータの追加
+                command.Parameters.AddWithValue("UserID", st_UserID)
+                command.Parameters.AddWithValue("LocationCode", Session("LocationCode"))
 
-                    ' 取得件数が 1 件以上ある場合
-                    If b_hasrows Then
-                        ' クエリ、コマンド、アダプタの生成
-                        st_query = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode"
-                        command.CommandText = st_query
-                        Dim adapter As New SqlClient.SqlDataAdapter()
+                ' SqlDataReader を生成し、検索処理を実行。
+                connection.Open()
+                Dim reader As SqlClient.SqlDataReader = command.ExecuteReader()
 
-                        ' データベースからデータを取得
-                        adapter.SelectCommand = command
-                        adapter.Fill(ds.Tables("UserID"))
+                ' 取得件数が 1 件以上の場合は True, 0 件の場合は False を取得。
+                Dim b_hasrows As Boolean = reader.HasRows
+                reader.Close()
 
-                        ' User プルダウンにバインド
-                        UserID.DataValueField = "UserID"
-                        UserID.DataTextField = "Name"
-                        UserID.SelectedIndex = UserID.SelectedIndex
-                        UserID.DataSource = ds.Tables("UserID")
-                        UserID.DataBind()
-                    End If
+                ' 取得件数が 1 件以上ある場合
+                If b_hasrows Then
 
-                End Using
-            Catch ex As Exception
-                'Exception をスローする
-                Throw
-            End Try
-
-        ElseIf Session("Purchase.PrivilegeLevel") = "A" Then
-            Try
-                Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
-                    ' クエリ、アダプタ、SQLコマンド オブジェクトの生成
-                    Dim st_query As String = "SELECT UserID, [Name] FROM v_User"
+                    ' クエリ、コマンド、アダプタの生成
+                    st_query = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode"
+                    command.CommandText = st_query
                     Dim adapter As New SqlClient.SqlDataAdapter()
-                    Dim command As New SqlClient.SqlCommand(st_query, connection)
 
                     ' データベースからデータを取得
                     adapter.SelectCommand = command
@@ -86,17 +65,33 @@
                     UserID.SelectedIndex = UserID.SelectedIndex
                     UserID.DataSource = ds.Tables("UserID")
                     UserID.DataBind()
-                End Using
-            Catch ex As Exception
-                'Exception をスローする
-                Throw
-            End Try
+                End If
+
+            End Using
+
+        ElseIf Session("Purchase.PrivilegeLevel") = "A" Then
+            Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
+                ' クエリ、アダプタ、SQLコマンド オブジェクトの生成
+                Dim st_query As String = "SELECT UserID, [Name] FROM v_User"
+                Dim adapter As New SqlClient.SqlDataAdapter()
+                Dim command As New SqlClient.SqlCommand(st_query, connection)
+
+                ' データベースからデータを取得
+                adapter.SelectCommand = command
+                adapter.Fill(ds.Tables("UserID"))
+
+                ' User プルダウンにバインド
+                UserID.DataValueField = "UserID"
+                UserID.DataTextField = "Name"
+                UserID.SelectedIndex = UserID.SelectedIndex
+                UserID.DataSource = ds.Tables("UserID")
+                UserID.DataBind()
+            End Using
         End If
 
         If Not IsPostBack Then
             Switch_Click()
         End If
-
 
     End Sub
 
@@ -110,7 +105,7 @@
         End If
 
         ' Action チェック
-        If IsPostBack And ((String.IsNullOrEmpty(st_Action)) Or st_Action <> ACTION_SWITCH) Then
+        If IsPostBack And ((String.IsNullOrEmpty(st_Action)) Or st_Action <> SWITCH_ACTION) Then
             Msg.Text = Common.ERR_INVALID_PARAMETER
             st_Action = ""
             Exit Sub
@@ -185,7 +180,7 @@
     End Sub
 
     ' POList_Overdue と POList_PPI のバインド終了時に PONumber を取得
-    Protected Sub Get_PONumber_Overdue(ByVal sender As Object, ByVal e As EventArgs) Handles POList_Overdue.DataBound, POList_PPI.DataBound
+    Protected Sub GetPONumberOverdue(ByVal sender As Object, ByVal e As EventArgs) Handles POList_Overdue.DataBound, POList_PPI.DataBound
 
         Dim lv As ListView = CType(sender, ListView)
         Dim label As Label = New Label
@@ -200,11 +195,11 @@
     End Sub
 
     ' POList_Par の項目バインド時にその項目の子データがあった場合は取得する
-    Protected Sub Set_ChildPO(ByVal sender As Object, ByVal e As EventArgs) Handles POList_Par.ItemDataBound
+    Protected Sub SetChildPO(ByVal sender As Object, ByVal e As ListViewItemEventArgs) Handles POList_Par.ItemDataBound
 
-        Dim lv As ListView = DirectCast(DirectCast(e, ListViewItemEventArgs).Item.FindControl("POList_Chi"), ListView)
-        Dim src As SqlDataSource = DirectCast(DirectCast(e, ListViewItemEventArgs).Item.FindControl("SrcPO_Chi"), SqlDataSource)
-        Dim label As Label = DirectCast(DirectCast(e, ListViewItemEventArgs).Item.FindControl("PONumber"), Label)
+        Dim lv As ListView = CType(e.Item.FindControl("POList_Chi"), ListView)
+        Dim src As SqlDataSource = CType(e.Item.FindControl("SrcPO_Chi"), SqlDataSource)
+        Dim label As Label = CType(e.Item.FindControl("PONumber"), Label)
 
         src.SelectParameters.Clear()
         src.SelectParameters.Add("PONumber", label.Text)
