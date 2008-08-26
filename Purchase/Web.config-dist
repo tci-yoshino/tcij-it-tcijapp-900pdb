@@ -18,6 +18,7 @@
     </configSections>
 
     <appSettings>
+        <add key="Debug" value="false"/>
         <add key="ErrorMailTo" value="app@tokyokasei.co.jp"/>
         <add key="TempDir" value="d:\temp\purchase\"/>
     </appSettings>
