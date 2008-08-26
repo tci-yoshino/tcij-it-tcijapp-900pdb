@@ -26,7 +26,6 @@
     Dim DBConn2 As New System.Data.SqlClient.SqlConnection  'データベースコネクション	
     Dim DBCommand2 As System.Data.SqlClient.SqlCommand      'データベースコマンド	
     Dim DBReader2 As System.Data.SqlClient.SqlDataReader    'データリーダー	
-    Dim st_RegionCode As String = ""                        '選択したRegionCode
     Public url As String = ""
 
     Sub Set_DBConnectingString()
@@ -85,7 +84,6 @@
                 Code.Text = Trim(Request.QueryString("Code"))
                 DataDisplay1()
                 SetTownName()
-                SetRegionCode()
                 DataDisplay2()
             End If
         End If
@@ -95,9 +93,6 @@
         SetTownName()
     End Sub
 
-    Protected Sub Region_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles Region.SelectedIndexChanged
-        SetRegionCode()
-    End Sub
 
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
         Dim st_SQLSTR As String = ""
@@ -121,7 +116,6 @@
                     Dim sqlTran As System.Data.SqlClient.SqlTransaction = DBConn.BeginTransaction()
                     DBCommand.Transaction = sqlTran
                     Try
-                        SetRegionCode()
                         If StAction.Value = "Edit" Then
                             '[Supplierの更新]-------------------------------------------------------------------
                             DBCommand.CommandText = "SELECT SupplierCode FROM dbo.Supplier WHERE SupplierCode = '" & Code.Text.ToString & "'"
@@ -155,7 +149,7 @@
                                 st_SQLSTR = st_SQLSTR & "CountryCode="
                                 If Country.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Country.Text.ToString & "',"
                                 st_SQLSTR = st_SQLSTR & "RegionCode="
-                                If Region.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & st_RegionCode & "',"
+                                If Region.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Region.Text.ToString & "',"
                                 st_SQLSTR = st_SQLSTR & "Telephone="
                                 If Telephone.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Telephone.Text.ToString & "',"
                                 st_SQLSTR = st_SQLSTR & "Fax="
@@ -193,7 +187,7 @@
                             If Address3.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Address3.Text.ToString & "',"
                             If PostalCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & PostalCode.Text.ToString & "',"
                             If Country.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Country.Text.ToString & "',"
-                            If Region.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & st_RegionCode & "',"
+                            If Region.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Region.Text.ToString & "',"
                             If Telephone.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Telephone.Text.ToString & "',"
                             If Fax.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Fax.Text.ToString & "',"
                             If Email.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Email.Text.ToString & "',"
@@ -251,10 +245,7 @@
         DBReader.Close()
     End Sub
 
-    Public Sub SetRegionCode()
-        st_RegionCode = Region.Text.ToString
-    End Sub
-
+    
     Public Sub DataDisplay1()
         DBCommand.CommandText = "SELECT SupplierCode, R3SupplierCode, Name1, Name2, Name3, Name4, SearchTerm1, SearchTerm2, Address1, Address2, Address3, PostalCode, CountryCode, RegionCode, Telephone, Fax, Email, Comment, Website, Note, UpdateDate " & _
                                 "FROM dbo.Supplier WHERE SupplierCode = '" & Code.Text.ToString & "'"
