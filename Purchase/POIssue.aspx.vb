@@ -13,6 +13,8 @@ Partial Public Class POIssue
 
     Private Const ERR_RFQ_NOT_FOUND As String = "該当する見積依頼は存在しません。"
     Private Const ERR_NO_QUOTATION_REPLY As String = "見積依頼に対する回答がないため発注できません。"
+    Private Const ERR_R3_SUPPLIER_DOES_NOT_EXIST As String = "仕入先が R/3 に登録されていないため発注できません。"
+    Private Const ERR_CHI_PO_ALREADY_EXISTS As String = "子発注データが既に存在します。"
     Private Const EXP_PO_ISSUE_ERROR As String = "POIssue.Issue_Click: 発注番号が採番されませんでした。"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -35,6 +37,14 @@ Partial Public Class POIssue
         End If
 
         If Not IsPostBack Then
+            If Not String.IsNullOrEmpty(st_ParPONumber) Then
+                ' 同じ親を持つ子 PO が存在する場合はエラーとします
+                If ExistenceConfirmation("PO", "ParPONumber", st_ParPONumber) Then
+                    Msg.Text = ERR_CHI_PO_ALREADY_EXISTS
+                    Exit Sub
+                End If
+            End If
+
             If SetControl() = False Then
                 ' 登録フォームを表示させないための措置です
                 st_RFQLineNumber = String.Empty
@@ -82,6 +92,11 @@ Partial Public Class POIssue
             Return False
         End If
 
+        If IsDBNull(ds.Tables("RFQLine").Rows(0)("R3SupplierCode")) Then
+            Msg.Text = ERR_R3_SUPPLIER_DOES_NOT_EXIST
+            Return False
+        End If
+
         If IsDBNull(ds.Tables("RFQLine").Rows(0)("UnitPrice")) Then
             Msg.Text = ERR_NO_QUOTATION_REPLY
             Return False
@@ -96,7 +111,7 @@ Partial Public Class POIssue
         POLocationName.Text = Session("LocationName").ToString
         ProductNumber.Text = ds.Tables("RFQLine").Rows(0)("ProductNumber").ToString
         ProductName.Text = CutShort(ds.Tables("RFQLine").Rows(0)("ProductName").ToString)
-        de_OrderQuantity = CDec(ds.Tables("RFQLine").Rows(0)("EnqQuantity")) * CDec(ds.Tables("RFQLine").Rows(0)("EnqPiece"))
+        de_OrderQuantity = CDec(ds.Tables("RFQLine").Rows(0)("EnqQuantity")) * CInt(ds.Tables("RFQLine").Rows(0)("EnqPiece"))
         OrderQuantity.Text = de_OrderQuantity.ToString("G29")
         OrderUnit.SelectedValue = ds.Tables("RFQLine").Rows(0)("EnqUnitCode").ToString
         CurrencyCode.Text = ds.Tables("RFQLine").Rows(0)("CurrencyCode").ToString
@@ -108,7 +123,7 @@ Partial Public Class POIssue
         R3MakerCode.Text = ds.Tables("RFQLine").Rows(0)("R3MakerCode").ToString
         R3MakerName.Text = ds.Tables("RFQLine").Rows(0)("R3MakerName").ToString
         PaymentTerm.Text = ds.Tables("RFQLine").Rows(0)("PaymentTerm").ToString
-        Incoterms.Text = ds.Tables("RFQLine").Rows(0)("Incoterms").ToString
+        Incoterms.Text = ds.Tables("RFQLine").Rows(0)("IncotermsCode").ToString
         DeliveryTerm.Text = ds.Tables("RFQLine").Rows(0)("DeliveryTerm").ToString
         SupplierItemNumber.Text = ds.Tables("RFQLine").Rows(0)("SupplierItemNumber").ToString
 
@@ -121,7 +136,7 @@ Partial Public Class POIssue
         IncotermsCode.Value = ds.Tables("RFQLine").Rows(0)("IncotermsCode").ToString
 
         ' SqlDataSource
-        SetControl_SrcUser()
+        SetControl_SrcUser(st_LoginLocationCode)
         SetControl_SrcUnit()
         SetControl_SrcSupplier(ds.Tables("RFQLine").Rows(0)("SupplierCode").ToString, ds.Tables("RFQLine").Rows(0)("QuoLocationCode").ToString)
         SetControl_SrcPurpose()
@@ -130,11 +145,11 @@ Partial Public Class POIssue
 
     End Function
 
-    Private Sub SetControl_SrcUser()
+    Private Sub SetControl_SrcUser(ByVal LocationCode As String)
 
         SrcUser.SelectCommand = "SELECT UserID, Name FROM v_User WHERE LocationCode = @LocationCode ORDER BY Name"
         SrcUser.SelectParameters.Clear()
-        SrcUser.SelectParameters.Add("LocationCode", st_LoginLocationCode)
+        SrcUser.SelectParameters.Add("LocationCode", LocationCode)
 
     End Sub
 
@@ -183,213 +198,6 @@ Partial Public Class POIssue
         SrcPurpose.SelectCommand = "SELECT PurposeCode, Text FROM Purpose ORDER BY SortOrder"
 
     End Sub
-
-    Private Function InsertPO() As Integer
-        Dim st_SOLocationCode As String = ""
-        Dim obj_PONumber As Object = DBNull.Value
-
-        Dim sqlConn As New SqlConnection(DB_CONNECT_STRING)
-        Dim sqlReader As SqlDataReader
-        Dim sqlCmd As SqlCommand
-        Dim ds As New DataSet
-        Dim sqlAdapter As New SqlDataAdapter
-
-        sqlCmd = New SqlCommand(CreateSql_SelectSupplier(), sqlConn)
-        sqlAdapter.SelectCommand = sqlCmd
-        sqlCmd.Parameters.Add("@SupplierCode", SqlDbType.VarChar).Value = Supplier.SelectedValue
-        sqlAdapter.Fill(ds, "Supplier")
-        st_SOLocationCode = ds.Tables("Supplier").Rows(0)("LocationCode").ToString
-
-        sqlCmd = New SqlCommand(CreateSql_InsertPO(), sqlConn)
-        sqlCmd.Parameters.AddWithValue("@R3PONumber", ConvertEmptyStringToNull(R3PONumber.Text))
-        sqlCmd.Parameters.AddWithValue("@R3POLineNumber", ConvertEmptyStringToNull(R3POLineNumber.Text))
-        sqlCmd.Parameters.AddWithValue("@PODate", GetDatabaseTime(st_LoginLocationCode, PODate.Text))
-        sqlCmd.Parameters.AddWithValue("@POLocationCode", ConvertEmptyStringToNull(POLocationCode.Value))
-        sqlCmd.Parameters.AddWithValue("@POUserID", ConvertStringToInt(POUser.SelectedValue))
-        sqlCmd.Parameters.AddWithValue("@SOLocationCode", ConvertEmptyStringToNull(st_SOLocationCode))
-        sqlCmd.Parameters.AddWithValue("@ProductID", ConvertStringToInt(ConvertEmptyStringToNull(ProductID.Value).ToString))
-        sqlCmd.Parameters.AddWithValue("@SupplierCode", ConvertEmptyStringToNull(Supplier.SelectedValue))
-        sqlCmd.Parameters.AddWithValue("@MakerCode", ConvertEmptyStringToNull(MakerCode.Value))
-        sqlCmd.Parameters.AddWithValue("@OrderQuantity", ConvertStringToDec(OrderQuantity.Text))
-        sqlCmd.Parameters.AddWithValue("@OrderUnitCode", ConvertEmptyStringToNull(OrderUnit.SelectedValue))
-        sqlCmd.Parameters.AddWithValue("@DeliveryDate", GetDatabaseTime(st_LoginLocationCode, DeliveryDate.Text))
-        sqlCmd.Parameters.AddWithValue("@CurrencyCode", ConvertEmptyStringToNull(CurrencyCode.Text))
-        sqlCmd.Parameters.AddWithValue("@UnitPrice", ConvertStringToDec(UnitPrice.Text))
-        sqlCmd.Parameters.AddWithValue("@PerQuantity", ConvertStringToDec(PerQuantity.Text))
-        sqlCmd.Parameters.AddWithValue("@PerUnitCode", ConvertEmptyStringToNull(PerUnit.Text))
-        sqlCmd.Parameters.AddWithValue("@PaymentTermCode", ConvertEmptyStringToNull(PaymentTermCode.Value))
-        sqlCmd.Parameters.AddWithValue("@IncotermsCode", ConvertEmptyStringToNull(IncotermsCode.Value))
-        sqlCmd.Parameters.AddWithValue("@DeliveryTerm", ConvertEmptyStringToNull(DeliveryTerm.Text))
-        sqlCmd.Parameters.AddWithValue("@PurposeCode", ConvertEmptyStringToNull(Purpose.SelectedValue))
-        sqlCmd.Parameters.AddWithValue("@RawMaterialFor", ConvertEmptyStringToNull(RawMaterialFor.Text))
-        sqlCmd.Parameters.AddWithValue("@RequestedBy", ConvertEmptyStringToNull(RequestedBy.Text))
-        sqlCmd.Parameters.AddWithValue("@SupplierItemNumber", ConvertEmptyStringToNull(SupplierItemNumber.Text))
-        sqlCmd.Parameters.AddWithValue("@SupplierLotNumber", ConvertEmptyStringToNull(SupplierLotNumber.Text))
-        sqlCmd.Parameters.AddWithValue("@DueDate", GetDatabaseTime(st_LoginLocationCode, DueDate.Text))
-        sqlCmd.Parameters.AddWithValue("@GoodsArrivedDate", GetDatabaseTime(st_LoginLocationCode, GoodsArrivedDate.Text))
-        sqlCmd.Parameters.AddWithValue("@LotNumber", ConvertEmptyStringToNull(LotNumber.Text))
-        sqlCmd.Parameters.AddWithValue("@InvoiceReceivedDate", GetDatabaseTime(st_LoginLocationCode, InvoiceReceivedDate.Text))
-        sqlCmd.Parameters.AddWithValue("@ImportCustomClearanceDate", GetDatabaseTime(st_LoginLocationCode, ImportCustomClearanceDate.Text))
-        sqlCmd.Parameters.AddWithValue("@QMStartingDate", GetDatabaseTime(st_LoginLocationCode, QMStartingDate.Text))
-        sqlCmd.Parameters.AddWithValue("@QMFinishDate", GetDatabaseTime(st_LoginLocationCode, QMFinishDate.Text))
-        sqlCmd.Parameters.AddWithValue("@QMResult", ConvertEmptyStringToNull(QMResult.Text))
-        sqlCmd.Parameters.AddWithValue("@RequestQuantity", ConvertEmptyStringToNull(RequestQuantity.Text))
-        sqlCmd.Parameters.AddWithValue("@ScheduledExportDate", GetDatabaseTime(st_LoginLocationCode, ScheduledExportDate.Text))
-        sqlCmd.Parameters.AddWithValue("@PurchasingRequisitionNumber", ConvertEmptyStringToNull(PurchasingRequisitionNumber.Text))
-        sqlCmd.Parameters.AddWithValue("@RFQLineNumber", ConvertStringToInt(RFQLineNumber.Value))
-        sqlCmd.Parameters.AddWithValue("@ParPONumber", ConvertStringToInt(ParPONumber.Text))
-        sqlCmd.Parameters.AddWithValue("@CreatedBy", CInt(Session("UserID")))
-        sqlCmd.Parameters.AddWithValue("@UpdatedBy", CInt(Session("UserID")))
-
-        sqlConn.Open()
-        sqlReader = sqlCmd.ExecuteReader
-        While sqlReader.Read
-            obj_PONumber = sqlReader("PONumber")
-        End While
-        sqlReader.Close()
-        sqlConn.Close()
-
-        If IsDBNull(obj_PONumber) Then
-            Throw New Exception(EXP_PO_ISSUE_ERROR)
-        End If
-
-        Return CInt(obj_PONumber)
-
-    End Function
-
-    Private Function CreateSql_SelectRFQLine() As String
-        Dim sb_Sql As StringBuilder = New StringBuilder
-
-        sb_Sql.Append("SELECT ")
-        sb_Sql.Append("  RFQNumber, ")
-        sb_Sql.Append("  QuoLocationCode,  ")
-        sb_Sql.Append("  ProductID, ")
-        sb_Sql.Append("  ProductNumber, ")
-        sb_Sql.Append("  ProductName, ")
-        sb_Sql.Append("  EnqQuantity, ")
-        sb_Sql.Append("  EnqUnitCode, ")
-        sb_Sql.Append("  EnqPiece, ")
-        sb_Sql.Append("  CurrencyCode, ")
-        sb_Sql.Append("  UnitPrice, ")
-        sb_Sql.Append("  QuoPer, ")
-        sb_Sql.Append("  QuoUnitCode, ")
-        sb_Sql.Append("  SupplierCode, ")
-        sb_Sql.Append("  R3SupplierCode, ")
-        sb_Sql.Append("  R3SupplierName, ")
-        sb_Sql.Append("  MakerCode, ")
-        sb_Sql.Append("  R3MakerCode, ")
-        sb_Sql.Append("  R3MakerName, ")
-        sb_Sql.Append("  PaymentTermCode, ")
-        sb_Sql.Append("  PaymentTerm, ")
-        sb_Sql.Append("  IncotermsCode, ")
-        sb_Sql.Append("  Incoterms, ")
-        sb_Sql.Append("  DeliveryTerm, ")
-        sb_Sql.Append("  PurposeCode, ")
-        sb_Sql.Append("  SupplierItemNumber ")
-        sb_Sql.Append("FROM ")
-        sb_Sql.Append("  v_RFQLine ")
-        sb_Sql.Append("WHERE ")
-        sb_Sql.Append("  RFQLineNumber = @RFQLineNumber")
-
-        Return sb_Sql.ToString
-
-    End Function
-
-    Private Function CreateSql_SelectSupplier() As String
-
-        Return "SELECT LocationCode FROM Supplier WHERE SupplierCode = @SupplierCode"
-
-    End Function
-
-    Private Function CreateSql_InsertPO() As String
-        Dim sb_Sql As StringBuilder = New StringBuilder
-
-        sb_Sql.Append("INSERT INTO PO ( ")
-        sb_Sql.Append("  R3PONumber, ")
-        sb_Sql.Append("  R3POLineNumber, ")
-        sb_Sql.Append("  PODate, ")
-        sb_Sql.Append("  POLocationCode, ")
-        sb_Sql.Append("  POUserID, ")
-        sb_Sql.Append("  SOLocationCode, ")
-        sb_Sql.Append("  ProductID, ")
-        sb_Sql.Append("  SupplierCode, ")
-        sb_Sql.Append("  MakerCode, ")
-        sb_Sql.Append("  OrderQuantity, ")
-        sb_Sql.Append("  OrderUnitCode, ")
-        sb_Sql.Append("  DeliveryDate, ")
-        sb_Sql.Append("  CurrencyCode, ")
-        sb_Sql.Append("  UnitPrice, ")
-        sb_Sql.Append("  PerQuantity, ")
-        sb_Sql.Append("  PerUnitCode, ")
-        sb_Sql.Append("  PaymentTermCode, ")
-        sb_Sql.Append("  IncotermsCode, ")
-        sb_Sql.Append("  DeliveryTerm, ")
-        sb_Sql.Append("  PurposeCode, ")
-        sb_Sql.Append("  RawMaterialFor, ")
-        sb_Sql.Append("  RequestedBy, ")
-        sb_Sql.Append("  SupplierItemNumber, ")
-        sb_Sql.Append("  SupplierLotNumber, ")
-        sb_Sql.Append("  DueDate, ")
-        sb_Sql.Append("  GoodsArrivedDate, ")
-        sb_Sql.Append("  LotNumber, ")
-        sb_Sql.Append("  InvoiceReceivedDate, ")
-        sb_Sql.Append("  ImportCustomClearanceDate, ")
-        sb_Sql.Append("  QMStartingDate, ")
-        sb_Sql.Append("  QMFinishDate, ")
-        sb_Sql.Append("  QMResult, ")
-        sb_Sql.Append("  RequestQuantity, ")
-        sb_Sql.Append("  ScheduledExportDate, ")
-        sb_Sql.Append("  PurchasingRequisitionNumber, ")
-        sb_Sql.Append("  RFQLineNumber, ")
-        sb_Sql.Append("  ParPONumber, ")
-        sb_Sql.Append("  CreatedBy, ")
-        sb_Sql.Append("  UpdatedBy ")
-        sb_Sql.Append(") VALUES ( ")
-        sb_Sql.Append("  @R3PONumber, ")
-        sb_Sql.Append("  @R3POLineNumber, ")
-        sb_Sql.Append("  @PODate, ")
-        sb_Sql.Append("  @POLocationCode, ")
-        sb_Sql.Append("  @POUserID, ")
-        sb_Sql.Append("  @SOLocationCode, ")
-        sb_Sql.Append("  @ProductID, ")
-        sb_Sql.Append("  @SupplierCode, ")
-        sb_Sql.Append("  @MakerCode, ")
-        sb_Sql.Append("  @OrderQuantity, ")
-        sb_Sql.Append("  @OrderUnitCode, ")
-        sb_Sql.Append("  @DeliveryDate, ")
-        sb_Sql.Append("  @CurrencyCode, ")
-        sb_Sql.Append("  @UnitPrice, ")
-        sb_Sql.Append("  @PerQuantity, ")
-        sb_Sql.Append("  @PerUnitCode, ")
-        sb_Sql.Append("  @PaymentTermCode, ")
-        sb_Sql.Append("  @IncotermsCode, ")
-        sb_Sql.Append("  @DeliveryTerm, ")
-        sb_Sql.Append("  @PurposeCode, ")
-        sb_Sql.Append("  @RawMaterialFor, ")
-        sb_Sql.Append("  @RequestedBy, ")
-        sb_Sql.Append("  @SupplierItemNumber, ")
-        sb_Sql.Append("  @SupplierLotNumber, ")
-        sb_Sql.Append("  @DueDate, ")
-        sb_Sql.Append("  @GoodsArrivedDate, ")
-        sb_Sql.Append("  @LotNumber, ")
-        sb_Sql.Append("  @InvoiceReceivedDate, ")
-        sb_Sql.Append("  @ImportCustomClearanceDate, ")
-        sb_Sql.Append("  @QMStartingDate, ")
-        sb_Sql.Append("  @QMFinishDate, ")
-        sb_Sql.Append("  @QMResult, ")
-        sb_Sql.Append("  @RequestQuantity, ")
-        sb_Sql.Append("  @ScheduledExportDate, ")
-        sb_Sql.Append("  @PurchasingRequisitionNumber, ")
-        sb_Sql.Append("  @RFQLineNumber, ")
-        sb_Sql.Append("  @ParPONumber, ")
-        sb_Sql.Append("  @CreatedBy, ")
-        sb_Sql.Append("  @UpdatedBy ")
-        sb_Sql.Append("); ")
-        sb_Sql.Append("SELECT PONumber FROM PO WHERE PONumber = SCOPE_IDENTITY()")
-
-        Return sb_Sql.ToString
-
-    End Function
 
     Private Function ValidateField() As Boolean
 
@@ -541,6 +349,212 @@ Partial Public Class POIssue
         End If
 
         Return True
+
+    End Function
+
+    Private Function InsertPO() As Integer
+        Dim st_SOLocationCode As String = ""
+        Dim obj_PONumber As Object = DBNull.Value
+
+        Dim sqlConn As New SqlConnection(DB_CONNECT_STRING)
+        Dim sqlReader As SqlDataReader
+        Dim sqlCmd As SqlCommand
+        Dim ds As New DataSet
+        Dim sqlAdapter As New SqlDataAdapter
+
+        sqlCmd = New SqlCommand(CreateSql_SelectSupplier(), sqlConn)
+        sqlAdapter.SelectCommand = sqlCmd
+        sqlCmd.Parameters.Add("@SupplierCode", SqlDbType.VarChar).Value = Supplier.SelectedValue
+        sqlAdapter.Fill(ds, "Supplier")
+        st_SOLocationCode = ds.Tables("Supplier").Rows(0)("LocationCode").ToString
+
+        sqlCmd = New SqlCommand(CreateSql_InsertPO(), sqlConn)
+        sqlCmd.Parameters.AddWithValue("@R3PONumber", ConvertEmptyStringToNull(R3PONumber.Text))
+        sqlCmd.Parameters.AddWithValue("@R3POLineNumber", ConvertEmptyStringToNull(R3POLineNumber.Text))
+        sqlCmd.Parameters.AddWithValue("@PODate", GetDatabaseTime(st_LoginLocationCode, PODate.Text))
+        sqlCmd.Parameters.AddWithValue("@POLocationCode", ConvertEmptyStringToNull(POLocationCode.Value))
+        sqlCmd.Parameters.AddWithValue("@POUserID", ConvertStringToInt(POUser.SelectedValue))
+        sqlCmd.Parameters.AddWithValue("@SOLocationCode", ConvertEmptyStringToNull(st_SOLocationCode))
+        sqlCmd.Parameters.AddWithValue("@ProductID", ConvertStringToInt(ConvertEmptyStringToNull(ProductID.Value).ToString))
+        sqlCmd.Parameters.AddWithValue("@SupplierCode", ConvertEmptyStringToNull(Supplier.SelectedValue))
+        sqlCmd.Parameters.AddWithValue("@MakerCode", ConvertEmptyStringToNull(MakerCode.Value))
+        sqlCmd.Parameters.AddWithValue("@OrderQuantity", ConvertStringToDec(OrderQuantity.Text))
+        sqlCmd.Parameters.AddWithValue("@OrderUnitCode", ConvertEmptyStringToNull(OrderUnit.SelectedValue))
+        sqlCmd.Parameters.AddWithValue("@DeliveryDate", GetDatabaseTime(st_LoginLocationCode, DeliveryDate.Text))
+        sqlCmd.Parameters.AddWithValue("@CurrencyCode", ConvertEmptyStringToNull(CurrencyCode.Text))
+        sqlCmd.Parameters.AddWithValue("@UnitPrice", ConvertStringToDec(UnitPrice.Text))
+        sqlCmd.Parameters.AddWithValue("@PerQuantity", ConvertStringToDec(PerQuantity.Text))
+        sqlCmd.Parameters.AddWithValue("@PerUnitCode", ConvertEmptyStringToNull(PerUnit.Text))
+        sqlCmd.Parameters.AddWithValue("@PaymentTermCode", ConvertEmptyStringToNull(PaymentTermCode.Value))
+        sqlCmd.Parameters.AddWithValue("@IncotermsCode", ConvertEmptyStringToNull(IncotermsCode.Value))
+        sqlCmd.Parameters.AddWithValue("@DeliveryTerm", ConvertEmptyStringToNull(DeliveryTerm.Text))
+        sqlCmd.Parameters.AddWithValue("@PurposeCode", ConvertEmptyStringToNull(Purpose.SelectedValue))
+        sqlCmd.Parameters.AddWithValue("@RawMaterialFor", ConvertEmptyStringToNull(RawMaterialFor.Text))
+        sqlCmd.Parameters.AddWithValue("@RequestedBy", ConvertEmptyStringToNull(RequestedBy.Text))
+        sqlCmd.Parameters.AddWithValue("@SupplierItemNumber", ConvertEmptyStringToNull(SupplierItemNumber.Text))
+        sqlCmd.Parameters.AddWithValue("@SupplierLotNumber", ConvertEmptyStringToNull(SupplierLotNumber.Text))
+        sqlCmd.Parameters.AddWithValue("@DueDate", GetDatabaseTime(st_LoginLocationCode, DueDate.Text))
+        sqlCmd.Parameters.AddWithValue("@GoodsArrivedDate", GetDatabaseTime(st_LoginLocationCode, GoodsArrivedDate.Text))
+        sqlCmd.Parameters.AddWithValue("@LotNumber", ConvertEmptyStringToNull(LotNumber.Text))
+        sqlCmd.Parameters.AddWithValue("@InvoiceReceivedDate", GetDatabaseTime(st_LoginLocationCode, InvoiceReceivedDate.Text))
+        sqlCmd.Parameters.AddWithValue("@ImportCustomClearanceDate", GetDatabaseTime(st_LoginLocationCode, ImportCustomClearanceDate.Text))
+        sqlCmd.Parameters.AddWithValue("@QMStartingDate", GetDatabaseTime(st_LoginLocationCode, QMStartingDate.Text))
+        sqlCmd.Parameters.AddWithValue("@QMFinishDate", GetDatabaseTime(st_LoginLocationCode, QMFinishDate.Text))
+        sqlCmd.Parameters.AddWithValue("@QMResult", ConvertEmptyStringToNull(QMResult.Text))
+        sqlCmd.Parameters.AddWithValue("@RequestQuantity", ConvertEmptyStringToNull(RequestQuantity.Text))
+        sqlCmd.Parameters.AddWithValue("@ScheduledExportDate", GetDatabaseTime(st_LoginLocationCode, ScheduledExportDate.Text))
+        sqlCmd.Parameters.AddWithValue("@PurchasingRequisitionNumber", ConvertEmptyStringToNull(PurchasingRequisitionNumber.Text))
+        sqlCmd.Parameters.AddWithValue("@RFQLineNumber", ConvertStringToInt(RFQLineNumber.Value))
+        sqlCmd.Parameters.AddWithValue("@ParPONumber", ConvertStringToInt(ParPONumber.Text))
+        sqlCmd.Parameters.AddWithValue("@CreatedBy", CInt(Session("UserID")))
+        sqlCmd.Parameters.AddWithValue("@UpdatedBy", CInt(Session("UserID")))
+
+        sqlConn.Open()
+        sqlReader = sqlCmd.ExecuteReader
+        While sqlReader.Read
+            obj_PONumber = sqlReader("PONumber")
+        End While
+        sqlReader.Close()
+        sqlConn.Close()
+
+        If IsDBNull(obj_PONumber) Then
+            Throw New Exception(EXP_PO_ISSUE_ERROR)
+        End If
+
+        Return CInt(obj_PONumber)
+
+    End Function
+
+    Private Function CreateSql_SelectRFQLine() As String
+        Dim sb_Sql As StringBuilder = New StringBuilder
+
+        sb_Sql.Append("SELECT ")
+        sb_Sql.Append("  RFQNumber, ")
+        sb_Sql.Append("  QuoLocationCode,  ")
+        sb_Sql.Append("  ProductID, ")
+        sb_Sql.Append("  ProductNumber, ")
+        sb_Sql.Append("  ProductName, ")
+        sb_Sql.Append("  EnqQuantity, ")
+        sb_Sql.Append("  EnqUnitCode, ")
+        sb_Sql.Append("  EnqPiece, ")
+        sb_Sql.Append("  CurrencyCode, ")
+        sb_Sql.Append("  UnitPrice, ")
+        sb_Sql.Append("  QuoPer, ")
+        sb_Sql.Append("  QuoUnitCode, ")
+        sb_Sql.Append("  SupplierCode, ")
+        sb_Sql.Append("  R3SupplierCode, ")
+        sb_Sql.Append("  R3SupplierName, ")
+        sb_Sql.Append("  MakerCode, ")
+        sb_Sql.Append("  R3MakerCode, ")
+        sb_Sql.Append("  R3MakerName, ")
+        sb_Sql.Append("  PaymentTermCode, ")
+        sb_Sql.Append("  PaymentTerm, ")
+        sb_Sql.Append("  IncotermsCode, ")
+        sb_Sql.Append("  DeliveryTerm, ")
+        sb_Sql.Append("  PurposeCode, ")
+        sb_Sql.Append("  SupplierItemNumber ")
+        sb_Sql.Append("FROM ")
+        sb_Sql.Append("  v_RFQLine ")
+        sb_Sql.Append("WHERE ")
+        sb_Sql.Append("  RFQLineNumber = @RFQLineNumber")
+
+        Return sb_Sql.ToString
+
+    End Function
+
+    Private Function CreateSql_SelectSupplier() As String
+
+        Return "SELECT LocationCode FROM Supplier WHERE SupplierCode = @SupplierCode"
+
+    End Function
+
+    Private Function CreateSql_InsertPO() As String
+        Dim sb_Sql As StringBuilder = New StringBuilder
+
+        sb_Sql.Append("INSERT INTO PO ( ")
+        sb_Sql.Append("  R3PONumber, ")
+        sb_Sql.Append("  R3POLineNumber, ")
+        sb_Sql.Append("  PODate, ")
+        sb_Sql.Append("  POLocationCode, ")
+        sb_Sql.Append("  POUserID, ")
+        sb_Sql.Append("  SOLocationCode, ")
+        sb_Sql.Append("  ProductID, ")
+        sb_Sql.Append("  SupplierCode, ")
+        sb_Sql.Append("  MakerCode, ")
+        sb_Sql.Append("  OrderQuantity, ")
+        sb_Sql.Append("  OrderUnitCode, ")
+        sb_Sql.Append("  DeliveryDate, ")
+        sb_Sql.Append("  CurrencyCode, ")
+        sb_Sql.Append("  UnitPrice, ")
+        sb_Sql.Append("  PerQuantity, ")
+        sb_Sql.Append("  PerUnitCode, ")
+        sb_Sql.Append("  PaymentTermCode, ")
+        sb_Sql.Append("  IncotermsCode, ")
+        sb_Sql.Append("  DeliveryTerm, ")
+        sb_Sql.Append("  PurposeCode, ")
+        sb_Sql.Append("  RawMaterialFor, ")
+        sb_Sql.Append("  RequestedBy, ")
+        sb_Sql.Append("  SupplierItemNumber, ")
+        sb_Sql.Append("  SupplierLotNumber, ")
+        sb_Sql.Append("  DueDate, ")
+        sb_Sql.Append("  GoodsArrivedDate, ")
+        sb_Sql.Append("  LotNumber, ")
+        sb_Sql.Append("  InvoiceReceivedDate, ")
+        sb_Sql.Append("  ImportCustomClearanceDate, ")
+        sb_Sql.Append("  QMStartingDate, ")
+        sb_Sql.Append("  QMFinishDate, ")
+        sb_Sql.Append("  QMResult, ")
+        sb_Sql.Append("  RequestQuantity, ")
+        sb_Sql.Append("  ScheduledExportDate, ")
+        sb_Sql.Append("  PurchasingRequisitionNumber, ")
+        sb_Sql.Append("  RFQLineNumber, ")
+        sb_Sql.Append("  ParPONumber, ")
+        sb_Sql.Append("  CreatedBy, ")
+        sb_Sql.Append("  UpdatedBy ")
+        sb_Sql.Append(") VALUES ( ")
+        sb_Sql.Append("  @R3PONumber, ")
+        sb_Sql.Append("  @R3POLineNumber, ")
+        sb_Sql.Append("  @PODate, ")
+        sb_Sql.Append("  @POLocationCode, ")
+        sb_Sql.Append("  @POUserID, ")
+        sb_Sql.Append("  @SOLocationCode, ")
+        sb_Sql.Append("  @ProductID, ")
+        sb_Sql.Append("  @SupplierCode, ")
+        sb_Sql.Append("  @MakerCode, ")
+        sb_Sql.Append("  @OrderQuantity, ")
+        sb_Sql.Append("  @OrderUnitCode, ")
+        sb_Sql.Append("  @DeliveryDate, ")
+        sb_Sql.Append("  @CurrencyCode, ")
+        sb_Sql.Append("  @UnitPrice, ")
+        sb_Sql.Append("  @PerQuantity, ")
+        sb_Sql.Append("  @PerUnitCode, ")
+        sb_Sql.Append("  @PaymentTermCode, ")
+        sb_Sql.Append("  @IncotermsCode, ")
+        sb_Sql.Append("  @DeliveryTerm, ")
+        sb_Sql.Append("  @PurposeCode, ")
+        sb_Sql.Append("  @RawMaterialFor, ")
+        sb_Sql.Append("  @RequestedBy, ")
+        sb_Sql.Append("  @SupplierItemNumber, ")
+        sb_Sql.Append("  @SupplierLotNumber, ")
+        sb_Sql.Append("  @DueDate, ")
+        sb_Sql.Append("  @GoodsArrivedDate, ")
+        sb_Sql.Append("  @LotNumber, ")
+        sb_Sql.Append("  @InvoiceReceivedDate, ")
+        sb_Sql.Append("  @ImportCustomClearanceDate, ")
+        sb_Sql.Append("  @QMStartingDate, ")
+        sb_Sql.Append("  @QMFinishDate, ")
+        sb_Sql.Append("  @QMResult, ")
+        sb_Sql.Append("  @RequestQuantity, ")
+        sb_Sql.Append("  @ScheduledExportDate, ")
+        sb_Sql.Append("  @PurchasingRequisitionNumber, ")
+        sb_Sql.Append("  @RFQLineNumber, ")
+        sb_Sql.Append("  @ParPONumber, ")
+        sb_Sql.Append("  @CreatedBy, ")
+        sb_Sql.Append("  @UpdatedBy ")
+        sb_Sql.Append("); ")
+        sb_Sql.Append("SELECT PONumber FROM PO WHERE PONumber = SCOPE_IDENTITY()")
+
+        Return sb_Sql.ToString
 
     End Function
 
