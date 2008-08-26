@@ -113,7 +113,7 @@
                             <td><asp:Label ID="Packing" runat="server" Text='<%#Eval("Packing") %>'></asp:Label></td>
                             <td><asp:Label ID="Purity" runat="server" Text='<%#If(IsDBNull(Eval("Purity")), "", Eval("Purity") & " %") %>'></asp:Label></td>
                             <td><asp:Label ID="QMMethod" runat="server" Text='<%#Eval("QMMethod") %>'></asp:Label></td>
-                            <td><asp:HyperLink ID="PO" runat="server" NavigateUrl='<%#If(IsDBNull(Eval("PO")), "", "./POListByRFQ.aspx?RFQNumber=" & Eval("RFQNumber"))%>'><%#If(IsDBNull(Eval("PO")), "", "PO  &raquo;")%></asp:HyperLink></td>
+                            <td><asp:HyperLink ID="PO" runat="server" NavigateUrl='<%#If(IsDBNull(Eval("PO")), "", "./POListByRFQ.aspx?RFQLineNumber=" & Eval("RFQLineNumber"))%>'><%#If(IsDBNull(Eval("PO")), "", "PO  &raquo;")%></asp:HyperLink></td>
                         </tr>
                         </ItemTemplate>
                     </asp:ListView>
