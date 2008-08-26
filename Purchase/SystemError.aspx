@@ -19,6 +19,7 @@
         <input type="button" value="Back" onclick="javascript:history.back()" />
     </div>
     
+<%  If b_IsDebug Then%>
     <hr />
     
     <div class="list">
@@ -27,6 +28,8 @@
         <h3>Stack Trace</h3>
         <pre><asp:Label ID="StackTrace" runat="server" Text=""></asp:Label></pre>
     </div>
+<%End If%>
+
   </div><!-- Main Content Area END -->
 </body>
 </html>
