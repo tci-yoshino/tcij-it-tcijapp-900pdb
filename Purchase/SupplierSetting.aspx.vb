@@ -110,7 +110,7 @@
                     DBReader = DBCommand.ExecuteReader()
                     DBCommand.Dispose()
                     If DBReader.Read = True Then
-                        If DBReader("UpdateDate") <> UpdateDate.Value Then
+                        If Common.GetUpdateDate("Supplier", "SupplierCode", Code.Text.ToString) <> UpdateDate.Value Then
                             Msg.Text = "このデータは他のユーザーによって編集されました。その内容を確認し再度編集をお願いします"
                         End If
                     End If
@@ -225,17 +225,11 @@
                     Catch ex As Exception
                         'エラーがあった場合はロールバック
                         sqlTran.Rollback()
-                        Exit Sub
+                        Throw
                     End Try
-                    DBCommand.CommandText = "SELECT UpdateDate FROM dbo.Supplier WHERE SupplierCode = '" & Code.Text.ToString & "'"
-                    DBReader = DBCommand.ExecuteReader()
-                    DBCommand.Dispose()
-                    If DBReader.Read = True Then
-                        UpdateDate.Value = DBReader("UpdateDate")
-                    Else
-                        UpdateDate.Value = ""
-                    End If
-                    DBReader.Close()
+
+                    '[SupplierからUpdateDate取得]--------------------------------------------------------------
+                    UpdateDate.Value = Common.GetUpdateDate("Supplier", "SupplierCode", Code.Text.ToString)  '[同時更新チェック用]
                 End If
             Else
                 Msg.Text = "必須項目を入力して下さい"
@@ -252,14 +246,13 @@
         DBCommand.Dispose()
         Region.Items.Clear()
         Do Until DBReader.Read = False
-            Region.Items.Add(New ListItem(DBReader("Name"), Left(DBReader("CountryCode") + "     ", 5) + DBReader("RegionCode")))
+            Region.Items.Add(New ListItem(DBReader("Name"), DBReader("RegionCode")))
         Loop
         DBReader.Close()
     End Sub
 
     Public Sub SetRegionCode()
-        '[選択したRegionからRegionCode取得]---------------------------------------------------------
-        st_RegionCode = Trim(Mid(Region.Text.ToString, 6, Len(Region.Text.ToString) - 5))
+        st_RegionCode = Region.Text.ToString
     End Sub
 
     Public Sub DataDisplay1()
@@ -287,7 +280,7 @@
             If Not TypeOf DBReader("Comment") Is DBNull Then R3Comment.Text = DBReader("Comment")
             If Not TypeOf DBReader("Note") Is DBNull Then Comment.Text = DBReader("Note")
             Country.SelectedValue = DBReader("CountryCode")
-            UpdateDate.Value = DBReader("UpdateDate")
+            UpdateDate.Value = Common.GetUpdateDate("Supplier", "SupplierCode", Code.Text.ToString) '[同時更新チェック用]
             DBReader.Close()
         Else
             UpdateDate.Value = ""
@@ -302,7 +295,7 @@
         If DBReader.Read = True Then
             '[Country,Regionにデータ表示]-------------------------------------------------------
             Country.Text = DBReader("CountryCode")
-            Region.Text = Left(DBReader("CountryCode") + "     ", 5) + DBReader("RegionCode")
+            Region.Text = DBReader("RegionCode")
 
             '[DefaultQuoLocation.Item設定]------------------------------------------------------
             DBCommand2.CommandText = "SELECT QuoLocationCode FROM dbo.IrregularRFQLocation WHERE (SupplierCode = '" & Code.Text.ToString & "')"
