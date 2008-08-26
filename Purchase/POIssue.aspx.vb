@@ -11,7 +11,8 @@ Partial Public Class POIssue
     Protected st_Action As String
     Protected st_LoginLocationCode As String
 
-    Private Const ERR_RFQ_NOT_FOUND As String = "該当する見積依頼は存在しません。"
+    Private Const ERR_RFQ_NOT_FOUND As String = "見積依頼が存在しません。"
+    Private Const ERR_PAR_PO_NOT_FOUND As String = "親発注が存在しません。"
     Private Const ERR_NO_QUOTATION_REPLY As String = "見積依頼に対する回答がないため発注できません。"
     Private Const ERR_R3_SUPPLIER_DOES_NOT_EXIST As String = "仕入先が R/3 に登録されていないため発注できません。"
     Private Const ERR_CHI_PO_ALREADY_EXISTS As String = "子発注データが既に存在します。"
@@ -38,6 +39,11 @@ Partial Public Class POIssue
 
         If Not IsPostBack Then
             If Not String.IsNullOrEmpty(st_ParPONumber) Then
+                If Not ExistenceConfirmation("PO", "PONumber", st_ParPONumber) Then
+                    Msg.Text = ERR_PAR_PO_NOT_FOUND
+                    Exit Sub
+                End If
+
                 ' 同じ親を持つ子 PO が存在する場合はエラーとします
                 If ExistenceConfirmation("PO", "ParPONumber", st_ParPONumber) Then
                     Msg.Text = ERR_CHI_PO_ALREADY_EXISTS
