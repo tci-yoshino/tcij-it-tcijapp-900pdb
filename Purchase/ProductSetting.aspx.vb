@@ -60,7 +60,7 @@
                     If Not TypeOf DBReader("ProposalDept") Is DBNull Then ProposalDept.Text = DBReader("ProposalDept")
                     If Not TypeOf DBReader("ProcumentDept") Is DBNull Then ProcumentDept.Text = DBReader("ProcumentDept")
                     If Not TypeOf DBReader("PD") Is DBNull Then PD.Text = DBReader("PD")
-                    UpdateDate.Value = DBReader("UpdateDate") '[同時更新チェック用]
+                    UpdateDate.Value = Common.GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
                 Else
                     UpdateDate.Value = ""
                 End If
@@ -76,111 +76,133 @@
         Dim NumberType As String = ""
         Dim st_SqlStr As String = ""
         Msg.Text = ""
-        If Action.Value = "Save" Then
-            NumberType = ""
-            If TCICommon.Func.IsCASNumber(ProductNumber.Text.ToString) = True Then NumberType = "CAS"
-            If TCICommon.Func.IsProductNumber(ProductNumber.Text.ToString) = True Then NumberType = "TCI"
-            If TCICommon.Func.IsNewProductNumber(ProductNumber.Text.ToString) = True Then NumberType = "NEW"
-            If NumberType <> "" Then
-                If ProductNumber.Text.ToString <> "" And ProductName.Text.ToString <> "" Then
-                    If stAction.Value = "Edit" Then
-                        '[ProductのUpdateDateチェック]-----------------------------------------------------------
-                        DBCommand.CommandText = "SELECT UpdateDate FROM dbo.Product WHERE ProductID = '" & ProductID.Value & "'"
-                        DBReader = DBCommand.ExecuteReader()
-                        DBCommand.Dispose()
-                        If DBReader.Read = True Then
-                            If DBReader("UpdateDate") = UpdateDate.Value Then
-                                DBReader.Close()
-                                '[Product更新処理]---------------------------------------------------------------
-                                st_SqlStr = "UPDATE dbo.Product SET ProductNumber="
-                                If ProductNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & ProductNumber.Text.ToString & "',"
-                                st_SqlStr = st_SqlStr + "NumberType='" + NumberType + "',"
-                                st_SqlStr = st_SqlStr & "Name="
-                                If ProductName.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & ProductName.Text.ToString & "',"
-                                st_SqlStr = st_SqlStr & "QuoName="
-                                If QuoName.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & QuoName.Text.ToString & "',"
-                                st_SqlStr = st_SqlStr & "CASNumber="
-                                If CASNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & CASNumber.Text.ToString & "',"
-                                st_SqlStr = st_SqlStr & "MolecularFormula="
-                                If MolecularFormula.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & MolecularFormula.Text.ToString & "',"
-                                st_SqlStr = st_SqlStr & "Reference="
-                                If Reference.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & Reference.Text.ToString & "',"
-                                st_SqlStr = st_SqlStr & "Comment="
-                                If Comment.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & Comment.Text.ToString & "',"
-                                st_SqlStr = st_SqlStr & "UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "' "
-                                st_SqlStr = st_SqlStr & "WHERE ProductID = '" & ProductID.Value & "'"
-                                DBCommand.CommandText = st_SqlStr
-                                DBCommand.ExecuteNonQuery()
-                                Msg.Text = "表示データを更新しました"
 
-                                '[引き続き更新処理ができるようにUpdateDate設定]----------------------------------
-                                DBCommand.CommandText = "SELECT UpdateDate FROM dbo.Product WHERE (ProductID = " + ProductID.Value + ")"
-                                DBReader = DBCommand.ExecuteReader()
-                                DBCommand.Dispose()
-                                If DBReader.Read = True Then
-                                    UpdateDate.Value = DBReader("UpdateDate") '[同時更新チェック用]
-                                End If
-                            Else
-                                DBReader.Close()
-                                Msg.Text = "このデータは他のユーザーによって編集されました。その内容を確認し再度編集をお願いします"
-                            End If
-                        Else
-                            DBReader.Close()
-                        End If
-                    Else
-                        '[Productの存在チェック]-----------------------------------------------------------
-                        DBCommand.CommandText = "SELECT ProductID FROM dbo.Product WHERE ProductNumber = '" & ProductNumber.Text.ToString & "'"
-                        DBReader = DBCommand.ExecuteReader()
-                        DBCommand.Dispose()
-                        If DBReader.Read = True Then
-                            Msg.Text = "このデータはすでに登録済です。その内容を確認し再度処理をお願いします"
-                        End If
-                        DBReader.Close()
+        '[Actionチェック]--------------------------------------------------------------
+        If Action.Value <> "Save" Then
+            Msg.Text = "Saveは拒否されました"
+            Exit Sub
+        End If
 
-                        If Msg.Text.ToString = "" Then
-                            '[Product追加処理]-----------------------------------------------------------------------
-                            st_SqlStr = "INSERT INTO Product (ProductNumber,NumberType,Name,QuoName,JapaneseName,ChineseName,CASNumber,MolecularFormula,Status,ProposalDept,ProcumentDept,PD,Reference,Comment,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ("
-                            If ProductNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + ProductNumber.Text.ToString + "',"
-                            st_SqlStr = st_SqlStr + "'" + NumberType + "',"
-                            If ProductName.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + ProductName.Text.ToString + "',"
-                            If QuoName.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + QuoName.Text.ToString + "',"
-                            st_SqlStr = st_SqlStr + "null,null,"
-                            If CASNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + CASNumber.Text.ToString + "',"
-                            If MolecularFormula.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + MolecularFormula.Text.ToString + "',"
-                            st_SqlStr = st_SqlStr + "null,null,null,null,"
-                            If Reference.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + Reference.Text.ToString + "',"
-                            If Comment.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + Comment.Text.ToString + "',"
-                            st_SqlStr = st_SqlStr + Session("UserID") + ",'" + Now() + "'," + Session("UserID") + ",'" + Now() + "')"
-                            DBCommand.CommandText = st_SqlStr
-                            DBCommand.ExecuteNonQuery()
-                            Msg.Text = "表示データを登録しました"
+        '[必須項目入力チェック]--------------------------------------------------------
+        If ProductNumber.Text.ToString = "" Or ProductName.Text.ToString = "" Then
+            Msg.Text = "必須項目を入力して下さい"
+            Exit Sub
+        End If
 
-                            '[新規登録されたProductIDの取得]--------------------------------------------------
-                            DBCommand.CommandText = "Select @@IDENTITY as ProductID"
-                            DBReader = DBCommand.ExecuteReader()
-                            DBCommand.Dispose()
-                            If DBReader.Read = True Then
-                                ProductID.Value = DBReader("ProductID")
-                            End If
-                            DBReader.Close()
-                            '[引き続き更新処理ができるようにUpdateDate設定]----------------------------------
-                            DBCommand.CommandText = "SELECT UpdateDate FROM dbo.Product WHERE (ProductID = " + ProductID.Value + ")"
-                            DBReader = DBCommand.ExecuteReader()
-                            DBCommand.Dispose()
-                            If DBReader.Read = True Then
-                                UpdateDate.Value = DBReader("UpdateDate") '[同時更新チェック用]
-                            End If
-                            stAction.Value = "Edit"
-                        End If
+        '[CASNumberチェック]-----------------------------------------------------------
+        NumberType = ""
+        If TCICommon.Func.IsCASNumber(ProductNumber.Text.ToString) = True Then NumberType = "CAS"
+        If TCICommon.Func.IsProductNumber(ProductNumber.Text.ToString) = True Then NumberType = "TCI"
+        If TCICommon.Func.IsNewProductNumber(ProductNumber.Text.ToString) = True Then NumberType = "NEW"
+        If NumberType = "" Then
+            Msg.Text = "ProductNumberTypeが決定できません"
+            Exit Sub
+        End If
+
+        If CASNumber.Text <> "" Then
+            If TCICommon.Func.IsCASNumber(CASNumber.Text.ToString) = False Then
+                Msg.Text = "ERROR CAS_Number"
+                Exit Sub
+            Else
+                If NumberType = "CAS" Then
+                    If ProductNumber.Text <> CASNumber.Text Then
+                        Msg.Text = "ProductNumberとCAS_Numberが異なります"
+                        Exit Sub
+                    End If
+                End If
+            End If
+        End If
+
+        '[Save処理]--------------------------------------------------------------------
+        If stAction.Value = "Edit" Then
+            '[ProductのUpdateDateチェック]-----------------------------------------------------------
+            DBCommand.CommandText = "SELECT UpdateDate FROM dbo.Product WHERE ProductID = '" & ProductID.Value & "'"
+            DBReader = DBCommand.ExecuteReader()
+            DBCommand.Dispose()
+            If DBReader.Read = True Then
+                If Common.GetUpdateDate("Product", "ProductID", ProductID.Value) = UpdateDate.Value Then
+                    DBReader.Close()
+                    '[Product更新処理]---------------------------------------------------------------
+                    st_SqlStr = "UPDATE dbo.Product SET ProductNumber="
+                    If ProductNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & ProductNumber.Text.ToString & "',"
+                    st_SqlStr = st_SqlStr + "NumberType='" + NumberType + "',"
+                    st_SqlStr = st_SqlStr & "Name="
+                    If ProductName.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & ProductName.Text.ToString & "',"
+                    st_SqlStr = st_SqlStr & "QuoName="
+                    If QuoName.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & QuoName.Text.ToString & "',"
+                    st_SqlStr = st_SqlStr & "CASNumber="
+                    If CASNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & CASNumber.Text.ToString & "',"
+                    st_SqlStr = st_SqlStr & "MolecularFormula="
+                    If MolecularFormula.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & MolecularFormula.Text.ToString & "',"
+                    st_SqlStr = st_SqlStr & "Reference="
+                    If Reference.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & Reference.Text.ToString & "',"
+                    st_SqlStr = st_SqlStr & "Comment="
+                    If Comment.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & Comment.Text.ToString & "',"
+                    st_SqlStr = st_SqlStr & "UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "' "
+                    st_SqlStr = st_SqlStr & "WHERE ProductID = '" & ProductID.Value & "'"
+                    DBCommand.CommandText = st_SqlStr
+                    DBCommand.ExecuteNonQuery()
+                    Msg.Text = "表示データを更新しました"
+
+                    '[引き続き更新処理ができるようにUpdateDate設定]----------------------------------
+                    DBCommand.CommandText = "SELECT UpdateDate FROM dbo.Product WHERE (ProductID = " + ProductID.Value + ")"
+                    DBReader = DBCommand.ExecuteReader()
+                    DBCommand.Dispose()
+                    If DBReader.Read = True Then
+                        UpdateDate.Value = DBReader("UpdateDate") '[同時更新チェック用]
                     End If
                 Else
-                    Msg.Text = "必須項目を入力して下さい"
+                    DBReader.Close()
+                    Msg.Text = "このデータは他のユーザーによって編集されました。その内容を確認し再度編集をお願いします"
                 End If
             Else
-                Msg.Text = "ProductNumberTypeが決定できません"
+                DBReader.Close()
             End If
         Else
-            Msg.Text = "Saveは拒否されました"
+            '[Productの存在チェック]-----------------------------------------------------------
+            DBCommand.CommandText = "SELECT ProductID FROM dbo.Product WHERE ProductNumber = '" & ProductNumber.Text.ToString & "'"
+            DBReader = DBCommand.ExecuteReader()
+            DBCommand.Dispose()
+            If DBReader.Read = True Then
+                Msg.Text = "このデータはすでに登録済です。その内容を確認し再度処理をお願いします"
+            End If
+            DBReader.Close()
+
+            If Msg.Text.ToString = "" Then
+                '[Product追加処理]-----------------------------------------------------------------------
+                st_SqlStr = "INSERT INTO Product (ProductNumber,NumberType,Name,QuoName,JapaneseName,ChineseName,CASNumber,MolecularFormula,Status,ProposalDept,ProcumentDept,PD,Reference,Comment,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ("
+                If ProductNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + ProductNumber.Text.ToString + "',"
+                st_SqlStr = st_SqlStr + "'" + NumberType + "',"
+                If ProductName.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + ProductName.Text.ToString + "',"
+                If QuoName.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + QuoName.Text.ToString + "',"
+                st_SqlStr = st_SqlStr + "null,null,"
+                If CASNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + CASNumber.Text.ToString + "',"
+                If MolecularFormula.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + MolecularFormula.Text.ToString + "',"
+                st_SqlStr = st_SqlStr + "null,null,null,null,"
+                If Reference.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + Reference.Text.ToString + "',"
+                If Comment.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + Comment.Text.ToString + "',"
+                st_SqlStr = st_SqlStr + Session("UserID") + ",'" + Now() + "'," + Session("UserID") + ",'" + Now() + "')"
+                DBCommand.CommandText = st_SqlStr
+                DBCommand.ExecuteNonQuery()
+                Msg.Text = "表示データを登録しました"
+
+                '[新規登録されたProductIDの取得]--------------------------------------------------
+                DBCommand.CommandText = "Select @@IDENTITY as ProductID"
+                DBReader = DBCommand.ExecuteReader()
+                DBCommand.Dispose()
+                If DBReader.Read = True Then
+                    ProductID.Value = DBReader("ProductID")
+                End If
+                DBReader.Close()
+                '[引き続き更新処理ができるようにUpdateDate設定]----------------------------------
+                DBCommand.CommandText = "SELECT UpdateDate FROM dbo.Product WHERE (ProductID = " + ProductID.Value + ")"
+                DBReader = DBCommand.ExecuteReader()
+                DBCommand.Dispose()
+                If DBReader.Read = True Then
+                    UpdateDate.Value = DBReader("UpdateDate") '[同時更新チェック用]
+                End If
+                stAction.Value = "Edit"
+            End If
         End If
     End Sub
 
