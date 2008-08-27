@@ -71,7 +71,12 @@ window.onload = function() {
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
                                 
                                 
-                                SelectCommand="SELECT DISTINCT s_Region.RegionCode, s_Region.Name FROM s_Region INNER JOIN Supplier ON s_Region.RegionCode = Supplier.RegionCode WHERE (s_Region.CountryCode = @Country) ORDER BY s_Region.Name">
+                                SelectCommand="SELECT DISTINCT RegionCode, Name
+FROM                     s_Region
+WHERE                   (RegionCode IN
+                                      (SELECT DISTINCT RegionCode
+                                            FROM                     Supplier
+                                            WHERE                   (CountryCode = @Country))) AND (CountryCode = @Country) ORDER BY s_Region.Name">
                                 <SelectParameters>
                                     <asp:ControlParameter ControlID="Country" Name="Country" 
                                         PropertyName="SelectedValue" />
