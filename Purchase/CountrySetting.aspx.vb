@@ -73,7 +73,8 @@
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
                 If DBReader.Read = True Then
-                    UpdateDate.Value = DBReader("UpdateDate")
+                    'TODO ToStringで臨時対応
+                    UpdateDate.Value = DBReader("UpdateDate").ToString()
                 End If
             Else
                 Code.CssClass = ""
@@ -128,7 +129,8 @@
                         DBReader = DBCommand.ExecuteReader()
                         DBCommand.Dispose()
                         If DBReader.Read = True Then
-                            If DBReader("UpdateDate") = UpdateDate.Value Then
+                            'TODO ToStringで臨時対応
+                            If DBReader("UpdateDate").ToString() = UpdateDate.Value Then
                                 DBReader.Close()
                                 If Location.Text.ToString <> "Direct" Then
                                     DBCommand.CommandText = "SELECT LocationCode FROM dbo.s_Location WHERE Name = '" & Location.Text.ToString & "'"
