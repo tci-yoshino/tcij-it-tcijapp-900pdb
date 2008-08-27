@@ -21,7 +21,7 @@
     <%Else%>
         <div class="tabs">
             <a href="./RFQIssue.aspx?SupplierCode=<%Response.Write(st_SupplierCode)%>">RFQ Issue</a>
-            | <a href="#" onclick="popup('./SupplierSetting.aspx?Action=Edit&SupplierCode=<%Response.Write(st_SupplierCode)%>')">Supplier Setting</a>
+            | <a href="#" onclick="popup('./SupplierSetting.aspx?Action=Edit&Code=<%Response.Write(st_SupplierCode)%>')">Supplier Setting</a>
         </div>
 
         <h3><asp:Label ID="SupplierCode" runat="server" Text=""></asp:Label><span class="indent"><asp:Label ID="SupplierName" runat="server" Text=""></asp:Label></span></h3>

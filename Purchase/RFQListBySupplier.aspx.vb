@@ -25,7 +25,7 @@
         ' Supplier 情報取得
         Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
             Dim st_query As String = _
-                  "SELECT SupplierCode, Name3, Name4, " _
+                  "SELECT SupplierCode, LTRIM(RTRIM(ISNULL(Name3, '') + ' ' + ISNULL(Name4, ''))) AS Name, " _
                 & "       Address1, Address2, Address3, PostalCode, Telephone, Fax, Email, " _
                 & "       Website, v_Country.CountryName " _
                 & "FROM Supplier,v_Country " _
@@ -47,7 +47,7 @@
 
                 ' 読込んだデータを各 Label に設定。
                 SupplierCode.Text = reader("SupplierCode")
-                SupplierName.Text = reader("Name3").ToString() & " " & reader("Name4").ToString()
+                SupplierName.Text = reader("Name").ToString()
                 Address1.Text = reader("Address1").ToString()
                 Address2.Text = reader("Address2").ToString()
                 Address3.Text = reader("Address3").ToString()
