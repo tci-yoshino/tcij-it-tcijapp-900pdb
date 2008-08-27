@@ -6,10 +6,10 @@ Partial Public Class RFQIssue
     Private DBConn As New SqlConnection
     Private DBCommand As SqlCommand
     'エラーメッセージ(入力値不正)
-    Private Const ERR_INCORRECT_SUPPLIERCODE As String = "SupplierCode" & ERR_INCORRECT_FORMAT
-    Private Const ERR_INCORRECT_MAKERCODE As String = "MakerCode" & ERR_INCORRECT_FORMAT
-    Private Const ERR_INCORRECT_ENQQUANTITY As String = "Enq-Quantity" & ERR_INCORRECT_FORMAT
-    Private Const ERR_INCORRECT_PRODUCTNUMBER As String = "ProductNumber" & ERR_INCORRECT_FORMAT
+    Private Const ERR_INCORRECT_SUPPLIERCODE As String = "Supplier Code はマスタに存在しません。"
+    Private Const ERR_INCORRECT_MAKERCODE As String = "Maker Code はマスタに存在しません。"
+    Private Const ERR_INCORRECT_ENQQUANTITY As String = "Enq-Quantity の入力値が不正です。Enq-Quantity は全て入力、もしくは全て空白で登録してください。"
+    Private Const ERR_INCORRECT_PRODUCTNUMBER As String = "Product Number はマスタに存在しません。"
     'エラーメッセージ(必須入力項目なし)
     Private Const ERR_REQUIRED_ENQLOCATION As String = "Enq-Location" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_ENQUSER As String = "Enq-User" & ERR_REQUIRED_FIELD
@@ -17,7 +17,8 @@ Partial Public Class RFQIssue
     Private Const ERR_REQUIRED_SUPPLIERCODE As String = "SupplierCode" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_QUOLOCATION As String = "Quo-Location" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_PURPOSE As String = "Purpose" & ERR_REQUIRED_FIELD
-    Private Const ERR_REQUIRED_ENQQUANTITY As String = "Enq-Quantity" & ERR_REQUIRED_FIELD
+    Private Const ERR_REQUIRED_ENQQUANTITY As String = "Enq-Quantity は最低1件登録する必要があります。入力値をお確かめのうえ、再度登録してください。 "
+    Private Const ERR_ISCASNUMBER As String = "Product Number 欄に CAS 登録番号を入力して見積依頼を作成することはできません。"
     Protected Parameter As Boolean = True
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -324,6 +325,9 @@ Partial Public Class RFQIssue
         End If
         If ProductNumber.Text = "" Then
             Msg.Text = ERR_REQUIRED_PRODUCTNUMBER
+            Return False
+        ElseIf TCICommon.Func.IsCASNumber(ProductNumber.Text) = True Then
+            Msg.Text = ERR_ISCASNUMBER
             Return False
         End If
         If SupplierCode.Text = "" Then
