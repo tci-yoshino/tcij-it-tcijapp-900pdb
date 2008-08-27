@@ -214,13 +214,13 @@ Partial Public Class SuppliersProductImport
             conn = New SqlConnection(DB_CONNECT_STRING)
             Dim cmd As SqlCommand = conn.CreateCommand()
 
-            cmd.CommandText = "SELECT Name3 FROM Supplier WHERE SupplierCode = @SupplierCode"
+            cmd.CommandText = "SELECT Name3,Name4 FROM Supplier WHERE SupplierCode = @SupplierCode"
             cmd.Parameters.AddWithValue("SupplierCode", SupplierCode)
 
             conn.Open()
             Dim dr As SqlDataReader = cmd.ExecuteReader()
             If dr.Read = True Then
-                st_supplierName = dr("Name3").ToString()
+                st_supplierName = dr("Name3").ToString() & " " & dr("Name4").ToString()
             End If
         Catch ex As Exception
             Throw
