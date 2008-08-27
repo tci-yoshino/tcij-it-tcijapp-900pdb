@@ -162,10 +162,11 @@ Partial Public Class POUpdate
                 Exit Sub
             End If
             ClearForm()
+
             ViewPOInformationToForm(CInt(st_PONumber))
 
             POCorrespondence.OnClientClick = String.Format("popup('./POCorrespondence.aspx?PONumber={0}')", st_PONumber)
-            ChiPOIssue.NavigateUrl = String.Format("./POIssue.aspx?PONumber={0}", st_PONumber)
+            ChiPOIssue.NavigateUrl = String.Format("./RFQSelect.aspx?ParPONumber={0}", st_PONumber)
 
         End If
     End Sub
@@ -294,7 +295,7 @@ Partial Public Class POUpdate
         POUser.Text = POInformation.POUserName
         POLocation.Text = POInformation.POLocationName
         ProductNumber.Text = POInformation.ProductNumber
-        'ProductNameは表示時に35文字制限があります
+        'ProductNameは表示時に40文字制限があります
         ProductName.Text = CutShort(POInformation.ProductName)
 
         OrderQuantity.Text = NullableDecimalToString(POInformation.OrderQuantity, FORMAT_DECIMAL)
@@ -680,6 +681,7 @@ Partial Public Class POUpdate
                 PoInformation.PurchasingRequisitionNumber = dr("PurchasingRequisitionNumber").ToString()
                 PoInformation.isCancelled = DBObjToNullableBoolean(dr("isCancelled"))
                 PoInformation.CancellationDate = DBObjToNullableDateTime(dr("CancellationDate"))
+                PoInformation.RFQNumber = DBObjToNullableInt(dr("RFQNumber"))
                 PoInformation.RFQLineNumber = DBObjToNullableInt(dr("RFQLineNumber"))
                 PoInformation.ParPONumber = DBObjToNullableInt(dr("ParPONumber"))
                 PoInformation.StatusCode = dr("StatusCode").ToString()
@@ -836,6 +838,7 @@ Partial Public Class POUpdate
             cmd.Parameters.AddWithValue("PurchasingRequisitionNumber", NullableVariableToDBObject(POInfomation.PurchasingRequisitionNumber))
             cmd.Parameters.AddWithValue("isCancelled", NullableVariableToDBObject(POInfomation.isCancelled))
             cmd.Parameters.AddWithValue("CancellationDate", NullableVariableToDBObject(POInfomation.CancellationDate))
+            cmd.Parameters.AddWithValue("RFQNumber", NullableVariableToDBObject(POInfomation.RFQNumber))
             cmd.Parameters.AddWithValue("RFQLineNumber", NullableVariableToDBObject(POInfomation.RFQLineNumber))
             cmd.Parameters.AddWithValue("ParPONumber", NullableVariableToDBObject(POInfomation.ParPONumber))
             cmd.Parameters.AddWithValue("CreatedBy", NullableVariableToDBObject(POInfomation.CreatedBy))
@@ -902,6 +905,7 @@ Partial Public Class POUpdate
         sb_SQL.Append("	PurchasingRequisitionNumber = @PurchasingRequisitionNumber, ")
         sb_SQL.Append("	isCancelled = @isCancelled, ")
         sb_SQL.Append("	CancellationDate = @CancellationDate, ")
+        sb_SQL.Append("	RFQNumber = @RFQNumber, ")
         sb_SQL.Append("	RFQLineNumber = @RFQLineNumber, ")
         sb_SQL.Append("	ParPONumber = @ParPONumber, ")
         sb_SQL.Append("	UpdatedBy = @UpdatedBy, ")
