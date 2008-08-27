@@ -16,15 +16,6 @@ Option Explicit On
 Partial Public Class RFQSearchBySupplier
 
     '''<summary>
-    '''Msg コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
-
-    '''<summary>
     '''SearchForm コントロール。
     '''</summary>
     '''<remarks>
@@ -32,6 +23,15 @@ Partial Public Class RFQSearchBySupplier
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents SearchForm As Global.System.Web.UI.HtmlControls.HtmlForm
+
+    '''<summary>
+    '''Msg コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
     '''SupplierCode コントロール。
@@ -70,6 +70,15 @@ Partial Public Class RFQSearchBySupplier
     Protected WithEvents Country As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
+    '''SDS_SBS_Country コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SDS_SBS_Country As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
     '''Region コントロール。
     '''</summary>
     '''<remarks>
@@ -77,6 +86,15 @@ Partial Public Class RFQSearchBySupplier
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Region As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''SDS_SBS_Region コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SDS_SBS_Region As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
     '''Search コントロール。

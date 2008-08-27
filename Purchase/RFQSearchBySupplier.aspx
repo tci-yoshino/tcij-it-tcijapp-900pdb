@@ -20,6 +20,8 @@ window.onload = function() {
     </script>
 </head>
 <body>
+            
+            <form id="SearchForm" runat="server">
 <!-- Main Content Area -->
     <div id="content">
         <div class="tabs"><a href="#" onclick="popup('./SupplierSetting.aspx')">New Supplier</a></div>
@@ -29,7 +31,6 @@ window.onload = function() {
         <div class="main">
             <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
             
-            <form id="SearchForm" runat="server">
                 <table>
 					<tr>
 						<th>Supplier Code : </th>
@@ -46,23 +47,41 @@ window.onload = function() {
                     <tr>
                         <th>Country : </th>
                         <td>
-                            <asp:DropDownList ID="Country" runat="server">
+                            <asp:DropDownList ID="Country" runat="server" AppendDataBoundItems="True" 
+                                AutoPostBack="True" DataSourceID="SDS_SBS_Country" DataTextField="CountryName" 
+                                DataValueField="CountryCode">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
+                            <asp:SqlDataSource ID="SDS_SBS_Country" runat="server" 
+                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+                                
+                                SelectCommand="SELECT CountryCode, CountryName FROM v_Country WHERE (CountryCode IN (SELECT DISTINCT SupplierCountryCode AS CountryCode FROM v_RFQHeader WHERE (SupplierCountryCode IS NOT NULL) UNION SELECT DISTINCT MakerCountryCode FROM v_RFQHeader AS v_RFQHeader_1 WHERE (SupplierCountryCode IS NOT NULL))) ORDER BY CountryName">
+                            </asp:SqlDataSource>
                         </td>
                     </tr>
                     <tr>
                         <th>Region : </th>
                         <td>
-                            <asp:DropDownList ID="Region" runat="server">
+                            <asp:DropDownList ID="Region" runat="server" AppendDataBoundItems="True" 
+                                DataSourceID="SDS_SBS_Region" DataTextField="Name" DataValueField="RegionCode">
+                                <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
+                            <asp:SqlDataSource ID="SDS_SBS_Region" runat="server" 
+                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+                                
+                                SelectCommand="SELECT RegionCode, Name FROM s_Region WHERE (CountryCode = @Country) AND (RegionCode IN (SELECT DISTINCT RegionCode FROM Supplier WHERE (SupplierCode IN (SELECT DISTINCT SupplierCode FROM v_RFQHeader WHERE (SupplierCode IS NOT NULL) UNION SELECT DISTINCT MakerCode FROM v_RFQHeader AS v_RFQHeader_1 WHERE (MakerCode IS NOT NULL))) AND (RegionCode IS NOT NULL))) ORDER BY Name">
+                                <SelectParameters>
+                                    <asp:ControlParameter ControlID="Country" Name="Country" 
+                                        PropertyName="SelectedValue" />
+                                </SelectParameters>
+                            </asp:SqlDataSource>
                         </td>
                     </tr>
                 </table>
 
 				<asp:Button ID="Search" runat="server" Text="Search" />
 				<input type="button" value="Clear" onclick="clearForm('SearchForm');" />
-            </form>
-        </div>
+            </div>
 
         <hr />
 
@@ -84,9 +103,9 @@ window.onload = function() {
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr style="">
-                        <td><asp:Label ID="SupplierCode" runat="server" Text='' /></td>
-                        <td><asp:Label ID="R3SupplierCode" runat="server" Text='' /></td>
-                        <td><asp:Label ID="SupplierName" runat="server" Text='' /></td>
+                        <td><asp:HyperLink ID="SupplierCode" runat="server" NavigateUrl='<%#Eval("SupplierCode","./RFQListBySupplier.aspx?SupplierCode={0}")%>' Text = '<%#Eval("SupplierCode")%>' /></td>
+                        <td><asp:HyperLink ID="R3SupplierCode" runat="server" NavigateUrl='<%#Eval("SupplierCode","./RFQListBySupplier.aspx?SupplierCode={0}")%>' Text = '<%#Eval("R3SupplierCode")%>' /></td>
+                        <td><asp:HyperLink ID="SupplierName" runat="server" NavigateUrl='<%#Eval("SupplierCode","./RFQListBySupplier.aspx?SupplierCode={0}")%>' Text = '<%#Eval("SupplierName")%>' /></td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>
@@ -97,5 +116,6 @@ window.onload = function() {
 
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
-</body>
+            </form>
+        </body>
 </html>
