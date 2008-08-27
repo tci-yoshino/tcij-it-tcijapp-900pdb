@@ -88,8 +88,8 @@
                 If DBReader.Read = True Then
                     If Not TypeOf DBReader("SupplierItemNumber") Is DBNull Then SupplierItemNumber.Text = DBReader("SupplierItemNumber")
                     If Not TypeOf DBReader("Note") Is DBNull Then Note.Text = DBReader("Note")
-                    UpdateDate.Value = DBReader("UpdateDate")
-                Else
+                    UpdateDate.Value = DBReader("UpdateDate").ToString()
+                 Else
                     UpdateDate.Value = ""
                 End If
                 DBReader.Close()
@@ -153,7 +153,8 @@
                         DBCommand.Dispose()
                         If DBReader.Read = True Then
                             If Request.QueryString("Action") = "Edit" Then
-                                If DBReader("UpdateDate") = UpdateDate.Value Then
+                                If DBReader("UpdateDate").ToString() = UpdateDate.Value Then
+
                                     '[Supplier_Product更新]---------------------------------------------------------
                                     DBReader.Close()
                                     st_SQLSTR = "UPDATE Supplier_Product SET SupplierItemNumber="
