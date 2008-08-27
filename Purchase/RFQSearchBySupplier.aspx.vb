@@ -169,7 +169,7 @@ Partial Public Class RFQSearchBySupplier
         End If
 
         sb_SQL.Append(sb_SQLConditional.ToString())
-
+        sb_SQL.Append(" ORDER BY SupplierCode ")
         Return sb_SQL.ToString()
 
     End Function
