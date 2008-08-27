@@ -43,25 +43,34 @@
         DBConn.Open()
         DBCommand = DBConn.CreateCommand()
 
-        If Request.QueryString("Supplier") <> "" Then
-            If IsPostBack = False Then
-                SupplierCode.Text = Request.QueryString("Supplier")
-                DBCommand.CommandText = "SELECT Name3 FROM Supplier WHERE (SupplierCode = '" & SupplierCode.Text.ToString & "')"
-                DBReader = DBCommand.ExecuteReader()
-                DBCommand.Dispose()
-                If DBReader.Read = True Then
-                    SupplierName.Text = DBReader("Name3")
-                End If
-                DBReader.Close()
-                SrcSupplierProduct.SelectCommand = "SELECT Product.ProductID,Product.ProductNumber, CASE WHEN NOT Product.QuoName IS NULL THEN Product.QuoName ELSE Product.Name END AS ProductName, Supplier_Product.SupplierItemNumber, Supplier_Product.Note, REPLACE(CONVERT(char, Supplier_Product.UpdateDate, 111), '/', '-') AS UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&Supplier=" + SupplierCode.Text.ToString + "&Product='+rtrim(ltrim(str(Product.ProductID))) AS Url " & _
-                                                   "FROM Supplier_Product LEFT OUTER JOIN Product ON Supplier_Product.ProductID = Product.ProductID " & _
-                                                   "WHERE (Supplier_Product.SupplierCode = '" & SupplierCode.Text.ToString & "')"
+        If Not IsPostBack Then
+            '[QueryString("Supplier")のチェック]----------------------------------------------
+            If Request.QueryString("Supplier") = "" Then
+                SrcSupplierProduct.SelectCommand = ""
                 SupplierProductList.DataBind()
+                Msg.Text = "SupplierCodeが設定されていません"
+                Exit Sub
             End If
-        Else
-            SrcSupplierProduct.SelectCommand = ""
+
+            SupplierCode.Text = Request.QueryString("Supplier")
+            DBCommand.CommandText = "SELECT Name3,Name4 FROM Supplier WHERE (SupplierCode = '" & SupplierCode.Text.ToString & "')"
+            DBReader = DBCommand.ExecuteReader()
+            DBCommand.Dispose()
+            If DBReader.Read = True Then
+                If Not TypeOf DBReader("Name3") Is DBNull Then SupplierName.Text = DBReader("Name3")
+                If Not TypeOf DBReader("Name4") Is DBNull Then
+                    If SupplierName.Text = String.Empty Then
+                        SupplierName.Text = DBReader("Name4")
+                    Else
+                        SupplierName.Text = SupplierName.Text & " " & DBReader("Name4")
+                    End If
+                End If
+            End If
+            DBReader.Close()
+            SrcSupplierProduct.SelectCommand = "SELECT Product.ProductID,Product.ProductNumber, CASE WHEN NOT Product.QuoName IS NULL THEN Product.QuoName ELSE Product.Name END AS ProductName, Supplier_Product.SupplierItemNumber, Supplier_Product.Note, REPLACE(CONVERT(char, Supplier_Product.UpdateDate, 111), '/', '-') AS UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&Supplier=" + SupplierCode.Text.ToString + "&Product='+rtrim(ltrim(str(Product.ProductID))) AS Url " & _
+                                               "FROM Supplier_Product LEFT OUTER JOIN Product ON Supplier_Product.ProductID = Product.ProductID " & _
+                                               "WHERE (Supplier_Product.SupplierCode = '" & SupplierCode.Text.ToString & "')"
             SupplierProductList.DataBind()
-            Msg.Text = "SupplierCodeが設定されていません"
         End If
     End Sub
 
