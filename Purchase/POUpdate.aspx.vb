@@ -45,8 +45,6 @@ Partial Public Class POUpdate
 
     Const FORMAT_DECIMAL As String = "G29"
 
-    Const LENGTH_PRODUCT_NAMES As Integer = 35
-
 
 #End Region
 
@@ -297,7 +295,7 @@ Partial Public Class POUpdate
         POLocation.Text = POInformation.POLocationName
         ProductNumber.Text = POInformation.ProductNumber
         'ProductNameは表示時に35文字制限があります
-        ProductName.Text = POInformation.ProductName.Substring(0, LENGTH_PRODUCT_NAMES)
+        ProductName.Text = CutShort(POInformation.ProductName)
 
         OrderQuantity.Text = NullableDecimalToString(POInformation.OrderQuantity, FORMAT_DECIMAL)
         OrderUnit.Text = POInformation.OrderUnitCode
