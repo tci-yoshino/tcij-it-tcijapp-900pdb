@@ -239,6 +239,7 @@
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
         Region.Items.Clear()
+        Region.Items.Add(New ListItem("", ""))
         Do Until DBReader.Read = False
             Region.Items.Add(New ListItem(DBReader("Name"), DBReader("RegionCode")))
         Loop
@@ -285,8 +286,8 @@
         DBCommand.Dispose()
         If DBReader.Read = True Then
             '[Country,Regionにデータ表示]-------------------------------------------------------
-            Country.Text = DBReader("CountryCode")
-            Region.Text = DBReader("RegionCode")
+            If Not TypeOf DBReader("CountryCode") Is DBNull Then Country.Text = DBReader("CountryCode")
+            If Not TypeOf DBReader("RegionCode") Is DBNull Then Region.Text = DBReader("RegionCode")
 
             '[DefaultQuoLocation.Item設定]------------------------------------------------------
             DBCommand2.CommandText = "SELECT QuoLocationCode FROM dbo.IrregularRFQLocation WHERE (SupplierCode = '" & Code.Text.ToString & "')"
