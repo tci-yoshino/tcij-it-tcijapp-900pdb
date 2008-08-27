@@ -50,7 +50,7 @@ function set_Action(action){
                     <tr>
                         <th>File : </th>
                         <td><asp:FileUpload ID="File" runat="server" /> 
-                            <asp:Button ID="Preview" runat="server" Text="Preview" onclientclick="javascript:set_Action('Preview');" /></td>
+                            <asp:Button ID="Preview" runat="server" Text="Preview" UseSubmitBehavior="false" onclientclick="javascript:set_Action('Preview');" /></td>
                     </tr>
                 </table>
 
@@ -80,10 +80,24 @@ function set_Action(action){
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                        <asp:BoundField HeaderText="EHS Status" />
-                        <asp:BoundField HeaderText="Proposal Dept" />
-                        <asp:BoundField HeaderText="Proc.Dept / Manu.Dept" />
+                        <asp:TemplateField HeaderText="EHS Status">
+                            <ItemTemplate>
+                                <%#Eval("EHS Status")%>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
+                        <asp:TemplateField HeaderText="Proposal Dept">
+                            <ItemTemplate>
+                                <%#Eval("Proposal Dept")%>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+             
+                        <asp:TemplateField HeaderText="Proc.Dept / Manu.Dept">
+                            <ItemTemplate>
+                                <%#Eval("Proc_Dept")%>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                                                           
                         <asp:TemplateField HeaderText="AD">
                             <ItemTemplate>
                                 <%#Eval("AD")%>
@@ -112,7 +126,9 @@ function set_Action(action){
                 </asp:GridView>
                 
                 <div class="btns">
-                    <asp:Button ID="Import" runat="server" Text="Import" 
+                    <asp:Button ID="ReCheck" runat="server" Text="ReCheck" UseSubmitBehavior="false" />
+                    <span class="indent"></span>
+                    <asp:Button ID="Import" runat="server" Text="Import" UseSubmitBehavior="false" 
                         onclientclick="javascript:set_Action('Import');" />
                 </div>
             </div>

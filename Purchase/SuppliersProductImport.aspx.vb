@@ -30,6 +30,7 @@ Partial Public Class SuppliersProductImport
     Const MSG_NOT_FILE_SET As String = "読込みファイルが設定されていません"
     Const MSG_NO_SUPPLIER_CODE As String = "SupplierCodeが設定されていません"
     Const MSG_ERR_CAS_NUMBER As String = "ERROR CAS_Number"
+    Const MSG_NOT_TEMP_DIR = "サーバに作業ディレクトリがありません"
 
     ''' <summary>
     ''' SupplierProductList列位置定数
@@ -79,12 +80,8 @@ Partial Public Class SuppliersProductImport
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         If IsPostBack = False Then
-            If True Then
-                'If Request.QueryString("Supplier") <> "" Then
-                'Dim st_SupplierCode = Request.QueryString("Supplier").ToString()
-
-                'テスト実行用ダミーコード
-                Dim st_SupplierCode As String = 1
+            If Request.QueryString("Supplier") <> "" Then
+                Dim st_SupplierCode = Request.QueryString("Supplier").ToString()
 
                 SupplierCode.Text = st_SupplierCode
                 SupplierName.Text = GetSupplierNameBySupplierCode(st_SupplierCode)
@@ -94,6 +91,8 @@ Partial Public Class SuppliersProductImport
                 Preview.Visible = False
                 Import.Visible = False
             End If
+            ReCheck.Visible = False
+            Import.Visible = False
         End If
     End Sub
 
@@ -106,6 +105,10 @@ Partial Public Class SuppliersProductImport
     Protected Sub Preview_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Preview.Click
 
         Msg.Text = String.Empty
+        ReCheck.Visible = False
+        Import.Visible = False
+        SupplierProductList.DataSource = Nothing
+        SupplierProductList.DataBind()
 
         'Actionパラメータの確認
         If Request.Form("Action") <> "Preview" Then
@@ -114,9 +117,7 @@ Partial Public Class SuppliersProductImport
         End If
 
         'ファイルのサーバ存在確認
-        ''TODO 要確認
         If IO.Path.GetFileName(File.PostedFile.FileName) = String.Empty Then
-            ClearSupplierProductList()
             Msg.Text = MSG_NOT_FILE_SET
             Exit Sub
         End If
@@ -125,7 +126,6 @@ Partial Public Class SuppliersProductImport
 
         'ファイルタイプの確認(MIME)
         If pf_UploadFile.ContentType <> "application/vnd.ms-excel" Then
-            ClearSupplierProductList()
             Msg.Text = MSG_NOT_EXCEL_FILE
             Exit Sub
         End If
@@ -133,38 +133,36 @@ Partial Public Class SuppliersProductImport
         'temp Pathパスの設定
         'TODO オリジナルネームの付与
         Dim st_TempPath As String = ConfigurationManager.AppSettings("TempDir")
-        Dim st_ExcelFileName As String = st_TempPath & System.IO.Path.GetFileName(pf_UploadFile.FileName)
+        If System.IO.Directory.Exists(st_TempPath) = False Then
+            Msg.Text = MSG_NOT_TEMP_DIR
+            Exit Sub
+        End If
+
+        Dim st_FuncName As String = ""
+        Dim st_UserID As String = Session("UserID")
+        Dim st_TimeStamp As String = Now.ToString("yyyyMMddHHmmss")
+        Dim st_OrgFileName As String = System.IO.Path.GetFileName(pf_UploadFile.FileName)
+
+
+        'Dim st_ExcelFileName As String = st_TempPath & System.IO.Path.GetFileName(pf_UploadFile.FileName)
+        Dim st_ExcelFileName As String = st_TempPath & st_FuncName & st_UserID & st_TimeStamp & st_OrgFileName
+
         pf_UploadFile.SaveAs(st_ExcelFileName)
         ViewSupplierProductList(st_ExcelFileName)
 
         'サーバ上のファイルを削除
-
-        '
-        If IO.File.Exists(st_ExcelFileName) = True Then
-
-        End If
-
-
+        IO.File.Delete(st_ExcelFileName)
+        
         If SupplierProductList.Rows.Count > 0 Then
+            ReCheck.Visible = True
             Import.Visible = True
+            If SetCASErrorColorToSupplierProductList() > 0 Then
+                Msg.Text = MSG_ERR_CAS_NUMBER
+                Exit Sub
+            End If
         End If
 
     End Sub
-
-
-    ''' <summary>
-    ''' SupplierProductListをクリアします。
-    ''' </summary>
-    ''' <remarks></remarks>
-    Private Sub ClearSupplierProductList()
-
-        SupplierProductList.DataSourceID = String.Empty
-        SupplierProductList.DataSource = String.Empty
-        SupplierProductList.DataBind()
-        Import.Visible = False
-
-    End Sub
-
 
     ''' <summary>
     ''' 指定されたExcelファイルをフォーム上に表示します。
@@ -175,6 +173,14 @@ Partial Public Class SuppliersProductImport
 
         'Excelからデータをテーブルに取り込み
         Dim tb_Excel As DataTable = GetSuppliersProductTableFromExcel(ExcelFileName)
+
+
+
+        If tb_Excel Is Nothing Then
+            SupplierProductList.DataSource = Nothing
+            SupplierProductList.DataBind()
+            Exit Sub
+        End If
 
         '他社扱い情報をテーブルに設定
         SetCompetitorInfometionToTable(tb_Excel)
@@ -192,6 +198,7 @@ Partial Public Class SuppliersProductImport
         'CASNumberエラー行をカラー表示
         SetCASErrorColorToSupplierProductList()
 
+        ''TODO ?? ProductNumber重複チェック
     End Sub
 
     ''' <summary>
@@ -236,17 +243,16 @@ Partial Public Class SuppliersProductImport
         For Each row As GridViewRow In SupplierProductList.Rows
 
             Dim st_CAS = CType(row.FindControl("CASNumber"), TextBox).Text
-
-            If Not IsCASNumber(st_CAS) And st_CAS <> String.Empty Then
+            If Not IsCASNumber(st_CAS) Then
                 row.CssClass = "attention"
                 i_ErrCount += 1
+            Else
+                row.CssClass = ""
             End If
-
         Next
         Return i_ErrCount
 
     End Function
-
 
     ''' <summary>
     ''' テーブル内のチェック項目をHTMLのイメージタグへ置き換えます。
@@ -294,10 +300,19 @@ Partial Public Class SuppliersProductImport
                         st_Separator = "<br/>"
                     End If
 
-                    row("TCI Product Number") &= st_Separator & dr("ProductNumber").ToString()
-                    row("EHS Status") &= st_Separator & dr("Status").ToString()
-                    row("Proposal Dept") &= st_Separator & dr("ProposalDept").ToString()
-                    row("Proc.Dept") &= st_Separator & dr("ProcumentDept").ToString()
+                    '*syusei
+                    'データない時'-'を表示する
+                    'データがあっても表示されていない
+
+                    Dim st_ProductNumber = dr("ProductNumber").ToString()
+                    Dim st_Status = GetEhsPhraseNameByPhID(dr("Status").ToString())
+                    Dim st_ProposalDept = GetEhsPhraseNameByPhID(dr("ProposalDept").ToString())
+                    Dim st_ProcumentDept = GetEhsPhraseNameByPhID(dr("ProcumentDept").ToString())
+
+                    row("TCI Product Number") &= st_Separator & st_ProductNumber
+                    row("EHS Status") &= st_Separator & st_Status
+                    row("Proposal Dept") &= st_Separator & st_ProposalDept
+                    row("Proc_Dept") &= st_Separator & st_ProcumentDept
                     i_DataCount += 1
                 End While
                 dr.Close()
@@ -311,7 +326,6 @@ Partial Public Class SuppliersProductImport
             End If
         End Try
     End Sub
-
 
     ''' <summary>
     ''' Excelからサプライヤー製品データのDataTableを生成します。
@@ -331,22 +345,75 @@ Partial Public Class SuppliersProductImport
         conStrExcel("Extended Properties") = "Excel 8.0;HDR=YES;IMEX=1"
 
         'Excelデータの取得
-        Dim sql As String = "SELECT * FROM [Sheet1$]"
-        Using da As New OleDb.OleDbDataAdapter(sql, conStrExcel.ConnectionString)
-            da.Fill(dsExcel, "SuppliersProductExcel")
-        End Using
+        Try
+            Dim sql As String = "SELECT * FROM [Sheet1$]"
+            Using da As New OleDb.OleDbDataAdapter(sql, conStrExcel.ConnectionString)
+                da.Fill(dsExcel, "SuppliersProductExcel")
+            End Using
+        Catch ex As Exception
+            Msg.Text = "ExcelにSheet1がありません"
+            Return Nothing
+        End Try
+
 
         tbExcel = dsExcel.Tables("SuppliersProductExcel")
+
+        '実験実装　カラム名のコード内設定
+        If tbExcel.Columns.Count < 4 Then
+            Msg.Text = "Excelの列が足りません"
+            Return Nothing
+        End If
+
+
+
+
+        For i As Integer = 0 To tbExcel.Columns.Count - 1
+            tbExcel.Columns(i).ColumnName = "Colume" & i.ToString
+        Next
+
+        tbExcel.Columns(0).ColumnName = "CAS Number"
+        tbExcel.Columns(1).ColumnName = "Supplier Item Number"
+        tbExcel.Columns(2).ColumnName = "Supplier Item Name"
+        tbExcel.Columns(3).ColumnName = "Note"
+
 
         'Excelにないデータフィールドをテーブルに追加
         tbExcel.Columns.Add("TCI Product Number", TYPE_OF_STRING)
         tbExcel.Columns.Add("EHS Status", TYPE_OF_STRING)
         tbExcel.Columns.Add("Proposal Dept", TYPE_OF_STRING)
-        tbExcel.Columns.Add("Proc.Dept", TYPE_OF_STRING)
+        tbExcel.Columns.Add("Proc_Dept", TYPE_OF_STRING)
         tbExcel.Columns.Add("AD", TYPE_OF_STRING)
         tbExcel.Columns.Add("AF", TYPE_OF_STRING)
         tbExcel.Columns.Add("WA", TYPE_OF_STRING)
         tbExcel.Columns.Add("KA", TYPE_OF_STRING)
+
+
+        'データ長エラーチェック
+
+        Dim st_SupplierItemNumber As String
+        Dim st_SupplierItemName As String
+        Dim st_Note As String
+
+        For j As Integer = 0 To tbExcel.Rows.Count - 1
+            st_SupplierItemNumber = tbExcel.Rows(j).Item("Supplier Item Number").ToString()
+            If st_SupplierItemNumber.Length > 128 Then
+                Msg.Text = "Supplier Item Numberの文字数がオーバー"
+                Return Nothing
+            End If
+
+            st_SupplierItemName = tbExcel.Rows(j).Item("Supplier Item Name").ToString()
+            If st_SupplierItemName.Length > 1000 Then
+                Msg.Text = "Supplier Item Nameの文字数がオーバー"
+                Return Nothing
+            End If
+
+            st_Note = tbExcel.Rows(j).Item("Note").ToString()
+            If st_Note.Length > 3000 Then
+                Msg.Text = "Noteの文字数がオーバー"
+                Return Nothing
+            End If
+        Next j
+
 
         Return tbExcel
 
@@ -384,7 +451,6 @@ Partial Public Class SuppliersProductImport
             End If
         End Try
     End Function
-
 
     ''' <summary>
     ''' データテーブルへ他社扱い情報を設定します。
@@ -443,7 +509,6 @@ Partial Public Class SuppliersProductImport
         End Try
     End Function
 
-
     ''' <summary>
     ''' インポートボタンのクリックイベントです。
     ''' </summary>
@@ -457,18 +522,11 @@ Partial Public Class SuppliersProductImport
             Exit Sub
         End If
 
-        'CASNumberのValidate 
-        If SetCASErrorColorToSupplierProductList() > 0 Then
-            Msg.Text = MSG_ERR_CAS_NUMBER
-            Exit Sub
-        End If
-
         'インポート処理の実行
         ImportData()
 
         Response.Redirect("./ProductListBySupplier.aspx?Supplier=" & SupplierCode.Text)
     End Sub
-
 
     ''' <summary>
     ''' 画面に表示された値をデータベースにインポートします。
@@ -490,14 +548,16 @@ Partial Public Class SuppliersProductImport
         Dim sqlTran As SqlTransaction = Nothing
         For Each vrow As GridViewRow In SupplierProductList.Rows
             sqlTran = conn.BeginTransaction()
+
             Try
                 st_CAS = CType(vrow.FindControl("CASNumber"), TextBox).Text
                 st_ItemNo = vrow.Cells(COL_POS_ITEM_NUMBER).Text()
                 st_ItemName = vrow.Cells(COL_POS_ITEM_NAME).Text()
                 st_Note = vrow.Cells(COL_POS_NOTE).Text()
 
-                'CAS番号を空白にした場合は処理対象外とします。
-                If st_CAS = String.Empty Then
+                'CAS番号が正しくない場合は処理対象外とします。
+                If IsCASNumber(st_CAS) = False Then
+                    sqlTran.Rollback()
                     Continue For
                 End If
 
@@ -507,7 +567,7 @@ Partial Public Class SuppliersProductImport
                         st_ProductID = rw("ProductID").ToString()
 
                         If rw("NumberType").ToString() = "CAS" Then
-                            UpdateProduct(st_CAS, st_UserID, st_ProductID, st_CAS, conn, sqlTran)
+                            UpdateProduct(st_ItemName, st_UserID, st_ProductID, st_CAS, conn, sqlTran)
                         End If
 
                         If ExistsSupplierProductData(st_ProductID, SupplierCode.Text) Then
@@ -530,7 +590,6 @@ Partial Public Class SuppliersProductImport
         Next
 
     End Sub
-
 
     ''' <summary>
     ''' Productテーブルから指定したCASNumberのデータをDataTableで取得します。
@@ -597,8 +656,6 @@ Partial Public Class SuppliersProductImport
 
     End Function
 
-
-
     ''' <summary>
     ''' Productテーブルへデータを挿入し、ProductIDを返します。
     ''' </summary>
@@ -639,7 +696,6 @@ Partial Public Class SuppliersProductImport
 
     End Function
 
-
     ''' <summary>
     ''' Product挿入SQL文字列を生成します。
     ''' </summary>
@@ -674,7 +730,6 @@ Partial Public Class SuppliersProductImport
         Return sb_SQL.ToString()
 
     End Function
-
 
     ''' <summary>
     ''' Productテーブルへデータを更新します。
@@ -726,7 +781,6 @@ Partial Public Class SuppliersProductImport
         Return sb_SQL.ToString()
 
     End Function
-
 
     ''' <summary>
     ''' SupplierProductProductテーブルへデータを挿入します。
@@ -796,7 +850,6 @@ Partial Public Class SuppliersProductImport
 
     End Function
 
-
     ''' <summary>
     ''' SupplierProductテーブルを更新します。
     ''' </summary>
@@ -828,7 +881,6 @@ Partial Public Class SuppliersProductImport
 
     End Sub
 
-
     ''' <summary>
     ''' SupplierProduct更新SQL文字列を生成します。
     ''' </summary>
@@ -851,6 +903,10 @@ Partial Public Class SuppliersProductImport
         Return sb_SQL.ToString()
     End Function
 
-
-
+    Protected Sub ReCheck_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ReCheck.Click
+        If SetCASErrorColorToSupplierProductList() > 0 Then
+            Msg.Text = MSG_ERR_CAS_NUMBER
+            Exit Sub
+        End If
+    End Sub
 End Class
