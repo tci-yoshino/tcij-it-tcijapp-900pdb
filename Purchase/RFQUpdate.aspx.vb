@@ -8,8 +8,8 @@ Partial Public Class RFQUpdate
     Public DBCommand As System.Data.SqlClient.SqlCommand
     Public DBAdapter As System.Data.SqlClient.SqlDataAdapter
     'エラーメッセージ(入力値不正)
-    Private Const ERR_INCORRECT_SUPPLIERCODE As String = "SupplierCode" & ERR_INCORRECT_FORMAT
-    Private Const ERR_INCORRECT_MAKERCODE As String = "MakerCode" & ERR_INCORRECT_FORMAT
+    Private Const ERR_INCORRECT_SUPPLIERCODE As String = "Supplier Code はマスタに存在しません。"
+    Private Const ERR_INCORRECT_MAKERCODE As String = "Maker Code はマスタに存在しません。"
     Private Const ERR_INCORRECT_SHIPPINGHANDLINGFEE As String = "ShippingHandlingFee" & ERR_INVALID_NUMBER
     Private Const ERR_INCORRECT_UNITPRICE As String = "UnitPrice" & ERR_INVALID_NUMBER
     Private Const ERR_INCORRECT_QUOPER As String = "Quo-Per" & ERR_INVALID_NUMBER
@@ -18,9 +18,9 @@ Partial Public Class RFQUpdate
     Private Const ERR_REQUIRED_SUPPLIERCODE As String = "SupplierCode" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_QUOUSER As String = "Quo-User" & ERR_REQUIRED_FIELD
     'エラーメッセージ(他ユーザ更新)
-    Private Const ERR_ALREADY_UPDATED As String = "このデータは他のユーザーによって編集されました。その内容を確認し再度編集をお願いします。"
+    Private Const ERR_ALREADY_UPDATED As String = "データは他のユーザによって既に更新されています。ご確認ください。"
     'エラーメッセージ(更新処理失敗)
-    Private Const ERR_GET_RFQDATA_FAILURE As String = "RFQ データの取得に失敗しましたが、エラーが検出されませんでした。"
+    Private Const ERR_GET_RFQDATA_FAILURE As String = "RFQ データの更新に失敗しましたが、エラーが検出されませんでした。"
     'エラーメッセージ(他拠点情報更新)
     Private Const ERR_ANOTHER_LOCATION As String = "他拠点間のRFQ情報は更新できません。"
     '画面表示フラグ
