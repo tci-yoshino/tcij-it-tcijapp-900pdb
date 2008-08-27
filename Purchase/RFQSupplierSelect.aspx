@@ -17,10 +17,8 @@
        
     }
     
-    function returnValues(code, r3code, name3, name4, countryCode, location){
+    function returnValues(code, r3code, name, countryCode, location){
       if(opener){
-        var name = name3 + " " + name4;
-        if (name3 == "") name = name4;
         opener.document.getElementById('SupplierCode').value=code
         opener.document.getElementById('R3SupplierCode').value=r3code
         opener.document.getElementById('SupplierName').value=name
@@ -84,11 +82,10 @@
                     <h3 style="font-style:italic">No match found.</h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onclick="returnValues('<%#Eval("SupplierCode")%>','<%#Eval("R3SupplierCode") %>','<%# Replace(Eval("Name3").ToString(), "'", "\'")%>','<%#Replace(Eval("Name4").ToString(), "'", "\'")%>','<%#Eval("CountryName") %>','<%#If(Eval("QuoLocationCode") = Purchase.Common.DIRECT, st_Location, Eval("QuoLocationCode"))%>');<%=st_js_postback %>">
+                    <tr onclick="returnValues('<%#Eval("SupplierCode")%>','<%#Eval("R3SupplierCode") %>','<%# Replace(Eval("Name").ToString(), "'", "\'")%>','<%#Eval("CountryName") %>','<%#If(Eval("QuoLocationCode") = Purchase.Common.DIRECT, st_Location, Eval("QuoLocationCode"))%>');<%=st_js_postback %>">
                         <td><asp:Label ID="SupplierCode" runat="server" Text='<%#Eval("SupplierCode")%>' /></td>
                         <td>
-                          <asp:Label ID="SupplierName3" runat="server" Text='<%#Eval("Name3")%>' />&nbsp;
-                          <asp:Label ID="SupplierName4" runat="server" Text='<%#Eval("Name4")%>' />
+                          <asp:Label ID="SupplierName3" runat="server" Text='<%#Eval("Name")%>' />
                         </td>
                         <td><asp:Label ID="QuoLocationCode" runat="server" Text='<%#Eval("QuoLocationCode") %>' /></td>
                     </tr>
