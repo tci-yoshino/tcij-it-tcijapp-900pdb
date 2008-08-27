@@ -55,7 +55,8 @@ window.onload = function() {
                             <asp:SqlDataSource ID="SDS_SBS_Country" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
                                 
-                                SelectCommand="SELECT CountryCode, CountryName FROM v_Country WHERE (CountryCode IN (SELECT DISTINCT SupplierCountryCode AS CountryCode FROM v_RFQHeader WHERE (SupplierCountryCode IS NOT NULL) UNION SELECT DISTINCT MakerCountryCode FROM v_RFQHeader AS v_RFQHeader_1 WHERE (SupplierCountryCode IS NOT NULL))) ORDER BY CountryName">
+                                
+                                SelectCommand="SELECT DISTINCT v_Country.CountryCode, v_Country.CountryName FROM v_Country INNER JOIN Supplier ON v_Country.CountryCode = Supplier.CountryCode ORDER BY v_Country.CountryName">
                             </asp:SqlDataSource>
                         </td>
                     </tr>
@@ -69,7 +70,8 @@ window.onload = function() {
                             <asp:SqlDataSource ID="SDS_SBS_Region" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
                                 
-                                SelectCommand="SELECT RegionCode, Name FROM s_Region WHERE (CountryCode = @Country) AND (RegionCode IN (SELECT DISTINCT RegionCode FROM Supplier WHERE (SupplierCode IN (SELECT DISTINCT SupplierCode FROM v_RFQHeader WHERE (SupplierCode IS NOT NULL) UNION SELECT DISTINCT MakerCode FROM v_RFQHeader AS v_RFQHeader_1 WHERE (MakerCode IS NOT NULL))) AND (RegionCode IS NOT NULL))) ORDER BY Name">
+                                
+                                SelectCommand="SELECT DISTINCT s_Region.RegionCode, s_Region.Name FROM s_Region INNER JOIN Supplier ON s_Region.RegionCode = Supplier.RegionCode WHERE (s_Region.CountryCode = @Country) ORDER BY s_Region.Name">
                                 <SelectParameters>
                                     <asp:ControlParameter ControlID="Country" Name="Country" 
                                         PropertyName="SelectedValue" />

@@ -46,9 +46,12 @@ Partial Public Class RFQSearchBySupplier
         SupplierList.Visible = True
         '入力チェック
         If Not IsCheckInput() Then
+            '何も入力されていない場合、「No match found.」を表示するため処理無し。
             Exit Sub
         End If
-
+        'Supplier Code は半角英数のみ
+        SupplierCode.Text = StrConv(SupplierCode.Text, VbStrConv.Narrow)
+        R3SupplierCode.Text = StrConv(R3SupplierCode.Text, VbStrConv.Narrow)
 
         '入力された検索キーを構造体に代入
         Dim st_SearchKey As SearchKey
@@ -84,7 +87,7 @@ Partial Public Class RFQSearchBySupplier
            SupplierName.Text.Trim = String.Empty And _
            Country.SelectedValue = String.Empty And _
            Region.SelectedValue = String.Empty Then
-            '全て空白の場合は処理を実行しない？
+            '検索条件が全て空白の場合
             Return False
         End If
         Return True
@@ -130,15 +133,11 @@ Partial Public Class RFQSearchBySupplier
         sb_SQL.Append("SELECT ")
         'sb_SQL.Append("	rfh.RFQNumber, ")
         sb_SQL.Append("	DISTINCT ")
-        sb_SQL.Append("	rfh.SupplierCode, ")
-        sb_SQL.Append("	rfh.R3SupplierCode, ")
-        sb_SQL.Append("	rfh.SupplierName ")
+        sb_SQL.Append("	SupplierCode, ")
+        sb_SQL.Append("	R3SupplierCode, ")
+        sb_SQL.Append("	LTRIM(RTRIM(ISNULL(Name3, '') + ' ' + ISNULL(Name4, ''))) AS SupplierName ")
         sb_SQL.Append("FROM ")
-        sb_SQL.Append("	v_RFQHeader rfh ")
-        sb_SQL.Append("	LEFT OUTER JOIN ")
-        sb_SQL.Append("	Supplier sr ")
-        sb_SQL.Append("ON ")
-        sb_SQL.Append("	sr.SupplierCode = rfh.SupplierCode ")
+        sb_SQL.Append("	Supplier ")
         sb_SQL.Append("WHERE ")
 
         'スカラ変数にワイルドカードは入らないので、検索キー入力値でSQL条件生成を変化させます。
@@ -146,27 +145,27 @@ Partial Public Class RFQSearchBySupplier
 
         If st_SearchKey.Code <> String.Empty Then
             sb_SQLConditional.Append(IIf(sb_SQLConditional.Length > 0, " AND ", String.Empty))
-            sb_SQLConditional.Append("sr.SupplierCode = @SupplierCode ")
+            sb_SQLConditional.Append("SupplierCode = @SupplierCode ")
         End If
 
         If st_SearchKey.R3Code <> String.Empty Then
             sb_SQLConditional.Append(IIf(sb_SQLConditional.Length > 0, " AND ", String.Empty))
-            sb_SQLConditional.Append("sr.R3SupplierCode = @R3SupplierCode ")
+            sb_SQLConditional.Append("R3SupplierCode = @R3SupplierCode ")
         End If
 
         If st_SearchKey.Name <> String.Empty Then
             sb_SQLConditional.Append(IIf(sb_SQLConditional.Length > 0, " AND ", String.Empty))
-            sb_SQLConditional.Append("(sr.Name1 + N' ' + sr.Name2 LIKE @SupplierName) ")
+            sb_SQLConditional.Append("(Name1 + N' ' + Name2 LIKE @SupplierName) ")
         End If
 
         If st_SearchKey.Country <> String.Empty Then
             sb_SQLConditional.Append(IIf(sb_SQLConditional.Length > 0, " AND ", String.Empty))
-            sb_SQLConditional.Append("sr.CountryCode = @Country ")
+            sb_SQLConditional.Append("CountryCode = @Country ")
         End If
 
         If st_SearchKey.Region <> String.Empty Then
             sb_SQLConditional.Append(IIf(sb_SQLConditional.Length > 0, " AND ", String.Empty))
-            sb_SQLConditional.Append("sr.RegionCode = @RegionCode ")
+            sb_SQLConditional.Append("RegionCode = @RegionCode ")
         End If
 
         sb_SQL.Append(sb_SQLConditional.ToString())
