@@ -110,7 +110,8 @@
         Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
             Dim st_query As String = _
                   "SELECT " _
-                & "  Name3, Name4, s_Country.[Name] AS CountryName " _
+                & "  LTRIM(RTRIM(ISNULL(Supplier.Name3, '') + ' ' + ISNULL(Supplier.Name4, ''))) AS Name, " _
+                & "  s_Country.[Name] AS CountryName " _
                 & "FROM " _
                 & "  Supplier, s_Country " _
                 & "WHERE " _
@@ -128,13 +129,9 @@
 
             ' Label ctrl にデータをセット
             reader.Read()
-            Country.Text = IIf(IsDBNull(reader("CountryName")), "", reader("CountryName"))
-            If IsDBNull(reader("Name3")) Then
-                SupplierName.Text = reader("Name4")
-            Else
-                SupplierName.Text = reader("Name3") & " " & reader("Name4")
-            End If
-
+            Country.Text = reader("CountryName").ToString()
+            SupplierName.Text = reader("Name").ToString()
+            
             reader.Close()
         End Using
     End Sub
