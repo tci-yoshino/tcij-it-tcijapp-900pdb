@@ -68,6 +68,15 @@ Partial Public Class POIssue
             Exit Sub
         End If
 
+        If Not String.IsNullOrEmpty(st_ParPONumber) Then
+            ' 同じ親を持つ子 PO が存在する場合はエラーとします
+            ' ※ブラウザの戻るボタン対策です
+            If ExistenceConfirmation("PO", "ParPONumber", st_ParPONumber) Then
+                Msg.Text = ERR_CHI_PO_ALREADY_EXISTS
+                Exit Sub
+            End If
+        End If
+
         If ValidateField() = False Then
             Exit Sub
         End If
@@ -82,8 +91,7 @@ Partial Public Class POIssue
         Dim de_OrderQuantity As Decimal = 0
         Dim de_PerQuantity As Decimal = 0
         Dim de_UnitPrice As Decimal = 0
-        Dim st_Via As String = ""
-
+        
         Dim sqlConn As New SqlConnection(DB_CONNECT_STRING)
         Dim sqlAdapter As New SqlDataAdapter
         Dim sqlCmd As New SqlCommand(CreateSql_SelectRFQLine(), sqlConn)
@@ -103,7 +111,11 @@ Partial Public Class POIssue
             Return False
         End If
 
-        If IsDBNull(ds.Tables("RFQLine").Rows(0)("UnitPrice")) Then
+        If IsDBNull(ds.Tables("RFQLine").Rows(0)("EnqQuantity")) _
+            Or IsDBNull(ds.Tables("RFQLine").Rows(0)("EnqPiece")) _
+            Or IsDBNull(ds.Tables("RFQLine").Rows(0)("UnitPrice")) _
+            Or IsDBNull(ds.Tables("RFQLine").Rows(0)("QuoPer")) Then
+
             Msg.Text = ERR_NO_QUOTATION_REPLY
             Return False
         End If
@@ -142,7 +154,7 @@ Partial Public Class POIssue
         IncotermsCode.Value = ds.Tables("RFQLine").Rows(0)("IncotermsCode").ToString
 
         ' SqlDataSource
-        SetControl_SrcUser(st_LoginLocationCode)
+        SetControl_SrcUser()
         SetControl_SrcUnit()
         SetControl_SrcSupplier(ds.Tables("RFQLine").Rows(0)("SupplierCode").ToString, ds.Tables("RFQLine").Rows(0)("QuoLocationCode").ToString)
         SetControl_SrcPurpose()
@@ -151,11 +163,11 @@ Partial Public Class POIssue
 
     End Function
 
-    Private Sub SetControl_SrcUser(ByVal LocationCode As String)
+    Private Sub SetControl_SrcUser()
 
         SrcUser.SelectCommand = "SELECT UserID, Name FROM v_User WHERE LocationCode = @LocationCode ORDER BY Name"
         SrcUser.SelectParameters.Clear()
-        SrcUser.SelectParameters.Add("LocationCode", LocationCode)
+        SrcUser.SelectParameters.Add("LocationCode", st_LoginLocationCode)
 
     End Sub
 
@@ -167,23 +179,27 @@ Partial Public Class POIssue
 
     Private Sub SetControl_SrcSupplier(ByVal SupplierCode As String, ByVal LocationCode As String)
         Dim sb_Sql As StringBuilder = New StringBuilder
-        Dim st_Via As String = ""
 
+        ' 検索結果の並び順を固定させるために UNION を使用しています
         sb_Sql.Append("SELECT ")
         sb_Sql.Append("  SupplierCode, ")
-        sb_Sql.Append("  LTRIM(RTRIM(ISNULL(Name1, '') + ' ' + ISNULL(Name2, ''))) AS Name ")
+        sb_Sql.Append("  LTRIM(RTRIM(ISNULL(Name1, '') + ' ' + ISNULL(Name2, ''))) AS Name, ")
+        sb_Sql.Append("  1 AS SortOrder ")
+        sb_Sql.Append("FROM ")
+        sb_Sql.Append("  Supplier ")
+        sb_Sql.Append("WHERE ")
+        sb_Sql.Append("  LocationCode = @LocationCode ")
+        sb_Sql.Append("UNION ")
+        sb_Sql.Append("SELECT ")
+        sb_Sql.Append("  SupplierCode, ")
+        sb_Sql.Append("  LTRIM(RTRIM(ISNULL(Name1, '') + ' ' + ISNULL(Name2, ''))) AS Name, ")
+        sb_Sql.Append("  2 AS SortOrder ")
         sb_Sql.Append("FROM ")
         sb_Sql.Append("  Supplier ")
         sb_Sql.Append("WHERE ")
         sb_Sql.Append("  SupplierCode = @SupplierCode ")
-        sb_Sql.Append("UNION ")
-        sb_Sql.Append("SELECT ")
-        sb_Sql.Append("  SupplierCode, ")
-        sb_Sql.Append("  LTRIM(RTRIM(ISNULL(Name1, '') + ' ' + ISNULL(Name2, ''))) AS Name ")
-        sb_Sql.Append("FROM ")
-        sb_Sql.Append("  Supplier ")
-        sb_Sql.Append("WHERE ")
-        sb_Sql.Append("  LocationCode = @LocationCode")
+        sb_Sql.Append("ORDER BY ")
+        sb_Sql.Append("  SortOrder ")
 
         SrcSupplier.SelectCommand = sb_Sql.ToString
         SrcSupplier.SelectParameters.Clear()
@@ -359,7 +375,7 @@ Partial Public Class POIssue
     End Function
 
     Private Function InsertPO() As Integer
-        Dim st_SOLocationCode As String = ""
+        Dim st_SOLocationCode As String = String.Empty
         Dim obj_PONumber As Object = DBNull.Value
 
         Dim sqlConn As New SqlConnection(DB_CONNECT_STRING)
@@ -368,6 +384,7 @@ Partial Public Class POIssue
         Dim ds As New DataSet
         Dim sqlAdapter As New SqlDataAdapter
 
+        ' 仕入先が現法の場合は SOLocationCode に拠点コードを設定します
         sqlCmd = New SqlCommand(CreateSql_SelectSupplier(), sqlConn)
         sqlAdapter.SelectCommand = sqlCmd
         sqlCmd.Parameters.Add("@SupplierCode", SqlDbType.VarChar).Value = Supplier.SelectedValue

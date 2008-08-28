@@ -20,7 +20,7 @@
             <div class="main">
                 <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 
-<%  If Not String.IsNullOrEmpty(st_RFQLineNumber) And Not String.IsNullOrEmpty(UnitPrice.Text) Then%>
+<%  If Not String.IsNullOrEmpty(st_RFQLineNumber) Then%>
                 <table class="left">
                     <tr>
                         <th>RFQ Reference Number : </th>
@@ -46,11 +46,9 @@
                     <tr>
                         <th>PO-User <span class="required">*</span> : </th>
                         <td>
-                            <asp:DropDownList ID="POUser" runat="server" DataSourceID="SrcUser" 
-                                DataTextField="Name" DataValueField="UserID">
+                            <asp:DropDownList ID="POUser" runat="server" DataSourceID="SrcUser" DataTextField="Name" DataValueField="UserID">
                             </asp:DropDownList>
-                            <asp:SqlDataSource ID="SrcUser" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>">
-                            </asp:SqlDataSource>
+                            <asp:SqlDataSource ID="SrcUser" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
                             (<asp:Label ID="POLocationName" runat="server" Text=""></asp:Label>)
                         </td>
                     </tr>
@@ -63,8 +61,7 @@
                         <th>Order Quantity <span class="required">*</span> : </th>
                         <td>
                             <asp:TextBox ID="OrderQuantity" runat="server" Width="5em" MaxLength="11" CssClass="number"></asp:TextBox>
-                            <asp:DropDownList ID="OrderUnit" runat="server" DataSourceID="SrcUnit" 
-                                DataTextField="UnitCode" DataValueField="UnitCode">
+                            <asp:DropDownList ID="OrderUnit" runat="server" DataSourceID="SrcUnit" DataTextField="UnitCode" DataValueField="UnitCode">
                             </asp:DropDownList>
                             <asp:SqlDataSource ID="SrcUnit" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
                         </td>
@@ -80,8 +77,7 @@
                     <tr>
                         <th>R/3 Supplier Name : </th>
                         <td>
-                            <asp:DropDownList ID="Supplier" runat="server" DataSourceID="SrcSupplier" 
-                                DataTextField="Name" DataValueField="SupplierCode">
+                            <asp:DropDownList ID="Supplier" runat="server" DataSourceID="SrcSupplier" DataTextField="Name" DataValueField="SupplierCode">
                             </asp:DropDownList>
                             <asp:SqlDataSource ID="SrcSupplier" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
                         </td>
@@ -109,8 +105,7 @@
                     <tr>
                         <th>Purpose : </th>
                         <td>
-                            <asp:DropDownList ID="Purpose" runat="server" DataSourceID="SrcPurpose" 
-                                DataTextField="Text" DataValueField="PurposeCode" AppendDataBoundItems="true">
+                            <asp:DropDownList ID="Purpose" runat="server" DataSourceID="SrcPurpose" DataTextField="Text" DataValueField="PurposeCode" AppendDataBoundItems="true">
                                 <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                             <asp:SqlDataSource ID="SrcPurpose" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
