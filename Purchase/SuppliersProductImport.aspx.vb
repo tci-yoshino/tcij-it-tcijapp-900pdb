@@ -89,7 +89,6 @@ Partial Public Class SuppliersProductImport
                 Msg.Text = MSG_NO_SUPPLIER_CODE
                 File.Visible = False
                 Preview.Visible = False
-                Import.Visible = False
             End If
             ReCheck.Visible = False
             Import.Visible = False
@@ -131,7 +130,6 @@ Partial Public Class SuppliersProductImport
         End If
 
         'temp Pathパスの設定
-        'TODO オリジナルネームの付与
         Dim st_TempPath As String = ConfigurationManager.AppSettings("TempDir")
         If System.IO.Directory.Exists(st_TempPath) = False Then
             Msg.Text = MSG_NOT_TEMP_DIR
@@ -143,8 +141,6 @@ Partial Public Class SuppliersProductImport
         Dim st_TimeStamp As String = Now.ToString("yyyyMMddHHmmss")
         Dim st_OrgFileName As String = System.IO.Path.GetFileName(pf_UploadFile.FileName)
 
-
-        'Dim st_ExcelFileName As String = st_TempPath & System.IO.Path.GetFileName(pf_UploadFile.FileName)
         Dim st_ExcelFileName As String = st_TempPath & st_FuncName & st_UserID & st_TimeStamp & st_OrgFileName
 
         pf_UploadFile.SaveAs(st_ExcelFileName)
@@ -173,8 +169,6 @@ Partial Public Class SuppliersProductImport
 
         'Excelからデータをテーブルに取り込み
         Dim tb_Excel As DataTable = GetSuppliersProductTableFromExcel(ExcelFileName)
-
-
 
         If tb_Excel Is Nothing Then
             SupplierProductList.DataSource = Nothing
@@ -300,10 +294,6 @@ Partial Public Class SuppliersProductImport
                         st_Separator = "<br/>"
                     End If
 
-                    '*syusei
-                    'データない時'-'を表示する
-                    'データがあっても表示されていない
-
                     Dim st_ProductNumber = dr("ProductNumber").ToString()
                     Dim st_Status = GetEhsPhraseNameByPhID(dr("Status").ToString())
                     Dim st_ProposalDept = GetEhsPhraseNameByPhID(dr("ProposalDept").ToString())
@@ -364,9 +354,6 @@ Partial Public Class SuppliersProductImport
             Return Nothing
         End If
 
-
-
-
         For i As Integer = 0 To tbExcel.Columns.Count - 1
             tbExcel.Columns(i).ColumnName = "Colume" & i.ToString
         Next
@@ -375,7 +362,6 @@ Partial Public Class SuppliersProductImport
         tbExcel.Columns(1).ColumnName = "Supplier Item Number"
         tbExcel.Columns(2).ColumnName = "Supplier Item Name"
         tbExcel.Columns(3).ColumnName = "Note"
-
 
         'Excelにないデータフィールドをテーブルに追加
         tbExcel.Columns.Add("TCI Product Number", TYPE_OF_STRING)
@@ -387,9 +373,7 @@ Partial Public Class SuppliersProductImport
         tbExcel.Columns.Add("WA", TYPE_OF_STRING)
         tbExcel.Columns.Add("KA", TYPE_OF_STRING)
 
-
         'データ長エラーチェック
-
         Dim st_SupplierItemNumber As String
         Dim st_SupplierItemName As String
         Dim st_Note As String
