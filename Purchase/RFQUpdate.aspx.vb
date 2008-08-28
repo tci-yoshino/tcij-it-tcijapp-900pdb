@@ -302,10 +302,8 @@ Partial Public Class RFQUpdate
             RequiredSpecification.Text = DS.Tables("RFQHeader").Rows(0)("RequiredSpecification").ToString
             If DS.Tables("RFQHeader").Rows(0)("SpecSheet").ToString = True Then
                 SpecSheet.Checked = True
-                SpecSheet.Text = "yes"
             Else
                 SpecSheet.Checked = False
-                SpecSheet.Text = "no"
             End If
             Specification.Text = DS.Tables("RFQHeader").Rows(0)("Specification").ToString
             EnqUser.Text = DS.Tables("RFQHeader").Rows(0)("EnqUserName").ToString
