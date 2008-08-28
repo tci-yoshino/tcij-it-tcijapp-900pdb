@@ -73,17 +73,26 @@
                         </tr>
                         <tr>
                             <th>Sender:</th>
-                            <td><asp:Label ID="SenderLabel" runat="server" Text='<%# Eval("Sender") %>' /></td>
+                            <td>         
+                                <asp:Label ID="SenderLabel" runat="server" Text='<%# Eval("Sender") %>' />
+                                <span class="indent"></span>
+                                <asp:Label ID="SenderLocationLabel" runat="server" Text='<%# Eval("SenderLocation") %>' />
+                            </td>
                         </tr>
                         <tr>
                             <th>Addressee:</th>
-                            <td><asp:Label ID="AddresseeLabel" runat="server" Text='<%# Eval("Addressee") %>' /></td>
+                             <td>
+                                <asp:Label ID="AddresseeLabel" runat="server" Text='<%# Eval("Addressee") %>' />
+                                <span class="indent"></span>
+                                <asp:Label ID="AddresseeLocationLabel" runat="server" Text='<%# Eval("AddresseeLocation") %>' />
+                            </td>
                         </tr>
                         <tr>
                             <th>Notes:</th>
                             <td>
-                                <asp:Label ID="TitleLabel" runat="server" ForeColor="Red" Font-Bold="True" Text='<%# Eval("Title") %>' /><br />
-                                <asp:Label ID="NotesLabel" runat="server" Text='<%# Eval("Notes") %>' />
+                                <asp:Label ID="TitleLabel" runat="server" CssClass="attention" Text='<%# Eval("Title") %>' />
+                                <%#If(IsDBNull(Eval("Title")), "", "<br />")%>
+                                <asp:Label ID="Label1" runat="server" Text='<%# Eval("Notes") %>' />
                             </td>
                         </tr>
                     </table>
@@ -116,17 +125,26 @@
                         </tr>
                         <tr>
                             <th>Sender:</th>
-                            <td><asp:Label ID="SenderLabel" runat="server" Text='<%# Eval("Sender") %>' /></td>
+                            <td>  
+                                <asp:Label ID="SenderLabel" runat="server" Text='<%# Eval("Sender") %>' />
+                                <span class="indent"></span>
+                                <asp:Label ID="SenderLocationLabel" runat="server" Text='<%# Eval("SenderLocation") %>' />
+                            </td>
                         </tr>
                         <tr>
                             <th>Addressee:</th>
-                            <td><asp:Label ID="AddresseeLabel" runat="server" Text='<%# Eval("Addressee") %>' /></td>
+                            <td>
+                                <asp:Label ID="AddresseeLabel" runat="server" Text='<%# Eval("Addressee") %>' />
+                                <span class="indent"></span>
+                                <asp:Label ID="AddresseeLocationLabel" runat="server" Text='<%# Eval("AddresseeLocation") %>' />
+                            </td>
                         </tr>
                         <tr>
                             <th>Notes:</th>
                             <td>
-                                <asp:Label ID="TitleLabel" runat="server" ForeColor="Red" Font-Bold="True" Text='<%# Eval("Title") %>' /><br />
-                                <asp:Label ID="NotesLabel" runat="server" Text='<%# Eval("Notes") %>' />
+                                <asp:Label ID="Label1" runat="server" CssClass="attention" Text='<%# Eval("Title") %>' />
+                                <%#If(IsDBNull(Eval("Title")), "", "<br />")%>
+                                <asp:Label ID="Label2" runat="server" Text='<%# Eval("Notes") %>' />
                             </td>
                         </tr>
                     </table>
@@ -137,14 +155,8 @@
             </asp:ListView>
         </div>
     </div><!-- Main Content Area END -->
-    <asp:SqlDataSource ID="SrcPOHistory" runat="server" 
-                        
-        ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-        
-        SelectCommand="SELECT dbo.POStatus.Text AS Status, dbo.POHistory.CreateDate AS Date, dbo.v_User.Name + '(' + dbo.s_Location.Name + ')' AS Sender, v_User_1.Name + '(' + s_Location_1.Name + ')' AS Addressee, dbo.POCorres.Text AS Title, dbo.POHistory.Note AS Notes, dbo.POHistory.isChecked, dbo.POHistory.RcptUserID, dbo.POHistory.POHistoryNumber
-FROM dbo.POHistory LEFT OUTER JOIN dbo.POCorres ON dbo.POHistory.POCorresCode = dbo.POCorres.POCorresCode LEFT OUTER JOIN dbo.s_Location AS s_Location_1 ON dbo.POHistory.RcptLocationCode = s_Location_1.LocationCode LEFT OUTER JOIN dbo.s_Location ON dbo.POHistory.SendLocationCode = dbo.s_Location.LocationCode LEFT OUTER JOIN dbo.v_User AS v_User_1 ON dbo.POHistory.RcptUserID = v_User_1.UserID LEFT OUTER JOIN dbo.v_User ON dbo.POHistory.SendUserID = dbo.v_User.UserID LEFT OUTER JOIN dbo.POStatus ON dbo.POHistory.POStatusCode = dbo.POStatus.POStatusCode
-WHERE (dbo.POHistory.PONumber = @PONumber)
-ORDER BY dbo.POHistory.POHistoryNumber DESC">
+    <asp:SqlDataSource ID="SrcPOHistory" runat="server"    
+        ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" >
         <SelectParameters>
             <asp:ControlParameter ControlID="hd_PONumber" Name="PONumber" 
                 PropertyName="Value" />
