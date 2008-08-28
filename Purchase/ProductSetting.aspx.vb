@@ -40,10 +40,10 @@
 
         If IsPostBack = False Then
             '[ProductIDのセット]------------------------------------------------------------------------
-            stAction.Value = Request.QueryString("Action")
+            Mode.Value = Request.QueryString("Action")
             ProductID.Value = Request.QueryString("ProductID")
 
-            If stAction.Value = "Edit" Then
+            If Mode.Value = "Edit" Then
                 DBCommand.CommandText = "SELECT ProductNumber, Name, QuoName, CASNumber, MolecularFormula, Reference, Comment, Status, ProposalDept, ProcumentDept, PD, UpdateDate " & _
                                         "FROM dbo.Product WHERE (ProductID = " + ProductID.Value + ")"
                 DBReader = DBCommand.ExecuteReader()
@@ -68,8 +68,11 @@
             End If
         End If
 
-        url = "./SupplierListByProduct.aspx?ProductID=" & ProductID.Value
-        'If Right(url, 1) = "=" Then url = "./ProductSetting.aspx"
+        If ProductID.Value <> "" Then
+            SupplierList.NavigateUrl = "./SupplierListByProduct.aspx?ProductID=" & ProductID.Value
+        Else
+            SupplierList.NavigateUrl = "./SupplierListByProduct.aspx"
+        End If
     End Sub
 
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
@@ -87,6 +90,18 @@
         If ProductNumber.Text.ToString = "" Or ProductName.Text.ToString = "" Then
             Msg.Text = "必須項目を入力して下さい"
             Exit Sub
+        End If
+
+        '[ProductNumber重複チェック]---------------------------------------------------
+        If Mode.Value = "Edit" Then
+            DBCommand.CommandText = "SELECT ProductNumber FROM Product WHERE ProductNumber = '" & ProductNumber.Text & "' AND ProductID<>" & ProductID.Value
+            DBReader = DBCommand.ExecuteReader()
+            DBCommand.Dispose()
+            If DBReader.Read = True Then
+                Msg.Text = "ProductNumberが既に利用されています"
+                Exit Sub
+            End If
+            DBReader.Close()
         End If
 
         '[CASNumberチェック]-----------------------------------------------------------
@@ -114,7 +129,7 @@
         End If
 
         '[Save処理]--------------------------------------------------------------------
-        If stAction.Value = "Edit" Then
+        If Mode.Value = "Edit" Then
             '[ProductのUpdateDateチェック]-----------------------------------------------------------
             DBCommand.CommandText = "SELECT UpdateDate FROM dbo.Product WHERE ProductID = '" & ProductID.Value & "'"
             DBReader = DBCommand.ExecuteReader()
@@ -176,22 +191,21 @@
                 st_SqlStr = st_SqlStr + "null,null,null,null,"
                 If Reference.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + Reference.Text.ToString + "',"
                 If Comment.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + Comment.Text.ToString + "',"
-                st_SqlStr = st_SqlStr + Session("UserID") + ",'" + Now() + "'," + Session("UserID") + ",'" + Now() + "')"
+                st_SqlStr = st_SqlStr + Session("UserID") + ",'" + Now() + "'," + Session("UserID") + ",'" + Now() + "'); "
+                st_SqlStr = st_SqlStr & "SELECT ProductID FROM Product WHERE ProductID = SCOPE_IDENTITY()"  '←[新規登録されたProductIDの取得の為]
                 DBCommand.CommandText = st_SqlStr
-                DBCommand.ExecuteNonQuery()
-                Msg.Text = "表示データを登録しました"
-
-                '[新規登録されたProductIDの取得]--------------------------------------------------
-                DBCommand.CommandText = "Select @@IDENTITY as ProductID"
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
                 If DBReader.Read = True Then
                     ProductID.Value = DBReader("ProductID")
+                    SupplierList.NavigateUrl = "./SupplierListByProduct.aspx?ProductID=" & ProductID.Value
                 End If
                 DBReader.Close()
+                Msg.Text = "表示データを登録しました"
+
                 '[引き続き更新処理ができるようにUpdateDate設定]---------------------------------
                 UpdateDate.Value = Common.GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
-                stAction.Value = "Edit"
+                Mode.Value = "Edit"
             End If
         End If
     End Sub

@@ -16,6 +16,15 @@ Option Explicit On
 Partial Public Class ProductSetting
 
     '''<summary>
+    '''SupplierList コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SupplierList As Global.System.Web.UI.WebControls.HyperLink
+
+    '''<summary>
     '''Product コントロール。
     '''</summary>
     '''<remarks>
@@ -151,13 +160,13 @@ Partial Public Class ProductSetting
     Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
-    '''stAction コントロール。
+    '''Mode コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents stAction As Global.System.Web.UI.WebControls.HiddenField
+    Protected WithEvents Mode As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
     '''UpdateDate コントロール。

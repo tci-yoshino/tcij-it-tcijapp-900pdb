@@ -12,7 +12,9 @@
 <body>
     <!-- Main Content Area -->
     <div id="content">
-        <div class="tabs"><a href="<%=url %>">Supplier List</a></div>
+        <div class="tabs">
+            <asp:HyperLink ID="SupplierList" runat="server">Supplier List</asp:HyperLink>
+        </div>
 
         <h3>Product Setting</h3>
 
@@ -73,7 +75,7 @@
                 <asp:HiddenField ID="ProductID" runat="server" />
                 <asp:HiddenField ID="Action" runat="server" Value="Save" />
 
-                <asp:HiddenField ID="stAction" runat="server" />
+                <asp:HiddenField ID="Mode" runat="server" />
 
                 <asp:HiddenField ID="UpdateDate" runat="server" />
 
