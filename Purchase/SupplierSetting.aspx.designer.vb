@@ -34,13 +34,13 @@ Partial Public Class SupplierSetting
     Protected WithEvents UpdateDate As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
-    '''StAction コントロール。
+    '''Mode コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents StAction As Global.System.Web.UI.WebControls.HiddenField
+    Protected WithEvents Mode As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
     '''SuppliersProduct コントロール。

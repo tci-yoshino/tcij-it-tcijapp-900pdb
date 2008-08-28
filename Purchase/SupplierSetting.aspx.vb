@@ -54,7 +54,7 @@
         '[初期データ表示]-----------------------------------------------------------------
         If IsPostBack = False Then
             '[StAction設定]---------------------------------------------------------------
-            StAction.Value = Request.QueryString("Action")
+            Mode.Value = Request.QueryString("Action")
 
             '[Country設定]----------------------------------------------------------------
             DBCommand.CommandText = "SELECT CountryCode,CountryName FROM v_Country ORDER BY CountryName"
@@ -78,7 +78,7 @@
             Loop
             DBReader.Close()
 
-            If StAction.Value = "Edit" Then
+            If Mode.Value = "Edit" Then
                 Code.Text = Trim(Request.QueryString("Code"))
                 DataDisplay1()
                 SetTownName()
@@ -87,10 +87,8 @@
         End If
 
         If Code.Text <> "" Then
-            'url = "./ProductListBySupplier.aspx?Supplier=" & Code.Text.ToString
             SuppliersProduct.NavigateUrl = "./ProductListBySupplier.aspx?Supplier=" & Code.Text.ToString
         Else
-            'url = "./ProductListBySupplier.aspx"
             SuppliersProduct.NavigateUrl = "./ProductListBySupplier.aspx"
         End If
     End Sub
@@ -133,7 +131,7 @@
             Dim sqlTran As System.Data.SqlClient.SqlTransaction = DBConn.BeginTransaction()
             DBCommand.Transaction = sqlTran
             Try
-                If StAction.Value = "Edit" Then
+                If Mode.Value = "Edit" Then
                     '[Supplierの更新]-------------------------------------------------------------------
                     DBCommand.CommandText = "SELECT SupplierCode FROM dbo.Supplier WHERE SupplierCode = '" & Code.Text.ToString & "'"
                     DBReader = DBCommand.ExecuteReader()
@@ -226,7 +224,7 @@
                     IRFQLocation_Mainte()
 
                     '[StActionをEditにする]--------------------------------------------------------------
-                    StAction.Value = "Edit"
+                    Mode.Value = "Edit"
                 End If
 
                 'ここまでエラーがなかったらコミット
