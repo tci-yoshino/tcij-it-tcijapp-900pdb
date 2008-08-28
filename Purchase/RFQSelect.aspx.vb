@@ -22,11 +22,13 @@
         ' 空白除去
         st_ParPONumber = st_ParPONumber.Trim
 
-        ' パラメータを取得できなかった場合はエラー終了
-        If String.IsNullOrEmpty(st_ParPONumber) Then
-            Msg.Text = Common.ERR_INVALID_PARAMETER
-            st_ParPONumber = ""
-            Exit Sub
+        ' パラメータチェック
+        If Not String.IsNullOrEmpty(st_ParPONumber) Then
+            If Not Regex.IsMatch(st_ParPONumber, "^[0-9]+$") Then
+                st_ParPONumber = String.Empty
+                Msg.Text = Common.ERR_NO_MATCH_FOUND
+                Exit Sub
+            End If
         End If
 
         ' 親データ取得。取得できなかった場合はエラー終了
@@ -50,31 +52,44 @@
     ' 親POデータを取得する
     ' ParPONumber をキーに PO を検索し、ProductID、SupplierCode、MaKerCode に値をセットする。
     Protected Sub Set_ParPOData(ByVal PONumber As String, ByRef ProductID As String, ByRef SupplierCode As String, ByRef MakerCode As String)
-        Try
-            Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
-                Dim st_query As String = "SELECT ProductID, SupplierCode, MakerCode FROM PO WHERE PONumber = @PONumber"
-                Dim command As New SqlClient.SqlCommand(st_query, connection)
-                connection.Open()
 
-                ' SQL SELECT パラメータの追加
-                command.Parameters.AddWithValue("PONumber", PONumber)
+        Dim st_RFQNumber As String = String.Empty
 
-                ' SqlDataReader を生成し、検索処理を実行。
-                Dim reader As SqlClient.SqlDataReader = command.ExecuteReader()
+        Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
 
-                ' データを変数にセット
-                If reader.HasRows Then
-                    reader.Read()
-                    ProductID = IIf(IsDBNull(reader("ProductID")), "", reader("ProductID"))
-                    SupplierCode = IIf(IsDBNull(reader("SupplierCode")), "", reader("SupplierCode"))
-                    MakerCode = IIf(IsDBNull(reader("MakerCode")), "", reader("MakerCode"))
-                End If
+            Dim command As New SqlClient.SqlCommand("SELECT RFQNumber FROM v_PO WHERE PONumber = @PONumber", connection)
+            command.Parameters.AddWithValue("PONumber", PONumber)
+            connection.Open()
+            st_RFQNumber = command.ExecuteScalar()
 
-                reader.Close()
-            End Using
-        Catch ex As Exception
-            Throw
-        End Try
+        End Using
+
+        If String.IsNullOrEmpty(st_RFQNumber) Then
+            Exit Sub
+        End If
+
+        Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
+
+            Dim st_query As String = "SELECT ProductID, SupplierCode, MakerCode FROM v_RFQHeader WHERE RFQNumber = @RFQNumber"
+            Dim command As New SqlClient.SqlCommand(st_query, connection)
+
+            command.Parameters.AddWithValue("RFQNumber", st_RFQNumber)
+            connection.Open()
+
+            Dim reader As SqlClient.SqlDataReader = command.ExecuteReader()
+
+            ' データを変数にセット
+            If reader.HasRows Then
+                reader.Read()
+                ProductID = IIf(IsDBNull(reader("ProductID")), "", reader("ProductID"))
+                SupplierCode = IIf(IsDBNull(reader("SupplierCode")), "", reader("SupplierCode"))
+                MakerCode = IIf(IsDBNull(reader("MakerCode")), "", reader("MakerCode"))
+            End If
+
+            reader.Close()
+
+        End Using
+
     End Sub
 
     ' 製品情報を取得し、aspx のラベルにセットする
