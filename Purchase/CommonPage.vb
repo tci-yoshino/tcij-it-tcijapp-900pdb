@@ -1,10 +1,7 @@
 ﻿Option Strict On
 
-Imports System
-Imports System.Collections
-Imports System.Web.UI
-Imports System.Web.UI.WebControls
 Imports System.Data.SqlClient
+Imports Purchase.Common
 
 ''' <summary>
 ''' CommonPage クラス
@@ -27,13 +24,14 @@ Public Class CommonPage
         Dim st_ScriptName As String = String.Empty
         Dim st_AccountName As String = String.Empty
         Dim st_Buf() As String
-        Dim setting As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
-        Dim sqlConn As SqlConnection = New SqlConnection(setting.ConnectionString)
+
+        Dim sqlConn As SqlConnection = New SqlConnection(DB_CONNECT_STRING)
         Dim sqlAdapter As SqlDataAdapter
         Dim sqlCmd As SqlCommand
         Dim ds As DataSet = New DataSet
 
-        ' User authorization process
+        ' HTTP Request を処理します
+        ' "OPTIONS" は IE で添付ファイルを直接開こうとした際に要求されます
         If Request.RequestType = "POST" Then
             st_Action = IIf(Request.Form("Action") = Nothing, String.Empty, Request.Form("Action")).ToString
         ElseIf Request.RequestType = "GET" Then
@@ -51,31 +49,13 @@ Public Class CommonPage
             st_AccountName = st_Buf(st_Buf.Length - 1)
 
             sqlAdapter = New SqlDataAdapter
-            sqlCmd = New SqlCommand( _
-"SELECT " & _
-"  PU.UserID, " & _
-"  U.AD_GivenName + ' ' + U.AD_Surname AS UserName, " & _
-"  U.LocationCode, " & _
-"  L.Name AS LocationName, " & _
-"  PU.RoleCode, " & _
-"  PU.PrivilegeLevel, " & _
-"  PU.isAdmin " & _
-"FROM " & _
-"  PurchasingUser AS PU, " & _
-"  s_User AS U, " & _
-"  s_Location AS L " & _
-"WHERE " & _
-"  PU.isDisabled = 0" & _
-"  AND PU.UserID = U.UserID " & _
-"  AND U.LocationCode = L.LocationCode " & _
-"  AND U.AD_AccountName = @AccountName", sqlConn)
+            sqlCmd = New SqlCommand(CreateSql_SelectUser(), sqlConn)
 
             sqlAdapter.SelectCommand = sqlCmd
             sqlCmd.Parameters.Add("AccountName", SqlDbType.NVarChar).Value = st_AccountName
 
             sqlAdapter.Fill(ds, "User")
             If ds.Tables("User").Rows.Count = 0 Then
-                ' Authorization failed
                 Response.Redirect("AuthError.html")
             End If
 
@@ -88,35 +68,68 @@ Public Class CommonPage
             Session("Purchase.isAdmin") = IIf(ds.Tables("User").Rows(0)("isAdmin").ToString = "True", True, False)
         End If
 
-        If CType(Session("Purchase.isAdmin"), Boolean) Then
+        If CBool(Session("Purchase.isAdmin")) Then
             ' Nothing to do
         Else
             sqlAdapter = New SqlDataAdapter
-            sqlCmd = New SqlCommand( _
-"SELECT " & _
-"  1 " & _
-"FROM " & _
-"  Privilege AS P, " & _
-"  Role_Privilege AS RP " & _
-"WHERE " & _
-"  RP.RoleCode = @RoleCode " & _
-"  AND RP.PrivilegeCode = P.PrivilegeCode " & _
-"  AND P.ScriptName = @ScriptName " & _
-"  AND ISNULL(P.Action, '') = @Action", sqlConn)
+            sqlCmd = New SqlCommand(CreateSql_SelectPrivilege(), sqlConn)
 
             sqlAdapter.SelectCommand = sqlCmd
             sqlCmd.Parameters.Add("RoleCode", SqlDbType.VarChar).Value = IIf(Session("Purchase.RoleCode") Is Nothing, String.Empty, Session("Purchase.RoleCode"))
             sqlCmd.Parameters.Add("ScriptName", SqlDbType.VarChar).Value = st_ScriptName
             sqlCmd.Parameters.Add("Action", SqlDbType.VarChar).Value = st_Action
 
-            sqlAdapter.Fill(ds, "Priv")
-            If ds.Tables("Priv").Rows.Count = 0 Then
-                ' Authorization failed
+            sqlAdapter.Fill(ds, "Privilege")
+            If ds.Tables("Privilege").Rows.Count = 0 Then
                 Response.Redirect("AuthError.html")
             End If
         End If
 
-        ' Call the base class's OnLoad method
+        ' 基底クラスの OnLoad を呼び出します
         MyBase.OnLoad(e)
     End Sub
+
+    Private Function CreateSql_SelectUser() As String
+        Dim sb_Sql As StringBuilder = New StringBuilder
+
+        sb_Sql.Append("SELECT ")
+        sb_Sql.Append("  PU.UserID, ")
+        sb_Sql.Append("  U.AD_GivenName + ' ' + U.AD_Surname AS UserName, ")
+        sb_Sql.Append("  U.LocationCode, ")
+        sb_Sql.Append("  L.Name AS LocationName, ")
+        sb_Sql.Append("  PU.RoleCode, ")
+        sb_Sql.Append("  PU.PrivilegeLevel, ")
+        sb_Sql.Append("  PU.isAdmin ")
+        sb_Sql.Append("FROM ")
+        sb_Sql.Append("  PurchasingUser AS PU, ")
+        sb_Sql.Append("  s_User AS U, ")
+        sb_Sql.Append("  s_Location AS L ")
+        sb_Sql.Append("WHERE ")
+        sb_Sql.Append("  PU.isDisabled = 0 ")
+        sb_Sql.Append("  AND PU.UserID = U.UserID ")
+        sb_Sql.Append("  AND U.LocationCode = L.LocationCode ")
+        sb_Sql.Append("  AND U.AD_AccountName = @AccountName ")
+
+        Return sb_Sql.ToString
+
+    End Function
+
+    Private Function CreateSql_SelectPrivilege() As String
+        Dim sb_Sql As StringBuilder = New StringBuilder
+
+        sb_Sql.Append("SELECT ")
+        sb_Sql.Append("  1 ")
+        sb_Sql.Append("FROM ")
+        sb_Sql.Append("  Privilege AS P, ")
+        sb_Sql.Append("  Role_Privilege AS RP ")
+        sb_Sql.Append("WHERE ")
+        sb_Sql.Append("  RP.RoleCode = @RoleCode ")
+        sb_Sql.Append("  AND RP.PrivilegeCode = P.PrivilegeCode ")
+        sb_Sql.Append("  AND P.ScriptName = @ScriptName ")
+        sb_Sql.Append("  AND ISNULL(P.Action, '') = @Action ")
+
+        Return sb_Sql.ToString
+
+    End Function
+
 End Class
