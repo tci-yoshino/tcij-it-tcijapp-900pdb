@@ -80,6 +80,10 @@
         Dim st_SqlStr As String = ""
         Msg.Text = ""
 
+        '[入力ProductNumberの正規化]---------------------------------------------------
+        ProductNumber.Text = StrConv(ProductNumber.Text, VbStrConv.Narrow)
+        ProductNumber.Text = UCase(ProductNumber.Text)
+
         '[Actionチェック]--------------------------------------------------------------
         If Action.Value <> "Save" Then
             Msg.Text = "Saveは拒否されました"
