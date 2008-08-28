@@ -38,6 +38,8 @@ Public Class CommonPage
             st_Action = IIf(Request.Form("Action") = Nothing, String.Empty, Request.Form("Action")).ToString
         ElseIf Request.RequestType = "GET" Then
             st_Action = IIf(Request.QueryString("Action") = Nothing, String.Empty, Request.QueryString("Action")).ToString
+        ElseIf Request.RequestType = "OPTIONS" Then
+            Exit Sub
         Else
             Throw New Exception("CommonPage.OnLoad: Bad Request Type.")
         End If
