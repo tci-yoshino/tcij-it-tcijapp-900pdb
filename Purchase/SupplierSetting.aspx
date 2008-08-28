@@ -17,7 +17,8 @@
 		<div class="tabs">
 			<asp:HiddenField ID="UpdateDate" runat="server" />
 			<asp:HiddenField ID="StAction" runat="server" />
-			<a href="<%=url %>" >Suppliers Product</a>
+			<asp:HyperLink ID="SuppliersProduct" runat="server">Suppliers Product</asp:HyperLink>
+			<!--<a href="<%=url %>" >Suppliers Product</a> -->
 		</div>
 
 		<h3>Supplier Setting</h3>
