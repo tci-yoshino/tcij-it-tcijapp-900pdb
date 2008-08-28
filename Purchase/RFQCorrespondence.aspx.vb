@@ -114,7 +114,7 @@ Partial Public Class RFQCorrespondence
         End If
 
         '[SrcRFQHistoryにSelectCommand設定]-------------------------------------------------------------
-        SrcRFQHistory.SelectCommand = "SELECT dbo.RFQStatus.Text AS Status, dbo.RFQHistory.CreateDate AS Date, dbo.v_User.Name + '(' + dbo.s_Location.Name + ')' AS Sender, v_User_1.Name + '(' + s_Location_1.Name + ')' AS Addressee, dbo.RFQCorres.Text AS Title, REPLACE(dbo.RFQHistory.Note,Char(10),'<br>') AS Notes, dbo.RFQHistory.isChecked, dbo.RFQHistory.RcptUserID, dbo.RFQHistory.RFQHistoryNumber " & _
+        SrcRFQHistory.SelectCommand = "SELECT dbo.RFQStatus.Text AS Status, dbo.RFQHistory.CreateDate AS Date, dbo.v_User.Name AS Sender, '(' + dbo.s_Location.Name + ')' AS SenderLocation, v_User_1.Name AS Addressee, '(' + s_Location_1.Name + ')' AS AddresseeLocation, dbo.RFQCorres.Text AS Title, REPLACE(dbo.RFQHistory.Note,Char(10),'<br>') AS Notes, dbo.RFQHistory.isChecked, dbo.RFQHistory.RcptUserID, dbo.RFQHistory.RFQHistoryNumber " & _
                                       "FROM dbo.RFQHistory LEFT OUTER JOIN " & _
                                       "dbo.RFQCorres ON dbo.RFQHistory.RFQCorresCode = dbo.RFQCorres.RFQCorresCode LEFT OUTER JOIN " & _
                                       "dbo.s_Location AS s_Location_1 ON dbo.RFQHistory.RcptLocationCode = s_Location_1.LocationCode LEFT OUTER JOIN " & _
