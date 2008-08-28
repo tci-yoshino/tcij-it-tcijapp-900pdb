@@ -61,6 +61,24 @@ Partial Public Class RFQSearchBySupplier
     Protected WithEvents SupplierName As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
+    '''SM_RSS コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SM_RSS As Global.System.Web.UI.ScriptManager
+
+    '''<summary>
+    '''UP_Country コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents UP_Country As Global.System.Web.UI.UpdatePanel
+
+    '''<summary>
     '''Country コントロール。
     '''</summary>
     '''<remarks>
@@ -77,6 +95,15 @@ Partial Public Class RFQSearchBySupplier
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents SDS_SBS_Country As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
+    '''UP_Region コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents UP_Region As Global.System.Web.UI.UpdatePanel
 
     '''<summary>
     '''Region コントロール。
@@ -104,6 +131,15 @@ Partial Public Class RFQSearchBySupplier
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Search As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''Clear コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Clear As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
     '''SupplierList コントロール。

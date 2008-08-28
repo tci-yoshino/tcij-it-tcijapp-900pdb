@@ -71,7 +71,20 @@ Partial Public Class RFQSearchBySupplier
     ''' </summary>
     ''' <param name="sender">ASP.NETの既定値</param>
     ''' <param name="e">ASP.NETの既定値</param>
+    ''' <remarks>UpdatePanelコントロールによるAjaxの非同期ポストバックで実行されます。</remarks>
     Protected Sub Country_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles Country.SelectedIndexChanged
+        Region.Items.Clear()
+        Region.Items.Add(String.Empty)
+    End Sub
+
+    ''' <summary>
+    ''' クリアボタンクリックイベントです。
+    ''' </summary>
+    ''' <param name="sender">ASP.NETの既定値</param>
+    ''' <param name="e">ASP.NETの既定値</param>
+    ''' <remarks>UpdatePanelコントロールによるAjaxの非同期ポストバックで実行されます。</remarks>
+    Protected Sub Clear_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Clear.Click
+        Country.SelectedIndex = 0
         Region.Items.Clear()
         Region.Items.Add(String.Empty)
     End Sub
@@ -271,5 +284,4 @@ Partial Public Class RFQSearchBySupplier
         End If
 
     End Function
-
 End Class

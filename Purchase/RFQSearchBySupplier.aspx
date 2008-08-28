@@ -45,28 +45,41 @@ window.onload = function() {
 						<td><asp:TextBox ID="SupplierName" runat="server" Width="21em" MaxLength="255"></asp:TextBox> (Partial text match)</td>
 					</tr>
                     <tr>
-                        <th>Country : </th>
-                        <td>
-                            <asp:DropDownList ID="Country" runat="server" AppendDataBoundItems="True" 
-                                AutoPostBack="True" DataSourceID="SDS_SBS_Country" DataTextField="CountryName" 
-                                DataValueField="CountryCode">
-                                <asp:ListItem></asp:ListItem>
-                            </asp:DropDownList>
-                            <asp:SqlDataSource ID="SDS_SBS_Country" runat="server" 
-                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-                                
-                                
-                                SelectCommand="SELECT DISTINCT v_Country.CountryCode, v_Country.CountryName FROM v_Country INNER JOIN Supplier ON v_Country.CountryCode = Supplier.CountryCode ORDER BY v_Country.CountryName">
+                        <th>Country : </th>                        
+                        <td><asp:ScriptManager ID="SM_RSS" runat="server"></asp:ScriptManager>
+                                <asp:UpdatePanel ID="UP_Country" runat="server">
+                                    <ContentTemplate>
+                                        <asp:DropDownList ID="Country" runat="server" AppendDataBoundItems="True" 
+                                DataSourceID="SDS_SBS_Country" DataTextField="CountryName" 
+                                DataValueField="CountryCode" AutoPostBack="True">
+                                            <asp:ListItem></asp:ListItem>
+                                        </asp:DropDownList>
+                                    </ContentTemplate>
+                                    <Triggers>
+                                        <asp:AsyncPostBackTrigger ControlID="Clear" EventName="Click" />
+                                    </Triggers>
+                            </asp:UpdatePanel>
+                            <asp:SqlDataSource ID="SDS_SBS_Country" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+                                 SelectCommand="SELECT DISTINCT v_Country.CountryCode, v_Country.CountryName FROM v_Country INNER JOIN Supplier ON v_Country.CountryCode = Supplier.CountryCode ORDER BY v_Country.CountryName">
                             </asp:SqlDataSource>
+
                         </td>
                     </tr>
                     <tr>
                         <th>Region : </th>
-                        <td>
-                            <asp:DropDownList ID="Region" runat="server" AppendDataBoundItems="True" 
-                                DataSourceID="SDS_SBS_Region" DataTextField="Name" DataValueField="RegionCode">
-                                <asp:ListItem></asp:ListItem>
-                            </asp:DropDownList>
+                        <td><asp:UpdatePanel ID="UP_Region" runat="server">
+                                <ContentTemplate>
+                                    <asp:DropDownList ID="Region" runat="server" AppendDataBoundItems="True" 
+                                        DataSourceID="SDS_SBS_Region" 
+                                        DataTextField="Name" DataValueField="RegionCode">
+                                        <asp:ListItem></asp:ListItem>
+                                    </asp:DropDownList>
+                                </ContentTemplate>
+                                <Triggers>
+                                    <asp:AsyncPostBackTrigger ControlID="Country" 
+                                        EventName="SelectedIndexChanged" />
+                                </Triggers>
+                            </asp:UpdatePanel>
                             <asp:SqlDataSource ID="SDS_SBS_Region" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
                                 
@@ -82,12 +95,13 @@ WHERE                   (RegionCode IN
                                         PropertyName="SelectedValue" />
                                 </SelectParameters>
                             </asp:SqlDataSource>
+
                         </td>
                     </tr>
                 </table>
 
 				<asp:Button ID="Search" runat="server" Text="Search" />
-				<input type="button" value="Clear" onclick="clearForm('SearchForm');" />
+				<asp:Button ID="Clear" runat="server" Text="Clear" OnClientClick ="clearForm('SearchForm');" />
             </div>
 
         <hr />
