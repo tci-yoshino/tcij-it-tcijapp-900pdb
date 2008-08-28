@@ -16,10 +16,8 @@ window.onload = function() {
    changeCellColor("SupplierList_itemPlaceholderContainer")
    
 }
-    function returnValues(code, name3, name4){
+    function returnValues(code, name){
       if(opener){
-        var name = name3 + " " + name4;
-        if (name3 == "") name = name4;
         if(opener.document.getElementById('Supplier')){
           opener.document.getElementById('Supplier').value=code
         }
@@ -78,11 +76,10 @@ window.onload = function() {
                     <h3 style="font-style:italic"><%=Purchase.Common.MSG_NO_DATA_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onclick="returnValues('<%#Eval("SupplierCode")%>','<%# Replace(Eval("Name3").ToString(), "'", "\'")%>','<%#Replace(Eval("Name4").ToString(), "'", "\'")%>');">
+                    <tr onclick="returnValues('<%#Eval("SupplierCode")%>','<%#Replace(Eval("Name").ToString(), "'", "\'")%>');">
                         <td><asp:Label ID="SupplierCode" runat="server" Text='<%#Eval("SupplierCode")%>' /></td>
                         <td>
-                          <asp:Label ID="SupplierName3" runat="server" Text='<%#Eval("Name3")%>' />&nbsp;
-                          <asp:Label ID="SupplierName4" runat="server" Text='<%#Eval("Name4")%>' />
+                          <asp:Label ID="SupplierName" runat="server" Text='<%#Eval("Name")%>' />
                         </td>
                     </tr>
                 </ItemTemplate>

@@ -47,8 +47,8 @@
         End If
 
         ' GET 且つ QueryString("Code") が送信されている場合は検索処理を実行
-        If (Request.RequestType = "GET") And (Request.QueryString("Code") = Nothing) Then
-            GetSupplierList()
+        If (Request.RequestType = "GET") And (Request.QueryString("Code") <> Nothing) Then
+            SetControl_SrcSupplier()
         End If
 
     End Sub
@@ -59,14 +59,14 @@
         Dim st_Action As String = IIf(Request.QueryString("Action") = Nothing, "", Request.QueryString("Action"))
 
         If st_Action = SEARCH_ACTION Then
-            GetSupplierList()
+            SetControl_SrcSupplier()
         End If
 
     End Sub
 
 
-    ' 検索処理
-    Private Sub GetSupplierList()
+    ' SQL データソースコントロールに SELECT 文を設定
+    Private Sub SetControl_SrcSupplier()
 
         SrcSupplier.SelectParameters.Clear()
 
@@ -90,9 +90,12 @@
         End If
 
         SrcSupplier.SelectCommand = _
-              " SELECT SupplierCode, Name3, Name4, s_Country.[Name] AS CountryName " _
-            & " FROM  Supplier " _
-            & "   LEFT OUTER JOIN s_Country " _
+              " SELECT " _
+            & "  SupplierCode, s_Country.[Name] AS CountryName, " _
+            & "  LTRIM(RTRIM(ISNULL(Supplier.Name3, '') + ' ' + ISNULL(Supplier.Name4, ''))) AS Name " _
+            & " FROM " _
+            & "  Supplier " _
+            & "  LEFT OUTER JOIN s_Country " _
             & "   ON s_Country.CountryCode = Supplier.CountryCode " _
             & " WHERE " & st_where _
             & " ORDER BY SupplierCode, Name3 "
