@@ -6,6 +6,10 @@
     End Sub
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
+        '[入力ProductNumberの正規化]---------------------------------------------------
+        ProductNumber.Text = StrConv(ProductNumber.Text, VbStrConv.Narrow)
+        ProductNumber.Text = UCase(ProductNumber.Text)
+
         Dim st_SqlStr As String = " "
         SrcProduct.SelectCommand = "SELECT ProductNumber, CASE WHEN NOT Product.QuoName IS NULL THEN Product.QuoName ELSE Product.Name END AS ProductName, './ProductSetting.aspx?Action=Edit&ProductID=' + Rtrim(Ltrim(Str(ProductID))) AS Url FROM dbo.Product "
         If ProductNumber.Text.ToString <> "" Then st_SqlStr = st_SqlStr + "WHERE (ProductNumber = '" + ProductNumber.Text.ToString + "')"
