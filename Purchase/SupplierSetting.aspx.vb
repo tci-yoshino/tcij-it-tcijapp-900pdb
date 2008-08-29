@@ -299,11 +299,11 @@
             DBCommand2.CommandText = "SELECT QuoLocationCode FROM dbo.IrregularRFQLocation WHERE (SupplierCode = '" & Code.Text.ToString & "')"
             DBReader2 = DBCommand2.ExecuteReader()
             DBCommand2.Dispose()
-
             If DBReader2.Read = True Then
-                'TODO レコードがあって[QuoLocationCode]が[DBNull]の場合はDirect扱いなのでその設定が必要です。
                 If Not TypeOf DBReader2("QuoLocationCode") Is DBNull Then
                     DefaultQuoLocation.Text = DBReader2("QuoLocationCode")
+                Else
+                    DefaultQuoLocation.Text = "Direct"
                 End If
             End If
             DBReader2.Close()
