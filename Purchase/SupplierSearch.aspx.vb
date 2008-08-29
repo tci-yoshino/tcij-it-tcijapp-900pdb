@@ -26,10 +26,10 @@
             '[R3Codeが数字の場合と文字の場合とでは検索が異なる]---------------------------
             If R3Code.Text.ToString <> "" Then
                 If SQLStr = "" Then SQLStr = "WHERE " Else SQLStr = SQLStr + " AND "
-                If IsNumeric(R3Code.Text.ToString) Then
-                    SQLStr = SQLStr + "((R3SupplierCode) = " & (R3Code.Text.ToString) & ")"
+                If IsNumeric(R3Code.Text.ToString) And R3Code.Text Like "*.*" = False Then
+                    SQLStr = SQLStr + "(R3SupplierCode = " & R3Code.Text.ToString & ")"
                 Else
-                    SQLStr = SQLStr + "((R3SupplierCode) = '" & (R3Code.Text.ToString) & "')"
+                    SQLStr = SQLStr + "(R3SupplierCode = '" & R3Code.Text.ToString & "')"
                 End If
             End If
             If Name.Text.ToString <> "" Then
