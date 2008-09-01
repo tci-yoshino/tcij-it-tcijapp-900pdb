@@ -12,12 +12,12 @@
 
         Dim st_SqlStr As String = " "
         SrcProduct.SelectCommand = "SELECT ProductNumber, CASE WHEN NOT Product.QuoName IS NULL THEN Product.QuoName ELSE Product.Name END AS ProductName, './ProductSetting.aspx?Action=Edit&ProductID=' + Rtrim(Ltrim(Str(ProductID))) AS Url FROM dbo.Product "
-        If ProductNumber.Text.ToString <> "" Then st_SqlStr = st_SqlStr + "WHERE (ProductNumber = '" + ProductNumber.Text.ToString + "')"
+        If ProductNumber.Text.ToString <> "" Then st_SqlStr = st_SqlStr + "WHERE (ProductNumber = '" + Common.SafeSqlLiteral(ProductNumber.Text) + "')"
         If CASNumber.Text.ToString <> "" Then
             If Right(st_SqlStr, 1) = ")" Then
-                st_SqlStr = st_SqlStr + " AND (CASNumber = '" + CASNumber.Text.ToString + "')"
+                st_SqlStr = st_SqlStr + " AND (CASNumber = '" + Common.SafeSqlLiteral(CASNumber.Text) + "')"
             Else
-                st_SqlStr = st_SqlStr + "WHERE (CASNumber = '" + CASNumber.Text.ToString + "')"
+                st_SqlStr = st_SqlStr + "WHERE (CASNumber = '" + Common.SafeSqlLiteral(CASNumber.Text) + "')"
             End If
         End If
 
