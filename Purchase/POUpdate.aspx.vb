@@ -846,7 +846,6 @@ Partial Public Class POUpdate
             cmd.Parameters.AddWithValue("PurchasingRequisitionNumber", NullableVariableToDBObject(POInfomation.PurchasingRequisitionNumber))
             cmd.Parameters.AddWithValue("isCancelled", NullableVariableToDBObject(POInfomation.isCancelled))
             cmd.Parameters.AddWithValue("CancellationDate", NullableVariableToDBObject(POInfomation.CancellationDate))
-            cmd.Parameters.AddWithValue("RFQNumber", NullableVariableToDBObject(POInfomation.RFQNumber))
             cmd.Parameters.AddWithValue("RFQLineNumber", NullableVariableToDBObject(POInfomation.RFQLineNumber))
             cmd.Parameters.AddWithValue("ParPONumber", NullableVariableToDBObject(POInfomation.ParPONumber))
             cmd.Parameters.AddWithValue("CreatedBy", NullableVariableToDBObject(POInfomation.CreatedBy))
@@ -913,7 +912,6 @@ Partial Public Class POUpdate
         sb_SQL.Append("	PurchasingRequisitionNumber = @PurchasingRequisitionNumber, ")
         sb_SQL.Append("	isCancelled = @isCancelled, ")
         sb_SQL.Append("	CancellationDate = @CancellationDate, ")
-        sb_SQL.Append("	RFQNumber = @RFQNumber, ")
         sb_SQL.Append("	RFQLineNumber = @RFQLineNumber, ")
         sb_SQL.Append("	ParPONumber = @ParPONumber, ")
         sb_SQL.Append("	UpdatedBy = @UpdatedBy, ")
@@ -1173,11 +1171,14 @@ Partial Public Class POUpdate
     ''' <param name="value">対象となるSystem.Object</param>
     ''' <returns>DB Nullを含んだ System Object。</returns>
     Public Shared Function NullableVariableToDBObject(ByVal value As Object) As Object
+        'TODO Stringで空文字列が来たときの対応
         If value Is Nothing Then
             Return DBNull.Value
-        Else
-            Return value
         End If
+        If String.IsNullOrEmpty(value.ToString()) Then
+            Return DBNull.Value
+        End If
+        Return value
     End Function
 
 
