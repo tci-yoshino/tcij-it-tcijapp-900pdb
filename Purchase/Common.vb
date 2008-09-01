@@ -92,6 +92,18 @@ Public Class Common
     Public Const INT_5_REGEX_OPTIONAL As String = "^\d{1,5}$|^$"
 
     ''' <summary>
+    ''' メールアドレスフォーマット(英数字@英数字.英数字)
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const MAIL_REGEX As String = "[A-Za-z0-9\-\.\_]+@[A-Za-z0-9\-\_]+\.[A-Za-z0-9\-\.\_]+"
+
+    ''' <summary>
+    ''' URLフォーマット
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const HTTP_REGEX As String = "^(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)"
+
+    ''' <summary>
     ''' メッセージ 「レコードはありません」
     ''' </summary>
     ''' <remarks></remarks>
