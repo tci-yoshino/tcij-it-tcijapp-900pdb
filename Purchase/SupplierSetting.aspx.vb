@@ -67,7 +67,7 @@
             DBReader.Close()
 
             '[DefaultQuoLocation設定]-----------------------------------------------------
-            DBCommand.CommandText = "SELECT LocationCode, Name FROM dbo.s_Location"
+            DBCommand.CommandText = "SELECT LocationCode, Name FROM dbo.s_Location ORDER BY Name"
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             DefaultQuoLocation.Items.Clear()
@@ -242,7 +242,7 @@
 
     Public Sub SetTownName()
         '[RegionにText及びValue設定]----------------------------------------------------------------
-        DBCommand.CommandText = "SELECT CountryCode,RegionCode,Name FROM s_Region WHERE CountryCode='" & Common.SafeSqlLiteral(Country.Text) & "' ORDER BY name"
+        DBCommand.CommandText = "SELECT CountryCode,RegionCode,Name FROM s_Region WHERE CountryCode='" & Common.SafeSqlLiteral(Country.Text) & "' ORDER BY Name"
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
         Region.Items.Clear()
