@@ -60,6 +60,14 @@
                     If Not TypeOf DBReader("ProposalDept") Is DBNull Then ProposalDept.Text = DBReader("ProposalDept")
                     If Not TypeOf DBReader("ProcumentDept") Is DBNull Then ProcumentDept.Text = DBReader("ProcumentDept")
                     If Not TypeOf DBReader("PD") Is DBNull Then PD.Text = DBReader("PD")
+                    DBReader.Close()
+                    DBCommand.CommandText = "SELECT ENai FROM s_EhsPhrase WHERE PhID = '" + Status.Text + "'"
+                    DBReader = DBCommand.ExecuteReader()
+                    DBCommand.Dispose()
+                    If DBReader.Read = True Then
+                        Status.Text = DBReader("ENai")
+                    End If
+                    DBReader.Close()
                     UpdateDate.Value = Common.GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
                 Else
                     UpdateDate.Value = ""
