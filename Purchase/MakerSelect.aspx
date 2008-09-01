@@ -16,10 +16,8 @@ window.onload = function() {
    changeCellColor("SupplierList_itemPlaceholderContainer")
    
 }
-    function returnValues(code, name3, name4, countryName){
+    function returnValues(code, name, countryName){
       if(opener){
-        var name = name3 + " " + name4;
-        if (name3 == "") name = name4;
         opener.document.getElementById('MakerCode').value=code
         opener.document.getElementById('MakerName').value=name
         opener.document.getElementById('MakerCountry').value=countryName
@@ -71,14 +69,13 @@ window.onload = function() {
                     </table>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
-                    <h3 style="font-style:italic">No match found.</h3>
+                    <h3 style="font-style:italic"><%=Purchase.Common.MSG_NO_DATA_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onclick="returnValues('<%#Eval("SupplierCode")%>','<%# Replace(Eval("Name3").ToString(), "'", "\'")%>','<%#Replace(Eval("Name4").ToString(), "'", "\'")%>','<%#Eval("CountryName") %>');">
+                    <tr onclick="returnValues('<%#Eval("SupplierCode")%>','<%# Replace(Eval("Name").ToString(), "'", "\'")%>','<%#Eval("CountryName") %>');">
                         <td><asp:Label ID="SupplierCode" runat="server" Text='<%#Eval("SupplierCode")%>' /></td>
                         <td>
-                          <asp:Label ID="SupplierName3" runat="server" Text='<%#Eval("Name3")%>' />&nbsp;
-                          <asp:Label ID="SupplierName4" runat="server" Text='<%#Eval("Name4")%>' />
+                          <asp:Label ID="SupplierName3" runat="server" Text='<%#Eval("Name")%>' />
                         </td>
                     </tr>
                 </ItemTemplate>

@@ -36,15 +36,6 @@
         Code.Text = st_Code
         Name.Text = st_Name
 
-        ' パラメータチェック
-        If Not String.IsNullOrEmpty(st_Code) Then
-            If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
-                st_Code = Nothing
-                Msg.Text = "Maker Code " & Common.ERR_INVALID_NUMBER
-                Exit Sub
-            End If
-        End If
-
         ' GET 且つ QueryString("Code") が送信されている場合は検索処理を実行
         If (Request.RequestType = "GET") And (Not String.IsNullOrEmpty(Request.QueryString("Code"))) Then
             SearchSupplierList()
@@ -63,6 +54,15 @@
 
     ' 検索処理
     Private Sub SearchSupplierList()
+
+        ' パラメータチェック
+        If Not String.IsNullOrEmpty(st_Code) Then
+            If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
+                st_Code = Nothing
+                SupplierList.DataBind()
+                Exit Sub
+            End If
+        End If
 
         SrcMaker.SelectParameters.Clear()
 
@@ -86,7 +86,8 @@
         End If
 
         SrcMaker.SelectCommand = _
-              " SELECT SupplierCode, Name3, Name4, s_Country.[Name] AS CountryName " _
+              " SELECT SupplierCode, s_Country.[Name] AS CountryName, " _
+            & "   LTRIM(RTRIM(ISNULL(Supplier.Name3, '') + ' ' + ISNULL(Supplier.Name4, ''))) AS Name " _
             & " FROM  Supplier " _
             & "   LEFT OUTER JOIN s_Country " _
             & "   ON s_Country.CountryCode = Supplier.CountryCode " _
