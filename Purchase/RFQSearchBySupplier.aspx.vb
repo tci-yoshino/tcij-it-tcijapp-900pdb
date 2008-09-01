@@ -168,7 +168,7 @@ Partial Public Class RFQSearchBySupplier
 
         If st_SearchKey.Name <> String.Empty Then
             sb_SQLConditional.Append(IIf(sb_SQLConditional.Length > 0, " AND ", String.Empty))
-            sb_SQLConditional.Append("(Name1 + N' ' + Name2 LIKE @SupplierName) ")
+            sb_SQLConditional.Append("(ISNULL(Name1,'') + N' ' + ISNULL(Name2,'') LIKE @SupplierName) ")
         End If
 
         If st_SearchKey.Country <> String.Empty Then
@@ -211,7 +211,7 @@ Partial Public Class RFQSearchBySupplier
 
         If Key.Name <> String.Empty Then
             SupplierName = "%{0}%"
-            SupplierName = String.Format(SupplierName, Key.Name)
+            SupplierName = String.Format(SupplierName, SafeSqlLikeClauseLiteral(Key.Name))
             Parameters.AddWithValue("SupplierName", SupplierName)
         End If
 
@@ -251,7 +251,7 @@ Partial Public Class RFQSearchBySupplier
 
         If Key.Name <> String.Empty Then
             SupplierName = "%{0}%"
-            SupplierName = String.Format(SupplierName, Key.Name)
+            SupplierName = String.Format(SupplierName, SafeSqlLikeClauseLiteral(Key.Name))
             Parameters.Add("SupplierName", SupplierName)
         End If
 
