@@ -37,15 +37,6 @@
         Code.Text = st_Code
         Name.Text = st_Name
 
-        ' パラメータチェック
-        If Not String.IsNullOrEmpty(st_Code) Then
-            If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
-                st_Code = String.Empty
-                Msg.Text = "Supplier Code " & Common.ERR_INVALID_NUMBER
-                Exit Sub
-            End If
-        End If
-
         ' GET 且つ QueryString("Code") が送信されている場合は検索処理を実行
         If (Request.RequestType = "GET") And (Request.QueryString("Code") <> Nothing) Then
             SetControl_SrcSupplier()
@@ -67,6 +58,15 @@
 
     ' SQL データソースコントロールに SELECT 文を設定
     Private Sub SetControl_SrcSupplier()
+
+        ' パラメータチェック
+        If Not String.IsNullOrEmpty(st_Code) Then
+            If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
+                st_Code = String.Empty
+                SupplierList.DataBind()
+                Exit Sub
+            End If
+        End If
 
         SrcSupplier.SelectParameters.Clear()
 

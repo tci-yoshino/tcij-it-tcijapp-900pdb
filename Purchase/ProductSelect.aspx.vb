@@ -46,24 +46,6 @@
         CASNumber.Text = st_CASNumber
         ProductName.Text = st_ProductName
 
-        ' パラメータチェック
-        If Not String.IsNullOrEmpty(st_ProductNumber) Then
-            If (Not TCICommon.Func.IsProductNumber(st_ProductNumber)) And _
-               (Not TCICommon.Func.IsNewProductNumber(st_ProductNumber)) And _
-               (Not TCICommon.Func.IsCASNumber(st_ProductNumber)) Then
-                st_ProductNumber = String.Empty
-                Msg.Text = "Product Number" & Common.ERR_INCORRECT_FORMAT
-                Exit Sub
-            End If
-        End If
-        If Not String.IsNullOrEmpty(st_CASNumber) Then
-            If Not TCICommon.Func.IsCASNumber(st_CASNumber) Then
-                st_ProductNumber = String.Empty
-                Msg.Text = "CAS Number" & Common.ERR_INCORRECT_FORMAT
-                Exit Sub
-            End If
-        End If
-
         ' GET 且つ QueryString("st_ProductNumber") が送信されている場合は検索処理を実行
         If (Request.RequestType = "GET") And (Not String.IsNullOrEmpty(Request.QueryString("ProductNumber"))) Then
             SearchProductList()
@@ -81,6 +63,24 @@
 
 
     Private Sub SearchProductList()
+
+        ' パラメータチェック
+        If Not String.IsNullOrEmpty(st_ProductNumber) Then
+            If (Not TCICommon.Func.IsProductNumber(st_ProductNumber)) And _
+               (Not TCICommon.Func.IsNewProductNumber(st_ProductNumber)) And _
+               (Not TCICommon.Func.IsCASNumber(st_ProductNumber)) Then
+                st_ProductNumber = String.Empty
+                ProductList.DataBind()
+                Exit Sub
+            End If
+        End If
+        If Not String.IsNullOrEmpty(st_CASNumber) Then
+            If Not TCICommon.Func.IsCASNumber(st_CASNumber) Then
+                st_ProductNumber = String.Empty
+                ProductList.DataBind()
+                Exit Sub
+            End If
+        End If
 
         SrcProduct.SelectParameters.Clear()
 

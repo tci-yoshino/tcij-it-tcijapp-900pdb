@@ -70,15 +70,6 @@
         Location.Value = st_Location
         Postback.Value = Request.QueryString("Postback")
 
-        ' パラメータチェック
-        If Not String.IsNullOrEmpty(st_Code) Then
-            If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
-                st_Code = String.Empty
-                Msg.Text = "Supplier Code " & Common.ERR_INVALID_NUMBER
-                Exit Sub
-            End If
-        End If
-
         ' GET 且つ QueryString("Code") が送信されている場合は検索処理を実行
         If (Request.RequestType = "GET") And (Not String.IsNullOrEmpty(Request.QueryString("Code"))) Then
             Dim dataSet As DataSet = New DataSet("Supplier")
@@ -105,6 +96,15 @@
     ' ByRef dataSet: 取得したデータをセットする DataSet オブジェクト。
     '                SupplierList というデータテーブルが追加される。
     Private Sub GetSupplierData(ByRef ds As DataSet)
+
+        ' パラメータチェック
+        If Not String.IsNullOrEmpty(st_Code) Then
+            If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
+                st_Code = String.Empty
+                SupplierList.DataBind()
+                Exit Sub
+            End If
+        End If
 
         ' Where 句の生成
         Dim st_where As String = String.Empty
