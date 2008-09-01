@@ -2,10 +2,12 @@
     Inherits CommonPage
 
     Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
-    Const ERR_UPDATE As String = "既に他のユーザによって更新されました。"
-    Const ASSIGN_ACTION As String = "Assign"
+    Private Const ERR_UPDATE As String = "既に他のユーザによって更新されました。"
+    Private Const ASSIGN_ACTION As String = "Assign"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
+        Dim st_Login_Location As String = Session("LocationCode").ToString()
 
         Msg.Text = ""
 
@@ -15,9 +17,9 @@
             & "       CONVERT(VARCHAR, VRH.UpdateDate, 120) AS UpdateDate " _
             & "FROM v_RFQHeader AS VRH " _
             & "WHERE " _
-            & "  VRH.QuoLocationCode = '" & Session("LocationCode") & "' " _
+            & "  VRH.QuoLocationCode = '" & st_Login_Location & "' " _
             & "  AND VRH.QuoUserID IS NULL " _
-            & "ORDER BY VRH.RFQNumber "
+            & "ORDER BY VRH.RFQNumber ASC "
 
         SrcPO.SelectCommand = _
               "SELECT VP.PONumber, VP.PODate, VP.POLocationCode, VP.POLocationName, VP.POUserID, VP.POUserName, " _
@@ -26,11 +28,11 @@
             & "       CONVERT(VARCHAR, VP.UpdateDate, 120) AS UpdateDate " _
             & "FROM v_PO AS VP " _
             & "WHERE " _
-            & "  VP.SOLocationCode = '" & Session("LocationCode") & "' " _
+            & "  VP.SOLocationCode = '" & st_Login_Location & "' " _
             & "  AND VP.SOUserID IS NULL " _
-            & "ORDER BY VP.PONumber "
+            & "ORDER BY VP.PONumber ASC "
 
-        SrcUser.SelectCommand = "SELECT UserID, Name FROM v_User WHERE isDisabled = 0 AND LocationCode = '" & Session("LocationCode") & "' "
+        SrcUser.SelectCommand = "SELECT UserID, Name FROM v_User WHERE isDisabled = 0 AND LocationCode = '" & st_Login_Location & "' ORDER BY Name ASC "
 
     End Sub
 
