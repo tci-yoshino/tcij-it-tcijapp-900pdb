@@ -116,7 +116,7 @@
 
         If UpdateDate.Value <> "" Then
             '[SupplierのUpdateDateチェック]-----------------------------------------------------------
-            DBCommand.CommandText = "SELECT UpdateDate FROM dbo.Supplier WHERE SupplierCode = '" & Code.Text.ToString & "'"
+            DBCommand.CommandText = "SELECT UpdateDate FROM dbo.Supplier WHERE SupplierCode = '" & Common.SafeSqlLiteral(Code.Text) & "'"
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             If DBReader.Read = True Then
@@ -133,52 +133,52 @@
             Try
                 If Mode.Value = "Edit" Then
                     '[Supplierの更新]-------------------------------------------------------------------
-                    DBCommand.CommandText = "SELECT SupplierCode FROM dbo.Supplier WHERE SupplierCode = '" & Code.Text.ToString & "'"
+                    DBCommand.CommandText = "SELECT SupplierCode FROM dbo.Supplier WHERE SupplierCode = '" & Common.SafeSqlLiteral(Code.Text) & "'"
                     DBReader = DBCommand.ExecuteReader()
                     DBCommand.Dispose()
                     If DBReader.Read = True Then
                         DBReader.Close()
                         '[Supplierの更新処理]------------------------------------------
                         st_SQLSTR = "UPDATE [Supplier] SET R3SupplierCode="
-                        If R3SupplierCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & R3SupplierCode.Text.ToString & "',"
+                        If R3SupplierCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(R3SupplierCode.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "Name1="
-                        If SupplierName1.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SupplierName1.Text.ToString & "',"
+                        If SupplierName1.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(SupplierName1.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "Name2="
-                        If SupplierName2.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SupplierName2.Text.ToString & "',"
+                        If SupplierName2.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(SupplierName2.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "Name3="
-                        If SupplierName3.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SupplierName3.Text.ToString & "',"
+                        If SupplierName3.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(SupplierName3.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "Name4="
-                        If SupplierName4.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SupplierName4.Text.ToString & "',"
+                        If SupplierName4.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(SupplierName4.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "SearchTerm1="
-                        If SearchTerm1.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SearchTerm1.Text.ToString & "',"
+                        If SearchTerm1.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(SearchTerm1.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "SearchTerm2="
-                        If SearchTerm2.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SearchTerm2.Text.ToString & "',"
+                        If SearchTerm2.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(SearchTerm2.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "Address1="
-                        If Address1.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Address1.Text.ToString & "',"
+                        If Address1.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Address1.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "Address2="
-                        If Address2.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Address2.Text.ToString & "',"
+                        If Address2.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Address2.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "Address3="
-                        If Address3.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Address3.Text.ToString & "',"
+                        If Address3.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Address3.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "PostalCode="
-                        If PostalCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & PostalCode.Text.ToString & "',"
+                        If PostalCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(PostalCode.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "CountryCode="
-                        If Country.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Country.Text.ToString & "',"
+                        If Country.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Country.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "RegionCode="
-                        If Region.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Region.Text.ToString & "',"
+                        If Region.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Region.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "Telephone="
-                        If Telephone.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Telephone.Text.ToString & "',"
+                        If Telephone.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Telephone.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "Fax="
-                        If Fax.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Fax.Text.ToString & "',"
+                        If Fax.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Fax.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "Email="
-                        If Email.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Email.Text.ToString & "',"
+                        If Email.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Email.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "Website="
-                        If Website.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null, " Else st_SQLSTR = st_SQLSTR & "'" & Website.Text.ToString & "',"
+                        If Website.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null, " Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Website.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "Comment="
-                        If R3Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null, " Else st_SQLSTR = st_SQLSTR & "'" & R3Comment.Text.ToString & "',"
+                        If R3Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null, " Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(R3Comment.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "Note="
-                        If Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null, " Else st_SQLSTR = st_SQLSTR & "'" & Comment.Text.ToString & "',"
+                        If Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null, " Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Comment.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "' "
-                        st_SQLSTR = st_SQLSTR & "WHERE SupplierCode='" & Code.Text.ToString & "'"
+                        st_SQLSTR = st_SQLSTR & "WHERE SupplierCode='" & Common.SafeSqlLiteral(Code.Text) & "'"
                         DBCommand.CommandText = st_SQLSTR
                         DBCommand.ExecuteNonQuery()
 
@@ -190,25 +190,25 @@
                 Else
                     '[Supplierの登録]-------------------------------------------------------------------
                     st_SQLSTR = "INSERT INTO Supplier (R3SupplierCode,Name1,Name2,Name3,Name4,SearchTerm1,SearchTerm2,Address1,Address2,Address3,PostalCode,CountryCode,RegionCode,Telephone,Fax,Email,Comment,Website,Note,LocationCode,isDisabled,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ("
-                    If R3SupplierCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & R3SupplierCode.Text.ToString & "',"
-                    If SupplierName1.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SupplierName1.Text.ToString & "',"
-                    If SupplierName2.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SupplierName2.Text.ToString & "',"
-                    If SupplierName3.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SupplierName3.Text.ToString & "',"
-                    If SupplierName4.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SupplierName4.Text.ToString & "',"
-                    If SearchTerm1.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SearchTerm1.Text.ToString & "',"
-                    If SearchTerm2.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SearchTerm2.Text.ToString & "',"
-                    If Address1.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Address1.Text.ToString & "',"
-                    If Address2.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Address2.Text.ToString & "',"
-                    If Address3.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Address3.Text.ToString & "',"
-                    If PostalCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & PostalCode.Text.ToString & "',"
-                    If Country.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Country.Text.ToString & "',"
-                    If Region.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Region.Text.ToString & "',"
-                    If Telephone.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Telephone.Text.ToString & "',"
-                    If Fax.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Fax.Text.ToString & "',"
-                    If Email.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Email.Text.ToString & "',"
-                    If R3Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & R3Comment.Text.ToString & "',"
-                    If Website.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Website.Text.ToString & "',"
-                    If Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Comment.Text.ToString & "',"
+                    If R3SupplierCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(R3SupplierCode.Text) & "',"
+                    If SupplierName1.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(SupplierName1.Text) & "',"
+                    If SupplierName2.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(SupplierName2.Text) & "',"
+                    If SupplierName3.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(SupplierName3.Text) & "',"
+                    If SupplierName4.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(SupplierName4.Text) & "',"
+                    If SearchTerm1.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(SearchTerm1.Text) & "',"
+                    If SearchTerm2.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(SearchTerm2.Text) & "',"
+                    If Address1.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Address1.Text) & "',"
+                    If Address2.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Address2.Text) & "',"
+                    If Address3.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Address3.Text) & "',"
+                    If PostalCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(PostalCode.Text) & "',"
+                    If Country.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Country.Text) & "',"
+                    If Region.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Region.Text) & "',"
+                    If Telephone.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Telephone.Text) & "',"
+                    If Fax.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Fax.Text) & "',"
+                    If Email.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Email.Text) & "',"
+                    If R3Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(R3Comment.Text) & "',"
+                    If Website.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Website.Text) & "',"
+                    If Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Comment.Text) & "',"
                     st_SQLSTR = st_SQLSTR & "null,0,'" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "'); "
                     st_SQLSTR = st_SQLSTR & "SELECT SupplierCode FROM Supplier WHERE SupplierCode = SCOPE_IDENTITY()"  '←[新規登録されたSupplierCodeの取得の為]
                     DBCommand.CommandText = st_SQLSTR
@@ -242,7 +242,7 @@
 
     Public Sub SetTownName()
         '[RegionにText及びValue設定]----------------------------------------------------------------
-        DBCommand.CommandText = "SELECT CountryCode,RegionCode,Name FROM s_Region WHERE CountryCode='" & Country.Text.ToString & "' ORDER BY name"
+        DBCommand.CommandText = "SELECT CountryCode,RegionCode,Name FROM s_Region WHERE CountryCode='" & Common.SafeSqlLiteral(Country.Text) & "' ORDER BY name"
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
         Region.Items.Clear()
@@ -287,7 +287,7 @@
     End Sub
 
     Public Sub DataDisplay2()
-        DBCommand.CommandText = "SELECT CountryCode, RegionCode FROM dbo.Supplier WHERE SupplierCode = '" & Code.Text.ToString & "'"
+        DBCommand.CommandText = "SELECT CountryCode, RegionCode FROM dbo.Supplier WHERE SupplierCode = '" & Common.SafeSqlLiteral(Code.Text) & "'"
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
         If DBReader.Read = True Then
@@ -296,7 +296,7 @@
             If Not TypeOf DBReader("RegionCode") Is DBNull Then Region.Text = DBReader("RegionCode")
 
             '[DefaultQuoLocation.Item設定]------------------------------------------------------
-            DBCommand2.CommandText = "SELECT QuoLocationCode FROM dbo.IrregularRFQLocation WHERE (SupplierCode = '" & Code.Text.ToString & "')"
+            DBCommand2.CommandText = "SELECT QuoLocationCode FROM dbo.IrregularRFQLocation WHERE (SupplierCode = '" & Common.SafeSqlLiteral(Code.Text) & "')"
             DBReader2 = DBCommand2.ExecuteReader()
             DBCommand2.Dispose()
             If DBReader2.Read = True Then
@@ -314,40 +314,40 @@
     Public Sub IRFQLocation_Mainte()
         '[IrregularRFQLocationの更新]-------------------------------------------------------------------
         If DefaultQuoLocation.SelectedValue = "" Then
-            DBCommand.CommandText = "SELECT SupplierCode FROM [IrregularRFQLocation] WHERE SupplierCode='" & Code.Text.ToString & "'"
+            DBCommand.CommandText = "SELECT SupplierCode FROM [IrregularRFQLocation] WHERE SupplierCode='" & Common.SafeSqlLiteral(Code.Text) & "'"
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             If DBReader.Read = True Then
                 DBReader.Close()
-                DBCommand.CommandText = "DELETE FROM IrregularRFQLocation WHERE SupplierCode = '" & Code.Text.ToString & "'"
+                DBCommand.CommandText = "DELETE FROM IrregularRFQLocation WHERE SupplierCode = '" & Common.SafeSqlLiteral(Code.Text) & "'"
                 DBCommand.ExecuteNonQuery()
             Else
                 DBReader.Close()
             End If
         ElseIf DefaultQuoLocation.SelectedValue = "Direct" Then
-            DBCommand.CommandText = "SELECT SupplierCode FROM [IrregularRFQLocation] WHERE SupplierCode='" & Code.Text.ToString & "'"
+            DBCommand.CommandText = "SELECT SupplierCode FROM [IrregularRFQLocation] WHERE SupplierCode='" & Common.SafeSqlLiteral(Code.Text) & "'"
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             If DBReader.Read = True Then
                 DBReader.Close()
-                DBCommand.CommandText = "UPDATE IrregularRFQLocation SET QuoLocationCode=null WHERE SupplierCode = '" & Code.Text.ToString & "'"
+                DBCommand.CommandText = "UPDATE IrregularRFQLocation SET QuoLocationCode=null WHERE SupplierCode = '" & Common.SafeSqlLiteral(Code.Text) & "'"
                 DBCommand.ExecuteNonQuery()
             Else
                 DBReader.Close()
-                DBCommand.CommandText = "INSERT INTO IrregularRFQLocation (EnqLocationCode,SupplierCode,QuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" & Session("LocationCode") & "','" & Code.Text.ToString & "',null,'" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "')"
+                DBCommand.CommandText = "INSERT INTO IrregularRFQLocation (EnqLocationCode,SupplierCode,QuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" & Session("LocationCode") & "','" & Common.SafeSqlLiteral(Code.Text) & "',null,'" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "')"
                 DBCommand.ExecuteNonQuery()
             End If
         Else
-            DBCommand.CommandText = "SELECT SupplierCode FROM [IrregularRFQLocation] WHERE SupplierCode='" & Code.Text.ToString & "'"
+            DBCommand.CommandText = "SELECT SupplierCode FROM [IrregularRFQLocation] WHERE SupplierCode='" & Common.SafeSqlLiteral(Code.Text) & "'"
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             If DBReader.Read = True Then
                 DBReader.Close()
-                DBCommand.CommandText = "UPDATE IrregularRFQLocation SET QuoLocationCode='" & DefaultQuoLocation.SelectedValue & "' WHERE SupplierCode = '" & Code.Text.ToString & "'"
+                DBCommand.CommandText = "UPDATE IrregularRFQLocation SET QuoLocationCode='" & DefaultQuoLocation.SelectedValue & "' WHERE SupplierCode = '" & Common.SafeSqlLiteral(Code.Text) & "'"
                 DBCommand.ExecuteNonQuery()
             Else
                 DBReader.Close()
-                DBCommand.CommandText = "INSERT INTO IrregularRFQLocation (EnqLocationCode,SupplierCode,QuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" & Session("LocationCode") & "','" & Code.Text.ToString & "','" & DefaultQuoLocation.SelectedValue & "','" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "')"
+                DBCommand.CommandText = "INSERT INTO IrregularRFQLocation (EnqLocationCode,SupplierCode,QuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" & Session("LocationCode") & "','" & Common.SafeSqlLiteral(Code.Text) & "','" & DefaultQuoLocation.SelectedValue & "','" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "')"
                 DBCommand.ExecuteNonQuery()
             End If
         End If
