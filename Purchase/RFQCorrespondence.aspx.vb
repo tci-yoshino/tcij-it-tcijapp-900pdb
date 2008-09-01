@@ -223,13 +223,14 @@ Partial Public Class RFQCorrespondence
         st_SqlStr = st_SqlStr + "'" + st_RFQStatusCode + "',"
         st_SqlStr = st_SqlStr + "'" + st_StatusChangeDate + "',"
         st_SqlStr = st_SqlStr + "'" + CorresTitle.SelectedValue + "',"
-        st_SqlStr = st_SqlStr + "'" + CorresNote.Text + "',"
+        st_SqlStr = st_SqlStr + "@Note,"
         st_SqlStr = st_SqlStr + "'" + Session("LocationCode") + "',"
         st_SqlStr = st_SqlStr + Session("UserID") + ","
         st_SqlStr = st_SqlStr + "'" + st_LocationCode + "',"
         st_SqlStr = st_SqlStr + st_UserID + ","
         st_SqlStr = st_SqlStr + "0,"
         st_SqlStr = st_SqlStr + Session("UserID") + ",'" + Now() + "'," + Session("UserID") + ",'" + Now() + "')"
+        SrcRFQHistory.InsertParameters.Add("Note", CorresNote.Text)
         SrcRFQHistory.InsertCommand = st_SqlStr
         SrcRFQHistory.Insert()
         Msg.Text = "表示データを登録しました"
