@@ -287,6 +287,13 @@ Partial Public Class POUpdate
         PO.Value = PONumber.ToString()
         Dim POInformation As POInformationType = SelectPOInformation(PONumber)
 
+        '関数戻り値が構造体でNothing判定できないため、主キーのPONumberがNothingかでデータ有無を判定
+        If POInformation.PONumber Is Nothing Then
+            Msg.Text = MSG_NO_DATA_FOUND
+            b_FormVisible = False
+            Exit Sub
+        End If
+
         'フォーム左段
         RFQNumber.Text = POInformation.RFQNumber.ToString()
         R3PONumber.Text = POInformation.R3PONumber
@@ -296,7 +303,7 @@ Partial Public Class POUpdate
         POLocation.Text = POInformation.POLocationName
         ProductNumber.Text = POInformation.ProductNumber
         'ProductNameは表示時に40文字制限があります
-        ProductName.Text = CutShort(POInformation.ProductName)
+        ProductName.Text = CutShort(POInformation.ProductName.ToString())
 
         OrderQuantity.Text = NullableDecimalToString(POInformation.OrderQuantity, FORMAT_DECIMAL)
         OrderUnit.Text = POInformation.OrderUnitCode
@@ -522,7 +529,8 @@ Partial Public Class POUpdate
     ''' <remarks></remarks>
     Private Function ExistsPO(ByVal PONumber As String) As Boolean
 
-        Return ExistenceConfirmation(TABLE_NAME_PO, PK_NAME_PO, PONumber)
+        'Return ExistenceConfirmation(TABLE_NAME_PO, PK_NAME_PO, PONumber)
+        Return ExistenceConfirmation(VIEW_NAME_PO, PK_NAME_PO, PONumber)
 
     End Function
 
