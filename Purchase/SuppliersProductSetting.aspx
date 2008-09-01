@@ -71,7 +71,7 @@
                 <asp:HiddenField ID="Action" runat="server" Value="Save" />
                 
                 <div class="btns">
-                    <asp:Button ID="Save" runat="server" Text="Save" />
+                    <asp:Button ID="Save" runat="server" Text="Save" UseSubmitBehavior="false" />
                 </div>
             </form>
         </div>
