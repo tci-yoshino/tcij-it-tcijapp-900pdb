@@ -95,13 +95,13 @@ Public Class Common
     ''' メールアドレスフォーマット(英数字@英数字.英数字)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const EMAIL_REGEX As String = "[A-Za-z0-9\-\.\_]+@[A-Za-z0-9\-\_]+\.[A-Za-z0-9\-\.\_]+"
+    Public Const EMAIL_REGEX As String = "[A-Za-z0-9\-\._]+@[A-Za-z0-9\-_]+\.[A-Za-z0-9\-\._]+|^$"
 
     ''' <summary>
     ''' URLフォーマット
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const URL_REGEX As String = "^(https?|ftp)(:\/\/[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)"
+    Public Const URL_REGEX As String = "([-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)|^$"
 
     ''' <summary>
     ''' メッセージ 「レコードはありません」
