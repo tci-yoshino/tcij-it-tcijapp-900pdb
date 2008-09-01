@@ -51,7 +51,7 @@
                 If b_hasrows Then
 
                     ' クエリ、コマンド、アダプタの生成
-                    st_query = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode"
+                    st_query = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode ORDER BY [Name] ASC "
                     command.CommandText = st_query
                     Dim adapter As New SqlClient.SqlDataAdapter()
 
@@ -72,7 +72,7 @@
         ElseIf Session("Purchase.PrivilegeLevel") = "A" Then
             Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
                 ' クエリ、アダプタ、SQLコマンド オブジェクトの生成
-                Dim st_query As String = "SELECT UserID, [Name] FROM v_User"
+                Dim st_query As String = "SELECT UserID, [Name] FROM v_User ORDER BY [Name] ASC "
                 Dim adapter As New SqlClient.SqlDataAdapter()
                 Dim command As New SqlClient.SqlCommand(st_query, connection)
 
@@ -132,7 +132,7 @@
             & "     v_RFQReminder AS RR ON RH.RFQNumber = RR.RFQNumber AND RR.RcptUserID = @UserID " _
             & "WHERE QuoUserID = @UserID " _
             & "  AND StatusCode NOT IN ('Q','C') " _
-            & "ORDER BY StatusSortOrder, StatusChangeDate "
+            & "ORDER BY StatusSortOrder, StatusChangeDate ASC "
         RFQList.DataSourceID = "SrcRFQ"
         RFQList.DataBind()
 
