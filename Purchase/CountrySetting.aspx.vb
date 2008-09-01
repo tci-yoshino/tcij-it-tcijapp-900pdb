@@ -46,7 +46,7 @@
 
         If IsPostBack = False Then
             '[Location設定]-------------------------------------------------------------------
-            DBCommand.CommandText = "SELECT Name FROM dbo.s_Location"
+            DBCommand.CommandText = "SELECT Name FROM dbo.s_Location ORDER BY Name"
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             Location.Items.Clear()
