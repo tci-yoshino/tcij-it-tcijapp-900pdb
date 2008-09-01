@@ -108,9 +108,19 @@
             Exit Sub
         End If
 
-        '[必須項目チェック]------------------------------------------------------------------
+        '[必須項目チェック]------------------------------------------------------------ ------
         If SupplierName3.Text.ToString = "" Or Address1.Text.ToString = "" Or Country.Text.ToString = "" Then
             Msg.Text = "必須項目を入力して下さい"
+            Exit Sub
+        End If
+
+        '[Email,URLのCheck]------------------------------------------------------------------
+        If Not Regex.IsMatch(Email.Text, Common.EMAIL_REGEX) Then
+            Msg.Text = Common.ERR_INCORRECT_FORMAT
+            Exit Sub
+        End If
+        If Not Regex.IsMatch(Website.Text, Common.URL_REGEX) Then
+            Msg.Text = Common.ERR_INCORRECT_FORMAT
             Exit Sub
         End If
 
