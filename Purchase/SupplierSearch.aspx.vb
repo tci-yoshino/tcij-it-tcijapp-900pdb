@@ -26,15 +26,15 @@
         SrcSupplier.SelectCommand = "SELECT SupplierCode AS [Supplier Code], R3SupplierCode AS [R/3 Supplier Code], ISNULL(Name3, '') + N' ' + ISNULL(Name4, '') AS [Supplier Name], './SupplierSetting.aspx?Action=Edit&Code=' + rtrim(ltrim(str([SupplierCode]))) AS Url  FROM dbo.Supplier "
         If Code.Text.ToString <> "" Then
             If SQLStr = "" Then SQLStr = "WHERE "
-            SQLStr = SQLStr + "(SupplierCode = '" + Common.SafeSqlLikeClauseLiteral(Code.Text) + "')"
+            SQLStr = SQLStr + "(SupplierCode = '" + Common.SafeSqlLiteral(Code.Text) + "')"
         End If
         '[R3Codeが数字の場合と文字の場合とでは検索が異なる]---------------------------
         If R3Code.Text.ToString <> "" Then
             If SQLStr = "" Then SQLStr = "WHERE " Else SQLStr = SQLStr + " AND "
             If IsNumeric(R3Code.Text.ToString) And R3Code.Text Like "*.*" = False Then
-                SQLStr = SQLStr + "(R3SupplierCode = " + Common.SafeSqlLikeClauseLiteral(R3Code.Text) + ")"
+                SQLStr = SQLStr + "(R3SupplierCode = " + Common.SafeSqlLiteral(R3Code.Text) + ")"
             Else
-                SQLStr = SQLStr + "(R3SupplierCode = '" + Common.SafeSqlLikeClauseLiteral(R3Code.Text) + "')"
+                SQLStr = SQLStr + "(R3SupplierCode = '" + Common.SafeSqlLiteral(R3Code.Text) + "')"
             End If
         End If
         If Name.Text.ToString <> "" Then
