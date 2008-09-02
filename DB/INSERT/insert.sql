@@ -1,96 +1,96 @@
 BULK INSERT [Role]
-FROM '$(ScliptPath)INSERT/Role.txt'
+FROM '$(ScriptPath)INSERT/Role.txt'
 WITH(
       DATAFILETYPE = 'widechar'
 )
 GO
 
 BULK INSERT [Privilege]
-FROM '$(ScliptPath)INSERT/Privilege.txt'
+FROM '$(ScriptPath)INSERT/Privilege.txt'
 WITH(
       DATAFILETYPE = 'widechar'
 )
 GO
 
 BULK INSERT [Role_Privilege]
-FROM '$(ScliptPath)INSERT/Role_Privilege.txt'
+FROM '$(ScriptPath)INSERT/Role_Privilege.txt'
 WITH(
       DATAFILETYPE = 'widechar'
 )
 GO
 
 BULK INSERT [PurchasingUser]
-FROM '$(ScliptPath)INSERT/PurchasingUser.txt'
+FROM '$(ScriptPath)INSERT/PurchasingUser.txt'
 WITH(
       DATAFILETYPE = 'widechar'
 )
 GO
 
 BULK INSERT [PurchasingCountry]
-FROM '$(ScliptPath)INSERT/PurchasingCountry.txt'
+FROM '$(ScriptPath)INSERT/PurchasingCountry.txt'
 WITH(
       DATAFILETYPE = 'widechar'
 )
 GO
 
 BULK INSERT [PurchasingUnit]
-FROM '$(ScliptPath)INSERT/PurchasingUnit.txt'
+FROM '$(ScriptPath)INSERT/PurchasingUnit.txt'
 WITH(
       DATAFILETYPE = 'widechar'
 )
 GO
 
 BULK INSERT [PurchasingCurrency]
-FROM '$(ScliptPath)INSERT/PurchasingCurrency.txt'
+FROM '$(ScriptPath)INSERT/PurchasingCurrency.txt'
 WITH(
       DATAFILETYPE = 'widechar'
 )
 GO
 
 BULK INSERT [PurchasingPaymentTerm]
-FROM '$(ScliptPath)INSERT/PurchasingPaymentTerm.txt'
+FROM '$(ScriptPath)INSERT/PurchasingPaymentTerm.txt'
 WITH(
       DATAFILETYPE = 'widechar'
 )
 GO
 
 BULK INSERT [Purpose]
-FROM '$(ScliptPath)INSERT/Purpose.txt'
+FROM '$(ScriptPath)INSERT/Purpose.txt'
 WITH(
       DATAFILETYPE = 'widechar'
 )
 GO
 
 BULK INSERT [NoOfferReason]
-FROM '$(ScliptPath)INSERT/NoOfferReason.txt'
+FROM '$(ScriptPath)INSERT/NoOfferReason.txt'
 WITH(
       DATAFILETYPE = 'widechar'
 )
 GO
 
 BULK INSERT [RFQCorres]
-FROM '$(ScliptPath)INSERT/RFQCorres.txt'
+FROM '$(ScriptPath)INSERT/RFQCorres.txt'
 WITH(
       DATAFILETYPE = 'widechar'
 )
 GO
 
 BULK INSERT [POCorres]
-FROM '$(ScliptPath)INSERT/POCorres.txt'
+FROM '$(ScriptPath)INSERT/POCorres.txt'
 WITH(
       DATAFILETYPE = 'widechar'
 )
 GO
 
 BULK INSERT [RFQStatus]
-FROM '$(ScliptPath)INSERT/RFQStatus.txt'
+FROM '$(ScriptPath)INSERT/RFQStatus.txt'
 WITH(
       DATAFILETYPE = 'widechar'
 )
 GO
 
 BULK INSERT [POStatus]
-FROM '$(ScliptPath)INSERT/POStatus.txt'
+FROM '$(ScriptPath)INSERT/POStatus.txt'
 WITH(
       DATAFILETYPE = 'widechar'
 )
