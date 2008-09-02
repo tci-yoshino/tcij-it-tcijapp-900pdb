@@ -2,13 +2,17 @@
     Inherits CommonPage
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        SrcSupplier.SelectCommand = ""
+        If IsPostBack = False Then
+            SrcSupplier.SelectCommand = ""
+            SupplierList.Visible = False
+        End If
     End Sub
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
         '[Code,R3Codeを1Byte形式に変換する]-----------------------------------------------
         Code.Text = StrConv(Code.Text.ToString, VbStrConv.Narrow)
         R3Code.Text = StrConv(R3Code.Text.ToString, VbStrConv.Narrow)
+        SupplierList.Visible = True
 
         '[Supplier検索]-------------------------------------------------------------------
         If Code.Text.ToString <> "" And Not IsNumeric(Code.Text.ToString) Then
