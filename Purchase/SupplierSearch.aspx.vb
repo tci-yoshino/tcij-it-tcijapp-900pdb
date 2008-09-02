@@ -12,20 +12,27 @@
         '[Code,R3Codeを1Byte形式に変換する]-----------------------------------------------
         Code.Text = StrConv(Code.Text.ToString, VbStrConv.Narrow)
         R3Code.Text = StrConv(R3Code.Text.ToString, VbStrConv.Narrow)
-        SupplierList.Visible = True
+
+        Msg.Text = ""
+        SupplierList.Visible = False
+
+        '[何も入力されていない場合検索しない]---------------------------------------------
+        If Trim(Code.Text).Length = 0 Then Code.Text = ""
+        If Trim(R3Code.Text).Length = 0 Then R3Code.Text = ""
+        If Trim(Name.Text).Length = 0 Then Name.Text = ""
+        If Code.Text.Length + R3Code.Text.Length + Name.Text.Length = 0 Then Exit Sub
 
         '[Supplier検索]-------------------------------------------------------------------
         If Code.Text.ToString <> "" And Not IsNumeric(Code.Text.ToString) Then
             Msg.Text = "SupplierCodeには数字を入力して下さい"
-            ClearListView()
             Exit Sub
         ElseIf Code.Text Like "*.*" = True Then
             Msg.Text = "SupplierCodeには整数を入力して下さい"
-            ClearListView()
             Exit Sub
         End If
 
-        Msg.Text = ""
+        SupplierList.Visible = True
+
         Dim SQLStr As String = ""
         SrcSupplier.SelectCommand = "SELECT SupplierCode AS [Supplier Code], R3SupplierCode AS [R/3 Supplier Code], ISNULL(Name3, '') + N' ' + ISNULL(Name4, '') AS [Supplier Name], './SupplierSetting.aspx?Action=Edit&Code=' + rtrim(ltrim(str([SupplierCode]))) AS Url  FROM dbo.Supplier "
         If Code.Text.ToString <> "" Then
@@ -54,8 +61,4 @@
         End If
     End Sub
 
-    Public Sub ClearListView()
-        SrcSupplier.SelectCommand = ""
-        SupplierList.DataBind()
-    End Sub
 End Class
