@@ -243,15 +243,18 @@
 		function ProductSelect_onclick() {
     		var ProductNumber = encodeURIComponent(document.getElementById('ProductNumber').value);
 	    	popup('./ProductSelect.aspx?ProductNumber=' + ProductNumber);
+	    	return false;
 		}
 		function SupplierSelect_onclick(Postback) {
     		var SupplierCode = encodeURIComponent(document.getElementById('SupplierCode').value);
     		var EnqLocation = encodeURIComponent(document.getElementById('EnqLocation').value);
 	    	popup('./RFQSupplierSelect.aspx?Code=' + SupplierCode + '&Location=' + EnqLocation + '&Postback=' + Postback);
+	    	return false;
 		}
 		function MakerSelect_onclick() {
     		var MakerCode = encodeURIComponent(document.getElementById('MakerCode').value);
 	    	popup('./MakerSelect.aspx?Code=' + MakerCode);
+	    	return false;
 		}
 		</script>
 	</body>
