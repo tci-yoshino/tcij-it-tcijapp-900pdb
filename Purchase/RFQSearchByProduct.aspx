@@ -41,7 +41,7 @@ window.onload = function() {
                     </tr>
                     <tr>
                         <th>RFQ Reference Number : </th>
-                        <td><asp:TextBox ID="RFQ" runat="server" Width="7em" MaxLength="10" Height="21px"></asp:TextBox></td>
+                        <td><asp:TextBox ID="RFQ" runat="server" Width="7em" MaxLength="10"></asp:TextBox></td>
                     </tr>
                 </table>
                 

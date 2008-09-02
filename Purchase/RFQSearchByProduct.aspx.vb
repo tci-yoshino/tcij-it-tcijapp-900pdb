@@ -165,6 +165,9 @@ Partial Public Class RFQSearchByProduct
 
         sb_SQL.Append(sb_SQLConditional.ToString())
 
+        sb_SQL.Append("ORDER BY ")
+        sb_SQL.Append(" ProductName ")
+
         Return sb_SQL.ToString()
 
     End Function
@@ -176,6 +179,11 @@ Partial Public Class RFQSearchByProduct
     ''' <param name="Parameters">対象SQLParameters</param>
     ''' <remarks></remarks>
     Private Sub SetParamesToSQL(ByVal Key As SearchKey, ByRef Parameters As SqlParameterCollection)
+
+        '検索キーサニタイジング
+        Key.Code = SafeSqlLikeClauseLiteral(Key.Code)
+        Key.CAS = SafeSqlLikeClauseLiteral(Key.CAS)
+        Key.RFQ = SafeSqlLikeClauseLiteral(Key.RFQ)
 
         If Key.Code <> String.Empty Then
             Parameters.AddWithValue("ProductNumber", Key.Code)
