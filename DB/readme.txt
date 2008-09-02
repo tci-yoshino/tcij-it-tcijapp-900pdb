@@ -16,50 +16,58 @@ Purchase のデータベースの構築および初期化する SQL スクリプトです。
 
 【使用方法】
 
-■ Purchase 用データベース構築を行いたい場合
-
-1. create_DBAndUser.bat をエディタで開く。
+■ 初期設定
+1. create_DBAndUser.bat を右クリック - [編集] を選択。
 2. 変数 DBFileDir にデータベースファイルおよび
    データベースログファイルを保存するパスを指定する。
    * SSMS でデータベースの CREATE 文作成時に PRIMARY 句で確認できます。
    * 開発サーバの場合は以下のとおり。
      D:\Program Files\Microsoft SQL Server\MSSQL.1\MSSQL\DATA\
-3. create_DBAndUser.bat を保存する。
-4. create_DBAndUser.bat を実行する。
-5. 作成したいデータベース名を指定する。
+3. create_DBAndUser.bat を保存し、閉じる。
+4. start_initialize.bat を右クリック - [編集] を選択。
+5. 変数 ScliptPath がこのスクリプトの存在するフォルダか確認する。
+   異なる場合は修正を行う。
+   * 開発サーバの場合は以下のとおり。
+     C:\tcijapp\Purchase\DB\
+6. start_initialize.bat を保存し、閉じる。
+
+■ Purchase 用データベース構築を行いたい場合
+
+1. create_DBAndUser.bat を実行する。
+2. 作成したいデータベース名を指定する。
 
 ■ Purchase 用データベースの初期化を行いたい場合
 
-1. start_initialize.bat をエディタで開く。
-2. 変数 ScliptPath がこのスクリプトの存在するフォルダか確認する。
-   異なる場合は修正を行い、保存する。
-   * 開発サーバの場合は以下のとおり。
-     C:\tcijapp\Purchase\DB\
-3. start_initialize.bat を 実行する。
-4. 作成したいデータベース名を指定する。
+1. start_initialize.bat を 実行する。
+2. 初期化したいデータベース名を指定する。
 
 【フォルダ構成】
 
 DB
 ├ DROP
-│ └ drop_*.sql (各オブジェクトごとに DROP スクリプトが存在)
+│ ├ drop_sp.sql        (ストアドの DROP スクリプト)
+│ ├ drop_synonym.sql   (シノニムの DROP スクリプト)
+│ ├ drop_table.sql     (テーブルの DROP スクリプト)
+│ └ drop_view.sql      (ビューの DROP スクリプト)
 ├ CREATE
 │ ├ *.sql      (各オブジェクト名ごとに CREATE スクリプトが存在)
-│ ├ create_synonym.sql (シノニムの CREATE スクリプト)
+│ ├ create_synonym.sql (シノニムの CREATE スクリプト(*1))
 │ └ create.sql (各 CREATE スクリプトを呼び出すスクリプト)
 ├ INSERT
-│ ├ data       (テーブル名ごとにインポートする .txt データが存在)
-│ └ insert.sql (data フォルダのデータをインポートするスクリプト)
+│ ├ data       (テーブル名ごとにインサートするテキストデータが存在)
+│ └ insert.sql (data フォルダのデータをインサートするスクリプト)
 ├ create_DBAndUser.bat (DB構築バッチ)
 ├ create_DBAndUser.sql (DB構築スクリプト)
-├ create_DBAndUser.log (DB構築実行ログ)
+├ create_DBAndUser.log (DB構築実行ログ(*2))
 ├ start_initialize.bat (DB初期化バッチ)
 ├ start_initialize.sql (DB初期化スクリプト)
-├ start_initialize.log (DB初期化実行ログ)
+├ start_initialize.log (DB初期化実行ログ(*2))
 └ readme.txt    (このファイル)
 
-* log ファイルは各バッチが実行された時に生成されます。
-  すでにlog ファイルが存在する場合は上書きされます。
+(*1) シノニムの CREATE 文はひとつのファイルに纏められています。
+(*2) log ファイルは各バッチが実行された時に生成されます。
+     すでにlog ファイルが存在する場合は上書きされます。
+
 
 【DROP クエリの生成・修正方法】
 
@@ -71,6 +79,7 @@ DB
    例)この2行を削除。
    USE オブジェクト名
    GO
+
 3. 最終行に GO コマンドが無い場合は GO コマンドを記述する。
 4. クエリを全行コピーする。
 5. 初期化スクリプトのフォルダを開き、 DB\DROP\ に移動する。
@@ -89,13 +98,14 @@ DB
    GO
 
 3. 最終行に GO コマンドが無い場合は GO コマンドを記述する。
-
 4. [ファイル] - [名前を付けて(クエリファイル名)を保存] で、
    ファイル名を生成するオブジェクト名として保存。
-   または既存のファイルに上書き保存する。
+   または既存のファイルに上書き保存する。(*1)
+5. 新規保存の場合は 初期化スクリプトのフォルダを開き、
+   DB\CREATE\create.sql ファイルを修正する。
 
-* 新規保存の場合は DB/CREATE/create.sql ファイルも修正してください。
-* FK、CH、インデックスの CREATE クエリはテーブルの CREATE クエリ内に記載してください。
+(*1) FK、CH、インデックスの CREATE クエリは
+     テーブルの CREATE スクリプト内に記載してください。
 
 【INSERT クエリの生成・修正方法】
 
