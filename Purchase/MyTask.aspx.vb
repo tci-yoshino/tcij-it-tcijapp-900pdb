@@ -131,7 +131,7 @@
             & "FROM v_RFQHeader AS RH LEFT OUTER JOIN " _
             & "     v_RFQReminder AS RR ON RH.RFQNumber = RR.RFQNumber AND RR.RcptUserID = @UserID " _
             & "WHERE QuoUserID = @UserID " _
-            & "  AND StatusCode NOT IN ('Q','C') " _
+            & "  AND NOT (StatusCode IN ('Q','C') AND RR.RFQHistoryNumber IS NULL) " _
             & "ORDER BY StatusSortOrder, StatusChangeDate ASC "
         RFQList.DataSourceID = "SrcRFQ"
         RFQList.DataBind()
