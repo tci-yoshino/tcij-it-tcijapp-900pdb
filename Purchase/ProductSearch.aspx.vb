@@ -12,8 +12,13 @@
         '[入力ProductNumberの正規化]---------------------------------------------------
         ProductNumber.Text = StrConv(ProductNumber.Text, VbStrConv.Narrow)
         ProductNumber.Text = UCase(ProductNumber.Text)
-        ProductList.Visible = True
 
+        If ProductNumber.Text = "" Then
+            Msg.Text = "Product Number" + Common.ERR_REQUIRED_FIELD
+            Exit Sub
+        End If
+
+        ProductList.Visible = True
         Dim st_SqlStr As String = " "
         SrcProduct.SelectCommand = "SELECT ProductNumber, CASE WHEN NOT Product.QuoName IS NULL THEN Product.QuoName ELSE Product.Name END AS ProductName, './ProductSetting.aspx?Action=Edit&ProductID=' + Rtrim(Ltrim(Str(ProductID))) AS Url FROM dbo.Product "
         If ProductNumber.Text.ToString <> "" Then st_SqlStr = st_SqlStr + "WHERE (ProductNumber = '" + Common.SafeSqlLiteral(ProductNumber.Text) + "')"
