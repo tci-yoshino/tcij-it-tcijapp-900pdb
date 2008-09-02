@@ -8,6 +8,7 @@
             & "FROM v_RFQHeader AS RH LEFT OUTER JOIN " _
             & "     v_RFQReminder AS RR ON RH.RFQNumber = RR.RFQNumber AND RR.RcptUserID = '" & Session("UserID") & "' " _
             & "WHERE EnqUserID = '" & Session("UserID") & "' " _
+            & "  AND NOT (RH.StatusCode = 'C' AND RR.RFQHistoryNumber IS NULL) " _
             & "ORDER BY StatusSortOrder, StatusChangeDate "
 
     End Sub
