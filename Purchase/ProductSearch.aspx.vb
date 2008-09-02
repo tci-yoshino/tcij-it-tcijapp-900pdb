@@ -2,13 +2,17 @@
     Inherits CommonPage
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        SrcProduct.SelectCommand = ""
+        If IsPostBack = False Then
+            SrcProduct.SelectCommand = ""
+            ProductList.Visible = False
+        End If
     End Sub
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
         '[入力ProductNumberの正規化]---------------------------------------------------
         ProductNumber.Text = StrConv(ProductNumber.Text, VbStrConv.Narrow)
         ProductNumber.Text = UCase(ProductNumber.Text)
+        ProductList.Visible = True
 
         Dim st_SqlStr As String = " "
         SrcProduct.SelectCommand = "SELECT ProductNumber, CASE WHEN NOT Product.QuoName IS NULL THEN Product.QuoName ELSE Product.Name END AS ProductName, './ProductSetting.aspx?Action=Edit&ProductID=' + Rtrim(Ltrim(Str(ProductID))) AS Url FROM dbo.Product "
