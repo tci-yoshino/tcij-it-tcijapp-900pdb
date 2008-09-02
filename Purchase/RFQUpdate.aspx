@@ -404,10 +404,12 @@
     		var SupplierCode = encodeURIComponent(document.getElementById('SupplierCode').value);
     		var EnqLocation = encodeURIComponent(document.getElementById('EnqLocation').innerHTML);
 	    	popup('./RFQSupplierSelect.aspx?Code=' + SupplierCode + '&Location=' + EnqLocation);
+	    	return false;
 		}
 		function MakerSelect_onclick() {
     		var MakerCode = encodeURIComponent(document.getElementById('MakerCode').value);
 	    	popup('./MakerSelect.aspx?Code=' + MakerCode);
+	    	return false;
 		}
         function Correspondence_onclick() {
     		var RFQNumber = encodeURIComponent(document.getElementById('RFQNumber').innerHTML);
