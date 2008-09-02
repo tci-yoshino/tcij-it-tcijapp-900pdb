@@ -554,14 +554,14 @@ Partial Public Class POUpdate
     ''' </summary>
     ''' <param name="LocalTime">ローカル時間</param>
     ''' <returns>データベース時間 (JST)</returns>
-    ''' <remarks>Nullに対応したCommonのラッピング関数</remarks>
-    Private Function GetDatabaseTime(ByVal LocalTime As Date?) As DateTime?
+    ''' <remarks>Nullに対応したラッピング関数</remarks>
+    Private Function GetDatabaseTime(ByVal LocalTime As Date?) As Date?
 
         If LocalTime Is Nothing Then
             Return Nothing
         End If
 
-        Return CType(Common.GetDatabaseTime(Session(SESSION_KEY_LOCATION).ToString(), LocalTime.ToString()), Date)
+        Return CType(Common.GetDatabaseTime(Session(SESSION_KEY_LOCATION).ToString(), LocalTime.ToString()), Date?)
 
     End Function
 
@@ -570,7 +570,7 @@ Partial Public Class POUpdate
     ''' </summary>
     ''' <param name="LocalTime">ローカル時間</param>
     ''' <returns>データベース時間 (JST)</returns>
-    ''' <remarks>Nullに対応したCommonのラッピング関数</remarks>
+    ''' <remarks>Nullに対応したラッピング関数</remarks>
     Private Function GetDatabaseTime(ByVal LocalTime As String) As Date?
 
         If LocalTime.Trim = String.Empty Then
