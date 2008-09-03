@@ -86,7 +86,7 @@
                 & "WHERE " _
                 & "  (RH.SupplierCode = @SupplierCode OR RH.MakerCode = @SupplierCode) " _
                 & "ORDER BY " _
-                & "  QuotedDate ASC, StatusChangeDate DESC, RFQNumber ASC "
+                & "  QuotedDate DESC, StatusChangeDate DESC, RFQNumber ASC "
         End If
 
     End Sub
