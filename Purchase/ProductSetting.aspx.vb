@@ -118,11 +118,11 @@
 
         '[入力項目のLengthCheck]-------------------------------------------------------
         If Reference.Text.Length > 3000 Then
-            Msg.Text = "Referenceが3000桁以上です。"
+            Msg.Text = "Referenceの文字数が3000を超えています。"
             Exit Sub
         End If
         If Comment.Text.Length > 3000 Then
-            Msg.Text = "Commentが3000桁以上です。"
+            Msg.Text = "Commentの文字数が3000を超えています。"
             Exit Sub
         End If
 
