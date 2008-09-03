@@ -8,7 +8,7 @@ CREATE VIEW [dbo].[v_User] AS
 SELECT
 	PU.UserID,
 	U.AD_AccountName AS AccountName,
-	U.AD_GivenName + ' ' + U.AD_Surname AS Name,
+	LTRIM(RTRIM(ISNULL(U.AD_GivenName, '') + ' ' + ISNULL(U.AD_Surname, ''))) AS Name,
 	PU.RoleCode,
 	PU.PrivilegeLevel,
 	U.R3ID,
