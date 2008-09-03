@@ -92,7 +92,7 @@
                         </th>
                         <th class="subhead">
                             <asp:Label ID="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"))%>'></asp:Label>
-                            <span class="indent"><asp:Label ID="POStatus" runat="server" Text='<%#Eval("Status")%>'></asp:Label></span>
+                            <span class="indent"><asp:Label ID="POStatus" runat="server" Text='<%#Eval("StatusCode")%>'></asp:Label></span>
                         </th>
                         <th class="subhead" style="text-align:right">
                             Assign to : <asp:DropDownList ID="SOUser" runat="server" DataSourceID="SrcUser" DataTextField="Name" DataValueField="UserID"></asp:DropDownList>

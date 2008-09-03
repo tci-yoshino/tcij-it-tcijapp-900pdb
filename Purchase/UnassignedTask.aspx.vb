@@ -24,7 +24,7 @@
         SrcPO.SelectCommand = _
               "SELECT VP.PONumber, VP.PODate, VP.POLocationCode, VP.POLocationName, VP.POUserID, VP.POUserName, " _
             & "       VP.ProductNumber, VP.ProductName, VP.SupplierCode, VP.SupplierName, " _
-            & "       VP.MakerCode, VP.MakerName, VP.ParPONumber, VP.Status, VP.StatusChangeDate, " _
+            & "       VP.MakerCode, VP.MakerName, VP.ParPONumber, VP.StatusCode, VP.StatusChangeDate, " _
             & "       CONVERT(VARCHAR, VP.UpdateDate, 120) AS UpdateDate " _
             & "FROM v_PO AS VP " _
             & "WHERE " _
