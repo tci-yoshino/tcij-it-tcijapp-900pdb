@@ -116,11 +116,17 @@
 
         '[Email,URLのCheck]------------------------------------------------------------------
         If Not Regex.IsMatch(Email.Text, Common.EMAIL_REGEX) Then
-            Msg.Text = Common.ERR_INCORRECT_FORMAT
+            Msg.Text = "E-mail" + Common.ERR_INCORRECT_FORMAT
             Exit Sub
         End If
         If Not Regex.IsMatch(Website.Text, Common.URL_REGEX) Then
-            Msg.Text = Common.ERR_INCORRECT_FORMAT
+            Msg.Text = "Website" + Common.ERR_INCORRECT_FORMAT
+            Exit Sub
+        End If
+
+        '[Comment長のCheck]------------------------------------------------------------------
+        If Comment.Text.Length > 3000 Then
+            Msg.Text = "Commentの文字数が3000を超えています。"
             Exit Sub
         End If
 
@@ -131,7 +137,7 @@
             DBCommand.Dispose()
             If DBReader.Read = True Then
                 If Common.GetUpdateDate("Supplier", "SupplierCode", Code.Text.ToString) <> UpdateDate.Value Then
-                    Msg.Text = "このデータは他のユーザーによって編集されました。その内容を確認し再度編集をお願いします"
+                    Msg.Text = "データは他のユーザによって既に更新されています。ご確認ください。"
                 End If
             End If
             DBReader.Close()
