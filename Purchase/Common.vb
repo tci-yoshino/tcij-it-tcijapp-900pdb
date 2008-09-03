@@ -193,42 +193,19 @@ Public Class Common
 
     End Function
 
-    '''' <summary>
-    '''' データベース時間を取得する。
-    '''' </summary>
-    '''' <param name="LocationCode">拠点コード</param>
-    '''' <param name="LocalTime">ローカル時間</param>
-    '''' <returns>データベース時間 (JST)</returns>
-    '''' <remarks></remarks>
-    'Public Shared Function GetDatabaseTime(ByVal LocationCode As String, ByVal LocalTime As String) As Object
-    '    Dim st_ErrMsg As String = String.Empty
-    '    Dim obj_Date As Object = ConvertStringToDate(LocalTime)
-
-    '    If IsDBNull(obj_Date) Then
-    '        Return System.DBNull.Value
-    '    End If
-
-    '    If TCICommon.Func.ConvertDate(CDate(obj_Date), LocationCode, LOCATION_JP, st_ErrMsg) < 0 Then
-    '        Throw New Exception(String.Format("TCICommon.ConvertDate: {0}", st_ErrMsg))
-    '    End If
-
-    '    Return obj_Date
-
-    'End Function
-
 
     ''' <summary>
     ''' データベース時間を取得する。
     ''' </summary>
     ''' <param name="LocationCode">拠点コード</param>
     ''' <param name="LocalTime">ローカル時間</param>
-    ''' <returns>データベース時間 (JST)</returns>
+    ''' <returns>データベース時間 (JST) 引値が空白時は DBNull.Value</returns>
     ''' <remarks>既存の同名関数ではオブジェクトキャスト時に時間情報が失われていたいた為、修正</remarks>
     Public Shared Function GetDatabaseTime(ByVal LocationCode As String, ByVal LocalTime As String) As Object
         Dim st_ErrMsg As String = String.Empty
 
-        '空値の時にはDBNullを返してDB-Null更新処理を行う
-        If Not IsDate(LocalTime) Then
+        '空値の時にはDBNullを返します（DB-Null更新処理が想定されるため）
+        If String.IsNullOrEmpty(LocalTime) Then
             Return DBNull.Value
         End If
 
