@@ -60,7 +60,14 @@ Public Class Global_asax
             End Try
         End If
 
-        Server.Transfer("./SystemError.aspx")
+
+        '危険な文字列(Htmlタグ)が入力された場合はFormErrorへRedirect
+        If TypeOf ex Is Web.HttpRequestValidationException Then
+            Response.Redirect("./FormError.html", True)
+        Else
+            Server.Transfer("./SystemError.aspx")
+        End If
+
     End Sub
 
     Sub Session_End(ByVal sender As Object, ByVal e As EventArgs)
