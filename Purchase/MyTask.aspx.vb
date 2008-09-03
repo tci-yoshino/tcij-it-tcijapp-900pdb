@@ -141,7 +141,7 @@
         ' SrcPO_Par の NOT IN () には、SrcPO_Overdue, SrcPO_PPI で取得した PONumber が入る。
         ' 取得した PONumber が空の場合は '' が入る。(重複を避けるための処理)
         SrcPO_Overdue.SelectCommand = _
-              "SELECT PONumber, StatusChangeDate, Status, ProductNumber, ProductName, " _
+              "SELECT PONumber, StatusChangeDate, StatusCode, ProductNumber, ProductName, " _
             & "       PODate, POUserName, POLocationName, SupplierName, MakerName, DeliveryDate, " _
             & "       OrderQuantity, OrderUnitCode, CurrencyCode, UnitPrice, PerQuantity, PerUnitCode, 'Overdue' as POCorrespondence " _
             & "FROM v_PO " _
@@ -154,7 +154,7 @@
         POList_Overdue.DataBind()
 
         SrcPO_PPI.SelectCommand = _
-              "SELECT PONumber, StatusChangeDate, Status, ProductNumber, ProductName, " _
+              "SELECT PONumber, StatusChangeDate, StatusCode, ProductNumber, ProductName, " _
             & "       PODate, POUserName, POLocationName, SupplierName, MakerName,DeliveryDate, " _
             & "       OrderQuantity, OrderUnitCode, CurrencyCode, UnitPrice, PerQuantity, PerUnitCode, Status as POCorrespondence " _
             & "FROM v_PO " _
@@ -165,7 +165,7 @@
         POList_PPI.DataBind()
 
         SrcPO_Par.SelectCommand = _
-              "SELECT P.PONumber, P.StatusChangeDate, P.Status, P.ProductNumber, P.ProductName, " _
+              "SELECT P.PONumber, P.StatusChangeDate, P.StatusCode, P.ProductNumber, P.ProductName, " _
             & "       P.PODate, P.POUserName, P.POLocationName, P.SupplierName, P.MakerName, P.DeliveryDate, " _
             & "       P.OrderQuantity, P.OrderUnitCode, P.CurrencyCode, P.UnitPrice, P.PerQuantity, P.PerUnitCode, PR.POCorres as POCorrespondence " _
             & "FROM v_PO AS P INNER JOIN " _

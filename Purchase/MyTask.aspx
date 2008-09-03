@@ -74,7 +74,7 @@ window.onload = function() {
                     </tr>
                     <tr>
                         <th style="width:17%">Product Number / Name</th>
-                        <td style="width:33%"><asp:label id="ProductNumber" runat="server" Text='<%# Eval("ProductNumber") %>'></asp:label><span class="indent"><asp:label id="ProductName" runat="server" Text='<%#If(Eval("ProductName").ToString.Length > 35, Eval("ProductName").ToString.Substring(0, 35) & "...", Eval("ProductName"))%>'></asp:label></span></td>
+                        <td style="width:33%"><asp:label id="ProductNumber" runat="server" Text='<%# Eval("ProductNumber") %>'></asp:label><span class="indent"><asp:label id="ProductName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("ProductName"))%>'></asp:label></span></td>
                         <th style="width:10%">Purpose</th>
                         <td style="width:12%"><asp:label id="Purpose" runat="server" Text='<%# Eval("Purpose") %>'></asp:label></td>
                         <th style="width:10%">Enq-User</th>
@@ -106,11 +106,11 @@ window.onload = function() {
                     <table>
                         <tr>
                             <th class="subhead" colspan="2">PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber") %>'><asp:label id="PONumber" runat="server" Text='<%# Eval("PONumber") %>'></asp:label></asp:HyperLink><span class="indent"><em><asp:label id="POCorrespondence" runat="server" Text='<%# Eval("POCorrespondence") %>'></asp:label></em></span></th>
-                            <th class="subhead" colspan="4"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"))%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%# Eval("Status") %>'></asp:label></span></th>
+                            <th class="subhead" colspan="4"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"))%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%# Eval("StatusCode") %>'></asp:label></span></th>
                         </tr>
                         <tr>
                             <th style="width:17%">Product Number / Name</th>
-                            <td style="width:33%"><asp:label id="ProductNumber" runat="server" Text='<%# Eval("ProductNumber") %>'></asp:label><span class="indent"><asp:label id="ProductName" runat="server" Text='<%#If(Eval("ProductName").ToString.Length > 35, Eval("ProductName").ToString.Substring(0, 35) & "...", Eval("ProductName"))%>'></asp:label></span></td>
+                            <td style="width:33%"><asp:label id="ProductNumber" runat="server" Text='<%# Eval("ProductNumber") %>'></asp:label><span class="indent"><asp:label id="ProductName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("ProductName"))%>'></asp:label></span></td>
                             <th style="width:10%">PO Date</th>
                             <td style="width:12%"><asp:label id="PODate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("PODate"))%>'></asp:label></td>
                             <th style="width:10%">PO-User</th>
@@ -144,11 +144,11 @@ window.onload = function() {
                     <table>
                         <tr>
                             <th class="subhead" colspan="2">PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber") %>'><asp:label id="PONumber" runat="server" Text='<%# Eval("PONumber") %>'></asp:label></asp:HyperLink><span class="indent"><em><asp:label id="POCorrespondence" runat="server" Text='<%# Eval("POCorrespondence") %>'></asp:label></em></span></th>
-                            <th class="subhead" colspan="4"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"))%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%# Eval("Status") %>'></asp:label></span></th>
+                            <th class="subhead" colspan="4"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"))%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%# Eval("StatusCode") %>'></asp:label></span></th>
                         </tr>
                         <tr>
                             <th style="width:17%">Product Number / Name</th>
-                            <td style="width:33%"><asp:label id="ProductNumber" runat="server" Text='<%# Eval("ProductNumber") %>'></asp:label><span class="indent"><asp:label id="ProductName" runat="server" Text='<%#If(Eval("ProductName").ToString.Length > 35, Eval("ProductName").ToString.Substring(0, 35) & "...", Eval("ProductName"))%>'></asp:label></span></td>
+                            <td style="width:33%"><asp:label id="ProductNumber" runat="server" Text='<%# Eval("ProductNumber") %>'></asp:label><span class="indent"><asp:label id="ProductName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("ProductName"))%>'></asp:label></span></td>
                             <th style="width:10%">PO Date</th>
                             <td style="width:12%"><asp:label id="PODate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("PODate"))%>'></asp:label></td>
                             <th style="width:10%">PO-User</th>
@@ -182,11 +182,11 @@ window.onload = function() {
                     <table>
                         <tr>
                             <th class="subhead" colspan="2">PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber") %>'><asp:label id="PONumber" runat="server" Text='<%# Eval("PONumber") %>'></asp:label></asp:HyperLink><span class="indent"><em><asp:label id="POCorrespondence" runat="server" Text='<%# Eval("POCorrespondence") %>'></asp:label></em></span></th>
-                            <th class="subhead" colspan="4"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"))%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%# Eval("Status") %>'></asp:label></span></th>
+                            <th class="subhead" colspan="4"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"))%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%# Eval("StatusCode") %>'></asp:label></span></th>
                         </tr>
                         <tr>
                             <th style="width:17%">Product Number / Name</th>
-                            <td style="width:33%"><asp:label id="ProductNumber" runat="server" Text='<%# Eval("ProductNumber") %>'></asp:label><span class="indent"><asp:label id="ProductName" runat="server" Text='<%#If(Eval("ProductName").ToString.Length > 35, Eval("ProductName").ToString.Substring(0, 35) & "...", Eval("ProductName"))%>'></asp:label></span></td>
+                            <td style="width:33%"><asp:label id="ProductNumber" runat="server" Text='<%# Eval("ProductNumber") %>'></asp:label><span class="indent"><asp:label id="ProductName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("ProductName"))%>'></asp:label></span></td>
                             <th style="width:10%">PO Date</th>
                             <td style="width:12%"><asp:label id="PODate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("PODate"))%>'></asp:label></td>
                             <th style="width:10%">PO-User</th>
@@ -222,7 +222,7 @@ window.onload = function() {
                                 </tr>
                                 <tr>
                                     <th style="width:17%">Product Number / Name</th>
-                                    <td style="width:33%"><asp:label id="ProductNumber" runat="server" Text='<%# Eval("ProductNumber") %>'></asp:label><span class="indent"><asp:label id="ProductName" runat="server" Text='<%#If(Eval("ProductName").ToString.Length > 35, Eval("ProductName").ToString.Substring(0, 35) & "...", Eval("ProductName"))%>'></asp:label></span></td>
+                                    <td style="width:33%"><asp:label id="ProductNumber" runat="server" Text='<%# Eval("ProductNumber") %>'></asp:label><span class="indent"><asp:label id="ProductName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("ProductName"))%>'></asp:label></span></td>
                                     <th style="width:10%">PO Date</th>
                                     <td style="width:12%"><asp:label id="PODate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("PODate"))%>'></asp:label></td>
                                     <th style="width:10%">PO-User</th>
