@@ -14,7 +14,8 @@ Partial Public Class RFQSearchByProduct
     ''' 必須項目漏れのエラーメッセージ定数です。
     ''' </summary>
     ''' <remarks></remarks>
-    Const MSG_REQUIED_PRODUCT_NUMBER = "Product Numberを入力してください"
+    Const MSG_REQUIED_PRODUCT_NUMBER As String = "Product Numberを入力してください"
+    Const MSG_FIELD_RFQ As String = "RFQ Reference Number"
 
     ''' <summary>
     ''' RFQ検索キー構造体です。
@@ -53,12 +54,17 @@ Partial Public Class RFQSearchByProduct
     ''' <remarks></remarks>
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
 
+        Msg.Text = String.Empty
+
         '必須入力項目のチェック
         If Code.Text.Trim = String.Empty Then
             Msg.Text = MSG_REQUIED_PRODUCT_NUMBER
             Exit Sub
-        Else
-            Msg.Text = String.Empty
+        End If
+
+        If Not IsNaturalNumber(RFQ.Text) And RFQ.Text.Trim <> String.Empty Then
+            Msg.Text = MSG_FIELD_RFQ + ERR_INCORRECT_FORMAT
+            Exit Sub
         End If
 
         '入力された検索キーを構造体に代入
@@ -71,6 +77,32 @@ Partial Public Class RFQSearchByProduct
         SearchRFQ(st_SearchKey)
 
     End Sub
+
+    ''' <summary>
+    ''' 対象が自然数（0以上の整数）かどうかをチェックし結果を返します。
+    ''' </summary>
+    ''' <param name="value">対象となる Object</param>
+    ''' <returns>自然数のときはTrue 異なるときはFalseを返します</returns>
+    ''' <remarks></remarks>
+    Private Function IsNaturalNumber(ByVal value As Object) As Boolean
+
+        If Not IsNumeric(value) Then
+            Return False
+        End If
+
+        Dim i_Value As Integer
+
+        If Not Integer.TryParse(value, i_Value) Then
+            Return False
+        End If
+
+        If i_Value <= 0 Then
+            Return False
+        End If
+
+        Return True
+
+    End Function
 
     ''' <summary>
     ''' RFQの検索を行います。
