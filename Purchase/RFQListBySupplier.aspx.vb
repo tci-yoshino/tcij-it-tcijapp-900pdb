@@ -55,9 +55,9 @@
                 Telephone.Text = reader("Telephone").ToString()
                 Fax.Text = reader("Fax").ToString()
                 Email.Text = reader("Email").ToString()
-                EmailLink.NavigateUrl = reader("Email").ToString()
+                EmailLink.NavigateUrl = "mailto:" & reader("Email").ToString()
                 Website.Text = reader("Website").ToString()
-                WebsiteLink.NavigateUrl = reader("Website").ToString()
+                WebsiteLink.NavigateUrl = "http://" & reader("Website").ToString()
                 CountryName.Text = reader("CountryName").ToString()
 
             Else
