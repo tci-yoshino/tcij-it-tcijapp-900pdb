@@ -27,8 +27,8 @@ BEGIN TRY
 ---- mainproccess
   UPDATE Product
     SET Product.[Name] = ISNULL(s_ProductName.HinMei3,'') + ISNULL(s_ProductName.HinMei4,''),
-        Product.JapaneseName = s_ProductName.HinMei4,
-        Product.UpdatedBy = '1252',
+        Product.JapaneseName = s_ProductName.HinMei2,
+        Product.UpdatedBy = '0',
         Product.UpdateDate = GETDATE()
     FROM Product, s_ProductName
     WHERE Product.ProductNumber = s_ProductName.HinCds
