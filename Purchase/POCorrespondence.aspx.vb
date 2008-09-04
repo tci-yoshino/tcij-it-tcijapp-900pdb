@@ -154,15 +154,25 @@ Partial Public Class POCorrespondence
         Dim st_StatusChangeDate As Date
         Dim st_LocationCode As String = ""
         Dim st_UserID As String = ""
+
         '[Send実行確認]---------------------------------------------------------------------------------
         If Request.QueryString("Action") <> "Send" Then
             Msg.Text = Common.ERR_INVALID_PARAMETER
         End If
 
-        '[Connectionの定義]-------------------------------------------------------------------------
+        '[CorresNoteのCheck]----------------------------------------------------------------------------
+        If Trim(CorresNote.Text) = "" Then
+            Msg.Text = "Note" + Common.ERR_REQUIRED_FIELD
+            Exit Sub
+        ElseIf CorresNote.Text.Length > 3000 Then
+            Msg.Text = "Noteの文字数が3000を超えています。"
+            Exit Sub
+        End If
+
+        '[Connectionの定義]-----------------------------------------------------------------------------
         Dim conn As SqlConnection = Nothing
 
-        '[パラメータPONumberと同一の最大POHistoryNumberのレコードを検索]------------------------------
+        '[パラメータPONumberと同一の最大POHistoryNumberのレコードを検索]--------------------------------
         Try
             conn = New SqlConnection(DB_CONNECT_STRING)
             Dim cmd As SqlCommand = conn.CreateCommand()
@@ -233,6 +243,8 @@ Partial Public Class POCorrespondence
         SrcPOHistory.InsertParameters.Add("Note", CorresNote.Text)
         SrcPOHistory.InsertCommand = st_SqlStr
         SrcPOHistory.Insert()
-        Msg.Text = "表示データを登録しました"
+
+        '[CorresNoteのClear]-----------------------------------------------------------------------------
+        CorresNote.Text = ""
     End Sub
 End Class

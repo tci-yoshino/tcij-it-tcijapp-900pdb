@@ -40,7 +40,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>Note : </th>
+                        <th>Note <span class="required">*</span> : </th>
                         <td><asp:TextBox ID="CorresNote" runat="server" Columns="60" Rows="5" TextMode="MultiLine"></asp:TextBox></td>
                     </tr>
                 </table>
