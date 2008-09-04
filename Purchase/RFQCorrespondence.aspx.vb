@@ -243,7 +243,6 @@ Partial Public Class RFQCorrespondence
         SrcRFQHistory.InsertParameters.Add("Note", CorresNote.Text)
         SrcRFQHistory.InsertCommand = st_SqlStr
         SrcRFQHistory.Insert()
-        Msg.Text = "表示データを登録しました"
 
         '[CorresNoteのClear]-----------------------------------------------------------------------------
         CorresNote.Text = ""
