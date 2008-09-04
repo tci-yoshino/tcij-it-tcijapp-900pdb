@@ -20,6 +20,8 @@ Partial Public Class RFQIssue
     Private Const ERR_REQUIRED_PURPOSE As String = "Purpose" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_ENQQUANTITY As String = "Enq-Quantity は最低1件登録する必要があります。入力値をお確かめのうえ、再度登録してください。 "
     Private Const ERR_ISCASNUMBER As String = "Product Number 欄に CAS 登録番号を入力して見積依頼を作成することはできません。"
+    'エラーメッセージ(文字数制限オーバー)
+    Private Const ERR_COMMENT_OVER As String = "Comment は3000文字以上登録することができません。"
     Protected Parameter As Boolean = True
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -355,6 +357,11 @@ Partial Public Class RFQIssue
             '数値に変換できなかった場合の処理(小数点含む場合もこちら)は入力値不正
             Msg.Text = ERR_INCORRECT_MAKERCODE
             Return False
+        End If
+        '入力項目の文字数チェック
+        If Comment.Text.Length > 3000 Then
+            Msg.Text = ERR_COMMENT_OVER
+            Exit Function
         End If
         Return True
     End Function
