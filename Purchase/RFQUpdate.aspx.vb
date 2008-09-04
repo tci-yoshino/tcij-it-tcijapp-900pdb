@@ -23,6 +23,10 @@ Partial Public Class RFQUpdate
     Private Const ERR_GET_RFQDATA_FAILURE As String = "RFQ データの更新に失敗しましたが、エラーが検出されませんでした。"
     'エラーメッセージ(他拠点情報更新)
     Private Const ERR_ANOTHER_LOCATION As String = "他拠点間のRFQ情報は更新できません。"
+    'エラーメッセージ(文字数制限オーバー)
+    Private Const ERR_COMMENT_OVER As String = "Comment は3000文字以上登録することができません。"
+    Private Const ERR_SPECIFICATION_OVER As String = "Specification は255文字以上登録することができません。"
+
     '画面表示フラグ
     Protected Parameter As Boolean = True
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -55,6 +59,15 @@ Partial Public Class RFQUpdate
             Msg.Text = ERR_INVALID_PARAMETER
             Exit Sub
         End If
+        '入力項目の文字数チェック
+        If Comment.Text.Length > 3000 Then
+            Msg.Text = ERR_COMMENT_OVER
+            Exit Sub
+        End If
+        If Specification.Text.Length > 255 Then
+            Msg.Text = ERR_SPECIFICATION_OVER
+            Exit Sub
+        End If
         If CheckSupplierCode() = False Then
             'Supplier及びMakerの存在チェック
             Exit Sub
@@ -68,7 +81,6 @@ Partial Public Class RFQUpdate
             '入力された項目の型をチェックする(DB登録時にエラーになるもののみ)
             Exit Sub
         End If
-
         '他セッションでの更新チェック
         If CheckUpdatedate() = False Then
             Exit Sub
