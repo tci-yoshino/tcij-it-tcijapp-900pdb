@@ -62,7 +62,7 @@ Partial Public Class RFQSearchByProduct
             Exit Sub
         End If
 
-        If Not IsNaturalNumber(RFQ.Text) And RFQ.Text.Trim <> String.Empty Then
+        If Not Regex.IsMatch(RFQ.Text, DECIMAL_10_REGEX_OPTIONAL) Then
             Msg.Text = MSG_FIELD_RFQ + ERR_INCORRECT_FORMAT
             Exit Sub
         End If
@@ -78,31 +78,6 @@ Partial Public Class RFQSearchByProduct
 
     End Sub
 
-    ''' <summary>
-    ''' 対象が自然数（0以上の整数）かどうかをチェックし結果を返します。
-    ''' </summary>
-    ''' <param name="value">対象となる Object</param>
-    ''' <returns>自然数のときはTrue 異なるときはFalseを返します</returns>
-    ''' <remarks></remarks>
-    Private Function IsNaturalNumber(ByVal value As Object) As Boolean
-
-        If Not IsNumeric(value) Then
-            Return False
-        End If
-
-        Dim i_Value As Integer
-
-        If Not Integer.TryParse(value, i_Value) Then
-            Return False
-        End If
-
-        If i_Value <= 0 Then
-            Return False
-        End If
-
-        Return True
-
-    End Function
 
     ''' <summary>
     ''' RFQの検索を行います。

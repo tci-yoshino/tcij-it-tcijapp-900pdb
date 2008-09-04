@@ -54,6 +54,12 @@ Public Class Common
     ''' </summary>
     ''' <remarks></remarks>
     Public Const DECIMAL_10_3_REGEX_OPTIONAL As String = "^\d{1,10}(|\.)$|^\d{0,10}\.\d{1,3}$|^$"
+ 
+   ''' <summary>
+    ''' 数値フォーマット正規表現 (整数 10 桁。任意)
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const DECIMAL_10_REGEX_OPTIONAL As String = "^\d{1,10}$|^$"
 
     ''' <summary>
     ''' 数値フォーマット正規表現 (整数 7 桁, 小数 3 桁。必須)
