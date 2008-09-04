@@ -208,6 +208,8 @@ Public Class Common
     ''' <returns>データベース時間 (JST) 引値が空白時は DBNull.Value</returns>
     ''' <remarks>既存の同名関数ではオブジェクトキャスト時に時間情報が失われていたいた為、修正</remarks>
     Public Shared Function GetDatabaseTime(ByVal LocationCode As String, ByVal LocalTime As String) As Object
+        Const ERR_ILLEGAL_TIME_FORMAT As String = "指定された時間が無効です。書式を再度ご確認下さい。"
+
         Dim st_ErrMsg As String = String.Empty
 
         '空値の時にはDBNullを返します（DB-Null更新処理が想定されるため）
@@ -216,7 +218,7 @@ Public Class Common
         End If
 
         If Not IsDate(LocalTime) Then
-            Throw New Exception(String.Format("TCICommon.ConvertDate: {0}", st_ErrMsg))
+            Throw New Exception(String.Format("Common.GetDatabaseTime: {0}", ERR_ILLEGAL_TIME_FORMAT))
         End If
 
         Dim dt_Date As Date = New DateTime()
