@@ -436,4 +436,19 @@ Public Class Common
         Return False
     End Function
 
+    ''' <summary>
+    ''' 対象の文字列が Integer かをチェックして結果を返します。
+    ''' </summary>
+    ''' <param name="str">対象となる文字列</param>
+    ''' <returns>整数の場合は True、 そうでない場合は False を返します</returns>
+    ''' <remarks></remarks>
+    Public Shared Function IsInteger(ByVal str As String) As Boolean
+        Dim i_Value As Integer
+        If Not Integer.TryParse(str, i_Value) Then
+            Return False
+        End If
+
+        Return True
+    End Function
+
 End Class
