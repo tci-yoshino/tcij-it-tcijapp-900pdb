@@ -89,7 +89,7 @@
                         <tr>
                             <th>Notes:</th>
                             <td>
-                                <asp:Label ID="TitleLabel" runat="server" ForeColor="Red" Font-Bold="True" Text='<%# Eval("Title") %>' />
+                                <asp:Label ID="TitleLabel" runat="server" CssClass="attention" Text='<%# Eval("Title") %>' />
                                 <%#If(IsDBNull(Eval("Title")), "", "<br />")%>
                                 <asp:Label ID="Label1" runat="server" Text='<%# Eval("Notes") %>' />
                             </td>
