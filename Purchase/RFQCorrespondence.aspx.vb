@@ -154,12 +154,19 @@ Partial Public Class RFQCorrespondence
         Dim st_StatusChangeDate As Date
         Dim st_LocationCode As String = ""
         Dim st_UserID As String = ""
+
         '[Send実行確認]---------------------------------------------------------------------------------
         If Request.QueryString("Action") <> "Send" Then
             Msg.Text = Common.ERR_INVALID_PARAMETER
         End If
 
-        '[Connectionの定義]-------------------------------------------------------------------------
+        '[必須入力項目の入力確認]-----------------------------------------------------------------------
+        If Trim(CorresNote.Text) = "" Then
+            Msg.Text = "Note" + Common.ERR_REQUIRED_FIELD
+            Exit Sub
+        End If
+
+        '[Connectionの定義]-----------------------------------------------------------------------------
         Dim conn As SqlConnection = Nothing
 
         '[パラメータRFQNumberと同一の最大RFQHistoryNumberのレコードを検索]------------------------------
@@ -234,6 +241,9 @@ Partial Public Class RFQCorrespondence
         SrcRFQHistory.InsertCommand = st_SqlStr
         SrcRFQHistory.Insert()
         Msg.Text = "表示データを登録しました"
+
+        '[CorresNoteのClear]-----------------------------------------------------------------------------
+        CorresNote.Text = ""
     End Sub
 
 End Class
