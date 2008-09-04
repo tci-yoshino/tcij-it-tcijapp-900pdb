@@ -59,7 +59,7 @@ FROM
 		LEFT OUTER JOIN v_User AS QU ON RH.QuoUserID = QU.UserID
 		LEFT OUTER JOIN Supplier AS M ON RH.MakerCode = M.SupplierCode
 		LEFT OUTER JOIN Purpose AS PP ON RH.PurposeCode = PP.PurposeCode
-		LEFT OUTER JOIN s_PaymentTerm AS PT ON RH.PaymentTermCode = PT.PaymentTermCode,
+		LEFT OUTER JOIN PurchasingPaymentTerm AS PT ON RH.PaymentTermCode = PT.PaymentTermCode,
 	s_Location AS EL,
 	v_User AS EU,
 	Product AS P,
