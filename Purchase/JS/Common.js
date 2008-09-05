@@ -62,20 +62,23 @@ function changeCellColor(tableid){
     if (tr[no].getElementsByTagName('TD')) {
         tr[no].onmouseover = overCell;
         tr[no].onmouseout = outCell;
+        //tr[1].childNodes[4].className
     }
   }
 }
 
 function overCell(){
   var td = this.getElementsByTagName('TD')
-  for(var no=0;no<td.length;no++){
-    td[no].className = 'over';
+  for (var no = 0; no < td.length; no++) {
+      td[no].className = td[no].className + ' over';
   }
 }
 
 function outCell(){
-  var td = this.getElementsByTagName('TD')
-  for(var no=0;no<td.length;no++){
-    td[no].className = '';
+    var td = this.getElementsByTagName('TD')
+    var classname;
+    for (var no = 0; no < td.length; no++) {
+        classname = td[no].className.replace(" over", "");
+        td[no].className = classname;
   }
 }
