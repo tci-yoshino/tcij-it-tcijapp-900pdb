@@ -48,7 +48,7 @@
             If Request.QueryString("Supplier") = "" Then
                 SrcSupplierProduct.SelectCommand = ""
                 SupplierProductList.DataBind()
-                Msg.Text = "SupplierCodeが設定されていません"
+                Msg.Text = Common.ERR_INVALID_PARAMETER
                 Exit Sub
             End If
 
