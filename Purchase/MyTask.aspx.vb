@@ -146,7 +146,7 @@
             & "       OrderQuantity, OrderUnitCode, CurrencyCode, UnitPrice, PerQuantity, PerUnitCode, 'Overdue' as POCorrespondence " _
             & "FROM v_PO " _
             & "WHERE POUserID = @UserID " _
-            & "  AND DueDate < GETDATE() " _
+            & "  AND CONVERT(VARCHAR,DueDate,112) <= CONVERT(VARCHAR,GETDATE(),112) " _
             & "  AND ((ParPONumber IS NULL) AND (StatusSortOrder <= 11) " _
             & "        OR (ParPONumber IS NOT NULL) AND (StatusCode = 'CPI')) " _
             & "ORDER BY DueDate ASC "
