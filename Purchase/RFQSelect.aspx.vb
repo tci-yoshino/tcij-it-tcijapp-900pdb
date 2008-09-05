@@ -11,7 +11,6 @@
 
         ' コントロール初期化
         Msg.Text = ""
-
         ' パラメータ取得
         If Request.RequestType = "POST" Then
             st_ParPONumber = IIf(String.IsNullOrEmpty(Request.Form("ParPONumber")), "", Request.Form("ParPONumber"))
@@ -146,7 +145,7 @@
             reader.Read()
             Country.Text = reader("CountryName").ToString()
             SupplierName.Text = reader("Name").ToString()
-            
+
             reader.Close()
         End Using
     End Sub
@@ -188,10 +187,10 @@
     End Sub
 
     ' RFQLine を RFQHeader のレコードごとに取得する。
-    Protected Sub Set_RFQLine(ByVal sender As Object, ByVal e As System.EventArgs) Handles RFQHeaderList.ItemDataBound
+    Protected Sub Set_RFQLine(ByVal sender As Object, ByVal e As ListViewItemEventArgs) Handles RFQHeaderList.ItemDataBound
 
-        Dim src As SqlDataSource = DirectCast(DirectCast(e, ListViewItemEventArgs).Item.FindControl("SrcRFQLine"), SqlDataSource)
-        Dim label As Label = DirectCast(DirectCast(e, ListViewItemEventArgs).Item.FindControl("RFQNumber"), Label)
+        Dim src As SqlDataSource = CType(e.Item.FindControl("SrcRFQLine"), SqlDataSource)
+        Dim label As Label = CType(e.Item.FindControl("RFQNumber"), Label)
 
         src.SelectParameters.Clear()
         src.SelectParameters.Add("RFQNumber", label.Text)
@@ -202,5 +201,38 @@
             & "WHERE RFQNumber = @RFQNumber "
 
     End Sub
+
+    ' JavaScript を生成する。
+    Protected Sub Set_JavaScript(ByVal sender As Object, ByVal e As System.EventArgs) Handles RFQHeaderList.PreRender
+
+        Dim clientScriptManager As ClientScriptManager
+        Dim sb_JS As New StringBuilder
+        Dim lv_RFQHead As ListView = CType(sender, ListView)
+        Dim st_RFQLine_ID As String = String.Empty
+
+        ' OnLoad 時に実行する JavaScript
+        sb_JS.Append(" window.onload = function() { " & vbCrLf)
+        sb_JS.Append("   colorful.set(); " & vbCrLf)
+        For Each item As ListViewDataItem In lv_RFQHead.Items
+            st_RFQLine_ID = item.FindControl("RFQLineList").ClientID
+            sb_JS.Append("   changeCellColor('" & st_RFQLine_ID & "_itemPlaceholderContainer'); " & vbCrLf)
+        Next
+        sb_JS.Append(" } " & vbCrLf)
+        sb_JS.Append(vbCrLf)
+
+        ' POIssue へリダイレクトさせる JavaScript
+        sb_JS.Append("function goPOIssue(price, ponumber, rfqnumber) {" & vbCrLf)
+        sb_JS.Append("    if (price == '') {" & vbCrLf)
+        sb_JS.Append("        alert('Price " & Common.ERR_REQUIRED_FIELD & "');" & vbCrLf)
+        sb_JS.Append("    } else {" & vbCrLf)
+        sb_JS.Append("        location.href = 'POIssue.aspx?ParPONumber=' + ponumber + '&RFQLineNumber=' + rfqnumber;" & vbCrLf)
+        sb_JS.Append("    }" & vbCrLf)
+        sb_JS.Append("}" & vbCrLf)
+        sb_JS.Append(vbCrLf)
+
+        clientScriptManager = Page.ClientScript
+        clientScriptManager.RegisterClientScriptBlock(Me.GetType(), "onLoad", sb_JS.ToString(), True)
+    End Sub
+
 
 End Class

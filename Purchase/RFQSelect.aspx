@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./CSS/Style.css" type="text/css" media="screen,print" />
     <script type="text/javascript" src="./JS/Common.js"></script>
     <script type="text/javascript" src="./JS/Colorful.js"></script>
+    <%' JavaScript は VB ファイルの Set_JavaScript 関数で生成しています。 %>
 </head>
 <body>
     <!-- Main Content Area -->
@@ -48,16 +49,16 @@
                         <h3 style="font-style:italic"><%=Purchase.Common.MSG_NO_DATA_FOUND%></h3>
                     </EmptyDataTemplate>
                     <ItemTemplate>
-                        <table>
+                        <table runat="server">
                             <tr>
                                 <th class="subhead" colspan="2">RFQ Reference Number : <asp:Label ID="RFQNumber" runat="server" Text='<%#Eval("RFQNumber")%>'></asp:Label></th>
-                                <th class="subhead" colspan="2">Quoted Date : <asp:Label ID="QuotedDate" runat="server" Text='<%#Eval("QuotedDate") %>'></asp:Label></th>
+                                <th class="subhead" colspan="2">Quoted Date : <asp:Label ID="QuotedDate" runat="server" Text='<%#if(isDBNull(Eval("QuotedDate")), "", Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("QuotedDate"))) %>'></asp:Label></th>
                             </tr>
                             <tr>
                                 <th style="width:17%">Purpose</th>
                                 <td style="width:33%"><asp:Label ID="Purpose" runat="server" Text='<%#Eval("Purpose") %>'></asp:Label></td>
                                 <th style="width:17%">Handling Fee / Shipment Cost</th>
-                                <td style="width:33%"><asp:Label ID="ShippingHandlingCurrency" runat="server" Text='<%#Eval("ShippingHandlingCurrencyCode") %>'></asp:Label> <asp:Label ID="ShippingHandlingFee" runat="server" Text='<%#Eval("ShippingHandlingFee") %>'></asp:Label></td>
+                                <td style="width:33%"><asp:Label ID="ShippingHandlingCurrency" runat="server" Text='<%#Eval("ShippingHandlingCurrencyCode") %>'></asp:Label> <asp:Label ID="ShippingHandlingFee" runat="server" Text='<%#Eval("ShippingHandlingFee","{0:G29}") %>'></asp:Label></td>
                             </tr>
                             <tr>
                                 <th>Maker Name / Country</th>
@@ -73,16 +74,16 @@
                             </tr>
                             <tr>
                                 <th>Comment</th>
-                                <td colspan="3"><asp:Label ID="Comment" runat="server" Text='<%#Eval("Comment") %>'></asp:Label></td>
+                                <td colspan="3"><asp:Label ID="Comment" runat="server" Text='<%#Replace(Eval("Comment").ToString(), vbCrLf, "<br />")%>'></asp:Label></td>
                             </tr>
                         </table>
 
                         <asp:ListView ID="RFQLineList" runat="server" DataSourceID="SrcRFQLine">
                             <LayoutTemplate>
+                                <%' ここのテーブルIDを変更する場合はVBファイルの Set_JavaScript 関数も修正してください。 %>
                                 <table ID="itemPlaceholderContainer" runat="server" border="0" style="">
                                     <tr>
-                                        <th id="Th1" runat="server" style="width:3%"></th>
-                                        <th id="Th2" runat="server" style="width:7%">No.</th>
+                                        <th id="Th2" runat="server" style="width:10%">No.</th>
                                         <th id="Th3" runat="server" style="width:10%">Enq-Quantity</th>
                                         <th id="Th4" runat="server" style="width:10%">Currency</th>
                                         <th id="Th5" runat="server" style="width:10%">Price</th>
@@ -100,13 +101,12 @@
                                 <h3 style="font-style:italic"><%=Purchase.Common.MSG_NO_DATA_FOUND%></h3>
                             </EmptyDataTemplate>
                             <ItemTemplate>
-                              <tr>
-                                <th><%#If(IsDBNull(Eval("UnitPrice")), "Select", "<a href=""POIssue.aspx?ParPONumber=" & st_ParPONumber & "&RFQLineNumber=" & Eval("RFQLineNumber") & """>Select</a>")%></th>
+                              <tr onclick="<%#"goPOIssue('" & Eval("UnitPrice") & "','" & st_ParPONumber & "','" & Eval("RFQLineNumber") & "')"%>">
                                 <th><asp:Label ID="Seq" runat="server" Text='<%#Container.DataItemIndex + 1 %>'></asp:Label></th>
-                                <td><asp:Label ID="EnqQuantity" runat="server" Text='<%#Eval("EnqQuantity") %>'></asp:Label> <asp:Label ID="EnqUnit" runat="server" Text='<%#Eval("EnqUnitCode") %>'></asp:Label> x <asp:Label ID="EnqPiece" runat="server" Text='<%#Eval("EnqPiece") %>'></asp:Label></td>
+                                <td><asp:Label ID="EnqQuantity" runat="server" Text='<%#Eval("EnqQuantity","{0:G29}") %>'></asp:Label> <asp:Label ID="EnqUnit" runat="server" Text='<%#Eval("EnqUnitCode") %>'></asp:Label> x <asp:Label ID="EnqPiece" runat="server" Text='<%#Eval("EnqPiece","{0:G29}") %>'></asp:Label></td>
                                 <td><asp:Label ID="Currency" runat="server" Text='<%#Eval("CurrencyCode") %>'></asp:Label></td>
-                                <td class="number"><asp:Label ID="UnitPrice" runat="server" Text='<%#Eval("UnitPrice") %>'></asp:Label></td>
-                                <td class="number"><asp:Label ID="QuoPer" runat="server" Text='<%#Eval("QuoPer") %>'></asp:Label> <asp:Label ID="QuoUnit" runat="server" Text='<%#Eval("QuoUnitCode") %>'></asp:Label></td>
+                                <td class="number"><asp:Label ID="UnitPrice" runat="server" Text='<%#Eval("UnitPrice","{0:G29}") %>'></asp:Label></td>
+                                <td class="number"><asp:Label ID="QuoPer" runat="server" Text='<%#Eval("QuoPer","{0:G29}") %>'></asp:Label> <asp:Label ID="QuoUnit" runat="server" Text='<%#Eval("QuoUnitCode") %>'></asp:Label></td>
                                 <td><asp:Label ID="LeadTime" runat="server" Text='<%#Eval("LeadTime") %>'></asp:Label></td>
                                 <td><asp:Label ID="Packing" runat="server" Text='<%#Eval("Packing") %>'></asp:Label></td>
                                 <td><asp:Label ID="Purity" runat="server" Text='<%#Eval("Purity") %>'></asp:Label></td>
@@ -117,7 +117,6 @@
                         <asp:SqlDataSource ID="SrcRFQLine" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
                     </ItemTemplate>
                 </asp:ListView>
-                
                 <asp:HiddenField runat="server" ID="ParPONumber" Value='<%=st_ParPONumber %>' />
                 <asp:HiddenField runat="server" ID="Action" Value="Next" />
             </form>
