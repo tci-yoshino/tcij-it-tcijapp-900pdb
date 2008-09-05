@@ -24,13 +24,13 @@
 
     Sub Set_DBConnectingString()
         Dim settings As ConnectionStringSettings
-        '[接続文字列を設定ファイル(Web.config)から取得]---------------------------------------------
+        '[接続文字列を設定ファイル(Web.config)から取得]------------------------------------
         settings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
         If Not settings Is Nothing Then
-            '[接続文字列をイミディエイトに出力]-----------------------------------------------------
+            '[接続文字列をイミディエイトに出力]--------------------------------------------
             Debug.Print(settings.ConnectionString)
         End If
-        '[sqlConnectionに接続文字列を設定]----------------------------------------------------------
+        '[sqlConnectionに接続文字列を設定]-------------------------------------------------
         Me.SqlConnection1.ConnectionString = settings.ConnectionString
     End Sub
 
@@ -41,11 +41,11 @@
         DBConn.Open()
         DBCommand = DBConn.CreateCommand()
 
-        '[Msgのクリア]--------------------------------------------------------------------
+        '[Msgのクリア]---------------------------------------------------------------------
         Msg.Text = ""
 
         If IsPostBack = False Then
-            '[Location設定]-------------------------------------------------------------------
+            '[Location設定]----------------------------------------------------------------
             DBCommand.CommandText = "SELECT Name FROM dbo.s_Location ORDER BY Name"
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
@@ -56,7 +56,7 @@
             Loop
             DBReader.Close()
 
-            '[処理(登録/修正)の判断]----------------------------------------------------------
+            '[処理(登録/修正)の判断]-------------------------------------------------------
             If Request.QueryString("Action") = "Edit" Then
                 Code.Text = Request.QueryString("Code")
                 Search.Visible = False
@@ -103,92 +103,99 @@
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
         Dim st_Location As String = ""
         If Request.Form("Action") <> "Save" Then
-            Msg.Text = "Saveは拒否されました"
+            Msg.Text = Common.ERR_INVALID_PARAMETER
             Exit Sub
         End If
 
-        '[データのチェックと保存]----------------------------------------------------------
-        If Code.Text.ToString = "" Then
-            Msg.Text = "CountryCodeを入力して下さい"
+        '[CodeのCheck]---------------------------------------------------------------------
+        If Trim(Code.Text) = "" Then
+            Msg.Text = "CountryCode" + Common.ERR_REQUIRED_FIELD
+            Exit Sub
         Else
-            '[s_Country check]----------------------------------------------------------
+            '[s_Country check]-------------------------------------------------------------
             DBCommand.CommandText = "SELECT CountryCode FROM dbo.s_Country WHERE CountryCode = '" + Common.SafeSqlLiteral(Code.Text) + "'"
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
-            If DBReader.Read = True Then
-                '[PurchasingCountryの追加又は更新]------------------------------------------
+            If DBReader.Read = False Then
+                Msg.Text = "CountryCodeが不正です。"
                 DBReader.Close()
-                DBCommand.CommandText = "SELECT CountryCode FROM dbo.PurchasingCountry WHERE CountryCode = '" + Common.SafeSqlLiteral(Code.Text) + "'"
+                Exit Sub
+            End If
+            DBReader.Close()
+        End If
+
+        '[PurchasingCountryの追加又は更新]-------------------------------------------------
+        DBCommand.CommandText = "SELECT CountryCode FROM PurchasingCountry WHERE CountryCode = '" + Common.SafeSqlLiteral(Code.Text) + "'"
+        DBReader = DBCommand.ExecuteReader()
+        DBCommand.Dispose()
+        If DBReader.Read = True Then
+            DBReader.Close()
+
+            If Request.QueryString("Action") <> "Edit" Then
+                Msg.Text = "このデータはすでに登録済です。その内容を確認し再度処理をお願いします"
+                Exit Sub
+            End If
+
+            '[PurchasingCountryのUpdateDateの値を取得する]---------------------------------
+            DBCommand.CommandText = "SELECT UpdateDate FROM PurchasingCountry WHERE CountryCode = '" + Common.SafeSqlLiteral(Code.Text) + "'"
+            DBReader = DBCommand.ExecuteReader()
+            DBCommand.Dispose()
+            If DBReader.Read = False Then
+                Msg.Text = "このデータは他のユーザーによって削除されています。"
+                DBReader.Close()
+                Exit Sub
+            End If
+
+            'TODO ToStringで臨時対応
+            If DBReader("UpdateDate").ToString() <> UpdateDate.Value Then
+                DBReader.Close()
+                Msg.Text = "データは他のユーザによって既に更新されています。ご確認ください。"
+                Exit Sub
+            End If
+            DBReader.Close()
+
+            If Location.Text.ToString <> "Direct" Then
+                DBCommand.CommandText = "SELECT LocationCode FROM dbo.s_Location WHERE Name = '" + Common.SafeSqlLiteral(Location.Text) + "'"
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
                 If DBReader.Read = True Then
+                    st_Location = DBReader("LocationCode")
                     DBReader.Close()
-                    If Request.QueryString("Action") = "Edit" Then
-                        '[PurchasingCountryのUpdateDateの値を取得する]---------------------------
-                        DBCommand.CommandText = "SELECT UpdateDate FROM PurchasingCountry WHERE CountryCode = '" + Common.SafeSqlLiteral(Code.Text) + "'"
-                        DBReader = DBCommand.ExecuteReader()
-                        DBCommand.Dispose()
-                        If DBReader.Read = True Then
-                            'TODO ToStringで臨時対応
-                            If DBReader("UpdateDate").ToString() = UpdateDate.Value Then
-                                DBReader.Close()
-                                If Location.Text.ToString <> "Direct" Then
-                                    DBCommand.CommandText = "SELECT LocationCode FROM dbo.s_Location WHERE Name = '" + Common.SafeSqlLiteral(Location.Text) + "'"
-                                    DBReader = DBCommand.ExecuteReader()
-                                    DBCommand.Dispose()
-                                    If DBReader.Read = True Then
-                                        st_Location = DBReader("LocationCode")
-                                        DBReader.Close()
-                                        '[PurchasingCountryの更新処理]------------------------------------------
-                                        DBCommand.CommandText = "UPDATE [PurchasingCountry] SET DefaultQuoLocationCode='" + st_Location + "',UpdatedBy=" + Session("UserID") + ", UpdateDate='" + Now() + "'  WHERE CountryCode ='" + Common.SafeSqlLiteral(Code.Text) + "'"
-                                        DBCommand.ExecuteNonQuery()
-                                    Else
-                                        DBReader.Close()
-                                    End If
-                                Else
-                                    '[PurchasingCountryの更新処理]------------------------------------------
-                                    DBCommand.CommandText = "UPDATE [PurchasingCountry] SET DefaultQuoLocationCode=null,UpdatedBy=" + Session("UserID") + ", UpdateDate='" + Now() + "'  WHERE CountryCode ='" + Common.SafeSqlLiteral(Code.Text) + "'"
-                                    DBCommand.ExecuteNonQuery()
-                                End If
-                            Else
-                                DBReader.Close()
-                                Msg.Text = "このデータは他のユーザーによって編集されました。その内容を確認し再度編集をお願いします"
-                            End If
-                        Else
-                            DBReader.Close()
-                        End If
-                    Else
-                        Msg.Text = "このデータはすでに登録済です。その内容を確認し再度処理をお願いします"
-                    End If
+                    '[PurchasingCountryの更新処理]-----------------------------------------
+                    DBCommand.CommandText = "UPDATE [PurchasingCountry] SET DefaultQuoLocationCode='" + st_Location + "',UpdatedBy=" + Session("UserID") + ", UpdateDate='" + Now() + "'  WHERE CountryCode ='" + Common.SafeSqlLiteral(Code.Text) + "'"
+                    DBCommand.ExecuteNonQuery()
                 Else
                     DBReader.Close()
-                    '[PurchasingCountryの追加処理]------------------------------------------
-                    If Location.Text.ToString <> "Direct" Then
-                        DBCommand.CommandText = "SELECT LocationCode FROM dbo.s_Location WHERE Name = '" + Common.SafeSqlLiteral(Location.Text) + "'"
-                        DBReader = DBCommand.ExecuteReader()
-                        DBCommand.Dispose()
-                        If DBReader.Read = True Then
-                            st_Location = DBReader("LocationCode")
-                            DBReader.Close()
-                            '[PurchasingCountryの追加処理]------------------------------------------
-                            DBCommand.CommandText = "INSERT INTO PurchasingCountry (CountryCode,DefaultQuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" + Common.SafeSqlLiteral(UCase(Code.Text)) + "','" + st_Location + "','" + Session("UserID") + "','" + Now() + "','" + Session("UserID") + "','" + Now() + "')"
-                            DBCommand.ExecuteNonQuery()
-                        Else
-                            DBReader.Close()
-                        End If
-                    Else
-                        '[PurchasingCountryの追加処理]------------------------------------------
-                        DBCommand.CommandText = "INSERT INTO PurchasingCountry (CountryCode,DefaultQuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" + Common.SafeSqlLiteral(UCase(Code.Text)) + "',null,'" + Session("UserID") + "','" + Now() + "','" + Session("UserID") + "','" + Now() + "')"
-                        DBCommand.ExecuteNonQuery()
-                    End If
                 End If
             Else
-                DBReader.Close()
-                Msg.Text = "CountryCodeが見つかりません"
+                '[PurchasingCountryの更新処理]---------------------------------------------
+                DBCommand.CommandText = "UPDATE [PurchasingCountry] SET DefaultQuoLocationCode=null,UpdatedBy=" + Session("UserID") + ", UpdateDate='" + Now() + "'  WHERE CountryCode ='" + Common.SafeSqlLiteral(Code.Text) + "'"
+                DBCommand.ExecuteNonQuery()
+            End If
+        Else
+            DBReader.Close()
+            '[PurchasingCountryの追加処理]-------------------------------------------------
+            If Location.Text.ToString <> "Direct" Then
+                DBCommand.CommandText = "SELECT LocationCode FROM dbo.s_Location WHERE Name = '" + Common.SafeSqlLiteral(Location.Text) + "'"
+                DBReader = DBCommand.ExecuteReader()
+                DBCommand.Dispose()
+                If DBReader.Read = True Then
+                    st_Location = DBReader("LocationCode")
+                    DBReader.Close()
+                    '[PurchasingCountryの追加処理]-----------------------------------------
+                    DBCommand.CommandText = "INSERT INTO PurchasingCountry (CountryCode,DefaultQuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" + Common.SafeSqlLiteral(UCase(Code.Text)) + "','" + st_Location + "','" + Session("UserID") + "','" + Now() + "','" + Session("UserID") + "','" + Now() + "')"
+                    DBCommand.ExecuteNonQuery()
+                Else
+                    DBReader.Close()
+                End If
+            Else
+                '[PurchasingCountryの追加処理]---------------------------------------------
+                DBCommand.CommandText = "INSERT INTO PurchasingCountry (CountryCode,DefaultQuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" + Common.SafeSqlLiteral(UCase(Code.Text)) + "',null,'" + Session("UserID") + "','" + Now() + "','" + Session("UserID") + "','" + Now() + "')"
+                DBCommand.ExecuteNonQuery()
             End If
         End If
 
-        '[呼出元のフォームに戻る]------------------------------------------
+        '[呼出元のフォームに戻る]----------------------------------------------------------
         If Msg.Text.ToString = "" Then
             Response.Redirect("CountryList.aspx")
         End If
