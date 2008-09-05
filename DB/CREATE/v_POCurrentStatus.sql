@@ -6,16 +6,33 @@ GO
 
 CREATE VIEW [dbo].[v_POCurrentStatus] AS
 SELECT
-	PH.PONumber,
+	P.PONumber,
 	PH.POStatusCode AS StatusCode,
 	PS.Text,
-	PS.SortOrder AS SortOrder,
+	PS.SortOrder,
 	PH.StatusChangeDate AS ChangeDate
 FROM
-	POHistory PH,
-	POStatus PS
+	PO AS P,
+	POHistory AS PH,
+	POStatus AS PS
 WHERE
-	PH.POHistoryNumber IN (SELECT MAX(POHistoryNumber) FROM POHistory GROUP BY PONumber)
+	P.PONumber = PH.PONumber
+	AND PH.POHistoryNumber IN (SELECT MAX(POHistoryNumber) FROM POHistory GROUP BY PONumber)
+	AND PH.POStatusCode = PS.POStatusCode
+UNION
+SELECT
+	P.PONumber,
+	PH.POStatusCode AS StatusCode,
+	PS.Text,
+	PS.SortOrder,
+	PH.StatusChangeDate AS ChangeDate
+FROM
+	PO AS P,
+	POHistory AS PH,
+	POStatus AS PS
+WHERE
+	P.ParPONumber = PH.PONumber
+	AND PH.POHistoryNumber IN (SELECT MAX(POHistoryNumber) FROM POHistory GROUP BY PONumber)
 	AND PH.POStatusCode = PS.POStatusCode
 
 GO
