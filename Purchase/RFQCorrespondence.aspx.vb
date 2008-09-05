@@ -158,6 +158,7 @@ Partial Public Class RFQCorrespondence
         '[Send実行確認]---------------------------------------------------------------------------------
         If Request.QueryString("Action") <> "Send" Then
             Msg.Text = Common.ERR_INVALID_PARAMETER
+            Exit Sub
         End If
 
         '[必須入力項目の入力確認]-----------------------------------------------------------------------
