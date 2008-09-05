@@ -158,6 +158,7 @@ Partial Public Class POCorrespondence
         '[Send実行確認]---------------------------------------------------------------------------------
         If Request.QueryString("Action") <> "Send" Then
             Msg.Text = Common.ERR_INVALID_PARAMETER
+            Exit Sub
         End If
 
         '[CorresNoteのCheck]----------------------------------------------------------------------------

@@ -46,7 +46,8 @@
                 </table>
    
                 <div class="btns">
-                    <asp:Button ID="Send" runat="server" Text="Send" />
+                    <asp:Button ID="Send" runat="server" Text="Send"
+                        PostBackUrl="POCorrespondence.aspx?Action=Send" />
                 </div>
         </div>
 
