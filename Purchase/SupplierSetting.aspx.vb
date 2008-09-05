@@ -97,20 +97,27 @@
         SetTownName()
     End Sub
 
-
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
         Dim st_SQLSTR As String = ""
         Msg.Text = ""
 
         '[Actionチェック]--------------------------------------------------------------------
         If Request.Form("Action") <> "Save" Then
-            Msg.Text = "Saveは拒否されました"
+            Msg.Text = Common.ERR_INVALID_PARAMETER
             Exit Sub
         End If
 
-        '[必須項目チェック]------------------------------------------------------------ ------
-        If SupplierName3.Text.ToString = "" Or Address1.Text.ToString = "" Or Country.Text.ToString = "" Then
-            Msg.Text = "必須項目を入力して下さい"
+        '[必須項目チェック]------------------------------------------------------------------
+        If SupplierName3.Text = "" Then
+            Msg.Text = "Supplier Name" + Common.ERR_REQUIRED_FIELD
+            Exit Sub
+        End If
+        If Address1.Text = "" Then
+            Msg.Text = "Address" + Common.ERR_REQUIRED_FIELD
+            Exit Sub
+        End If
+        If Country.Text = "" Then
+            Msg.Text = "Country" + Common.ERR_REQUIRED_FIELD
             Exit Sub
         End If
 
@@ -131,13 +138,14 @@
         End If
 
         If UpdateDate.Value <> "" Then
-            '[SupplierのUpdateDateチェック]-----------------------------------------------------------
+            '[SupplierのUpdateDateチェック]--------------------------------------------------
             DBCommand.CommandText = "SELECT UpdateDate FROM dbo.Supplier WHERE SupplierCode = '" & Common.SafeSqlLiteral(Code.Text) & "'"
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             If DBReader.Read = True Then
                 If Common.GetUpdateDate("Supplier", "SupplierCode", Code.Text.ToString) <> UpdateDate.Value Then
                     Msg.Text = "データは他のユーザによって既に更新されています。ご確認ください。"
+                    Exit Sub
                 End If
             End If
             DBReader.Close()
@@ -148,13 +156,13 @@
             DBCommand.Transaction = sqlTran
             Try
                 If Mode.Value = "Edit" Then
-                    '[Supplierの更新]-------------------------------------------------------------------
+                    '[Supplierの更新]--------------------------------------------------------
                     DBCommand.CommandText = "SELECT SupplierCode FROM dbo.Supplier WHERE SupplierCode = '" & Common.SafeSqlLiteral(Code.Text) & "'"
                     DBReader = DBCommand.ExecuteReader()
                     DBCommand.Dispose()
                     If DBReader.Read = True Then
                         DBReader.Close()
-                        '[Supplierの更新処理]------------------------------------------
+                        '[Supplierの更新処理]------------------------------------------------
                         st_SQLSTR = "UPDATE [Supplier] SET R3SupplierCode="
                         If R3SupplierCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(R3SupplierCode.Text) & "',"
                         st_SQLSTR = st_SQLSTR & "Name1="
@@ -198,13 +206,13 @@
                         DBCommand.CommandText = st_SQLSTR
                         DBCommand.ExecuteNonQuery()
 
-                        '[IrregularRFQLocationの更新]---------------------------------------------------
+                        '[IrregularRFQLocationの更新]----------------------------------------
                         IRFQLocation_Mainte()
                     Else
                         DBReader.Close()
                     End If
                 Else
-                    '[Supplierの登録]-------------------------------------------------------------------
+                    '[Supplierの登録]--------------------------------------------------------
                     st_SQLSTR = "INSERT INTO Supplier (R3SupplierCode,Name1,Name2,Name3,Name4,SearchTerm1,SearchTerm2,Address1,Address2,Address3,PostalCode,CountryCode,RegionCode,Telephone,Fax,Email,Comment,Website,Note,LocationCode,isDisabled,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ("
                     If R3SupplierCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(R3SupplierCode.Text) & "',"
                     If SupplierName1.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(SupplierName1.Text) & "',"
@@ -236,10 +244,10 @@
                     End If
                     DBReader.Close()
 
-                    '[IrregularRFQLocationの更新]--------------------------------------------------------
+                    '[IrregularRFQLocationの更新]--------------------------------------------
                     IRFQLocation_Mainte()
 
-                    '[StActionをEditにする]--------------------------------------------------------------
+                    '[StActionをEditにする]--------------------------------------------------
                     Mode.Value = "Edit"
                 End If
 
@@ -251,13 +259,13 @@
                 Throw
             End Try
 
-            '[SupplierからUpdateDate取得]--------------------------------------------------------------
+            '[SupplierからUpdateDate取得]----------------------------------------------------
             UpdateDate.Value = Common.GetUpdateDate("Supplier", "SupplierCode", Code.Text.ToString)  '[同時更新チェック用]
         End If
     End Sub
 
     Public Sub SetTownName()
-        '[RegionにText及びValue設定]----------------------------------------------------------------
+        '[RegionにText及びValue設定]---------------------------------------------------------
         DBCommand.CommandText = "SELECT CountryCode,RegionCode,Name FROM s_Region WHERE CountryCode='" & Common.SafeSqlLiteral(Country.Text) & "' ORDER BY Name"
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
@@ -328,7 +336,7 @@
     End Sub
 
     Public Sub IRFQLocation_Mainte()
-        '[IrregularRFQLocationの更新]-------------------------------------------------------------------
+        '[IrregularRFQLocationの更新]--------------------------------------------------------
         If DefaultQuoLocation.SelectedValue = "" Then
             DBCommand.CommandText = "SELECT SupplierCode FROM [IrregularRFQLocation] WHERE SupplierCode='" & Common.SafeSqlLiteral(Code.Text) & "'"
             DBReader = DBCommand.ExecuteReader()
