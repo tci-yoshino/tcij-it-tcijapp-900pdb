@@ -20,7 +20,7 @@
             <div class="main">
                 <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 
-<%  If Not String.IsNullOrEmpty(st_RFQLineNumber) Then%>
+<%  If bo_DisplayForm = True Then%>
                 <table class="left">
                     <tr>
                         <th>RFQ Reference Number : </th>
@@ -29,7 +29,7 @@
     <% If Not String.IsNullOrEmpty(st_ParPONumber) Then%>
                     <tr>
                         <th>Par-PO Number : </th>
-                        <td><asp:Label ID="ParPONumber" runat="server" Text=""></asp:Label></td>
+                        <td><asp:Label ID="ParPONumber_Label" runat="server" Text=""></asp:Label></td>
                     </tr>
     <% End If%>
                     <tr>
@@ -181,6 +181,7 @@
                 </div>
                 
                 <asp:HiddenField ID="RFQLineNumber" runat="server" />
+                <asp:HiddenField ID="ParPONumber" runat="server" />
                 <asp:HiddenField ID="POLocationCode" runat="server" />
                 <asp:HiddenField ID="ProductID" runat="server" />
                 <asp:HiddenField ID="MakerCode" runat="server" />

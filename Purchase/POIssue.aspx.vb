@@ -11,6 +11,9 @@ Partial Public Class POIssue
     Protected st_Action As String
     Protected st_LoginLocationCode As String
 
+    ' 登録フォームを表示するか否か
+    Protected bo_DisplayForm As Boolean
+
     Private Const ERR_RFQ_NOT_FOUND As String = "見積依頼が存在しません。"
     Private Const ERR_PAR_PO_NOT_FOUND As String = "親発注が存在しません。"
     Private Const ERR_NO_QUOTATION_REPLY As String = "見積依頼に対する回答がないため発注できません。"
@@ -19,6 +22,8 @@ Partial Public Class POIssue
     Private Const EXP_PO_ISSUE_ERROR As String = "POIssue.Issue_Click: 発注番号が採番されませんでした。"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
+        bo_DisplayForm = False
 
         If Request.RequestType = "POST" Then
             st_RFQLineNumber = Request.Form("RFQLineNumber")
@@ -32,13 +37,18 @@ Partial Public Class POIssue
 
         st_LoginLocationCode = Session("LocationCode").ToString
 
-        If String.IsNullOrEmpty(st_RFQLineNumber) Then
+        If String.IsNullOrEmpty(st_RFQLineNumber) Or Not IsInteger(st_RFQLineNumber) Then
             Msg.Text = ERR_INVALID_PARAMETER
             Exit Sub
         End If
 
         If Not IsPostBack Then
             If Not String.IsNullOrEmpty(st_ParPONumber) Then
+                If Not IsInteger(st_ParPONumber) Then
+                    Msg.Text = ERR_INVALID_PARAMETER
+                    Exit Sub
+                End If
+
                 If Not ExistenceConfirmation("PO", "PONumber", st_ParPONumber) Then
                     Msg.Text = ERR_PAR_PO_NOT_FOUND
                     Exit Sub
@@ -52,11 +62,11 @@ Partial Public Class POIssue
             End If
 
             If SetControl() = False Then
-                ' 登録フォームを表示させないための措置です
-                st_RFQLineNumber = String.Empty
                 Exit Sub
             End If
         End If
+
+        bo_DisplayForm = True
 
     End Sub
 
@@ -121,7 +131,7 @@ Partial Public Class POIssue
         End If
 
         RFQNumber.Text = ds.Tables("RFQLine").Rows(0)("RFQNumber").ToString
-        ParPONumber.Text = st_ParPONumber
+        ParPONumber_Label.Text = st_ParPONumber
         PODate.Text = GetLocalTime(Session("LocationCode").ToString, Now)
         If Not CBool(Session("Purchase.isAdmin")) Then
             POUser.SelectedValue = Session("UserID").ToString
@@ -147,6 +157,7 @@ Partial Public Class POIssue
 
         ' HiddenField
         RFQLineNumber.Value = st_RFQLineNumber
+        ParPONumber.Value = st_ParPONumber
         POLocationCode.Value = Session("LocationCode").ToString
         ProductID.Value = ds.Tables("RFQLine").Rows(0)("ProductID").ToString
         MakerCode.Value = ds.Tables("RFQLine").Rows(0)("MakerCode").ToString
@@ -428,7 +439,7 @@ Partial Public Class POIssue
         sqlCmd.Parameters.AddWithValue("@ScheduledExportDate", GetDatabaseTime(st_LoginLocationCode, ScheduledExportDate.Text))
         sqlCmd.Parameters.AddWithValue("@PurchasingRequisitionNumber", ConvertEmptyStringToNull(PurchasingRequisitionNumber.Text))
         sqlCmd.Parameters.AddWithValue("@RFQLineNumber", ConvertStringToInt(RFQLineNumber.Value))
-        sqlCmd.Parameters.AddWithValue("@ParPONumber", ConvertStringToInt(ParPONumber.Text))
+        sqlCmd.Parameters.AddWithValue("@ParPONumber", ConvertStringToInt(ParPONumber.Value))
         sqlCmd.Parameters.AddWithValue("@CreatedBy", CInt(Session("UserID")))
         sqlCmd.Parameters.AddWithValue("@UpdatedBy", CInt(Session("UserID")))
 
