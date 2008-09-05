@@ -81,6 +81,9 @@
                 Code.ReadOnly = False
                 UpdateDate.Value = ""
             End If
+        Else
+            '[ReadOnly項目の再設定]--------------------------------------------------------
+            Name.Text = Request.Form("Name")
         End If
     End Sub
 
