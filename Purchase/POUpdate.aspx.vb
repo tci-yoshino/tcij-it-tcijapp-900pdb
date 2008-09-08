@@ -17,6 +17,7 @@ Partial Public Class POUpdate
     Protected st_PONumber As String
     Protected st_Action As String
     Protected b_FormVisible As Boolean = True
+    Protected b_ChildVisible As Boolean = True
 
 #End Region
 
@@ -234,6 +235,7 @@ Partial Public Class POUpdate
         'フォーム左段
         RFQNumber.Text = String.Empty
         R3PONumber.Text = String.Empty
+        ParPONumber.Text = String.Empty
         R3POLineNumber.Text = String.Empty
         PODate.Text = String.Empty
         POUser.Text = String.Empty
@@ -297,6 +299,7 @@ Partial Public Class POUpdate
         'フォーム左段
         RFQNumber.Text = POInformation.RFQNumber.ToString()
         R3PONumber.Text = POInformation.R3PONumber
+        ParPONumber.Text = NullableIntToString(POInformation.ParPONumber)
         R3POLineNumber.Text = POInformation.R3POLineNumber
         PODate.Text = GetLocalTime(POInformation.PODate)
         POUser.Text = POInformation.POUserName
@@ -341,6 +344,9 @@ Partial Public Class POUpdate
 
         UpdateDate.Value = GetUpdateDate(TABLE_NAME_PO, PK_NAME_PO, POInformation.PONumber.ToString())
 
+        'Par-PO Number と Chi-PO Request Quantity は、ParPONumber が設定されている (すなわち子 PO の) 場合のみ画面に表示する。
+        b_ChildVisible = Not (POInformation.ParPONumber Is Nothing)
+        
     End Sub
 
     ''' <summary>
@@ -1270,6 +1276,21 @@ Partial Public Class POUpdate
         End If
 
         Return CType(value, Decimal).ToString(format)
+
+    End Function
+
+
+    ''' <summary>
+    ''' Nullable Integerオブジェクトを文字列に変換します。
+    ''' </summary>
+    ''' <param name="value">変換対象となる Integer? オブジェクト</param>
+    ''' <returns>変換したstring 文字列</returns>
+    Private Function NullableIntToString(ByVal value As Integer?) As String
+        If value Is Nothing Then
+            Return String.Empty
+        End If
+
+        Return CType(value, Integer).ToString()
 
     End Function
 

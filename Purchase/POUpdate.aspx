@@ -26,6 +26,14 @@
                             <th>RFQ Reference Number : </th>
                             <td><asp:Label ID="RFQNumber" runat="server" Text=""></asp:Label></td>
                         </tr>
+                        
+                        <% If b_ChildVisible Then%>
+                        <tr>
+                            <th>Par-PO Number : </th>
+                            <td><asp:Label ID="ParPONumber" runat="server" Text=""></asp:Label></td>
+                        </tr>
+                        <% End If%> 
+                                                
                         <tr>
                             <th>R/3 PO Number : </th>
                             <td><asp:TextBox ID="R3PONumber" runat="server" Width="10em" MaxLength="10"></asp:TextBox>
@@ -141,10 +149,14 @@
                             <th>QM Result : </th>
                             <td><asp:TextBox ID="QMResult" runat="server" Width="15em" MaxLength="255"></asp:TextBox></td>
                         </tr>
+
+                        <% If b_ChildVisible Then%>            
                         <tr>
                             <th>Chi-PO Request Quantity : </th>
                             <td><asp:TextBox ID="RequestQuantity" runat="server" Width="15em" MaxLength="255"></asp:TextBox></td>
                         </tr>
+                        <% End If%> 
+                       
                         <tr>
                             <th>Scheduled Export Date : </th>
                             <td><asp:TextBox ID="ScheduledExportDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
