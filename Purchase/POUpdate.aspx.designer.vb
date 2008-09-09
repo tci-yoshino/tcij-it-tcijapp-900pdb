@@ -142,15 +142,6 @@ Partial Public Class POUpdate
     Protected WithEvents OrderUnit As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
-    '''OrderPiece コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents OrderPiece As Global.System.Web.UI.WebControls.Label
-
-    '''<summary>
     '''DeliveryDate コントロール。
     '''</summary>
     '''<remarks>

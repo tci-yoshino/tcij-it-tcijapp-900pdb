@@ -55,7 +55,7 @@
                         </tr>
                         <tr>
                             <th>Order Quantity <span class="required">*</span> : </th>
-                            <td><asp:Label ID="OrderQuantity" runat="server" Text=""></asp:Label> <asp:Label ID="OrderUnit" runat="server" Text=""></asp:Label> x <asp:Label ID="OrderPiece" runat="server" Text=""></asp:Label></td>
+                            <td><asp:Label ID="OrderQuantity" runat="server" Text=""></asp:Label> <asp:Label ID="OrderUnit" runat="server" Text=""></asp:Label> </td>
                         </tr>
                         <tr>
                             <th>Delivery Date : </th>

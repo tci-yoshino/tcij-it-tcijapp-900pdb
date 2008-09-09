@@ -250,7 +250,7 @@ Partial Public Class POUpdate
         ProductName.Text = String.Empty
         OrderQuantity.Text = String.Empty
         OrderUnit.Text = String.Empty
-        OrderPiece.Text = String.Empty
+        'OrderPiece.Text = String.Empty
         DeliveryDate.Text = String.Empty
         Currency.Text = String.Empty
         UnitPrice.Text = String.Empty
@@ -316,7 +316,7 @@ Partial Public Class POUpdate
 
         OrderQuantity.Text = NullableDecimalToString(POInformation.OrderQuantity, FORMAT_DECIMAL)
         OrderUnit.Text = POInformation.OrderUnitCode
-        OrderPiece.Text = NullableDecimalToString(POInformation.UnitPrice, FORMAT_DECIMAL)
+        'OrderPiece.Text = NullableDecimalToString(POInformation.UnitPrice, FORMAT_DECIMAL)
         DeliveryDate.Text = GetLocalTime(POInformation.DeliveryDate)
         Currency.Text = POInformation.CurrencyCode
         UnitPrice.Text = NullableDecimalToString(POInformation.UnitPrice, FORMAT_DECIMAL)
