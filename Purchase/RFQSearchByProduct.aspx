@@ -22,7 +22,7 @@ window.onload = function() {
 <body>
     <!-- Main Content Area -->
     <div id="content">
-        <div class="tabs"><a href="./ProductSetting.aspx">New Product</a></div>
+        <div class="tabs"><a href="#" onclick = "popup('./ProductSetting.aspx')">New Product</a></div>
 
         <h3>RFQ Search by Product</h3>
 
