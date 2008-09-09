@@ -3,10 +3,9 @@ Imports Purchase.Common
 
 Partial Public Class RFQUpdate
     Inherits CommonPage
-    Public DBConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
-    Public DBConn As New System.Data.SqlClient.SqlConnection
-    Public DBCommand As System.Data.SqlClient.SqlCommand
-    Public DBAdapter As System.Data.SqlClient.SqlDataAdapter
+    Private DBConn As New System.Data.SqlClient.SqlConnection(DB_CONNECT_STRING)
+    Private DBCommand As System.Data.SqlClient.SqlCommand
+    Private DBAdapter As System.Data.SqlClient.SqlDataAdapter
     'エラーメッセージ(入力値不正)
     Private Const ERR_INCORRECT_SUPPLIERCODE As String = "Supplier Code はマスタに存在しません。"
     Private Const ERR_INCORRECT_MAKERCODE As String = "Maker Code はマスタに存在しません。"
@@ -29,11 +28,18 @@ Partial Public Class RFQUpdate
 
     '画面表示フラグ
     Protected Parameter As Boolean = True
+    'RFQNumber
+    Protected st_RFQNumber As String = String.Empty
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        DBConn.ConnectionString = DBConnectString.ConnectionString
         DBConn.Open()
         DBCommand = DBConn.CreateCommand()
 
+        If SetRFQNumber() = False Then
+            Msg.Text = ERR_INVALID_PARAMETER
+            '画面上の入力項目を隠す。
+            Parameter = False
+            Exit Sub
+        End If
         If IsPostBack = False Then
             Call SetPostBackUrl()
             If FormDataSet() = False Then
@@ -81,12 +87,12 @@ Partial Public Class RFQUpdate
             '入力された項目の型をチェックする(DB登録時にエラーになるもののみ)
             Exit Sub
         End If
-        '他セッションでの更新チェック
-        If CheckUpdatedate() = False Then
-            Exit Sub
-        End If
         '更新可能拠点の確認
         If CheckLocation() = False Then
+            Exit Sub
+        End If
+        '他セッションでの更新チェック
+        If CheckUpdatedate() = False Then
             Exit Sub
         End If
         '更新処理
@@ -260,20 +266,9 @@ Partial Public Class RFQUpdate
     End Sub
 
     Private Function FormDataSet() As Boolean
+        Dim i As Integer = 0
         Dim DS As DataSet = New DataSet
-        Dim st_RFQNumber As String = String.Empty
-        If IsPostBack = False Then
-            If Request.QueryString("RFQNumber") <> String.Empty Or Request.Form("RFQNumber") <> String.Empty Then
-                st_RFQNumber = IIf(Request.QueryString("RFQNumber") <> String.Empty, Request.QueryString("RFQNumber"), Request.Form("RFQNumber"))
-            Else
-                'パラメータが渡されない場合、エラーメッセージの表示はPage_Loadで行う。
-                Return False
-            End If
-        Else
-            st_RFQNumber = RFQNumber.Text
-        End If
-
-        If IsNumeric(st_RFQNumber) Then
+        If Integer.TryParse(st_RFQNumber, i) Then
             DBCommand = New SqlCommand("Select " _
 & "EnqLocationName, EnqUserName, QuoLocationName, QuoUserID, QuoUserName, ProductNumber, " _
 & "ProductName, SupplierCode, R3SupplierCode, SupplierName, SupplierCountryCode, MakerCode, " _
@@ -298,11 +293,11 @@ Partial Public Class RFQUpdate
             SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString
             R3SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("R3SupplierCode").ToString
             SupplierName.Text = DS.Tables("RFQHeader").Rows(0)("SupplierName").ToString
-            SupplierCountry.Text = GetContryName(DS.Tables("RFQHeader").Rows(0)("SupplierCountryCode").ToString)
+            SupplierCountry.Text = GetCountryName(DS.Tables("RFQHeader").Rows(0)("SupplierCountryCode").ToString)
             SupplierContactPerson.Text = DS.Tables("RFQHeader").Rows(0)("SupplierContactPerson").ToString
             MakerCode.Text = DS.Tables("RFQHeader").Rows(0)("MakerCode").ToString
             MakerName.Text = DS.Tables("RFQHeader").Rows(0)("MakerName").ToString
-            MakerCountry.Text = GetContryName(DS.Tables("RFQHeader").Rows(0)("MakerCountryCode").ToString)
+            MakerCountry.Text = GetCountryName(DS.Tables("RFQHeader").Rows(0)("MakerCountryCode").ToString)
             SupplierItemName.Text = DS.Tables("RFQHeader").Rows(0)("SupplierItemName").ToString
             PaymentTerm.SelectedValue = DS.Tables("RFQHeader").Rows(0)("PaymentTermCode").ToString
             ShippingHandlingCurrency.SelectedValue = DS.Tables("RFQHeader").Rows(0)("ShippingHandlingCurrencyCode").ToString
@@ -327,7 +322,6 @@ Partial Public Class RFQUpdate
                 QuoLocation.Text = DS.Tables("RFQHeader").Rows(0)("QuoLocationName").ToString
             End If
             SDS_RFQUpdate_QuoUser.DataBind()
-            'QuoUser.DataBind()     '要不要を検討する。
             If IsDBNull(DS.Tables("RFQHeader").Rows(0)("QuoUserID")) = False Then
                 QuoUser.SelectedValue = DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString
             End If
@@ -515,9 +509,9 @@ Partial Public Class RFQUpdate
         MakerCountry.Text = Request.Form("MakerCountry").ToString
     End Sub
 
-    Private Function GetContryName(ByVal Code As String) As String
+    Private Function GetCountryName(ByVal Code As String) As String
         Dim DBReader As SqlDataReader
-        GetContryName = String.Empty
+        GetCountryName = String.Empty
         DBCommand.CommandText = "SELECT CountryName FROM v_Country WHERE (CountryCode = @CountryCode)"
         DBCommand.Parameters.Add("@CountryCode", SqlDbType.NVarChar).Value = Code
         DBReader = DBCommand.ExecuteReader()
@@ -525,7 +519,7 @@ Partial Public Class RFQUpdate
         DBCommand.Dispose()
         If DBReader.HasRows = True Then
             While DBReader.Read
-                GetContryName = DBReader("CountryName").ToString
+                GetCountryName = DBReader("CountryName").ToString
             End While
         End If
         DBReader.Close()
@@ -572,6 +566,8 @@ Partial Public Class RFQUpdate
         End If
     End Function
 
+
+    ''作成中　共通関数で作成済なのでそれを使用するように変更する。
     Private Function CheckUpdatedate() As Boolean
         Using DBConn As New SqlClient.SqlConnection(DB_CONNECT_STRING), _
             DBCommand As SqlCommand = DBConn.CreateCommand()
@@ -597,6 +593,8 @@ Partial Public Class RFQUpdate
         End Using
     End Function
 
+
+    ''作成中　比較はNameじゃなくコードで行うようにする。コードを現状もっていないので、コードを取得するところから作成しなおす。
     Private Function CheckLocation() As Boolean
         If Session("Purchase.isAdmin") = False Then
             If Session("LocationName") <> EnqLocation.Text And Session("LocationName") <> QuoLocation.Text Then
@@ -636,5 +634,14 @@ Partial Public Class RFQUpdate
         Else
             Return True
         End If
+    End Function
+    Private Function SetRFQNumber() As Boolean
+        If Request.QueryString("RFQNumber") <> String.Empty Or Request.Form("RFQNumber") <> String.Empty Then
+            st_RFQNumber = IIf(Request.QueryString("RFQNumber") <> String.Empty, Request.QueryString("RFQNumber"), Request.Form("RFQNumber"))
+        Else
+            'パラメータが渡されない場合、エラーメッセージの表示はPage_Loadで行う。
+            Return False
+        End If
+        Return True
     End Function
 End Class
