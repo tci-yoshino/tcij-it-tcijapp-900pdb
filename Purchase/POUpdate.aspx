@@ -18,7 +18,7 @@
             <div class="main">
                 <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 
-            <%  If b_FormVisible Then%>
+            <% If b_FormVisible Then%>
                 
                     <table class="left">
                         <tr>
@@ -170,7 +170,9 @@
                         </tr>
                         <tr>
                             <th></th>
+                            <% If b_ChiPOIssueVisible Then%>
                             <td style="text-align:right"><asp:HyperLink ID="ChiPOIssue" runat="server" NavigateUrl="./POIssue.aspx">Chi-PO Issue</asp:HyperLink></td>
+                            <% End If%>                      
                         </tr>
                     </table>
 				    <asp:HiddenField ID="UpdateDate" runat="server" />

@@ -18,6 +18,7 @@ Partial Public Class POUpdate
     Protected st_Action As String
     Protected b_FormVisible As Boolean = True
     Protected b_ChildVisible As Boolean = True
+    Protected b_ChiPOIssueVisible As Boolean = True
 
 #End Region
 
@@ -148,10 +149,6 @@ Partial Public Class POUpdate
             st_PONumber = Request.Form(QUERY_KEY_PO_NUMBER).ToString()
         End If
 
-        'TODO ダミーコードです。要削除
-        'st_PONumber = "1000000011"
-        'st_PONumber = "00011"
-
         If IsPostBack = False Then
             If IsNumeric(st_PONumber) = False Then
                 Msg.Text = ERR_INVALID_PARAMETER
@@ -176,7 +173,6 @@ Partial Public Class POUpdate
                 st_ParPONumber = POInformation.ParPONumber.ToString()
             End If
 
-            'POCorrespondence.OnClientClick = String.Format("popup('./POCorrespondence.aspx?PONumber={0}')", st_PONumber)
             ChiPOIssue.NavigateUrl = String.Format("./RFQSelect.aspx?ParPONumber={0}", st_PONumber)
 
         End If
@@ -356,7 +352,16 @@ Partial Public Class POUpdate
 
         'Par-PO Number と Chi-PO Request Quantity は、ParPONumber が設定されている (すなわち子 PO の) 場合のみ画面に表示する。
         b_ChildVisible = Not (POInformation.ParPONumber Is Nothing)
-        
+
+
+        'Chi-PO Issue リンクは "ParPONumber が設定されていない かつ SupplierCode に該当するテーブル Supplier の Supplier.LocationCode が
+        '設定されている場合のみ画面に表示する。
+        If (POInformation.ParPONumber Is Nothing) And (IsExistSuppliers_Location(POInformation.SupplierCode)) Then
+            b_ChiPOIssueVisible = True
+        Else
+            b_ChiPOIssueVisible = False
+        End If
+
     End Sub
 
     ''' <summary>
@@ -550,6 +555,43 @@ Partial Public Class POUpdate
 
     End Function
 
+
+
+    ''' <summary>
+    ''' 指定したサプライヤーにLocationCodeが設定されているかを取得します。
+    ''' </summary>
+    ''' <param name="supplierCode">対象となるサプライヤーの一意コード</param>
+    ''' <returns>LocationCodeが存在するときにはTrue しないときにはFasle を返します</returns>
+    ''' <remarks></remarks>
+    Private Function IsExistSuppliers_Location(ByVal supplierCode As Integer?) As Boolean
+
+        If supplierCode Is Nothing Then
+            Return False
+        End If
+
+        Dim conn As SqlConnection = Nothing
+        Try
+            conn = New SqlConnection(DB_CONNECT_STRING)
+            Dim cmd As SqlCommand = New SqlCommand("SELECT LocationCode FROM Supplier WHERE SupplierCode = @SupplierCode", conn)
+            cmd.Parameters.AddWithValue("SupplierCode", supplierCode)
+
+            conn.Open()
+            Dim dr As SqlDataReader = cmd.ExecuteReader()
+            If dr.Read() Then
+                If DBObjToString(dr("LocationCode")) <> String.Empty Then
+                    Return True
+                End If
+            End If
+            Return False
+
+        Finally
+            If Not conn Is Nothing Then
+                conn.Close()
+            End If
+
+        End Try
+
+    End Function
 
     ''' <summary>
     ''' ローカル時間を取得する
