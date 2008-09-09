@@ -75,7 +75,7 @@
                         <td><asp:Label ID="CurrencyCode" runat="server" Text=""></asp:Label> <asp:Label ID="UnitPrice" runat="server" Text=""></asp:Label> / <asp:Label ID="PerQuantity" runat="server" Text=""></asp:Label> <asp:Label ID="PerUnit" runat="server" Text=""></asp:Label></td>
                     </tr>
                     <tr>
-                        <th>R/3 Supplier Name : </th>
+                        <th>TCI-J Supplier Name : </th>
                         <td>
                             <asp:DropDownList ID="Supplier" runat="server" DataSourceID="SrcSupplier" DataTextField="Name" DataValueField="SupplierCode">
                             </asp:DropDownList>
@@ -83,11 +83,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>R/3 Maker Code : </th>
+                        <th>TCI-J Maker Code : </th>
                         <td><asp:Label ID="R3MakerCode" runat="server" Text=""></asp:Label></td>
                     </tr>
                     <tr>
-                        <th>R/3 Maker Name : </th>
+                        <th>TCI-J Maker Name : </th>
                         <td><asp:Label ID="R3MakerName" runat="server" Text=""></asp:Label></td>
                     </tr>
                     <tr>
