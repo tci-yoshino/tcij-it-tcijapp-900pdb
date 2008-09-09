@@ -83,6 +83,8 @@
                 DataDisplay1()
                 SetTownName()
                 DataDisplay2()
+            Else
+                SuppliersProduct.Visible = False
             End If
         End If
 
@@ -248,6 +250,7 @@
 
                 '[StActionをEditにする]--------------------------------------------------
                 Mode.Value = "Edit"
+                SuppliersProduct.Visible = True
             End If
 
             'ここまでエラーがなかったらコミット
