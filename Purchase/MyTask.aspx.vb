@@ -62,7 +62,6 @@
                     ' User プルダウンにバインド
                     UserID.DataValueField = "UserID"
                     UserID.DataTextField = "Name"
-                    UserID.SelectedIndex = UserID.SelectedIndex
                     UserID.DataSource = ds.Tables("UserID")
                     UserID.DataBind()
                 End If
@@ -83,7 +82,6 @@
                 ' User プルダウンにバインド
                 UserID.DataValueField = "UserID"
                 UserID.DataTextField = "Name"
-                UserID.SelectedIndex = UserID.SelectedIndex
                 UserID.DataSource = ds.Tables("UserID")
                 UserID.DataBind()
             End Using
@@ -212,6 +210,17 @@
             & "ORDER BY P.StatusSortOrder ASC "
         lv.DataSourceID = src.ID
         lv.DataBind()
+    End Sub
+
+    Private Sub SetCtrl_UserIDSelected(ByVal sender As Object, ByVal e As System.EventArgs) Handles UserID.DataBound
+        Dim ddl As DropDownList = sender
+
+        For Each item As ListItem In ddl.Items
+            If item.Value = st_UserID Then
+                ddl.SelectedValue = item.Value
+            End If
+        Next
+
     End Sub
 
 End Class
