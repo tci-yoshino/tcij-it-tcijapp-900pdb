@@ -297,90 +297,6 @@ Partial Public Class POIssue
             End If
         End If
 
-        ' Goods Arrived Date
-        GoodsArrivedDate.Text = GoodsArrivedDate.Text.Trim
-        If GoodsArrivedDate.Text <> String.Empty Then
-            If Not Regex.IsMatch(GoodsArrivedDate.Text, DATE_REGEX) Then
-                Msg.Text = "Goods Arrived Date" & ERR_INCORRECT_FORMAT
-                Return False
-            End If
-
-            If Not IsDate(GoodsArrivedDate.Text) Then
-                Msg.Text = "Goods Arrived Date" & ERR_INVALID_DATE
-                Return False
-            End If
-        End If
-
-        ' Commercial Invoice Received Date
-        InvoiceReceivedDate.Text = InvoiceReceivedDate.Text.Trim
-        If InvoiceReceivedDate.Text <> String.Empty Then
-            If Not Regex.IsMatch(InvoiceReceivedDate.Text, DATE_REGEX) Then
-                Msg.Text = "Commercial Invoice Received Date" & ERR_INCORRECT_FORMAT
-                Return False
-            End If
-
-            If Not IsDate(InvoiceReceivedDate.Text) Then
-                Msg.Text = "Commercial Invoice Received Date" & ERR_INVALID_DATE
-                Return False
-            End If
-        End If
-
-        ' Import Custom Clearance Date
-        ImportCustomClearanceDate.Text = ImportCustomClearanceDate.Text.Trim
-        If ImportCustomClearanceDate.Text <> String.Empty Then
-            If Not Regex.IsMatch(ImportCustomClearanceDate.Text, DATE_REGEX) Then
-                Msg.Text = "Import Custom Clearance Date" & ERR_INCORRECT_FORMAT
-                Return False
-            End If
-
-            If Not IsDate(ImportCustomClearanceDate.Text) Then
-                Msg.Text = "Import Custom Clearance Date" & ERR_INVALID_DATE
-                Return False
-            End If
-        End If
-
-        ' QM Starting Date
-        QMStartingDate.Text = QMStartingDate.Text.Trim
-        If QMStartingDate.Text <> String.Empty Then
-            If Not Regex.IsMatch(QMStartingDate.Text, DATE_REGEX) Then
-                Msg.Text = "QM Starting Date" & ERR_INCORRECT_FORMAT
-                Return False
-            End If
-
-            If Not IsDate(QMStartingDate.Text) Then
-                Msg.Text = "QM Starting Date" & ERR_INVALID_DATE
-                Return False
-            End If
-        End If
-
-        ' QM Finish Date
-        QMFinishDate.Text = QMFinishDate.Text.Trim
-        If QMFinishDate.Text <> String.Empty Then
-            If Not Regex.IsMatch(QMFinishDate.Text, DATE_REGEX) Then
-                Msg.Text = "QM Finish Date" & ERR_INCORRECT_FORMAT
-                Return False
-            End If
-
-            If Not IsDate(QMFinishDate.Text) Then
-                Msg.Text = "QM Finish Date" & ERR_INVALID_DATE
-                Return False
-            End If
-        End If
-
-        ' Scheduled Export Date
-        ScheduledExportDate.Text = ScheduledExportDate.Text.Trim
-        If ScheduledExportDate.Text <> String.Empty Then
-            If Not Regex.IsMatch(ScheduledExportDate.Text, DATE_REGEX) Then
-                Msg.Text = "Scheduled Export Date" & ERR_INCORRECT_FORMAT
-                Return False
-            End If
-
-            If Not IsDate(ScheduledExportDate.Text) Then
-                Msg.Text = "Scheduled Export Date" & ERR_INVALID_DATE
-                Return False
-            End If
-        End If
-
         Return True
 
     End Function
@@ -428,16 +344,6 @@ Partial Public Class POIssue
         sqlCmd.Parameters.AddWithValue("@SupplierItemNumber", ConvertEmptyStringToNull(SupplierItemNumber.Text))
         sqlCmd.Parameters.AddWithValue("@SupplierLotNumber", ConvertEmptyStringToNull(SupplierLotNumber.Text))
         sqlCmd.Parameters.AddWithValue("@DueDate", GetDatabaseTime(st_LoginLocationCode, DueDate.Text))
-        sqlCmd.Parameters.AddWithValue("@GoodsArrivedDate", GetDatabaseTime(st_LoginLocationCode, GoodsArrivedDate.Text))
-        sqlCmd.Parameters.AddWithValue("@LotNumber", ConvertEmptyStringToNull(LotNumber.Text))
-        sqlCmd.Parameters.AddWithValue("@InvoiceReceivedDate", GetDatabaseTime(st_LoginLocationCode, InvoiceReceivedDate.Text))
-        sqlCmd.Parameters.AddWithValue("@ImportCustomClearanceDate", GetDatabaseTime(st_LoginLocationCode, ImportCustomClearanceDate.Text))
-        sqlCmd.Parameters.AddWithValue("@QMStartingDate", GetDatabaseTime(st_LoginLocationCode, QMStartingDate.Text))
-        sqlCmd.Parameters.AddWithValue("@QMFinishDate", GetDatabaseTime(st_LoginLocationCode, QMFinishDate.Text))
-        sqlCmd.Parameters.AddWithValue("@QMResult", ConvertEmptyStringToNull(QMResult.Text))
-        sqlCmd.Parameters.AddWithValue("@RequestQuantity", ConvertEmptyStringToNull(RequestQuantity.Text))
-        sqlCmd.Parameters.AddWithValue("@ScheduledExportDate", GetDatabaseTime(st_LoginLocationCode, ScheduledExportDate.Text))
-        sqlCmd.Parameters.AddWithValue("@PurchasingRequisitionNumber", ConvertEmptyStringToNull(PurchasingRequisitionNumber.Text))
         sqlCmd.Parameters.AddWithValue("@RFQLineNumber", ConvertStringToInt(RFQLineNumber.Value))
         sqlCmd.Parameters.AddWithValue("@ParPONumber", ConvertStringToInt(ParPONumber.Value))
         sqlCmd.Parameters.AddWithValue("@CreatedBy", CInt(Session("UserID")))
@@ -531,16 +437,6 @@ Partial Public Class POIssue
         sb_Sql.Append("  SupplierItemNumber, ")
         sb_Sql.Append("  SupplierLotNumber, ")
         sb_Sql.Append("  DueDate, ")
-        sb_Sql.Append("  GoodsArrivedDate, ")
-        sb_Sql.Append("  LotNumber, ")
-        sb_Sql.Append("  InvoiceReceivedDate, ")
-        sb_Sql.Append("  ImportCustomClearanceDate, ")
-        sb_Sql.Append("  QMStartingDate, ")
-        sb_Sql.Append("  QMFinishDate, ")
-        sb_Sql.Append("  QMResult, ")
-        sb_Sql.Append("  RequestQuantity, ")
-        sb_Sql.Append("  ScheduledExportDate, ")
-        sb_Sql.Append("  PurchasingRequisitionNumber, ")
         sb_Sql.Append("  RFQLineNumber, ")
         sb_Sql.Append("  ParPONumber, ")
         sb_Sql.Append("  CreatedBy, ")
@@ -571,16 +467,6 @@ Partial Public Class POIssue
         sb_Sql.Append("  @SupplierItemNumber, ")
         sb_Sql.Append("  @SupplierLotNumber, ")
         sb_Sql.Append("  @DueDate, ")
-        sb_Sql.Append("  @GoodsArrivedDate, ")
-        sb_Sql.Append("  @LotNumber, ")
-        sb_Sql.Append("  @InvoiceReceivedDate, ")
-        sb_Sql.Append("  @ImportCustomClearanceDate, ")
-        sb_Sql.Append("  @QMStartingDate, ")
-        sb_Sql.Append("  @QMFinishDate, ")
-        sb_Sql.Append("  @QMResult, ")
-        sb_Sql.Append("  @RequestQuantity, ")
-        sb_Sql.Append("  @ScheduledExportDate, ")
-        sb_Sql.Append("  @PurchasingRequisitionNumber, ")
         sb_Sql.Append("  @RFQLineNumber, ")
         sb_Sql.Append("  @ParPONumber, ")
         sb_Sql.Append("  @CreatedBy, ")

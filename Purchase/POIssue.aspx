@@ -134,46 +134,6 @@
                         <th>Due Date : </th>
                         <td><asp:TextBox ID="DueDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
                     </tr>
-                    <tr>
-                        <th>Goods Arrived Date : </th>
-                        <td><asp:TextBox ID="GoodsArrivedDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
-                    </tr>
-                    <tr>
-                        <th>TCI Lot Number : </th>
-                        <td><asp:TextBox ID="LotNumber" runat="server" Width="10em" MaxLength="10"></asp:TextBox></td>
-                    </tr>
-                    <tr>
-                        <th>Commercial Invoice Received Date : </th>
-                        <td><asp:TextBox ID="InvoiceReceivedDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
-                    </tr>
-                    <tr>
-                        <th>Import Custom Clearance Date : </th>
-                        <td><asp:TextBox ID="ImportCustomClearanceDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
-                    </tr>
-                    <tr>
-                        <th>QM Starting Date : </th>
-                        <td><asp:TextBox ID="QMStartingDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
-                    </tr>
-                    <tr>
-                        <th>QM Finish Date : </th>
-                        <td><asp:TextBox ID="QMFinishDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
-                    </tr>
-                    <tr>
-                        <th>QM Result : </th>
-                        <td><asp:TextBox ID="QMResult" runat="server" Width="15em" MaxLength="255"></asp:TextBox></td>
-                    </tr>
-                    <tr>
-                        <th>Chi-PO Request Quantity : </th>
-                        <td><asp:TextBox ID="RequestQuantity" runat="server" Width="15em" MaxLength="255"></asp:TextBox></td>
-                    </tr>
-                    <tr>
-                        <th>Scheduled Export Date : </th>
-                        <td><asp:TextBox ID="ScheduledExportDate" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
-                    </tr>
-                    <tr>
-                        <th>Purchasing Requisition Number : </th>
-                        <td><asp:TextBox ID="PurchasingRequisitionNumber" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
-                    </tr>
                 </table>
                 
                 <div class="btns">
