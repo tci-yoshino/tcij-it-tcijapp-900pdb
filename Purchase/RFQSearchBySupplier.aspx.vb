@@ -59,7 +59,7 @@ Partial Public Class RFQSearchBySupplier
         SupplierCode.Text = StrConv(SupplierCode.Text, VbStrConv.Narrow)
         R3SupplierCode.Text = StrConv(R3SupplierCode.Text, VbStrConv.Narrow)
         'Supplier Code は数値型
-        If Not Integer.TryParse(SupplierCode.Text, i) Then
+        If Not Integer.TryParse(SupplierCode.Text, i) And Not SupplierCode.Text.Trim = String.Empty Then
             Msg.Text = ERR_INCORRECT_SUPPLIERCODE
             Exit Sub
         End If
