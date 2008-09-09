@@ -37,7 +37,7 @@ window.onload = function() {
 						<td><asp:TextBox ID="SupplierCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox></td>
 					</tr>
 					<tr>
-						<th>R/3 Supplier Code : </th>
+						<th>TCI-J Supplier Code : </th>
 						<td><asp:TextBox ID="R3SupplierCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox></td>
 					</tr>
 					<tr>
@@ -112,7 +112,7 @@ WHERE                   (RegionCode IN
                     <table ID="itemPlaceholderContainer" runat="server">
                         <tr id="Tr1" runat="server">
                             <th id="Th1" runat="server" style="width:15%">Supplier Code</th>
-                            <th id="Th2" runat="server" style="width:15%">R/3 Supplier Code</th>
+                            <th id="Th2" runat="server" style="width:15%">TCI-J Supplier Code</th>
                             <th id="Th3" runat="server" style="width:70%">Supplier Name</th>
                         </tr>
                         <tr ID="itemPlaceholder" runat="server">
