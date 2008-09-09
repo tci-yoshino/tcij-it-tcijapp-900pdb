@@ -75,7 +75,7 @@
 						</td>
 					</tr>
 					<tr>
-						<th>R/3 Supplier Code : </th>
+						<th>TCI-J Supplier Code : </th>
 						<td><asp:TextBox ID="R3SupplierCode" runat="server" Width="7em" MaxLength="10" 
                                 ReadOnly="true" CssClass="readonly" EnableViewState="False"></asp:TextBox></td>
 					</tr>
