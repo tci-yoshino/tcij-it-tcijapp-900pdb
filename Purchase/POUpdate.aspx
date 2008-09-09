@@ -66,19 +66,19 @@
                             <td><asp:Label ID="Currency" runat="server" Text=""></asp:Label> <asp:Label ID="UnitPrice" runat="server" Text=""></asp:Label> / <asp:Label ID="PerQuantity" runat="server" Text=""></asp:Label> <asp:Label ID="PerUnit" runat="server" Text=""></asp:Label></td>
                         </tr>
                         <tr>
-                            <th>R/3 Supplier Code : </th>
+                            <th>TCI-J Supplier Code : </th>
                             <td><asp:Label ID="R3SupplierCode" runat="server" Text=""></asp:Label></td>
                         </tr>
                         <tr>
-                            <th>R/3 Supplier Name : </th>
+                            <th>TCI-J Supplier Name : </th>
                             <td><asp:Label ID="R3SupplierName" runat="server" Text=""></asp:Label></td>
                         </tr>
                         <tr>
-                            <th>R/3 Maker Code : </th>
+                            <th>TCI-J Maker Code : </th>
                             <td><asp:Label ID="R3MakerCode" runat="server" Text=""></asp:Label></td>
                         </tr>
                         <tr>
-                            <th>R/3 Maker Name : </th>
+                            <th>TCI-J Name : </th>
                             <td><asp:Label ID="R3MakerName" runat="server" Text=""></asp:Label></td>
                         </tr>
                         <tr>
