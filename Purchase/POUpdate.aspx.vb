@@ -14,7 +14,7 @@ Partial Public Class POUpdate
 
 #Region "グローバル変数定義"
 
-    Protected st_PONumber As String
+    Protected st_ParPONumber As String
     Protected st_Action As String
     Protected b_FormVisible As Boolean = True
     Protected b_ChildVisible As Boolean = True
@@ -140,6 +140,8 @@ Partial Public Class POUpdate
             st_Action = Request.Form(QUERY_KEY_ACTION).ToString()
         End If
 
+        Dim st_PONumber As String = String.Empty
+
         If Not (Request.QueryString(QUERY_KEY_PO_NUMBER) Is Nothing) Then
             st_PONumber = Request.QueryString(QUERY_KEY_PO_NUMBER).ToString()
         ElseIf Not (Request.Form(QUERY_KEY_PO_NUMBER) Is Nothing) Then
@@ -166,7 +168,15 @@ Partial Public Class POUpdate
 
             ViewPOInformationToForm(CInt(st_PONumber))
 
-            POCorrespondence.OnClientClick = String.Format("popup('./POCorrespondence.aspx?PONumber={0}')", st_PONumber)
+            '親発注番号(ParPONumber)がある場合はそちらを優先をする
+            Dim POInformation As POInformationType = SelectPOInformation(CInt(st_PONumber))
+            If POInformation.ParPONumber Is Nothing Then
+                st_ParPONumber = POInformation.PONumber.ToString()
+            Else
+                st_ParPONumber = POInformation.ParPONumber.ToString()
+            End If
+
+            'POCorrespondence.OnClientClick = String.Format("popup('./POCorrespondence.aspx?PONumber={0}')", st_PONumber)
             ChiPOIssue.NavigateUrl = String.Format("./RFQSelect.aspx?ParPONumber={0}", st_PONumber)
 
         End If

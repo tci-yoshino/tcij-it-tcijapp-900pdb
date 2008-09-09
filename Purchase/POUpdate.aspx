@@ -13,8 +13,7 @@
     <!-- Main Content Area -->
     <div id="content">
         <form id="POForm" runat="server">
-            <div class="tabs"><asp:LinkButton ID="POCorrespondence" runat="server">PO Correspondence / History</asp:LinkButton></div>
-            
+            <div class="tabs"><a href = "#" onclick="popup('./RFQSelect.aspx?ParPONumber=<%Response.Write(st_ParPONumber)%>')">PO Correspondence / History</a></div>
             <h3>PO Update</h3>
             <div class="main">
                 <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
