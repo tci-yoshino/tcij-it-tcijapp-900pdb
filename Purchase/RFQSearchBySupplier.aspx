@@ -34,7 +34,7 @@ window.onload = function() {
                 <table>
 					<tr>
 						<th>Supplier Code : </th>
-						<td><asp:TextBox ID="SupplierCode" runat="server" Width="7em" MaxLength="5"></asp:TextBox></td>
+						<td><asp:TextBox ID="SupplierCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox></td>
 					</tr>
 					<tr>
 						<th>R/3 Supplier Code : </th>

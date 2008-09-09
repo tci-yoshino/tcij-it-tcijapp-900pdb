@@ -9,6 +9,12 @@ Imports Purchase.Common
 ''' <remarks>Supplier情報から見積依頼を検索します。</remarks>
 Partial Public Class RFQSearchBySupplier
     Inherits CommonPage
+
+    ''' <summary>
+    ''' Supplier Codeの入力チェックで使用するエラーメッセージ
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Const ERR_INCORRECT_SUPPLIERCODE As String = "Supplier Code" & ERR_INVALID_NUMBER
     ''' <summary>
     ''' RFQ検索キー構造体です。
     ''' </summary>
@@ -39,7 +45,7 @@ Partial Public Class RFQSearchBySupplier
     ''' <param name="sender">ASP.NETの既定値</param>
     ''' <param name="e">ASP.NETの既定値</param>
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
-
+        Dim i As Integer = 0
         Msg.Text = String.Empty
 
         '画面表示OK
@@ -52,6 +58,11 @@ Partial Public Class RFQSearchBySupplier
         'Supplier Code は半角英数のみ
         SupplierCode.Text = StrConv(SupplierCode.Text, VbStrConv.Narrow)
         R3SupplierCode.Text = StrConv(R3SupplierCode.Text, VbStrConv.Narrow)
+        'Supplier Code は数値型
+        If Not Integer.TryParse(SupplierCode.Text, i) Then
+            Msg.Text = ERR_INCORRECT_SUPPLIERCODE
+            Exit Sub
+        End If
 
         '入力された検索キーを構造体に代入
         Dim st_SearchKey As SearchKey
