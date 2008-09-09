@@ -73,6 +73,8 @@
                     UpdateDate.Value = ""
                 End If
                 DBReader.Close()
+            Else
+                SupplierList.Visible = False
             End If
         End If
 
@@ -233,7 +235,7 @@
             '[引き続き更新処理ができるようにUpdateDate設定]---------------------------------
             UpdateDate.Value = Common.GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
             Mode.Value = "Edit"
-
+            SupplierList.Visible = True
         End If
     End Sub
 
