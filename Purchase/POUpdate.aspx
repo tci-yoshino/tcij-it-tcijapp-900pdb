@@ -78,7 +78,7 @@
                             <td><asp:Label ID="R3MakerCode" runat="server" Text=""></asp:Label></td>
                         </tr>
                         <tr>
-                            <th>TCI-J Name : </th>
+                            <th>TCI-J Maker Name : </th>
                             <td><asp:Label ID="R3MakerName" runat="server" Text=""></asp:Label></td>
                         </tr>
                         <tr>
