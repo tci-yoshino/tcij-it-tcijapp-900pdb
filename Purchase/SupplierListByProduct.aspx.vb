@@ -1,44 +1,14 @@
 ﻿Public Partial Class SupplierListByProduct
     Inherits CommonPage
 
-#Region " Region "
-    '*****（Region内は変更しないこと）*****
-    <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-        Me.SqlConnection1 = New System.Data.SqlClient.SqlConnection
-        Me.SqlConnection1.FireInfoMessageEventOnUserErrors = False
-    End Sub
-
-    Protected WithEvents SqlConnection1 As System.Data.SqlClient.SqlConnection
-
-    Private Sub Page_Init(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Init
-        InitializeComponent()
-    End Sub
-#End Region
-
-    '*****（DB接続用変数定義）*****
-    Dim DBConnString As String                              '接続文字列	
-    Dim DBConn As New System.Data.SqlClient.SqlConnection   'データベースコネクション	
-    Dim DBCommand As System.Data.SqlClient.SqlCommand       'データベースコマンド	
-    Dim DBReader As System.Data.SqlClient.SqlDataReader     'データリーダー	
+    Dim DBConn As New System.Data.SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
+    Dim DBCommand As System.Data.SqlClient.SqlCommand
+    Dim DBReader As System.Data.SqlClient.SqlDataReader
     Public Url As String = ""
     Public AddUrl As String = ""
     Public ProductID As String = ""
 
-    Sub Set_DBConnectingString()
-        Dim settings As ConnectionStringSettings
-        '[接続文字列を設定ファイル(Web.config)から取得]---------------------------------------------
-        settings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
-        If Not settings Is Nothing Then
-            '[接続文字列をイミディエイトに出力]-----------------------------------------------------
-            Debug.Print(settings.ConnectionString)
-        End If
-        '[sqlConnectionに接続文字列を設定]----------------------------------------------------------
-        Me.SqlConnection1.ConnectionString = settings.ConnectionString
-    End Sub
-
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        Set_DBConnectingString()
-        DBConn = Me.SqlConnection1
         DBConn.Open()
         DBCommand = DBConn.CreateCommand()
 
