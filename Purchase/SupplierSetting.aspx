@@ -31,11 +31,11 @@
 						<td><asp:Label ID="Code" runat="server" Text=""></asp:Label></td>
 					</tr>
 					<tr>
-						<th>R/3 Supplier Code : </th>
+						<th>TCI-J Supplier Code : </th>
 						<td><asp:TextBox ID="R3SupplierCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox></td>
 					</tr>
 					<tr>
-						<th>R/3 Company Name : </th>
+						<th>TCI-J Supplier Name : </th>
 						<td>
                             <asp:TextBox ID="SupplierName1" runat="server"  Width="21em" MaxLength="255"></asp:TextBox>
 							<asp:TextBox ID="SupplierName2" runat="server"  Width="21em" MaxLength="255"></asp:TextBox>
