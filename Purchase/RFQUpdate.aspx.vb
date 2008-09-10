@@ -266,9 +266,10 @@ Partial Public Class RFQUpdate
     End Sub
 
     Private Function FormDataSet() As Boolean
-        Dim i As Integer = 0
+        'TODO 変数名重複によるコンパイルエラーのため、変数名コメントアウト。またTryParse(st_RFQNumber, i)をTryParse(st_RFQNumber, 0)に暫定変更　natsuki OKUDA
+        'Dim i As Integer = 0
         Dim DS As DataSet = New DataSet
-        If Integer.TryParse(st_RFQNumber, i) Then
+        If Integer.TryParse(st_RFQNumber, 0) Then
             DBCommand = New SqlCommand("Select " _
 & "EnqLocationName, EnqUserName, QuoLocationName, QuoUserID, QuoUserName, ProductNumber, " _
 & "ProductName, SupplierCode, R3SupplierCode, SupplierName, SupplierCountryCode, MakerCode, " _
