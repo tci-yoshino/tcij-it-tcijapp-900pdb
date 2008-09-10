@@ -51,8 +51,6 @@
                                         "s_EhsPhrase AS s_EhsPhrase_1 ON Product.ProposalDept = s_EhsPhrase_1.PhID LEFT OUTER JOIN " & _
                                         "s_EhsPhrase ON Product.Status = s_EhsPhrase.PhID " & _
                                         "WHERE(dbo.Product.ProductID = " + ProductID.Value + ")"
-                'DBCommand.CommandText = "SELECT ProductNumber, Name, QuoName, CASNumber, MolecularFormula, Reference, Comment, Status, ProposalDept, ProcumentDept, PD, UpdateDate " & _
-                '                        "FROM dbo.Product WHERE (ProductID = " + ProductID.Value + ")"
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
                 If DBReader.Read = True Then
@@ -68,13 +66,6 @@
                     If Not TypeOf DBReader("ProcumentDept") Is DBNull Then ProcumentDept.Text = DBReader("ProcumentDept")
                     If Not TypeOf DBReader("PD") Is DBNull Then PD.Text = DBReader("PD")
                     DBReader.Close()
-                    'DBCommand.CommandText = "SELECT ENai FROM s_EhsPhrase WHERE PhID = '" + Status.Text + "'"
-                    'DBReader = DBCommand.ExecuteReader()
-                    'DBCommand.Dispose()
-                    'If DBReader.Read = True Then
-                    '    Status.Text = DBReader("ENai")
-                    'End If
-                    'DBReader.Close()
                     UpdateDate.Value = Common.GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
                 Else
                     UpdateDate.Value = ""
