@@ -44,8 +44,15 @@
             ProductID.Value = Request.QueryString("ProductID")
 
             If Mode.Value = "Edit" Then
-                DBCommand.CommandText = "SELECT ProductNumber, Name, QuoName, CASNumber, MolecularFormula, Reference, Comment, Status, ProposalDept, ProcumentDept, PD, UpdateDate " & _
-                                        "FROM dbo.Product WHERE (ProductID = " + ProductID.Value + ")"
+                DBCommand.CommandText = "SELECT Product.ProductNumber, Product.Name, Product.QuoName, Product.CASNumber, Product.MolecularFormula, Product.Reference, Product.Comment, Product.UpdateDate, s_EhsPhrase.ENai AS Status, s_EhsPhrase_1.ENai AS ProposalDept, s_EhsPhrase_2.ENai AS ProcumentDept, s_EhsPhrase_3.ENai AS PD " & _
+                                        "FROM Product LEFT OUTER JOIN " & _
+                                        "s_EhsPhrase AS s_EhsPhrase_3 ON Product.PD = s_EhsPhrase_3.PhID LEFT OUTER JOIN " & _
+                                        "s_EhsPhrase AS s_EhsPhrase_2 ON Product.ProcumentDept = s_EhsPhrase_2.PhID LEFT OUTER JOIN " & _
+                                        "s_EhsPhrase AS s_EhsPhrase_1 ON Product.ProposalDept = s_EhsPhrase_1.PhID LEFT OUTER JOIN " & _
+                                        "s_EhsPhrase ON Product.Status = s_EhsPhrase.PhID " & _
+                                        "WHERE(dbo.Product.ProductID = " + ProductID.Value + ")"
+                'DBCommand.CommandText = "SELECT ProductNumber, Name, QuoName, CASNumber, MolecularFormula, Reference, Comment, Status, ProposalDept, ProcumentDept, PD, UpdateDate " & _
+                '                        "FROM dbo.Product WHERE (ProductID = " + ProductID.Value + ")"
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
                 If DBReader.Read = True Then
@@ -61,13 +68,13 @@
                     If Not TypeOf DBReader("ProcumentDept") Is DBNull Then ProcumentDept.Text = DBReader("ProcumentDept")
                     If Not TypeOf DBReader("PD") Is DBNull Then PD.Text = DBReader("PD")
                     DBReader.Close()
-                    DBCommand.CommandText = "SELECT ENai FROM s_EhsPhrase WHERE PhID = '" + Status.Text + "'"
-                    DBReader = DBCommand.ExecuteReader()
-                    DBCommand.Dispose()
-                    If DBReader.Read = True Then
-                        Status.Text = DBReader("ENai")
-                    End If
-                    DBReader.Close()
+                    'DBCommand.CommandText = "SELECT ENai FROM s_EhsPhrase WHERE PhID = '" + Status.Text + "'"
+                    'DBReader = DBCommand.ExecuteReader()
+                    'DBCommand.Dispose()
+                    'If DBReader.Read = True Then
+                    '    Status.Text = DBReader("ENai")
+                    'End If
+                    'DBReader.Close()
                     UpdateDate.Value = Common.GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
                 Else
                     UpdateDate.Value = ""
