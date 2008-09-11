@@ -154,6 +154,18 @@ Public Class Common
     Private Const LOCATION_JP As String = "JP"
 
     ''' <summary>
+    ''' 文字数チェックで使用する。3000文字用
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const NUM3000 As Integer = 3000
+
+    ''' <summary>
+    ''' 文字数チェックで使用する。255文字用
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const NUM255 As Integer = 255
+
+    ''' <summary>
     ''' ローカル時間を取得する。
     ''' </summary>
     ''' <param name="LocationCode">拠点コード</param>
