@@ -23,8 +23,8 @@ Partial Public Class RFQUpdate
     'エラーメッセージ(他拠点情報更新)
     Private Const ERR_ANOTHER_LOCATION As String = "他拠点間のRFQ情報は更新できません。"
     'エラーメッセージ(文字数制限オーバー)
-    Private Const ERR_COMMENT_OVER As String = "Comment は3000文字以上登録することができません。"
-    Private Const ERR_SPECIFICATION_OVER As String = "Specification は255文字以上登録することができません。"
+    Private Const ERR_COMMENT_OVER As String = "Comment" & ERR_OVER_3000
+    Private Const ERR_SPECIFICATION_OVER As String = "Specification" & ERR_OVER_255
 
     '画面表示フラグ
     Protected Parameter As Boolean = True
@@ -74,11 +74,11 @@ Partial Public Class RFQUpdate
             Exit Sub
         End If
         '入力項目の文字数チェック
-        If Comment.Text.Length > 3000 Then
+        If Comment.Text.Length > INT_3000 Then
             Msg.Text = ERR_COMMENT_OVER
             Exit Sub
         End If
-        If Specification.Text.Length > 255 Then
+        If Specification.Text.Length > INT_255 Then
             Msg.Text = ERR_SPECIFICATION_OVER
             Exit Sub
         End If
@@ -100,7 +100,7 @@ Partial Public Class RFQUpdate
             Exit Sub
         End If
         '他セッションでの更新チェック
-        If CheckUpdatedate() = False Then
+        If isLatestData("RFQHeader", "RFQNumber", st_RFQNumber, UpdateDate.Value) = False Then
             Exit Sub
         End If
         '更新処理
@@ -260,7 +260,7 @@ Partial Public Class RFQUpdate
             Exit Sub
         End If
         '他セッションでの更新チェック
-        If CheckUpdatedate() = False Then
+        If isLatestData("RFQHeader", "RFQNumber", st_RFQNumber, UpdateDate.Value) = False Then
             Exit Sub
         End If
         DBCommand.CommandText = "UPDATE RFQHeader SET RFQStatusCode = 'C', UpdatedBy = @UpdatedBy, UpdateDate = GETDATE() WHERE (RFQNumber = @RFQNumber)"
@@ -288,7 +288,7 @@ Partial Public Class RFQUpdate
 & "MakerName, MakerCountryCode, SupplierContactPerson, PaymentTermCode, RequiredPurity, " _
 & "RequiredQMMethod, RequiredSpecification, SpecSheet, Specification, Purpose, SupplierItemName, " _
 & "ShippingHandlingFee, ShippingHandlingCurrencyCode, Comment, QuotedDate, StatusCode, " _
-& "UpdateDate, Status, StatusChangeDate " _
+& "UpdateDate, Status, StatusChangeDate, EnqLocationCode, QuoLocationCode" _
 & " From v_RFQHeader Where RFQNumber = @i_RFQNumber", DBConn)
             DBCommand.Parameters.Add("i_RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
             DBAdapter = New SqlDataAdapter
@@ -343,7 +343,9 @@ Partial Public Class RFQUpdate
             RFQStatus.SelectedValue = DS.Tables("RFQHeader").Rows(0)("StatusCode").ToString
             'Hidden
             QuotedDate.Value = DS.Tables("RFQHeader").Rows(0)("QuotedDate").ToString
-            UpdateDate.Value = DS.Tables("RFQHeader").Rows(0)("UpdateDate").ToString
+            UpdateDate.Value = GetUpdateDate("v_RFQHeader", "RFQNumber", st_RFQNumber)
+            EnqLocationCode.Value = DS.Tables("RFQHeader").Rows(0)("EnqLocationCode").ToString
+            QuoLocationCode.Value = DS.Tables("RFQHeader").Rows(0)("QuoLocationCode").ToString
             'Line
             DBCommand = New SqlCommand("Select " _
 & "RFQLineNumber, EnqQuantity, EnqUnitCode, EnqPiece, CurrencyCode, " _
@@ -366,8 +368,15 @@ Partial Public Class RFQUpdate
                 Select Case i
                     Case 0
                         EnqQuantity_1.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
-                        EnqUnit_1.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
+                        EnqQuantity_1.ReadOnly = True
+                        EnqQuantity_1.CssClass = "readonly"
+                        EnqUnit_1.Items.Clear()
+                        EnqUnit_1.DataSourceID = ""
+                        EnqUnit_1.Items.Add(DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString)
+                        EnqUnit_1.CssClass = "readonly"
                         EnqPiece_1.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
+                        EnqPiece_1.ReadOnly = True
+                        EnqPiece_1.CssClass = "readonly"
                         Incoterms_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
                         Currency_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
                         UnitPrice_1.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
@@ -385,8 +394,15 @@ Partial Public Class RFQUpdate
                         LineNumber1.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
                     Case 1
                         EnqQuantity_2.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
-                        EnqUnit_2.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
+                        EnqQuantity_2.ReadOnly = True
+                        EnqQuantity_2.CssClass = "readonly"
+                        EnqUnit_2.Items.Clear()
+                        EnqUnit_2.DataSourceID = ""
+                        EnqUnit_2.Items.Add(DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString)
+                        EnqUnit_2.CssClass = "readonly"
                         EnqPiece_2.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
+                        EnqPiece_2.ReadOnly = True
+                        EnqPiece_2.CssClass = "readonly"
                         Incoterms_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
                         Currency_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
                         UnitPrice_2.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
@@ -404,8 +420,15 @@ Partial Public Class RFQUpdate
                         LineNumber2.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
                     Case 2
                         EnqQuantity_3.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
-                        EnqUnit_3.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
+                        EnqQuantity_3.ReadOnly = True
+                        EnqQuantity_3.CssClass = "readonly"
+                        EnqUnit_3.Items.Clear()
+                        EnqUnit_3.DataSourceID = ""
+                        EnqUnit_3.Items.Add(DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString)
+                        EnqUnit_3.CssClass = "readonly"
                         EnqPiece_3.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
+                        EnqPiece_3.ReadOnly = True
+                        EnqPiece_3.CssClass = "readonly"
                         Incoterms_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
                         Currency_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
                         UnitPrice_3.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
@@ -423,8 +446,15 @@ Partial Public Class RFQUpdate
                         LineNumber3.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
                     Case 3
                         EnqQuantity_4.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
-                        EnqUnit_4.Text = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
+                        EnqQuantity_4.ReadOnly = True
+                        EnqQuantity_4.CssClass = "readonly"
+                        EnqUnit_4.Items.Clear()
+                        EnqUnit_4.DataSourceID = ""
+                        EnqUnit_4.Items.Add(DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString)
+                        EnqUnit_4.CssClass = "readonly"
                         EnqPiece_4.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
+                        EnqPiece_4.ReadOnly = True
+                        EnqPiece_4.CssClass = "readonly"
                         Incoterms_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
                         Currency_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
                         UnitPrice_4.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
@@ -579,38 +609,9 @@ Partial Public Class RFQUpdate
         End If
     End Function
 
-
-    ''作成中　共通関数で作成済なのでそれを使用するように変更する。
-    Private Function CheckUpdatedate() As Boolean
-        Using DBConn As New SqlClient.SqlConnection(DB_CONNECT_STRING), _
-            DBCommand As SqlCommand = DBConn.CreateCommand()
-            Dim DBReader As SqlDataReader
-            DBConn.Open()
-            DBCommand.CommandText = "SELECT UpdateDate FROM RFQHeader WHERE (RFQNumber = @RFQNumber)"
-            DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = Integer.Parse(RFQNumber.Text)
-            DBReader = DBCommand.ExecuteReader()
-            DBCommand.Parameters.Clear()
-            If DBReader.HasRows = False Then
-                '行削除済のため処理を抜ける。
-                Msg.Text = ERR_GET_RFQDATA_FAILURE
-                Return False
-            Else
-                DBReader.Read()
-                If DBReader("UpdateDate").ToString = UpdateDate.Value Then
-                    Return True
-                Else
-                    Msg.Text = ERR_ALREADY_UPDATED
-                    Return False
-                End If
-            End If
-        End Using
-    End Function
-
-
-    ''作成中　比較はNameじゃなくコードで行うようにする。コードを現状もっていないので、コードを取得するところから作成しなおす。
     Private Function CheckLocation() As Boolean
         If Session("Purchase.isAdmin") = False Then
-            If Session("LocationName") <> EnqLocation.Text And Session("LocationName") <> QuoLocation.Text Then
+            If Session("LocationCode") <> EnqLocationCode.Value And Session("LocationCode") <> QuoLocationCode.Value Then
                 Msg.Text = ERR_ANOTHER_LOCATION
                 Return False
             End If

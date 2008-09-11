@@ -328,7 +328,7 @@ Partial Public Class RFQUpdate
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents EnqQuantity_1 As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents EnqQuantity_1 As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
     '''EnqUnit_1 コントロール。
@@ -337,7 +337,7 @@ Partial Public Class RFQUpdate
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents EnqUnit_1 As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents EnqUnit_1 As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
     '''EnqPiece_1 コントロール。
@@ -346,7 +346,16 @@ Partial Public Class RFQUpdate
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents EnqPiece_1 As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents EnqPiece_1 As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''SDS_RFQUpdate_Qua コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SDS_RFQUpdate_Qua As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
     '''Currency_1 コントロール。
@@ -508,7 +517,7 @@ Partial Public Class RFQUpdate
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents EnqQuantity_2 As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents EnqQuantity_2 As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
     '''EnqUnit_2 コントロール。
@@ -517,7 +526,7 @@ Partial Public Class RFQUpdate
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents EnqUnit_2 As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents EnqUnit_2 As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
     '''EnqPiece_2 コントロール。
@@ -526,7 +535,7 @@ Partial Public Class RFQUpdate
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents EnqPiece_2 As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents EnqPiece_2 As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
     '''Currency_2 コントロール。
@@ -661,7 +670,7 @@ Partial Public Class RFQUpdate
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents EnqQuantity_3 As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents EnqQuantity_3 As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
     '''EnqUnit_3 コントロール。
@@ -670,7 +679,7 @@ Partial Public Class RFQUpdate
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents EnqUnit_3 As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents EnqUnit_3 As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
     '''EnqPiece_3 コントロール。
@@ -679,7 +688,7 @@ Partial Public Class RFQUpdate
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents EnqPiece_3 As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents EnqPiece_3 As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
     '''Currency_3 コントロール。
@@ -814,7 +823,7 @@ Partial Public Class RFQUpdate
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents EnqQuantity_4 As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents EnqQuantity_4 As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
     '''EnqUnit_4 コントロール。
@@ -823,7 +832,7 @@ Partial Public Class RFQUpdate
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents EnqUnit_4 As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents EnqUnit_4 As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
     '''EnqPiece_4 コントロール。
@@ -832,7 +841,7 @@ Partial Public Class RFQUpdate
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents EnqPiece_4 As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents EnqPiece_4 As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
     '''Currency_4 コントロール。
@@ -1004,4 +1013,22 @@ Partial Public Class RFQUpdate
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents UpdateDate As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''EnqLocationCode コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents EnqLocationCode As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''QuoLocationCode コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents QuoLocationCode As Global.System.Web.UI.WebControls.HiddenField
 End Class

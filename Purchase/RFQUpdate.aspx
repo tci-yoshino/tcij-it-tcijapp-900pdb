@@ -182,7 +182,17 @@
                     <tr>
                         <th rowspan="2">1</th>
                         <td>
-                            <asp:Label ID="EnqQuantity_1" runat="server" Text=""></asp:Label> <asp:Label ID="EnqUnit_1" runat="server" Text=""></asp:Label> x <asp:Label ID="EnqPiece_1" runat="server" Text=""></asp:Label></td>
+                            <asp:TextBox ID="EnqQuantity_1" runat="server" Width="5em" MaxLength="18" CssClass="number"></asp:TextBox>
+                            <asp:DropDownList ID="EnqUnit_1" runat="server" AppendDataBoundItems="True" 
+                                DataSourceID="SDS_RFQUpdate_Qua" DataTextField="UnitCode" 
+                                DataValueField="UnitCode" >
+                                <asp:ListItem></asp:ListItem>
+                            </asp:DropDownList>
+                            x <asp:TextBox ID="EnqPiece_1" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox>
+                            <asp:SqlDataSource ID="SDS_RFQUpdate_Qua" runat="server" 
+                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
+                                SelectCommand="SELECT [UnitCode] FROM [PurchasingUnit] ORDER BY [UnitCode]">
+                            </asp:SqlDataSource></td>
                         <td>
                             <asp:DropDownList ID="Currency_1" runat="server" 
                                 DataSourceID="SDS_RFQUpdate_Currency" DataTextField="CurrencyCode" 
@@ -242,7 +252,14 @@
                     <tr>
                         <th rowspan="2">2</th>
                         <td>
-                            <asp:Label ID="EnqQuantity_2" runat="server" Text=""></asp:Label> <asp:Label ID="EnqUnit_2" runat="server" Text=""></asp:Label> x <asp:Label ID="EnqPiece_2" runat="server" Text=""></asp:Label></td>
+                            <asp:TextBox ID="EnqQuantity_2" runat="server" Width="5em" MaxLength="18" CssClass="number"></asp:TextBox>
+                            <asp:DropDownList ID="EnqUnit_2" runat="server" AppendDataBoundItems="True" 
+                                DataSourceID="SDS_RFQUpdate_Qua" DataTextField="UnitCode" 
+                                DataValueField="UnitCode">
+                                <asp:ListItem></asp:ListItem>
+                            </asp:DropDownList>
+                            x <asp:TextBox ID="EnqPiece_2" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox>
+                        </td>
                         <td>
                             <asp:DropDownList ID="Currency_2" runat="server" 
                                 DataSourceID="SDS_RFQUpdate_Currency" DataTextField="CurrencyCode" 
@@ -289,7 +306,14 @@
                     <tr>
                         <th rowspan="2">3</th>
                         <td>
-                            <asp:Label ID="EnqQuantity_3" runat="server" Text=""></asp:Label> <asp:Label ID="EnqUnit_3" runat="server" Text=""></asp:Label> x <asp:Label ID="EnqPiece_3" runat="server" Text=""></asp:Label></td>
+                            <asp:TextBox ID="EnqQuantity_3" runat="server" Width="5em" MaxLength="18" CssClass="number"></asp:TextBox>
+                            <asp:DropDownList ID="EnqUnit_3" runat="server" AppendDataBoundItems="True" 
+                                DataSourceID="SDS_RFQUpdate_Qua" DataTextField="UnitCode" 
+                                DataValueField="UnitCode">
+                                <asp:ListItem></asp:ListItem>
+                            </asp:DropDownList>
+                            x <asp:TextBox ID="EnqPiece_3" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox>
+                        </td>
                         <td>
                             <asp:DropDownList ID="Currency_3" runat="server" 
                                 DataSourceID="SDS_RFQUpdate_Currency" DataTextField="CurrencyCode" 
@@ -336,7 +360,14 @@
                     <tr>
                         <th rowspan="2">4</th>
                         <td>
-                            <asp:Label ID="EnqQuantity_4" runat="server" Text=""></asp:Label> <asp:Label ID="EnqUnit_4" runat="server" Text=""></asp:Label> x <asp:Label ID="EnqPiece_4" runat="server" Text=""></asp:Label></td>
+                            <asp:TextBox ID="EnqQuantity_4" runat="server" Width="5em" MaxLength="18" CssClass="number"></asp:TextBox>
+                            <asp:DropDownList ID="EnqUnit_4" runat="server" AppendDataBoundItems="True" 
+                                DataSourceID="SDS_RFQUpdate_Qua" DataTextField="UnitCode" 
+                                DataValueField="UnitCode">
+                                <asp:ListItem></asp:ListItem>
+                            </asp:DropDownList>
+                            x <asp:TextBox ID="EnqPiece_4" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox>
+                        </td>
                         <td>
                             <asp:DropDownList ID="Currency_4" runat="server" 
                                 DataSourceID="SDS_RFQUpdate_Currency" DataTextField="CurrencyCode" 
@@ -395,6 +426,8 @@
                     <asp:Button ID="Close" runat="server" Text="Close" />
                     <asp:HiddenField ID="QuotedDate" runat="server" />
                     <asp:HiddenField ID="UpdateDate" runat="server" />
+                    <asp:HiddenField ID="EnqLocationCode" runat="server" />
+                    <asp:HiddenField ID="QuoLocationCode" runat="server" />
                 </div>
 				<% End If%>                
             </div>
