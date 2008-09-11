@@ -157,7 +157,7 @@ Public Class Common
     ''' 文字数チェックで使用する。3000文字用
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const INT_3000 As Object = 3000
+    Public Const INT_3000 As Integer = 3000
 
     ''' <summary>
     ''' 文字数チェックで使用する。255文字用
