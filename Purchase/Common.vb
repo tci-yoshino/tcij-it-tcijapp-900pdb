@@ -166,6 +166,18 @@ Public Class Common
     Public Const INT_255 As Integer = 255
 
     ''' <summary>
+    ''' エラーメッセージ 「○○ には3000文字以上登録することができません。」
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const ERR_OVER_3000 As String = " には3000文字以上登録することができません。"
+
+    ''' <summary>
+    ''' エラーメッセージ 「○○ には255文字以上登録することができません。」
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const ERR_OVER_255 As String = " には255文字以上登録することができません。"
+
+    ''' <summary>
     ''' ローカル時間を取得する。
     ''' </summary>
     ''' <param name="LocationCode">拠点コード</param>
