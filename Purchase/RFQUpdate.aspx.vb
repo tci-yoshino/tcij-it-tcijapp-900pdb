@@ -131,7 +131,6 @@ Partial Public Class RFQUpdate
             DBCommand.Parameters.Add("@Comment", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(Comment.Text)
             DBCommand.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = Integer.Parse(Session("UserID"))
             DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = Integer.Parse(RFQNumber.Text)
-            'DBCommand.Parameters.Add("@UpdateDate", SqlDbType.DateTime).Value = Now()
             DBCommand.ExecuteNonQuery()
             DBCommand.Parameters.Clear()
             DBCommand.Dispose()
@@ -266,10 +265,9 @@ Partial Public Class RFQUpdate
     End Sub
 
     Private Function FormDataSet() As Boolean
-        'TODO 変数名重複によるコンパイルエラーのため、変数名コメントアウト。またTryParse(st_RFQNumber, i)をTryParse(st_RFQNumber, 0)に暫定変更　natsuki OKUDA
-        'Dim i As Integer = 0
+        Dim i_TryParse As Integer = 0
         Dim DS As DataSet = New DataSet
-        If Integer.TryParse(st_RFQNumber, 0) Then
+        If Integer.TryParse(st_RFQNumber, i_TryParse) Then
             DBCommand = New SqlCommand("Select " _
 & "EnqLocationName, EnqUserName, QuoLocationName, QuoUserID, QuoUserName, ProductNumber, " _
 & "ProductName, SupplierCode, R3SupplierCode, SupplierName, SupplierCountryCode, MakerCode, " _
