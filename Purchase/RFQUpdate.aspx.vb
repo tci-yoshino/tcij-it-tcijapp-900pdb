@@ -34,13 +34,14 @@ Partial Public Class RFQUpdate
         DBConn.Open()
         DBCommand = DBConn.CreateCommand()
 
-        If SetRFQNumber() = False Then
-            Msg.Text = ERR_INVALID_PARAMETER
-            '画面上の入力項目を隠す。
-            Parameter = False
-            Exit Sub
-        End If
         If IsPostBack = False Then
+            If SetRFQNumber() = False Then
+                'RFQNumberのチェックとst_RFQNumberへのセットを行う。
+                Msg.Text = ERR_INVALID_PARAMETER
+                '画面上の入力項目を隠す。
+                Parameter = False
+                Exit Sub
+            End If
             Call SetPostBackUrl()
             If FormDataSet() = False Then
                 Msg.Text = ERR_INVALID_PARAMETER
@@ -60,6 +61,13 @@ Partial Public Class RFQUpdate
     Protected Sub Update_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Update.Click
         Dim RFQStatusCode As String = String.Empty
         Dim st_QuotedDate As String = String.Empty
+        If SetRFQNumber() = False Then
+            'RFQNumberのチェックとst_RFQNumberへのセットを行う。
+            Msg.Text = ERR_INVALID_PARAMETER
+            '画面上の入力項目を隠す。
+            Parameter = False
+            Exit Sub
+        End If
         Msg.Text = String.Empty
         If Request.QueryString("Action") <> "Update" Then
             Msg.Text = ERR_INVALID_PARAMETER
@@ -240,16 +248,23 @@ Partial Public Class RFQUpdate
         If Request.QueryString("Action") <> "Close" Then
             Exit Sub
         End If
-        '他セッションでの更新チェック
-        If CheckUpdatedate() = False Then
+        If SetRFQNumber() = False Then
+            'RFQNumberのチェックとst_RFQNumberへのセットを行う。
+            Msg.Text = ERR_INVALID_PARAMETER
+            '画面上の入力項目を隠す。
+            Parameter = False
             Exit Sub
         End If
         '更新可能拠点の確認
         If CheckLocation() = False Then
             Exit Sub
         End If
+        '他セッションでの更新チェック
+        If CheckUpdatedate() = False Then
+            Exit Sub
+        End If
         DBCommand.CommandText = "UPDATE RFQHeader SET RFQStatusCode = 'C', UpdatedBy = @UpdatedBy, UpdateDate = GETDATE() WHERE (RFQNumber = @RFQNumber)"
-        DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = Integer.Parse(RFQNumber.Text)
+        DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
         DBCommand.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = Integer.Parse(Session("UserID"))
         DBCommand.ExecuteNonQuery()
         DBCommand.Parameters.Clear()
@@ -634,10 +649,15 @@ Partial Public Class RFQUpdate
         End If
     End Function
     Private Function SetRFQNumber() As Boolean
+        Dim i_TryParse As Integer = 0
         If Request.QueryString("RFQNumber") <> String.Empty Or Request.Form("RFQNumber") <> String.Empty Then
             st_RFQNumber = IIf(Request.QueryString("RFQNumber") <> String.Empty, Request.QueryString("RFQNumber"), Request.Form("RFQNumber"))
+        ElseIf RFQNumber.Text <> String.Empty Then
+            st_RFQNumber = RFQNumber.Text
         Else
-            'パラメータが渡されない場合、エラーメッセージの表示はPage_Loadで行う。
+            Return False
+        End If
+        If Integer.TryParse(st_RFQNumber, i_TryParse) = False Then
             Return False
         End If
         Return True
