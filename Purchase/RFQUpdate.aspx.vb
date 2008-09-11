@@ -108,8 +108,7 @@ Partial Public Class RFQUpdate
             If QuotedDate.Value = String.Empty Then
                 'QuotedDateは初回のみ登録し上書きしない。登録条件はRFQStatusが「Q」or「PQ」
                 If RFQStatus.SelectedValue = "Q" Or RFQStatus.SelectedValue = "PQ" Then
-                    st_QuotedDate = ", QuotedDate = @st_QuotedDate "
-                    DBCommand.Parameters.Add("@st_QuotedDate", SqlDbType.DateTime).Value = DateTime.Today
+                    st_QuotedDate = ", QuotedDate = GETDATE() "
                 End If
             End If
             DBCommand.CommandText = "Update RFQHeader SET QuoUserID = @QuoUserID, SupplierCode = @SupplierCode, MakerCode = @MakerCode," _
@@ -288,7 +287,7 @@ Partial Public Class RFQUpdate
             RFQNumber.Text = st_RFQNumber
             CurrentRFQStatus.Text = DS.Tables("RFQHeader").Rows(0)("Status").ToString
             ProductNumber.Text = DS.Tables("RFQHeader").Rows(0)("ProductNumber").ToString
-            ProductName.Text = DS.Tables("RFQHeader").Rows(0)("ProductName").ToString
+            ProductName.Text = CutShort(DS.Tables("RFQHeader").Rows(0)("ProductName").ToString)
             SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString
             R3SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("R3SupplierCode").ToString
             SupplierName.Text = DS.Tables("RFQHeader").Rows(0)("SupplierName").ToString
