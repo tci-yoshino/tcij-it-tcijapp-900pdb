@@ -13,6 +13,7 @@ Partial Public Class RFQUpdate
     Private Const ERR_INCORRECT_UNITPRICE As String = "UnitPrice" & ERR_INVALID_NUMBER
     Private Const ERR_INCORRECT_QUOPER As String = "Quo-Per" & ERR_INVALID_NUMBER
     Private Const ERR_INCORRECT_CURRENCY As String = "Currency Price Quo-Per Quo-Unit は全て入力、もしくは全て空白で登録してください。"
+    Private Const ERR_INCORRECT_ENQQUANTITY As String = "Enq-Quantity" & ERR_INCORRECT_FORMAT
     'エラーメッセージ(必須入力項目)
     Private Const ERR_REQUIRED_SUPPLIERCODE As String = "SupplierCode" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_QUOUSER As String = "Quo-User" & ERR_REQUIRED_FIELD
@@ -30,10 +31,34 @@ Partial Public Class RFQUpdate
     Protected Parameter As Boolean = True
     'RFQNumber
     Protected st_RFQNumber As String = String.Empty
+
+    'RFQLineのコントロール配列化用定数
+    Const LINE_START As Integer = 1
+    Const LINE_COUNT As Integer = 4
+
+    ' コントロール配列の定義
+    Private EnqQuantity(LINE_COUNT) As TextBox
+    Private EnqUnit(LINE_COUNT) As DropDownList
+    Private EnqPiece(LINE_COUNT) As TextBox
+    Private Currency(LINE_COUNT) As DropDownList
+    Private UnitPrice(LINE_COUNT) As TextBox
+    Private QuoPer(LINE_COUNT) As TextBox
+    Private QuoUnit(LINE_COUNT) As DropDownList
+    Private LeadTime(LINE_COUNT) As TextBox
+    Private SupplierItemNumber(LINE_COUNT) As TextBox
+    Private POIssue(LINE_COUNT) As HyperLink
+    Private LineNumber(LINE_COUNT) As HiddenField
+    Private Incoterms(LINE_COUNT) As DropDownList
+    Private DeliveryTerm(LINE_COUNT) As TextBox
+    Private Purity(LINE_COUNT) As TextBox
+    Private QMMethod(LINE_COUNT) As TextBox
+    Private Packing(LINE_COUNT) As TextBox
+    Private NoOfferReason(LINE_COUNT) As DropDownList
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         DBConn.Open()
         DBCommand = DBConn.CreateCommand()
-
+        Call SetControlArray()
         If IsPostBack = False Then
             If SetRFQNumber() = False Then
                 'RFQNumberのチェックとst_RFQNumberへのセットを行う。
@@ -61,6 +86,8 @@ Partial Public Class RFQUpdate
     Protected Sub Update_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Update.Click
         Dim RFQStatusCode As String = String.Empty
         Dim st_QuotedDate As String = String.Empty
+        Dim SQLLineUpdate As String = String.Empty
+        Dim SQLLineInsert As String = String.Empty
         If SetRFQNumber() = False Then
             'RFQNumberのチェックとst_RFQNumberへのセットを行う。
             Msg.Text = ERR_INVALID_PARAMETER
@@ -87,8 +114,7 @@ Partial Public Class RFQUpdate
             Exit Sub
         End If
         If LineCheck() = False Then
-            'Currency,Price,Quo-Per,Quo-Unitの入力チェック
-            Msg.Text = ERR_INCORRECT_CURRENCY
+            'RFQLineの必須入力チェック
             Exit Sub
         End If
         If ItemCheck() = False Then
@@ -137,97 +163,60 @@ Partial Public Class RFQUpdate
             DBCommand.Parameters.Add("@PaymentTermCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(PaymentTerm.SelectedValue)
             DBCommand.Parameters.Add("@Comment", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(Comment.Text)
             DBCommand.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = Integer.Parse(Session("UserID"))
-            DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = Integer.Parse(RFQNumber.Text)
+            DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
             DBCommand.ExecuteNonQuery()
             DBCommand.Parameters.Clear()
             DBCommand.Dispose()
 
-            'RFQLine の更新
-            DBCommand.CommandText = "UPDATE RFQLine SET CurrencyCode = @CurrencyCode, UnitPrice = @UnitPrice, " _
-            & "QuoPer = @QuoPer, QuoUnitCode = @QuoUnitCode, LeadTime = @LeadTime, SupplierItemNumber = @SupplierItemNumber, " _
-            & "IncotermsCode = @IncotermsCode, DeliveryTerm = @DeliveryTerm, Packing = @Packing, Purity = @Purity, " _
-            & "QMMethod = @QMMethod, NoOfferReasonCode = @NoOfferReasonCode, UpdatedBy = @UpdatedBy, UpdateDate = GETDATE() " _
-            & "Where RFQLineNumber = @RFQLineNumber"
-            Dim param1 As SqlParameter = DBCommand.Parameters.Add("@RFQLineNumber", SqlDbType.Int)
-            Dim param2 As SqlParameter = DBCommand.Parameters.Add("@CurrencyCode", SqlDbType.VarChar)
-            Dim param3 As SqlParameter = DBCommand.Parameters.Add("@UnitPrice", SqlDbType.Decimal)
-            Dim param4 As SqlParameter = DBCommand.Parameters.Add("@QuoPer", SqlDbType.Decimal)
-            Dim param5 As SqlParameter = DBCommand.Parameters.Add("@QuoUnitCode", SqlDbType.VarChar)
-            Dim param6 As SqlParameter = DBCommand.Parameters.Add("@LeadTime", SqlDbType.NVarChar)
-            Dim param7 As SqlParameter = DBCommand.Parameters.Add("@SupplierItemNumber", SqlDbType.NVarChar)
-            Dim param8 As SqlParameter = DBCommand.Parameters.Add("@IncotermsCode", SqlDbType.NVarChar)
-            Dim param9 As SqlParameter = DBCommand.Parameters.Add("@DeliveryTerm", SqlDbType.NVarChar)
-            Dim param10 As SqlParameter = DBCommand.Parameters.Add("@Packing", SqlDbType.NVarChar)
-            Dim param11 As SqlParameter = DBCommand.Parameters.Add("@Purity", SqlDbType.NVarChar)
-            Dim param12 As SqlParameter = DBCommand.Parameters.Add("@QMMethod", SqlDbType.NVarChar)
-            Dim param13 As SqlParameter = DBCommand.Parameters.Add("@NoOfferReasonCode", SqlDbType.VarChar)
-            DBCommand.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = Integer.Parse(Session("UserID"))
-            If EnqQuantity_1.Text <> String.Empty Then
-                'RFQIssueで登録されたデータのみ更新可
-                param1.Value = Integer.Parse(LineNumber1.Value)
-                param2.Value = ConvertEmptyStringToNull(Currency_1.SelectedValue)
-                param3.Value = ConvertStringToDec(UnitPrice_1.Text)
-                param4.Value = ConvertStringToDec(QuoPer_1.Text)
-                param5.Value = ConvertEmptyStringToNull(QuoUnit_1.SelectedValue)
-                param6.Value = ConvertEmptyStringToNull(LeadTime_1.Text)
-                param7.Value = ConvertEmptyStringToNull(SupplierItemNumber_1.Text)
-                param8.Value = ConvertEmptyStringToNull(Incoterms_1.SelectedValue)
-                param9.Value = ConvertEmptyStringToNull(DeliveryTerm_1.Text)
-                param10.Value = ConvertEmptyStringToNull(Packing_1.Text)
-                param11.Value = ConvertEmptyStringToNull(Purity_1.Text)
-                param12.Value = ConvertEmptyStringToNull(QMMethod_1.Text)
-                param13.Value = ConvertEmptyStringToNull(NoOfferReason_1.SelectedValue)
-                DBCommand.ExecuteNonQuery()
-            End If
+            'RFQLine の更新もしくはデータ追加
+            'Update文作成
+            SQLLineUpdate = "UPDATE RFQLine SET CurrencyCode = @CurrencyCode, UnitPrice = @UnitPrice, " _
+& "QuoPer = @QuoPer, QuoUnitCode = @QuoUnitCode, LeadTime = @LeadTime, SupplierItemNumber = @SupplierItemNumber, " _
+& "IncotermsCode = @IncotermsCode, DeliveryTerm = @DeliveryTerm, Packing = @Packing, Purity = @Purity, " _
+& "QMMethod = @QMMethod, NoOfferReasonCode = @NoOfferReasonCode, UpdatedBy = @UpdatedBy, UpdateDate = GETDATE() " _
+& "Where RFQLineNumber = @RFQLineNumber"
 
-            If EnqQuantity_2.Text <> String.Empty Then
-                param1.Value = Integer.Parse(LineNumber2.Value)
-                param2.Value = ConvertEmptyStringToNull(Currency_2.SelectedValue)
-                param3.Value = ConvertStringToDec(UnitPrice_2.Text)
-                param4.Value = ConvertStringToDec(QuoPer_2.Text)
-                param5.Value = ConvertEmptyStringToNull(QuoUnit_2.SelectedValue)
-                param6.Value = ConvertEmptyStringToNull(LeadTime_2.Text)
-                param7.Value = ConvertEmptyStringToNull(SupplierItemNumber_2.Text)
-                param8.Value = ConvertEmptyStringToNull(Incoterms_2.SelectedValue)
-                param9.Value = ConvertEmptyStringToNull(DeliveryTerm_2.Text)
-                param10.Value = ConvertEmptyStringToNull(Packing_2.Text)
-                param11.Value = ConvertEmptyStringToNull(Purity_2.Text)
-                param12.Value = ConvertEmptyStringToNull(QMMethod_2.Text)
-                param13.Value = ConvertEmptyStringToNull(NoOfferReason_2.SelectedValue)
-                DBCommand.ExecuteNonQuery()
-            End If
-            If EnqQuantity_3.Text <> String.Empty Then
-                param1.Value = Integer.Parse(LineNumber3.Value)
-                param2.Value = ConvertEmptyStringToNull(Currency_3.SelectedValue)
-                param3.Value = ConvertStringToDec(UnitPrice_3.Text)
-                param4.Value = ConvertStringToDec(QuoPer_3.Text)
-                param5.Value = ConvertEmptyStringToNull(QuoUnit_3.SelectedValue)
-                param6.Value = ConvertEmptyStringToNull(LeadTime_3.Text)
-                param7.Value = ConvertEmptyStringToNull(SupplierItemNumber_3.Text)
-                param8.Value = ConvertEmptyStringToNull(Incoterms_3.SelectedValue)
-                param9.Value = ConvertEmptyStringToNull(DeliveryTerm_3.Text)
-                param10.Value = ConvertEmptyStringToNull(Packing_3.Text)
-                param11.Value = ConvertEmptyStringToNull(Purity_3.Text)
-                param12.Value = ConvertEmptyStringToNull(QMMethod_3.Text)
-                param13.Value = ConvertEmptyStringToNull(NoOfferReason_3.SelectedValue)
-                DBCommand.ExecuteNonQuery()
-            End If
-            If EnqQuantity_4.Text <> String.Empty Then
-                param1.Value = Integer.Parse(LineNumber4.Value)
-                param2.Value = ConvertEmptyStringToNull(Currency_4.SelectedValue)
-                param3.Value = ConvertStringToDec(UnitPrice_4.Text)
-                param4.Value = ConvertStringToDec(QuoPer_4.Text)
-                param5.Value = ConvertEmptyStringToNull(QuoUnit_4.SelectedValue)
-                param6.Value = ConvertEmptyStringToNull(LeadTime_4.Text)
-                param7.Value = ConvertEmptyStringToNull(SupplierItemNumber_4.Text)
-                param8.Value = ConvertEmptyStringToNull(Incoterms_4.SelectedValue)
-                param9.Value = ConvertEmptyStringToNull(DeliveryTerm_4.Text)
-                param10.Value = ConvertEmptyStringToNull(Packing_4.Text)
-                param11.Value = ConvertEmptyStringToNull(Purity_4.Text)
-                param12.Value = ConvertEmptyStringToNull(QMMethod_4.Text)
-                param13.Value = ConvertEmptyStringToNull(NoOfferReason_4.SelectedValue)
-                DBCommand.ExecuteNonQuery()
-            End If
+            'Insert文作成
+            SQLLineInsert = "INSERT INTO RFQLine (RFQNumber, EnqQuantity, EnqUnitCode, EnqPiece, CurrencyCode," _
+& " UnitPrice, QuoPer, QuoUnitCode, LeadTime, SupplierItemNumber, IncotermsCode," _
+& " DeliveryTerm, Packing, Purity, QMMethod, NoOfferReasonCode, CreatedBy, UpdatedBy)" _
+& " VALUES(@RFQNumber, @EnqQuantity, @EnqUnitCode, @EnqPiece, @CurrencyCode," _
+& " @UnitPrice, @QuoPer, @QuoUnitCode, @LeadTime, @SupplierItemNumber, @IncotermsCode," _
+& " @DeliveryTerm, @Packing, @Purity, @QMMethod, @NoOfferReasonCode, @CreatedBy,@UpdatedBy);"
+            For i As Integer = LINE_START To LINE_COUNT
+                If EnqQuantity(i).Text.Trim <> String.Empty Then
+                    DBCommand.Parameters.Add("@RFQLineNumber", SqlDbType.Int).Value = ConvertStringToInt(LineNumber(i).Value)
+                    DBCommand.Parameters.Add("@CurrencyCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(Currency(i).SelectedValue)
+                    DBCommand.Parameters.Add("@UnitPrice", SqlDbType.Decimal).Value = ConvertStringToDec(UnitPrice(i).Text)
+                    DBCommand.Parameters.Add("@QuoPer", SqlDbType.Decimal).Value = ConvertStringToDec(QuoPer(i).Text)
+                    DBCommand.Parameters.Add("@QuoUnitCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(QuoUnit(i).SelectedValue)
+                    DBCommand.Parameters.Add("@LeadTime", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(LeadTime(i).Text)
+                    DBCommand.Parameters.Add("@SupplierItemNumber", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(SupplierItemNumber(i).Text)
+                    DBCommand.Parameters.Add("@IncotermsCode", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(Incoterms(i).SelectedValue)
+                    DBCommand.Parameters.Add("@DeliveryTerm", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(DeliveryTerm(i).Text)
+                    DBCommand.Parameters.Add("@Packing", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(Packing(i).Text)
+                    DBCommand.Parameters.Add("@Purity", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(Purity(i).Text)
+                    DBCommand.Parameters.Add("@QMMethod", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(QMMethod(i).Text)
+                    DBCommand.Parameters.Add("@NoOfferReasonCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(NoOfferReason(i).SelectedValue)
+                    DBCommand.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = ConvertStringToInt(Session("UserID"))
+                    If LineNumber(i).Value.Trim <> String.Empty Then
+                        '更新処理
+                        DBCommand.CommandText = SQLLineUpdate
+                        DBCommand.ExecuteNonQuery()
+                        DBCommand.Parameters.Clear()
+                    Else
+                        '登録処理
+                        DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = ConvertStringToInt(st_RFQNumber)
+                        DBCommand.Parameters.Add("@EnqQuantity", SqlDbType.Decimal).Value = ConvertStringToDec(EnqQuantity(i).Text)
+                        DBCommand.Parameters.Add("@EnqUnitCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(EnqUnit(i).SelectedValue)
+                        DBCommand.Parameters.Add("@EnqPiece", SqlDbType.Int).Value = ConvertStringToInt(EnqPiece(i).Text)
+                        DBCommand.Parameters.Add("@CreatedBy", SqlDbType.Int).Value = ConvertStringToInt(Session("UserID"))
+                        DBCommand.CommandText = SQLLineInsert
+                        DBCommand.ExecuteNonQuery()
+                        DBCommand.Parameters.Clear()
+                    End If
+                End If
+            Next
             sqlTran.Commit()
         Catch ex As Exception
             sqlTran.Rollback()
@@ -280,7 +269,10 @@ Partial Public Class RFQUpdate
 
     Private Function FormDataSet() As Boolean
         Dim i_TryParse As Integer = 0
+        Dim i As Integer = 0
+        Dim j As Integer = 0
         Dim DS As DataSet = New DataSet
+        Call ClearLineData()
         If Integer.TryParse(st_RFQNumber, i_TryParse) Then
             DBCommand = New SqlCommand("Select " _
 & "EnqLocationName, EnqUserName, QuoLocationName, QuoUserID, QuoUserName, ProductNumber, " _
@@ -363,116 +355,33 @@ Partial Public Class RFQUpdate
                 Return False
             End If
 
-            Dim i As Integer
             For i = 0 To DS.Tables("RFQLine").Rows.Count - 1
-                Select Case i
-                    Case 0
-                        EnqQuantity_1.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
-                        EnqQuantity_1.ReadOnly = True
-                        EnqQuantity_1.CssClass = "readonly"
-                        EnqUnit_1.Items.Clear()
-                        EnqUnit_1.DataSourceID = ""
-                        EnqUnit_1.Items.Add(DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString)
-                        EnqUnit_1.CssClass = "readonly"
-                        EnqPiece_1.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
-                        EnqPiece_1.ReadOnly = True
-                        EnqPiece_1.CssClass = "readonly"
-                        Incoterms_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
-                        Currency_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
-                        UnitPrice_1.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
-                        DeliveryTerm_1.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
-                        QuoPer_1.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
-                        Purity_1.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
-                        QuoUnit_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
-                        QMMethod_1.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
-                        LeadTime_1.Text = DS.Tables("RFQLine").Rows(i).Item("LeadTime").ToString
-                        Packing_1.Text = DS.Tables("RFQLine").Rows(i).Item("Packing").ToString
-                        SupplierItemNumber_1.Text = DS.Tables("RFQLine").Rows(i).Item("SupplierItemNumber").ToString
-                        NoOfferReason_1.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("NoOfferReasonCode").ToString
-                        POIssue_1.Visible = True
-                        POIssue_1.NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
-                        LineNumber1.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
-                    Case 1
-                        EnqQuantity_2.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
-                        EnqQuantity_2.ReadOnly = True
-                        EnqQuantity_2.CssClass = "readonly"
-                        EnqUnit_2.Items.Clear()
-                        EnqUnit_2.DataSourceID = ""
-                        EnqUnit_2.Items.Add(DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString)
-                        EnqUnit_2.CssClass = "readonly"
-                        EnqPiece_2.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
-                        EnqPiece_2.ReadOnly = True
-                        EnqPiece_2.CssClass = "readonly"
-                        Incoterms_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
-                        Currency_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
-                        UnitPrice_2.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
-                        DeliveryTerm_2.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
-                        QuoPer_2.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
-                        Purity_2.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
-                        QuoUnit_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
-                        QMMethod_2.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
-                        LeadTime_2.Text = DS.Tables("RFQLine").Rows(i).Item("LeadTime").ToString
-                        Packing_2.Text = DS.Tables("RFQLine").Rows(i).Item("Packing").ToString
-                        SupplierItemNumber_2.Text = DS.Tables("RFQLine").Rows(i).Item("SupplierItemNumber").ToString
-                        NoOfferReason_2.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("NoOfferReasonCode").ToString
-                        POIssue_2.Visible = True
-                        POIssue_2.NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
-                        LineNumber2.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
-                    Case 2
-                        EnqQuantity_3.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
-                        EnqQuantity_3.ReadOnly = True
-                        EnqQuantity_3.CssClass = "readonly"
-                        EnqUnit_3.Items.Clear()
-                        EnqUnit_3.DataSourceID = ""
-                        EnqUnit_3.Items.Add(DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString)
-                        EnqUnit_3.CssClass = "readonly"
-                        EnqPiece_3.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
-                        EnqPiece_3.ReadOnly = True
-                        EnqPiece_3.CssClass = "readonly"
-                        Incoterms_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
-                        Currency_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
-                        UnitPrice_3.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
-                        DeliveryTerm_3.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
-                        QuoPer_3.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
-                        Purity_3.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
-                        QuoUnit_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
-                        QMMethod_3.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
-                        LeadTime_3.Text = DS.Tables("RFQLine").Rows(i).Item("LeadTime").ToString
-                        Packing_3.Text = DS.Tables("RFQLine").Rows(i).Item("Packing").ToString
-                        SupplierItemNumber_3.Text = DS.Tables("RFQLine").Rows(i).Item("SupplierItemNumber").ToString
-                        NoOfferReason_3.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("NoOfferReasonCode").ToString
-                        POIssue_3.Visible = True
-                        POIssue_3.NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
-                        LineNumber3.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
-                    Case 3
-                        EnqQuantity_4.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
-                        EnqQuantity_4.ReadOnly = True
-                        EnqQuantity_4.CssClass = "readonly"
-                        EnqUnit_4.Items.Clear()
-                        EnqUnit_4.DataSourceID = ""
-                        EnqUnit_4.Items.Add(DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString)
-                        EnqUnit_4.CssClass = "readonly"
-                        EnqPiece_4.Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
-                        EnqPiece_4.ReadOnly = True
-                        EnqPiece_4.CssClass = "readonly"
-                        Incoterms_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
-                        Currency_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
-                        UnitPrice_4.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
-                        DeliveryTerm_4.Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
-                        QuoPer_4.Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
-                        Purity_4.Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
-                        QuoUnit_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
-                        QMMethod_4.Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
-                        LeadTime_4.Text = DS.Tables("RFQLine").Rows(i).Item("LeadTime").ToString
-                        Packing_4.Text = DS.Tables("RFQLine").Rows(i).Item("Packing").ToString
-                        SupplierItemNumber_4.Text = DS.Tables("RFQLine").Rows(i).Item("SupplierItemNumber").ToString
-                        NoOfferReason_4.SelectedValue = DS.Tables("RFQLine").Rows(i).Item("NoOfferReasonCode").ToString
-                        POIssue_4.Visible = True
-                        POIssue_4.NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
-                        LineNumber4.Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
-                    Case Else
-                        '処理無し
-                End Select
+                j = i + 1
+                EnqQuantity(j).Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
+                EnqQuantity(j).ReadOnly = True
+                EnqQuantity(j).CssClass = "readonly"
+                EnqUnit(j).Items.Clear()
+                EnqUnit(j).DataSourceID = ""
+                EnqUnit(j).Items.Add(DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString)
+                EnqUnit(j).CssClass = "readonly"
+                EnqPiece(j).Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
+                EnqPiece(j).ReadOnly = True
+                EnqPiece(j).CssClass = "readonly"
+                Incoterms(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
+                Currency(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
+                UnitPrice(j).Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
+                DeliveryTerm(j).Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
+                QuoPer(j).Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
+                Purity(j).Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
+                QuoUnit(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
+                QMMethod(j).Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
+                LeadTime(j).Text = DS.Tables("RFQLine").Rows(i).Item("LeadTime").ToString
+                Packing(j).Text = DS.Tables("RFQLine").Rows(i).Item("Packing").ToString
+                SupplierItemNumber(j).Text = DS.Tables("RFQLine").Rows(i).Item("SupplierItemNumber").ToString
+                NoOfferReason(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("NoOfferReasonCode").ToString
+                POIssue(j).Visible = True
+                POIssue(j).NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
+                LineNumber(j).Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
             Next
             DS.Clear()
         End If
@@ -480,7 +389,6 @@ Partial Public Class RFQUpdate
     End Function
 
     Private Function ItemCheck() As Boolean
-
         ItemCheck = False
         '型チェック
         If ShippingHandlingFee.Text <> String.Empty Then
@@ -489,58 +397,21 @@ Partial Public Class RFQUpdate
                 Exit Function
             End If
         End If
-
-        If UnitPrice_1.Text <> String.Empty Then
-            If Not Regex.IsMatch(UnitPrice_1.Text, DECIMAL_10_3_REGEX) Then
-                Msg.Text = ERR_INCORRECT_UNITPRICE
-                Exit Function
+        For i As Integer = LINE_START To LINE_COUNT
+            If UnitPrice(i).Text <> String.Empty Then
+                If Not Regex.IsMatch(UnitPrice(i).Text, DECIMAL_10_3_REGEX) Then
+                    Msg.Text = ERR_INCORRECT_UNITPRICE
+                    Exit Function
+                End If
             End If
-        End If
-        If UnitPrice_2.Text <> String.Empty Then
-            If Not Regex.IsMatch(UnitPrice_2.Text, DECIMAL_10_3_REGEX) Then
-                Msg.Text = ERR_INCORRECT_UNITPRICE
-                Exit Function
+            If QuoPer(i).Text <> String.Empty Then
+                If Not Regex.IsMatch(QuoPer(i).Text, DECIMAL_5_3_REGEX) Then
+                    Msg.Text = ERR_INCORRECT_QUOPER
+                    Exit Function
+                End If
             End If
-        End If
-        If UnitPrice_3.Text <> String.Empty Then
-            If Not Regex.IsMatch(UnitPrice_3.Text, DECIMAL_10_3_REGEX) Then
-                Msg.Text = ERR_INCORRECT_UNITPRICE
-                Exit Function
-            End If
-        End If
-        If UnitPrice_4.Text <> String.Empty Then
-            If Not Regex.IsMatch(UnitPrice_4.Text, DECIMAL_10_3_REGEX) Then
-                Msg.Text = ERR_INCORRECT_UNITPRICE
-                Exit Function
-            End If
-        End If
-
-        If QuoPer_1.Text <> String.Empty Then
-            If Not Regex.IsMatch(QuoPer_1.Text, DECIMAL_5_3_REGEX) Then
-                Msg.Text = ERR_INCORRECT_QUOPER
-                Exit Function
-            End If
-        End If
-        If QuoPer_2.Text <> String.Empty Then
-            If Not Regex.IsMatch(QuoPer_2.Text, DECIMAL_5_3_REGEX) Then
-                Msg.Text = ERR_INCORRECT_QUOPER
-                Exit Function
-            End If
-        End If
-        If QuoPer_3.Text <> String.Empty Then
-            If Not Regex.IsMatch(QuoPer_3.Text, DECIMAL_5_3_REGEX) Then
-                Msg.Text = ERR_INCORRECT_QUOPER
-                Exit Function
-            End If
-        End If
-        If QuoPer_4.Text <> String.Empty Then
-            If Not Regex.IsMatch(QuoPer_4.Text, DECIMAL_5_3_REGEX) Then
-                Msg.Text = ERR_INCORRECT_QUOPER
-                Exit Function
-            End If
-        End If
+        Next
         ItemCheck = True
-
     End Function
 
     Private Sub SetReadOnlyItems()
@@ -619,36 +490,59 @@ Partial Public Class RFQUpdate
         Return True
     End Function
     Private Function LineCheck() As Boolean
-        If CheckLineSet(Currency_1.SelectedValue, UnitPrice_1.Text, QuoPer_1.Text, QuoUnit_1.SelectedValue) = False Then
+        If CheckLineEnqQuantity() = False Then
+            'EnqQuantity,EnqUnit,EnqPieceの入力チェック
+            Msg.Text = ERR_INCORRECT_ENQQUANTITY
             Return False
         End If
-        If CheckLineSet(Currency_2.SelectedValue, UnitPrice_2.Text, QuoPer_2.Text, QuoUnit_2.SelectedValue) = False Then
-            Return False
-        End If
-        If CheckLineSet(Currency_3.SelectedValue, UnitPrice_3.Text, QuoPer_3.Text, QuoUnit_3.SelectedValue) = False Then
-            Return False
-        End If
-        If CheckLineSet(Currency_4.SelectedValue, UnitPrice_4.Text, QuoPer_4.Text, QuoUnit_4.SelectedValue) = False Then
+        If CheckLineSet() = False Then
+            'Currency,Price,Quo-Per,Quo-Unitの入力チェック
+            Msg.Text = ERR_INCORRECT_CURRENCY
             Return False
         End If
         Return True
     End Function
-    Private Function CheckLineSet(ByVal Currency As String, ByVal Price As String, ByVal QuoPer As String, ByVal QuoUnit As String) As Boolean
+    Private Function CheckLineSet() As Boolean
         'RFQLineのCurrency,Price,QuoPer,QuoUnitはどこかが空白で更新することができない。
-        If Currency.Trim = String.Empty And Price.Trim = String.Empty And QuoPer.Trim = String.Empty And QuoUnit.Trim = String.Empty Then
-            Return True
-        ElseIf Currency.Trim = String.Empty Then
-            Return False
-        ElseIf Price.Trim = String.Empty Then
-            Return False
-        ElseIf QuoPer.Trim = String.Empty Then
-            Return False
-        ElseIf QuoUnit.Trim = String.Empty Then
-            Return False
-        Else
-            Return True
-        End If
+        For i As Integer = LINE_START To LINE_COUNT
+            If Currency(i).SelectedValue.Trim = String.Empty And UnitPrice(i).Text.Trim = String.Empty And QuoPer(i).Text.Trim = String.Empty And QuoUnit(i).SelectedValue.Trim = String.Empty Then
+                Return True
+            ElseIf Currency(i).SelectedValue.Trim = String.Empty Then
+                Return False
+            ElseIf UnitPrice(i).Text.Trim = String.Empty Then
+                Return False
+            ElseIf QuoPer(i).Text.Trim = String.Empty Then
+                Return False
+            ElseIf QuoUnit(i).SelectedValue.Trim = String.Empty Then
+                Return False
+            End If
+        Next
+        Return True
     End Function
+    Private Function CheckLineEnqQuantity() As Boolean
+        'RFQLineのEnqQuantity,EnqUnit,EnqPieceはどこかが空白で登録することができない。
+        For i As Integer = LINE_START To LINE_COUNT
+            If EnqQuantity(i).Text.Trim = String.Empty And EnqUnit(i).SelectedValue.Trim = String.Empty And EnqPiece(i).Text.Trim = String.Empty Then
+                Return True
+            ElseIf EnqQuantity(i).Text.Trim = String.Empty Then
+                Return False
+            ElseIf EnqUnit(i).SelectedValue.Trim = String.Empty Then
+                Return False
+            ElseIf EnqPiece(i).Text.Trim = String.Empty Then
+                Return False
+            End If
+            '量入力の書式チェック
+            If Regex.IsMatch(EnqQuantity(i).Text.Trim, DECIMAL_7_3_REGEX) = False Then
+                Return False
+            End If
+            '数量入力の整数チェック
+            If Regex.IsMatch(EnqPiece(i).Text.Trim, INT_5_REGEX) = False Then
+                Return False
+            End If
+        Next
+        Return True
+    End Function
+
     Private Function SetRFQNumber() As Boolean
         Dim i_TryParse As Integer = 0
         If Request.QueryString("RFQNumber") <> String.Empty Or Request.Form("RFQNumber") <> String.Empty Then
@@ -663,4 +557,47 @@ Partial Public Class RFQUpdate
         End If
         Return True
     End Function
+
+    Private Sub SetControlArray()
+        'RFQLineのコントロール配列を作成する。
+        For i As Integer = LINE_START To LINE_COUNT
+            EnqQuantity(i) = CType(FindControl(String.Format("{0}_{1}", "EnqQuantity", i)), TextBox)
+            EnqUnit(i) = CType(FindControl(String.Format("{0}_{1}", "EnqUnit", i)), DropDownList)
+            EnqPiece(i) = CType(FindControl(String.Format("{0}_{1}", "EnqPiece", i)), TextBox)
+            Currency(i) = CType(FindControl(String.Format("{0}_{1}", "Currency", i)), DropDownList)
+            UnitPrice(i) = CType(FindControl(String.Format("{0}_{1}", "UnitPrice", i)), TextBox)
+            QuoPer(i) = CType(FindControl(String.Format("{0}_{1}", "QuoPer", i)), TextBox)
+            QuoUnit(i) = CType(FindControl(String.Format("{0}_{1}", "QuoUnit", i)), DropDownList)
+            LeadTime(i) = CType(FindControl(String.Format("{0}_{1}", "LeadTime", i)), TextBox)
+            SupplierItemNumber(i) = CType(FindControl(String.Format("{0}_{1}", "SupplierItemNumber", i)), TextBox)
+            POIssue(i) = CType(FindControl(String.Format("{0}_{1}", "POIssue", i)), HyperLink)
+            LineNumber(i) = CType(FindControl(String.Format("{0}{1}", "LineNumber", i)), HiddenField)
+            Incoterms(i) = CType(FindControl(String.Format("{0}_{1}", "Incoterms", i)), DropDownList)
+            DeliveryTerm(i) = CType(FindControl(String.Format("{0}_{1}", "DeliveryTerm", i)), TextBox)
+            Purity(i) = CType(FindControl(String.Format("{0}_{1}", "Purity", i)), TextBox)
+            QMMethod(i) = CType(FindControl(String.Format("{0}_{1}", "QMMethod", i)), TextBox)
+            Packing(i) = CType(FindControl(String.Format("{0}_{1}", "Packing", i)), TextBox)
+            NoOfferReason(i) = CType(FindControl(String.Format("{0}_{1}", "NoOfferReason", i)), DropDownList)
+        Next
+    End Sub
+    Private Sub ClearLineData()
+        ''この処理はダメらしい。初期化方法を再検討する。
+        'For i As Integer = LINE_START To LINE_COUNT
+        '    EnqQuantity(i).Text = String.Empty
+        '    EnqUnit(i).Text = String.Empty
+        '    EnqPiece(i).Text = String.Empty
+        '    Currency(i).Text = String.Empty
+        '    UnitPrice(i).Text = String.Empty
+        '    QuoPer(i).Text = String.Empty
+        '    QuoUnit(i).Text = String.Empty
+        '    LeadTime(i).Text = String.Empty
+        '    SupplierItemNumber(i).Text = String.Empty
+        '    Incoterms(i).Text = String.Empty
+        '    DeliveryTerm(i).Text = String.Empty
+        '    Purity(i).Text = String.Empty
+        '    QMMethod(i).Text = String.Empty
+        '    Packing(i).Text = String.Empty
+        '    NoOfferReason(i).Text = String.Empty
+        'Next
+    End Sub
 End Class
