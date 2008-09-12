@@ -1,4 +1,4 @@
-<?xml version="1.0"?><DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts" DTS:ExecutableType="MSDTS.Package.1"><DTS:Property DTS:Name="PackageFormatVersion">2</DTS:Property><DTS:Property DTS:Name="VersionComments"></DTS:Property><DTS:Property DTS:Name="CreatorName">TCI\JOSYS-07</DTS:Property><DTS:Property DTS:Name="CreatorComputerName">HS-SYS0245</DTS:Property><DTS:Property DTS:Name="CreationDate" DTS:DataType="7">5/28/2008 5:56:05 PM</DTS:Property><DTS:Property DTS:Name="PackageType">5</DTS:Property><DTS:Property DTS:Name="ProtectionLevel">0</DTS:Property><DTS:Property DTS:Name="MaxConcurrentExecutables">-1</DTS:Property><DTS:Property DTS:Name="PackagePriorityClass">0</DTS:Property><DTS:Property DTS:Name="VersionMajor">1</DTS:Property><DTS:Property DTS:Name="VersionMinor">0</DTS:Property><DTS:Property DTS:Name="VersionBuild">58</DTS:Property><DTS:Property DTS:Name="VersionGUID">{4BD5DC5A-27AC-486C-B383-8DC091FB038D}</DTS:Property><DTS:Property DTS:Name="EnableConfig">-1</DTS:Property><DTS:Property DTS:Name="CheckpointFileName"></DTS:Property><DTS:Property DTS:Name="SaveCheckpoints">0</DTS:Property><DTS:Property DTS:Name="CheckpointUsage">0</DTS:Property><DTS:Property DTS:Name="SuppressConfigurationWarnings">0</DTS:Property>
+<?xml version="1.0"?><DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts" DTS:ExecutableType="MSDTS.Package.1"><DTS:Property DTS:Name="PackageFormatVersion">2</DTS:Property><DTS:Property DTS:Name="VersionComments"></DTS:Property><DTS:Property DTS:Name="CreatorName">TCI\JOSYS-07</DTS:Property><DTS:Property DTS:Name="CreatorComputerName">HS-SYS0245</DTS:Property><DTS:Property DTS:Name="CreationDate" DTS:DataType="7">5/28/2008 5:56:05 PM</DTS:Property><DTS:Property DTS:Name="PackageType">5</DTS:Property><DTS:Property DTS:Name="ProtectionLevel">0</DTS:Property><DTS:Property DTS:Name="MaxConcurrentExecutables">-1</DTS:Property><DTS:Property DTS:Name="PackagePriorityClass">0</DTS:Property><DTS:Property DTS:Name="VersionMajor">1</DTS:Property><DTS:Property DTS:Name="VersionMinor">0</DTS:Property><DTS:Property DTS:Name="VersionBuild">60</DTS:Property><DTS:Property DTS:Name="VersionGUID">{E2F6513E-4862-49E2-8597-EBB1585C1021}</DTS:Property><DTS:Property DTS:Name="EnableConfig">-1</DTS:Property><DTS:Property DTS:Name="CheckpointFileName"></DTS:Property><DTS:Property DTS:Name="SaveCheckpoints">0</DTS:Property><DTS:Property DTS:Name="CheckpointUsage">0</DTS:Property><DTS:Property DTS:Name="SuppressConfigurationWarnings">0</DTS:Property>
 <DTS:ConnectionManager><DTS:Property DTS:Name="DelayValidation">0</DTS:Property><DTS:Property DTS:Name="ObjectName">ADO.Purchase</DTS:Property><DTS:Property DTS:Name="DTSID">{EC9B29DE-F3C3-488F-A962-27F13F201CC7}</DTS:Property><DTS:Property DTS:Name="Description"></DTS:Property><DTS:Property DTS:Name="CreationName">ADO.NET:System.Data.SqlClient.SqlConnection, System.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</DTS:Property><DTS:ObjectData><DTS:ConnectionManager><DTS:Password DTS:Name="Password" Sensitive="1"></DTS:Password><DTS:Property DTS:Name="ConnectionString">Data Source=TCIJ-08049;User ID=Purchase;Initial Catalog=AKUTSU_TEST;</DTS:Property></DTS:ConnectionManager></DTS:ObjectData></DTS:ConnectionManager>
 <DTS:ConnectionManager><DTS:Property DTS:Name="DelayValidation">0</DTS:Property><DTS:Property DTS:Name="ObjectName">SMTP</DTS:Property><DTS:Property DTS:Name="DTSID">{E271125B-E698-49A8-B2B0-0B0D1949DB2C}</DTS:Property><DTS:Property DTS:Name="Description">PurchaseDB SupplierImport.dtsx エラーメール送信</DTS:Property><DTS:Property DTS:Name="CreationName">SMTP</DTS:Property><DTS:ObjectData><SmtpConnectionManager ConnectionString="SmtpServer=tex1.tci.tokyokasei;UseWindowsAuthentication=True;EnableSsl=False;"/></DTS:ObjectData></DTS:ConnectionManager>
 <DTS:Configuration><DTS:Property DTS:Name="ConfigurationType">1</DTS:Property><DTS:Property DTS:Name="ConfigurationString">C:\tcijapp\Purchase\Batch\Purchase\SupplierImport.dtsConfig</DTS:Property><DTS:Property DTS:Name="ConfigurationVariable"></DTS:Property><DTS:Property DTS:Name="ObjectName">構成 1</DTS:Property><DTS:Property DTS:Name="DTSID">{5A64896D-104C-4B5D-86C7-6C255D729356}</DTS:Property><DTS:Property DTS:Name="Description"></DTS:Property><DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:Configuration>
@@ -103,7 +103,7 @@
     &lt;/layoutobject&gt;
     &lt;shape groupshapeid="0" groupnode="0" /&gt;
   &lt;/ddscontrol&gt;
-&lt;/dds&gt;&lt;/dwd:Layout&gt;&lt;/dwd:DtsControlFlowDiagram&gt;&lt;/Package&gt;</DTS:Property><DTS:Property DTS:Name="Namespace">dts-designer-1.0</DTS:Property><DTS:Property DTS:Name="ObjectName">{23F09C9A-DF24-49D4-8292-E077E4F563AA}</DTS:Property><DTS:Property DTS:Name="DTSID">{27521DBE-53F8-4BF4-8819-E75C6A490ABC}</DTS:Property><DTS:Property DTS:Name="Description"></DTS:Property><DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:PackageVariable><DTS:Property DTS:Name="ForceExecValue">0</DTS:Property><DTS:Property DTS:Name="ExecValue" DTS:DataType="3">0</DTS:Property><DTS:Property DTS:Name="ForceExecutionResult">-1</DTS:Property><DTS:Property DTS:Name="Disabled">0</DTS:Property><DTS:Property DTS:Name="FailPackageOnFailure">0</DTS:Property><DTS:Property DTS:Name="FailParentOnFailure">0</DTS:Property><DTS:Property DTS:Name="MaxErrorCount">1</DTS:Property><DTS:Property DTS:Name="ISOLevel">1048576</DTS:Property><DTS:Property DTS:Name="LocaleID">1041</DTS:Property><DTS:Property DTS:Name="TransactionOption">1</DTS:Property><DTS:Property DTS:Name="DelayValidation">0</DTS:Property>
+&lt;/dds&gt;&lt;/dwd:Layout&gt;&lt;/dwd:DtsControlFlowDiagram&gt;&lt;/Package&gt;</DTS:Property><DTS:Property DTS:Name="Namespace">dts-designer-1.0</DTS:Property><DTS:Property DTS:Name="ObjectName">{23F09C9A-DF24-49D4-8292-E077E4F563AA}</DTS:Property><DTS:Property DTS:Name="DTSID">{22D5B624-30C9-4574-9F6F-B4A31CF13EFD}</DTS:Property><DTS:Property DTS:Name="Description"></DTS:Property><DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:PackageVariable><DTS:Property DTS:Name="ForceExecValue">0</DTS:Property><DTS:Property DTS:Name="ExecValue" DTS:DataType="3">0</DTS:Property><DTS:Property DTS:Name="ForceExecutionResult">-1</DTS:Property><DTS:Property DTS:Name="Disabled">0</DTS:Property><DTS:Property DTS:Name="FailPackageOnFailure">0</DTS:Property><DTS:Property DTS:Name="FailParentOnFailure">0</DTS:Property><DTS:Property DTS:Name="MaxErrorCount">1</DTS:Property><DTS:Property DTS:Name="ISOLevel">1048576</DTS:Property><DTS:Property DTS:Name="LocaleID">1041</DTS:Property><DTS:Property DTS:Name="TransactionOption">1</DTS:Property><DTS:Property DTS:Name="DelayValidation">0</DTS:Property>
 <DTS:Variable><DTS:Property DTS:Name="Expression"></DTS:Property><DTS:Property DTS:Name="EvaluateAsExpression">0</DTS:Property><DTS:Property DTS:Name="Namespace">User</DTS:Property><DTS:Property DTS:Name="ReadOnly">0</DTS:Property><DTS:Property DTS:Name="RaiseChangedEvent">0</DTS:Property><DTS:VariableValue DTS:DataType="8"></DTS:VariableValue><DTS:Property DTS:Name="ObjectName">Comment</DTS:Property><DTS:Property DTS:Name="DTSID">{23AF382E-E022-4D59-9631-F9130599F6D1}</DTS:Property><DTS:Property DTS:Name="Description"></DTS:Property><DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:Variable>
 <DTS:Variable><DTS:Property DTS:Name="Expression"></DTS:Property><DTS:Property DTS:Name="EvaluateAsExpression">0</DTS:Property><DTS:Property DTS:Name="Namespace">User</DTS:Property><DTS:Property DTS:Name="ReadOnly">0</DTS:Property><DTS:Property DTS:Name="RaiseChangedEvent">0</DTS:Property><DTS:VariableValue DTS:DataType="8">C:\tcijapp\Purchase\Batch\log\</DTS:VariableValue><DTS:Property DTS:Name="ObjectName">Dir_Log</DTS:Property><DTS:Property DTS:Name="DTSID">{6E8DF1B1-135D-4310-832B-54E5FDE9F703}</DTS:Property><DTS:Property DTS:Name="Description"></DTS:Property><DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:Variable>
 <DTS:Variable><DTS:Property DTS:Name="Expression"></DTS:Property><DTS:Property DTS:Name="EvaluateAsExpression">0</DTS:Property><DTS:Property DTS:Name="Namespace">User</DTS:Property><DTS:Property DTS:Name="ReadOnly">0</DTS:Property><DTS:Property DTS:Name="RaiseChangedEvent">0</DTS:Property><DTS:VariableValue DTS:DataType="7">0:00:00</DTS:VariableValue><DTS:Property DTS:Name="ObjectName">End_Time</DTS:Property><DTS:Property DTS:Name="DTSID">{28F524E4-4581-41B2-8DA0-2020F0FEA3AB}</DTS:Property><DTS:Property DTS:Name="Description"></DTS:Property><DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:Variable>
@@ -195,6 +195,7 @@ Imports System
 Imports System.Xml
 Imports System.Data
 Imports System.Math
+Imports System.Text.RegularExpressions
 Imports Microsoft.SqlServer.Dts.Runtime
 Imports System.Data.SqlClient
 
@@ -227,15 +228,24 @@ Public Class ScriptMain
         Dim DBCommand As System.Data.SqlClient.SqlCommand       'データベースコマンド		
         Dim MyCom As SqlCommand
         Dts.Variables("Start_Time").Value = Now()
-
-        ' 一週間前のログファイルをすべて削除する
+        ' 変数設定(ログファイル削除時に使用)
         Dim deldate As Integer = CInt(Format(DateAdd(DateInterval.WeekOfYear, -1, Now()), "yyyyMMdd"))
-        Dim delfile As IO.FileInfo
+        Dim delFI As IO.FileInfo
+        Dim delfile As String = String.Empty
+
+        ' ログ保存ディレクトリから拡張子 .log のファイルを取得し、
+        ' ログファイル名形式とマッチ且つ一週間以上前のファイルを削除。
         For Each path As String In IO.Directory.GetFileSystemEntries(Dts.Variables("Dir_Log").Value.ToString, "*.log")
-            delfile = New IO.FileInfo(path)
-            If CInt(Split(delfile.Name, delfile.Extension)(0)) < deldate Then
-                delfile.Delete()
+
+            delFI = New IO.FileInfo(path)
+            delfile = Split(delFI.Name, delFI.Extension)(0)
+
+            If Regex.IsMatch(delfile, "^[0-9]{4}[0-9]{2}[0-9]{2}$") Then
+                If CInt(delfile) < deldate Then
+                    delFI.Delete()
+                End If
             End If
+
         Next path
 
         '*&---------------------------------------------------------------------*
