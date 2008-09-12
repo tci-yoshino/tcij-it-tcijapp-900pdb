@@ -9,7 +9,7 @@ Partial Public Class RFQIssue
     Private Const ERR_INCORRECT_SUPPLIERCODE As String = "Supplier Code はマスタに存在しません。"
     Private Const ERR_INCORRECT_MAKERCODE As String = "Maker Code はマスタに存在しません。"
     'Private Const ERR_INCORRECT_ENQQUANTITY As String = "Enq-Quantity の入力値が不正です。Enq-Quantity は全て入力、もしくは全て空白で登録してください。"
-    Private Const ERR_INCORRECT_ENQQUANTITY As String = "Enq-Quantity" & ERR_REQUIRED_FIELD
+    Private Const ERR_INCORRECT_ENQQUANTITY As String = "Enq-Quantity" & ERR_INCORRECT_FORMAT
     Private Const ERR_INCORRECT_PRODUCTNUMBER As String = "Product Number はマスタに存在しません。"
     'エラーメッセージ(必須入力項目なし)
     Private Const ERR_REQUIRED_ENQLOCATION As String = "Enq-Location" & ERR_REQUIRED_FIELD
