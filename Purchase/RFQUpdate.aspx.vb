@@ -332,7 +332,7 @@ Partial Public Class RFQUpdate
             End If
             Comment.Text = DS.Tables("RFQHeader").Rows(0)("Comment").ToString
             'Under
-            RFQStatus.SelectedValue = DS.Tables("RFQHeader").Rows(0)("StatusCode").ToString
+            'RFQStatus.SelectedValue = DS.Tables("RFQHeader").Rows(0)("StatusCode").ToString
             'Hidden
             QuotedDate.Value = DS.Tables("RFQHeader").Rows(0)("QuotedDate").ToString
             UpdateDate.Value = GetUpdateDate("v_RFQHeader", "RFQNumber", st_RFQNumber)
@@ -581,23 +581,47 @@ Partial Public Class RFQUpdate
         Next
     End Sub
     Private Sub ClearLineData()
-        ''この処理はダメらしい。初期化方法を再検討する。
-        'For i As Integer = LINE_START To LINE_COUNT
-        '    EnqQuantity(i).Text = String.Empty
-        '    EnqUnit(i).Text = String.Empty
-        '    EnqPiece(i).Text = String.Empty
-        '    Currency(i).Text = String.Empty
-        '    UnitPrice(i).Text = String.Empty
-        '    QuoPer(i).Text = String.Empty
-        '    QuoUnit(i).Text = String.Empty
-        '    LeadTime(i).Text = String.Empty
-        '    SupplierItemNumber(i).Text = String.Empty
-        '    Incoterms(i).Text = String.Empty
-        '    DeliveryTerm(i).Text = String.Empty
-        '    Purity(i).Text = String.Empty
-        '    QMMethod(i).Text = String.Empty
-        '    Packing(i).Text = String.Empty
-        '    NoOfferReason(i).Text = String.Empty
-        'Next
+        For i As Integer = LINE_START To LINE_COUNT
+            EnqQuantity(i).Text = String.Empty
+            EnqUnit(i).Items.Clear()
+            EnqUnit(i).Items.Add(String.Empty)
+            EnqUnit(i).DataSourceID = "SDS_RFQUpdate_Qua"
+            EnqUnit(i).DataTextField = "UnitCode"
+            EnqUnit(i).DataValueField = "UnitCode"
+            EnqUnit(i).DataBind()
+            EnqPiece(i).Text = String.Empty
+            Currency(i).Items.Clear()
+            Currency(i).Items.Add(String.Empty)
+            Currency(i).DataSourceID = "SDS_RFQUpdate_Currency"
+            Currency(i).DataTextField = "CurrencyCode"
+            Currency(i).DataValueField = "CurrencyCode"
+            Currency(i).DataBind()
+            UnitPrice(i).Text = String.Empty
+            QuoPer(i).Text = String.Empty
+            QuoUnit(i).Items.Clear()
+            QuoUnit(i).Items.Add(String.Empty)
+            QuoUnit(i).DataSourceID = "SDS_RFQUpdate_Unit"
+            QuoUnit(i).DataTextField = "UnitCode"
+            QuoUnit(i).DataValueField = "UnitCode"
+            QuoUnit(i).DataBind()
+            LeadTime(i).Text = String.Empty
+            SupplierItemNumber(i).Text = String.Empty
+            Incoterms(i).Items.Clear()
+            Incoterms(i).Items.Add(String.Empty)
+            Incoterms(i).DataSourceID = "SDS_RFQUpdate_Incoterms"
+            Incoterms(i).DataTextField = "IncotermsCode"
+            Incoterms(i).DataValueField = "IncotermsCode"
+            Incoterms(i).DataBind()
+            DeliveryTerm(i).Text = String.Empty
+            Purity(i).Text = String.Empty
+            QMMethod(i).Text = String.Empty
+            Packing(i).Text = String.Empty
+            NoOfferReason(i).Items.Clear()
+            NoOfferReason(i).Items.Add(String.Empty)
+            NoOfferReason(i).DataSourceID = "SDS_RFQUpdate_NoOffer"
+            NoOfferReason(i).DataTextField = "Text"
+            NoOfferReason(i).DataValueField = "NoOfferReasonCode"
+            NoOfferReason(i).DataBind()
+        Next
     End Sub
 End Class
