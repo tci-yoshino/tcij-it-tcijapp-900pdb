@@ -331,8 +331,6 @@ Partial Public Class RFQUpdate
                 QuoUser.SelectedValue = DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString
             End If
             Comment.Text = DS.Tables("RFQHeader").Rows(0)("Comment").ToString
-            'Under
-            'RFQStatus.SelectedValue = DS.Tables("RFQHeader").Rows(0)("StatusCode").ToString
             'Hidden
             QuotedDate.Value = DS.Tables("RFQHeader").Rows(0)("QuotedDate").ToString
             UpdateDate.Value = GetUpdateDate("v_RFQHeader", "RFQNumber", st_RFQNumber)
