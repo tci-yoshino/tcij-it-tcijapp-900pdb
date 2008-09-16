@@ -475,4 +475,15 @@ Public Class Common
         Return True
     End Function
 
+    ''' <summary>
+    ''' Shift JIS換算の半角文字数を取得します。
+    ''' </summary>
+    ''' <param name="str">対象となる文字列</param>
+    ''' <returns>半角換算の文字数</returns>
+    ''' <remarks>Unicodeでは全角、半角の区別はありません。一度Shift_JISに変換後、バイト数を取得する必要があります</remarks>
+    Public Shared Function GetByteCount_SJIS(ByVal str As String) As Integer
+        Dim s_jis As System.Text.Encoding = System.Text.Encoding.GetEncoding("Shift_JIS")
+        Return s_jis.GetByteCount(str)
+    End Function
+
 End Class
