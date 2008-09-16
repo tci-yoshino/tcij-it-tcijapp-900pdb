@@ -30,6 +30,8 @@ Partial Public Class POUpdate
     Const ERR_LOCATION_INCONSITENT As String = "拠点が一致しません。"
     Const ERR_DATA_REMOVED_BY_OTHER As String = "このデータは他のユーザーによって削除されました。"
     Const ERR_DATA_CHAGED_BY_OTHER As String = "このデータは他のユーザーによって編集されました。その内容を確認し再度編集をお願いします"
+    Const ERR_LENGTH_OVER As String = "{0} には{1}文字以上登録することができません。"
+
 
     Const TABLE_NAME_PO As String = "PO"
     Const VIEW_NAME_PO As String = "v_PO"
@@ -47,6 +49,9 @@ Partial Public Class POUpdate
 
     Const FORMAT_DECIMAL As String = "G29"
 
+    Const MAX_LENGTH_R3_PO_NUMBER As Integer = 10
+    Const MAX_LENGTH_R3_PO_LINE_NUMBER As Integer = 5
+    Const MAX_LENGTH_LOT_NUMBER As Integer = 10
 
 #End Region
 
@@ -165,17 +170,19 @@ Partial Public Class POUpdate
 
             ViewPOInformationToForm(CInt(st_PONumber))
 
-            '親発注番号(ParPONumber)がある場合はそちらを優先をする
-            Dim POInformation As POInformationType = SelectPOInformation(CInt(st_PONumber))
-            If POInformation.ParPONumber Is Nothing Then
-                st_ParPONumber = POInformation.PONumber.ToString()
-            Else
-                st_ParPONumber = POInformation.ParPONumber.ToString()
-            End If
-
-            ChiPOIssue.NavigateUrl = String.Format("./RFQSelect.aspx?ParPONumber={0}", st_PONumber)
-
         End If
+
+        'PO Correspondence / History リンクパラメータは 親発注番号(ParPONumber) 優先
+        '親発注番号(ParPONumber) がない場合は、自身の 発注番号(PONumber) 
+        Dim POInformation As POInformationType = SelectPOInformation(CInt(st_PONumber))
+        If POInformation.ParPONumber Is Nothing Then
+            st_ParPONumber = POInformation.PONumber.ToString()
+        Else
+            st_ParPONumber = POInformation.ParPONumber.ToString()
+        End If
+
+        ChiPOIssue.NavigateUrl = String.Format("./RFQSelect.aspx?ParPONumber={0}", st_PONumber)
+
     End Sub
 
     ''' <summary>
@@ -185,6 +192,9 @@ Partial Public Class POUpdate
     ''' <param name="e">ASP.NETの既定値</param>
     ''' <remarks></remarks>
     Protected Sub Update_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Update.Click
+
+        'TODO 半角が期待されるフィールドの半角変換
+        ChangeTextBoxValueToSingleByte()
 
         If ValidateForUpdate() = False Then
             Exit Sub
@@ -354,9 +364,15 @@ Partial Public Class POUpdate
         b_ChildVisible = Not (POInformation.ParPONumber Is Nothing)
 
 
-        'Chi-PO Issue リンクは "ParPONumber が設定されていない かつ SupplierCode に該当するテーブル Supplier の Supplier.LocationCode が
-        '設定されている場合のみ画面に表示する。
-        If (POInformation.ParPONumber Is Nothing) And (IsExistSuppliers_Location(POInformation.SupplierCode)) Then
+        'Chi-PO Issue リンクは 
+        '1. "ParPONumber が設定されていない 
+        '2. SupplierCode に該当するテーブル Supplier の Supplier.LocationCode が設定されている
+        '3. その値がログインユーザの拠点 (セッション LocationCode) と一致する場合
+        '画面に表示する。
+
+        Dim st_SuppLiersLocation As String = GetSuppliers_Location(POInformation.SupplierCode)
+        If (POInformation.ParPONumber Is Nothing) And (st_SuppLiersLocation <> String.Empty) And _
+            (Session(SESSION_KEY_LOCATION).ToString = st_SuppLiersLocation) Then
             b_ChiPOIssueVisible = True
         Else
             b_ChiPOIssueVisible = False
@@ -422,6 +438,18 @@ Partial Public Class POUpdate
     ''' <remarks></remarks>
     Private Function ValidateCommon() As Boolean
 
+        'TODO R3PONumberの文字長正当性チェック（半角換算）
+        If GetByteCount_SJIS(R3PONumber.Text) > MAX_LENGTH_R3_PO_NUMBER Then
+            Msg.Text = String.Format(ERR_LENGTH_OVER, "R/3 PO Number", MAX_LENGTH_R3_PO_NUMBER)
+            Return False
+        End If
+
+        'TODO R3POLineNUmberの文字長正当性チェック（半角換算）
+        If GetByteCount_SJIS(R3POLineNumber.Text) > MAX_LENGTH_R3_PO_LINE_NUMBER Then
+            Msg.Text = String.Format(ERR_LENGTH_OVER, "R/3 PO Line Number", MAX_LENGTH_R3_PO_LINE_NUMBER)
+            Return False
+        End If
+
         If Not ValidateDateTextBox(DeliveryDate) Then
             Msg.Text = "Delivery Date" & ERR_INCORRECT_FORMAT
             Return False
@@ -437,6 +465,12 @@ Partial Public Class POUpdate
             Return False
         End If
 
+        'TODO TCILotNumberの文字長正当性チェック（半角換算）
+        If GetByteCount_SJIS(LotNumber.Text) > MAX_LENGTH_LOT_NUMBER Then
+            Msg.Text = String.Format(ERR_LENGTH_OVER, "TCI Lot Number", MAX_LENGTH_LOT_NUMBER)
+            Return False
+        End If
+
         If Not ValidateDateTextBox(InvoceReceivedDate) Then
             Msg.Text = "Invoice Received Date" & ERR_INCORRECT_FORMAT
             Return False
@@ -444,6 +478,11 @@ Partial Public Class POUpdate
 
         If Not ValidateDateTextBox(ImportCustomClearanceDate) Then
             Msg.Text = "Import Custom Clearance Date" & ERR_INCORRECT_FORMAT
+            Return False
+        End If
+
+        If Not ValidateDateTextBox(QMStartingDate) Then
+            Msg.Text = "QM Starting Date" & ERR_INCORRECT_FORMAT
             Return False
         End If
 
@@ -499,6 +538,18 @@ Partial Public Class POUpdate
         End If
         Return True
     End Function
+
+    ''' <summary>
+    ''' 半角が期待されるフィールドの入力値を半角に変換します。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub ChangeTextBoxValueToSingleByte()
+
+        R3PONumber.Text = StrConv(R3PONumber.Text, VbStrConv.Narrow)
+        R3POLineNumber.Text = StrConv(R3POLineNumber.Text, VbStrConv.Narrow)
+        LotNumber.Text = StrConv(LotNumber.Text, VbStrConv.Narrow)
+
+    End Sub
 
 
     ''' <summary>
@@ -558,15 +609,15 @@ Partial Public Class POUpdate
 
 
     ''' <summary>
-    ''' 指定したサプライヤーにLocationCodeが設定されているかを取得します。
+    ''' 指定したサプライヤーに設定されているLocationCodeを取得します。
     ''' </summary>
     ''' <param name="supplierCode">対象となるサプライヤーの一意コード</param>
-    ''' <returns>LocationCodeが存在するときにはTrue しないときにはFasle を返します</returns>
+    ''' <returns>LocationCodeを返します。存在しないときは空文字列を返します。</returns>
     ''' <remarks></remarks>
-    Private Function IsExistSuppliers_Location(ByVal supplierCode As Integer?) As Boolean
+    Private Function GetSuppliers_Location(ByVal supplierCode As Integer?) As String
 
         If supplierCode Is Nothing Then
-            Return False
+            Return String.Empty
         End If
 
         Dim conn As SqlConnection = Nothing
@@ -579,10 +630,10 @@ Partial Public Class POUpdate
             Dim dr As SqlDataReader = cmd.ExecuteReader()
             If dr.Read() Then
                 If DBObjToString(dr("LocationCode")) <> String.Empty Then
-                    Return True
+                    Return DBObjToString(dr("LocationCode"))
                 End If
             End If
-            Return False
+            Return String.Empty
 
         Finally
             If Not conn Is Nothing Then
