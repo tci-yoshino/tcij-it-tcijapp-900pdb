@@ -2,7 +2,6 @@
 Imports Purchase.Common
 Partial Public Class RFQIssue
     Inherits CommonPage
-    Private DBConnectString As ConnectionStringSettings = ConfigurationManager.ConnectionStrings("DatabaseConnect")
     Private DBConn As New SqlConnection
     Private DBCommand As SqlCommand
     'エラーメッセージ(入力値不正)
@@ -26,7 +25,7 @@ Partial Public Class RFQIssue
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
-        DBConn.ConnectionString = DBConnectString.ConnectionString
+        DBConn.ConnectionString = DB_CONNECT_STRING
         DBConn.Open()
         DBCommand = DBConn.CreateCommand()
         If IsPostBack = False Then
