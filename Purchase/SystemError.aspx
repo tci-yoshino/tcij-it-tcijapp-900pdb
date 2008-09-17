@@ -12,10 +12,10 @@
 <body>
   <!-- Main Content Area -->
   <div id="content">
-    <h1 class="attention">Internal System Error</h1>
+    <h1 class="attention">System Error!!</h1>
 
     <div class="main">
-        <p style="margin-bottom:1em">I'm afraid we are currently having problems on the site.<br />An email has been sent to the system administrator to report the problem.</p>
+        <p style="margin-bottom:1em">Error notification has sent to system operator.<br />Please wait until finish restoring.</p>
         <input type="button" value="Back" onclick="javascript:history.back()" />
     </div>
     
