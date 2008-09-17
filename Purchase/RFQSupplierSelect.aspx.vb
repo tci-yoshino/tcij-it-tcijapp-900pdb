@@ -1,8 +1,6 @@
 ﻿Partial Public Class RFQSupplierSelect
     Inherits CommonPage
 
-    ' 接続文字列
-    Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
     Protected st_Code As String = String.Empty
     Protected st_Name As String = String.Empty
     Protected st_Location As String = String.Empty
@@ -149,7 +147,7 @@
             & "ORDER BY " _
             & "  Supplier.SupplierCode, Supplier.Name3"
 
-        Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
+        Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
 
             ' 接続情報、アダプタ、SQLコマンド オブジェクトの生成
             Dim adapter As New SqlClient.SqlDataAdapter()
