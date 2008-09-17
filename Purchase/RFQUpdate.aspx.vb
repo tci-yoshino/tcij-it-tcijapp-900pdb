@@ -336,6 +336,8 @@ Partial Public Class RFQUpdate
             UpdateDate.Value = GetUpdateDate("v_RFQHeader", "RFQNumber", st_RFQNumber)
             EnqLocationCode.Value = DS.Tables("RFQHeader").Rows(0)("EnqLocationCode").ToString
             QuoLocationCode.Value = DS.Tables("RFQHeader").Rows(0)("QuoLocationCode").ToString
+            'Under
+            RFQStatus.SelectedValue = ""
             'Line
             DBCommand = New SqlCommand("Select " _
 & "RFQLineNumber, EnqQuantity, EnqUnitCode, EnqPiece, CurrencyCode, " _
