@@ -357,14 +357,12 @@ Partial Public Class RFQUpdate
                 j = i + 1
                 EnqQuantity(j).Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
                 EnqQuantity(j).ReadOnly = True
-                EnqQuantity(j).CssClass = "readonly"
-                EnqUnit(j).Items.Clear()
-                EnqUnit(j).DataSourceID = ""
-                EnqUnit(j).Items.Add(DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString)
+                EnqQuantity(j).CssClass = "readonly number"
+                EnqUnit(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
                 EnqUnit(j).CssClass = "readonly"
                 EnqPiece(j).Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
                 EnqPiece(j).ReadOnly = True
-                EnqPiece(j).CssClass = "readonly"
+                EnqPiece(j).CssClass = "readonly number"
                 Incoterms(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
                 Currency(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
                 UnitPrice(j).Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
