@@ -193,7 +193,6 @@ Partial Public Class POUpdate
     ''' <remarks></remarks>
     Protected Sub Update_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Update.Click
 
-        'TODO 半角が期待されるフィールドの半角変換
         ChangeTextBoxValueToSingleByte()
 
         If ValidateForUpdate() = False Then
@@ -438,13 +437,11 @@ Partial Public Class POUpdate
     ''' <remarks></remarks>
     Private Function ValidateCommon() As Boolean
 
-        'TODO R3PONumberの文字長正当性チェック（半角換算）
         If GetByteCount_SJIS(R3PONumber.Text) > MAX_LENGTH_R3_PO_NUMBER Then
             Msg.Text = String.Format(ERR_LENGTH_OVER, "R/3 PO Number", MAX_LENGTH_R3_PO_NUMBER)
             Return False
         End If
 
-        'TODO R3POLineNUmberの文字長正当性チェック（半角換算）
         If GetByteCount_SJIS(R3POLineNumber.Text) > MAX_LENGTH_R3_PO_LINE_NUMBER Then
             Msg.Text = String.Format(ERR_LENGTH_OVER, "R/3 PO Line Number", MAX_LENGTH_R3_PO_LINE_NUMBER)
             Return False
@@ -465,7 +462,6 @@ Partial Public Class POUpdate
             Return False
         End If
 
-        'TODO TCILotNumberの文字長正当性チェック（半角換算）
         If GetByteCount_SJIS(LotNumber.Text) > MAX_LENGTH_LOT_NUMBER Then
             Msg.Text = String.Format(ERR_LENGTH_OVER, "TCI Lot Number", MAX_LENGTH_LOT_NUMBER)
             Return False
@@ -1280,7 +1276,6 @@ Partial Public Class POUpdate
     ''' <param name="value">対象となるSystem.Object</param>
     ''' <returns>DB Nullを含んだ System Object。</returns>
     Public Shared Function NullableVariableToDBObject(ByVal value As Object) As Object
-        'TODO Stringで空文字列が来たときの対応
         If value Is Nothing Then
             Return DBNull.Value
         End If
