@@ -110,10 +110,34 @@ Public Class Common
     Public Const URL_REGEX As String = "([-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+)|^$"
 
     ''' <summary>
+    ''' 文字数チェックで使用する。3000文字用
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const INT_3000 As Integer = 3000
+
+    ''' <summary>
+    ''' 文字数チェックで使用する。255文字用
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const INT_255 As Integer = 255
+
+    ''' <summary>
     ''' メッセージ 「レコードはありません」
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const MSG_NO_DATA_FOUND As String = "No data found."
+    Public Const MSG_NO_DATA_FOUND As String = "No record found."
+
+    ''' <summary>
+    ''' メッセージ 「データが新規登録されました」
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const MSG_DATA_CREATED As String = "Record newly issued."
+
+    ''' <summary>
+    ''' メッセージ 「データが更新されました」
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const MSG_DATA_UPDATED As String = "Record updated."
 
     ''' <summary>
     ''' エラーメッセージ 「不正なパラメータを受け取りました」
@@ -131,51 +155,45 @@ Public Class Common
     ''' エラーメッセージ 「○○は正しいフォーマットではありません」
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const ERR_INCORRECT_FORMAT As String = " is not in the correct format."
+    Public Const ERR_INCORRECT_FORMAT As String = " is invalid format."
 
     ''' <summary>
     ''' エラーメッセージ 「○○はカレンダーにない日付です」
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const ERR_INVALID_DATE As String = " is an invalid date."
+    Public Const ERR_INVALID_DATE As String = " is invalid date."
 
     ''' <summary>
     ''' エラーメッセージ 「○○は数値として不正です」
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const ERR_INVALID_NUMBER As String = " is an invalid number."
+    Public Const ERR_INVALID_NUMBER As String = " is invalid number."
 
     ''' <summary>
     ''' エラーメッセージ 「検索条件に一致するレコードがありません」
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const ERR_NO_MATCH_FOUND As String = "No match found."
-
-    Private Const LOCATION_JP As String = "JP"
+    Public Const ERR_NO_MATCH_FOUND As String = "Your requested record does not exist."
 
     ''' <summary>
-    ''' 文字数チェックで使用する。3000文字用
+    ''' エラーメッセージ 「○○はマスタテーブルに登録されていません」
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const INT_3000 As Integer = 3000
+    Public Const ERR_DOES_NOT_EXIST As String = " can not be found in master table."
 
     ''' <summary>
-    ''' 文字数チェックで使用する。255文字用
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Const INT_255 As Integer = 255
-
-    ''' <summary>
-    ''' エラーメッセージ 「○○ には3000文字以上登録することができません。」
+    ''' エラーメッセージ 「○○には3000文字以上登録することができません」
     ''' </summary>
     ''' <remarks></remarks>
     Public Const ERR_OVER_3000 As String = " には3000文字以上登録することができません。"
 
     ''' <summary>
-    ''' エラーメッセージ 「○○ には255文字以上登録することができません。」
+    ''' エラーメッセージ 「○○には255文字以上登録することができません」
     ''' </summary>
     ''' <remarks></remarks>
     Public Const ERR_OVER_255 As String = " には255文字以上登録することができません。"
+
+    Private Const LOCATION_JP As String = "JP"
 
     ''' <summary>
     ''' ローカル時間を取得する。
