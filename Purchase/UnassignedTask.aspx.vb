@@ -1,7 +1,6 @@
 ﻿Partial Public Class UnassignedTask
     Inherits CommonPage
 
-    Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
     Private Const ERR_UPDATE As String = "既に他のユーザによって更新されました。"
     Private Const ASSIGN_ACTION As String = "Assign"
 

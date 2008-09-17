@@ -1,7 +1,6 @@
 ﻿Public Partial Class ProductSelect
     Inherits CommonPage
 
-    Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
     Private st_ProductNumber As String = String.Empty
     Private st_CASNumber As String = String.Empty
     Private st_ProductName As String = String.Empty

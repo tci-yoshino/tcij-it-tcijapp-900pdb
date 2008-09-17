@@ -1,7 +1,6 @@
 ﻿Public Partial Class CountrySelect
     Inherits CommonPage
 
-    Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
     Private st_Code As String = String.Empty
     Private st_Name As String = String.Empty
     Const SEARCH_ACTION As String = "Search"

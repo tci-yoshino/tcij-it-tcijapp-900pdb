@@ -2,7 +2,6 @@
     Inherits CommonPage
     Protected st_SupplierCode As String = String.Empty ' aspx 側で読むため、Protected にする
     Protected i_DataNum As Integer = 0 ' 0 の場合は Supplier Data が無いと判断し、 Data not found. を表示する。
-    Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -23,7 +22,7 @@
         End If
 
         ' Supplier 情報取得
-        Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
+        Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
             Dim st_query As String = _
                   "SELECT SupplierCode, LTRIM(RTRIM(ISNULL(Name3, '') + ' ' + ISNULL(Name4, ''))) AS Name, " _
                 & "       Address1, Address2, Address3, PostalCode, Telephone, Fax, Email, " _

@@ -2,7 +2,6 @@
     Inherits CommonPage
 
     ' 接続文字列
-    Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
     Private st_Code As String = String.Empty
     Private st_Name As String = String.Empty
     Private st_Errorr_Meggage As String = String.Empty

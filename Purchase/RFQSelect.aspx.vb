@@ -1,7 +1,6 @@
 ﻿Public Partial Class RFQSelect
     Inherits CommonPage
     ' 変数宣言
-    Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
     Protected st_ParPONumber As String = "" ' aspx 側で読むため、Protected にする
     Private st_ProductID As String = ""
     Private st_SupplierCode As String = ""
@@ -54,7 +53,7 @@
 
         Dim st_RFQNumber As String = String.Empty
 
-        Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
+        Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
 
             Dim command As New SqlClient.SqlCommand("SELECT RFQNumber FROM v_PO WHERE PONumber = @PONumber", connection)
             command.Parameters.AddWithValue("PONumber", PONumber)
@@ -67,7 +66,7 @@
             Exit Sub
         End If
 
-        Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
+        Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
 
             Dim st_query As String = "SELECT ProductID, SupplierCode, MakerCode FROM v_RFQHeader WHERE RFQNumber = @RFQNumber"
             Dim command As New SqlClient.SqlCommand(st_query, connection)
@@ -93,7 +92,7 @@
 
     ' 製品情報を取得し、aspx のラベルにセットする
     Protected Sub Set_ProductData(ByVal ProductID As String)
-        Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
+        Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
             Dim st_query As String = _
                   "SELECT " _
                 & "  ProductNumber, ISNULL(Name, QuoName) AS ProductName " _
@@ -121,7 +120,7 @@
 
     ' 仕入先情報取得し、aspx のラベルにセットする
     Protected Sub Set_SupplierData(ByVal SuppplierCode As String)
-        Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
+        Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
             Dim st_query As String = _
                   "SELECT " _
                 & "  LTRIM(RTRIM(ISNULL(Supplier.Name3, '') + ' ' + ISNULL(Supplier.Name4, ''))) AS Name, " _

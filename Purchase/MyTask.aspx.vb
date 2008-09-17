@@ -4,7 +4,6 @@
     Protected st_Action As String = String.Empty ' aspx 側で読むため、Protected にする
     Private st_UserID As String = String.Empty
     Private stb_PONumbers As StringBuilder = New StringBuilder ' PONumber を格納するオブジェクト。この値を見て、重複するPONumber を除外する。
-    Private DBConnectString As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
 
     Const SWITCH_ACTION As String = "Switch"
 
@@ -30,7 +29,7 @@
 
         If Session("Purchase.PrivilegeLevel") = "P" Then
 
-            Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
+            Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
 
                 Dim st_query As String = "SELECT count(UserID) as count FROM v_User WHERE LocationCode = @LocationCode AND UserID = @UserID"
                 Dim command As New SqlClient.SqlCommand(st_query, connection)
@@ -69,7 +68,7 @@
             End Using
 
         ElseIf Session("Purchase.PrivilegeLevel") = "A" Then
-            Using connection As New SqlClient.SqlConnection(DBConnectString.ConnectionString)
+            Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
                 ' クエリ、アダプタ、SQLコマンド オブジェクトの生成
                 Dim st_query As String = "SELECT UserID, [Name] FROM v_User ORDER BY [Name] ASC "
                 Dim adapter As New SqlClient.SqlDataAdapter()
