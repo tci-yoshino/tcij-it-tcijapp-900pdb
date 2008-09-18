@@ -50,7 +50,7 @@
                         <th style="width:17%">Product Number / Name</th>
                         <td style="width:33%">
                             <asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label>
-                            <span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("ProductName")) %>'></asp:Label></span>
+                            <span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("ProductName").ToString()) %>'></asp:Label></span>
                         </td>
                         <th style="width:10%">Purpose</th>
                         <td style="width:12%"><asp:Label ID="Purpose" runat="server" Text='<%#Eval("Purpose")%>'></asp:Label></td>
