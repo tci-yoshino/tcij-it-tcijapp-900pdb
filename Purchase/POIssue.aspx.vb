@@ -14,11 +14,11 @@ Partial Public Class POIssue
     ' 登録フォームを表示するか否か
     Protected bo_DisplayForm As Boolean
 
-    Private Const ERR_RFQ_NOT_FOUND As String = "見積依頼が存在しません。"
-    Private Const ERR_PAR_PO_NOT_FOUND As String = "親発注が存在しません。"
-    Private Const ERR_NO_QUOTATION_REPLY As String = "見積依頼に対する回答がないため発注できません。"
-    Private Const ERR_R3_SUPPLIER_DOES_NOT_EXIST As String = "仕入先が R/3 に登録されていないため発注できません。"
-    Private Const ERR_CHI_PO_ALREADY_EXISTS As String = "子発注データが既に存在します。"
+    Private Const ERR_RFQ_NOT_FOUND As String = "No requested enquiry record found."
+    Private Const ERR_PAR_PO_NOT_FOUND As String = "No parent PO found."
+    Private Const ERR_NO_QUOTATION_REPLY As String = "No quotation record found.<br />(You can not issue any order without quotation record.)"
+    Private Const ERR_R3_SUPPLIER_DOES_NOT_EXIST As String = "No R3 Company code found.<br />(You can not issue any order without R3 company code.)"
+    Private Const ERR_CHI_PO_ALREADY_EXISTS As String = "Other child PO has already issued."
     Private Const EXP_PO_ISSUE_ERROR As String = "POIssue.Issue_Click: 発注番号が採番されませんでした。"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -311,7 +311,8 @@ Partial Public Class POIssue
         Dim ds As New DataSet
         Dim sqlAdapter As New SqlDataAdapter
 
-        ' 仕入先が現法の場合は SOLocationCode に拠点コードを設定します
+        ' 現法に発注する場合は SOLocationCode を設定します
+        ' (Supplier.LocationCode が設定されていたら、その仕入先は現法と判断)
         sqlCmd = New SqlCommand(CreateSql_SelectSupplier(), sqlConn)
         sqlAdapter.SelectCommand = sqlCmd
         sqlCmd.Parameters.Add("@SupplierCode", SqlDbType.VarChar).Value = Supplier.SelectedValue
