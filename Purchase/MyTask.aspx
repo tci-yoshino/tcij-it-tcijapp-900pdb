@@ -60,7 +60,7 @@ window.onload = function() {
                     </table>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
-                    <h3 style="font-style:italic">No data found.</h3>
+                    <h3 style="font-style:italic"><%=Purchase.Common.MSG_NO_DATA_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr>
@@ -250,7 +250,7 @@ window.onload = function() {
                 </ItemTemplate>
             </asp:ListView>
         <%  If POList_Overdue.Items.Count + POList_PPI.Items.Count + POList_Par.Items.Count <= 0 Then%>
-            <h3 style="font-style:italic">No data found.</h3>
+            <h3 style="font-style:italic"><%=Purchase.Common.MSG_NO_DATA_FOUND%></h3>
         <% End If%>
         </div>
 <%End If%>
