@@ -74,7 +74,7 @@ window.onload = function() {
                     </tr>
                     <tr>
                         <th style="width:17%">Product Number / Name</th>
-                        <td style="width:33%"><asp:label id="ProductNumber" runat="server" Text='<%# Eval("ProductNumber") %>'></asp:label><span class="indent"><asp:label id="ProductName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("ProductName"))%>'></asp:label></span></td>
+                        <td style="width:33%"><asp:label id="ProductNumber" runat="server" Text='<%# Eval("ProductNumber") %>'></asp:label><span class="indent"><asp:label id="ProductName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("ProductName").ToString())%>'></asp:label></span></td>
                         <th style="width:10%">Purpose</th>
                         <td style="width:12%"><asp:label id="Purpose" runat="server" Text='<%# Eval("Purpose") %>'></asp:label></td>
                         <th style="width:10%">Enq-User</th>

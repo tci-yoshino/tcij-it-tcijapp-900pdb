@@ -102,7 +102,7 @@
                     </tr>
                     <tr>
                         <th style="width:17%">Product Number / Name</th>
-                        <td style="width:33%"><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label><span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("ProductName")) %>'></asp:Label></span></td>
+                        <td style="width:33%"><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label><span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("ProductName").ToString()) %>'></asp:Label></span></td>
                         <th style="width:17%">PO-User</th>
                         <td style="width:33%"><asp:Label ID="POUser" runat="server" Text='<%#Eval("POUserName")%>'></asp:Label><span class="indent">(<asp:Label ID="POLocation" runat="server" Text='<%#Eval("POLocationName")%>'></asp:Label>)</span></td>
                     </tr>
