@@ -19,6 +19,7 @@ Partial Public Class POUpdate
     Protected b_FormVisible As Boolean = True
     Protected b_ChildVisible As Boolean = True
     Protected b_ChiPOIssueVisible As Boolean = True
+    Private i_OperatingUserID As Integer = 0
 
 #End Region
 
@@ -42,6 +43,7 @@ Partial Public Class POUpdate
 
     Const SESSION_KEY_ADMIN As String = "Purchase.isAdmin"
     Const SESSION_KEY_LOCATION As String = "LocationCode"
+    Const SESSION_KEY_USER_ID As String = "UserID"
 
 
     Const ACTION_VALUE_UPDATE As String = "Update"
@@ -140,12 +142,14 @@ Partial Public Class POUpdate
     ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
+        'Actionの取得
         If Not (Request.QueryString(QUERY_KEY_ACTION) Is Nothing) Then
             st_Action = Request.QueryString(QUERY_KEY_ACTION).ToString()
         ElseIf Not (Request.Form(QUERY_KEY_ACTION) Is Nothing) Then
             st_Action = Request.Form(QUERY_KEY_ACTION).ToString()
         End If
 
+        'PO Numberの取得
         Dim st_PONumber As String = String.Empty
 
         If Not (Request.QueryString(QUERY_KEY_PO_NUMBER) Is Nothing) Then
@@ -154,6 +158,16 @@ Partial Public Class POUpdate
             st_PONumber = Request.Form(QUERY_KEY_PO_NUMBER).ToString()
         End If
 
+        '操作ユーザIDの取得
+        If Common.IsInteger(Session(SESSION_KEY_USER_ID).ToString) Then
+            i_OperatingUserID = Integer.Parse(Session(SESSION_KEY_USER_ID).ToString)
+        Else
+            Msg.Text = ERR_INVALID_PARAMETER
+            b_FormVisible = False
+            Exit Sub
+        End If
+
+        '初回呼び出し時のデータ読み出しとパラメータチェック
         If IsPostBack = False Then
             If IsNumeric(st_PONumber) = False Then
                 Msg.Text = ERR_INVALID_PARAMETER
@@ -169,9 +183,9 @@ Partial Public Class POUpdate
             ClearForm()
 
             ViewPOInformationToForm(CInt(st_PONumber))
-
         End If
 
+        '親発注番号の取得
         'PO Correspondence / History リンクパラメータは 親発注番号(ParPONumber) 優先
         '親発注番号(ParPONumber) がない場合は、自身の 発注番号(PONumber) 
         Dim POInformation As POInformationType = SelectPOInformation(CInt(st_PONumber))
@@ -392,7 +406,8 @@ Partial Public Class POUpdate
             CancellationDate.Text = GetLocalTime(GetCurrentTime())
         End If
 
-        POInformation.CancellationDate = StrToNullableDateTime(CancellationDate.Text)
+        POInformation.CancellationDate = GetDatabaseTime(CancellationDate.Text.Trim())
+
         POInformation.isCancelled = False
 
         UpdatePOInfomation(POInformation)
@@ -565,7 +580,7 @@ Partial Public Class POUpdate
             Return False
         End If
 
-        Dim i_PONumber As Integer = CInt(PO.Value)
+        Dim i_PONumber As Integer = Integer.Parse(PO.Value)
 
         Dim POInformation As POInformationType = SelectPOInformation(i_PONumber)
         If CBool(Session(SESSION_KEY_ADMIN)) = False And POInformation.POLocationCode <> Session(SESSION_KEY_LOCATION).ToString() Then
@@ -955,8 +970,9 @@ Partial Public Class POUpdate
             cmd.Parameters.AddWithValue("ParPONumber", NullableVariableToDBObject(POInfomation.ParPONumber))
             cmd.Parameters.AddWithValue("CreatedBy", NullableVariableToDBObject(POInfomation.CreatedBy))
             cmd.Parameters.AddWithValue("CreateDate", NullableVariableToDBObject(POInfomation.CreateDate))
-            cmd.Parameters.AddWithValue("UpdatedBy", NullableVariableToDBObject(POInfomation.UpdatedBy))
-            cmd.Parameters.AddWithValue("UpdateDate", NullableVariableToDBObject(POInfomation.UpdateDate))
+            cmd.Parameters.AddWithValue("UpdatedBy", i_OperatingUserID)
+            'UpdateDateフィールドはSQL内にGETDATE()を明示してあるため不要
+            'cmd.Parameters.AddWithValue("UpdateDate", NullableVariableToDBObject(POInfomation.UpdateDate))
             cmd.Parameters.AddWithValue("PONumber", NullableVariableToDBObject(POInfomation.PONumber))
 
             conn.Open()
