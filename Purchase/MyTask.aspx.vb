@@ -50,7 +50,7 @@
                 If b_hasrows Then
 
                     ' クエリ、コマンド、アダプタの生成
-                    st_query = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode ORDER BY [Name] ASC "
+                    st_query = "SELECT UserID, [Name] FROM v_User WHERE isDisabled = 0 AND LocationCode = @LocationCode ORDER BY [Name] ASC "
                     command.CommandText = st_query
                     Dim adapter As New SqlClient.SqlDataAdapter()
 
