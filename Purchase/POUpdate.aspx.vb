@@ -14,12 +14,12 @@ Partial Public Class POUpdate
 
 #Region "グローバル変数定義"
 
-    Protected st_ParPONumber As String
-    Protected st_Action As String
+    Protected st_ParPONumber As String = String.Empty
+    Protected st_Action As String = String.Empty
     Protected b_FormVisible As Boolean = True
     Protected b_ChildVisible As Boolean = True
     Protected b_ChiPOIssueVisible As Boolean = True
-    Private i_OperatingUserID As Integer = 0
+    Private i_OperatingUserID As Integer = -1
 
 #End Region
 
@@ -64,7 +64,7 @@ Partial Public Class POUpdate
     ''' <remarks></remarks>
     Private Structure POInformationType
 
-        Public PONumber As Nullable(Of Integer)
+        Public PONumber As Integer?
         Public R3PONumber As String
         Public R3POLineNumber As String
         Public PODate As DateTime?
@@ -115,7 +115,7 @@ Partial Public Class POUpdate
         Public RequestQuantity As String
         Public ScheduledExportDate As DateTime?
         Public PurchasingRequisitionNumber As String
-        Public isCancelled As Boolean?
+        'Public isCancelled As Boolean?
         Public CancellationDate As DateTime?
         Public RFQNumber As Integer?
         Public RFQLineNumber As Integer?
@@ -169,7 +169,7 @@ Partial Public Class POUpdate
 
         '初回呼び出し時のデータ読み出しとパラメータチェック
         If IsPostBack = False Then
-            If IsNumeric(st_PONumber) = False Then
+            If IsInteger(st_PONumber) = False Then
                 Msg.Text = ERR_INVALID_PARAMETER
                 b_FormVisible = False
                 Exit Sub
@@ -180,6 +180,7 @@ Partial Public Class POUpdate
                 b_FormVisible = False
                 Exit Sub
             End If
+            b_FormVisible = True
             ClearForm()
 
             ViewPOInformationToForm(CInt(st_PONumber))
@@ -188,7 +189,7 @@ Partial Public Class POUpdate
         '親発注番号の取得
         'PO Correspondence / History リンクパラメータは 親発注番号(ParPONumber) 優先
         '親発注番号(ParPONumber) がない場合は、自身の 発注番号(PONumber) 
-        Dim POInformation As POInformationType = SelectPOInformation(CInt(st_PONumber))
+        Dim POInformation As POInformationType = SelectPOInformation(Integer.Parse(st_PONumber))
         If POInformation.ParPONumber Is Nothing Then
             st_ParPONumber = POInformation.PONumber.ToString()
         Else
@@ -209,11 +210,11 @@ Partial Public Class POUpdate
 
         ChangeTextBoxValueToSingleByte()
 
-        If ValidateForUpdate() = False Then
+        If ValidateCommon() = False Then
             Exit Sub
         End If
 
-        If ValidateCommon() = False Then
+        If ValidateForUpdate() = False Then
             Exit Sub
         End If
 
@@ -234,7 +235,7 @@ Partial Public Class POUpdate
     ''' <remarks></remarks>
     Protected Sub Cancell_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Cancell.Click
 
-        If ValidateForUpdate() = False Then
+        If ValidateCommon() = False Then
             Exit Sub
         End If
 
@@ -243,7 +244,7 @@ Partial Public Class POUpdate
             Exit Sub
         End If
 
-        Dim i_PONumber As Integer = CInt(PO.Value)
+        Dim i_PONumber As Integer = Integer.Parse(PO.Value)
 
         CancelPOInfomationFromForm(i_PONumber)
         Msg.Text = String.Empty
@@ -403,12 +404,12 @@ Partial Public Class POUpdate
         Dim POInformation As POInformationType = SelectPOInformation(PONumber)
 
         If CancellationDate.Text.Trim() = String.Empty Then
-            CancellationDate.Text = GetLocalTime(GetCurrentTime())
+            CancellationDate.Text = GetLocalTime(GetDBCurrentTime())
         End If
 
         POInformation.CancellationDate = GetDatabaseTime(CancellationDate.Text.Trim())
 
-        POInformation.isCancelled = False
+        'POInformation.isCancelled = True
 
         UpdatePOInfomation(POInformation)
 
@@ -444,13 +445,12 @@ Partial Public Class POUpdate
         UpdatePOInfomation(POInformation)
     End Sub
 
-
     ''' <summary>
-    ''' Update,Cancel共通検証
+    ''' Update,Cancel時のパラメータ、設定値の正当性チェックを行います。
     ''' </summary>
     ''' <returns>正当なときはTrue 不正なときはFalseを返します。</returns>
     ''' <remarks></remarks>
-    Private Function ValidateCommon() As Boolean
+    Private Function ValidateForUpdate() As Boolean
 
         If GetByteCount_SJIS(R3PONumber.Text) > MAX_LENGTH_R3_PO_NUMBER Then
             Msg.Text = String.Format(ERR_LENGTH_OVER, "R/3 PO Number", MAX_LENGTH_R3_PO_NUMBER)
@@ -564,18 +564,18 @@ Partial Public Class POUpdate
 
 
     ''' <summary>
-    ''' 更新時のパラメータ、設定値の正当性チェックを行います。
+    ''' Update,Cancel時のパラメータ、設定値の正当性チェックを行います。
     ''' </summary>
-    ''' <returns></returns>
+    ''' <returns>正当なときはTrue 不正なときはFalseを返します。</returns>
     ''' <remarks></remarks>
-    Private Function ValidateForUpdate() As Boolean
+    Private Function ValidateCommon() As Boolean
 
         If st_Action <> ACTION_VALUE_UPDATE Then
             Msg.Text = ERR_INVALID_PARAMETER
             Return False
         End If
 
-        If IsNumeric(PO.Value) = False Then
+        If IsInteger(PO.Value) = False Then
             Msg.Text = ERR_INVALID_PARAMETER
             Return False
         End If
@@ -668,23 +668,6 @@ Partial Public Class POUpdate
         Return Common.GetLocalTime(Session(SESSION_KEY_LOCATION).ToString(), CType(DataBaseTime, Date))
     End Function
 
-
-    ''' <summary>
-    ''' データベース時間を取得する。
-    ''' </summary>
-    ''' <param name="LocalTime">ローカル時間</param>
-    ''' <returns>データベース時間 (JST)</returns>
-    ''' <remarks>Nullに対応したラッピング関数</remarks>
-    Private Function GetDatabaseTime(ByVal LocalTime As Date?) As Date?
-
-        If LocalTime Is Nothing Then
-            Return Nothing
-        End If
-
-        Return CType(Common.GetDatabaseTime(Session(SESSION_KEY_LOCATION).ToString(), LocalTime.ToString()), Date?)
-
-    End Function
-
     ''' <summary>
     ''' データベース時間を取得する。
     ''' </summary>
@@ -707,7 +690,7 @@ Partial Public Class POUpdate
     ''' </summary>
     ''' <returns>取得した時刻</returns>
     ''' <remarks></remarks>
-    Private Function GetCurrentTime() As DateTime
+    Private Function GetDBCurrentTime() As DateTime
 
         Dim dt_Current As DateTime = New DateTime()
         Dim conn As SqlConnection = Nothing
@@ -807,7 +790,7 @@ Partial Public Class POUpdate
                 PoInformation.RequestQuantity = dr("RequestQuantity").ToString()
                 PoInformation.ScheduledExportDate = DBObjToNullableDateTime(dr("ScheduledExportDate"))
                 PoInformation.PurchasingRequisitionNumber = dr("PurchasingRequisitionNumber").ToString()
-                PoInformation.isCancelled = DBObjToNullableBoolean(dr("isCancelled"))
+                'PoInformation.isCancelled = DBObjToNullableBoolean(dr("isCancelled"))
                 PoInformation.CancellationDate = DBObjToNullableDateTime(dr("CancellationDate"))
                 PoInformation.RFQNumber = DBObjToNullableInt(dr("RFQNumber"))
                 PoInformation.RFQLineNumber = DBObjToNullableInt(dr("RFQLineNumber"))
@@ -893,7 +876,7 @@ Partial Public Class POUpdate
         sb_SQL.Append("	RequestQuantity, ")
         sb_SQL.Append("	ScheduledExportDate, ")
         sb_SQL.Append("	PurchasingRequisitionNumber, ")
-        sb_SQL.Append("	isCancelled, ")
+        'sb_SQL.Append("	isCancelled, ")
         sb_SQL.Append("	CancellationDate, ")
         sb_SQL.Append("	RFQNumber, ")
         sb_SQL.Append("	RFQLineNumber, ")
@@ -964,7 +947,7 @@ Partial Public Class POUpdate
             cmd.Parameters.AddWithValue("RequestQuantity", NullableVariableToDBObject(POInfomation.RequestQuantity))
             cmd.Parameters.AddWithValue("ScheduledExportDate", NullableVariableToDBObject(POInfomation.ScheduledExportDate))
             cmd.Parameters.AddWithValue("PurchasingRequisitionNumber", NullableVariableToDBObject(POInfomation.PurchasingRequisitionNumber))
-            cmd.Parameters.AddWithValue("isCancelled", NullableVariableToDBObject(POInfomation.isCancelled))
+            'cmd.Parameters.AddWithValue("isCancelled", NullableVariableToDBObject(POInfomation.isCancelled))
             cmd.Parameters.AddWithValue("CancellationDate", NullableVariableToDBObject(POInfomation.CancellationDate))
             cmd.Parameters.AddWithValue("RFQLineNumber", NullableVariableToDBObject(POInfomation.RFQLineNumber))
             cmd.Parameters.AddWithValue("ParPONumber", NullableVariableToDBObject(POInfomation.ParPONumber))
@@ -1031,7 +1014,7 @@ Partial Public Class POUpdate
         sb_SQL.Append("	RequestQuantity = @RequestQuantity, ")
         sb_SQL.Append("	ScheduledExportDate = @ScheduledExportDate, ")
         sb_SQL.Append("	PurchasingRequisitionNumber = @PurchasingRequisitionNumber, ")
-        sb_SQL.Append("	isCancelled = @isCancelled, ")
+        'sb_SQL.Append("	isCancelled = @isCancelled, ")
         sb_SQL.Append("	CancellationDate = @CancellationDate, ")
         sb_SQL.Append("	RFQLineNumber = @RFQLineNumber, ")
         sb_SQL.Append("	ParPONumber = @ParPONumber, ")
@@ -1050,7 +1033,7 @@ Partial Public Class POUpdate
     ''' </summary>
     ''' <param name="value">対象となる System.object</param>
     ''' <returns>変換したSystem.string 。DBNullの場合はstring.Emptyを返します。</returns>
-    Public Shared Function DBObjToString(ByVal value As Object) As String
+    Private Function DBObjToString(ByVal value As Object) As String
         Return DBObjToString(value, String.Empty)
     End Function
 
@@ -1060,7 +1043,7 @@ Partial Public Class POUpdate
     ''' <param name="value">対象となる System.object</param>
     ''' <param name="defaultValue">変換対象のObjectがDBNullの場合に返される値</param>
     ''' <returns>変換したSystem.string 。DBNullの場合は引数で指定されたSystem.stringを返します。</returns>
-    Public Shared Function DBObjToString(ByVal value As Object, ByVal defaultValue As String) As String
+    Private Function DBObjToString(ByVal value As Object, ByVal defaultValue As String) As String
         If Convert.IsDBNull(value) Then
             Return defaultValue
         Else
@@ -1068,102 +1051,18 @@ Partial Public Class POUpdate
         End If
     End Function
 
-    ''' <summary>
-    ''' DBオブジェクトをSystem.Long(int64)に変換します。
-    ''' </summary>
-    ''' <param name="value">対象となる System.object</param>
-    ''' <param name="defaulfValue">変換対象のObjectがDBNullの場合に返される値</param>
-    ''' <returns>変換したSystem.string 。DBNullの場合は引数で指定されたSystem.Long(System.Int64)を返します。</returns>
-    Public Shared Function DBObjToLong(ByVal value As Object, ByVal defaulfValue As Long) As Long
-        Return DBObjToInt64(value, defaulfValue)
-    End Function
-
-    ''' <summary>
-    ''' DBオブジェクトをSystem.Int64に変換します。
-    ''' </summary>
-    ''' <param name="value">対象となる System.Object</param>
-    ''' <param name="defaultValue">変換対象のObjectがDBNullの場合に返される値</param>
-    ''' <returns>変換したSystem.Int64。DBNullの場合は引数で指定されたSystem.Int64を返します。</returns>
-    Public Shared Function DBObjToInt64(ByVal value As Object, ByVal defaultValue As Long) As Long
-        If Convert.IsDBNull(value) Then
-            Return defaultValue
-        Else
-            Return Convert.ToInt64(value)
-        End If
-    End Function
-
-    ''' <summary>
-    ''' DBオブジェクトをSystem.Long(System.Int64)に変換します。
-    ''' </summary>
-    ''' <param name="value">対象となる System.Object</param>
-    ''' <returns>変換したSystem.Long(System.Int64)。DBNullの場合は0を返します。</returns>
-    Public Shared Function DBObjToLong(ByVal value As Object) As Long
-        Return DBObjToInt64(value)
-    End Function
-
-    ''' <summary>
-    ''' DBオブジェクトをSystem.Int64に変換します。
-    ''' </summary>
-    ''' <param name="value">対象となる System.Object</param>
-    ''' <returns>変換したSystem.Int64。DBNullの場合は0を返します。</returns>
-    Public Shared Function DBObjToInt64(ByVal value As Object) As Long
-        Return DBObjToInt64(value, 0)
-    End Function
-
-
-    ''' <summary>
-    ''' DBオブジェクトをSystem.Int32に変換します。
-    ''' </summary>
-    ''' <param name="value">対象となる System.Object</param>
-    ''' <param name="defaultValue">変換対象のObjectがDBNullの場合に返される値</param>
-    ''' <returns>変換したSystem.Int32。DBNullの場合は引数で指定されたSystem.Int32を返します。</returns>
-    Public Shared Function DBObjToInt32(ByVal value As Object, ByVal defaultValue As Int32) As Int32
-        If Convert.IsDBNull(value) Then
-            Return defaultValue
-        Else
-            Return Convert.ToInt32(value)
-        End If
-    End Function
-
-
-    ''' <summary>
-    ''' DBオブジェクトをint(System.Int32)に変換します。
-    ''' </summary>
-    ''' <param name="value">対象となる System.Object</param>
-    ''' <returns>変換したint(System.Int32)。DBNullの場合は0を返します。</returns>
-    Public Shared Function DBObjToInt(ByVal value As Object, ByVal defaultValue As Integer) As Int32
-        Return DBObjToInt32(value, defaultValue)
-    End Function
-
-    ''' <summary>
-    ''' DBオブジェクトをSystem.Int32に変換します。
-    ''' </summary>
-    ''' <param name="value">対象となる System.Object</param>
-    ''' <returns>変換したSystem.Int32。DBNullの場合は0を返します。</returns>
-    Public Shared Function DBObjToInt32(ByVal value As Object) As Int32
-        Return DBObjToInt32(value, 0)
-    End Function
 
     ''' <summary>
     ''' DBオブジェクトをNullable System.Int32に変換します。
     ''' </summary>
     ''' <param name="value">対象となる System.Object</param>
     ''' <returns>変換したNullable System.Int32。</returns>
-    Public Shared Function DBObjToNullableInt32(ByVal value As Object) As Int32?
+    Private Shared Function DBObjToNullableInt32(ByVal value As Object) As Int32?
         If Convert.IsDBNull(value) Then
             Return Nothing
         Else
             Return Convert.ToInt32(value)
         End If
-    End Function
-
-    ''' <summary>
-    ''' DBオブジェクトをint(System.Int32)に変換します。
-    ''' </summary>
-    ''' <param name="value">対象となる System.Object</param>
-    ''' <returns>変換したint(System.Int32)。DBNullの場合は0を返します。</returns>
-    Public Shared Function DBObjToInt(ByVal value As Object) As Int32
-        Return DBObjToInt32(value)
     End Function
 
     ''' <summary>
@@ -1171,55 +1070,8 @@ Partial Public Class POUpdate
     ''' </summary>
     ''' <param name="value">対象となる System.Object</param>
     ''' <returns>変換したNullable int(System.Int32)。</returns>
-    Public Shared Function DBObjToNullableInt(ByVal value As Object) As Int32?
+    Private Function DBObjToNullableInt(ByVal value As Object) As Int32?
         Return DBObjToNullableInt32(value)
-    End Function
-
-
-    ''' <summary>
-    ''' DBオブジェクトをSystem.Decimalに変換します。
-    ''' </summary>
-    ''' <param name="value">対象となる System.Object</param>
-    ''' <param name="defaultValue">変換対象のObjectがDBNullの場合に返される値</param>
-    ''' <returns>変換したSystem.Decimal。DBNullの場合は引数で指定されたSystem.Decimalを返します。</returns>
-    Public Shared Function DBObjToDecimal(ByVal value As Object, ByVal defaultValue As Decimal) As Decimal
-        If Convert.IsDBNull(value) Then
-            Return defaultValue
-        Else
-            Return Convert.ToDecimal(value)
-        End If
-    End Function
-
-    ''' <summary>
-    ''' DBオブジェクトをSystem.Decimalに変換します。
-    ''' </summary>
-    ''' <param name="value">対象となる System.Object</param>
-    ''' <returns>変換したSystem.Decimal。DBNullの場合は0を返します。</returns>
-    Public Shared Function DBObjToDecimal(ByVal value As Object) As Decimal
-        Return DBObjToDecimal(value, 0)
-    End Function
-
-    ''' <summary>
-    ''' DBオブジェクトをSystem.Doubleに変換します。
-    ''' </summary>
-    ''' <param name="value">対象となる System.Object</param>
-    ''' <param name="defaultValue">変換対象のObjectがDBNullの場合に返される値</param>
-    ''' <returns>変換したSystem.Double。DBNullの場合は引数で指定されたSystem.Doubleを返します。</returns>
-    Public Shared Function DBObjToDouble(ByVal value As Object, ByVal defaultValue As Double) As Double
-        If Convert.IsDBNull(value) Then
-            Return defaultValue
-        Else
-            Return Convert.ToDouble(value)
-        End If
-    End Function
-
-    ''' <summary>
-    ''' DBオブジェクトをSystem.Doubleに変換します。
-    ''' </summary>
-    ''' <param name="value">対象となる System.Object</param>
-    ''' <returns>変換したSystem.Double。DBNullの場合は0を返します。</returns>
-    Public Shared Function DBObjToDouble(ByVal value As Object) As Double
-        Return DBObjToDouble(value, 0)
     End Function
 
     ''' <summary>
@@ -1227,47 +1079,11 @@ Partial Public Class POUpdate
     ''' </summary>
     ''' <param name="value">対象となる System.Object</param>
     ''' <returns>変換したNullable System.Decimal。</returns>
-    Public Shared Function DBObjToNullableDecimal(ByVal value As Object) As Decimal?
+    Private Function DBObjToNullableDecimal(ByVal value As Object) As Decimal?
         If Convert.IsDBNull(value) Then
             Return Nothing
         Else
             Return Convert.ToDecimal(value)
-        End If
-    End Function
-
-    ''' <summary>
-    ''' Nullable DateTimeオブジェクトを文字列に変換します。
-    ''' </summary>
-    ''' <param name="value">変換対象となる DateTime? オブジェクト</param>
-    ''' <returns>変換したstring 文字列</returns>
-    Public Shared Function NullableDateToString(ByVal value As DateTime?) As String
-        Return NullableDateToString(value, "yyyy/MM/dd")
-    End Function
-
-    ''' <summary>
-    ''' 文字列をNullable DateTimeオブジェクトに変換します。
-    ''' </summary>
-    ''' <param name="value">変換対象となるstring オブジェクト</param>
-    ''' <returns>変換対象となる DateTime? オブジェクト</returns>
-    Public Shared Function StrToNullableDateTime(ByVal value As String) As DateTime?
-        Dim dt As DateTime = New DateTime()
-        If DateTime.TryParse(value, dt) Then
-            Return dt
-        Else
-            Return Nothing
-        End If
-    End Function
-
-    ''' <summary>
-    ''' Nullable DateTimeオブジェクト内をDBNullを含んだSystem.Objectオブジェクトに変換します。
-    ''' </summary>
-    ''' <param name="value">対象となるDateTime? オブジェクト</param>
-    ''' <returns>DB Nullを含んだ System Object。</returns>
-    Public Shared Function NullableDateTimeToDBDate(ByVal value As DateTime?) As Object
-        If value Is Nothing Then
-            Return DBNull.Value
-        Else
-            Return value
         End If
     End Function
 
@@ -1276,7 +1092,7 @@ Partial Public Class POUpdate
     ''' </summary>
     ''' <param name="value">対象となるSystem.String</param>
     ''' <returns>DB Nullを含んだ System Object。</returns>
-    Public Shared Function NullableStringToDBObject(ByVal value As String) As Object
+    Private Function NullableStringToDBObject(ByVal value As String) As Object
         If String.IsNullOrEmpty(value) Then
             Return DBNull.Value
         Else
@@ -1291,7 +1107,7 @@ Partial Public Class POUpdate
     ''' </summary>
     ''' <param name="value">対象となるSystem.Object</param>
     ''' <returns>DB Nullを含んだ System Object。</returns>
-    Public Shared Function NullableVariableToDBObject(ByVal value As Object) As Object
+    Private Function NullableVariableToDBObject(ByVal value As Object) As Object
         If value Is Nothing Then
             Return DBNull.Value
         End If
@@ -1308,7 +1124,7 @@ Partial Public Class POUpdate
     ''' </summary>
     ''' <param name="value">対象となる System.Object</param>
     ''' <returns>変換したNullable System.DateTime。</returns>
-    Public Shared Function DBObjToNullableDateTime(ByVal value As Object) As DateTime?
+    Private Function DBObjToNullableDateTime(ByVal value As Object) As DateTime?
         Dim dt As DateTime = New DateTime()
         If DateTime.TryParse(value.ToString(), dt) Then
             Return dt
@@ -1323,7 +1139,7 @@ Partial Public Class POUpdate
     ''' </summary>
     ''' <param name="value">対象となる System.Object</param>
     ''' <returns>変換したNullable System.Boolean。</returns>
-    Public Shared Function DBObjToNullableBoolean(ByVal value As Object) As Boolean
+    Private Function DBObjToNullableBoolean(ByVal value As Object) As Boolean
         If Convert.IsDBNull(value) Then
             Return Nothing
         Else
@@ -1332,45 +1148,15 @@ Partial Public Class POUpdate
     End Function
 
 
-    ''' <summary>
-    ''' Systemn.StringをSystem.Intの値を持ったDBオブジェクトへ変換します。
-    ''' </summary>
-    ''' <param name="value">対象となる System.String</param>
-    ''' <returns>DB Nullを含んだ System Object。</returns>
-    Public Shared Function StringToDBInt(ByVal value As String) As Object
-        Dim obRet As Object = DBNull.Value
-
-        If Not String.IsNullOrEmpty(value) Then
-            If IsNumeric(value) Then
-                obRet = Integer.Parse(value)
-            End If
-        End If
-        Return obRet
-    End Function
-
 #End Region
 
 #Region "Null・.NET変数変換関数"
-    ''' <summary>
-    ''' Nullable DateTimeオブジェクトを文字列に変換します。
-    ''' </summary>
-    ''' <param name="value">変換対象となる DateTime? オブジェクト</param>
-    ''' <param name="format">書式指定文字列</param>
-    ''' <returns>変換したstring 文字列</returns>
-    Public Shared Function NullableDateToString(ByVal value As DateTime?, ByVal format As String) As String
-        If value.HasValue Then
-            Return (CType(value, DateTime).ToString(format))
-        Else
-            Return String.Empty
-        End If
-    End Function
-
     ''' <summary>
     ''' Systemn.String内の空白をNothingに変換します。
     ''' </summary>
     ''' <param name="value">変換対象となるstring オブジェクト</param>
     ''' <returns>Nothingを含んだString文字列</returns>
-    Public Shared Function StrToNullableString(ByVal value As String) As String
+    Private Function StrToNullableString(ByVal value As String) As String
         If String.IsNullOrEmpty(value) Then
             Return Nothing
         Else
