@@ -182,6 +182,12 @@ Public Class Common
     Public Const ERR_DOES_NOT_EXIST As String = " can not be found in master table."
 
     ''' <summary>
+    ''' エラーメッセージ 「データは他のユーザによって更新されました。」
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const ERR_UPDATED_BY_ANOTHER_USER As String = "This record has been updated by another user."
+
+    ''' <summary>
     ''' エラーメッセージ 「○○には3000文字以上登録することができません」
     ''' </summary>
     ''' <remarks></remarks>
