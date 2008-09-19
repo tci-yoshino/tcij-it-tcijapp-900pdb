@@ -47,12 +47,15 @@ Partial Public Class RFQSearchBySupplier
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
         Dim i As Integer = 0
         Msg.Text = String.Empty
-
+        'List初期化
+        SrcSupplier.SelectCommand = ""
+        SrcSupplier.DataBind()
+        SupplierList.DataBind()
         '画面表示OK
         SupplierList.Visible = True
         '入力チェック
         If Not IsCheckInput() Then
-            '何も入力されていない場合、「No match found.」を表示するため処理無し。
+            '何も入力されていない場合、aspxファイルの「EmptyDataTemplate」を表示するため処理無し。
             Exit Sub
         End If
         'Supplier Code は半角英数のみ
@@ -61,6 +64,8 @@ Partial Public Class RFQSearchBySupplier
         'Supplier Code は数値型
         If Not Integer.TryParse(SupplierCode.Text, i) And Not SupplierCode.Text.Trim = String.Empty Then
             Msg.Text = ERR_INCORRECT_SUPPLIERCODE
+            'LISTは非表示とする。
+            SupplierList.Visible = False
             Exit Sub
         End If
 
@@ -179,7 +184,7 @@ Partial Public Class RFQSearchBySupplier
 
         If st_SearchKey.Name <> String.Empty Then
             sb_SQLConditional.Append(IIf(sb_SQLConditional.Length > 0, " AND ", String.Empty))
-            sb_SQLConditional.Append("(ISNULL(Name1,'') + N' ' + ISNULL(Name2,'') LIKE @SupplierName) ")
+            sb_SQLConditional.Append("(ISNULL(Name3,'') + N' ' + ISNULL(Name4,'') LIKE @SupplierName) ")
         End If
 
         If st_SearchKey.Country <> String.Empty Then
