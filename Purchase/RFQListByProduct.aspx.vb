@@ -16,12 +16,6 @@ Partial Public Class RFQListByProduct
     Protected i_DataNum As Integer = 0 ' 0 の場合は Supplier Data が無いと判断し、 Data not found. を表示する。
 
     ''' <summary>
-    ''' 必須項目漏れのエラーメッセージ定数です。
-    ''' </summary>
-    ''' <remarks></remarks>
-    Const MSG_REQUIED_PRODUCT_NUMBER As String = "Product Number が指定されていません。"
-
-    ''' <summary>
     ''' このページのロードイベントです。
     ''' </summary>
     ''' <param name="sender"></param>
@@ -29,28 +23,22 @@ Partial Public Class RFQListByProduct
     ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
-        If Request.QueryString("ProductID") <> String.Empty Then
-
-            st_ProductID = Request.QueryString("ProductID")
-
-            ' パラメータ取得
-            If Request.RequestType = "POST" Then
-                st_ProductID = CType(IIf(Request.Form("ProductID") = Nothing, "", Request.Form("ProductID")), String)
-            ElseIf Request.RequestType = "GET" Then
-                st_ProductID = CType(IIf(Request.QueryString("ProductID") = Nothing, "", Request.QueryString("ProductID")), String)
-            End If
-
-            ' 空白除去
-            st_ProductID = st_ProductID.Trim()
-
-            If st_ProductID = "" Or IsNumeric(st_ProductID) = False Then
-                Msg.Text = MSG_REQUIED_PRODUCT_NUMBER
-                Exit Sub
-            End If
-
-            SearchProduct(st_ProductID)
-            SearchRFQHeader(st_ProductID)
+        ' パラメータ取得
+        If Request.RequestType = "POST" Then
+            st_ProductID = CType(IIf(Request.Form("ProductID") = Nothing, "", Request.Form("ProductID")), String)
+        ElseIf Request.RequestType = "GET" Then
+            st_ProductID = CType(IIf(Request.QueryString("ProductID") = Nothing, "", Request.QueryString("ProductID")), String)
         End If
+
+        If st_ProductID = "" Or IsInteger(st_ProductID) = False Then
+            Msg.Text = ERR_INVALID_PARAMETER
+            Exit Sub
+        End If
+
+        ' 空白除去
+        st_ProductID = st_ProductID.Trim()
+        SearchProduct(st_ProductID)
+        SearchRFQHeader(st_ProductID)
 
     End Sub
 
@@ -140,7 +128,6 @@ Partial Public Class RFQListByProduct
         sb_SQL.Append("	Product ")
         sb_SQL.Append("WHERE ")
         sb_SQL.Append("	ProductID = @ProductID ")
-
 
         Return sb_SQL.ToString()
 
@@ -234,7 +221,5 @@ Partial Public Class RFQListByProduct
         Return sb_SQL.ToString()
 
     End Function
-
-
 
 End Class

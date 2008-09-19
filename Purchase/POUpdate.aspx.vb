@@ -28,7 +28,7 @@ Partial Public Class POUpdate
     ''' エラー定数です。
     ''' </summary>
     ''' <remarks></remarks>
-    Const ERR_LOCATION_INCONSITENT As String = "拠点が一致しません。"
+    Const ERR_LOCATION_INCONSITENT As String = "You can not edit PO of other locations." '"拠点が一致しません。"
     Const ERR_DATA_REMOVED_BY_OTHER As String = "このデータは他のユーザーによって削除されました。"
     Const ERR_DATA_CHAGED_BY_OTHER As String = "このデータは他のユーザーによって編集されました。その内容を確認し再度編集をお願いします"
     Const ERR_LENGTH_OVER As String = "{0} には{1}文字以上登録することができません。"

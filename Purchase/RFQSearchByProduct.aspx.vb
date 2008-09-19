@@ -14,7 +14,7 @@ Partial Public Class RFQSearchByProduct
     ''' 必須項目漏れのエラーメッセージ定数です。
     ''' </summary>
     ''' <remarks></remarks>
-    Const MSG_REQUIED_PRODUCT_NUMBER As String = "Product Numberを入力してください"
+    Const MSG_REQUIED_PRODUCT_NUMBER As String = "Product Number" & Common.ERR_REQUIRED_FIELD     'Product Numberを入力してください
     Const MSG_FIELD_RFQ As String = "RFQ Reference Number"
 
     ''' <summary>
