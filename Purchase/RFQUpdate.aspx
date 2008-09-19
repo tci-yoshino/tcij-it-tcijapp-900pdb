@@ -162,7 +162,7 @@
                 <table>
                     <tr>
                         <th style="width:3%" rowspan="2">No.</th>
-                        <th>Enq-Quantity</th>
+                        <th>Enq-Quantity <span class="required">*</span></th>
                         <th>Currency</th>
                         <th>Price</th>
                         <th>Quo-Per</th>

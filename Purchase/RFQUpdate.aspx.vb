@@ -7,22 +7,20 @@ Partial Public Class RFQUpdate
     Private DBCommand As System.Data.SqlClient.SqlCommand
     Private DBAdapter As System.Data.SqlClient.SqlDataAdapter
     'エラーメッセージ(入力値不正)
-    Private Const ERR_INCORRECT_SUPPLIERCODE As String = "Supplier Code はマスタに存在しません。"
-    Private Const ERR_INCORRECT_MAKERCODE As String = "Maker Code はマスタに存在しません。"
+    Private Const ERR_INCORRECT_SUPPLIERCODE As String = "Supplier Code" & ERR_DOES_NOT_EXIST
+    Private Const ERR_INCORRECT_MAKERCODE As String = "Maker Code" & ERR_DOES_NOT_EXIST
     Private Const ERR_INCORRECT_SHIPPINGHANDLINGFEE As String = "ShippingHandlingFee" & ERR_INVALID_NUMBER
     Private Const ERR_INCORRECT_UNITPRICE As String = "UnitPrice" & ERR_INVALID_NUMBER
     Private Const ERR_INCORRECT_QUOPER As String = "Quo-Per" & ERR_INVALID_NUMBER
-    Private Const ERR_INCORRECT_CURRENCY As String = "Currency Price Quo-Per Quo-Unit は全て入力、もしくは全て空白で登録してください。"
-    Private Const ERR_INCORRECT_ENQQUANTITY As String = "Enq-Quantity" & ERR_INCORRECT_FORMAT
+    Private Const ERR_INCORRECT_CURRENCY As String = "Please enter a quotation (price)."
     'エラーメッセージ(必須入力項目)
+    Private Const ERR_INCORRECT_ENQQUANTITY As String = "Enq-Quantity" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_SUPPLIERCODE As String = "SupplierCode" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_QUOUSER As String = "Quo-User" & ERR_REQUIRED_FIELD
-    'エラーメッセージ(他ユーザ更新)
-    Private Const ERR_ALREADY_UPDATED As String = "データは他のユーザによって既に更新されています。ご確認ください。"
-    'エラーメッセージ(更新処理失敗)
+    'エラーメッセージ(更新処理失敗)(Exception扱いなので日本語のままとする。)
     Private Const ERR_GET_RFQDATA_FAILURE As String = "RFQ データの更新に失敗しましたが、エラーが検出されませんでした。"
     'エラーメッセージ(他拠点情報更新)
-    Private Const ERR_ANOTHER_LOCATION As String = "他拠点間のRFQ情報は更新できません。"
+    Private Const ERR_ANOTHER_LOCATION As String = "You can not edit the enquiry of other locations"
     'エラーメッセージ(文字数制限オーバー)
     Private Const ERR_COMMENT_OVER As String = "Comment" & ERR_OVER_3000
     Private Const ERR_SPECIFICATION_OVER As String = "Specification" & ERR_OVER_255
@@ -127,6 +125,7 @@ Partial Public Class RFQUpdate
         End If
         '他セッションでの更新チェック
         If isLatestData("RFQHeader", "RFQNumber", st_RFQNumber, UpdateDate.Value) = False Then
+            Msg.Text = ERR_UPDATED_BY_ANOTHER_USER
             Exit Sub
         End If
         '更新処理
@@ -226,7 +225,7 @@ Partial Public Class RFQUpdate
         End Try
         If FormDataSet() = False Then
             '画面リフレッシュ
-            Msg.Text = ERR_GET_RFQDATA_FAILURE
+            Throw New Exception(ERR_GET_RFQDATA_FAILURE & "(UPDATE)")
             '画面上の入力項目を隠す。
             Parameter = False
             Exit Sub
@@ -250,6 +249,7 @@ Partial Public Class RFQUpdate
         End If
         '他セッションでの更新チェック
         If isLatestData("RFQHeader", "RFQNumber", st_RFQNumber, UpdateDate.Value) = False Then
+            Msg.Text = ERR_UPDATED_BY_ANOTHER_USER
             Exit Sub
         End If
         DBCommand.CommandText = "UPDATE RFQHeader SET RFQStatusCode = 'C', UpdatedBy = @UpdatedBy, UpdateDate = GETDATE() WHERE (RFQNumber = @RFQNumber)"
@@ -260,7 +260,7 @@ Partial Public Class RFQUpdate
         DBCommand.Dispose()
         If FormDataSet() = False Then
             '画面リフレッシュ
-            Msg.Text = ERR_GET_RFQDATA_FAILURE
+            Throw New Exception(ERR_GET_RFQDATA_FAILURE & "(CLOSE)")
             '画面上の入力項目を隠す。
             Parameter = False
             Exit Sub
