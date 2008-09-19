@@ -17,6 +17,8 @@ Partial Public Class RFQSearchByProduct
     Const MSG_REQUIED_PRODUCT_NUMBER As String = "Product Number" & Common.ERR_REQUIRED_FIELD     'Product Numberを入力してください
     Const MSG_FIELD_RFQ As String = "RFQ Reference Number"
 
+    Protected b_ProductListView_Flg As Boolean = True
+
     ''' <summary>
     ''' RFQ検索キー構造体です。
     ''' </summary>
@@ -55,6 +57,7 @@ Partial Public Class RFQSearchByProduct
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
 
         Msg.Text = String.Empty
+        b_ProductListView_Flg = False
 
         '必須入力項目のチェック
         If Code.Text.Trim = String.Empty Then
@@ -72,6 +75,9 @@ Partial Public Class RFQSearchByProduct
         st_SearchKey.Code = Code.Text.Trim
         st_SearchKey.CAS = CAS.Text.Trim
         st_SearchKey.RFQ = RFQ.Text.Trim
+
+        'フラグの有効化
+        b_ProductListView_Flg = True
 
         '検索の実行
         SearchRFQ(st_SearchKey)
@@ -104,7 +110,12 @@ Partial Public Class RFQSearchByProduct
         End If
     End Sub
 
-
+    ''' <summary>
+    ''' 検索条件から一件のみのデータが抽出できる場合のみProductIDを返します。
+    ''' </summary>
+    ''' <param name="st_SearchKey">RFQ検索キー構造体</param>
+    ''' <returns>取得したProductID 該当がない時は空白を返します。</returns>
+    ''' <remarks></remarks>
     Private Function GetProductCodeWhenOneRecord(ByVal st_SearchKey As SearchKey) As String
 
         Dim sqlConn As SqlConnection = New SqlConnection(DB_CONNECT_STRING)

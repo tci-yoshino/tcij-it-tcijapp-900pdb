@@ -66,7 +66,9 @@ window.onload = function() {
                     </table>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
-                    <h3 style="font-style:italic"><% =Purchase.Common.ERR_NO_MATCH_FOUND%></h3>
+                    <%If b_ProductListView_Flg = True Then%>
+                        <h3 style="font-style:italic"><% =Purchase.Common.ERR_NO_MATCH_FOUND%></h3>
+                    <%End If%>                
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr>
