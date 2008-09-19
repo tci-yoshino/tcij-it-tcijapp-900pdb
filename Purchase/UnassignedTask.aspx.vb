@@ -1,7 +1,6 @@
 ﻿Partial Public Class UnassignedTask
     Inherits CommonPage
 
-    Private Const ERR_UPDATE As String = "既に他のユーザによって更新されました。"
     Private Const ASSIGN_ACTION As String = "Assign"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -58,7 +57,7 @@
 
         ' Update Chack
         If Not Common.isLatestData("RFQHeader", "RFQNumber", st_RFQNumber, st_UpdateDate) Then
-            Msg.Text = ERR_UPDATE
+            Msg.Text = Common.ERR_UPDATED_BY_ANOTHER_USER
             RFQList.DataBind()
             Exit Sub
         End If
@@ -101,7 +100,7 @@
 
         ' Update Chack
         If Not Common.isLatestData("PO", "PONumber", st_PONumber, st_UpdateDate) Then
-            Msg.Text = ERR_UPDATE
+            Msg.Text = Common.ERR_UPDATED_BY_ANOTHER_USER
             POList.DataBind()
             Exit Sub
         End If
