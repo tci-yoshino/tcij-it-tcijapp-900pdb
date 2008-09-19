@@ -5,11 +5,10 @@ Partial Public Class RFQIssue
     Private DBConn As New SqlConnection
     Private DBCommand As SqlCommand
     'エラーメッセージ(入力値不正)
-    Private Const ERR_INCORRECT_SUPPLIERCODE As String = "Supplier Code はマスタに存在しません。"
-    Private Const ERR_INCORRECT_MAKERCODE As String = "Maker Code はマスタに存在しません。"
-    'Private Const ERR_INCORRECT_ENQQUANTITY As String = "Enq-Quantity の入力値が不正です。Enq-Quantity は全て入力、もしくは全て空白で登録してください。"
+    Private Const ERR_INCORRECT_SUPPLIERCODE As String = "Supplier Code" & ERR_DOES_NOT_EXIST
+    Private Const ERR_INCORRECT_MAKERCODE As String = "Maker Code" & ERR_DOES_NOT_EXIST
     Private Const ERR_INCORRECT_ENQQUANTITY As String = "Enq-Quantity" & ERR_INCORRECT_FORMAT
-    Private Const ERR_INCORRECT_PRODUCTNUMBER As String = "Product Number はマスタに存在しません。"
+    Private Const ERR_INCORRECT_PRODUCTNUMBER As String = "Product Number" & ERR_DOES_NOT_EXIST
     'エラーメッセージ(必須入力項目なし)
     Private Const ERR_REQUIRED_ENQLOCATION As String = "Enq-Location" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_ENQUSER As String = "Enq-User" & ERR_REQUIRED_FIELD
@@ -17,10 +16,10 @@ Partial Public Class RFQIssue
     Private Const ERR_REQUIRED_SUPPLIERCODE As String = "SupplierCode" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_QUOLOCATION As String = "Quo-Location" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_PURPOSE As String = "Purpose" & ERR_REQUIRED_FIELD
-    Private Const ERR_REQUIRED_ENQQUANTITY As String = "Enq-Quantity は最低1件登録する必要があります。入力値をお確かめのうえ、再度登録してください。 "
-    Private Const ERR_ISCASNUMBER As String = "Product Number 欄に CAS 登録番号を入力して見積依頼を作成することはできません。"
+    Private Const ERR_REQUIRED_ENQQUANTITY As String = "Please enter a item."
+    Private Const ERR_ISCASNUMBER As String = "You can not enquire with CAS Number. Please convert it into either ""New Product Registry Number"" or ""TCI Product Number""."
     'エラーメッセージ(文字数制限オーバー)
-    Private Const ERR_COMMENT_OVER As String = "Comment は3000文字以上登録することができません。"
+    Private Const ERR_COMMENT_OVER As String = "Comment" & ERR_OVER_3000
     Protected Parameter As Boolean = True
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -240,7 +239,7 @@ Partial Public Class RFQIssue
                 If DBReader.HasRows = True Then
                     While DBReader.Read
                         ProductNumber.Text = DBReader("ProductNumber").ToString
-                        ProductName.Text = CutShort(DBReader("Name").ToString)
+                        ProductName.Text = DBReader("Name").ToString
                     End While
                     ProductNumber.ReadOnly = True
                     ProductNumber.CssClass = "readonly"
@@ -358,7 +357,7 @@ Partial Public Class RFQIssue
             Return False
         End If
         '入力項目の文字数チェック
-        If Comment.Text.Length > 3000 Then
+        If Comment.Text.Length > INT_3000 Then
             Msg.Text = ERR_COMMENT_OVER
             Exit Function
         End If
