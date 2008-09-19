@@ -6,8 +6,6 @@
     Protected st_Location As String = String.Empty
     Protected st_js_postback = String.Empty ' do_Postback メソッドの取得
 
-    Const MSG_REQUIED_EnqLocation = "見積依頼拠点コードが設定されていません。"
-
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         ' コントロール初期化
@@ -25,7 +23,7 @@
 
         ' 見積依頼拠点が取得できない場合はエラーメッセージを表示して終了
         If String.IsNullOrEmpty(st_Location) Then
-            Msg.Text = MSG_REQUIED_EnqLocation
+            Msg.Text = Common.ERR_INVALID_PARAMETER
             SearchForm.Visible = False
             Exit Sub
         End If
@@ -34,6 +32,7 @@
         If Request.RequestType = "POST" Then
             st_Code = IIf(Request.Form("Code") = Nothing, "", Request.Form("Code"))
             st_Name = IIf(Request.Form("Name") = Nothing, "", Request.Form("Name"))
+
             ' 親画面から送信された ASP.NET が自動生成する JavaScript の関数を取得。
             ' この関数はポストバックを強制的に発生させる。
             ' 当プログラムでは、検索結果を親画面に渡した後に親画面の見積もり回答拠点のユーザ名プルダウンコントロールを更新するために用いている。
