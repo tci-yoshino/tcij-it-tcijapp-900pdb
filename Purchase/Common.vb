@@ -188,6 +188,12 @@ Public Class Common
     Public Const ERR_UPDATED_BY_ANOTHER_USER As String = "This record has been updated by another user."
 
     ''' <summary>
+    ''' エラーメッセージ 「データは他のユーザによって削除されました。」
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const ERR_DELETED_BY_ANOTHER_USER As String = "This record has been deleted by another user."
+
+    ''' <summary>
     ''' エラーメッセージ 「○○には3000文字以上登録することができません」
     ''' </summary>
     ''' <remarks></remarks>
