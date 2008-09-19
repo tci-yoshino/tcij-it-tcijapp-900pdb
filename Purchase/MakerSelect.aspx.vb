@@ -75,7 +75,7 @@
         If Not String.IsNullOrEmpty(st_Name) Then
             SrcMaker.SelectParameters.Add("Name", Common.SafeSqlLikeClauseLiteral(st_Name))
             st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
-            st_where = st_where & " ISNULL(Supplier.Name1,'') + ' ' + ISNULL(Supplier.Name2,'') LIKE N'%' + @Name + '%' "
+            st_where = st_where & " ISNULL(Supplier.Name3,'') + ' ' + ISNULL(Supplier.Name4,'') LIKE N'%' + @Name + '%' "
         End If
 
         ' Where 句が生成できなかった場合は検索処理を行わずに処理を終了する
