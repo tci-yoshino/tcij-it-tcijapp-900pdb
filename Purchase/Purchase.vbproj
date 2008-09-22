@@ -173,7 +173,7 @@
     </Compile>
     <Compile Include="JFYISearch.aspx.vb">
       <DependentUpon>JFYISearch.aspx</DependentUpon>
-      <SubType>ASPXCodebehind</SubType>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

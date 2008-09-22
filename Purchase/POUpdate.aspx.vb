@@ -514,40 +514,6 @@ Partial Public Class POUpdate
 
     End Function
 
-    ''' <summary>
-    ''' 日付型テキストボックスの正当性を評価します。
-    ''' </summary>
-    ''' <param name="TargetObject">対象となるTexrBoxオブジェクト</param>
-    ''' <returns>正当なときはTrue 不正なときはFalseを返します</returns>
-    ''' <remarks>評価対象の文字列が空のときはTrueと判定されます。</remarks>
-    Private Function ValidateDateTextBox(ByVal TargetObject As TextBox) As Boolean
-
-        Return ValidateDateTextBox(TargetObject, True)
-
-    End Function
-
-    ''' <summary>
-    ''' 日付型テキストボックスの正当性を評価します。
-    ''' </summary>
-    ''' <param name="TargetObject">対象となるTexrBoxオブジェクト</param>
-    ''' <param name="AllowEmpty">空の文字列を許すかを設定します。Trueは許可 Falseは不許可 </param>
-    ''' <returns>正当なときはTrue 不正なときはFalseを返します</returns>
-    ''' <remarks></remarks>
-    Private Function ValidateDateTextBox(ByVal TargetObject As TextBox, ByVal AllowEmpty As Boolean) As Boolean
-
-        If AllowEmpty And TargetObject.Text.Trim = String.Empty Then
-            Return True
-        End If
-
-        If Not Regex.IsMatch(TargetObject.Text, DATE_REGEX_OPTIONAL) Then
-            Return False
-        End If
-
-        If Not IsDate(TargetObject.Text.Trim) Then
-            Return False
-        End If
-        Return True
-    End Function
 
     ''' <summary>
     ''' 半角が期待されるフィールドの入力値を半角に変換します。
