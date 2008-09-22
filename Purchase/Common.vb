@@ -35,13 +35,13 @@ Public Class Common
     ''' 日付フォーマット正規表現 (必須)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const DATE_REGEX As String = "\d{4}-\d{1,2}-\d{1,2}"
+    Public Const DATE_REGEX As String = "^\d{4}-\d{1,2}-\d{1,2}$"
 
     ''' <summary>
     ''' 日付フォーマット正規表現 (任意)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const DATE_REGEX_OPTIONAL As String = "\d{4}-\d{1,2}-\d{1,2}|"
+    Public Const DATE_REGEX_OPTIONAL As String = "^\d{4}-\d{1,2}-\d{1,2}$|^$"
 
     ''' <summary>
     ''' 数値フォーマット正規表現 (整数 10 桁, 小数 3 桁。必須)
