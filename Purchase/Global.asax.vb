@@ -36,19 +36,27 @@ Public Class Global_asax
         ' エラーの発生時に呼び出されます。
         Dim context As HttpContext = DirectCast(sender, HttpApplication).Context
         Dim ex As Exception = HttpContext.Current.Server.GetLastError
+        Dim appSetting As New System.Configuration.AppSettingsReader()
+        Dim b_IsDebug As Boolean
 
         If TypeOf ex Is HttpUnhandledException AndAlso _
             ex.InnerException IsNot Nothing Then
             ex = ex.InnerException
         End If
 
-        If ex IsNot Nothing Then
+        Try
+            b_IsDebug = CBool(appSetting.GetValue("Debug", GetType(String)))
+        Catch
+            ' 例外を捕捉せず、デバッグモードを False に設定する
+            b_IsDebug = False
+        End Try
+
+        If ex IsNot Nothing And Not b_IsDebug Then
             Try
                 Dim mail As New MailMessage
-                Dim appSetting As New System.Configuration.AppSettingsReader()
 
                 mail.To.Add(New MailAddress(appSetting.GetValue("ErrorMailTo", GetType(String)).ToString))
-                mail.Subject = "[Purchase DB] Internal System Error"
+                mail.Subject = "[Purchase] Internal System Error"
                 mail.Body = String.Format("An unhandled exception occurred: {1}{0}{0}User: {2} ({3}){0}{0}Message: {4}{0}{0}Stack Trace:{0}{5}{0}{0}User Agent:{0}{6}{0}{0}", _
                     System.Environment.NewLine, context.Request.RawUrl, Session("UserName"), Session("UserID"), ex.Message, ex.StackTrace, context.Request.UserAgent)
                 mail.IsBodyHtml = False
@@ -56,12 +64,10 @@ Public Class Global_asax
                 Dim smtp As New SmtpClient
                 smtp.Send(mail)
             Catch
-                ' メール送信に失敗したときのエラーは捕捉しない
+                ' メール送信に失敗したときの例外は捕捉しない
             End Try
         End If
 
-
-        '危険な文字列(Htmlタグ)が入力された場合はFormErrorへRedirect
         If TypeOf ex Is Web.HttpRequestValidationException Then
             Response.Redirect("./FormError.html", True)
         Else
