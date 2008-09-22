@@ -43,24 +43,6 @@ Partial Public Class RFQSearchByProduct
     Protected WithEvents Code As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
-    '''CAS コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents CAS As Global.System.Web.UI.WebControls.TextBox
-
-    '''<summary>
-    '''RFQ コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents RFQ As Global.System.Web.UI.WebControls.TextBox
-
-    '''<summary>
     '''Search コントロール。
     '''</summary>
     '''<remarks>

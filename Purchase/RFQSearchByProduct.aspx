@@ -35,14 +35,6 @@ window.onload = function() {
                         <th>Product Number <span class="required">*</span> : </th>
                         <td><asp:TextBox ID="Code" runat="server" Width="7em" MaxLength="32"></asp:TextBox></td>
                     </tr>
-                    <tr>
-                        <th>CAS Number : </th>
-                        <td><asp:TextBox ID="CAS" runat="server" Width="7em" MaxLength="32"></asp:TextBox></td>
-                    </tr>
-                    <tr>
-                        <th>RFQ Reference Number : </th>
-                        <td><asp:TextBox ID="RFQ" runat="server" Width="7em" MaxLength="10"></asp:TextBox></td>
-                    </tr>
                 </table>
                 
                 <asp:Button ID="Search" runat="server" Text="Search" />

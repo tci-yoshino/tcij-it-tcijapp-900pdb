@@ -1,4 +1,6 @@
 ﻿Option Explicit On
+Option Strict On
+Option Infer Off
 
 Imports System.Data.SqlClient
 Imports Purchase.Common
@@ -15,19 +17,8 @@ Partial Public Class RFQSearchByProduct
     ''' </summary>
     ''' <remarks></remarks>
     Const MSG_REQUIED_PRODUCT_NUMBER As String = "Product Number" & Common.ERR_REQUIRED_FIELD     'Product Numberを入力してください
-    Const MSG_FIELD_RFQ As String = "RFQ Reference Number"
 
     Protected b_ProductListView_Flg As Boolean = True
-
-    ''' <summary>
-    ''' RFQ検索キー構造体です。
-    ''' </summary>
-    ''' <remarks></remarks>
-    Structure SearchKey
-        Dim Code As String
-        Dim CAS As String
-        Dim RFQ As String
-    End Structure
 
     ''' <summary>
     ''' このクラスのロードイベントです。
@@ -65,22 +56,11 @@ Partial Public Class RFQSearchByProduct
             Exit Sub
         End If
 
-        If Not Regex.IsMatch(RFQ.Text, DECIMAL_10_REGEX_OPTIONAL) Then
-            Msg.Text = MSG_FIELD_RFQ + ERR_INCORRECT_FORMAT
-            Exit Sub
-        End If
-
-        '入力された検索キーを構造体に代入
-        Dim st_SearchKey As SearchKey
-        st_SearchKey.Code = Code.Text.Trim
-        st_SearchKey.CAS = CAS.Text.Trim
-        st_SearchKey.RFQ = RFQ.Text.Trim
-
         'フラグの有効化
         b_ProductListView_Flg = True
 
         '検索の実行
-        SearchRFQ(st_SearchKey)
+        SearchRFQ(Code.Text.Trim)
 
     End Sub
 
@@ -88,22 +68,24 @@ Partial Public Class RFQSearchByProduct
     ''' <summary>
     ''' RFQの検索を行います。
     ''' </summary>
-    ''' <param name="st_SearchKey">RFQ検索キー構造体</param>
+    ''' <param name="productNumber">検索キーとなるProductNumber(またはCASNumber)</param>
     ''' <remarks></remarks>
-    Private Sub SearchRFQ(ByVal st_SearchKey As SearchKey)
+    Private Sub SearchRFQ(ByVal productNumber As String)
 
-        Dim st_SQL As String = CreateSQLSentence(st_SearchKey)
+        Dim st_SQL As String = CreateSQLSentence()
         SrcProduct.SelectCommand = st_SQL
 
         SrcProduct.SelectParameters.Clear()
-        SetParamesToSQL(st_SearchKey, SrcProduct.SelectParameters)
+        productNumber = SafeSqlLikeClauseLiteral(productNumber)
+        SrcProduct.SelectParameters.Add("SearchParam", productNumber)
+
 
         '1件のみ検索された場合の処理
-        Dim st_ProductCode As String = GetProductCodeWhenOneRecord(st_SearchKey)
+        Dim i_ProductID As Integer? = GetProductCodeWhenOneRecord(productNumber)
 
-        If st_ProductCode <> String.Empty Then
+        If Not (i_ProductID Is Nothing) Then
             Dim st_URI As String = "./RFQListByProduct.aspx?ProductID={0}"
-            st_URI = String.Format(st_URI, st_ProductCode)
+            st_URI = String.Format(st_URI, i_ProductID.ToString())
             Response.Redirect(st_URI, False)
         Else
             ProductList.DataBind()
@@ -113,130 +95,55 @@ Partial Public Class RFQSearchByProduct
     ''' <summary>
     ''' 検索条件から一件のみのデータが抽出できる場合のみProductIDを返します。
     ''' </summary>
-    ''' <param name="st_SearchKey">RFQ検索キー構造体</param>
+    ''' <param name="productNumber">検索キーとなるProductNumber(またはCASNumber)</param>
     ''' <returns>取得したProductID 該当がない時は空白を返します。</returns>
     ''' <remarks></remarks>
-    Private Function GetProductCodeWhenOneRecord(ByVal st_SearchKey As SearchKey) As String
+    Private Function GetProductCodeWhenOneRecord(ByVal productNumber As String) As Integer?
 
-        Dim sqlConn As SqlConnection = New SqlConnection(DB_CONNECT_STRING)
-        Dim sqlCmd As SqlCommand = New SqlCommand(CreateSQLSentence(st_SearchKey), sqlConn)
-        SetParamesToSQL(st_SearchKey, sqlCmd.Parameters)
+        Using sqlConn As SqlConnection = New SqlConnection(DB_CONNECT_STRING)
+            Dim sqlCmd As SqlCommand = New SqlCommand(CreateSQLSentence(), sqlConn)
+            sqlCmd.Parameters.AddWithValue("SearchParam", productNumber)
 
-        Dim adp As SqlDataAdapter = New SqlDataAdapter(sqlCmd)
+            Dim adp As SqlDataAdapter = New SqlDataAdapter(sqlCmd)
+            Dim ds As DataSet = New DataSet()
 
-        Dim ds As DataSet = New DataSet()
+            adp.Fill(ds, "Product")
 
-        adp.Fill(ds, "RFQ")
-
-        If ds.Tables("RFQ").Rows.Count = 1 Then
-            Return ds.Tables("RFQ").Rows(0)("ProductID").ToString()
-        Else
-            Return String.Empty
-        End If
+            If ds.Tables("Product").Rows.Count = 1 Then
+                Return CType(ds.Tables("Product").Rows(0)("ProductID"), Integer?)
+            Else
+                Return Nothing
+            End If
+        End Using
 
     End Function
-
 
 
     ''' <summary>
     ''' RFQ検索SQL文字列を生成します。
     ''' </summary>
-    ''' <param name="st_SearchKey">RFQ検索キー構造体</param>
     ''' <returns>生成したSQL文字列</returns>
     ''' <remarks></remarks>
-    Private Function CreateSQLSentence(ByVal st_SearchKey As SearchKey) As String
+    Private Function CreateSQLSentence() As String
 
         Dim sb_SQL As New Text.StringBuilder
 
         'SQL文字列の作成
         sb_SQL.Append("SELECT ")
-        'sb_SQL.Append("	rfh.RFQNumber, ")
-        sb_SQL.Append("	DISTINCT ")
-        sb_SQL.Append("	pr.ProductID, ")
-        sb_SQL.Append("	pr.ProductNumber, ")
-        sb_SQL.Append("	pr.[Name] As ProductName ")
+        sb_SQL.Append("	 DISTINCT ")
+        sb_SQL.Append("	 ProductID, ")
+        sb_SQL.Append("	 ProductNumber, ")
+        sb_SQL.Append("	 [Name] As ProductName ")
         sb_SQL.Append("FROM ")
-        sb_SQL.Append("	Product pr ")
-        sb_SQL.Append("	LEFT OUTER JOIN ")
-        sb_SQL.Append("	v_RFQHeader rfh ")
-        sb_SQL.Append("ON ")
-        sb_SQL.Append("	pr.ProductNumber = rfh.ProductNumber ")
+        sb_SQL.Append("	 Product ")
         sb_SQL.Append("WHERE ")
-
-        'スカラ変数にワイルドカードは入らないので、検索キー入力値でSQL条件生成を変化させます。
-        Dim sb_SQLConditional As New Text.StringBuilder
-
-        If st_SearchKey.Code <> String.Empty Then
-            sb_SQLConditional.Append(CStr(IIf(sb_SQLConditional.Length > 1, " AND ", String.Empty)))
-            sb_SQLConditional.Append("pr.ProductNumber = @ProductNumber ")
-        End If
-
-        If st_SearchKey.CAS <> String.Empty Then
-            sb_SQLConditional.Append(CStr(IIf(sb_SQLConditional.Length > 1, " AND ", String.Empty)))
-            sb_SQLConditional.Append("pr.CASNumber = @CASNumber ")
-        End If
-
-        If st_SearchKey.RFQ <> String.Empty Then
-            sb_SQLConditional.Append(CStr(IIf(sb_SQLConditional.Length > 1, " AND ", String.Empty)))
-            sb_SQLConditional.Append("rfh.RFQNumber = @RFQNumber ")
-        End If
-
-        sb_SQL.Append(sb_SQLConditional.ToString())
-
+        sb_SQL.Append("	 ProductNumber = @SearchParam OR ")
+        sb_SQL.Append("	 CASNumber = @SearchParam ")
         sb_SQL.Append("ORDER BY ")
-        sb_SQL.Append(" ProductName ")
+        sb_SQL.Append("  ProductName ")
 
         Return sb_SQL.ToString()
 
     End Function
-
-    ''' <summary>
-    ''' RFQ検索キーをSQLParametersへバインドします。
-    ''' </summary>
-    ''' <param name="Key">RFQ検索キー構造体</param>
-    ''' <param name="Parameters">対象SQLParameters</param>
-    ''' <remarks></remarks>
-    Private Sub SetParamesToSQL(ByVal Key As SearchKey, ByRef Parameters As SqlParameterCollection)
-
-        '検索キーサニタイジング
-        Key.Code = SafeSqlLikeClauseLiteral(Key.Code)
-        Key.CAS = SafeSqlLikeClauseLiteral(Key.CAS)
-        Key.RFQ = SafeSqlLikeClauseLiteral(Key.RFQ)
-
-        If Key.Code <> String.Empty Then
-            Parameters.AddWithValue("ProductNumber", Key.Code)
-        End If
-
-        If Key.CAS <> String.Empty Then
-            Parameters.AddWithValue("CASNumber", Key.CAS)
-        End If
-
-        If Key.RFQ <> String.Empty Then
-            Parameters.AddWithValue("RFQNumber", Key.RFQ)
-        End If
-
-    End Sub
-
-    ''' <summary>
-    ''' RFQ検索キーをSQLParametersへバインドします。
-    ''' </summary>
-    ''' <param name="Key">RFQ検索キー構造体</param>
-    ''' <param name="Parameters">対象SQLParameters</param>
-    ''' <remarks></remarks>
-    Private Sub SetParamesToSQL(ByVal Key As SearchKey, ByRef Parameters As Web.UI.WebControls.ParameterCollection)
-
-        If Key.Code <> String.Empty Then
-            Parameters.Add("ProductNumber", Key.Code)
-        End If
-
-        If Key.CAS <> String.Empty Then
-            Parameters.Add("CASNumber", Key.CAS)
-        End If
-
-        If Key.RFQ <> String.Empty Then
-            Parameters.Add("RFQNumber", Key.RFQ)
-        End If
-
-    End Sub
 
 End Class
