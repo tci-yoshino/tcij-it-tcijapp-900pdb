@@ -97,6 +97,7 @@
     <Content Include="Image\Check.gif" />
     <Content Include="Image\Logo.gif" />
     <Content Include="Image\Search.gif" />
+    <Content Include="JFYISearch.aspx" />
     <Content Include="JS\Colorful.js" />
     <Content Include="JS\Common.js" />
     <Content Include="MyTask.aspx" />
@@ -166,6 +167,13 @@
     <Compile Include="Header.aspx.vb">
       <DependentUpon>Header.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JFYISearch.aspx.designer.vb">
+      <DependentUpon>JFYISearch.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="JFYISearch.aspx.vb">
+      <DependentUpon>JFYISearch.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
