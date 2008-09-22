@@ -122,14 +122,22 @@
 
         ' 見積一覧データ取得、バインド
         SrcRFQ.SelectCommand = _
-              "SELECT RH.RFQNumber, RH.StatusChangeDate, RH.Status, RH.ProductNumber, RH.ProductName AS ProductName, " _
-            & "       RH.Purpose, RH.QuoUserName, RH.QuoLocationName, RH.EnqUserName, RH.EnqLocationName, " _
-            & "       RH.SupplierName, RH.MakerName, RR.RFQCorres AS RFQCorrespondence " _
-            & "FROM v_RFQHeader AS RH LEFT OUTER JOIN " _
-            & "     v_RFQReminder AS RR ON RH.RFQNumber = RR.RFQNumber AND RR.RcptUserID = @UserID " _
-            & "WHERE QuoUserID = @UserID " _
-            & "  AND NOT (StatusCode IN ('Q','C') AND RR.RFQHistoryNumber IS NULL) " _
-            & "ORDER BY StatusSortOrder, StatusChangeDate ASC "
+              "SELECT " _
+            & "  RH.RFQNumber, RH.StatusChangeDate, RH.Status, RH.ProductNumber, " _
+            & "  RH.ProductName AS ProductName, " _
+            & "  RH.Purpose, RH.QuoUserName, RH.QuoLocationName, RH.EnqUserName, " _
+            & "  RH.EnqLocationName, RH.SupplierName, RH.MakerName, " _
+            & "  RR.RFQCorres AS RFQCorrespondence " _
+            & "FROM " _
+            & "  v_RFQHeader AS RH " _
+            & "  LEFT OUTER JOIN v_RFQReminder AS RR " _
+            & "    ON RH.RFQNumber = RR.RFQNumber AND @UserID = RR.RcptUserID " _
+            & "WHERE " _
+            & "  QuoUserID = @UserID " _
+            & "  AND StatusCode NOT IN ('Q','C') " _
+            & "  OR  (StatusCode IN ('Q','C') AND RR.RFQHistoryNumber IS NOT NULL) " _
+            & "ORDER BY " _
+            & "  StatusSortOrder, StatusChangeDate ASC  "
         RFQList.DataSourceID = "SrcRFQ"
         RFQList.DataBind()
 
