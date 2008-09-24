@@ -5,6 +5,7 @@
     Private st_ProductID As String = ""
     Private st_SupplierCode As String = ""
     Private st_MakerCode As String = ""
+    Private st_Err_NoQuotation As String = "No quotation record found.\n(You can not issue any order without quotation record.)"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -222,7 +223,7 @@
         ' POIssue へリダイレクトさせる JavaScript
         sb_JS.Append("function goPOIssue(price, ponumber, rfqnumber) {" & vbCrLf)
         sb_JS.Append("    if (price == '') {" & vbCrLf)
-        sb_JS.Append("        alert('Price " & Common.ERR_REQUIRED_FIELD & "');" & vbCrLf)
+        sb_JS.Append("        alert('" & st_Err_NoQuotation & "');" & vbCrLf)
         sb_JS.Append("    } else {" & vbCrLf)
         sb_JS.Append("        location.href = 'POIssue.aspx?ParPONumber=' + ponumber + '&RFQLineNumber=' + rfqnumber;" & vbCrLf)
         sb_JS.Append("    }" & vbCrLf)
