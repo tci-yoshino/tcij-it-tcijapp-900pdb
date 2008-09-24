@@ -15,6 +15,7 @@
             <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
         </div>
 <%  If st_ProductID <> "" And Purchase.Common.IsInteger(st_ProductID) = True Then%>
+    <%=""%>
     <%If i_DataNum = 0 Then%>
         <h3 style="font-style:italic"><% =Purchase.Common.ERR_NO_MATCH_FOUND%></h3>
     <%Else%>
@@ -44,7 +45,7 @@
                     </div>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
-                    <h3 style="font-style:italic">No data found.</h3>
+                    <h3 style="font-style:italic"><% =Purchase.Common.ERR_NO_MATCH_FOUND%>></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <table>

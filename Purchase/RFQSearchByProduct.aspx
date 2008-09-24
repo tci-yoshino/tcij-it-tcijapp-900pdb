@@ -30,6 +30,7 @@ window.onload = function() {
             <p class="attention"><asp:Label ID="Msg" runat="server"></asp:Label></p>
             
             <form id="SearchForm" runat="server">
+                <input id="Dummy" type="text" style = "display:none"/>
                 <table>
                     <tr>
                         <th>Product Number <span class="required">*</span> : </th>
