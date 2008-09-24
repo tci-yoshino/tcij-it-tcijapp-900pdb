@@ -50,7 +50,7 @@
         End If
         If Name.Text.ToString <> "" Then
             If SQLStr = "" Then SQLStr = "WHERE " Else SQLStr = SQLStr + " AND "
-            SQLStr = SQLStr + "ISNULL(Name1,'') + N' ' + ISNULL(Name2,'') LIKE '%" + Common.SafeSqlLikeClauseLiteral(Name.Text) + "%'"
+            SQLStr = SQLStr + "ISNULL(Name3,'') + N' ' + ISNULL(Name4,'') LIKE '%" + Common.SafeSqlLikeClauseLiteral(Name.Text) + "%'"
         End If
 
         '[検索項目すべて指定しない場合は結果無しとする]-------------------------------
