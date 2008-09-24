@@ -14,7 +14,7 @@
 window.onload = function() {
    colorful.set();
    navi('supplier');
-   
+   document.SearchForm.SupplierCode.focus();
 }
     -->
     </script>

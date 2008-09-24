@@ -11,11 +11,11 @@
     <script type="text/javascript">
     <!--
 
-window.onload = function() {
-   colorful.set();
-   changeCellColor("SupplierList_itemPlaceholderContainer")
-   
-}
+    window.onload = function() {
+        colorful.set();
+        changeCellColor("SupplierList_itemPlaceholderContainer");
+        document.SearchForm.Code.focus();
+    }
     function returnValues(code, name){
       if(opener){
         if(opener.document.getElementById('Supplier')){

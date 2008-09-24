@@ -12,9 +12,11 @@
     <!--
 
     window.onload = function() {
-       colorful.set();
-       changeCellColor("SupplierList_itemPlaceholderContainer")
-       
+        colorful.set();
+        changeCellColor("SupplierList_itemPlaceholderContainer")
+        if (document.SearchForm) {
+            document.SearchForm.Code.focus();
+        }
     }
     
     function returnValues(code, r3code, name, countryCode, location){

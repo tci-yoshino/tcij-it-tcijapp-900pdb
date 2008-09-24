@@ -17,7 +17,7 @@
 window.onload = function() {
    colorful.set();
    changeCellColor("CountryList_itemPlaceholderContainer")
-   
+   document.CountryForm.Code.focus();
 }
 
 
@@ -77,7 +77,6 @@ function returnValues(code, name){
                     <h3 style="font-style:italic"><%=Purchase.Common.MSG_NO_DATA_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                
                     <tr onclick="returnValues('<%#Eval("CountryCode")%>','<%#Replace(Eval("Name").ToString(), "'", "\'")%>');">
                         <td><asp:Label ID="CountryCode" runat="server" Text='<%#Eval("CountryCode")%>' /></td>
                         <td><asp:Label ID="CountryName" runat="server" Text='<%#Eval("Name")%>' /></td>

@@ -14,7 +14,7 @@
 window.onload = function() {
    colorful.set();
    navi('product');
-   
+   document.SearchForm.Code.focus();
 }
     -->
     </script>

@@ -14,7 +14,7 @@
 window.onload = function() {
    colorful.set();
    changeCellColor("ProductList_itemPlaceholderContainer")
-   
+   document.SearchForm.ProductNumber.focus();
 }
     function returnValues(code, name){
       if(opener){
