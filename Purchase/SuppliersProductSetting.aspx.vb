@@ -142,7 +142,7 @@
             End If
         Else
             DBReader.Close()
-            Msg.Text = "Supplier Code はマスタに存在しません。"
+            Msg.Text = "Supplier Code" + Common.ERR_DOES_NOT_EXIST   '"Supplier Code はマスタに存在しません。"
             Exit Sub
         End If
         DBReader.Close()
@@ -159,7 +159,7 @@
             st_ProductID = DBReader("ProductID")
         Else
             DBReader.Close()
-            Msg.Text = "Product Number はマスタに存在しません。"
+            Msg.Text = "Product Number" + Common.ERR_DOES_NOT_EXIST   '"Product Number はマスタに存在しません。"
             Exit Sub
         End If
         DBReader.Close()
@@ -171,13 +171,13 @@
         If DBReader.Read = True Then
             If Request.QueryString("Action") <> "Edit" Then
                 DBReader.Close()
-                Msg.Text = "同じ Supplier Code と Product Number を持つデータが既に登録されています。ご確認の上、再編集してください。"
+                Msg.Text = "The same set of 'Supplier code' and 'Product Number' already exist.<br />(Please check again to avoid duplication.)"   '"同じ Supplier Code と Product Number を持つデータが既に登録されています。ご確認の上、再編集してください。"
                 Exit Sub
             End If
 
             If DBReader("UpdateDate").ToString() <> UpdateDate.Value Then
                 DBReader.Close()
-                Msg.Text = "データは他のユーザによって既に更新されています。ご確認ください。"
+                Msg.Text = Common.ERR_UPDATED_BY_ANOTHER_USER   '"データは他のユーザによって既に更新されています。ご確認ください。"
                 Exit Sub
             End If
 
