@@ -20,16 +20,12 @@ Partial Public Class JFYISearch
 
     Const SESSION_KEY_ADMIN As String = "Purchase.isAdmin"
     Const SESSION_KEY_LOCATION As String = "LocationCode"
-    Const SESSION_KEY_USER_ID As String = "UserID"
-
-    Const ACTION_VALUE_UPDATE As String = "Update"
-    Const ACTION_VALUE_CANCEL As String = "Cancel"
+    
     Const ACTION_VALUE_SEARCH As String = "Search"
 
     Const PURPOSE_CODE_JFYI As String = "JFYI"
 
 #End Region
-
 
     ''' <summary>
     ''' このページのロードイベントです。
@@ -59,31 +55,47 @@ Partial Public Class JFYISearch
     ''' <summary>
     ''' Search ボタンのクリックイベントです。
     ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e"></param>
+    ''' <param name="sender">ASP.NETの既定値</param>
+    ''' <param name="e">ASP.NETの既定値</param>
     ''' <remarks></remarks>
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
 
         '入力値検証
-        If QuotedDateFrom.Text <> "" Then
-            Msg.Text = ""
+        If QuotedDateFrom.Text = String.Empty And QuotedDateTo.Text = String.Empty Then
+            Msg.Text = "QuotedDate" & ERR_REQUIRED_FIELD
             Return
         End If
+
+        If QuotedDateFrom.Text = String.Empty And QuotedDateTo.Text <> String.Empty Then
+            Msg.Text = "QuotedDate(from)" & ERR_REQUIRED_FIELD
+            Return
+        End If
+
 
         If ValidateDateTextBox(QuotedDateFrom, False) = False Then
-            Msg.Text = ""
+            Msg.Text = "QuotedDate(from)" & ERR_INVALID_DATE
             Return
         End If
-        If ValidateDateTextBox(QuotedDateTo, False) = False Then
-            Msg.Text = ""
+        If ValidateDateTextBox(QuotedDateTo, True) = False Then
+            Msg.Text = "QuotedDate(to)" & ERR_INVALID_DATE
             Return
         End If
 
-        SrcRFQHeader.SelectCommand = CreateSQL_For_Select_RFQHeader()
+        Dim b_useToDate As Boolean
+        If QuotedDateTo.Text.Trim = String.Empty Then
+            b_useToDate = False
+        Else
+            b_useToDate = True
+        End If
+
+        SrcRFQHeader.SelectCommand = CreateSQL_For_Select_RFQHeader(b_useToDate)
+        SrcRFQHeader.SelectParameters.Clear()
         SrcRFQHeader.SelectParameters.Add("PurposeCode", PURPOSE_CODE_JFYI)
-        'TODO 時差換算関数の実装が必要です。
-        SrcRFQHeader.SelectParameters.Add("QuotedDateFrom", QuotedDateFrom.Text)
-        SrcRFQHeader.SelectParameters.Add("QuotedDateTo", QuotedDateTo.Text)
+        Dim s_LocationCode As String = Session(SESSION_KEY_LOCATION).ToString()
+        SrcRFQHeader.SelectParameters.Add("QuotedDateFrom", GetDatabaseTime(s_LocationCode, QuotedDateFrom.Text).ToString())
+        If b_useToDate = True Then
+            SrcRFQHeader.SelectParameters.Add("QuotedDateTo", GetDatabaseTime(s_LocationCode, QuotedDateTo.Text).ToString())
+        End If
 
         RFQHeaderList.DataBind()
 
@@ -95,7 +107,7 @@ Partial Public Class JFYISearch
     ''' </summary>
     ''' <returns>生成したSQL文字列</returns>
     ''' <remarks></remarks>
-    Private Function CreateSQL_For_Select_RFQHeader() As String
+    Private Function CreateSQL_For_Select_RFQHeader(ByVal useToDate As Boolean) As String
 
         Dim sb_SQL As StringBuilder = New StringBuilder()
 
@@ -124,9 +136,16 @@ Partial Public Class JFYISearch
         sb_SQL.Append("	s_Country AS CS ON CS.CountryCode = RH.SupplierCountryCode LEFT OUTER JOIN ")
         sb_SQL.Append("	s_Country AS C ON C.CountryCode = RH.MakerCountryCode ")
         sb_SQL.Append("WHERE ")
-        sb_SQL.Append("	RH.PurposeCode = @PurposeCode AND")
-        sb_SQL.Append("	RH.QuotedDate <= @QuotedDateFrom AND ")
-        sb_SQL.Append("	RH.QuotedDate >= @QuotedDateTo ")
+        sb_SQL.Append("	RH.PurposeCode = @PurposeCode ")
+
+        If useToDate = True Then
+            sb_SQL.Append("	AND RH.QuotedDate >= @QuotedDateFrom ")
+            sb_SQL.Append("	AND RH.QuotedDate < DATEADD(d, 1, @QuotedDateTo) ")
+        Else
+            sb_SQL.Append("	AND RH.QuotedDate >= @QuotedDateFrom ")
+            sb_SQL.Append("	AND RH.QuotedDate < DATEADD(d, 1, @QuotedDateFrom) ")
+        End If
+
         sb_SQL.Append("ORDER BY ")
         sb_SQL.Append("	QuotedDate DESC, StatusChangeDate DESC, RFQNumber ASC ")
 
@@ -137,8 +156,8 @@ Partial Public Class JFYISearch
     ''' <summary>
     ''' RFQヘッダーのバインドイベントです。
     ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e"></param>
+    ''' <param name="sender">ASP.NETの既定値</param>
+    ''' <param name="e">ASP.NETの既定値</param>
     ''' <remarks>RFQラインの条件を設定しバインドします</remarks>
     Protected Sub GetRFQLine(ByVal sender As Object, ByVal e As ListViewItemEventArgs) Handles RFQHeaderList.ItemDataBound
         Dim lv As ListView = CType(e.Item.FindControl("RFQLineList"), ListView)
@@ -182,11 +201,7 @@ Partial Public Class JFYISearch
         sb_SQL.Append("WHERE ")
         sb_SQL.Append("	RL.RFQNumber = @RFQNumber ")
 
-
         Return sb_SQL.ToString()
 
     End Function
-
-
-
 End Class
