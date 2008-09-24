@@ -86,7 +86,7 @@
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             If DBReader.Read = True Then
-                Msg.Text = "同じ Product Number のデータが既に登録されています。ご確認ください。"
+                Msg.Text = "Your registering product number already exist.<br />(Please check again to avoid dupulication.)"   '"同じ Product Number のデータが既に登録されています。ご確認ください。"
                 Exit Sub
             End If
             DBReader.Close()
@@ -108,17 +108,17 @@
         If TCICommon.Func.IsProductNumber(ProductNumber.Text.ToString) = True Then NumberType = "TCI"
         If TCICommon.Func.IsNewProductNumber(ProductNumber.Text.ToString) = True Then NumberType = "NEW"
         If NumberType = "" Then
-            Msg.Text = "Product Number Typeが決定できません。"
+            Msg.Text = "Product Number" + Common.ERR_INCORRECT_FORMAT   '"Product Number Typeが決定できません。"
             Exit Sub
         End If
         If CASNumber.Text <> "" Then
             If TCICommon.Func.IsCASNumber(CASNumber.Text.ToString) = False Then
-                Msg.Text = "ERROR CAS_Number"
+                Msg.Text = "CAS Number" + Common.ERR_INCORRECT_FORMAT   '"ERROR CAS_Number"
                 Exit Sub
             Else
                 If NumberType = "CAS" Then
                     If ProductNumber.Text <> CASNumber.Text Then
-                        Msg.Text = "ProductNumberとCAS_Numberが異なります。"
+                        Msg.Text = "Please enter the CAS number in CAS section.<br />(When product number is CAS number, we need the same value in CAS section.)"   '"ProductNumberとCAS_Numberが異なります。"
                         Exit Sub
                     End If
                 End If
@@ -137,12 +137,12 @@
             DBCommand.Dispose()
             If DBReader.Read = False Then
                 DBReader.Close()
-                Msg.Text = "このデータは他のユーザーによって削除されました。"
+                Msg.Text = Common.ERR_DELETED_BY_ANOTHER_USER   '"このデータは他のユーザーによって削除されました。"
                 Exit Sub
             End If
             If Common.GetUpdateDate("Product", "ProductID", ProductID.Value) <> UpdateDate.Value Then
                 DBReader.Close()
-                Msg.Text = "データは他のユーザによって既に更新されています。ご確認ください。"
+                Msg.Text = Common.ERR_UPDATED_BY_ANOTHER_USER   '"データは他のユーザによって既に更新されています。ご確認ください。"
                 Exit Sub
             End If
             DBReader.Close()
@@ -167,7 +167,7 @@
             st_SqlStr = st_SqlStr & "WHERE ProductID = '" & ProductID.Value & "'"
             DBCommand.CommandText = st_SqlStr
             DBCommand.ExecuteNonQuery()
-            Msg.Text = "データを更新しました。"
+            Msg.Text = Common.MSG_DATA_UPDATED   '"データを更新しました。"
 
             '[引き続き更新処理ができるようにUpdateDate設定]----------------------------------
             UpdateDate.Value = Common.GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
@@ -177,7 +177,7 @@
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             If DBReader.Read = True Then
-                Msg.Text = "このデータはすでに登録済です。その内容を確認し再度処理をお願いします。"
+                Msg.Text = "Your requested product number already exist.<br />(Please check again to avoid duplication.)"   '"このデータはすでに登録済です。その内容を確認し再度処理をお願いします。"
                 Exit Sub
             End If
             DBReader.Close()
@@ -204,7 +204,7 @@
                 SupplierList.NavigateUrl = "./SupplierListByProduct.aspx?ProductID=" & ProductID.Value
             End If
             DBReader.Close()
-            Msg.Text = "データを登録しました。"
+            Msg.Text = Common.MSG_DATA_CREATED   '"データを登録しました。"
 
             '[引き続き更新処理ができるようにUpdateDate設定]---------------------------------
             UpdateDate.Value = Common.GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
