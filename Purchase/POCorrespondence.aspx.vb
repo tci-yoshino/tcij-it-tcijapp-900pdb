@@ -165,8 +165,8 @@ Partial Public Class POCorrespondence
         If Trim(CorresNote.Text) = "" Then
             Msg.Text = "Note" + Common.ERR_REQUIRED_FIELD
             Exit Sub
-        ElseIf CorresNote.Text.Length > 3000 Then
-            Msg.Text = "Noteの文字数が3000を超えています。"
+        ElseIf CorresNote.Text.Length > Common.INT_3000 Then
+            Msg.Text = "Note" + Common.ERR_OVER_3000
             Exit Sub
         End If
 
