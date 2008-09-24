@@ -123,6 +123,10 @@
                     End If
                 End If
             End If
+        Else
+            If NumberType = "CAS" Then
+                CASNumber.Text = ProductNumber.Text
+            End If
         End If
 
         '[Save処理]--------------------------------------------------------------------
