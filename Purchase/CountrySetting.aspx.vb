@@ -90,7 +90,7 @@
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             If DBReader.Read = False Then
-                Msg.Text = "CountryCodeが不正です。"
+                Msg.Text = "Country Code can not be found in R3 master table."  'CountryCodeが不正です。
                 DBReader.Close()
                 Exit Sub
             End If
@@ -105,7 +105,7 @@
             DBReader.Close()
 
             If Request.QueryString("Action") <> "Edit" Then
-                Msg.Text = "このデータはすでに登録済です。その内容を確認し再度処理をお願いします"
+                Msg.Text = "Your requested contry code already exist.<br />(Please check again to avoid duplication.)"   '"このデータはすでに登録済です。その内容を確認し再度処理をお願いします"
                 Exit Sub
             End If
 
@@ -114,7 +114,7 @@
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             If DBReader.Read = False Then
-                Msg.Text = "このデータは他のユーザーによって削除されています。"
+                Msg.Text = Common.ERR_DELETED_BY_ANOTHER_USER  '"このデータは他のユーザーによって削除されています。"
                 DBReader.Close()
                 Exit Sub
             End If
@@ -122,7 +122,7 @@
             'TODO ToStringで臨時対応
             If DBReader("UpdateDate").ToString() <> UpdateDate.Value Then
                 DBReader.Close()
-                Msg.Text = "データは他のユーザによって既に更新されています。ご確認ください。"
+                Msg.Text = Common.ERR_UPDATED_BY_ANOTHER_USER   '"データは他のユーザによって既に更新されています。ご確認ください。"
                 Exit Sub
             End If
             DBReader.Close()
