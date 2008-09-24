@@ -9,6 +9,11 @@
     End Sub
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
+        Msg.Text = String.Empty
+
+        '[Search実行可能確認]----------------------------------------------------------
+        If Action.Value <> "Search" Then Exit Sub
+
         '[入力ProductNumberの正規化]---------------------------------------------------
         ProductNumber.Text = StrConv(ProductNumber.Text, VbStrConv.Narrow)
         ProductNumber.Text = UCase(ProductNumber.Text)
@@ -16,6 +21,14 @@
         If ProductNumber.Text = "" Then
             Msg.Text = "Product Number" + Common.ERR_REQUIRED_FIELD
             Exit Sub
+        End If
+
+        '[CASNumberチェック]-----------------------------------------------------------
+        If CASNumber.Text <> "" Then
+            If TCICommon.Func.IsCASNumber(CASNumber.Text.ToString) = False Then
+                Msg.Text = "CAS Number" + Common.ERR_INCORRECT_FORMAT   '"ERROR CAS_Number"
+                Exit Sub
+            End If
         End If
 
         ProductList.Visible = True
@@ -30,7 +43,7 @@
             End If
         End If
 
-        '[検索項目すべて指定しない場合は結果無しとする]-------------------------------
+        '[検索項目すべて指定しない場合は結果無しとする]--------------------------------
         If st_SqlStr = " " Then st_SqlStr = ""
         If st_SqlStr = "" Then
             SrcProduct.SelectCommand = ""

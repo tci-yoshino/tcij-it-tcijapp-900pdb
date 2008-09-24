@@ -35,7 +35,9 @@ window.onload = function() {
                         <td><asp:TextBox ID="ProductNumber" runat="server" Width="7em" MaxLength="32"></asp:TextBox></td>
                     </tr>
                     <tr>
-                        <th>CAS Number : </th>
+                        <th>CAS Number : 
+                            <asp:HiddenField ID="Action" runat="server" Value="Search" />
+                        </th>
                         <td><asp:TextBox ID="CASNumber" runat="server" Width="7em" MaxLength="32"></asp:TextBox></td>
                     </tr>
                 </table>
@@ -80,5 +82,5 @@ window.onload = function() {
     
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
-</body>
+    </body>
 </html>
