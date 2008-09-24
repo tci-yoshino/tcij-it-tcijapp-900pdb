@@ -119,8 +119,8 @@
         End If
 
         '[Noteの文字数Check]-----------------------------------------------------------
-        If Note.Text.Length > 3000 Then
-            Msg.Text = "Noteの文字数が3000を超えています。"
+        If Note.Text.Length > Common.INT_3000 Then
+            Msg.Text = "Note" + Common.ERR_OVER_3000
             Exit Sub
         End If
 
