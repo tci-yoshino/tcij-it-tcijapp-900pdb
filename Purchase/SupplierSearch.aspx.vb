@@ -9,6 +9,9 @@
     End Sub
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
+        '[Search実行可能確認]-------------------------------------------------------------
+        If Action.Value <> "Search" Then Exit Sub
+
         '[Code,R3Codeを1Byte形式に変換する]-----------------------------------------------
         Code.Text = StrConv(Code.Text.ToString, VbStrConv.Narrow)
         R3Code.Text = StrConv(R3Code.Text.ToString, VbStrConv.Narrow)
@@ -39,7 +42,7 @@
             If SQLStr = "" Then SQLStr = "WHERE "
             SQLStr = SQLStr + "(SupplierCode = '" + Common.SafeSqlLiteral(Code.Text) + "')"
         End If
-        '[R3Codeが数字の場合と文字の場合とでは検索が異なる]---------------------------
+        '[R3Codeが数字の場合と文字の場合とでは検索が異なる]-------------------------------
         If R3Code.Text.ToString <> "" Then
             If SQLStr = "" Then SQLStr = "WHERE " Else SQLStr = SQLStr + " AND "
             If IsNumeric(R3Code.Text.ToString) And R3Code.Text Like "*.*" = False Then
@@ -53,7 +56,7 @@
             SQLStr = SQLStr + "ISNULL(Name3,'') + N' ' + ISNULL(Name4,'') LIKE '%" + Common.SafeSqlLikeClauseLiteral(Name.Text) + "%'"
         End If
 
-        '[検索項目すべて指定しない場合は結果無しとする]-------------------------------
+        '[検索項目すべて指定しない場合は結果無しとする]-----------------------------------
         If SQLStr = "" Then
             SrcSupplier.SelectCommand = ""
         Else

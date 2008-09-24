@@ -33,7 +33,9 @@ window.onload = function() {
 						<td><asp:TextBox ID="Code" runat="server" Width="7em" MaxLength="5"></asp:TextBox></td>
 					</tr>
 					<tr>
-						<th>TCI-J Supplier Code : </th>
+						<th>TCI-J Supplier Code : 
+                            <asp:HiddenField ID="Action" runat="server" Value="Search" />
+                        </th>
 						<td><asp:TextBox ID="R3Code" runat="server" Width="7em" MaxLength="10"></asp:TextBox></td>
 					</tr>
 					<tr>

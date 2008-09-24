@@ -43,6 +43,15 @@ Partial Public Class SupplierSearch
     Protected WithEvents Code As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
+    '''Action コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''R3Code コントロール。
     '''</summary>
     '''<remarks>
