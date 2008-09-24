@@ -93,12 +93,12 @@
         End If
 
         '[入力項目のLengthCheck]-------------------------------------------------------
-        If Reference.Text.Length > 3000 Then
-            Msg.Text = "Referenceの文字数が3000を超えています。"
+        If Reference.Text.Length > Common.INT_3000 Then
+            Msg.Text = "Reference" + Common.ERR_OVER_3000
             Exit Sub
         End If
-        If Comment.Text.Length > 3000 Then
-            Msg.Text = "Commentの文字数が3000を超えています。"
+        If Comment.Text.Length > Common.INT_3000 Then
+            Msg.Text = "Comment" + Common.ERR_OVER_3000
             Exit Sub
         End If
 
