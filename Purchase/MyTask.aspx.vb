@@ -134,6 +134,7 @@
             & "    ON RH.RFQNumber = RR.RFQNumber AND @UserID = RR.RcptUserID " _
             & "WHERE " _
             & "  QuoUserID = @UserID " _
+            & "  AND EnqUserID != @UserID " _
             & "  AND StatusCode NOT IN ('Q','C') " _
             & "  OR  (StatusCode IN ('Q','C') AND RR.RFQHistoryNumber IS NOT NULL) " _
             & "ORDER BY " _
@@ -229,5 +230,10 @@
         Next
 
     End Sub
+
+    Private Sub test(ByVal sender As Object, ByVal e As SqlDataSourceSelectingEventArgs) Handles SrcRFQ.Selecting
+        e.Command.CommandTimeout = 120
+    End Sub
+
 
 End Class
