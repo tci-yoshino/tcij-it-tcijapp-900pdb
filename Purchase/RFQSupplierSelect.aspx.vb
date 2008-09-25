@@ -69,30 +69,18 @@
 
         ' GET 且つ QueryString("Code") が送信されている場合は検索処理を実行
         If (Request.RequestType = "GET") And (Not String.IsNullOrEmpty(Request.QueryString("Code"))) Then
-            Dim dataSet As DataSet = New DataSet("Supplier")
-            GetSupplierData(dataSet)
-            SupplierList.DataSource = dataSet.Tables("SupplierList")
+            GetSupplierData()
         End If
-        SupplierList.DataBind()
 
     End Sub
 
     ' Search ボタンクリック処理
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
-        Dim dataSet As DataSet = New DataSet("Supplier")
-        GetSupplierData(dataSet)
-        SupplierList.DataSource = dataSet.Tables("SupplierList")
-        SupplierList.DataBind()
+        GetSupplierData()
     End Sub
 
     ' 仕入先リスト取得関数
-    ' Public 変数の st_Code と st_Name を元に Supplier テーブルからデータを取得する。
-    ' 
-    '
-    ' [パラメータ]
-    ' ByRef dataSet: 取得したデータをセットする DataSet オブジェクト。
-    '                SupplierList というデータテーブルが追加される。
-    Private Sub GetSupplierData(ByRef ds As DataSet)
+    Private Sub GetSupplierData()
 
         ' パラメータチェック
         If Not String.IsNullOrEmpty(st_Code) Then
@@ -103,81 +91,54 @@
             End If
         End If
 
+        SrcSupplier.SelectParameters.Clear()
+        SrcSupplier.SelectParameters.Add("Code", Common.SafeSqlLiteral(st_Code))
+        SrcSupplier.SelectParameters.Add("Name", Common.SafeSqlLikeClauseLiteral(st_Name))
+        SrcSupplier.SelectParameters.Add("Location", Common.SafeSqlLiteral(st_Location))
+        SrcSupplier.SelectCommand = CreateSql_SelectSupplier()
+
+    End Sub
+
+
+    Private Function CreateSql_SelectSupplier() As String
+        Dim sb_Sql As StringBuilder = New StringBuilder
+
         ' Where 句の生成
         Dim st_where As String = String.Empty
         If Not String.IsNullOrEmpty(st_Code) Then
-            st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
-            st_where = st_where & " Supplier.SupplierCode = @Code "
+            st_where = st_where & " AND S.SupplierCode = @Code "
         End If
         If Not String.IsNullOrEmpty(st_Name) Then
-            st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
-            st_where = st_where & " ISNULL(Supplier.Name3,'') + ' ' + ISNULL(Supplier.Name4,'') LIKE N'%' + @Name + '%' "
+            st_where = st_where & " AND ISNULL(S.Name3,'') + ' ' + ISNULL(S.Name4,'') LIKE N'%' + @Name + '%' "
         End If
 
         ' Where 句が生成できなかった場合は検索処理を行わずに処理を終了する
         If String.IsNullOrEmpty(st_where) Then
             SupplierList.DataBind()
-            Exit Sub
+            Return ""
         End If
 
-        ' 仕入先リスト取得
-        ' [備考]
-        ' LEFT OUTER JOIN で連結した際、IrregularRFQLocation.QuoLocationCode の値が
-        ' レコードが存在していて NULL なのか、存在していなくて NULL なのかの判断ができないため、
-        ' IrregularRFQLocation.SupplierCode を取得し、この値が NULL の場合はレコードが取得「できなかった」と判断する。
-        Dim st_query As String = _
-               "SELECT " _
-            & "  Supplier.SupplierCode, Supplier.R3SupplierCode, Supplier.CountryCode, " _
-            & "  LTRIM(RTRIM(ISNULL(Supplier.Name3, '') + ' ' + ISNULL(Supplier.Name4, ''))) AS Name, " _
-            & "  IrregularRFQLocation.SupplierCode AS IrregularSupplierCode, " _
-            & "  PurchasingCountry.DefaultQuoLocationCode, " _
-            & "  IrregularRFQLocation.QuoLocationCode AS IrregularQuoLocationCode, " _
-            & "  s_Country.[Name] AS CountryName " _
-            & "FROM " _
-            & "  Supplier " _
-            & "    INNER JOIN s_Country " _
-            & "      ON Supplier.CountryCode = s_Country.CountryCode " _
-            & "    INNER JOIN PurchasingCountry " _
-            & "      ON Supplier.CountryCode = PurchasingCountry.CountryCode " _
-            & "    LEFT OUTER JOIN IrregularRFQLocation " _
-            & "      ON Supplier.SupplierCode = IrregularRFQLocation.SupplierCode " _
-            & "         AND IrregularRFQLocation.EnqLocationCode = @Location " _
-            & "WHERE " & st_where _
-            & "ORDER BY " _
-            & "  Supplier.SupplierCode, Supplier.Name3"
+        sb_Sql.Append("SELECT ")
+        sb_Sql.Append("  S.SupplierCode, ")
+        sb_Sql.Append("  S.R3SupplierCode, ")
+        sb_Sql.Append("  S.CountryCode, ")
+        sb_Sql.Append("  LTRIM(RTRIM(ISNULL(S.Name3, '') + ' ' + ISNULL(S.Name4, ''))) AS [Name], ")
+        sb_Sql.Append("  C.CountryName AS CountryName, ")
+        sb_Sql.Append("  ISNULL(ISNULL(L.LocationCode, C.DefaultQuoLocationCode),'" & st_Location & "') AS QuoLocationCode, ")
+        sb_Sql.Append("  ISNULL(L.[Name], C.DefaultQuoLocationName) AS QuoLocationName ")
+        sb_Sql.Append("FROM ")
+        sb_Sql.Append("  Supplier AS S ")
+        sb_Sql.Append("  LEFT OUTER JOIN IrregularRFQLocation AS IR ")
+        sb_Sql.Append("    ON S.SupplierCode = IR.SupplierCode AND IR.EnqLocationCode = @Location ")
+        sb_Sql.Append("  LEFT OUTER JOIN s_Location AS L ")
+        sb_Sql.Append("    ON IR.QuoLocationCode = L.LocationCode, ")
+        sb_Sql.Append("  v_Country AS C ")
+        sb_Sql.Append("WHERE ")
+        sb_Sql.Append("  S.CountryCode = C.CountryCode ")
+        sb_Sql.Append(st_where)
 
-        Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
 
-            ' 接続情報、アダプタ、SQLコマンド オブジェクトの生成
-            Dim adapter As New SqlClient.SqlDataAdapter()
-            Dim command As New SqlClient.SqlCommand(st_query, connection)
-
-            ' DataSet にテーブルとカラムを追加
-            ds.Tables.Add("SupplierList")
-            ds.Tables("SupplierList").Columns.Add("QuoLocationCode", Type.GetType("System.String"))
-
-            ' SQL SELECT パラメータの追加
-            command.Parameters.AddWithValue("Code", Common.SafeSqlLiteral(st_Code))
-            command.Parameters.AddWithValue("Name", Common.SafeSqlLikeClauseLiteral(st_Name))
-            command.Parameters.AddWithValue("Location", Common.SafeSqlLiteral(st_Location))
-
-            ' データベースからデータを取得
-            adapter.SelectCommand = command
-            adapter.Fill(ds.Tables("SupplierList"))
-        End Using
-
-        ' 見積回答拠点コード取得
-        For i As Integer = 0 To ds.Tables("SupplierList").Rows.Count - 1
-            If IsDBNull(ds.Tables("SupplierList").Rows(i).Item("IrregularSupplierCode")) Then
-                ds.Tables("SupplierList").Rows(i).Item("QuoLocationCode") = ds.Tables("SupplierList").Rows(i).Item("DefaultQuoLocationCode")
-            Else
-                ds.Tables("SupplierList").Rows(i).Item("QuoLocationCode") = ds.Tables("SupplierList").Rows(i).Item("IrregularQuoLocationCode")
-            End If
-
-            If IsDBNull(ds.Tables("SupplierList").Rows(i).Item("QuoLocationCode")) Then
-                ds.Tables("SupplierList").Rows(i).Item("QuoLocationCode") = Common.DIRECT
-            End If
-        Next i
-    End Sub
+        Return sb_Sql.ToString
+    End Function
 
 End Class
