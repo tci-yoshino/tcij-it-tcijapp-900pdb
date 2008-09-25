@@ -12,7 +12,10 @@
         Msg.Text = String.Empty
 
         '[Search実行可能確認]----------------------------------------------------------
-        If Action.Value <> "Search" Then Exit Sub
+        If Action.Value <> "Search" Then
+            Msg.Text = Common.ERR_INVALID_PARAMETER
+            Exit Sub
+        End If
 
         '[入力ProductNumberの正規化]---------------------------------------------------
         ProductNumber.Text = StrConv(ProductNumber.Text, VbStrConv.Narrow)
