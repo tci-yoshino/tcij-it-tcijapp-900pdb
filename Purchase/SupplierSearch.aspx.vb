@@ -9,8 +9,13 @@
     End Sub
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
+        Msg.Text = String.Empty
+
         '[Search実行可能確認]-------------------------------------------------------------
-        If Action.Value <> "Search" Then Exit Sub
+        If Action.Value <> "Search" Then
+            Msg.Text = Common.ERR_INVALID_PARAMETER
+            Exit Sub
+        End If
 
         '[Code,R3Codeを1Byte形式に変換する]-----------------------------------------------
         Code.Text = StrConv(Code.Text.ToString, VbStrConv.Narrow)
@@ -27,7 +32,7 @@
 
         '[Supplier検索]-------------------------------------------------------------------
         If Code.Text.ToString <> "" And Not IsNumeric(Code.Text.ToString) Then
-            Msg.Text = "SupplierCodeには数字を入力して下さい"
+            'Msg.Text = "SupplierCodeには数字を入力して下さい"
             Exit Sub
         ElseIf Code.Text Like "*.*" = True Then
             Msg.Text = "SupplierCodeには整数を入力して下さい"
