@@ -29,16 +29,13 @@ window.onload = function() {
             <p class="attention"><asp:Label ID="Msg" runat="server"></asp:Label></p>
             
             <form id="SearchForm" runat="server">
+            <input id="Dummy" type="text" style = "display:none"/>
                 <table>
                     <tr>
-                        <th>Product Number <span class="required">*</span> : </th>
-                        <td><asp:TextBox ID="ProductNumber" runat="server" Width="7em" MaxLength="32"></asp:TextBox></td>
-                    </tr>
-                    <tr>
-                        <th>CAS Number : 
+                        <th>Product Number <span class="required">*</span> : 
                             <asp:HiddenField ID="Action" runat="server" Value="Search" />
                         </th>
-                        <td><asp:TextBox ID="CASNumber" runat="server" Width="7em" MaxLength="32"></asp:TextBox></td>
+                        <td><asp:TextBox ID="ProductNumber" runat="server" Width="7em" MaxLength="32"></asp:TextBox></td>
                     </tr>
                 </table>
                 <asp:Button ID="Search" runat="server" Text="Search" />
@@ -62,7 +59,7 @@ window.onload = function() {
                     </table>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
-                    <h3 style="font-style:italic">No match found.</h3>
+                    <h3 style="font-style:italic"><% =Purchase.Common.ERR_NO_MATCH_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr>
