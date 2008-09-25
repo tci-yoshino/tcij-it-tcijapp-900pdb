@@ -39,11 +39,11 @@
                             <asp:TextBox ID="R3POLineNumber" runat="server" Width="5em" MaxLength="5"></asp:TextBox></td>
                         </tr>
                         <tr>
-                            <th>PO Date <span class="required">*</span> : </th>
+                            <th>PO Date  : </th>
                             <td><asp:Label ID="PODate" runat="server" Text=""></asp:Label></td>
                         </tr>
                         <tr>
-                            <th>PO-User <span class="required">*</span> : </th>
+                            <th>PO-User  : </th>
                             <td><asp:Label ID="POUser" runat="server" Text=""></asp:Label>
                                 <span class="indent">(<asp:Label ID="POLocation" runat="server" Text=""></asp:Label>)</span>
                             </td>
@@ -54,7 +54,7 @@
                             <span class="indent"><asp:Label ID="ProductName" runat="server" Text=""></asp:Label></span></td>
                         </tr>
                         <tr>
-                            <th>Order Quantity <span class="required">*</span> : </th>
+                            <th>Order Quantity  : </th>
                             <td><asp:Label ID="OrderQuantity" runat="server" Text=""></asp:Label> <asp:Label ID="OrderUnit" runat="server" Text=""></asp:Label> </td>
                         </tr>
                         <tr>
