@@ -48,7 +48,7 @@ Partial Public Class RFQSearchByProduct
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
 
         Msg.Text = String.Empty
-        b_ProductListView_Flg = False
+        ProductList.Visible = False
 
         '必須入力項目のチェック
         If Code.Text.Trim = String.Empty Then
@@ -56,8 +56,8 @@ Partial Public Class RFQSearchByProduct
             Exit Sub
         End If
 
-        'フラグの有効化
-        b_ProductListView_Flg = True
+        '必須入力が有効な時のリスト可視化
+        ProductList.Visible = True
 
         '検索の実行
         SearchRFQ(Code.Text.Trim)
