@@ -17,7 +17,7 @@
 <%  If st_ProductID <> "" And Purchase.Common.IsInteger(st_ProductID) = True Then%>
     <%=""%>
     <%If i_DataNum = 0 Then%>
-        <h3 style="font-style:italic"><% =Purchase.Common.ERR_NO_MATCH_FOUND%></h3>
+        <h3 style="font-style:italic"><% =Purchase.Common.MSG_NO_DATA_FOUND%></h3>
     <%Else%>
         <div class="tabs">
             <a href="./RFQIssue.aspx?ProductID=<%=st_ProductID %>">RFQ Issue</a>            
@@ -45,7 +45,7 @@
                     </div>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
-                    <h3 style="font-style:italic"><% =Purchase.Common.ERR_NO_MATCH_FOUND%></h3>
+                    <h3 style="font-style:italic"><% =Purchase.Common.MSG_NO_DATA_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <table>
