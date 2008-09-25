@@ -1,7 +1,9 @@
-﻿Public Partial Class ProductSetting
+﻿Imports Purchase.Common
+
+Partial Public Class ProductSetting
     Inherits CommonPage
 
-    Dim DBConn As New System.Data.SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
+    Dim DBConn As New System.Data.SqlClient.SqlConnection(DB_CONNECT_STRING)
     Dim DBCommand As System.Data.SqlClient.SqlCommand
     Dim DBReader As System.Data.SqlClient.SqlDataReader
     Public url As String = ""
@@ -38,7 +40,7 @@
                     If Not TypeOf DBReader("ProcumentDept") Is DBNull Then ProcumentDept.Text = DBReader("ProcumentDept")
                     If Not TypeOf DBReader("PD") Is DBNull Then PD.Text = DBReader("PD")
                     DBReader.Close()
-                    UpdateDate.Value = Common.GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
+                    UpdateDate.Value = GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
                 Else
                     UpdateDate.Value = ""
                 End If
@@ -66,23 +68,23 @@
 
         '[Actionチェック]--------------------------------------------------------------
         If Action.Value <> "Save" Then
-            Msg.Text = Common.ERR_INVALID_PARAMETER
+            Msg.Text = ERR_INVALID_PARAMETER
             Exit Sub
         End If
 
         '[必須項目入力チェック]--------------------------------------------------------
         If ProductNumber.Text = "" Then
-            Msg.Text = "Product Number" + Common.ERR_REQUIRED_FIELD
+            Msg.Text = "Product Number" + ERR_REQUIRED_FIELD
             Exit Sub
         End If
         If ProductName.Text = "" Then
-            Msg.Text = "Product Name" + Common.ERR_REQUIRED_FIELD
+            Msg.Text = "Product Name" + ERR_REQUIRED_FIELD
             Exit Sub
         End If
 
         '[ProductNumber重複チェック]---------------------------------------------------
         If Mode.Value = "Edit" Then
-            DBCommand.CommandText = "SELECT ProductNumber FROM Product WHERE ProductNumber = '" & Common.SafeSqlLiteral(ProductNumber.Text) & "' AND ProductID<>" & ProductID.Value
+            DBCommand.CommandText = "SELECT ProductNumber FROM Product WHERE ProductNumber = '" & SafeSqlLiteral(ProductNumber.Text) & "' AND ProductID<>" & ProductID.Value
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             If DBReader.Read = True Then
@@ -93,12 +95,16 @@
         End If
 
         '[入力項目のLengthCheck]-------------------------------------------------------
-        If Reference.Text.Length > Common.INT_3000 Then
-            Msg.Text = "Reference" + Common.ERR_OVER_3000
+        If GetByteCount_SJIS(MolecularFormula.Text) > 128 Then
+            Msg.Text = "MolecularFormulaが長すぎます。"
             Exit Sub
         End If
-        If Comment.Text.Length > Common.INT_3000 Then
-            Msg.Text = "Comment" + Common.ERR_OVER_3000
+        If Reference.Text.Length > INT_3000 Then
+            Msg.Text = "Reference" + ERR_OVER_3000
+            Exit Sub
+        End If
+        If Comment.Text.Length > INT_3000 Then
+            Msg.Text = "Comment" + ERR_OVER_3000
             Exit Sub
         End If
 
@@ -108,12 +114,12 @@
         If TCICommon.Func.IsProductNumber(ProductNumber.Text.ToString) = True Then NumberType = "TCI"
         If TCICommon.Func.IsNewProductNumber(ProductNumber.Text.ToString) = True Then NumberType = "NEW"
         If NumberType = "" Then
-            Msg.Text = "Product Number" + Common.ERR_INCORRECT_FORMAT   '"Product Number Typeが決定できません。"
+            Msg.Text = "Product Number" + ERR_INCORRECT_FORMAT   '"Product Number Typeが決定できません。"
             Exit Sub
         End If
         If CASNumber.Text <> "" Then
             If TCICommon.Func.IsCASNumber(CASNumber.Text.ToString) = False Then
-                Msg.Text = "CAS Number" + Common.ERR_INCORRECT_FORMAT   '"ERROR CAS_Number"
+                Msg.Text = "CAS Number" + ERR_INCORRECT_FORMAT   '"ERROR CAS_Number"
                 Exit Sub
             Else
                 If NumberType = "CAS" Then
@@ -137,43 +143,43 @@
             DBCommand.Dispose()
             If DBReader.Read = False Then
                 DBReader.Close()
-                Msg.Text = Common.ERR_DELETED_BY_ANOTHER_USER   '"このデータは他のユーザーによって削除されました。"
+                Msg.Text = ERR_DELETED_BY_ANOTHER_USER   '"このデータは他のユーザーによって削除されました。"
                 Exit Sub
             End If
-            If Common.GetUpdateDate("Product", "ProductID", ProductID.Value) <> UpdateDate.Value Then
+            If GetUpdateDate("Product", "ProductID", ProductID.Value) <> UpdateDate.Value Then
                 DBReader.Close()
-                Msg.Text = Common.ERR_UPDATED_BY_ANOTHER_USER   '"データは他のユーザによって既に更新されています。ご確認ください。"
+                Msg.Text = ERR_UPDATED_BY_ANOTHER_USER   '"データは他のユーザによって既に更新されています。ご確認ください。"
                 Exit Sub
             End If
             DBReader.Close()
 
             '[Product更新処理]---------------------------------------------------------------
             st_SqlStr = "UPDATE dbo.Product SET ProductNumber="
-            If ProductNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & Common.SafeSqlLiteral(ProductNumber.Text) & "',"
+            If ProductNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & SafeSqlLiteral(ProductNumber.Text) & "',"
             st_SqlStr = st_SqlStr + "NumberType='" + NumberType + "',"
             st_SqlStr = st_SqlStr & "Name="
-            If ProductName.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & Common.SafeSqlLiteral(ProductName.Text) & "',"
+            If ProductName.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & SafeSqlLiteral(ProductName.Text) & "',"
             st_SqlStr = st_SqlStr & "QuoName="
-            If QuoName.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & Common.SafeSqlLiteral(QuoName.Text) & "',"
+            If QuoName.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & SafeSqlLiteral(QuoName.Text) & "',"
             st_SqlStr = st_SqlStr & "CASNumber="
-            If CASNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & Common.SafeSqlLiteral(CASNumber.Text) & "',"
+            If CASNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & SafeSqlLiteral(CASNumber.Text) & "',"
             st_SqlStr = st_SqlStr & "MolecularFormula="
-            If MolecularFormula.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & Common.SafeSqlLiteral(MolecularFormula.Text) & "',"
+            If MolecularFormula.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & SafeSqlLiteral(MolecularFormula.Text) & "',"
             st_SqlStr = st_SqlStr & "Reference="
-            If Reference.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & Common.SafeSqlLiteral(Reference.Text) & "',"
+            If Reference.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & SafeSqlLiteral(Reference.Text) & "',"
             st_SqlStr = st_SqlStr & "Comment="
-            If Comment.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & Common.SafeSqlLiteral(Comment.Text) & "',"
+            If Comment.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & SafeSqlLiteral(Comment.Text) & "',"
             st_SqlStr = st_SqlStr & "UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "' "
             st_SqlStr = st_SqlStr & "WHERE ProductID = '" & ProductID.Value & "'"
             DBCommand.CommandText = st_SqlStr
             DBCommand.ExecuteNonQuery()
-            Msg.Text = Common.MSG_DATA_UPDATED   '"データを更新しました。"
+            Msg.Text = MSG_DATA_UPDATED   '"データを更新しました。"
 
             '[引き続き更新処理ができるようにUpdateDate設定]----------------------------------
-            UpdateDate.Value = Common.GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
+            UpdateDate.Value = GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
         Else
             '[Productの存在チェック]-----------------------------------------------------------
-            DBCommand.CommandText = "SELECT ProductID FROM dbo.Product WHERE ProductNumber = '" & Common.SafeSqlLiteral(ProductNumber.Text) & "'"
+            DBCommand.CommandText = "SELECT ProductID FROM dbo.Product WHERE ProductNumber = '" & SafeSqlLiteral(ProductNumber.Text) & "'"
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             If DBReader.Read = True Then
@@ -184,16 +190,16 @@
 
             '[Product登録処理]-----------------------------------------------------------------------
             st_SqlStr = "INSERT INTO Product (ProductNumber,NumberType,Name,QuoName,JapaneseName,ChineseName,CASNumber,MolecularFormula,Status,ProposalDept,ProcumentDept,PD,Reference,Comment,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ("
-            If ProductNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + Common.SafeSqlLiteral(ProductNumber.Text) + "',"
+            If ProductNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + SafeSqlLiteral(ProductNumber.Text) + "',"
             st_SqlStr = st_SqlStr + "'" + NumberType + "',"
-            If ProductName.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + Common.SafeSqlLiteral(ProductName.Text) + "',"
-            If QuoName.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + Common.SafeSqlLiteral(QuoName.Text) + "',"
+            If ProductName.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + SafeSqlLiteral(ProductName.Text) + "',"
+            If QuoName.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + SafeSqlLiteral(QuoName.Text) + "',"
             st_SqlStr = st_SqlStr + "null,null,"
-            If CASNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + Common.SafeSqlLiteral(CASNumber.Text) + "',"
-            If MolecularFormula.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + Common.SafeSqlLiteral(MolecularFormula.Text) + "',"
+            If CASNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + SafeSqlLiteral(CASNumber.Text) + "',"
+            If MolecularFormula.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + SafeSqlLiteral(MolecularFormula.Text) + "',"
             st_SqlStr = st_SqlStr + "null,null,null,null,"
-            If Reference.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + Common.SafeSqlLiteral(Reference.Text) + "',"
-            If Comment.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + Common.SafeSqlLiteral(Comment.Text) + "',"
+            If Reference.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + SafeSqlLiteral(Reference.Text) + "',"
+            If Comment.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + SafeSqlLiteral(Comment.Text) + "',"
             st_SqlStr = st_SqlStr + Session("UserID") + ",'" + Now() + "'," + Session("UserID") + ",'" + Now() + "'); "
             st_SqlStr = st_SqlStr & "SELECT ProductID FROM Product WHERE ProductID = SCOPE_IDENTITY()"  '←[新規登録されたProductIDの取得の為]
             DBCommand.CommandText = st_SqlStr
@@ -204,10 +210,10 @@
                 SupplierList.NavigateUrl = "./SupplierListByProduct.aspx?ProductID=" & ProductID.Value
             End If
             DBReader.Close()
-            Msg.Text = Common.MSG_DATA_CREATED   '"データを登録しました。"
+            Msg.Text = MSG_DATA_CREATED   '"データを登録しました。"
 
             '[引き続き更新処理ができるようにUpdateDate設定]---------------------------------
-            UpdateDate.Value = Common.GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
+            UpdateDate.Value = GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
             Mode.Value = "Edit"
             SupplierList.Visible = True
         End If
