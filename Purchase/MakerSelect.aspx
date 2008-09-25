@@ -69,7 +69,7 @@ window.onload = function() {
                     </table>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
-                    <h3 style="font-style:italic"><%=Purchase.Common.MSG_NO_DATA_FOUND%></h3>
+                    <h3 style="font-style:italic"><%=Purchase.Common.ERR_NO_MATCH_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr onclick="returnValues('<%#Eval("SupplierCode")%>','<%# Replace(Eval("Name").ToString(), "'", "\'")%>','<%#Eval("CountryName") %>');">
