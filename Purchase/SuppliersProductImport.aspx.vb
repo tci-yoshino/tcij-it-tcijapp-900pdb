@@ -24,12 +24,6 @@ Partial Public Class SuppliersProductImport
     ''' エラー表示メッセージ定数です。
     ''' </summary>
     ''' <remarks></remarks>
-    Const MSG_CANT_PREVIEW_ENV As String = "Previewできる環境でありません"
-    Const MSG_CANT_IMPORT_ENV As String = "Importできる環境でありません"
-    Const MSG_NOT_EXCEL_FILE As String = "読込みファイルはEXCELでありません"
-    Const MSG_NOT_FILE_SET As String = "読込みファイルが設定されていません"
-    Const MSG_NO_SUPPLIER_CODE As String = "SupplierCodeが設定されていません"
-    Const MSG_ERR_CAS_NUMBER As String = "ERROR CAS_Number"
     Const MSG_NOT_TEMP_DIR = "サーバに作業ディレクトリがありません"
 
     ''' <summary>
@@ -86,7 +80,7 @@ Partial Public Class SuppliersProductImport
                 SupplierCode.Text = st_SupplierCode
                 SupplierName.Text = GetSupplierNameBySupplierCode(st_SupplierCode)
             Else
-                Msg.Text = MSG_NO_SUPPLIER_CODE
+                Msg.Text = ERR_INVALID_PARAMETER
                 File.Visible = False
                 Preview.Visible = False
             End If
@@ -111,13 +105,13 @@ Partial Public Class SuppliersProductImport
 
         'Actionパラメータの確認
         If Request.Form("Action") <> "Preview" Then
-            Msg.Text = MSG_CANT_PREVIEW_ENV
+            Msg.Text = ERR_INVALID_PARAMETER
             Exit Sub
         End If
 
         'ファイルのサーバ存在確認
         If IO.Path.GetFileName(File.PostedFile.FileName) = String.Empty Then
-            Msg.Text = MSG_NOT_FILE_SET
+            Msg.Text = "Please define the filename."
             Exit Sub
         End If
 
@@ -125,7 +119,7 @@ Partial Public Class SuppliersProductImport
 
         'ファイルタイプの確認(MIME)
         If pf_UploadFile.ContentType <> "application/vnd.ms-excel" Then
-            Msg.Text = MSG_NOT_EXCEL_FILE
+            Msg.Text = "Please define the MS Excel."
             Exit Sub
         End If
 
@@ -153,7 +147,7 @@ Partial Public Class SuppliersProductImport
             ReCheck.Visible = True
             Import.Visible = True
             If SetCASErrorColorToSupplierProductList() > 0 Then
-                Msg.Text = MSG_ERR_CAS_NUMBER
+                Msg.Text = "CAS Number" + ERR_INCORRECT_FORMAT
                 Exit Sub
             End If
         End If
@@ -392,8 +386,8 @@ Partial Public Class SuppliersProductImport
             End If
 
             st_Note = tbExcel.Rows(j).Item("Note").ToString()
-            If st_Note.Length > 3000 Then
-                Msg.Text = "Noteの文字数がオーバー"
+            If st_Note.Length > INT_3000 Then
+                Msg.Text = "Note" + ERR_OVER_3000
                 Return Nothing
             End If
         Next j
@@ -502,7 +496,7 @@ Partial Public Class SuppliersProductImport
     Protected Sub Import_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Import.Click
 
         If Request.Form("Action") <> "Import" Then
-            Msg.Text = MSG_CANT_IMPORT_ENV
+            Msg.Text = ERR_INVALID_PARAMETER
             Exit Sub
         End If
 
@@ -888,8 +882,9 @@ Partial Public Class SuppliersProductImport
     End Function
 
     Protected Sub ReCheck_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ReCheck.Click
+        Msg.Text = String.Empty
         If SetCASErrorColorToSupplierProductList() > 0 Then
-            Msg.Text = MSG_ERR_CAS_NUMBER
+            Msg.Text = "CAS Number" + ERR_INCORRECT_FORMAT
             Exit Sub
         End If
     End Sub
