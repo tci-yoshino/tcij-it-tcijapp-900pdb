@@ -50,6 +50,9 @@ Partial Public Class RFQSearchByProduct
         Msg.Text = String.Empty
         ProductList.Visible = False
 
+        Code.Text = StrConv(Code.Text, VbStrConv.Narrow)
+        Code.Text = UCase(Code.Text)
+
         '必須入力項目のチェック
         If Code.Text.Trim = String.Empty Then
             Msg.Text = MSG_REQUIED_PRODUCT_NUMBER
