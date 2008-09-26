@@ -28,7 +28,11 @@ Partial Public Class SupplierSearch
         If Trim(Code.Text).Length = 0 Then Code.Text = ""
         If Trim(R3Code.Text).Length = 0 Then R3Code.Text = ""
         If Trim(Name.Text).Length = 0 Then Name.Text = ""
-        If Code.Text.Length + R3Code.Text.Length + Name.Text.Length = 0 Then Exit Sub
+        If Code.Text.Length + R3Code.Text.Length + Name.Text.Length = 0 Then
+            UnDsp_SrcSupplier()
+            Exit Sub
+        End If
+
 
         '[検索項目が入力された場合]-------------------------------------------------------
         Dim SQLStr As String = ""
@@ -36,8 +40,7 @@ Partial Public Class SupplierSearch
         If Code.Text.ToString <> "" Then
             SQLStr = SQLStr + "WHERE (SupplierCode = " + SafeSqlLiteral(Code.Text) + ")"
             If Not IsNumeric(SafeSqlLiteral(Code.Text)) Then
-                SrcSupplier.SelectCommand = ""
-                SupplierList.Visible = True
+                UnDsp_SrcSupplier()
                 Exit Sub
             End If
         End If
@@ -61,4 +64,8 @@ Partial Public Class SupplierSearch
         SupplierList.Visible = True
     End Sub
 
+    Public Sub UnDsp_SrcSupplier()
+        SrcSupplier.SelectCommand = ""
+        SupplierList.Visible = True
+    End Sub
 End Class
