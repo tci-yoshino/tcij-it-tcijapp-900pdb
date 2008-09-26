@@ -78,7 +78,7 @@ function outCell(){
     var td = this.getElementsByTagName('TD')
     var classname;
     for (var no = 0; no < td.length; no++) {
-        classname = td[no].className.replace(" over", "");
+        classname = td[no].className.replace('over', '');
         td[no].className = classname;
   }
 }
