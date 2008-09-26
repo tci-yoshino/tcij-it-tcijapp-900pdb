@@ -72,13 +72,13 @@ Partial Public Class SuppliersProductImport
     ''' <param name="e">ASP.NETの規定値</param>
     ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-
         If IsPostBack = False Then
             If Request.QueryString("Supplier") <> "" Then
                 Dim st_SupplierCode = Request.QueryString("Supplier").ToString()
 
                 SupplierCode.Text = st_SupplierCode
                 SupplierName.Text = GetSupplierNameBySupplierCode(st_SupplierCode)
+
             Else
                 Msg.Text = ERR_INVALID_PARAMETER
                 File.Visible = False
@@ -87,6 +87,9 @@ Partial Public Class SuppliersProductImport
             ReCheck.Visible = False
             Import.Visible = False
         End If
+        Preview.PostBackUrl = "SuppliersProductImport.aspx?Action=Preview&Supplier=" & SupplierCode.Text
+        ReCheck.PostBackUrl = "SuppliersProductImport.aspx?Action=ReCheck&Supplier=" & SupplierCode.Text
+        Import.PostBackUrl = "SuppliersProductImport.aspx?Action=Import&Supplier=" & SupplierCode.Text
     End Sub
 
     ''' <summary>
@@ -104,7 +107,7 @@ Partial Public Class SuppliersProductImport
         SupplierProductList.DataBind()
 
         'Actionパラメータの確認
-        If Request.Form("Action") <> "Preview" Then
+        If Request.QueryString("Action") <> "Preview" Then
             Msg.Text = ERR_INVALID_PARAMETER
             Exit Sub
         End If
@@ -495,7 +498,7 @@ Partial Public Class SuppliersProductImport
     ''' <remarks></remarks>
     Protected Sub Import_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Import.Click
 
-        If Request.Form("Action") <> "Import" Then
+        If Request.QueryString("Action") <> "Import" Then
             Msg.Text = ERR_INVALID_PARAMETER
             Exit Sub
         End If
@@ -883,6 +886,12 @@ Partial Public Class SuppliersProductImport
 
     Protected Sub ReCheck_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ReCheck.Click
         Msg.Text = String.Empty
+
+        If Request.QueryString("Action") <> "ReCheck" Then
+            Msg.Text = ERR_INVALID_PARAMETER
+            Exit Sub
+        End If
+
         If SetCASErrorColorToSupplierProductList() > 0 Then
             Msg.Text = "CAS Number" + ERR_INCORRECT_FORMAT
             Exit Sub

@@ -8,23 +8,6 @@
     <link rel="stylesheet" href="./CSS/Style.css" type="text/css" media="screen,print" />
     <script type="text/javascript" src="./JS/Common.js"></script>
     <script type="text/javascript" src="./JS/Colorful.js"></script>
-        <script type="text/javascript">
-<!--
-function set_Action(action){
-  if (action == "Preview") {
-    document.forms["ExcelImportForm"].Action.value = action
-    document.forms["ExcelImportForm"].submit();
-    return true;
-  }else if(action == "Import"){
-    document.forms["ExcelImportForm"].Action.value = action
-    document.forms["ExcelImportForm"].submit();
-    return true;
-  }else{
-    return false;
-  }
-}
-//-->
-    </script>
 </head>
 <body>
 
@@ -50,7 +33,8 @@ function set_Action(action){
                     <tr>
                         <th>File : </th>
                         <td><asp:FileUpload ID="File" runat="server" /> 
-                            <asp:Button ID="Preview" runat="server" Text="Preview" UseSubmitBehavior="false" onclientclick="javascript:set_Action('Preview');" /></td>
+                            <asp:Button ID="Preview" runat="server" Text="Preview" 
+                                UseSubmitBehavior="false" /></td>
                     </tr>
                 </table>
 
@@ -128,8 +112,8 @@ function set_Action(action){
                 <div class="btns">
                     <asp:Button ID="ReCheck" runat="server" Text="ReCheck" UseSubmitBehavior="false" />
                     <span class="indent"></span>
-                    <asp:Button ID="Import" runat="server" Text="Import" UseSubmitBehavior="false" 
-                        onclientclick="javascript:set_Action('Import');" />
+                    <asp:Button ID="Import" runat="server" Text="Import" 
+                        UseSubmitBehavior="false" />
                 </div>
             </div>
     </div><!-- Main Content Area END -->
