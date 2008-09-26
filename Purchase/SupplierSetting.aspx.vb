@@ -102,15 +102,15 @@ Partial Public Class SupplierSetting
 
         '[入力項目の項目長Check]-------------------------------------------------------------
         If GetByteCount_SJIS(PostalCode.Text) > 32 Then
-            Msg.Text = "PostalCodeが長すぎます。"
+            Msg.Text = "PostalCode" + ERR_TOO_LONG
             Exit Sub
         End If
         If GetByteCount_SJIS(Telephone.Text) > 32 Then
-            Msg.Text = "Telephoneが長すぎます。"
+            Msg.Text = "Telephone" + ERR_TOO_LONG
             Exit Sub
         End If
         If GetByteCount_SJIS(Fax.Text) > 32 Then
-            Msg.Text = "faxが長すぎます。"
+            Msg.Text = "fax" + ERR_TOO_LONG
             Exit Sub
         End If
         If Comment.Text.Length > INT_3000 Then
