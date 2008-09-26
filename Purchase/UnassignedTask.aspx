@@ -12,7 +12,7 @@
 <body>
     <!-- Sub Navigation -->
     <div id="subNavi">
-        <a href="./MyTask.aspx">My Tasks</a> | <a href="./RequestedTask.aspx">Requested Tasks</a> | <a href="./UnassignedTask.aspx" class="current">Unassigned Tasks</a>
+        <a href="./MyTask.aspx">My Tasks</a> | <a href="./RequestedTask.aspx">Requested Tasks</a> | <a href="./UnassignedTask.aspx" class="current">Unassigned Tasks</a> | <a href="./JFYISearch.aspx">JFYI</a>
     </div><!-- Sub Navigation END -->
 
     <!-- Main Content Area -->
