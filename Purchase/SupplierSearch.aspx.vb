@@ -1,4 +1,6 @@
-﻿Public Partial Class SupplierSearch
+﻿Imports Purchase.Common
+
+Partial Public Class SupplierSearch
     Inherits CommonPage
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -13,7 +15,7 @@
 
         '[Search実行可能確認]-------------------------------------------------------------
         If Action.Value <> "Search" Then
-            Msg.Text = Common.ERR_INVALID_PARAMETER
+            Msg.Text = ERR_INVALID_PARAMETER
             Exit Sub
         End If
 
@@ -32,7 +34,7 @@
 
         '[Supplier検索]-------------------------------------------------------------------
         If Code.Text.ToString <> "" And Not IsNumeric(Code.Text.ToString) Then
-            'Msg.Text = "SupplierCodeには数字を入力して下さい"
+            Msg.Text = "SupplierCodeには数字を入力して下さい"
             Exit Sub
         ElseIf Code.Text Like "*.*" = True Then
             Msg.Text = "SupplierCodeには整数を入力して下さい"
@@ -45,20 +47,20 @@
         SrcSupplier.SelectCommand = "SELECT SupplierCode AS [Supplier Code], R3SupplierCode AS [R/3 Supplier Code], ISNULL(Name3, '') + N' ' + ISNULL(Name4, '') AS [Supplier Name], './SupplierSetting.aspx?Action=Edit&Code=' + rtrim(ltrim(str([SupplierCode]))) AS Url  FROM dbo.Supplier "
         If Code.Text.ToString <> "" Then
             If SQLStr = "" Then SQLStr = "WHERE "
-            SQLStr = SQLStr + "(SupplierCode = '" + Common.SafeSqlLiteral(Code.Text) + "')"
+            SQLStr = SQLStr + "(SupplierCode = '" + SafeSqlLiteral(Code.Text) + "')"
         End If
         '[R3Codeが数字の場合と文字の場合とでは検索が異なる]-------------------------------
         If R3Code.Text.ToString <> "" Then
             If SQLStr = "" Then SQLStr = "WHERE " Else SQLStr = SQLStr + " AND "
             If IsNumeric(R3Code.Text.ToString) And R3Code.Text Like "*.*" = False Then
-                SQLStr = SQLStr + "(R3SupplierCode = " + Common.SafeSqlLiteral(R3Code.Text) + ")"
+                SQLStr = SQLStr + "(R3SupplierCode = " + SafeSqlLiteral(R3Code.Text) + ")"
             Else
-                SQLStr = SQLStr + "(R3SupplierCode = '" + Common.SafeSqlLiteral(R3Code.Text) + "')"
+                SQLStr = SQLStr + "(R3SupplierCode = '" + SafeSqlLiteral(R3Code.Text) + "')"
             End If
         End If
         If Name.Text.ToString <> "" Then
             If SQLStr = "" Then SQLStr = "WHERE " Else SQLStr = SQLStr + " AND "
-            SQLStr = SQLStr + "ISNULL(Name3,'') + N' ' + ISNULL(Name4,'') LIKE '%" + Common.SafeSqlLikeClauseLiteral(Name.Text) + "%'"
+            SQLStr = SQLStr + "ISNULL(Name3,'') + N' ' + ISNULL(Name4,'') LIKE '%" + SafeSqlLikeClauseLiteral(Name.Text) + "%'"
         End If
 
         '[検索項目すべて指定しない場合は結果無しとする]-----------------------------------
