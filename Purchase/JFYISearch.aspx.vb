@@ -44,9 +44,9 @@ Partial Public Class JFYISearch
 
         '初回時の Common.ERR_NO_MATCH_FOUND 表示抑制 Actionパラメータ保存 
         If IsPostBack = True Then
-            b_FormVisible = True
+            RFQHeaderList.Visible = True
         Else
-            b_FormVisible = False
+            RFQHeaderList.Visible = False
             Action.Value = ACTION_VALUE_SEARCH
         End If
 
@@ -60,24 +60,28 @@ Partial Public Class JFYISearch
     ''' <remarks></remarks>
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
 
+        'エラー未発生時のリスト不可視化
+        RFQHeaderList.Visible = False
+        Msg.Text = String.Empty
+
         '入力値検証
         If QuotedDateFrom.Text = String.Empty And QuotedDateTo.Text = String.Empty Then
-            Msg.Text = "QuotedDate" & ERR_REQUIRED_FIELD
+            Msg.Text = "Quoted Date" & ERR_REQUIRED_FIELD
             Return
         End If
 
         If QuotedDateFrom.Text = String.Empty And QuotedDateTo.Text <> String.Empty Then
-            Msg.Text = "QuotedDate(from)" & ERR_REQUIRED_FIELD
+            Msg.Text = "Quoted Date(from)" & ERR_REQUIRED_FIELD
             Return
         End If
 
 
         If ValidateDateTextBox(QuotedDateFrom, False) = False Then
-            Msg.Text = "QuotedDate(from)" & ERR_INVALID_DATE
+            Msg.Text = "Quoted Date(from)" & ERR_INVALID_DATE
             Return
         End If
         If ValidateDateTextBox(QuotedDateTo, True) = False Then
-            Msg.Text = "QuotedDate(to)" & ERR_INVALID_DATE
+            Msg.Text = "Quoted Date(to)" & ERR_INVALID_DATE
             Return
         End If
 
@@ -97,7 +101,8 @@ Partial Public Class JFYISearch
             SrcRFQHeader.SelectParameters.Add("QuotedDateTo", GetDatabaseTime(s_LocationCode, QuotedDateTo.Text).ToString())
         End If
 
-        RFQHeaderList.DataBind()
+        'エラー未発生時のリスト可視化
+        RFQHeaderList.Visible = True
 
     End Sub
 
