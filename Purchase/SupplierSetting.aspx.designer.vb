@@ -259,6 +259,15 @@ Partial Public Class SupplierSetting
     Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
+    '''RunMsg コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents RunMsg As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
     '''Save コントロール。
     '''</summary>
     '''<remarks>

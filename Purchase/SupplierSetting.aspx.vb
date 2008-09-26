@@ -134,6 +134,7 @@ Partial Public Class SupplierSetting
 
         Dim sqlTran As System.Data.SqlClient.SqlTransaction = DBConn.BeginTransaction()
         DBCommand.Transaction = sqlTran
+        Dim MemoMode As String = Mode.Value
         Try
             If Mode.Value = "Edit" Then
                 '[Supplierの更新]--------------------------------------------------------
@@ -234,6 +235,11 @@ Partial Public Class SupplierSetting
 
             'ここまでエラーがなかったらコミット
             sqlTran.Commit()
+            If MemoMode = "Edit" Then
+                RunMsg.Text = MSG_DATA_UPDATED
+            Else
+                RunMsg.Text = MSG_DATA_CREATED
+            End If
         Catch ex As Exception
             'エラーがあった場合はロールバック
             sqlTran.Rollback()

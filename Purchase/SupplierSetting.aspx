@@ -125,6 +125,7 @@
                 <asp:HiddenField ID="Action" runat="server" value="Save" />
 
 				<div class="btns">
+				    <p class="message"><asp:Label ID="RunMsg" runat="server"></asp:Label></p>
                     <asp:Button ID="Save" runat="server" Text="Save" UseSubmitBehavior="False" />
 				</div>
 		</div>
