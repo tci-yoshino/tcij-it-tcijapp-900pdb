@@ -114,13 +114,13 @@ Partial Public Class RFQCorrespondence
         End If
 
         '[SrcRFQHistoryにSelectCommand設定]-------------------------------------------------------------
-        SrcRFQHistory.SelectCommand = "SELECT dbo.RFQStatus.Text AS Status, dbo.RFQHistory.CreateDate AS Date, dbo.v_User.Name AS Sender, '(' + dbo.s_Location.Name + ')' AS SenderLocation, v_User_1.Name AS Addressee, '(' + s_Location_1.Name + ')' AS AddresseeLocation, dbo.RFQCorres.Text AS Title, REPLACE(dbo.RFQHistory.Note,Char(10),'<br>') AS Notes, dbo.RFQHistory.isChecked, dbo.RFQHistory.RcptUserID, dbo.RFQHistory.RFQHistoryNumber " & _
+        SrcRFQHistory.SelectCommand = "SELECT dbo.RFQStatus.Text AS Status, dbo.RFQHistory.CreateDate AS Date, dbo.v_UserAll.Name AS Sender, '(' + dbo.s_Location.Name + ')' AS SenderLocation, v_UserAll_1.Name AS Addressee, '(' + s_Location_1.Name + ')' AS AddresseeLocation, dbo.RFQCorres.Text AS Title, REPLACE(dbo.RFQHistory.Note,Char(10),'<br>') AS Notes, dbo.RFQHistory.isChecked, dbo.RFQHistory.RcptUserID, dbo.RFQHistory.RFQHistoryNumber " & _
                                       "FROM dbo.RFQHistory LEFT OUTER JOIN " & _
                                       "dbo.RFQCorres ON dbo.RFQHistory.RFQCorresCode = dbo.RFQCorres.RFQCorresCode LEFT OUTER JOIN " & _
                                       "dbo.s_Location AS s_Location_1 ON dbo.RFQHistory.RcptLocationCode = s_Location_1.LocationCode LEFT OUTER JOIN " & _
                                       "dbo.s_Location ON dbo.RFQHistory.SendLocationCode = dbo.s_Location.LocationCode LEFT OUTER JOIN " & _
-                                      "dbo.v_User AS v_User_1 ON dbo.RFQHistory.RcptUserID = v_User_1.UserID LEFT OUTER JOIN " & _
-                                      "dbo.v_User ON dbo.RFQHistory.SendUserID = dbo.v_User.UserID LEFT OUTER JOIN " & _
+                                      "dbo.v_UserAll AS v_UserAll_1 ON dbo.RFQHistory.RcptUserID = v_UserAll_1.UserID LEFT OUTER JOIN " & _
+                                      "dbo.v_UserAll ON dbo.RFQHistory.SendUserID = dbo.v_UserAll.UserID LEFT OUTER JOIN " & _
                                       "dbo.RFQStatus ON dbo.RFQHistory.RFQStatusCode = dbo.RFQStatus.RFQStatusCode " & _
                                       "WHERE (dbo.RFQHistory.RFQNumber = @RFQNumber) " & _
                                       "ORDER BY dbo.RFQHistory.RFQHistoryNumber DESC"
@@ -151,7 +151,7 @@ Partial Public Class RFQCorrespondence
 
     Protected Sub Send_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Send.Click
         Dim st_RFQStatusCode As String = ""
-        Dim st_StatusChangeDate As Date
+        Dim StatusChangeDate As Date
         Dim st_LocationCode As String = ""
         Dim st_UserID As String = ""
 
@@ -183,7 +183,7 @@ Partial Public Class RFQCorrespondence
             Dim dr As SqlDataReader = cmd.ExecuteReader
             If dr.Read = True Then
                 st_RFQStatusCode = dr("RFQStatusCode")
-                st_StatusChangeDate = dr("StatusChangeDate")
+                StatusChangeDate = dr("StatusChangeDate")
             End If
         Finally
             If Not conn Is Nothing Then conn.Close()
@@ -232,7 +232,7 @@ Partial Public Class RFQCorrespondence
         st_SqlStr = "INSERT INTO RFQHistory (RFQNumber,RFQStatusCode,StatusChangeDate,RFQCorresCode,Note,SendLocationCode,SendUserID,RcptLocationCode,RcptUserID,isChecked,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ("
         st_SqlStr = st_SqlStr + "'" + Trim(Str(hd_RFQNumber.Value)) + "',"
         st_SqlStr = st_SqlStr + "'" + st_RFQStatusCode + "',"
-        st_SqlStr = st_SqlStr + "'" + st_StatusChangeDate + "',"
+        st_SqlStr = st_SqlStr + "'" + StatusChangeDate + "',"
         st_SqlStr = st_SqlStr + "'" + CorresTitle.SelectedValue + "',"
         st_SqlStr = st_SqlStr + "@Note,"
         st_SqlStr = st_SqlStr + "'" + Session("LocationCode") + "',"
