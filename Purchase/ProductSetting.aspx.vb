@@ -96,7 +96,7 @@ Partial Public Class ProductSetting
 
         '[入力項目のLengthCheck]-------------------------------------------------------
         If GetByteCount_SJIS(MolecularFormula.Text) > 128 Then
-            Msg.Text = "MolecularFormulaが長すぎます。"
+            Msg.Text = "MolecularFormula" + ERR_TOO_LONG
             Exit Sub
         End If
         If Reference.Text.Length > INT_3000 Then
