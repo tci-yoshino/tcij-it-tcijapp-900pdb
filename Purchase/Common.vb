@@ -205,6 +205,12 @@ Public Class Common
     ''' <remarks></remarks>
     Public Const ERR_OVER_255 As String = " には255文字以上登録することができません。"
 
+    ''' <summary>
+    ''' エラーメッセージ 「○○は長すぎます。」
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const ERR_TOO_LONG As String = " が長すぎます。"
+
     Private Const LOCATION_JP As String = "JP"
 
     ''' <summary>
