@@ -12,6 +12,7 @@ Partial Public Class SupplierSearch
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
         Msg.Text = String.Empty
+        SupplierList.Visible = False
 
         '[Search実行可能確認]-------------------------------------------------------------
         If Action.Value <> "Search" Then
@@ -23,32 +24,24 @@ Partial Public Class SupplierSearch
         Code.Text = StrConv(Code.Text.ToString, VbStrConv.Narrow)
         R3Code.Text = StrConv(R3Code.Text.ToString, VbStrConv.Narrow)
 
-        Msg.Text = ""
-        SupplierList.Visible = False
-
-        '[何も入力されていない場合検索しない]---------------------------------------------
+        '[検索項目が入力されなかった場合]-------------------------------------------------
         If Trim(Code.Text).Length = 0 Then Code.Text = ""
         If Trim(R3Code.Text).Length = 0 Then R3Code.Text = ""
         If Trim(Name.Text).Length = 0 Then Name.Text = ""
         If Code.Text.Length + R3Code.Text.Length + Name.Text.Length = 0 Then Exit Sub
 
-        '[Supplier検索]-------------------------------------------------------------------
-        If Code.Text.ToString <> "" And Not IsNumeric(Code.Text.ToString) Then
-            Msg.Text = "SupplierCodeには数字を入力して下さい"
-            Exit Sub
-        ElseIf Code.Text Like "*.*" = True Then
-            Msg.Text = "SupplierCodeには整数を入力して下さい"
-            Exit Sub
-        End If
-
-        SupplierList.Visible = True
-
+        '[検索項目が入力された場合]-------------------------------------------------------
         Dim SQLStr As String = ""
         SrcSupplier.SelectCommand = "SELECT SupplierCode AS [Supplier Code], R3SupplierCode AS [R/3 Supplier Code], ISNULL(Name3, '') + N' ' + ISNULL(Name4, '') AS [Supplier Name], './SupplierSetting.aspx?Action=Edit&Code=' + rtrim(ltrim(str([SupplierCode]))) AS Url  FROM dbo.Supplier "
         If Code.Text.ToString <> "" Then
-            If SQLStr = "" Then SQLStr = "WHERE "
-            SQLStr = SQLStr + "(SupplierCode = '" + SafeSqlLiteral(Code.Text) + "')"
+            SQLStr = SQLStr + "WHERE (SupplierCode = " + SafeSqlLiteral(Code.Text) + ")"
+            If Not IsNumeric(SafeSqlLiteral(Code.Text)) Then
+                SrcSupplier.SelectCommand = ""
+                SupplierList.Visible = True
+                Exit Sub
+            End If
         End If
+
         '[R3Codeが数字の場合と文字の場合とでは検索が異なる]-------------------------------
         If R3Code.Text.ToString <> "" Then
             If SQLStr = "" Then SQLStr = "WHERE " Else SQLStr = SQLStr + " AND "
@@ -63,12 +56,9 @@ Partial Public Class SupplierSearch
             SQLStr = SQLStr + "ISNULL(Name3,'') + N' ' + ISNULL(Name4,'') LIKE '%" + SafeSqlLikeClauseLiteral(Name.Text) + "%'"
         End If
 
-        '[検索項目すべて指定しない場合は結果無しとする]-----------------------------------
-        If SQLStr = "" Then
-            SrcSupplier.SelectCommand = ""
-        Else
-            SrcSupplier.SelectCommand = SrcSupplier.SelectCommand + SQLStr
-        End If
+        '[SrcSupplierの表示]--------------------------------------------------------------
+        SrcSupplier.SelectCommand = SrcSupplier.SelectCommand + SQLStr
+        SupplierList.Visible = True
     End Sub
 
 End Class
