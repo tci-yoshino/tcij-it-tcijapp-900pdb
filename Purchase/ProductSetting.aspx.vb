@@ -136,6 +136,7 @@ Partial Public Class ProductSetting
         End If
 
         '[Save処理]--------------------------------------------------------------------
+        Dim MemoMode As String = Mode.Value
         If Mode.Value = "Edit" Then
             '[ProductのUpdateDateチェック]-----------------------------------------------------------
             DBCommand.CommandText = "SELECT UpdateDate FROM dbo.Product WHERE ProductID = '" & ProductID.Value & "'"
@@ -216,6 +217,11 @@ Partial Public Class ProductSetting
             UpdateDate.Value = GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
             Mode.Value = "Edit"
             SupplierList.Visible = True
+        End If
+        If MemoMode = "Edit" Then
+            RunMsg.Text = MSG_DATA_UPDATED
+        Else
+            RunMsg.Text = MSG_DATA_CREATED
         End If
     End Sub
 
