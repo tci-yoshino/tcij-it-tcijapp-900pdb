@@ -42,6 +42,8 @@ function deleteLine(code) {
             </table>
         </div>
 
+        <hr />
+
         <div class="list">
             <form id="DeleteForm" runat="server" action="" method="post">
                 <input type="hidden" runat="server" id="ProductID" />
