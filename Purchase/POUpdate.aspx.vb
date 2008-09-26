@@ -207,6 +207,9 @@ Partial Public Class POUpdate
     ''' <remarks></remarks>
     Protected Sub Update_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Update.Click
 
+        Msg.Text = String.Empty
+        RunMsg.Text = String.Empty
+
         ChangeTextBoxValueToSingleByte()
 
         If ValidateCommon() = False Then
@@ -220,9 +223,8 @@ Partial Public Class POUpdate
         Dim i_PONumber As Integer = CInt(PO.Value)
 
         UpdatePOInfomationFromForm(i_PONumber)
-        Msg.Text = String.Empty
-
         ViewPOInformationToForm(i_PONumber)
+        RunMsg.Text = Common.MSG_DATA_UPDATED
 
     End Sub
 
@@ -233,6 +235,9 @@ Partial Public Class POUpdate
     ''' <param name="e">ASP.NETの既定値</param>
     ''' <remarks></remarks>
     Protected Sub Cancell_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Cancell.Click
+
+        Msg.Text = String.Empty
+        RunMsg.Text = String.Empty
 
         If ValidateCommon() = False Then
             Exit Sub
@@ -246,9 +251,8 @@ Partial Public Class POUpdate
         Dim i_PONumber As Integer = Integer.Parse(PO.Value)
 
         CancelPOInfomationFromForm(i_PONumber)
-        Msg.Text = String.Empty
-
         ViewPOInformationToForm(i_PONumber)
+        RunMsg.Text = Common.MSG_DATA_UPDATED
     End Sub
 
 

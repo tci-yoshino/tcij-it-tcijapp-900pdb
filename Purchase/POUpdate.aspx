@@ -180,6 +180,7 @@
 				    <asp:HiddenField ID="Action" value="Update" runat="server" />
 
                     <div class="btns">
+                        <p class="message"><asp:Label ID="RunMsg" runat="server"></asp:Label></p>
                         <asp:Button ID="Update" runat="server" Text="Update" />
                         <span class="indent"></span>
                         <asp:Button ID="Cancell" runat="server" Text="Cancell" />
