@@ -231,9 +231,4 @@
 
     End Sub
 
-    Private Sub test(ByVal sender As Object, ByVal e As SqlDataSourceSelectingEventArgs) Handles SrcRFQ.Selecting
-        e.Command.CommandTimeout = 120
-    End Sub
-
-
 End Class
