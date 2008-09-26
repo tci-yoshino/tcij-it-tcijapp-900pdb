@@ -2,7 +2,6 @@
 
 Imports System.Data.SqlClient
 Imports Purchase.Common
-Imports TCICommon.Func
 
 Partial Public Class POCorrespondence
     Inherits CommonPage
@@ -20,7 +19,7 @@ Partial Public Class POCorrespondence
                 CorresTitle.Enabled = False
                 CorresNote.Enabled = False
                 Send.Enabled = False
-                Msg.Text = Common.ERR_INVALID_PARAMETER
+                Msg.Text = ERR_INVALID_PARAMETER
                 Exit Sub
             End If
 
@@ -114,13 +113,13 @@ Partial Public Class POCorrespondence
         End If
 
         '[SrcPOHistoryにSelectCommand設定]-------------------------------------------------------------
-        SrcPOHistory.SelectCommand = "SELECT dbo.POStatus.Text AS Status, dbo.POHistory.CreateDate AS Date, dbo.v_User.Name AS Sender, '(' + dbo.s_Location.Name + ')' AS SenderLocation, v_User_1.Name AS Addressee, '(' + s_Location_1.Name + ')' AS AddresseeLocation, dbo.POCorres.Text AS Title, REPLACE(dbo.POHistory.Note,Char(10),'<br>') AS Notes, dbo.POHistory.isChecked, dbo.POHistory.RcptUserID, dbo.POHistory.POHistoryNumber " & _
+        SrcPOHistory.SelectCommand = "SELECT dbo.POStatus.Text AS Status, dbo.POHistory.CreateDate AS Date, dbo.v_UserAll.Name AS Sender, '(' + dbo.s_Location.Name + ')' AS SenderLocation, v_UserAll_1.Name AS Addressee, '(' + s_Location_1.Name + ')' AS AddresseeLocation, dbo.POCorres.Text AS Title, REPLACE(dbo.POHistory.Note,Char(10),'<br>') AS Notes, dbo.POHistory.isChecked, dbo.POHistory.RcptUserID, dbo.POHistory.POHistoryNumber " & _
                                      "FROM dbo.POHistory LEFT OUTER JOIN " & _
                                      "dbo.POCorres ON dbo.POHistory.POCorresCode = dbo.POCorres.POCorresCode LEFT OUTER JOIN " & _
                                      "dbo.s_Location AS s_Location_1 ON dbo.POHistory.RcptLocationCode = s_Location_1.LocationCode LEFT OUTER JOIN " & _
                                      "dbo.s_Location ON dbo.POHistory.SendLocationCode = dbo.s_Location.LocationCode LEFT OUTER JOIN " & _
-                                     "dbo.v_User AS v_User_1 ON dbo.POHistory.RcptUserID = v_User_1.UserID LEFT OUTER JOIN " & _
-                                     "dbo.v_User ON dbo.POHistory.SendUserID = dbo.v_User.UserID LEFT OUTER JOIN " & _
+                                     "dbo.v_UserAll AS v_UserAll_1 ON dbo.POHistory.RcptUserID = v_UserAll_1.UserID LEFT OUTER JOIN " & _
+                                     "dbo.v_UserAll ON dbo.POHistory.SendUserID = dbo.v_UserAll.UserID LEFT OUTER JOIN " & _
                                      "dbo.POStatus ON dbo.POHistory.POStatusCode = dbo.POStatus.POStatusCode " & _
                                      "WHERE (dbo.POHistory.PONumber = @PONumber) " & _
                                      "ORDER BY dbo.POHistory.POHistoryNumber DESC"
@@ -145,28 +144,28 @@ Partial Public Class POCorrespondence
             SrcPOHistory.UpdateCommand = "UPDATE POHistory SET isChecked=1 WHERE POHistoryNumber='" & POHistoryNumber.Value & "'"
             SrcPOHistory.Update()
         Else
-            Msg.Text = Common.ERR_INVALID_PARAMETER
+            Msg.Text = ERR_INVALID_PARAMETER
         End If
     End Sub
 
     Protected Sub Send_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Send.Click
         Dim st_POStatusCode As String = ""
-        Dim st_StatusChangeDate As Date
+        Dim StatusChangeDate As Date
         Dim st_LocationCode As String = ""
         Dim st_UserID As String = ""
 
         '[Send実行確認]---------------------------------------------------------------------------------
         If Request.QueryString("Action") <> "Send" Then
-            Msg.Text = Common.ERR_INVALID_PARAMETER
+            Msg.Text = ERR_INVALID_PARAMETER
             Exit Sub
         End If
 
         '[CorresNoteのCheck]----------------------------------------------------------------------------
         If Trim(CorresNote.Text) = "" Then
-            Msg.Text = "Note" + Common.ERR_REQUIRED_FIELD
+            Msg.Text = "Note" + ERR_REQUIRED_FIELD
             Exit Sub
-        ElseIf CorresNote.Text.Length > Common.INT_3000 Then
-            Msg.Text = "Note" + Common.ERR_OVER_3000
+        ElseIf CorresNote.Text.Length > INT_3000 Then
+            Msg.Text = "Note" + ERR_OVER_3000
             Exit Sub
         End If
 
@@ -183,7 +182,7 @@ Partial Public Class POCorrespondence
             Dim dr As SqlDataReader = cmd.ExecuteReader
             If dr.Read = True Then
                 st_POStatusCode = dr("POStatusCode")
-                st_StatusChangeDate = dr("StatusChangeDate")
+                StatusChangeDate = dr("StatusChangeDate")
             End If
         Finally
             If Not conn Is Nothing Then conn.Close()
@@ -232,7 +231,7 @@ Partial Public Class POCorrespondence
         st_SqlStr = "INSERT INTO POHistory (PONumber,POStatusCode,StatusChangeDate,POCorresCode,Note,SendLocationCode,SendUserID,RcptLocationCode,RcptUserID,isChecked,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ("
         st_SqlStr = st_SqlStr + "'" + Trim(Str(hd_PONumber.Value)) + "',"
         st_SqlStr = st_SqlStr + "'" + st_POStatusCode + "',"
-        st_SqlStr = st_SqlStr + "'" + st_StatusChangeDate + "',"
+        st_SqlStr = st_SqlStr + "'" + StatusChangeDate + "',"
         st_SqlStr = st_SqlStr + "'" + CorresTitle.SelectedValue + "',"
         st_SqlStr = st_SqlStr + " @Note , "
         st_SqlStr = st_SqlStr + "'" + Session("LocationCode") + "',"
