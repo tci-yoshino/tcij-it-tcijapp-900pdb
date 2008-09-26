@@ -173,7 +173,7 @@ Partial Public Class ProductSetting
             st_SqlStr = st_SqlStr & "WHERE ProductID = '" & ProductID.Value & "'"
             DBCommand.CommandText = st_SqlStr
             DBCommand.ExecuteNonQuery()
-            Msg.Text = MSG_DATA_UPDATED   '"データを更新しました。"
+            RunMsg.Text = MSG_DATA_UPDATED   '"データを更新しました。"
 
             '[引き続き更新処理ができるようにUpdateDate設定]----------------------------------
             UpdateDate.Value = GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
@@ -210,7 +210,7 @@ Partial Public Class ProductSetting
                 SupplierList.NavigateUrl = "./SupplierListByProduct.aspx?ProductID=" & ProductID.Value
             End If
             DBReader.Close()
-            Msg.Text = MSG_DATA_CREATED   '"データを登録しました。"
+            RunMsg.Text = MSG_DATA_CREATED   '"データを登録しました。"
 
             '[引き続き更新処理ができるようにUpdateDate設定]---------------------------------
             UpdateDate.Value = GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]

@@ -80,6 +80,7 @@
                 <asp:HiddenField ID="UpdateDate" runat="server" />
 
                 <div class="btns">
+                    <p class="message"><asp:Label ID="RunMsg" runat="server"></asp:Label></p>
                     <asp:Button ID="Save" runat="server" Text="Save" UseSubmitBehavior="false" />
                 </div>
             </form>
