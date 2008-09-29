@@ -60,7 +60,8 @@ Partial Public Class ProductSetting
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
         Dim NumberType As String = ""
         Dim st_SqlStr As String = ""
-        Msg.Text = ""
+        Msg.Text = String.Empty
+        RunMsg.Text = String.Empty
 
         '[入力ProductNumberの正規化]---------------------------------------------------
         ProductNumber.Text = StrConv(ProductNumber.Text, VbStrConv.Narrow)
