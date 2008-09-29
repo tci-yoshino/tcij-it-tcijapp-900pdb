@@ -232,14 +232,14 @@ Partial Public Class RFQIssue
         If Request.QueryString("ProductID") <> "" Or Request.Form("ProductID") <> "" Then
             st_ProductID = IIf(Request.QueryString("ProductID") <> "", Request.QueryString("ProductID"), Request.Form("ProductID"))
             If IsNumeric(st_ProductID) Then
-                DBCommand.CommandText = "Select ProductNumber, Name FROM Product WHERE ProductID = @i_ProductID"
+                DBCommand.CommandText = "Select ProductNumber, Name, QuoName FROM Product WHERE ProductID = @i_ProductID"
                 DBCommand.Parameters.Add("i_ProductID", SqlDbType.Int).Value = Integer.Parse(st_ProductID)
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
                 If DBReader.HasRows = True Then
                     While DBReader.Read
                         ProductNumber.Text = DBReader("ProductNumber").ToString
-                        ProductName.Text = DBReader("Name").ToString
+                        ProductName.Text = IIf(DBReader("QuoName").ToString.Trim = String.Empty, DBReader("Name").ToString, DBReader("QuoName").ToString)
                     End While
                     ProductNumber.ReadOnly = True
                     ProductNumber.CssClass = "readonly"
@@ -255,7 +255,7 @@ Partial Public Class RFQIssue
         If Request.QueryString("SupplierCode") <> "" Or Request.Form("SupplierCode") <> "" Then
             st_SupplierCode = IIf(Request.QueryString("SupplierCode") <> "", Request.QueryString("SupplierCode"), Request.Form("SupplierCode"))
             If IsNumeric(st_SupplierCode) Then
-                DBCommand.CommandText = "SELECT SupplierCode, R3SupplierCode, ISNULL(Name3, '') + ISNULL(Name4, '') AS SupplierName, CountryCode FROM Supplier WHERE SupplierCode = @i_SupplierCode"
+                DBCommand.CommandText = "SELECT SupplierCode, R3SupplierCode, ISNULL(Name3, '') + ' ' + ISNULL(Name4, '') AS SupplierName, CountryCode FROM Supplier WHERE SupplierCode = @i_SupplierCode"
                 DBCommand.Parameters.Add("i_SupplierCode", SqlDbType.Int).Value = Integer.Parse(st_SupplierCode)
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
