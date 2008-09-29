@@ -60,7 +60,7 @@ Partial Public Class JFYISearch
     ''' <remarks></remarks>
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
 
-        'エラー未発生時のリスト不可視化
+        'エラー発生時のリスト不可視化
         RFQHeaderList.Visible = False
         Msg.Text = String.Empty
 
