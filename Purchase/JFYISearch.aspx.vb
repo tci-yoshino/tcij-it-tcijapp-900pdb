@@ -27,6 +27,7 @@ Partial Public Class JFYISearch
 
 #End Region
 
+
     ''' <summary>
     ''' このページのロードイベントです。
     ''' </summary>
@@ -47,7 +48,6 @@ Partial Public Class JFYISearch
             RFQHeaderList.Visible = True
         Else
             RFQHeaderList.Visible = False
-            Action.Value = ACTION_VALUE_SEARCH
         End If
 
     End Sub
@@ -63,6 +63,14 @@ Partial Public Class JFYISearch
         'エラー発生時のリスト不可視化
         RFQHeaderList.Visible = False
         Msg.Text = String.Empty
+
+        'Actionパラメータ検証
+        If st_Action <> ACTION_VALUE_SEARCH Then
+            Msg.Text = Common.ERR_INVALID_PARAMETER
+            b_FormVisible = False
+            Exit Sub
+        End If
+
 
         '入力値検証
         If QuotedDateFrom.Text = String.Empty And QuotedDateTo.Text = String.Empty Then

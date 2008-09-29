@@ -29,20 +29,21 @@
     <div id="content">
         <div class="main">
             <p class="attention"><asp:Label ID="Msg" runat="server"></asp:Label></p>
-            
-            <form id="SearchForm" runat="server">
-                <table>
-                    <tr>
-                        <th>Quoted Date <span class="required">*</span> : </th>
-                        <td>from <asp:TextBox ID="QuotedDateFrom" runat="server" Width="7em" MaxLength="10"></asp:TextBox></td>
-                        <td>to <asp:TextBox ID="QuotedDateTo" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
-                    </tr>
-                </table>
-                
-                <asp:Button ID="Search" runat="server" Text="Search" />
-                <input type="button" value="Clear" onclick="clearForm('SearchForm')"/>
-                <asp:HiddenField ID="Action" runat="server" value="Search" />
-            </form>
+            <% If b_FormVisible Then%>
+                <form id="SearchForm" runat="server">
+                    <table>
+                        <tr>
+                            <th>Quoted Date <span class="required">*</span> : </th>
+                            <td>from <asp:TextBox ID="QuotedDateFrom" runat="server" Width="7em" MaxLength="10"></asp:TextBox></td>
+                            <td>to <asp:TextBox ID="QuotedDateTo" runat="server" Width="7em" MaxLength="10"></asp:TextBox> <span class="format">(YYYY-MM-DD)</span></td>
+                        </tr>
+                    </table>
+                    
+                    <asp:Button ID="Search" runat="server" Text="Search" />
+                    <input type="button" value="Clear" onclick="clearForm('SearchForm')"/>
+                    <asp:HiddenField ID="Action" runat="server" value="Search" />
+                </form>
+            <% end if %>            
         </div>
 
         <hr />
