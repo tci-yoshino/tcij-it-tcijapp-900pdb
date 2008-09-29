@@ -230,7 +230,7 @@ Partial Public Class POCorrespondence
         End Try
 
         '[POHistory(を新規登録)]-----------------------------------------------------------------------
-        st_SqlStr = "INSERT INTO POHistory (PONumber,POStatusCode,StatusChangeDate,POCorresCode,Note,SendLocationCode,SendUserID,RcptLocationCode,RcptUserID,isChecked,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ("
+        st_SqlStr = "INSERT INTO POHistory (PONumber,POStatusCode,StatusChangeDate,POCorresCode,Note,SendLocationCode,SendUserID,RcptLocationCode,RcptUserID,isChecked,CreatedBy,UpdatedBy) values ("
         st_SqlStr = st_SqlStr + "'" + Trim(Str(hd_PONumber.Value)) + "',"
         st_SqlStr = st_SqlStr + "'" + st_POStatusCode + "',"
         st_SqlStr = st_SqlStr + "'" + StatusChangeDate + "',"
@@ -241,7 +241,7 @@ Partial Public Class POCorrespondence
         st_SqlStr = st_SqlStr + "'" + st_LocationCode + "',"
         st_SqlStr = st_SqlStr + st_UserID + ","
         st_SqlStr = st_SqlStr + "0,"
-        st_SqlStr = st_SqlStr + Session("UserID") + ",'" + Now() + "'," + Session("UserID") + ",'" + Now() + "')"
+        st_SqlStr = st_SqlStr + Session("UserID") + "," + Session("UserID") + ")"
         SrcPOHistory.InsertParameters.Add("Note", CorresNote.Text)
         SrcPOHistory.InsertCommand = st_SqlStr
         SrcPOHistory.Insert()
