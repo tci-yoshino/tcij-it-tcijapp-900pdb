@@ -16,6 +16,7 @@
             & "FROM v_RFQHeader AS VRH " _
             & "WHERE " _
             & "  VRH.QuoLocationCode = '" & st_Login_Location & "' " _
+            & "  AND VRH.StatusCode = 'N' " _
             & "  AND VRH.QuoUserID IS NULL " _
             & "ORDER BY VRH.RFQNumber ASC "
 
