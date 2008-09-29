@@ -402,7 +402,7 @@ Public Class Common
     ''' <param name="TableName">検索対象のテーブル名</param>
     ''' <param name="TableField">検索条件フィールド名</param>
     ''' <param name="CheckData">検索条件の値</param>
-    ''' <returns>データが一件以上ある場合はTrue ない場合はFalseを返します。</returns>
+    ''' <returns>データが一件以上ある場合はTrue ない場合はFalseを返します。検索条件フィールドと検索条件の値で型が異なる場合はシステムエラーが発生します。</returns>
     ''' <remarks></remarks>
     Public Shared Function ExistenceConfirmation(ByVal TableName As String, ByVal TableField As String, ByVal CheckData As String) As Boolean
         '汎用存在確認チェック
