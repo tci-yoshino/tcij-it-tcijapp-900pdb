@@ -234,6 +234,7 @@ Partial Public Class RFQUpdate
 
     Protected Sub Close_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Close.Click
         If Request.QueryString("Action") <> "Close" Then
+            Msg.Text = ERR_INVALID_PARAMETER
             Exit Sub
         End If
         If SetRFQNumber() = False Then
