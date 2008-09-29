@@ -151,9 +151,10 @@ Partial Public Class RFQCorrespondence
 
     Protected Sub Send_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Send.Click
         Dim st_RFQStatusCode As String = ""
-        Dim StatusChangeDate As Date
+        Dim StatusChangeDate As String = String.Empty
         Dim st_LocationCode As String = ""
         Dim st_UserID As String = ""
+        Msg.Text = String.Empty
 
         '[Send実行確認]---------------------------------------------------------------------------------
         If Request.QueryString("Action") <> "Send" Then
@@ -177,7 +178,7 @@ Partial Public Class RFQCorrespondence
         Try
             conn = New SqlConnection(DB_CONNECT_STRING)
             Dim cmd As SqlCommand = conn.CreateCommand()
-            cmd.CommandText = "SELECT RFQStatusCode, StatusChangeDate FROM dbo.RFQHistory WHERE (RFQHistoryNumber = (SELECT MAX(RFQHistoryNumber) AS MaxNo FROM dbo.RFQHistory AS RFQHistory_1 WHERE (RFQNumber = @RFQNumber)))"
+            cmd.CommandText = "SELECT RFQStatusCode, convert(varchar,StatusChangeDate,121) as StatusChangeDate FROM dbo.RFQHistory WHERE (RFQHistoryNumber = (SELECT MAX(RFQHistoryNumber) AS MaxNo FROM dbo.RFQHistory AS RFQHistory_1 WHERE (RFQNumber = @RFQNumber)))"
             cmd.Parameters.AddWithValue("RFQNumber", hd_RFQNumber.Value)
             conn.Open()
             Dim dr As SqlDataReader = cmd.ExecuteReader
