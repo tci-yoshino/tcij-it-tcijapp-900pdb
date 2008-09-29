@@ -79,17 +79,17 @@ Partial Public Class JFYISearch
         End If
 
         If QuotedDateFrom.Text = String.Empty And QuotedDateTo.Text <> String.Empty Then
-            Msg.Text = "Quoted Date(from)" & ERR_REQUIRED_FIELD
+            Msg.Text = "Quoted Date (from)" & ERR_REQUIRED_FIELD
             Return
         End If
 
 
         If ValidateDateTextBox(QuotedDateFrom, False) = False Then
-            Msg.Text = "Quoted Date(from)" & ERR_INVALID_DATE
+            Msg.Text = "Quoted Date (from)" & ERR_INVALID_DATE
             Return
         End If
         If ValidateDateTextBox(QuotedDateTo, True) = False Then
-            Msg.Text = "Quoted Date(to)" & ERR_INVALID_DATE
+            Msg.Text = "Quoted Date (to)" & ERR_INVALID_DATE
             Return
         End If
 
