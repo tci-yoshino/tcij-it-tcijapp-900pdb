@@ -68,7 +68,8 @@ Partial Public Class SupplierSetting
 
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
         Dim st_SQLSTR As String = ""
-        Msg.Text = ""
+        Msg.Text = String.Empty
+        RunMsg.Text = String.Empty
 
         '[Actionチェック]--------------------------------------------------------------------
         If Request.Form("Action") <> "Save" Then
