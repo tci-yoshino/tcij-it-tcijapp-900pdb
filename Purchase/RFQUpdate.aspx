@@ -102,7 +102,7 @@
                                 
                                 SelectCommand="SELECT [CurrencyCode] FROM [PurchasingCurrency] ORDER BY [CurrencyCode]">
                             </asp:SqlDataSource>
-                            <asp:TextBox ID="ShippingHandlingFee" runat="server" Width="5em" MaxLength="21" CssClass="number"></asp:TextBox>
+                            <asp:TextBox ID="ShippingHandlingFee" runat="server" Width="5em" MaxLength="14" CssClass="number"></asp:TextBox>
                         </td>
                     </tr>
                 </table>
@@ -200,7 +200,7 @@
                                 <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                         </td>
-                        <td><asp:TextBox ID="UnitPrice_1" runat="server" Width="5em" MaxLength="18" CssClass="number"></asp:TextBox></td>
+                        <td><asp:TextBox ID="UnitPrice_1" runat="server" Width="5em" MaxLength="14" CssClass="number"></asp:TextBox></td>
                         <td><asp:TextBox ID="QuoPer_1" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox></td>
                         <td>
                             <asp:DropDownList ID="QuoUnit_1" runat="server" 
@@ -267,7 +267,7 @@
                                 <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                         </td>
-                        <td><asp:TextBox ID="UnitPrice_2" runat="server" Width="5em" MaxLength="18" CssClass="number"></asp:TextBox></td>
+                        <td><asp:TextBox ID="UnitPrice_2" runat="server" Width="5em" MaxLength="14" CssClass="number"></asp:TextBox></td>
                         <td><asp:TextBox ID="QuoPer_2" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox></td>
                         <td>
                             <asp:DropDownList ID="QuoUnit_2" runat="server" 
@@ -321,7 +321,7 @@
                                 <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                         </td>
-                        <td><asp:TextBox ID="UnitPrice_3" runat="server" Width="5em" MaxLength="18" CssClass="number"></asp:TextBox></td>
+                        <td><asp:TextBox ID="UnitPrice_3" runat="server" Width="5em" MaxLength="14" CssClass="number"></asp:TextBox></td>
                         <td><asp:TextBox ID="QuoPer_3" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox></td>
                         <td>
                             <asp:DropDownList ID="QuoUnit_3" runat="server" 
@@ -375,7 +375,7 @@
                                 <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                         </td>
-                        <td><asp:TextBox ID="UnitPrice_4" runat="server" Width="5em" MaxLength="18" CssClass="number"></asp:TextBox></td>
+                        <td><asp:TextBox ID="UnitPrice_4" runat="server" Width="5em" MaxLength="14" CssClass="number"></asp:TextBox></td>
                         <td><asp:TextBox ID="QuoPer_4" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox></td>
                         <td>
                             <asp:DropDownList ID="QuoUnit_4" runat="server" 

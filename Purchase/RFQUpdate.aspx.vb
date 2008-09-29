@@ -351,36 +351,34 @@ Partial Public Class RFQUpdate
             DBCommand.Dispose()
 
             If DS.Tables("RFQLine").Rows.Count = 0 Then
-                'RFQNumber 不正
-                Return False
+            Else
+                For i = 0 To DS.Tables("RFQLine").Rows.Count - 1
+                    j = i + 1
+                    EnqQuantity(j).Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
+                    EnqQuantity(j).ReadOnly = True
+                    EnqQuantity(j).CssClass = "readonly number"
+                    EnqUnit(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
+                    EnqUnit(j).CssClass = "readonly"
+                    EnqPiece(j).Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
+                    EnqPiece(j).ReadOnly = True
+                    EnqPiece(j).CssClass = "readonly number"
+                    Incoterms(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
+                    Currency(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
+                    UnitPrice(j).Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
+                    DeliveryTerm(j).Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
+                    QuoPer(j).Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
+                    Purity(j).Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
+                    QuoUnit(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
+                    QMMethod(j).Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
+                    LeadTime(j).Text = DS.Tables("RFQLine").Rows(i).Item("LeadTime").ToString
+                    Packing(j).Text = DS.Tables("RFQLine").Rows(i).Item("Packing").ToString
+                    SupplierItemNumber(j).Text = DS.Tables("RFQLine").Rows(i).Item("SupplierItemNumber").ToString
+                    NoOfferReason(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("NoOfferReasonCode").ToString
+                    POIssue(j).Visible = True
+                    POIssue(j).NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
+                    LineNumber(j).Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
+                Next
             End If
-
-            For i = 0 To DS.Tables("RFQLine").Rows.Count - 1
-                j = i + 1
-                EnqQuantity(j).Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
-                EnqQuantity(j).ReadOnly = True
-                EnqQuantity(j).CssClass = "readonly number"
-                EnqUnit(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
-                EnqUnit(j).CssClass = "readonly"
-                EnqPiece(j).Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
-                EnqPiece(j).ReadOnly = True
-                EnqPiece(j).CssClass = "readonly number"
-                Incoterms(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
-                Currency(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
-                UnitPrice(j).Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
-                DeliveryTerm(j).Text = DS.Tables("RFQLine").Rows(i).Item("DeliveryTerm").ToString
-                QuoPer(j).Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("QuoPer").ToString)
-                Purity(j).Text = DS.Tables("RFQLine").Rows(i).Item("Purity").ToString
-                QuoUnit(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("QuoUnitCode").ToString
-                QMMethod(j).Text = DS.Tables("RFQLine").Rows(i).Item("QMMethod").ToString
-                LeadTime(j).Text = DS.Tables("RFQLine").Rows(i).Item("LeadTime").ToString
-                Packing(j).Text = DS.Tables("RFQLine").Rows(i).Item("Packing").ToString
-                SupplierItemNumber(j).Text = DS.Tables("RFQLine").Rows(i).Item("SupplierItemNumber").ToString
-                NoOfferReason(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("NoOfferReasonCode").ToString
-                POIssue(j).Visible = True
-                POIssue(j).NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
-                LineNumber(j).Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
-            Next
             DS.Clear()
         End If
         Return True
@@ -504,7 +502,6 @@ Partial Public Class RFQUpdate
         'RFQLineのCurrency,Price,QuoPer,QuoUnitはどこかが空白で更新することができない。
         For i As Integer = LINE_START To LINE_COUNT
             If Currency(i).SelectedValue.Trim = String.Empty And UnitPrice(i).Text.Trim = String.Empty And QuoPer(i).Text.Trim = String.Empty And QuoUnit(i).SelectedValue.Trim = String.Empty Then
-                Return True
             ElseIf Currency(i).SelectedValue.Trim = String.Empty Then
                 Return False
             ElseIf UnitPrice(i).Text.Trim = String.Empty Then
@@ -520,8 +517,12 @@ Partial Public Class RFQUpdate
     Private Function CheckLineEnqQuantity() As Boolean
         'RFQLineのEnqQuantity,EnqUnit,EnqPieceはどこかが空白で登録することができない。
         For i As Integer = LINE_START To LINE_COUNT
+            If POIssue(i).Visible = True Then
+                '登録済で変更不可の行はチェックしない。
+                Continue For
+            End If
             If EnqQuantity(i).Text.Trim = String.Empty And EnqUnit(i).SelectedValue.Trim = String.Empty And EnqPiece(i).Text.Trim = String.Empty Then
-                Return True
+                Continue For
             ElseIf EnqQuantity(i).Text.Trim = String.Empty Then
                 Return False
             ElseIf EnqUnit(i).SelectedValue.Trim = String.Empty Then
