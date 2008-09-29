@@ -230,7 +230,7 @@ Partial Public Class RFQCorrespondence
         End Try
 
         '[RFQHistory(を新規登録)]-----------------------------------------------------------------------
-        st_SqlStr = "INSERT INTO RFQHistory (RFQNumber,RFQStatusCode,StatusChangeDate,RFQCorresCode,Note,SendLocationCode,SendUserID,RcptLocationCode,RcptUserID,isChecked,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ("
+        st_SqlStr = "INSERT INTO RFQHistory (RFQNumber,RFQStatusCode,StatusChangeDate,RFQCorresCode,Note,SendLocationCode,SendUserID,RcptLocationCode,RcptUserID,isChecked,CreatedBy,UpdatedBy) values ("
         st_SqlStr = st_SqlStr + "'" + Trim(Str(hd_RFQNumber.Value)) + "',"
         st_SqlStr = st_SqlStr + "'" + st_RFQStatusCode + "',"
         st_SqlStr = st_SqlStr + "'" + StatusChangeDate + "',"
@@ -241,7 +241,7 @@ Partial Public Class RFQCorrespondence
         st_SqlStr = st_SqlStr + "'" + st_LocationCode + "',"
         st_SqlStr = st_SqlStr + st_UserID + ","
         st_SqlStr = st_SqlStr + "0,"
-        st_SqlStr = st_SqlStr + Session("UserID") + ",'" + Now() + "'," + Session("UserID") + ",'" + Now() + "')"
+        st_SqlStr = st_SqlStr + Session("UserID") + "," + Session("UserID") + ")"
         SrcRFQHistory.InsertParameters.Add("Note", CorresNote.Text)
         SrcRFQHistory.InsertCommand = st_SqlStr
         SrcRFQHistory.Insert()
