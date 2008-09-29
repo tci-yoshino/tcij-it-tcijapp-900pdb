@@ -149,10 +149,12 @@ Partial Public Class POCorrespondence
     End Sub
 
     Protected Sub Send_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Send.Click
+        Dim StatusChangeDate As String = String.Empty
         Dim st_POStatusCode As String = ""
-        Dim StatusChangeDate As Date
         Dim st_LocationCode As String = ""
         Dim st_UserID As String = ""
+        Dim st_POHistoryNumber As String = String.Empty
+        Msg.Text = String.Empty
 
         '[Send実行確認]---------------------------------------------------------------------------------
         If Request.QueryString("Action") <> "Send" Then
@@ -176,7 +178,7 @@ Partial Public Class POCorrespondence
         Try
             conn = New SqlConnection(DB_CONNECT_STRING)
             Dim cmd As SqlCommand = conn.CreateCommand()
-            cmd.CommandText = "SELECT POStatusCode, StatusChangeDate FROM dbo.POHistory WHERE (POHistoryNumber = (SELECT MAX(POHistoryNumber) AS MaxNo FROM dbo.POHistory AS POHistory_1 WHERE (PONumber = @PONumber)))"
+            cmd.CommandText = "SELECT POStatusCode,convert(varchar,StatusChangeDate,121) as StatusChangeDate FROM dbo.POHistory WHERE (POHistoryNumber = (SELECT MAX(POHistoryNumber) AS MaxNo FROM dbo.POHistory AS POHistory_1 WHERE (PONumber = @PONumber)))"
             cmd.Parameters.AddWithValue("PONumber", hd_PONumber.Value)
             conn.Open()
             Dim dr As SqlDataReader = cmd.ExecuteReader
