@@ -441,12 +441,20 @@ Partial Public Class RFQUpdate
         Dim st_SupplierKey As String = "SupplierCode"
 
         'Supplierのチェック
+        If Not IsInteger(SupplierCode.Text) Then
+            Msg.Text = ERR_INCORRECT_SUPPLIERCODE
+            Return False
+        End If
         If ExistenceConfirmation(st_Supplier, st_SupplierKey, SupplierCode.Text) = False Then
             Msg.Text = ERR_INCORRECT_SUPPLIERCODE
             Return False
         End If
         'Makerのチェック
         If MakerCode.Text <> String.Empty Then
+            If Not IsInteger(SupplierCode.Text) Then
+                Msg.Text = ERR_INCORRECT_MAKERCODE
+                Return False
+            End If
             If ExistenceConfirmation(st_Supplier, st_SupplierKey, MakerCode.Text) = False Then
                 Msg.Text = ERR_INCORRECT_MAKERCODE
                 Return False
