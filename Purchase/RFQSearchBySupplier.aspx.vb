@@ -35,6 +35,9 @@ Partial Public Class RFQSearchBySupplier
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         'No match found表示防止
         SupplierList.Visible = False
+        If IsPostBack = False Then
+            Call SetPostBackUrl()
+        End If
 
         SrcSupplier.SelectCommand = String.Empty
     End Sub
@@ -45,6 +48,10 @@ Partial Public Class RFQSearchBySupplier
     ''' <param name="sender">ASP.NETの既定値</param>
     ''' <param name="e">ASP.NETの既定値</param>
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
+        If Request.QueryString("Action") <> "Search" Then
+            Msg.Text = ERR_INVALID_PARAMETER
+            Exit Sub
+        End If
         Dim i As Integer = 0
         Msg.Text = String.Empty
         'List初期化
@@ -81,6 +88,15 @@ Partial Public Class RFQSearchBySupplier
         SearchRFQ(st_SearchKey)
 
     End Sub
+
+    ''' <summary>
+    ''' PostBackUrl の設定を行います。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub SetPostBackUrl()
+        Search.PostBackUrl = "~/RFQSearchBySupplier.aspx?Action=Search"
+    End Sub
+
 
     ''' <summary>
     ''' Country ドロップダウンリストの変更時イベントです。
