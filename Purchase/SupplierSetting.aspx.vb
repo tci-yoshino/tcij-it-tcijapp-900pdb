@@ -111,7 +111,7 @@ Partial Public Class SupplierSetting
             Exit Sub
         End If
         If GetByteCount_SJIS(Fax.Text) > 32 Then
-            Msg.Text = "fax" + ERR_TOO_LONG
+            Msg.Text = "Fax" + ERR_TOO_LONG
             Exit Sub
         End If
         If Comment.Text.Length > INT_3000 Then
