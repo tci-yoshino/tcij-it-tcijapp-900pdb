@@ -500,7 +500,7 @@ Public Class Common
     ''' 対象の文字列が Integer かをチェックして結果を返します。
     ''' </summary>
     ''' <param name="str">対象となる文字列</param>
-    ''' <returns>整数の場合は True、 そうでない場合は False を返します</returns>
+    ''' <returns>Integerの場合は True、 そうでない場合は False を返します。</returns>
     ''' <remarks></remarks>
     Public Shared Function IsInteger(ByVal str As String) As Boolean
         Dim i_Value As Integer
@@ -522,27 +522,14 @@ Public Class Common
         Return s_jis.GetByteCount(str)
     End Function
 
-
     ''' <summary>
-    ''' 日付型テキストボックスの正当性を評価します。
-    ''' </summary>
-    ''' <param name="TargetObject">対象となるTexrBoxオブジェクト</param>
-    ''' <returns>空文字が入っている、または正当なときはTrue 不正なときはFalseを返します</returns>
-    ''' <remarks>評価対象の文字列が空のときはTrueと判定されます。</remarks>
-    Public Shared Function ValidateDateTextBox(ByVal TargetObject As TextBox) As Boolean
-
-        Return ValidateDateTextBox(TargetObject, True)
-
-    End Function
-
-    ''' <summary>
-    ''' 日付型テキストボックスの正当性を評価します。
+    ''' テキストボックスの値が日付型に変換可能か評価します。
     ''' </summary>
     ''' <param name="TargetObject">対象となるTexrBoxオブジェクト</param>
     ''' <param name="AllowEmpty">空の文字列を許すかを設定します。Trueは許可 Falseは不許可 </param>
-    ''' <returns>正当なときはTrue 不正なときはFalseを返します</returns>
+    ''' <returns>空文字、または変換可能なときはTrue 変換できないときはFalseを返します。</returns>
     ''' <remarks></remarks>
-    Public Shared Function ValidateDateTextBox(ByVal TargetObject As TextBox, ByVal AllowEmpty As Boolean) As Boolean
+    Public Shared Function ValidateDateTextBox(ByVal TargetObject As TextBox, Optional ByVal AllowEmpty As Boolean = True) As Boolean
 
         If AllowEmpty And TargetObject.Text.Trim = String.Empty Then
             Return True
