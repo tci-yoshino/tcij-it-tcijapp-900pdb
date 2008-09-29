@@ -29,7 +29,6 @@ Partial Public Class POUpdate
     ''' </summary>
     ''' <remarks></remarks>
     Const ERR_LOCATION_INCONSITENT As String = "You can not edit PO of other locations." '"拠点が一致しません。"
-    Const ERR_DATA_REMOVED_BY_OTHER As String = "このデータは他のユーザーによって削除されました。"
     Const ERR_LENGTH_OVER As String = "{0} には{1}文字以上登録することができません。"
 
 
@@ -558,7 +557,7 @@ Partial Public Class POUpdate
         End If
 
         If ExistsPO(i_PONumber.ToString()) = False Then
-            Msg.Text = ERR_DATA_REMOVED_BY_OTHER
+            Msg.Text = ERR_DELETED_BY_ANOTHER_USER
             Return False
         End If
 
