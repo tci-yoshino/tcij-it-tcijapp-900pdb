@@ -14,7 +14,7 @@
         <form id="RFQForm" runat="server">
     <!-- Main Content Area -->
     <div id="content">
-        <div class="tabs"><a href="#" onclick="return Correspondence_onclick()">RFQ Correspondence / History</a></div>
+        <div class="tabs"><a href="#">Supplier Setting</a> | <a href="#" onclick="return Correspondence_onclick()">RFQ Correspondence / History</a></div>
 
         <h3>Quotation Reply</h3>
 
