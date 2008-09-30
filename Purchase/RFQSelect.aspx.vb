@@ -196,7 +196,7 @@
         src.SelectParameters.Add("RFQNumber", label.Text)
         src.SelectCommand = _
               "SELECT RFQLineNumber, EnqQuantity, EnqUnitCode, EnqPiece, CurrencyCode, UnitPrice, " _
-            & "  QuoPer, QuoUnitCode, LeadTime, Packing, Purity, QMMethod " _
+            & "  QuoPer, QuoUnitCode, LeadTime, Packing, Purity, QMMethod, NoOfferReason " _
             & "FROM v_RFQLine " _
             & "WHERE RFQNumber = @RFQNumber "
 

@@ -101,7 +101,7 @@
         src.SelectCommand = _
               "SELECT distinct RL.RFQLineNumber, RL.EnqQuantity, RL.EnqUnitCode, RL.EnqPiece, " _
             & "       RL.CurrencyCode, RL.UnitPrice, RL.QuoPer, RL.QuoUnitCode, " _
-            & "       RL.LeadTime, RL.Packing, RL.Purity, RL.QMMethod, " _
+            & "       RL.LeadTime, RL.Packing, RL.Purity, RL.QMMethod, RL.NoOfferReason, " _
             & "       PO.RFQLineNumber AS PO " _
             & "FROM v_RFQLine AS RL LEFT OUTER JOIN " _
             & "     PO ON PO.RFQLineNumber = RL.RFQLineNumber " _
