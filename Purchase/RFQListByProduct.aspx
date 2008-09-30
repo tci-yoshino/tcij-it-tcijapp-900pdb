@@ -56,6 +56,10 @@
                             <th class="subhead" colspan="2"><asp:Label ID="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"))%>'></asp:Label><span class="indent"><asp:Label ID="RFQStatus" runat="server" Text='<%#Eval("Status")%>'></asp:Label></span></th>
                         </tr>
                         <tr>
+                            <th>Product Number / Name</th>
+                            <td colspan="5"><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label><span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Eval("ProductName")%>'></asp:Label></span></td>
+                        </tr>
+                        <tr>
                             <th>Supplier Name / Country</th>
                             <td colspan="3"><asp:Label ID="SupplierName" runat="server" Text='<%#Eval("SupplierName")%>'></asp:Label><span class="indent">(<asp:Label ID="SupplierCountry" runat="server" Text='<%#Eval("SupplierCountryName")%>'></asp:Label>)</span></td>
                             <th>Purpose</th>
@@ -102,7 +106,7 @@
                             </table>
                         </LayoutTemplate>
                         <EmptyDataTemplate>
-                            <h3 style="font-style:italic">No data found.</h3>
+                            <h3 style="font-style:italic"><% =Purchase.Common.MSG_NO_DATA_FOUND%>></h3>
                         </EmptyDataTemplate>
                         <ItemTemplate>
                         <tr ID="itemPlaceholder" runat="server">
@@ -115,7 +119,7 @@
                             <td><asp:Label ID="Packing" runat="server" Text='<%#Eval("Packing") %>'></asp:Label></td>
                             <td><asp:Label ID="Purity" runat="server" Text='<%#Eval("Purity") %>'></asp:Label></td>
                             <td><asp:Label ID="QMMethod" runat="server" Text='<%#Eval("QMMethod") %>'></asp:Label></td>
-                            <td></td>
+                            <td><asp:Label ID="NoOfferReason" runat="server" Text='<%#Eval("NoOfferReason") %>'></asp:Label></td>
                             <td><asp:HyperLink ID="PO" runat="server" NavigateUrl='<%#If(IsDBNull(Eval("PO")), "", "./POListByRFQ.aspx?RFQLineNumber=" & Eval("RFQLineNumber"))%>'><%#If(IsDBNull(Eval("PO")), "", "PO")%></asp:HyperLink></td>
                         </tr>
                         </ItemTemplate>
