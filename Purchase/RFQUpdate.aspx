@@ -14,7 +14,7 @@
         <form id="RFQForm" runat="server">
     <!-- Main Content Area -->
     <div id="content">
-        <div class="tabs"><a href="#">Supplier Setting</a> | <a href="#" onclick="return Correspondence_onclick()">RFQ Correspondence / History</a></div>
+        <div class="tabs"><a href="#" onclick="return SupplierSetting_onclick()">Supplier Setting</a> | <a href="#" onclick="return Correspondence_onclick()">RFQ Correspondence / History</a></div>
 
         <h3>Quotation Reply</h3>
 
@@ -449,7 +449,11 @@
     		var RFQNumber = encodeURIComponent(document.getElementById('RFQNumber').innerHTML);
 	    	popup('./RFQCorrespondence.aspx?RFQNumber=' + RFQNumber);
         }
-		</script>
+        function SupplierSetting_onclick() {
+            var SupplierCode = encodeURIComponent(document.getElementById('SupplierCode').value);
+            w = window.open('./SupplierSetting.aspx?Action=Edit&Code=' + SupplierCode, "_self");
+        }
+        </script>
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
         </form>
