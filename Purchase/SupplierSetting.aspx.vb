@@ -267,7 +267,7 @@ Partial Public Class SupplierSetting
     Public Sub DataDisplay1()
         If IsNumeric(Code.Text) Then
             DBCommand.CommandText = "SELECT SupplierCode, R3SupplierCode, Name1, Name2, Name3, Name4, SearchTerm1, SearchTerm2, Address1, Address2, Address3, PostalCode, CountryCode, RegionCode, Telephone, Fax, Email, Comment, Website, Note, UpdateDate " & _
-                                            "FROM dbo.Supplier WHERE SupplierCode = '" & Code.Text.ToString & "'"
+                                            "FROM dbo.Supplier WHERE SupplierCode = " & Code.Text.ToString
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             If DBReader.Read = True Then
@@ -295,15 +295,12 @@ Partial Public Class SupplierSetting
                 UpdateDate.Value = ""
                 DBReader.Close()
             End If
-        Else
-            Msg.Text = "Supplier Code" + ERR_DOES_NOT_EXIST
-            Exit Sub
         End If
     End Sub
 
     Public Sub DataDisplay2()
         If IsNumeric(Code.Text) Then
-            DBCommand.CommandText = "SELECT CountryCode, RegionCode FROM dbo.Supplier WHERE SupplierCode = '" & SafeSqlLiteral(Code.Text) & "'"
+            DBCommand.CommandText = "SELECT CountryCode, RegionCode FROM dbo.Supplier WHERE SupplierCode = " & SafeSqlLiteral(Code.Text)
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             If DBReader.Read = True Then
@@ -323,14 +320,20 @@ Partial Public Class SupplierSetting
                     End If
                 End If
                 DBReader2.Close()
+            Else
+                INV_Supplier()
             End If
             DBReader.Close()
         Else
-            Msg.Text = "Supplier Code" + ERR_DOES_NOT_EXIST
-            SuppliersProduct.Enabled = False
-            Save.Enabled = False
+            INV_Supplier()
             Exit Sub
         End If
+    End Sub
+
+    Public Sub INV_Supplier()
+        Msg.Text = "Supplier Code" + ERR_DOES_NOT_EXIST
+        SuppliersProduct.Enabled = False
+        Save.Enabled = False
     End Sub
 
     Public Sub IRFQLocation_Mainte()
@@ -379,4 +382,5 @@ Partial Public Class SupplierSetting
         DBConn.Close()
         DBConn2.Close()
     End Sub
+
 End Class
