@@ -344,6 +344,11 @@ Partial Public Class RFQUpdate
             QuoLocationCode.Value = DS.Tables("RFQHeader").Rows(0)("QuoLocationCode").ToString
             'Under
             RFQStatus.SelectedValue = ""
+            If Session("LocationCode") <> EnqLocationCode.Value Then
+                Close.Visible = False
+            Else
+                Close.Visible = True
+            End If
             'Line
             DBCommand = New SqlCommand("Select " _
 & "RFQLineNumber, EnqQuantity, EnqUnitCode, EnqPiece, CurrencyCode, " _
