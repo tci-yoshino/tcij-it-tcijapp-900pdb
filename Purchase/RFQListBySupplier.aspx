@@ -96,13 +96,14 @@
                                 <tr>
                                     <th id="Th1"  runat="server" style="width:5%">No.</th>
                                     <th id="Th2"  runat="server" style="width:10%">Enq-Quantity</th>
-                                    <th id="Th3"  runat="server" style="width:10%">Currency</th>
-                                    <th id="Th4"  runat="server" style="width:10%">Price</th>
+                                    <th id="Th3"  runat="server" style="width:8%">Currency</th>
+                                    <th id="Th4"  runat="server" style="width:8%">Price</th>
                                     <th id="Th5"  runat="server" style="width:10%">Quo-Quantity</th>
                                     <th id="Th6"  runat="server" style="width:10%">Lead Time</th>
                                     <th id="Th7"  runat="server" style="width:10%">Packing</th>
                                     <th id="Th8"  runat="server" style="width:10%">Purity</th>
                                     <th id="Th9" runat="server" style="width:10%">Method</th>
+                                    <th id="Th11" runat="server" style="width:14%">Reason for "No Offer"</th>
                                     <th id="Th10" runat="server" style="width:5%">PO</th>
                                 </tr>
                                 <tr ID="itemPlaceholder" runat="server">
@@ -123,6 +124,7 @@
                             <td><asp:Label ID="Packing" runat="server" Text='<%#Eval("Packing") %>'></asp:Label></td>
                             <td><asp:Label ID="Purity" runat="server" Text='<%#Eval("Purity") %>'></asp:Label></td>
                             <td><asp:Label ID="QMMethod" runat="server" Text='<%#Eval("QMMethod") %>'></asp:Label></td>
+                            <td></td>
                             <td><asp:HyperLink ID="PO" runat="server" NavigateUrl='<%#If(IsDBNull(Eval("PO")), "", "./POListByRFQ.aspx?RFQLineNumber=" & Eval("RFQLineNumber"))%>'><%#If(IsDBNull(Eval("PO")), "", "PO")%></asp:HyperLink></td>
                         </tr>
                         </ItemTemplate>
