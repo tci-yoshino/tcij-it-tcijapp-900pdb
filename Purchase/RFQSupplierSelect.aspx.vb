@@ -84,7 +84,7 @@
 
         ' パラメータチェック
         If Not String.IsNullOrEmpty(st_Code) Then
-            If Not Regex.IsMatch(st_Code, "^[0-9]+$") Then
+            If Not Common.IsInteger(st_Code) Then
                 st_Code = String.Empty
                 SupplierList.DataBind()
                 Exit Sub
