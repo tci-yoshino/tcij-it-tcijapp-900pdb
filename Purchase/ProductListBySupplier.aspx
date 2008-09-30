@@ -67,7 +67,7 @@ function deleteLine(code) {
                     </table>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
-                    <h3 style="font-style:italic">No data found.</h3>
+                    <h3 style="font-style:italic"><% =Purchase.Common.ERR_NO_MATCH_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr>
@@ -75,7 +75,7 @@ function deleteLine(code) {
                         <td><asp:Label ID="ProductName" runat="server" Text='<%# Eval("ProductName") %>' /></td>
                         <td><asp:Label ID="SupplierItemNumber" runat="server" Text='<%# Eval("SupplierItemNumber") %>' /></td>
                         <td><asp:Label ID="Note" runat="server" Text='<%# Eval("Note") %>' /></td>
-                        <td><asp:Label ID="UpdateDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("UpdateDate"))%>' /></td>
+                        <td><asp:Label ID="UpdateDate" runat="server" Text='<%#Left(Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("UpdateDate"), True), 10)%>' /></td>
                         <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl='<%# Eval("Url") %>'>Edit</asp:HyperLink></td>
                         <td>
                             <asp:HyperLink ID="Delete" runat="server" NavigateUrl='<%# "javascript:deleteLine(" & Eval("ProductID") & ");" %>'>Delete</asp:HyperLink>
