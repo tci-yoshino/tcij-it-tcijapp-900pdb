@@ -56,7 +56,8 @@ function deleteLine(code) {
                     <table ID="itemPlaceholderContainer" runat="server" border="0" style="">
                         <tr>
                             <th style="width:12%">Supplier Code</th>
-                            <th style="width:38%">Supplier Name</th>
+                            <th style="width:30%">Supplier Name</th>
+                            <th style="width:8%">Country</th>
                             <th style="width:10%">Supplier Item Number</th>
                             <th style="width:20%">Note</th>
                             <th style="width:8%">Update Date</th>
@@ -74,9 +75,10 @@ function deleteLine(code) {
                     <tr>
                         <td><asp:Label ID="SupplierCode" runat="server" Text='<%# Eval("SupplierCode") %>' /></td>
                         <td><asp:Label ID="SupplierName" runat="server" Text='<%# Eval("SupplierName") %>' /></td>
+                        <td></td>
                         <td><asp:Label ID="SupplierItemNumber" runat="server" Text='<%# Eval("SupplierItemNumber") %>' /></td>
                         <td><asp:Label ID="Note" runat="server" Text='<%# Eval("Note") %>' /></td>
-                        <td><asp:Label ID="UpdateDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("UpdateDate"))%>' /></td>
+                        <td><asp:Label ID="UpdateDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("UpdateDate"), True)%>' /></td>
                         <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl='<%# Eval("Url") %>'>Edit</asp:HyperLink></td>
                         <td><asp:HyperLink ID="Delete" runat="server" NavigateUrl='<%# "javascript:deleteLine(" & Eval("SupplierCode") & ");" %>'>Delete</asp:HyperLink></td>
                     </tr>
