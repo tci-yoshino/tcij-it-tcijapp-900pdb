@@ -56,8 +56,8 @@ function deleteLine(code) {
                     <table ID="itemPlaceholderContainer" runat="server" border="0" style="">
                         <tr>
                             <th style="width:12%">Supplier Code</th>
-                            <th style="width:30%">Supplier Name</th>
-                            <th style="width:8%">Country</th>
+                            <th style="width:28%">Supplier Name</th>
+                            <th style="width:10%">Country</th>
                             <th style="width:10%">Supplier Item Number</th>
                             <th style="width:20%">Note</th>
                             <th style="width:8%">Update Date</th>
@@ -69,16 +69,16 @@ function deleteLine(code) {
                     </table>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
-                    <h3 style="font-style:italic">No data found.</h3>
+                    <h3 style="font-style:italic"><% =Purchase.Common.ERR_NO_MATCH_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr>
-                        <td><asp:Label ID="SupplierCode" runat="server" Text='<%# Eval("SupplierCode") %>' /></td>
-                        <td><asp:Label ID="SupplierName" runat="server" Text='<%# Eval("SupplierName") %>' /></td>
-                        <td></td>
+                        <td><asp:HyperLink ID="SupplierCode" runat="server" NavigateUrl='<%#Eval("SupplierCode","./SupplierSetting.aspx?Action=Edit&Code={0}")%>' Text = '<%#Eval("SupplierCode")%>' /></td>
+                        <td><asp:HyperLink ID="SupplierName" runat="server" NavigateUrl='<%#Eval("SupplierCode","./SupplierSetting.aspx?Action=Edit&Code={0}")%>' Text = '<%#Eval("SupplierName")%>' /></td>
+                        <td><asp:Label ID="CountryName" runat="server" Text='<%# Eval("CountryName") %>' /></td>
                         <td><asp:Label ID="SupplierItemNumber" runat="server" Text='<%# Eval("SupplierItemNumber") %>' /></td>
                         <td><asp:Label ID="Note" runat="server" Text='<%# Eval("Note") %>' /></td>
-                        <td><asp:Label ID="UpdateDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("UpdateDate"), True)%>' /></td>
+                        <td><asp:Label ID="UpdateDate" runat="server" Text='<%#Left(Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("UpdateDate"), True), 10)%>' /></td>
                         <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl='<%# Eval("Url") %>'>Edit</asp:HyperLink></td>
                         <td><asp:HyperLink ID="Delete" runat="server" NavigateUrl='<%# "javascript:deleteLine(" & Eval("SupplierCode") & ");" %>'>Delete</asp:HyperLink></td>
                     </tr>

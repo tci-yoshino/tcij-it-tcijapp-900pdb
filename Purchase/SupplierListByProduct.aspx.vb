@@ -29,10 +29,10 @@
                 If Not TypeOf DBReader("QuoName") Is DBNull Then ProductName.Text = DBReader("QuoName")
             End If
             DBReader.Close()
-            SrcSupplierProduct.SelectCommand = "SELECT dbo.Supplier_Product.SupplierCode, ISNULL(dbo.Supplier.Name3, '') + N' ' + ISNULL(dbo.Supplier.Name4, '') AS [SupplierName], dbo.Supplier_Product.SupplierItemNumber, dbo.Supplier_Product.Note, REPLACE(CONVERT(char, Supplier_Product.UpdateDate, 111), '/', '-') AS UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&Supplier='+rtrim(ltrim(str(Supplier_Product.SupplierCode)))+'&Product=" + Request.QueryString("ProductID") + "&Return=SP' AS Url " & _
-                                               "FROM dbo.Supplier_Product LEFT OUTER JOIN dbo.Supplier ON dbo.Supplier_Product.SupplierCode = dbo.Supplier.SupplierCode " & _
+            SrcSupplierProduct.SelectCommand = "SELECT dbo.Supplier_Product.SupplierCode, ISNULL(dbo.Supplier.Name3, '') + N' ' + ISNULL(dbo.Supplier.Name4, '') AS SupplierName, dbo.v_Country.CountryName, dbo.Supplier_Product.SupplierItemNumber, dbo.Supplier_Product.Note, dbo.Supplier_Product.UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&Supplier=' + RTRIM(LTRIM(STR(dbo.Supplier_Product.SupplierCode))) + '&Product=" + Request.QueryString("ProductID") + "&Return=SP' AS Url " & _
+                                               "FROM dbo.v_Country RIGHT OUTER JOIN dbo.Supplier ON dbo.v_Country.CountryCode = dbo.Supplier.CountryCode RIGHT OUTER JOIN dbo.Supplier_Product ON dbo.Supplier.SupplierCode = dbo.Supplier_Product.SupplierCode " & _
                                                "WHERE (dbo.Supplier_Product.ProductID = " + Request.QueryString("ProductID") + ")"
-            SupplierProductList.DataBind()
+             SupplierProductList.DataBind()
         End If
     End Sub
 
