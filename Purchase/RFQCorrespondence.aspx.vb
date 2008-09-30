@@ -163,7 +163,8 @@ Partial Public Class RFQCorrespondence
         End If
 
         '[必須入力項目の入力確認]-----------------------------------------------------------------------
-        If Trim(CorresNote.Text) = "" Then
+        CorresNote.Text = CorresNote.Text.Trim    '入力データ前後の改行コード、タブコードを除去
+        If CorresNote.Text = "" Then
             Msg.Text = "Note" + Common.ERR_REQUIRED_FIELD
             Exit Sub
         ElseIf CorresNote.Text.Length > Common.INT_3000 Then
