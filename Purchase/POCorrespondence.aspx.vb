@@ -163,7 +163,8 @@ Partial Public Class POCorrespondence
         End If
 
         '[CorresNoteのCheck]----------------------------------------------------------------------------
-        If Trim(CorresNote.Text) = "" Then
+        CorresNote.Text = CorresNote.Text.Trim    '入力データ前後の改行コード、タブコードを除去
+        If CorresNote.Text = "" Then
             Msg.Text = "Note" + ERR_REQUIRED_FIELD
             Exit Sub
         ElseIf CorresNote.Text.Length > INT_3000 Then
