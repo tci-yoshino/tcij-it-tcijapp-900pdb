@@ -979,6 +979,15 @@ Partial Public Class RFQUpdate
     Protected WithEvents RFQStatus As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
+    '''RunMsg コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents RunMsg As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
     '''Update コントロール。
     '''</summary>
     '''<remarks>

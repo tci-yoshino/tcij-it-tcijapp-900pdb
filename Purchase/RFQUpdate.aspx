@@ -421,6 +421,7 @@
                         <asp:ListItem Value="PQ">Partly-quoted</asp:ListItem>
                         <asp:ListItem Value="Q">Quoted</asp:ListItem>
                     </asp:DropDownList>
+                    <p class="message"><asp:Label ID="RunMsg" runat="server"></asp:Label></p>
                     <asp:Button ID="Update" runat="server" Text="Update" />
                     <span class="indent"></span>
                     <asp:Button ID="Close" runat="server" Text="Close" />

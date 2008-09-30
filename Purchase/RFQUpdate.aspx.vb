@@ -86,6 +86,8 @@ Partial Public Class RFQUpdate
         Dim st_QuotedDate As String = String.Empty
         Dim SQLLineUpdate As String = String.Empty
         Dim SQLLineInsert As String = String.Empty
+        RunMsg.Text = String.Empty
+        Msg.Text = String.Empty
         If SetRFQNumber() = False Then
             'RFQNumberのチェックとst_RFQNumberへのセットを行う。
             Msg.Text = ERR_INVALID_PARAMETER
@@ -93,7 +95,6 @@ Partial Public Class RFQUpdate
             Parameter = False
             Exit Sub
         End If
-        Msg.Text = String.Empty
         If Request.QueryString("Action") <> "Update" Then
             Msg.Text = ERR_INVALID_PARAMETER
             Exit Sub
@@ -230,9 +231,12 @@ Partial Public Class RFQUpdate
             Parameter = False
             Exit Sub
         End If
+        RunMsg.Text = MSG_DATA_UPDATED
     End Sub
 
     Protected Sub Close_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Close.Click
+        RunMsg.Text = String.Empty
+        Msg.Text = String.Empty
         If Request.QueryString("Action") <> "Close" Then
             Msg.Text = ERR_INVALID_PARAMETER
             Exit Sub
@@ -266,6 +270,7 @@ Partial Public Class RFQUpdate
             Parameter = False
             Exit Sub
         End If
+        RunMsg.Text = MSG_DATA_UPDATED
     End Sub
 
     Private Function FormDataSet() As Boolean
@@ -452,7 +457,7 @@ Partial Public Class RFQUpdate
         End If
         'Makerのチェック
         If MakerCode.Text <> String.Empty Then
-            If Not IsInteger(SupplierCode.Text) Then
+            If Not IsInteger(MakerCode.Text) Then
                 Msg.Text = ERR_INCORRECT_MAKERCODE
                 Return False
             End If
