@@ -119,6 +119,7 @@
         End If
 
         '[Noteの文字数Check]-----------------------------------------------------------
+        Note.Text = Note.Text.Trim         '入力データ前後の改行コード、タブコードを除去
         If Note.Text.Length > Common.INT_3000 Then
             Msg.Text = "Note" + Common.ERR_OVER_3000
             Exit Sub
