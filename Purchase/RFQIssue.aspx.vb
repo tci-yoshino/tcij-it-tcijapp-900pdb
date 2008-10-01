@@ -457,7 +457,7 @@ Partial Public Class RFQIssue
                 If DBSQLDataReader.HasRows = True Then
                     While DBSQLDataReader.Read
                         SupplierCountry.Text = DBSQLDataReader("CountryName").ToString
-                        QuoLocation.SelectedValue = DBSQLDataReader("DefaultQuoLocationCode").ToString
+                        QuoLocation.SelectedValue = IIf(DBSQLDataReader("DefaultQuoLocationCode").ToString = "", Session("LocationCode").ToString, DBSQLDataReader("DefaultQuoLocationCode").ToString)
                     End While
                 End If
             End Using
