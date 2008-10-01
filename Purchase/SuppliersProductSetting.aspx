@@ -11,6 +11,7 @@
 </head>
 <body>
     <!-- Main Content Area -->
+      <form id="SupplierProductForm" runat="server">
     <div id="content">
         <div class="tabs"></div>
 
@@ -18,7 +19,7 @@
 
         <div class="main">
 
-            <form id="SupplierProductForm" runat="server">
+          
             <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 
                 <table>
@@ -26,8 +27,7 @@
                         <th>Supplier Code <span class="required">*</span> : </th>
                         <td>
 						    <asp:TextBox ID="Supplier" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
-						    <asp:ImageButton ID="SupplierSelect" runat="server" 
-                                ImageUrl="./Image/Search.gif" CssClass="magnify" />
+						    <asp:ImageButton ID="SupplierSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="return SupplierSelect_onclick()" />
                         </td>
                     </tr>
                     <tr>
@@ -73,11 +73,19 @@
                 <div class="btns">
                     <asp:Button ID="Save" runat="server" Text="Save" UseSubmitBehavior="false" />
                 </div>
-            </form>
+
         </div>
     </div><!-- Main Content Area END -->
 
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
+    </form>
+		<script language ="javascript" type="text/javascript">
+		    function SupplierSelect_onclick() {
+        var Supplier = encodeURIComponent(document.getElementById('Supplier').value);
+        popup('./SupplierSelect.aspx?Code=' + Supplier);
+	    	return false;
+		}
+		</script>
 </body>
 </html>
