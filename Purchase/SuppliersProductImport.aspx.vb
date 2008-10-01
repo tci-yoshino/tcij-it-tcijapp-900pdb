@@ -35,6 +35,7 @@ Partial Public Class SuppliersProductImport
     Const COL_POS_ITEM_NAME As Integer = 2
     Const COL_POS_NOTE As Integer = 3
 
+    Public Shared tb_Excel As DataTable
 
     'Stringの型タイプ定数です。
     Private ReadOnly TYPE_OF_STRING As System.Type = Type.GetType("System.String")
@@ -165,7 +166,7 @@ Partial Public Class SuppliersProductImport
     Private Sub ViewSupplierProductList(ByVal ExcelFileName As String)
 
         'Excelからデータをテーブルに取り込み
-        Dim tb_Excel As DataTable = GetSuppliersProductTableFromExcel(ExcelFileName)
+        tb_Excel = GetSuppliersProductTableFromExcel(ExcelFileName)
 
         If tb_Excel Is Nothing Then
             SupplierProductList.DataSource = Nothing
@@ -189,6 +190,7 @@ Partial Public Class SuppliersProductImport
         'CASNumberエラー行をカラー表示
         SetCASErrorColorToSupplierProductList()
 
+        Session("EXCEL_DATA_TABLE") = tb_Excel
         ''TODO ?? ProductNumber重複チェック
     End Sub
 
@@ -232,13 +234,17 @@ Partial Public Class SuppliersProductImport
 
         Dim i_ErrCount As Integer = 0
         For Each row As GridViewRow In SupplierProductList.Rows
-
+            Dim CasTxt As TextBox = CType(row.FindControl("CASNumber"), TextBox)
             Dim st_CAS = CType(row.FindControl("CASNumber"), TextBox).Text
+
             If Not IsCASNumber(st_CAS) Then
                 row.CssClass = "attention"
+                CasTxt.CssClass = "attention"
+                If st_CAS = "" Then CasTxt.Text = "No_Cas"
                 i_ErrCount += 1
             Else
                 row.CssClass = ""
+                CasTxt.CssClass = ""
             End If
         Next
         Return i_ErrCount
@@ -283,6 +289,11 @@ Partial Public Class SuppliersProductImport
                 cmd.Parameters.AddWithValue("CASNumber", row("CAS Number"))
 
                 Dim dr As SqlDataReader = cmd.ExecuteReader()
+
+                row("TCI Product Number") = String.Empty
+                row("EHS Status") = String.Empty
+                row("Proposal Dept") = String.Empty
+                row("Proc_Dept") = String.Empty
 
                 i_DataCount = 0
                 While dr.Read()
@@ -342,7 +353,6 @@ Partial Public Class SuppliersProductImport
             Return Nothing
         End Try
 
-
         tbExcel = dsExcel.Tables("SuppliersProductExcel")
 
         '実験実装　カラム名のコード内設定
@@ -376,6 +386,9 @@ Partial Public Class SuppliersProductImport
         Dim st_Note As String
 
         For j As Integer = 0 To tbExcel.Rows.Count - 1
+
+            tbExcel.Rows(j).Item("CAS Number") = tbExcel.Rows(j).Item("CAS Number").ToString().Trim()
+
             st_SupplierItemNumber = tbExcel.Rows(j).Item("Supplier Item Number").ToString()
             If st_SupplierItemNumber.Length > 128 Then
                 Msg.Text = "Supplier Item Numberの文字数がオーバー"
@@ -394,7 +407,6 @@ Partial Public Class SuppliersProductImport
                 Return Nothing
             End If
         Next j
-
 
         Return tbExcel
 
@@ -440,10 +452,11 @@ Partial Public Class SuppliersProductImport
     ''' <remarks></remarks>
     Private Sub SetCompetitorInfometionToTable(ByRef Table As DataTable)
 
-        Dim st_CASNumber As String
+        Dim st_CASNumber As String = String.Empty
         Dim competitorProduct As CompetitorProductType
 
         For Each row As DataRow In Table.Rows
+
             st_CASNumber = row("CAS Number")
             competitorProduct = GetCompetitorProductByCASNumber(st_CASNumber)
 
@@ -895,9 +908,28 @@ Partial Public Class SuppliersProductImport
             Exit Sub
         End If
 
-        If SetCASErrorColorToSupplierProductList() > 0 Then
-            Msg.Text = "CAS Number" + ERR_INCORRECT_FORMAT
-            Exit Sub
-        End If
+        tb_Excel = CType(Session("EXCEL_DATA_TABLE"), DataTable)
+
+        For j As Integer = 0 To tb_Excel.Rows.Count - 1
+            tb_Excel.Rows(j).Item("CAS Number") = CType(SupplierProductList.Rows(j).FindControl("CASNumber"), TextBox).Text
+        Next
+
+        '他社扱い情報をテーブルに設定
+        SetCompetitorInfometionToTable(tb_Excel)
+
+        '製品情報データをテーブルに設定
+        SetProductInfometionToTable(tb_Excel)
+
+        'チェック項目を画像ファイルに置き換え
+        SetCheckImageHtmlToTable(tb_Excel)
+
+        'テーブルデータを画面に表示
+        SupplierProductList.DataSource = tb_Excel
+        SupplierProductList.DataBind()
+
+        'CASNumberエラー行をカラー表示
+        SetCASErrorColorToSupplierProductList()
+
     End Sub
+
 End Class
