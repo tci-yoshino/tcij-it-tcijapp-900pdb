@@ -368,7 +368,9 @@ Partial Public Class RFQUpdate
 
             If DS.Tables("RFQLine").Rows.Count = 0 Then
             Else
-                For i = 0 To DS.Tables("RFQLine").Rows.Count - 1
+                Dim i_Cnt As Integer = 0
+                i_Cnt = IIf(LINE_COUNT > DS.Tables("RFQLine").Rows.Count, DS.Tables("RFQLine").Rows.Count, LINE_COUNT)
+                For i = 0 To i_Cnt - 1
                     j = i + 1
                     EnqQuantity(j).Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
                     EnqQuantity(j).ReadOnly = True
