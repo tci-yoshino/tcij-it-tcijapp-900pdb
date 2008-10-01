@@ -147,26 +147,28 @@
         ' SrcPO_Par の NOT IN () には、SrcPO_Overdue, SrcPO_PPI で取得した PONumber が入る。
         ' 取得した PONumber が空の場合は '' が入る。(重複を避けるための処理)
         SrcPO_Overdue.SelectCommand = _
-              "SELECT PONumber, StatusChangeDate, StatusCode, ProductNumber, ProductName, " _
-            & "       PODate, POUserName, POLocationName, SupplierName, MakerName, DeliveryDate, " _
-            & "       OrderQuantity, OrderUnitCode, CurrencyCode, UnitPrice, PerQuantity, PerUnitCode, 'Overdue' as POCorrespondence " _
-            & "FROM v_PO " _
+              "SELECT P.PONumber, P.StatusChangeDate, P.StatusCode, P.ProductNumber, P.ProductName, " _
+            & "       P.PODate, P.POUserName, P.POLocationName, P.SupplierName, P.MakerName, P.DeliveryDate, " _
+            & "       P.OrderQuantity, P.OrderUnitCode, P.CurrencyCode, P.UnitPrice, P.PerQuantity, P.PerUnitCode, PR.POCorres as POCorrespondence " _
+            & "FROM v_PO AS P LEFT OUTER JOIN " _
+            & "     v_POReminder AS PR ON PR.PONumber = P.PONumber AND PR.RcptUserID = @UserID " _
             & "WHERE POUserID = @UserID " _
-            & "  AND CONVERT(VARCHAR,DueDate,112) <= CONVERT(VARCHAR,GETDATE(),112) " _
-            & "  AND ((ParPONumber IS NULL) AND (StatusSortOrder <= 11) " _
-            & "        OR (ParPONumber IS NOT NULL) AND (StatusCode = 'CPI')) " _
+            & "  AND CONVERT(VARCHAR,P.DueDate,112) <= CONVERT(VARCHAR,GETDATE(),112) " _
+            & "  AND ((P.ParPONumber IS NULL) AND (P.StatusSortOrder <= 11) " _
+            & "        OR (P.ParPONumber IS NOT NULL) AND (P.StatusCode = 'CPI')) " _
             & "ORDER BY DueDate ASC "
         POList_Overdue.DataSourceID = "SrcPO_Overdue"
         POList_Overdue.DataBind()
 
         SrcPO_PPI.SelectCommand = _
-              "SELECT PONumber, StatusChangeDate, StatusCode, ProductNumber, ProductName, " _
-            & "       PODate, POUserName, POLocationName, SupplierName, MakerName,DeliveryDate, " _
-            & "       OrderQuantity, OrderUnitCode, CurrencyCode, UnitPrice, PerQuantity, PerUnitCode, Status as POCorrespondence " _
-            & "FROM v_PO " _
-            & "WHERE SOUserID = @UserID " _
-            & "  AND StatusCode = 'PPI' " _
-            & "  AND PONumber NOT IN (" & IIf(String.IsNullOrEmpty(stb_PONumbers.ToString), "''", stb_PONumbers.ToString.Trim(",")) & ") "
+              "SELECT P.PONumber, P.StatusChangeDate, P.StatusCode, P.ProductNumber, P.ProductName, " _
+            & "       P.PODate, P.POUserName, P.POLocationName, P.SupplierName, P.MakerName, P.DeliveryDate, " _
+            & "       P.OrderQuantity, P.OrderUnitCode, P.CurrencyCode, P.UnitPrice, P.PerQuantity, P.PerUnitCode, PR.POCorres as POCorrespondence " _
+            & "FROM v_PO AS P LEFT OUTER JOIN " _
+            & "     v_POReminder AS PR ON PR.PONumber = P.PONumber AND PR.RcptUserID = @UserID " _
+            & "WHERE P.SOUserID = @UserID " _
+            & "  AND P.StatusCode = 'PPI' " _
+            & "  AND P.PONumber NOT IN (" & IIf(String.IsNullOrEmpty(stb_PONumbers.ToString), "''", stb_PONumbers.ToString.Trim(",")) & ") "
         POList_PPI.DataSourceID = "SrcPO_PPI"
         POList_PPI.DataBind()
 
