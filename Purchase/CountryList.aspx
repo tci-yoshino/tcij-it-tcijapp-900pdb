@@ -33,7 +33,7 @@
                     </table>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
-                    <h3 style="font-style:italic">No data found.</h3>
+                    <h3 style="font-style:italic"><% =Purchase.Common.ERR_NO_MATCH_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr>
