@@ -100,10 +100,12 @@ Partial Public Class ProductSetting
             Msg.Text = "MolecularFormula" + ERR_TOO_LONG
             Exit Sub
         End If
+        Reference.Text = Reference.Text.Trim        '入力データ前後の改行コード、タブコードを除去
         If Reference.Text.Length > INT_3000 Then
             Msg.Text = "Reference" + ERR_OVER_3000
             Exit Sub
         End If
+        Comment.Text = Comment.Text.Trim            '入力データ前後の改行コード、タブコードを除去
         If Comment.Text.Length > INT_3000 Then
             Msg.Text = "Comment" + ERR_OVER_3000
             Exit Sub
