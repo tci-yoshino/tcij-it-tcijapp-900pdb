@@ -970,15 +970,6 @@ Partial Public Class RFQUpdate
     Protected WithEvents NoOfferReason_4 As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
-    '''RFQStatus コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents RFQStatus As Global.System.Web.UI.WebControls.DropDownList
-
-    '''<summary>
     '''RunMsg コントロール。
     '''</summary>
     '''<remarks>
@@ -986,6 +977,15 @@ Partial Public Class RFQUpdate
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents RunMsg As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
+    '''RFQStatus コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents RFQStatus As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
     '''Update コントロール。
