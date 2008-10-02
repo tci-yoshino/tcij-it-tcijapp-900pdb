@@ -15,7 +15,6 @@
     <!-- Main Content Area -->
     <div id="content">
         <div class="tabs"><a href="#" onclick="return SupplierSetting_onclick()">Supplier Setting</a> | <a href="#" onclick="return Correspondence_onclick()">RFQ Correspondence / History</a></div>
-
         <h3>Quotation Reply</h3>
 
             <div class="main">
@@ -414,6 +413,7 @@
                 </table>
 
                 <div class="btns">
+                    <p class="message"><asp:Label ID="RunMsg" runat="server"></asp:Label></p>
                     <strong>Status : </strong>
                     <asp:DropDownList ID="RFQStatus" runat="server">
                         <asp:ListItem></asp:ListItem>
@@ -421,7 +421,7 @@
                         <asp:ListItem Value="PQ">Partly-quoted</asp:ListItem>
                         <asp:ListItem Value="Q">Quoted</asp:ListItem>
                     </asp:DropDownList>
-                    <p class="message"><asp:Label ID="RunMsg" runat="server"></asp:Label></p>
+                    
                     <asp:Button ID="Update" runat="server" Text="Update" />
                     <span class="indent"></span>
                     <asp:Button ID="Close" runat="server" Text="Close" />
@@ -445,13 +445,23 @@
 	    	popup('./MakerSelect.aspx?Code=' + MakerCode);
 	    	return false;
 		}
-        function Correspondence_onclick() {
-    		var RFQNumber = encodeURIComponent(document.getElementById('RFQNumber').innerHTML);
-	    	popup('./RFQCorrespondence.aspx?RFQNumber=' + RFQNumber);
+		function Correspondence_onclick() {
+            if (document.getElementById('RFQNumber')) {
+        		var RFQNumber = encodeURIComponent(document.getElementById('RFQNumber').innerHTML);
+	        	popup('./RFQCorrespondence.aspx?RFQNumber=' + RFQNumber);
+	        }
+	        else {
+	            popup('./RFQCorrespondence.aspx?RFQNumber=');
+	        }
         }
         function SupplierSetting_onclick() {
-            var SupplierCode = encodeURIComponent(document.getElementById('SupplierCode').value);
-            w = window.open('./SupplierSetting.aspx?Action=Edit&Code=' + SupplierCode, "_self");
+            if (document.getElementById('SupplierCode')) {
+                var SupplierCode = encodeURIComponent(document.getElementById('SupplierCode').value);
+                popup('./SupplierSetting.aspx?Action=Edit&Code=' + SupplierCode);
+            }
+            else {
+                popup('./SupplierSetting.aspx?Action=Edit&Code=');
+            }
         }
         </script>
     <!-- Footer -->
