@@ -56,6 +56,7 @@ Partial Public Class RFQUpdate
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         DBConn.Open()
         DBCommand = DBConn.CreateCommand()
+
         Call SetControlArray()
         If IsPostBack = False Then
             If SetRFQNumber() = False Then
