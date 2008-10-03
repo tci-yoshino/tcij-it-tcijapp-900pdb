@@ -239,12 +239,10 @@ Partial Public Class SuppliersProductImport
 
             If Not IsCASNumber(st_CAS) Then
                 row.CssClass = "attention"
-                CasTxt.CssClass = "attention"
                 If st_CAS = "" Then CasTxt.Text = "No_Cas"
                 i_ErrCount += 1
             Else
                 row.CssClass = ""
-                CasTxt.CssClass = ""
             End If
         Next
         Return i_ErrCount
