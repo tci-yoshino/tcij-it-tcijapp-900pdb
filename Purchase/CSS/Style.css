@@ -356,6 +356,10 @@ option.message {
     font-weight: bold;
 }
 
+tr.attention td {
+    background-color: #ffe4e1;
+}
+
 .message {
 	color: #2651a5;
 	font-weight: bold;
