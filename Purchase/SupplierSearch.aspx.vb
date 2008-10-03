@@ -33,27 +33,32 @@ Partial Public Class SupplierSearch
             Exit Sub
         End If
 
-
         '[検索項目が入力された場合]-------------------------------------------------------
         Dim SQLStr As String = ""
         SrcSupplier.SelectCommand = "SELECT SupplierCode AS [Supplier Code], R3SupplierCode AS [R/3 Supplier Code], ISNULL(Name3, '') + N' ' + ISNULL(Name4, '') AS [Supplier Name], './SupplierSetting.aspx?Action=Edit&Code=' + rtrim(ltrim(str([SupplierCode]))) AS Url  FROM dbo.Supplier "
         If Code.Text.ToString <> "" Then
+            '[Codeの検索指定]-------------------------------------------------------------
             SQLStr = SQLStr + "WHERE (SupplierCode = " + SafeSqlLiteral(Code.Text) + ")"
-            If Not IsNumeric(SafeSqlLiteral(Code.Text)) Then
+            If Not IsInteger(SafeSqlLiteral(Code.Text)) Then
                 UnDsp_SrcSupplier()
                 Exit Sub
+            Else
+                If SafeSqlLiteral(Code.Text) Like "*+*" Then
+                    UnDsp_SrcSupplier()
+                    Exit Sub
+                End If
             End If
         End If
 
-        '[R3Codeが数字の場合と文字の場合とでは検索が異なる]-------------------------------
-        If R3Code.Text.ToString <> "" Then
+        '[R3Codeの検索文字列作成]---------------------------------------------------------
+        If R3Code.Text <> "" Then
+            Dim st_R3Code1 As String = Right("0000000000" + SafeSqlLiteral(R3Code.Text), 10)
+            Dim st_R3Code2 As String = SafeSqlLiteral(R3Code.Text)
             If SQLStr = "" Then SQLStr = "WHERE " Else SQLStr = SQLStr + " AND "
-            If IsNumeric(R3Code.Text.ToString) And R3Code.Text Like "*.*" = False Then
-                SQLStr = SQLStr + "(R3SupplierCode = " + SafeSqlLiteral(R3Code.Text) + ")"
-            Else
-                SQLStr = SQLStr + "(R3SupplierCode = '" + SafeSqlLiteral(R3Code.Text) + "')"
-            End If
+            SQLStr = SQLStr + "((R3SupplierCode = '" + st_R3Code1 + "') OR (R3SupplierCode = '" + st_R3Code2 + "'))"
         End If
+
+        '[Nameの検索指定]-----------------------------------------------------------------
         If Name.Text.ToString <> "" Then
             If SQLStr = "" Then SQLStr = "WHERE " Else SQLStr = SQLStr + " AND "
             SQLStr = SQLStr + "ISNULL(Name3,'') + N' ' + ISNULL(Name4,'') LIKE '%" + SafeSqlLikeClauseLiteral(Name.Text) + "%'"
