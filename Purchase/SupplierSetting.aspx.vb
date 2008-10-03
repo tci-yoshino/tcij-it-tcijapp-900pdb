@@ -266,67 +266,71 @@ Partial Public Class SupplierSetting
 
     Public Sub DataDisplay1()
         If IsInteger(Code.Text) Then
-            DBCommand.CommandText = "SELECT SupplierCode, R3SupplierCode, Name1, Name2, Name3, Name4, SearchTerm1, SearchTerm2, Address1, Address2, Address3, PostalCode, CountryCode, RegionCode, Telephone, Fax, Email, Comment, Website, Note, UpdateDate " & _
-                                            "FROM dbo.Supplier WHERE SupplierCode = " & Code.Text.ToString
-            DBReader = DBCommand.ExecuteReader()
-            DBCommand.Dispose()
-            If DBReader.Read = True Then
-                If Not TypeOf DBReader("R3SupplierCode") Is DBNull Then R3SupplierCode.Text = DBReader("R3SupplierCode")
-                If Not TypeOf DBReader("Name1") Is DBNull Then SupplierName1.Text = DBReader("Name1")
-                If Not TypeOf DBReader("Name2") Is DBNull Then SupplierName2.Text = DBReader("Name2")
-                If Not TypeOf DBReader("Name3") Is DBNull Then SupplierName3.Text = DBReader("Name3")
-                If Not TypeOf DBReader("Name4") Is DBNull Then SupplierName4.Text = DBReader("Name4")
-                If Not TypeOf DBReader("SearchTerm1") Is DBNull Then SearchTerm1.Text = DBReader("SearchTerm1")
-                If Not TypeOf DBReader("SearchTerm2") Is DBNull Then SearchTerm2.Text = DBReader("SearchTerm2")
-                If Not TypeOf DBReader("Address1") Is DBNull Then Address1.Text = DBReader("Address1")
-                If Not TypeOf DBReader("Address2") Is DBNull Then Address2.Text = DBReader("Address2")
-                If Not TypeOf DBReader("Address3") Is DBNull Then Address3.Text = DBReader("Address3")
-                If Not TypeOf DBReader("PostalCode") Is DBNull Then PostalCode.Text = DBReader("PostalCode")
-                If Not TypeOf DBReader("Telephone") Is DBNull Then Telephone.Text = DBReader("Telephone")
-                If Not TypeOf DBReader("Fax") Is DBNull Then Fax.Text = DBReader("Fax")
-                If Not TypeOf DBReader("Email") Is DBNull Then Email.Text = DBReader("Email")
-                If Not TypeOf DBReader("Website") Is DBNull Then Website.Text = DBReader("Website")
-                If Not TypeOf DBReader("Comment") Is DBNull Then R3Comment.Text = DBReader("Comment")
-                If Not TypeOf DBReader("Note") Is DBNull Then Comment.Text = DBReader("Note")
-                Country.SelectedValue = DBReader("CountryCode")
-                UpdateDate.Value = GetUpdateDate("Supplier", "SupplierCode", Code.Text.ToString) '[同時更新チェック用]
-                DBReader.Close()
-            Else
-                UpdateDate.Value = ""
-                DBReader.Close()
+            If Code.Text Like "*+*" = False Then
+                DBCommand.CommandText = "SELECT SupplierCode, R3SupplierCode, Name1, Name2, Name3, Name4, SearchTerm1, SearchTerm2, Address1, Address2, Address3, PostalCode, CountryCode, RegionCode, Telephone, Fax, Email, Comment, Website, Note, UpdateDate " & _
+                                                           "FROM dbo.Supplier WHERE SupplierCode = " & Code.Text.ToString
+                DBReader = DBCommand.ExecuteReader()
+                DBCommand.Dispose()
+                If DBReader.Read = True Then
+                    If Not TypeOf DBReader("R3SupplierCode") Is DBNull Then R3SupplierCode.Text = DBReader("R3SupplierCode")
+                    If Not TypeOf DBReader("Name1") Is DBNull Then SupplierName1.Text = DBReader("Name1")
+                    If Not TypeOf DBReader("Name2") Is DBNull Then SupplierName2.Text = DBReader("Name2")
+                    If Not TypeOf DBReader("Name3") Is DBNull Then SupplierName3.Text = DBReader("Name3")
+                    If Not TypeOf DBReader("Name4") Is DBNull Then SupplierName4.Text = DBReader("Name4")
+                    If Not TypeOf DBReader("SearchTerm1") Is DBNull Then SearchTerm1.Text = DBReader("SearchTerm1")
+                    If Not TypeOf DBReader("SearchTerm2") Is DBNull Then SearchTerm2.Text = DBReader("SearchTerm2")
+                    If Not TypeOf DBReader("Address1") Is DBNull Then Address1.Text = DBReader("Address1")
+                    If Not TypeOf DBReader("Address2") Is DBNull Then Address2.Text = DBReader("Address2")
+                    If Not TypeOf DBReader("Address3") Is DBNull Then Address3.Text = DBReader("Address3")
+                    If Not TypeOf DBReader("PostalCode") Is DBNull Then PostalCode.Text = DBReader("PostalCode")
+                    If Not TypeOf DBReader("Telephone") Is DBNull Then Telephone.Text = DBReader("Telephone")
+                    If Not TypeOf DBReader("Fax") Is DBNull Then Fax.Text = DBReader("Fax")
+                    If Not TypeOf DBReader("Email") Is DBNull Then Email.Text = DBReader("Email")
+                    If Not TypeOf DBReader("Website") Is DBNull Then Website.Text = DBReader("Website")
+                    If Not TypeOf DBReader("Comment") Is DBNull Then R3Comment.Text = DBReader("Comment")
+                    If Not TypeOf DBReader("Note") Is DBNull Then Comment.Text = DBReader("Note")
+                    Country.SelectedValue = DBReader("CountryCode")
+                    UpdateDate.Value = GetUpdateDate("Supplier", "SupplierCode", Code.Text.ToString) '[同時更新チェック用]
+                    DBReader.Close()
+                Else
+                    UpdateDate.Value = ""
+                    DBReader.Close()
+                End If
             End If
         End If
     End Sub
 
     Public Sub DataDisplay2()
         If IsInteger(Code.Text) Then
-            DBCommand.CommandText = "SELECT CountryCode, RegionCode FROM dbo.Supplier WHERE SupplierCode = " & SafeSqlLiteral(Code.Text)
-            DBReader = DBCommand.ExecuteReader()
-            DBCommand.Dispose()
-            If DBReader.Read = True Then
-                '[Country,Regionにデータ表示]-------------------------------------------------------
-                If Not TypeOf DBReader("CountryCode") Is DBNull Then Country.Text = DBReader("CountryCode")
-                If Not TypeOf DBReader("RegionCode") Is DBNull Then Region.Text = DBReader("RegionCode")
+            If Code.Text Like "*+*" = False Then
+                DBCommand.CommandText = "SELECT CountryCode, RegionCode FROM dbo.Supplier WHERE SupplierCode = " & SafeSqlLiteral(Code.Text)
+                DBReader = DBCommand.ExecuteReader()
+                DBCommand.Dispose()
+                If DBReader.Read = True Then
+                    '[Country,Regionにデータ表示]-------------------------------------------------------
+                    If Not TypeOf DBReader("CountryCode") Is DBNull Then Country.Text = DBReader("CountryCode")
+                    If Not TypeOf DBReader("RegionCode") Is DBNull Then Region.Text = DBReader("RegionCode")
 
-                '[DefaultQuoLocation.Item設定]------------------------------------------------------
-                DBCommand2.CommandText = "SELECT QuoLocationCode FROM dbo.IrregularRFQLocation WHERE (SupplierCode = '" & SafeSqlLiteral(Code.Text) & "')"
-                DBReader2 = DBCommand2.ExecuteReader()
-                DBCommand2.Dispose()
-                If DBReader2.Read = True Then
-                    If Not TypeOf DBReader2("QuoLocationCode") Is DBNull Then
-                        DefaultQuoLocation.Text = DBReader2("QuoLocationCode")
-                    Else
-                        DefaultQuoLocation.Text = "Direct"
+                    '[DefaultQuoLocation.Item設定]------------------------------------------------------
+                    DBCommand2.CommandText = "SELECT QuoLocationCode FROM dbo.IrregularRFQLocation WHERE (SupplierCode = '" & SafeSqlLiteral(Code.Text) & "')"
+                    DBReader2 = DBCommand2.ExecuteReader()
+                    DBCommand2.Dispose()
+                    If DBReader2.Read = True Then
+                        If Not TypeOf DBReader2("QuoLocationCode") Is DBNull Then
+                            DefaultQuoLocation.Text = DBReader2("QuoLocationCode")
+                        Else
+                            DefaultQuoLocation.Text = "Direct"
+                        End If
                     End If
+                    DBReader2.Close()
+                Else
+                    INV_Supplier()
                 End If
-                DBReader2.Close()
+                DBReader.Close()
             Else
                 INV_Supplier()
+                Exit Sub
             End If
-            DBReader.Close()
-        Else
-            INV_Supplier()
-            Exit Sub
         End If
     End Sub
 
