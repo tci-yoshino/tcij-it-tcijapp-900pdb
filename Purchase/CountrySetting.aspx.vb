@@ -4,7 +4,6 @@
     Dim DBConn As New System.Data.SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
     Dim DBCommand As System.Data.SqlClient.SqlCommand
     Dim DBReader As System.Data.SqlClient.SqlDataReader
-    Dim ActNai As String                                    '処理判断内容
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         '[DBの接続]-----------------------------------------------------------------------
@@ -56,22 +55,6 @@
             Name.Text = Request.Form("Name")
         End If
     End Sub
-
-    Private Sub CountrySetting_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
-        Dim wClient As String       'クライアントサイドの処理を格納する
-        Dim Type2 As Type = Me.GetType
-        wClient = Clientside()
-        If wClient <> "" Then
-            ClientScript.RegisterStartupScript(Type2, "startup", Chr(13) & Chr(10) & "<script language='JavaScript' type=text/javascript> " & wClient & " </script>")
-        End If
-    End Sub
-
-    Private Function Clientside()
-        Clientside = ""
-        If ActNai = "CountrySelect.aspx_Open" Then
-            Clientside = "popup('CountrySelect.aspx?code=" + Common.SafeSqlLiteral(Code.Text) + "')"
-        End If
-    End Function
 
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
         Dim st_Location As String = ""
@@ -172,10 +155,6 @@
         If Msg.Text.ToString = "" Then
             Response.Redirect("CountryList.aspx")
         End If
-    End Sub
-
-    Protected Sub Search_Click(ByVal sender As Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles Search.Click
-        ActNai = "CountrySelect.aspx_Open"
     End Sub
 
     Private Sub CountrySetting_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload

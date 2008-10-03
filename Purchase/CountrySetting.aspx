@@ -11,24 +11,18 @@
 </head>
 <body>
 	<!-- Main Content Area -->
+	<form id="CountryForm" runat="server">
 	<div id="content">
 		<div class="tabs"></div>
-
 		<h3>Country Setting</h3>
-
 		<div class="main">
-
-			<form id="CountryForm" runat="server">
 			<p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
-
 				<table>
 					<tr>
 						<th>Country Code <span class="required">*</span> : </th>
 						<td>
-						    <asp:TextBox ID="Code" runat="server" Width="7em" MaxLength="5" ReadOnly="true" 
-                                CssClass="readonly" TabIndex="1"></asp:TextBox>
-						    <asp:ImageButton ID="Search" runat="server" ImageUrl="./Image/Search.gif" 
-                                CssClass="magnify" Width="18px" />
+						    <asp:TextBox ID="Code" runat="server" Width="7em" MaxLength="5" ReadOnly="true" CssClass="readonly" TabIndex="1"></asp:TextBox>
+						    <asp:ImageButton ID="Search" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="return Search_onclick()" />
 						</td>
 					</tr>
 					<tr>
@@ -46,11 +40,18 @@
 				<div class="btns">
                     <asp:Button ID="Save" runat="server" Text="Save" />
 				</div>
-			</form>
 		</div>
 	</div><!-- Main Content Area END -->
 
 	<!-- Footer -->
-	<!--#include virtual="./Footer.html" --><!-- Footer END -->			
+	<!--#include virtual="./Footer.html" --><!-- Footer END -->	
+	</form>
+		<script language ="javascript" type="text/javascript">
+		    function Search_onclick() {
+		        var Code = encodeURIComponent(document.getElementById('Code').value);
+		        popup('./CountrySelect.aspx?Code=' + Code);
+		        return false;
+		    }
+		</script>		
 </body>
 </html>
