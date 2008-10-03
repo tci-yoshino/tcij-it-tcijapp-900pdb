@@ -283,6 +283,7 @@ Partial Public Class RFQUpdate
         Dim i_TryParse As Integer = 0
         Dim i As Integer = 0
         Dim j As Integer = 0
+        Dim st_SelectCommand As String = String.Empty
         Dim DS As DataSet = New DataSet
         Call ClearLineData()
         If Integer.TryParse(st_RFQNumber, i_TryParse) Then
@@ -302,6 +303,11 @@ Partial Public Class RFQUpdate
                 'RFQNumber 不正
                 Return False
             End If
+            'Hidden
+            QuotedDate.Value = DS.Tables("RFQHeader").Rows(0)("QuotedDate").ToString
+            UpdateDate.Value = GetUpdateDate("v_RFQHeader", "RFQNumber", st_RFQNumber)
+            EnqLocationCode.Value = DS.Tables("RFQHeader").Rows(0)("EnqLocationCode").ToString
+            QuoLocationCode.Value = DS.Tables("RFQHeader").Rows(0)("QuoLocationCode").ToString
             'Left
             RFQNumber.Text = st_RFQNumber
             CurrentRFQStatus.Text = DS.Tables("RFQHeader").Rows(0)("Status").ToString
@@ -338,16 +344,21 @@ Partial Public Class RFQUpdate
             Else
                 QuoLocation.Text = DS.Tables("RFQHeader").Rows(0)("QuoLocationName").ToString
             End If
+            If DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString.Trim = String.Empty Then
+                st_SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}') ORDER BY [Name]" _
+                                             , QuoLocationCode.Value)
+            Else
+                st_SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}') " _
+                                             & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1}) ORDER BY [Name]" _
+                                             , QuoLocationCode.Value, DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString)
+            End If
+            SDS_RFQUpdate_QuoUser.SelectCommand = st_SelectCommand
             SDS_RFQUpdate_QuoUser.DataBind()
             If IsDBNull(DS.Tables("RFQHeader").Rows(0)("QuoUserID")) = False Then
                 QuoUser.SelectedValue = DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString
             End If
             Comment.Text = DS.Tables("RFQHeader").Rows(0)("Comment").ToString
-            'Hidden
-            QuotedDate.Value = DS.Tables("RFQHeader").Rows(0)("QuotedDate").ToString
-            UpdateDate.Value = GetUpdateDate("v_RFQHeader", "RFQNumber", st_RFQNumber)
-            EnqLocationCode.Value = DS.Tables("RFQHeader").Rows(0)("EnqLocationCode").ToString
-            QuoLocationCode.Value = DS.Tables("RFQHeader").Rows(0)("QuoLocationCode").ToString
+
             'Under
             RFQStatus.SelectedValue = ""
             If Session("LocationCode") <> EnqLocationCode.Value Then
