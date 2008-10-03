@@ -50,10 +50,6 @@
             End If
         End If
 
-        ' URL デコード
-        st_Code = HttpUtility.UrlDecode(st_Code)
-        st_Name = HttpUtility.UrlDecode(st_Name)
-
         ' 空白除去
         st_Code = st_Code.Trim
         st_Name = st_Name.Trim
