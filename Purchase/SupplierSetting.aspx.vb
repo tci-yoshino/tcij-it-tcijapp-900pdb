@@ -265,7 +265,7 @@ Partial Public Class SupplierSetting
     End Sub
 
     Public Sub DataDisplay1()
-        If IsNumeric(Code.Text) Then
+        If IsInteger(Code.Text) Then
             DBCommand.CommandText = "SELECT SupplierCode, R3SupplierCode, Name1, Name2, Name3, Name4, SearchTerm1, SearchTerm2, Address1, Address2, Address3, PostalCode, CountryCode, RegionCode, Telephone, Fax, Email, Comment, Website, Note, UpdateDate " & _
                                             "FROM dbo.Supplier WHERE SupplierCode = " & Code.Text.ToString
             DBReader = DBCommand.ExecuteReader()
@@ -299,7 +299,7 @@ Partial Public Class SupplierSetting
     End Sub
 
     Public Sub DataDisplay2()
-        If IsNumeric(Code.Text) Then
+        If IsInteger(Code.Text) Then
             DBCommand.CommandText = "SELECT CountryCode, RegionCode FROM dbo.Supplier WHERE SupplierCode = " & SafeSqlLiteral(Code.Text)
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
