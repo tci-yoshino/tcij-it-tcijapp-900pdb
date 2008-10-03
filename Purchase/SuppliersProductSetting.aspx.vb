@@ -1,7 +1,9 @@
-﻿Public Partial Class SuppliersProductSetting
+﻿Imports Purchase.Common
+
+Partial Public Class SuppliersProductSetting
     Inherits CommonPage
 
-    Dim DBConn As New System.Data.SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
+    Dim DBConn As New System.Data.SqlClient.SqlConnection(DB_CONNECT_STRING)
     Dim DBCommand As System.Data.SqlClient.SqlCommand
     Dim DBReader As System.Data.SqlClient.SqlDataReader
     Public Url As String
@@ -81,35 +83,40 @@
 
         '[Acionチェック]---------------------------------------------------------------
         If Request.Form("Action") <> "Save" Then
-            Msg.Text = Common.ERR_INVALID_PARAMETER
+            Msg.Text = ERR_INVALID_PARAMETER
             Exit Sub
         End If
 
         '[必須項目チェック]------------------------------------------------------------
         If Supplier.Text = String.Empty Then
-            Msg.Text = "Supplier Code" + Common.ERR_REQUIRED_FIELD
+            Msg.Text = "Supplier Code" + ERR_REQUIRED_FIELD
             Exit Sub
         End If
         If ProductNumber.Text = String.Empty Then
-            Msg.Text = "Product Number" + Common.ERR_REQUIRED_FIELD
+            Msg.Text = "Product Number" + ERR_REQUIRED_FIELD
             Exit Sub
         End If
 
         '[Supplier.Textの数字チェック]-------------------------------------------------
-        If Not IsNumeric(Supplier.Text.ToString) Then
-            Msg.Text = "Supplier Code" + Common.ERR_INVALID_NUMBER
+        If Not IsInteger(Supplier.Text) Then
+            Msg.Text = "Supplier Code" + ERR_INVALID_NUMBER
             Exit Sub
+        Else
+            If SafeSqlLiteral(Supplier.Text) Like "*+*" Then
+                Msg.Text = "Supplier Code" + ERR_INVALID_NUMBER
+                Exit Sub
+            End If
         End If
 
         '[Noteの文字数Check]-----------------------------------------------------------
         Note.Text = Note.Text.Trim         '入力データ前後の改行コード、タブコードを除去
-        If Note.Text.Length > Common.INT_3000 Then
-            Msg.Text = "Note" + Common.ERR_OVER_3000
+        If Note.Text.Length > INT_3000 Then
+            Msg.Text = "Note" + ERR_OVER_3000
             Exit Sub
         End If
 
         '[Supplier存在チェック]-------------------------------------------------------------
-        DBCommand.CommandText = "SELECT SupplierCode,Name3,Name4 FROM Supplier WHERE SupplierCode='" & Common.SafeSqlLiteral(Supplier.Text) & "'"
+        DBCommand.CommandText = "SELECT SupplierCode,Name3,Name4 FROM Supplier WHERE SupplierCode='" & SafeSqlLiteral(Supplier.Text) & "'"
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
         Supplier.Text = String.Empty
@@ -126,13 +133,13 @@
             End If
         Else
             DBReader.Close()
-            Msg.Text = "Supplier Code" + Common.ERR_DOES_NOT_EXIST   '"Supplier Code はマスタに存在しません。"
+            Msg.Text = "Supplier Code" + ERR_DOES_NOT_EXIST   '"Supplier Code はマスタに存在しません。"
             Exit Sub
         End If
         DBReader.Close()
 
         '[Product存在チェック]--------------------------------------------------------------
-        DBCommand.CommandText = "SELECT ProductID,ProductNumber,Name,QuoName FROM Product WHERE ProductNumber='" & Common.SafeSqlLiteral(ProductNumber.Text) & "'"
+        DBCommand.CommandText = "SELECT ProductID,ProductNumber,Name,QuoName FROM Product WHERE ProductNumber='" & SafeSqlLiteral(ProductNumber.Text) & "'"
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
         If DBReader.Read = True Then
@@ -143,13 +150,13 @@
             st_ProductID = DBReader("ProductID")
         Else
             DBReader.Close()
-            Msg.Text = "Product Number" + Common.ERR_DOES_NOT_EXIST   '"Product Number はマスタに存在しません。"
+            Msg.Text = "Product Number" + ERR_DOES_NOT_EXIST   '"Product Number はマスタに存在しません。"
             Exit Sub
         End If
         DBReader.Close()
 
         '[Supplier_Product登録、更新]-------------------------------------------------------
-        DBCommand.CommandText = "SELECT SupplierCode,ProductID,UpdateDate FROM Supplier_Product WHERE (SupplierCode = '" & Common.SafeSqlLiteral(Supplier.Text) & "' AND ProductID='" & st_ProductID & "')"
+        DBCommand.CommandText = "SELECT SupplierCode,ProductID,UpdateDate FROM Supplier_Product WHERE (SupplierCode = '" & SafeSqlLiteral(Supplier.Text) & "' AND ProductID='" & st_ProductID & "')"
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
         If DBReader.Read = True Then
@@ -161,18 +168,18 @@
 
             If DBReader("UpdateDate").ToString() <> UpdateDate.Value Then
                 DBReader.Close()
-                Msg.Text = Common.ERR_UPDATED_BY_ANOTHER_USER   '"データは他のユーザによって既に更新されています。ご確認ください。"
+                Msg.Text = ERR_UPDATED_BY_ANOTHER_USER   '"データは他のユーザによって既に更新されています。ご確認ください。"
                 Exit Sub
             End If
 
             '[Supplier_Product更新]---------------------------------------------------------
             DBReader.Close()
             st_SQLSTR = "UPDATE Supplier_Product SET SupplierItemNumber="
-            If SupplierItemNumber.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(SupplierItemNumber.Text) & "',"
+            If SupplierItemNumber.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(SupplierItemNumber.Text) & "',"
             st_SQLSTR = st_SQLSTR & "Note="
-            If Note.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Note.Text) & "',"
+            If Note.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(Note.Text) & "',"
             st_SQLSTR = st_SQLSTR & "UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "' "
-            st_SQLSTR = st_SQLSTR & "WHERE (SupplierCode = '" & Common.SafeSqlLiteral(Supplier.Text) & "' AND ProductID='" & st_ProductID & "')"
+            st_SQLSTR = st_SQLSTR & "WHERE (SupplierCode = '" & SafeSqlLiteral(Supplier.Text) & "' AND ProductID='" & st_ProductID & "')"
             DBCommand.CommandText = st_SQLSTR
             DBCommand.ExecuteNonQuery()
         Else
@@ -180,8 +187,8 @@
             DBReader.Close()
             st_SQLSTR = "INSERT INTO Supplier_Product (SupplierCode,ProductID,SupplierItemNumber,Note,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ("
             st_SQLSTR = st_SQLSTR & Supplier.Text.ToString & "," & st_ProductID & ","
-            If SupplierItemNumber.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(SupplierItemNumber.Text) & "',"
-            If Note.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & Common.SafeSqlLiteral(Note.Text) & "',"
+            If SupplierItemNumber.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(SupplierItemNumber.Text) & "',"
+            If Note.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(Note.Text) & "',"
             st_SQLSTR = st_SQLSTR & "'" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "')"
             DBCommand.CommandText = st_SQLSTR
             DBCommand.ExecuteNonQuery()
@@ -190,7 +197,7 @@
             If Request.QueryString("Return") = "SP" Then
                 Url = "./SupplierListByProduct.aspx?ProductID=" & st_ProductID
             Else
-                Url = "./ProductListBySupplier.aspx?Supplier=" & Common.SafeSqlLiteral(Supplier.Text)
+                Url = "./ProductListBySupplier.aspx?Supplier=" & SafeSqlLiteral(Supplier.Text)
             End If
             Response.Redirect(Url)
         End If
