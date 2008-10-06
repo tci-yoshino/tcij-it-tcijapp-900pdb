@@ -11,7 +11,7 @@
 </head>
 <body>
 
-			<form id="SupplierForm" runat="server">
+			<form runat="server">
 	<!-- Main Content Area -->
 	<div id="content">
 		<div class="tabs">

@@ -16,15 +16,6 @@ Option Explicit On
 Partial Public Class SupplierSetting
 
     '''<summary>
-    '''SupplierForm コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents SupplierForm As Global.System.Web.UI.HtmlControls.HtmlForm
-
-    '''<summary>
     '''UpdateDate コントロール。
     '''</summary>
     '''<remarks>
