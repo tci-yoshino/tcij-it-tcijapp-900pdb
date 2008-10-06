@@ -53,7 +53,8 @@
 					</tr>
 				</table>
 
-				<asp:Button ID="Search" runat="server" Text="Search" PostBackUrl="SupplierSelect.aspx?Action=Search" />
+				<asp:HiddenField ID="Action" runat="server" Value="Search" />
+				<asp:Button ID="Search" runat="server" Text="Search" />
 				<input type="button" value="Clear" onclick="clearForm('SearchForm')" />
 			</form>
 		</div>
@@ -86,7 +87,7 @@
             </asp:ListView>
         </div>
     </div><!-- Main Content Area END -->
-    <asp:SqlDataSource ID="SrcSupplier" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="SrcSupplier" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" CancelSelectOnNullParameter="False"></asp:SqlDataSource>
 
 
 </body>

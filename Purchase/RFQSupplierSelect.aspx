@@ -60,6 +60,7 @@
 
 				<asp:HiddenField ID="Location" runat="server" Value="" />
 				<asp:HiddenField ID="Postback" runat="server" />
+				<asp:HiddenField ID="Action" runat="server" Value="Search" />
 				<asp:Button ID="Search" runat="server" Text="Search" />
 				<input type="button" value="Clear" onclick="clearForm('SearchForm')" />
 			</form>
@@ -98,9 +99,7 @@
 
     </div><!-- Main Content Area END -->
 
-    <asp:SqlDataSource ID="SrcSupplier" runat="server" 
-        ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-        CancelSelectOnNullParameter="False"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="SrcSupplier" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" CancelSelectOnNullParameter="False"></asp:SqlDataSource>
 
 </body>
 </html>
