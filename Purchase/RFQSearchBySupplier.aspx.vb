@@ -107,6 +107,7 @@ Partial Public Class RFQSearchBySupplier
     Protected Sub Country_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles Country.SelectedIndexChanged
         Region.Items.Clear()
         Region.Items.Add(String.Empty)
+        ScriptManager.RegisterStartupScript(Me.Page, Me.GetType(), "myscript", "colorful.set();navi('supplier');", True)
     End Sub
 
     ''' <summary>
@@ -119,6 +120,7 @@ Partial Public Class RFQSearchBySupplier
         Country.SelectedIndex = 0
         Region.Items.Clear()
         Region.Items.Add(String.Empty)
+        ScriptManager.RegisterStartupScript(Me.Page, Me.GetType(), "myscript", "colorful.set();navi('supplier');", True)
     End Sub
 
     ''' <summary>
