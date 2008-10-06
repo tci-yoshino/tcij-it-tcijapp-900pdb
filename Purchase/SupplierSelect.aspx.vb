@@ -46,7 +46,13 @@
     ' Search ボタンクリック処理
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
 
-        Dim st_Action As String = IIf(Request.QueryString("Action") = Nothing, "", Request.QueryString("Action"))
+        Dim st_Action As String = String.Empty
+
+        If Request.Form("Action") = Nothing Then
+            st_Action = IIf(Request.QueryString("Action") = Nothing, String.Empty, Request.QueryString("Action")).ToString
+        Else
+            st_Action = Request.Form("Action").ToString
+        End If
 
         If st_Action = SEARCH_ACTION Then
             SetControl_SrcSupplier()
@@ -68,16 +74,22 @@
         End If
 
         SrcSupplier.SelectParameters.Clear()
+        SrcSupplier.SelectParameters.Add("Code", Common.SafeSqlLiteral(st_Code))
+        SrcSupplier.SelectParameters.Add("Name", Common.SafeSqlLikeClauseLiteral(st_Name))
+        SrcSupplier.SelectCommand = CreateSql_SelectSupplier()
+
+    End Sub
+
+    Private Function CreateSql_SelectSupplier() As String
+        Dim sb_Sql As StringBuilder = New StringBuilder
 
         ' Where 句の生成
         Dim st_where As String = String.Empty
         If Not String.IsNullOrEmpty(st_Code) Then
-            SrcSupplier.SelectParameters.Add("Code", Common.SafeSqlLiteral(st_Code))
             st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
             st_where = st_where & " Supplier.SupplierCode = @Code "
         End If
         If Not String.IsNullOrEmpty(st_Name) Then
-            SrcSupplier.SelectParameters.Add("Name", Common.SafeSqlLikeClauseLiteral(st_Name))
             st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
             st_where = st_where & " ISNULL(Supplier.Name3,'') + ' ' + ISNULL(Supplier.Name4,'') LIKE N'%' + @Name + '%' "
         End If
@@ -85,19 +97,24 @@
         ' Where 句が生成できなかった場合は検索処理を行わずに処理を終了する
         If String.IsNullOrEmpty(st_where) Then
             SupplierList.DataBind()
-            Exit Sub
+            Return ""
         End If
 
-        SrcSupplier.SelectCommand = _
-              " SELECT " _
-            & "  SupplierCode, s_Country.[Name] AS CountryName, " _
-            & "  LTRIM(RTRIM(ISNULL(Supplier.Name3, '') + ' ' + ISNULL(Supplier.Name4, ''))) AS Name " _
-            & " FROM " _
-            & "  Supplier " _
-            & "  LEFT OUTER JOIN s_Country " _
-            & "   ON s_Country.CountryCode = Supplier.CountryCode " _
-            & " WHERE " & st_where _
-            & " ORDER BY SupplierCode, Name3 "
+        sb_Sql.Append(" SELECT ")
+        sb_Sql.Append("   SupplierCode, ")
+        sb_Sql.Append("   s_Country.[Name] AS CountryName, ")
+        sb_Sql.Append("   LTRIM(RTRIM(ISNULL(Supplier.Name3, '') + ' ' + ISNULL(Supplier.Name4, ''))) AS Name ")
+        sb_Sql.Append(" FROM ")
+        sb_Sql.Append("   Supplier ")
+        sb_Sql.Append("   LEFT OUTER JOIN s_Country ")
+        sb_Sql.Append("    ON s_Country.CountryCode = Supplier.CountryCode ")
+        sb_Sql.Append(" WHERE  ")
+        sb_Sql.Append(st_where)
+        sb_Sql.Append(" ORDER BY ")
+        sb_Sql.Append("   SupplierCode, ")
+        sb_Sql.Append("   Name3 ")
 
-    End Sub
+        Return sb_Sql.ToString
+    End Function
+
 End Class
