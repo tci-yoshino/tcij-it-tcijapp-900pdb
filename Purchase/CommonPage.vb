@@ -33,14 +33,24 @@ Public Class CommonPage
         ' HTTP Request を処理します
         ' "OPTIONS" は IE で添付ファイルを直接開こうとした際に要求されます
         If Request.RequestType = "POST" Then
-            st_Action = IIf(Request.Form("Action") = Nothing, String.Empty, Request.Form("Action")).ToString
+            If Request.Form("Action") = Nothing Then
+                st_Action = IIf(Request.QueryString("Action") = Nothing, String.Empty, Request.QueryString("Action")).ToString
+            Else
+                st_Action = Request.Form("Action").ToString
+            End If
         ElseIf Request.RequestType = "GET" Then
-            st_Action = IIf(Request.QueryString("Action") = Nothing, String.Empty, Request.QueryString("Action")).ToString
+            If Request.Form("Action") = Nothing Then
+                st_Action = IIf(Request.QueryString("Action") = Nothing, String.Empty, Request.QueryString("Action")).ToString
+            Else
+                st_Action = Request.Form("Action").ToString
+            End If
         ElseIf Request.RequestType = "OPTIONS" Then
             Exit Sub
         Else
             Throw New Exception("CommonPage.OnLoad: Bad Request Type.")
         End If
+
+        Debug.Print("Action: " & st_Action)
 
         st_ScriptName = System.IO.Path.GetFileNameWithoutExtension(Request.Url.ToString)
 
