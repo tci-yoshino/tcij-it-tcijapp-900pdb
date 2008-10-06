@@ -5,6 +5,8 @@
     Protected st_Name As String = String.Empty
     Protected st_Location As String = String.Empty
     Protected st_js_postback = String.Empty ' do_Postback メソッドの取得
+    Const SEARCH_ACTION As String = "Search"
+
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -65,18 +67,29 @@
 
         ' GET 且つ QueryString("Code") が送信されている場合は検索処理を実行
         If (Request.RequestType = "GET") And (Not String.IsNullOrEmpty(Request.QueryString("Code"))) Then
-            GetSupplierData()
+            SetControl_SrcSupplier()
         End If
 
     End Sub
 
     ' Search ボタンクリック処理
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
-        GetSupplierData()
+
+        Dim st_Action As String = String.Empty
+
+        If Request.Form("Action") = Nothing Then
+            st_Action = IIf(Request.QueryString("Action") = Nothing, String.Empty, Request.QueryString("Action")).ToString
+        Else
+            st_Action = Request.Form("Action").ToString
+        End If
+
+        If st_Action = SEARCH_ACTION Then
+            SetControl_SrcSupplier()
+        End If
     End Sub
 
     ' 仕入先リスト取得関数
-    Private Sub GetSupplierData()
+    Private Sub SetControl_SrcSupplier()
 
         ' パラメータチェック
         If Not String.IsNullOrEmpty(st_Code) Then
