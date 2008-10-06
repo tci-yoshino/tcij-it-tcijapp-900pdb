@@ -925,7 +925,6 @@ Partial Public Class SuppliersProductImport
         SupplierProductList.DataBind()
 
         'CASNumberエラー行をカラー表示
-        SetCASErrorColorToSupplierProductList()
         If SetCASErrorColorToSupplierProductList() > 0 Then
             Msg.Text = "CAS Number" + ERR_INCORRECT_FORMAT
         End If
