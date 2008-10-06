@@ -126,6 +126,7 @@ Partial Public Class SupplierSetting
             DBCommand.Dispose()
             If DBReader.Read = True Then
                 If GetUpdateDate("Supplier", "SupplierCode", Code.Text.ToString) <> UpdateDate.Value Then
+                    DBReader.Close()
                     Msg.Text = ERR_UPDATED_BY_ANOTHER_USER   '"データは他のユーザによって既に更新されています。ご確認ください。"
                     Exit Sub
                 End If
@@ -331,6 +332,9 @@ Partial Public Class SupplierSetting
                 INV_Supplier()
                 Exit Sub
             End If
+        Else
+            INV_Supplier()
+            Exit Sub
         End If
     End Sub
 
