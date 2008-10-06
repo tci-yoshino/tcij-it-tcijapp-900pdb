@@ -50,8 +50,6 @@ Public Class CommonPage
             Throw New Exception("CommonPage.OnLoad: Bad Request Type.")
         End If
 
-        Debug.Print("Action: " & st_Action)
-
         st_ScriptName = System.IO.Path.GetFileNameWithoutExtension(Request.Url.ToString)
 
         If Session("UserID") Is Nothing Then
