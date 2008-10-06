@@ -44,7 +44,13 @@
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Search.Click
 
-        Dim st_Action As String = IIf(Request.QueryString("Action") = Nothing, "", Request.QueryString("Action"))
+        Dim st_Action As String = String.Empty
+
+        If Request.Form("Action") = Nothing Then
+            st_Action = IIf(Request.QueryString("Action") = Nothing, String.Empty, Request.QueryString("Action")).ToString
+        Else
+            st_Action = Request.Form("Action").ToString
+        End If
 
         If st_Action = SEARCH_ACTION Then
             SearchCountryList()
