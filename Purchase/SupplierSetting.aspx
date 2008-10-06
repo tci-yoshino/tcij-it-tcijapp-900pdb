@@ -10,8 +10,7 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
 </head>
 <body>
-
-			<form runat="server">
+     <form id="SupplierForm" runat="server">
 	<!-- Main Content Area -->
 	<div id="content">
 		<div class="tabs">
