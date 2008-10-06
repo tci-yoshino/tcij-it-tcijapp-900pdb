@@ -37,14 +37,6 @@
                     Location.Text = DBReader("DefaultQuoLocationName")
                 End If
                 DBReader.Close()
-                '[最終的に更新するPurchasingCountryのUpdateDateの値をHidden(UpdateDate)にセット]
-                DBCommand.CommandText = "SELECT UpdateDate FROM PurchasingCountry WHERE CountryCode = '" + Common.SafeSqlLiteral(Code.Text) + "'"
-                DBReader = DBCommand.ExecuteReader()
-                DBCommand.Dispose()
-                If DBReader.Read = True Then
-                    'TODO ToStringで臨時対応
-                    UpdateDate.Value = DBReader("UpdateDate").ToString()
-                End If
             Else
                 Code.CssClass = ""
                 Code.ReadOnly = False
@@ -54,6 +46,16 @@
             '[ReadOnly項目の再設定]--------------------------------------------------------
             Name.Text = Request.Form("Name")
         End If
+
+        '[最終的に更新するPurchasingCountryのUpdateDateの値をHidden(UpdateDate)にセット]
+        DBCommand.CommandText = "SELECT UpdateDate FROM PurchasingCountry WHERE CountryCode = '" + Common.SafeSqlLiteral(Code.Text) + "'"
+        DBReader = DBCommand.ExecuteReader()
+        DBCommand.Dispose()
+        If DBReader.Read = True Then
+            'TODO ToStringで臨時対応
+            UpdateDate.Value = DBReader("UpdateDate").ToString()
+        End If
+        DBReader.Close()
     End Sub
 
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
