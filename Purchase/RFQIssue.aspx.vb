@@ -374,7 +374,7 @@ Partial Public Class RFQIssue
         If Enq_Quantity1 = False And bo_UnLine_1 = False Then
             Bo_UnLine = True
         End If
-        If IsCheckRFQLineFormat(EnqQuantity_1.Text, EnqPiece_1.Text) = False Then
+        If IsCheckRFQLineFormat(EnqQuantity_1.Text, EnqPiece_1.Text) = False And bo_UnLine_1 = False Then
             Bo_UnLine = True
         End If
 
@@ -383,7 +383,7 @@ Partial Public Class RFQIssue
         If Enq_Quantity2 = False And bo_UnLine_2 = False Then
             Bo_UnLine = True
         End If
-        If IsCheckRFQLineFormat(EnqQuantity_2.Text, EnqPiece_2.Text) = False Then
+        If IsCheckRFQLineFormat(EnqQuantity_2.Text, EnqPiece_2.Text) = False And bo_UnLine_2 = False Then
             Bo_UnLine = True
         End If
 
@@ -392,7 +392,7 @@ Partial Public Class RFQIssue
         If Enq_Quantity3 = False And bo_UnLine_3 = False Then
             Bo_UnLine = True
         End If
-        If IsCheckRFQLineFormat(EnqQuantity_3.Text, EnqPiece_3.Text) = False Then
+        If IsCheckRFQLineFormat(EnqQuantity_3.Text, EnqPiece_3.Text) = False And bo_UnLine_3 = False Then
             Bo_UnLine = True
         End If
 
@@ -401,7 +401,7 @@ Partial Public Class RFQIssue
         If Enq_Quantity4 = False And bo_UnLine_4 = False Then
             Bo_UnLine = True
         End If
-        If IsCheckRFQLineFormat(EnqQuantity_4.Text, EnqPiece_4.Text) = False Then
+        If IsCheckRFQLineFormat(EnqQuantity_4.Text, EnqPiece_4.Text) = False And bo_UnLine_4 = False Then
             Bo_UnLine = True
         End If
 
