@@ -199,6 +199,10 @@ Partial Public Class RFQIssue
             Return False
         End If
 
+        Return True
+    End Function
+
+    Private Function IsCheckRFQLineFormat(ByVal EnqQuantity As String, ByVal EnqPiece As String) As Boolean
         '量入力の書式チェック
         If Regex.IsMatch(EnqQuantity.Trim, DECIMAL_7_3_REGEX) = False Then
             Return False
@@ -209,10 +213,8 @@ Partial Public Class RFQIssue
         If Regex.IsMatch(EnqPiece.Trim, INT_5_REGEX) = False Then
             Return False
         End If
-
         Return True
     End Function
-
 
     Protected Sub QuoLocation_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles QuoLocation.SelectedIndexChanged
         'QuoUser ドロップダウンリストの初期化
@@ -372,10 +374,16 @@ Partial Public Class RFQIssue
         If Enq_Quantity1 = False And bo_UnLine_1 = False Then
             Bo_UnLine = True
         End If
+        If IsCheckRFQLineFormat(EnqQuantity_1.Text, EnqPiece_1.Text) = False Then
+            Bo_UnLine = True
+        End If
 
         Enq_Quantity2 = IsAllInputOfRFQList(EnqQuantity_2.Text, EnqUnit_2.SelectedValue, EnqPiece_2.Text)
         Dim bo_UnLine_2 = IsAllNullOfRFQList(EnqQuantity_2.Text, EnqUnit_2.SelectedValue, EnqPiece_2.Text)
         If Enq_Quantity2 = False And bo_UnLine_2 = False Then
+            Bo_UnLine = True
+        End If
+        If IsCheckRFQLineFormat(EnqQuantity_2.Text, EnqPiece_2.Text) = False Then
             Bo_UnLine = True
         End If
 
@@ -384,10 +392,16 @@ Partial Public Class RFQIssue
         If Enq_Quantity3 = False And bo_UnLine_3 = False Then
             Bo_UnLine = True
         End If
+        If IsCheckRFQLineFormat(EnqQuantity_3.Text, EnqPiece_3.Text) = False Then
+            Bo_UnLine = True
+        End If
 
         Enq_Quantity4 = IsAllInputOfRFQList(EnqQuantity_4.Text, EnqUnit_4.SelectedValue, EnqPiece_4.Text)
         Dim bo_UnLine_4 = IsAllNullOfRFQList(EnqQuantity_4.Text, EnqUnit_4.SelectedValue, EnqPiece_4.Text)
         If Enq_Quantity4 = False And bo_UnLine_4 = False Then
+            Bo_UnLine = True
+        End If
+        If IsCheckRFQLineFormat(EnqQuantity_4.Text, EnqPiece_4.Text) = False Then
             Bo_UnLine = True
         End If
 
