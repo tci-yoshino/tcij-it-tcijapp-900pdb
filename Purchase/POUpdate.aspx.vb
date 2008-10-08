@@ -406,7 +406,7 @@ Partial Public Class POUpdate
         Dim POInformation As POInformationType = SelectPOInformation(PONumber)
 
         If CancellationDate.Text.Trim() = String.Empty Then
-            CancellationDate.Text = GetLocalTime(GetDBCurrentTime())
+            CancellationDate.Text = GetLocalTime(GetDBCurrentTime().Date)
         End If
 
         POInformation.CancellationDate = GetDatabaseTime(CancellationDate.Text.Trim())
