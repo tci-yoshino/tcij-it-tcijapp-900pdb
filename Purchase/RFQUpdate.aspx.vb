@@ -143,10 +143,8 @@ Partial Public Class RFQUpdate
             If QuotedDate.Value = String.Empty Then
                 'QuotedDateは初回のみ登録し上書きしない。登録条件はRFQStatusが「Q」or「PQ」
                 If RFQStatus.SelectedValue = "Q" Or RFQStatus.SelectedValue = "PQ" Then
-                    Dim da_QuoDate As Date
                     Dim st_QuoDate As String = String.Empty
-                    Date.TryParse(GetLocalTime(Session("LocationCode").ToString, Now, True), da_QuoDate)
-                    st_QuoDate = da_QuoDate.Year & "/" & da_QuoDate.Month & "/" & da_QuoDate.Day
+                    st_QuoDate = GetLocalTime(Session("LocationCode").ToString, Now.Date, False, False)
                     st_QuoDate = GetDatabaseTime(Session("LocationCode").ToString, st_QuoDate)
                     st_QuotedDate = ", QuotedDate = '" & st_QuoDate & "'"
                 End If
