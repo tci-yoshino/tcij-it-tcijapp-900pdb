@@ -38,7 +38,7 @@
                             RFQ Reference Number : <asp:HyperLink ID="RFQUpdate" runat="server" NavigateUrl='<%# "./RFQUpdate.aspx?RFQNumber=" & Eval("RFQNumber")%>'><asp:Label ID="RFQNumber" runat="server" Text='<%#Eval("RFQNumber")%>'></asp:Label></asp:HyperLink>
                         </th>
                         <th class="subhead" colspan="2">
-                            <asp:Label ID="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"))%>'></asp:Label><span class="indent"><asp:Label ID="RFQStatus" runat="server" Text='<%#Eval("Status")%>'></asp:Label></span>
+                            <asp:Label ID="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:Label><span class="indent"><asp:Label ID="RFQStatus" runat="server" Text='<%#Eval("Status")%>'></asp:Label></span>
                         </th>
                         <th class="subhead" colspan="2" style="text-align:right">
                             Assign to : <asp:DropDownList ID="QuoUser" runat="server" DataSourceID="SrcUser" DataTextField="Name" DataValueField="UserID"></asp:DropDownList>
@@ -91,7 +91,7 @@
                             PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber")%>'><asp:Label ID="PONumber" runat="server" Text='<%#Eval("PONumber")%>'></asp:Label></asp:HyperLink>
                         </th>
                         <th class="subhead">
-                            <asp:Label ID="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"))%>'></asp:Label>
+                            <asp:Label ID="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:Label>
                             <span class="indent"><asp:Label ID="POStatus" runat="server" Text='<%#Eval("StatusCode")%>'></asp:Label></span>
                         </th>
                         <th class="subhead" style="text-align:right">
