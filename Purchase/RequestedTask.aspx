@@ -37,7 +37,7 @@
                             <span class="indent"><em><asp:label id="RFQCorrespondence" runat="server" Text='<%# Eval("RFQCorrespondence")%>'></asp:label></em></span>
                         </th>
                         <th class="subhead" colspan="4">
-                            <asp:label id="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"))%>'></asp:label><span class="indent"><asp:label id="RFQStatus" runat="server" Text='<%# Eval("Status")%>'></asp:label></span>
+                            <asp:label id="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:label><span class="indent"><asp:label id="RFQStatus" runat="server" Text='<%# Eval("Status")%>'></asp:label></span>
                         </th>
                     </tr>
                     <tr>
