@@ -59,6 +59,8 @@ DB
 ├ INSERT
 │ ├ data       (テーブル名ごとにインサートするテキストデータが存在)
 │ └ insert.sql (data フォルダのデータをインサートするスクリプト)
+├ UPDATE
+│ └ Supplier.sql (Supplier の LocationCode をセットするスクリプト(*1))
 ├ create_DBAndUser.bat-dist (DB構築バッチ)
 ├ create_DBAndUser.sql (DB構築スクリプト)
 ├ create_DBAndUser.log (DB構築実行ログ)
@@ -66,6 +68,8 @@ DB
 ├ start_initialize.sql (DB初期化スクリプト)
 ├ start_initialize.log (DB初期化実行ログ)
 └ readme.txt    (このファイル)
+
+(*1): バッチには組み込まれていないので、手動で実行してください。
 
 【CREATE クエリの生成・修正方法】
 
