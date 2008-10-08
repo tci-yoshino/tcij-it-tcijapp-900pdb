@@ -132,7 +132,7 @@ Partial Public Class POIssue
 
         RFQNumber.Text = ds.Tables("RFQLine").Rows(0)("RFQNumber").ToString
         ParPONumber_Label.Text = st_ParPONumber
-        PODate.Text = GetLocalTime(Session("LocationCode").ToString, Now.Date)
+        PODate.Text = GetLocalTime(Session("LocationCode").ToString, Now.Date, False, False)
         If Not CBool(Session("Purchase.isAdmin")) Then
             POUser.SelectedValue = Session("UserID").ToString
         End If
