@@ -214,7 +214,7 @@ Public Class Common
     Private Const LOCATION_JP As String = "JP"
 
     ''' <summary>
-    ''' ローカル時間を取得する。時刻情報を持たないデータを渡して時刻情報付きデータを返すことはできません。
+    ''' ローカル時間を取得する。
     ''' </summary>
     ''' <param name="LocationCode">拠点コード</param>
     ''' <param name="DatabaseTime">データベース時間 (JST)</param>
@@ -233,15 +233,17 @@ Public Class Common
         If TCICommon.Func.ConvertDate(da_Date, LOCATION_JP, LocationCode, st_ErrMsg) < 0 Then
             Throw New Exception(String.Format("TCICommon.ConvertDate: {0}", st_ErrMsg))
         End If
+
         If InputHMS = False Then
             da_Date = DateAdd(DateInterval.Hour, 12, da_Date)
-            Return Format(da_Date, DATE_FORMAT)
         End If
+
         If OutputHMS = False Then
             Return Format(da_Date, DATE_FORMAT)
         Else
             Return Format(da_Date, DATETIME_FORMAT)
         End If
+
     End Function
 
     ''' <summary>
