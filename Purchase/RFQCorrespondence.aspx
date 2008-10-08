@@ -68,7 +68,7 @@
                         </tr>
                         <tr>
                             <th>Date:</th>
-                            <td><asp:Label ID="DateLabel" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("Date"),true)%>' /></td>
+                            <td><asp:Label ID="DateLabel" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("Date"), true, true)%>' /></td>
                         </tr>
                         <tr>
                             <th>Sender:</th>
@@ -120,7 +120,7 @@
                         </tr>
                         <tr>
                             <th>Date:</th>
-                            <td><asp:Label ID="DateLabel" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("Date"),true)%>' /></td>
+                            <td><asp:Label ID="DateLabel" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("Date"),true,true)%>' /></td>
                         </tr>
                         <tr>
                             <th>Sender:</th>
