@@ -52,7 +52,7 @@
                         <table runat="server">
                             <tr>
                                 <th class="subhead" colspan="2">RFQ Reference Number : <asp:Label ID="RFQNumber" runat="server" Text='<%#Eval("RFQNumber")%>'></asp:Label></th>
-                                <th class="subhead" colspan="2">Quoted Date : <asp:Label ID="QuotedDate" runat="server" Text='<%#if(isDBNull(Eval("QuotedDate")), "", Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("QuotedDate"))) %>'></asp:Label></th>
+                                <th class="subhead" colspan="2">Quoted Date : <asp:Label ID="QuotedDate" runat="server" Text='<%#if(isDBNull(Eval("QuotedDate")), "", Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("QuotedDate"), False, False)) %>'></asp:Label></th>
                             </tr>
                             <tr>
                                 <th style="width:17%">Purpose</th>
