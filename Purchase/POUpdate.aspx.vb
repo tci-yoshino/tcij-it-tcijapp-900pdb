@@ -633,7 +633,7 @@ Partial Public Class POUpdate
         If DataBaseTime Is Nothing Then
             Return String.Empty
         End If
-        Return Common.GetLocalTime(Session(SESSION_KEY_LOCATION).ToString(), CType(DataBaseTime, Date))
+        Return Common.GetLocalTime(Session(SESSION_KEY_LOCATION).ToString(), CType(DataBaseTime, Date), False, False)
     End Function
 
     ''' <summary>
