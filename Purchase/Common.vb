@@ -214,32 +214,34 @@ Public Class Common
     Private Const LOCATION_JP As String = "JP"
 
     ''' <summary>
-    ''' ローカル時間を取得する。
+    ''' ローカル時間を取得する。時刻情報を持たないデータを渡して時刻情報付きデータを返すことはできません。
     ''' </summary>
     ''' <param name="LocationCode">拠点コード</param>
     ''' <param name="DatabaseTime">データベース時間 (JST)</param>
-    ''' <param name="WithHMS">時刻情報付きデータを読み出す場合は True を指定</param>
+    ''' <param name="InputHMS">時差を除く、時刻情報を持つデータを変換する場合は True を指定</param>
+    ''' <param name="OutputHMS">時刻情報付きで戻り値を返す場合は True を指定</param>
     ''' <returns>ローカル時間</returns>
     ''' <remarks></remarks>
-    Public Shared Function GetLocalTime(ByVal LocationCode As String, ByVal DatabaseTime As Date, Optional ByVal WithHMS As Boolean = False) As String
+    Public Shared Function GetLocalTime(ByVal LocationCode As String, _
+                                        ByVal DatabaseTime As Date, _
+                                        ByVal InputHMS As Boolean, _
+                                        ByVal OutputHMS As Boolean) As String
         Dim st_ErrMsg As String = String.Empty
         Dim st_Format As String = String.Empty
         Dim da_Date As Date = DatabaseTime
 
-        If Not IsDate(da_Date) Then
-            Return String.Empty
-        End If
-
         If TCICommon.Func.ConvertDate(da_Date, LOCATION_JP, LocationCode, st_ErrMsg) < 0 Then
             Throw New Exception(String.Format("TCICommon.ConvertDate: {0}", st_ErrMsg))
         End If
-        If WithHMS = False Then
+        If InputHMS = False Then
             da_Date = DateAdd(DateInterval.Hour, 12, da_Date)
+            Return Format(da_Date, DATE_FORMAT)
         End If
-        st_Format = IIf(WithHMS = True, DATETIME_FORMAT, DATE_FORMAT).ToString
-
-        Return Format(da_Date, st_Format)
-
+        If OutputHMS = False Then
+            Return Format(da_Date, DATE_FORMAT)
+        Else
+            Return Format(da_Date, DATETIME_FORMAT)
+        End If
     End Function
 
     ''' <summary>
