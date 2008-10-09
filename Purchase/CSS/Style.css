@@ -324,9 +324,11 @@ pre {
 input.readonly {
     background-color: #cbd0d3;
 }
+
 select.readonly {
     background-color: #cbd0d3;
 }
+
 /*
 option.message {
     color: #696969;
@@ -361,6 +363,11 @@ tr.attention td {
 }
 
 .message {
+	color: #2651a5;
+	font-weight: bold;
+}
+
+.r3 {
 	color: #2651a5;
 	font-weight: bold;
 }
