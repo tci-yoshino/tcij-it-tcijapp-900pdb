@@ -35,68 +35,67 @@ Public Class Common
     ''' 日付フォーマット正規表現 (必須)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const DATE_REGEX As String = "^\d{4}-\d{1,2}-\d{1,2}$"
+    Public Const DATE_REGEX As String = "^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$"
 
     ''' <summary>
     ''' 日付フォーマット正規表現 (任意)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const DATE_REGEX_OPTIONAL As String = "^\d{4}-\d{1,2}-\d{1,2}$|^$"
+    Public Const DATE_REGEX_OPTIONAL As String = "^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$|^$"
 
     ''' <summary>
     ''' 数値フォーマット正規表現 (整数 10 桁, 小数 3 桁。必須)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const DECIMAL_10_3_REGEX As String = "^\d{1,10}(|\.)$|^\d{0,10}\.\d{1,3}$"
+    Public Const DECIMAL_10_3_REGEX As String = "^[0-9]{1,10}(|\.)$|^[0-9]{0,10}\.[0-9]{1,3}$"
 
     ''' <summary>
     ''' 数値フォーマット正規表現 (整数 10 桁, 小数 3 桁。任意)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const DECIMAL_10_3_REGEX_OPTIONAL As String = "^\d{1,10}(|\.)$|^\d{0,10}\.\d{1,3}$|^$"
- 
-   ''' <summary>
+    Public Const DECIMAL_10_3_REGEX_OPTIONAL As String = "^[0-9]{1,10}(|\.)$|^[0-9]{0,10}\.[0-9]{1,3}$|^$"
+
+    ''' <summary>
     ''' 数値フォーマット正規表現 (整数 10 桁。任意)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const DECIMAL_10_REGEX_OPTIONAL As String = "^\d{1,10}$|^$"
+    Public Const DECIMAL_10_REGEX_OPTIONAL As String = "^[0-9]{1,10}$|^$"
 
     ''' <summary>
     ''' 数値フォーマット正規表現 (整数 7 桁, 小数 3 桁。必須)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const DECIMAL_7_3_REGEX As String = "^\d{1,7}(|\.)$|^\d{0,7}\.\d{1,3}$"
+    Public Const DECIMAL_7_3_REGEX As String = "^[0-9]{1,7}(|\.)$|^[0-9]{0,7}\.[0-9]{1,3}$"
 
     ''' <summary>
     ''' 数値フォーマット正規表現 (整数 7 桁, 小数 3 桁。任意)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const DECIMAL_7_3_REGEX_OPTIONAL As String = "^\d{1,7}(|\.)$|^\d{0,7}\.\d{1,3}$|^$"
+    Public Const DECIMAL_7_3_REGEX_OPTIONAL As String = "^[0-9]{1,7}(|\.)$|^[0-9]{0,7}\.[0-9]{1,3}$|^$"
 
     ''' <summary>
     ''' 数値フォーマット正規表現 (整数 5 桁, 小数 3 桁。必須)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const DECIMAL_5_3_REGEX As String = "^\d{1,5}(|\.)$|^\d{0,5}\.\d{1,3}$"
+    Public Const DECIMAL_5_3_REGEX As String = "^[0-9]{1,5}(|\.)$|^[0-9]{0,5}\.[0-9]{1,3}$"
 
     ''' <summary>
     ''' 数値フォーマット正規表現 (整数 5 桁, 小数 3 桁。任意)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const DECIMAL_5_3_REGEX_OPTIONAL As String = "^\d{1,5}(|\.)$|^\d{0,5}\.\d{1,3}$|^$"
+    Public Const DECIMAL_5_3_REGEX_OPTIONAL As String = "^[0-9]{1,5}(|\.)$|^[0-9]{0,5}\.[0-9]{1,3}$|^$"
 
     ''' <summary>
     ''' 数値フォーマット正規表現 (整数 5 桁。必須)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const INT_5_REGEX As String = "^\d{1,5}$"
+    Public Const INT_5_REGEX As String = "^[0-9]{1,5}$"
 
     ''' <summary>
     ''' 数値フォーマット正規表現 (整数 5 桁。任意)
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const INT_5_REGEX_OPTIONAL As String = "^\d{1,5}$|^$"
-
+    Public Const INT_5_REGEX_OPTIONAL As String = "^[0-9]{1,5}$|^$"
     ''' <summary>
     ''' メールアドレスフォーマット(英数字@英数字.英数字)
     ''' </summary>
