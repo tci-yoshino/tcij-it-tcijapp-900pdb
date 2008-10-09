@@ -41,7 +41,7 @@
 						</td>
 					</tr>
 					<tr>
-						<th>Supplier Name <span class="required">*</span> : </th>
+						<th><span class="r3">Supplier Name</span><span class="required">*</span> : </th>
 						<td>
 							<asp:TextBox ID="SupplierName3" runat="server"  Width="21em" MaxLength="255"></asp:TextBox>
 							<asp:TextBox ID="SupplierName4" runat="server"  Width="21em" MaxLength="255"></asp:TextBox>
