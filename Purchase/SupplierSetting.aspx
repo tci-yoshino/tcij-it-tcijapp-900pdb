@@ -30,11 +30,11 @@
 						<td><asp:Label ID="Code" runat="server" Text=""></asp:Label></td>
 					</tr>
 					<tr>
-						<th>TCI-J Supplier Code : </th>
+						<th><span class="r3">TCI-J Supplier Code</span> : </th>
 						<td><asp:TextBox ID="R3SupplierCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox></td>
 					</tr>
 					<tr>
-						<th>TCI-J Supplier Name : </th>
+						<th><span class="r3">TCI-J Supplier Name</span> : </th>
 						<td>
                             <asp:TextBox ID="SupplierName1" runat="server"  Width="21em" MaxLength="255"></asp:TextBox>
 							<asp:TextBox ID="SupplierName2" runat="server"  Width="21em" MaxLength="255"></asp:TextBox>
@@ -48,7 +48,7 @@
 						</td>
 					</tr>
 					<tr>
-						<th>Search Term : </th>
+						<th><span class="r3">Search Term</span> : </th>
 						<td>
 							<asp:TextBox ID="SearchTerm1" runat="server"  Width="21em" MaxLength="255"></asp:TextBox>
 							<asp:TextBox ID="SearchTerm2" runat="server"  Width="21em" MaxLength="255"></asp:TextBox>
@@ -58,7 +58,7 @@
 
 				<table class="left" style="margin-left:21px">
 					<tr>
-						<th rowspan="3">Address <span class="required">*</span> : </th>
+						<th rowspan="3"><span class="r3">Address</span><span class="required">*</span> : </th>
 						<td><asp:TextBox ID="Address1" runat="server"  Width="21em" MaxLength="255"></asp:TextBox></td>
 					</tr>
 					<tr>
@@ -68,36 +68,36 @@
 						<td><asp:TextBox ID="Address3" runat="server"  Width="21em" MaxLength="255"></asp:TextBox></td>
 					</tr>
 					<tr>
-						<th>Postal Code : </th>
+						<th><span class="r3">Postal Code</span> : </th>
 						<td><asp:TextBox ID="PostalCode" runat="server" Width="7em" MaxLength="32"></asp:TextBox></td>
 					</tr>
 					<tr>
-						<th>Country <span class="required">*</span> : </th>
+						<th><span class="r3">Country</span><span class="required">*</span> : </th>
 						<td>
                             <asp:DropDownList ID="Country" runat="server" AutoPostBack="True">
                             </asp:DropDownList>
 						</td>
 					</tr>
 					<tr>
-						<th>Region : </th>
+						<th><span class="r3">Region</span> : </th>
 						<td>
                             <asp:DropDownList ID="Region" runat="server">
                             </asp:DropDownList>
 						</td>
 					</tr>
 					<tr>
-						<th>Telephone : </th>
+						<th><span class="r3">Telephone</span> : </th>
 						<td><asp:TextBox ID="Telephone" runat="server"  Width="10em" MaxLength="32"></asp:TextBox></td>
 					</tr>
 					<tr>
-						<th>Fax : </th>
+						<th><span class="r3">Fax</span> : </th>
 						<td><asp:TextBox ID="Fax" runat="server"  Width="10em" MaxLength="32"></asp:TextBox></td>
 					</tr>
 				</table>
 
 				<table>
 					<tr>
-						<th>E-mail : </th>
+						<th><span class="r3">E-mail</span> : </th>
 						<td><asp:TextBox ID="Email" runat="server"  Width="21em" MaxLength="255"></asp:TextBox></td>
 					</tr>
 					<tr>
@@ -105,7 +105,7 @@
 						<td>http:// <asp:TextBox ID="Website" runat="server"  Width="21em" MaxLength="255"></asp:TextBox></td>
 					</tr>
 					<tr>
-						<th>R/3 Comments : </th>
+						<th><span class="r3">R/3 Comments</span> : </th>
 						<td><asp:TextBox ID="R3Comment" runat="server"  Width="21em" MaxLength="255"></asp:TextBox></td>
 					</tr>
 					<tr>
