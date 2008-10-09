@@ -50,7 +50,7 @@ Public Class CommonPage
             Throw New Exception("CommonPage.OnLoad: Bad Request Type.")
         End If
 
-        st_ScriptName = System.IO.Path.GetFileNameWithoutExtension(Request.Url.ToString)
+        st_ScriptName = System.IO.Path.GetFileName(Regex.Replace(Request.Url.ToString, "\.[aA][sS][pP][xX].*", ""))
 
         If Session("UserID") Is Nothing Then
             st_Buf = Split(Request.ServerVariables("LOGON_USER"), "\")
