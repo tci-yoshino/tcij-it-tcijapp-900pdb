@@ -103,10 +103,18 @@ Partial Public Class JFYISearch
         SrcRFQHeader.SelectCommand = CreateSQL_For_Select_RFQHeader(b_useToDate)
         SrcRFQHeader.SelectParameters.Clear()
         SrcRFQHeader.SelectParameters.Add("PurposeCode", PURPOSE_CODE_JFYI)
+
         Dim s_LocationCode As String = Session(SESSION_KEY_LOCATION).ToString()
-        SrcRFQHeader.SelectParameters.Add("QuotedDateFrom", GetDatabaseTime(s_LocationCode, QuotedDateFrom.Text).ToString())
+
+        '日差補正関数（TCI国際化対応12時間）
+        Const DATE_ADJUST_HOUR As Integer = -12
+
+        Dim s_QuotedDateFrom As String = CType(GetDatabaseTime(s_LocationCode, QuotedDateFrom.Text), Date).AddHours(DATE_ADJUST_HOUR).ToString("yyyy-MM-dd HH:mm:ss")
+        SrcRFQHeader.SelectParameters.Add("QuotedDateFrom", s_QuotedDateFrom)
+
         If b_useToDate = True Then
-            SrcRFQHeader.SelectParameters.Add("QuotedDateTo", GetDatabaseTime(s_LocationCode, QuotedDateTo.Text).ToString())
+            Dim s_QuotedDateTo As String = CType(GetDatabaseTime(s_LocationCode, QuotedDateTo.Text), Date).AddHours(DATE_ADJUST_HOUR).ToString("yyyy-MM-dd HH:mm:ss")
+            SrcRFQHeader.SelectParameters.Add("QuotedDateTo", s_QuotedDateTo)
         End If
 
         'エラー未発生時のリスト可視化
