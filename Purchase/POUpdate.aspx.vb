@@ -14,6 +14,7 @@ Partial Public Class POUpdate
 
 #Region "グローバル変数定義"
 
+    Protected st_PONumber As String = String.Empty
     Protected st_ParPONumber As String = String.Empty
     Protected st_Action As String = String.Empty
     Protected b_FormVisible As Boolean = True
@@ -147,9 +148,6 @@ Partial Public Class POUpdate
             st_Action = Request.Form(QUERY_KEY_ACTION).ToString()
         End If
 
-        'PO Numberの取得
-        Dim st_PONumber As String = String.Empty
-
         If Not (Request.QueryString(QUERY_KEY_PO_NUMBER) Is Nothing) Then
             st_PONumber = Request.QueryString(QUERY_KEY_PO_NUMBER).ToString()
         ElseIf Not (Request.Form(QUERY_KEY_PO_NUMBER) Is Nothing) Then
@@ -196,6 +194,14 @@ Partial Public Class POUpdate
 
         ChiPOIssue.NavigateUrl = String.Format("./RFQSelect.aspx?ParPONumber={0}", st_PONumber)
 
+        Update.PostBackUrl = String.Format("POUpdate.aspx?{0}={1}&{2}={3}", _
+                                            QUERY_KEY_ACTION, ACTION_VALUE_UPDATE, _
+                                            QUERY_KEY_PO_NUMBER, st_PONumber)
+
+        Cancell.PostBackUrl = String.Format("POUpdate.aspx?{0}={1}&{2}={3}", _
+                                            QUERY_KEY_ACTION, ACTION_VALUE_CANCEL, _
+                                            QUERY_KEY_PO_NUMBER, st_PONumber)
+
     End Sub
 
     ''' <summary>
@@ -211,6 +217,12 @@ Partial Public Class POUpdate
 
         ChangeTextBoxValueToSingleByte()
 
+        'Actionの確認
+        If st_Action <> ACTION_VALUE_UPDATE Then
+            Msg.Text = ERR_INVALID_PARAMETER
+            Return
+        End If
+
         If ValidateCommon() = False Then
             Exit Sub
         End If
@@ -219,7 +231,7 @@ Partial Public Class POUpdate
             Exit Sub
         End If
 
-        Dim i_PONumber As Integer = CInt(PO.Value)
+        Dim i_PONumber As Integer = CInt(st_PONumber)
 
         UpdatePOInfomationFromForm(i_PONumber)
         ViewPOInformationToForm(i_PONumber)
@@ -238,6 +250,12 @@ Partial Public Class POUpdate
         Msg.Text = String.Empty
         RunMsg.Text = String.Empty
 
+        'Actionの確認
+        If st_Action <> ACTION_VALUE_CANCEL Then
+            Msg.Text = ERR_INVALID_PARAMETER
+            Return
+        End If
+
         If ValidateCommon() = False Then
             Exit Sub
         End If
@@ -247,7 +265,7 @@ Partial Public Class POUpdate
             Exit Sub
         End If
 
-        Dim i_PONumber As Integer = Integer.Parse(PO.Value)
+        Dim i_PONumber As Integer = CInt(st_PONumber)
 
         CancelPOInfomationFromForm(i_PONumber)
         ViewPOInformationToForm(i_PONumber)
@@ -318,7 +336,7 @@ Partial Public Class POUpdate
     ''' <remarks></remarks>
     Private Sub ViewPOInformationToForm(ByVal PONumber As Integer)
 
-        PO.Value = PONumber.ToString()
+        'PO.Value = PONumber.ToString()
         Dim POInformation As POInformationType = SelectPOInformation(PONumber)
 
         '関数戻り値が構造体でNothing判定できないため、主キーのPONumberがNothingかでデータ有無を判定
@@ -538,17 +556,12 @@ Partial Public Class POUpdate
     ''' <remarks></remarks>
     Private Function ValidateCommon() As Boolean
 
-        If st_Action <> ACTION_VALUE_UPDATE Then
+        If IsInteger(st_PONumber) = False Then
             Msg.Text = ERR_INVALID_PARAMETER
             Return False
         End If
 
-        If IsInteger(PO.Value) = False Then
-            Msg.Text = ERR_INVALID_PARAMETER
-            Return False
-        End If
-
-        Dim i_PONumber As Integer = Integer.Parse(PO.Value)
+        Dim i_PONumber As Integer = Integer.Parse(st_PONumber)
 
         Dim POInformation As POInformationType = SelectPOInformation(i_PONumber)
         If CBool(Session(SESSION_KEY_ADMIN)) = False And POInformation.POLocationCode <> Session(SESSION_KEY_LOCATION).ToString() Then

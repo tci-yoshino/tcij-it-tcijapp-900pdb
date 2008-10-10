@@ -176,8 +176,6 @@
                         </tr>
                     </table>
 				    <asp:HiddenField ID="UpdateDate" runat="server" />
-				    <asp:HiddenField ID="PO" runat="server" />
-				    <asp:HiddenField ID="Action" value="Update" runat="server" />
 
                     <div class="btns">
                         <p class="message"><asp:Label ID="RunMsg" runat="server"></asp:Label></p>
