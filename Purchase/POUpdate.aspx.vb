@@ -12,8 +12,6 @@ Imports System.Data.SqlClient
 Partial Public Class POUpdate
     Inherits CommonPage
 
-#Region "グローバル変数定義"
-
     Protected st_PONumber As String = String.Empty
     Protected st_ParPONumber As String = String.Empty
     Protected st_Action As String = String.Empty
@@ -22,9 +20,6 @@ Partial Public Class POUpdate
     Protected b_ChiPOIssueVisible As Boolean = False
     Private i_OperatingUserID As Integer = -1
 
-#End Region
-
-#Region "定数定義"
     ''' <summary>
     ''' エラー定数です。
     ''' </summary>
@@ -54,9 +49,6 @@ Partial Public Class POUpdate
     Const MAX_LENGTH_R3_PO_LINE_NUMBER As Integer = 5
     Const MAX_LENGTH_LOT_NUMBER As Integer = 10
 
-#End Region
-
-#Region "構造体定義"
     ''' <summary>
     ''' POデータを格納する構造体です。
     ''' </summary>
@@ -129,9 +121,6 @@ Partial Public Class POUpdate
         Public UpdateDate As DateTime?
     End Structure
 
-#End Region
-
-#Region "フォームイベント"
 
     ''' <summary>
     ''' このページのロードイベントです。
@@ -273,10 +262,6 @@ Partial Public Class POUpdate
     End Sub
 
 
-
-#End Region
-
-#Region "フォーム処理"
     ''' <summary>
     ''' フォームの表示・入力項目を初期化します。
     ''' </summary>
@@ -582,9 +567,6 @@ Partial Public Class POUpdate
 
     End Function
 
-#End Region
-
-#Region "クラス内共通処理"
     ''' <summary>
     ''' 指定されたPOのデータが存在するかを取得します。
     ''' </summary>
@@ -597,7 +579,6 @@ Partial Public Class POUpdate
         Return ExistenceConfirmation(VIEW_NAME_PO, PK_NAME_PO, PONumber)
 
     End Function
-
 
 
     ''' <summary>
@@ -692,10 +673,6 @@ Partial Public Class POUpdate
         Return dt_Current
 
     End Function
-
-#End Region
-
-#Region "DB登録処理"
 
 
     ''' <summary>
@@ -1006,9 +983,9 @@ Partial Public Class POUpdate
 
         Return sb_SQL.ToString()
     End Function
-#End Region
 
-#Region "DBNull・.NET変数変換関数"
+
+
     ''' <summary>
     ''' DBオブジェクトをSystem.stringに変換します。
     ''' </summary>
@@ -1128,10 +1105,6 @@ Partial Public Class POUpdate
         End If
     End Function
 
-
-#End Region
-
-#Region "Null・.NET変数変換関数"
     ''' <summary>
     ''' Systemn.String内の空白をNothingに変換します。
     ''' </summary>
@@ -1160,7 +1133,6 @@ Partial Public Class POUpdate
 
     End Function
 
-
     ''' <summary>
     ''' Nullable Integerオブジェクトを文字列に変換します。
     ''' </summary>
@@ -1175,6 +1147,6 @@ Partial Public Class POUpdate
 
     End Function
 
-#End Region
+
 
 End Class

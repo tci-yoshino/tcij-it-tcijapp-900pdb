@@ -10,23 +10,14 @@ Imports System.Data.SqlClient
 Partial Public Class JFYISearch
     Inherits CommonPage
 
-#Region "グローバル変数定義"
     Protected st_Action As String = String.Empty
     Protected b_FormVisible As Boolean = True
-#End Region
 
-#Region "定数定義"
     Const QUERY_KEY_ACTION As String = "Action"
-
     Const SESSION_KEY_ADMIN As String = "Purchase.isAdmin"
     Const SESSION_KEY_LOCATION As String = "LocationCode"
-    
     Const ACTION_VALUE_SEARCH As String = "Search"
-
     Const PURPOSE_CODE_JFYI As String = "JFYI"
-
-#End Region
-
 
     ''' <summary>
     ''' このページのロードイベントです。
