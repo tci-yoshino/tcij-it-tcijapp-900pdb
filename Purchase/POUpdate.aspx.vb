@@ -41,7 +41,7 @@ Partial Public Class POUpdate
 
 
     Const ACTION_VALUE_UPDATE As String = "Update"
-    Const ACTION_VALUE_CANCEL As String = "Cancel"
+    Const ACTION_VALUE_CANCEL As String = "Cancell"
 
     Const FORMAT_DECIMAL As String = "G29"
 
