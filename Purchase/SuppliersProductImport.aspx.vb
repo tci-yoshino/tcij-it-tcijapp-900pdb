@@ -24,7 +24,7 @@ Partial Public Class SuppliersProductImport
     ''' エラー表示メッセージ定数です。
     ''' </summary>
     ''' <remarks></remarks>
-    Const MSG_NOT_TEMP_DIR = "サーバに作業ディレクトリがありません"
+    Const MSG_NOT_TEMP_DIR = "SuppliersProductImport.Preview_Click：サーバに作業ディレクトリがありません"
 
     ''' <summary>
     ''' SupplierProductList列位置定数
@@ -130,8 +130,7 @@ Partial Public Class SuppliersProductImport
         'temp Pathパスの設定
         Dim st_TempPath As String = ConfigurationManager.AppSettings("TempDir")
         If System.IO.Directory.Exists(st_TempPath) = False Then
-            Msg.Text = MSG_NOT_TEMP_DIR
-            Exit Sub
+            Throw New Exception(MSG_NOT_TEMP_DIR)
         End If
 
         Dim st_FuncName As String = ""
