@@ -110,9 +110,7 @@
                                 </tr>
                             </table>
                         </LayoutTemplate>
-                        <EmptyDataTemplate>
-                            <h3 style="font-style:italic"><%=Purchase.Common.MSG_NO_DATA_FOUND%></h3>
-                        </EmptyDataTemplate>
+                        <EmptyDataTemplate></EmptyDataTemplate>
                         <ItemTemplate>
                         <tr ID="itemPlaceholder" runat="server">
                             <th><asp:Label ID="Seq" runat="server" Text='<%# Container.DataItemIndex + 1 %>'></asp:Label></th>
