@@ -19,6 +19,7 @@ Partial Public Class POIssue
     Private Const ERR_NO_QUOTATION_REPLY As String = "No quotation record found.<br />(You can not issue any order without quotation record.)"
     Private Const ERR_R3_SUPPLIER_DOES_NOT_EXIST As String = "No R3 Company code found.<br />(You can not issue any order without R3 company code.)"
     Private Const ERR_CHI_PO_ALREADY_EXISTS As String = "Other child PO has already issued."
+    Private Const ERR_PAR_PO_NOT_ASSIGN As String = "親 PO の発注先担当者が割当てられていません。"
     Private Const EXP_PO_ISSUE_ERROR As String = "POIssue.Issue_Click: 発注番号が採番されませんでした。"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -59,6 +60,13 @@ Partial Public Class POIssue
                     Msg.Text = ERR_CHI_PO_ALREADY_EXISTS
                     Exit Sub
                 End If
+
+                '親 PO に発注先担当者の設定がない場合はエラーとします
+                If GetSOUserID(st_ParPONumber) = String.Empty Then
+                    Msg.Text = ERR_PAR_PO_NOT_ASSIGN
+                    Exit Sub
+                End If
+
             End If
 
             If SetControl() = False Then
@@ -133,9 +141,18 @@ Partial Public Class POIssue
         RFQNumber.Text = ds.Tables("RFQLine").Rows(0)("RFQNumber").ToString
         ParPONumber_Label.Text = st_ParPONumber
         PODate.Text = GetLocalTime(Session("LocationCode").ToString, Now.Date, False, False)
+
         If Not CBool(Session("Purchase.isAdmin")) Then
             POUser.SelectedValue = Session("UserID").ToString
         End If
+
+        '親POがある場合はその発注先担当者(SOUser)を設定し、選択固定とします。
+        Dim st_ParentSOUserID As String = GetSOUserID(st_ParPONumber)
+        If Not st_ParentSOUserID = String.Empty Then
+            POUser.SelectedValue = st_ParentSOUserID
+            POUser.Enabled = False
+        End If
+
         POLocationName.Text = Session("LocationName").ToString
         ProductNumber.Text = ds.Tables("RFQLine").Rows(0)("ProductNumber").ToString
         ProductName.Text = CutShort(ds.Tables("RFQLine").Rows(0)("ProductName").ToString)
@@ -155,6 +172,7 @@ Partial Public Class POIssue
         DeliveryTerm.Text = ds.Tables("RFQLine").Rows(0)("DeliveryTerm").ToString
         SupplierItemNumber.Text = ds.Tables("RFQLine").Rows(0)("SupplierItemNumber").ToString
 
+
         ' HiddenField
         RFQLineNumber.Value = st_RFQLineNumber
         ParPONumber.Value = st_ParPONumber
@@ -173,6 +191,41 @@ Partial Public Class POIssue
         Return True
 
     End Function
+
+    Public Function GetSOUserID(ByVal PONumber As String) As String
+
+        If PONumber = String.Empty Then
+            Return String.Empty
+        End If
+
+        Dim sqlConn As SqlConnection = Nothing
+
+        Try
+            sqlConn = New SqlConnection(DB_CONNECT_STRING)
+            Dim sqlCmd As New SqlCommand(GetSQL_SelectSOUserID(), sqlConn)
+            sqlCmd.Parameters.AddWithValue("PONumber", PONumber)
+            sqlConn.Open()
+
+            Dim obj_Return As Object = sqlCmd.ExecuteScalar()
+
+            If obj_Return Is Nothing Then
+                Return String.Empty
+            End If
+
+            Return obj_Return.ToString()
+
+        Finally
+
+            If sqlConn Is Nothing Then
+                sqlConn.Close()
+                sqlConn.Dispose()
+            End If
+
+        End Try
+
+    End Function
+
+
 
     Private Sub SetControl_SrcUser()
 
@@ -476,6 +529,20 @@ Partial Public Class POIssue
         sb_Sql.Append("SELECT PONumber FROM PO WHERE PONumber = SCOPE_IDENTITY()")
 
         Return sb_Sql.ToString
+
+    End Function
+
+    Private Function GetSQL_SelectSOUserID() As String
+        Dim sb_Sql As StringBuilder = New StringBuilder
+
+        sb_Sql.Append("SELECT ")
+        sb_Sql.Append("	SOUserID ")
+        sb_Sql.Append("FROM ")
+        sb_Sql.Append("	PO ")
+        sb_Sql.Append("WHERE ")
+        sb_Sql.Append("	PONumber = @PONumber")
+
+        Return sb_Sql.ToString()
 
     End Function
 
