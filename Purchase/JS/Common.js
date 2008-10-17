@@ -34,7 +34,7 @@ function navi(menu) {
 function popup(file) {
   var option = "width=" + 600 + ",height=" + 500;
 
-  window.open(file, "" ,option + ",left=100,top=100,scrollbars=yes,menubar=no,toolbar=no,statusbar=no,resizable=yes,directories=no");
+  window.open(file, "" ,option + ",left=100,top=100,scrollbars=yes,menubar=no,toolbar=yes,location=yes,statusbar=no,resizable=yes,directories=no");
 }
 
 function clearForm(formname){
