@@ -137,8 +137,13 @@ Partial Public Class RFQUpdate
             'RFQHeader の更新
             DBCommand.Parameters.Clear()
             If RFQStatus.SelectedValue <> String.Empty Then
+                'RFQStatus を選択してある場合は RFQStatusCode を更新する。
                 RFQStatusCode = ", RFQStatusCode = @RFQStatusCode "
                 DBCommand.Parameters.Add("@RFQStatusCode", SqlDbType.NVarChar).Value = RFQStatus.SelectedValue
+            ElseIf Hi_RFQStatusCode.Value = "N" And QuoUser.SelectedValue <> String.Empty Then
+                'ステータスを Create から Assign に変更する。
+                RFQStatusCode = ", RFQStatusCode = @RFQStatusCode "
+                DBCommand.Parameters.Add("@RFQStatusCode", SqlDbType.NVarChar).Value = "A"
             End If
             If QuotedDate.Value = String.Empty Then
                 'QuotedDateは初回のみ登録し上書きしない。登録条件はRFQStatusが「Q」or「PQ」
@@ -306,6 +311,7 @@ Partial Public Class RFQUpdate
             UpdateDate.Value = GetUpdateDate("v_RFQHeader", "RFQNumber", st_RFQNumber)
             EnqLocationCode.Value = DS.Tables("RFQHeader").Rows(0)("EnqLocationCode").ToString
             QuoLocationCode.Value = DS.Tables("RFQHeader").Rows(0)("QuoLocationCode").ToString
+            Hi_RFQStatusCode.Value = DS.Tables("RFQHeader").Rows(0)("StatusCode").ToString
             'Left
             RFQNumber.Text = st_RFQNumber
             CurrentRFQStatus.Text = DS.Tables("RFQHeader").Rows(0)("Status").ToString
