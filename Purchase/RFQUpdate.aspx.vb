@@ -558,12 +558,12 @@ Partial Public Class RFQUpdate
     End Function
     Private Function CheckLineEnqQuantity() As Boolean
         'RFQLineのEnqQuantity,EnqUnit,EnqPieceはどこかが空白で登録することができない。
-        'JFYI 以外は全て未入力で登録することができない。
-        Dim CheckJFYI As Boolean = False
+        Dim b_IsNull_ALLLine As Boolean = True
+        'b_IsNull_ALLLine が True の場合は、全行が空行である。一行でもデータ入力がある場合は False にする。
         For i As Integer = LINE_START To LINE_COUNT
             If POIssue(i).Visible = True Then
                 '登録済で変更不可の行はチェックしない。
-                CheckJFYI = True
+                b_IsNull_ALLLine = False
                 Continue For
             End If
             If EnqQuantity(i).Text.Trim = String.Empty _
@@ -585,9 +585,10 @@ Partial Public Class RFQUpdate
             If Regex.IsMatch(EnqPiece(i).Text.Trim, INT_5_REGEX) = False Then
                 Return False
             End If
-            CheckJFYI = True
+            b_IsNull_ALLLine = False
         Next
-        If CheckJFYI = False And Purpose.Text <> "JFYI" Then
+        If b_IsNull_ALLLine = True And Purpose.Text <> "JFYI" Then
+            'JFYI 以外は全て未入力で登録することができない。'
             Return False
         End If
         Return True
