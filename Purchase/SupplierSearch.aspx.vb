@@ -65,7 +65,7 @@ Partial Public Class SupplierSearch
         End If
 
         '[SrcSupplierの表示]--------------------------------------------------------------
-        SrcSupplier.SelectCommand = SrcSupplier.SelectCommand + SQLStr
+        SrcSupplier.SelectCommand = SrcSupplier.SelectCommand + SQLStr + " ORDER BY [Supplier Name]"
         SupplierList.Visible = True
     End Sub
 
