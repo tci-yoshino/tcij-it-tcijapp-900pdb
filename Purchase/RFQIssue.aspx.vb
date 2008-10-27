@@ -404,14 +404,14 @@ Partial Public Class RFQIssue
         If IsCheckRFQLineFormat(EnqQuantity_4.Text, EnqPiece_4.Text) = False And bo_UnLine_4 = False Then
             Bo_UnLine = True
         End If
-
         If Enq_Quantity1 = False And Enq_Quantity2 = False And _
             Enq_Quantity3 = False And Enq_Quantity4 = False Then
-
-            Msg.Text = ERR_REQUIRED_ENQQUANTITY
-            Return False
+            If Not Purpose.SelectedValue = "JFYI" Then
+                'JFYI時は明細行なしで登録可能
+                Msg.Text = ERR_REQUIRED_ENQQUANTITY
+                Return False
+            End If
         End If
-
         If Bo_UnLine = True Then
             Msg.Text = ERR_INCORRECT_ENQQUANTITY
             Return False
@@ -438,7 +438,6 @@ Partial Public Class RFQIssue
             Return False
         End If
         DBReader.Close()
-
         'Supplierのチェック
         If ExistenceConfirmation(st_Supplier, st_SupplierKey, SupplierCode.Text) = False Then
             Msg.Text = ERR_INCORRECT_SUPPLIERCODE
@@ -456,7 +455,6 @@ Partial Public Class RFQIssue
     Private Sub SetCountryName(ByVal Code As String)
         Dim st_CountryName As String = String.Empty
         Dim st_DefaultQuoLocationName As String = String.Empty
-
         'SupplierCountryName取得
         Dim st_SQLCommand As String = String.Empty
         st_SQLCommand = "SELECT CountryName, DefaultQuoLocationCode FROM v_Country WHERE CountryCode = @st_CountryCode"
