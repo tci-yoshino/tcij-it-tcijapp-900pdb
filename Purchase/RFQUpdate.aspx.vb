@@ -558,12 +558,17 @@ Partial Public Class RFQUpdate
     End Function
     Private Function CheckLineEnqQuantity() As Boolean
         'RFQLineのEnqQuantity,EnqUnit,EnqPieceはどこかが空白で登録することができない。
+        'JFYI 以外は全て未入力で登録することができない。
+        Dim CheckJFYI As Boolean = False
         For i As Integer = LINE_START To LINE_COUNT
             If POIssue(i).Visible = True Then
                 '登録済で変更不可の行はチェックしない。
+                CheckJFYI = True
                 Continue For
             End If
-            If EnqQuantity(i).Text.Trim = String.Empty And EnqUnit(i).SelectedValue.Trim = String.Empty And EnqPiece(i).Text.Trim = String.Empty Then
+            If EnqQuantity(i).Text.Trim = String.Empty _
+                And EnqUnit(i).SelectedValue.Trim = String.Empty _
+                And EnqPiece(i).Text.Trim = String.Empty Then
                 Continue For
             ElseIf EnqQuantity(i).Text.Trim = String.Empty Then
                 Return False
@@ -580,7 +585,11 @@ Partial Public Class RFQUpdate
             If Regex.IsMatch(EnqPiece(i).Text.Trim, INT_5_REGEX) = False Then
                 Return False
             End If
+            CheckJFYI = True
         Next
+        If CheckJFYI = False And Purpose.Text <> "JFYI" Then
+            Return False
+        End If
         Return True
     End Function
 
