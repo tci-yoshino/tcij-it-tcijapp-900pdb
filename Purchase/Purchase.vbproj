@@ -405,6 +405,8 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="PO.doc" />
+    <None Include="RFQ.doc" />
     <None Include="Sample.xls" />
     <None Include="Web.config-dist" />
   </ItemGroup>
