@@ -389,8 +389,9 @@ tr.attention td {
 /* Footer Rules */
 #footer {
     margin-top: 5em;
-    padding: 5px 7px;
-/*  background-color: #cbd0d3; */
+    padding: 5px 10px 5px 20px;
+    background-color : #cbd0d3;
+    height: 1.5em;
 }
 
 #footer address {
@@ -403,5 +404,4 @@ tr.attention td {
     padding: 0 15px;
     text-decoration: none;
     color: #2651a5;
-    float: left;
 }
