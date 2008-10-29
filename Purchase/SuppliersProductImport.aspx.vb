@@ -174,7 +174,7 @@ Partial Public Class SuppliersProductImport
         End If
 
         '他社扱い情報をテーブルに設定
-        SetCompetitorInfometionToTable(tb_Excel)
+        SetCompetitorInformationToTable(tb_Excel)
 
         '製品情報データをテーブルに設定
         SetProductInfometionToTable(tb_Excel)
@@ -446,7 +446,7 @@ Partial Public Class SuppliersProductImport
     ''' </summary>
     ''' <param name="Table">対象となるサプライヤプロダクトDataTable</param>
     ''' <remarks></remarks>
-    Private Sub SetCompetitorInfometionToTable(ByRef Table As DataTable)
+    Private Sub SetCompetitorInformationToTable(ByRef Table As DataTable)
 
         Dim st_CASNumber As String = String.Empty
         Dim competitorProduct As CompetitorProductType
@@ -911,7 +911,7 @@ Partial Public Class SuppliersProductImport
         Next
 
         '他社扱い情報をテーブルに設定
-        SetCompetitorInfometionToTable(tb_Excel)
+        SetCompetitorInformationToTable(tb_Excel)
 
         '製品情報データをテーブルに設定
         SetProductInfometionToTable(tb_Excel)
