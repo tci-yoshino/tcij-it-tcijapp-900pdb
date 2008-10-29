@@ -177,7 +177,7 @@ Partial Public Class SuppliersProductImport
         SetCompetitorInformationToTable(tb_Excel)
 
         '製品情報データをテーブルに設定
-        SetProductInfometionToTable(tb_Excel)
+        SetProductInformationToTable(tb_Excel)
 
         'チェック項目を画像ファイルに置き換え
         SetCheckImageHtmlToTable(tb_Excel)
@@ -268,7 +268,7 @@ Partial Public Class SuppliersProductImport
     ''' </summary>
     ''' <param name="Table">対象となるサプライヤプロダクトDataTable</param>
     ''' <remarks></remarks>
-    Private Sub SetProductInfometionToTable(ByRef Table As DataTable)
+    Private Sub SetProductInformationToTable(ByRef Table As DataTable)
 
         Dim conn As SqlConnection = Nothing
         Dim i_DataCount As Integer
@@ -914,7 +914,7 @@ Partial Public Class SuppliersProductImport
         SetCompetitorInformationToTable(tb_Excel)
 
         '製品情報データをテーブルに設定
-        SetProductInfometionToTable(tb_Excel)
+        SetProductInformationToTable(tb_Excel)
 
         'チェック項目を画像ファイルに置き換え
         SetCheckImageHtmlToTable(tb_Excel)
