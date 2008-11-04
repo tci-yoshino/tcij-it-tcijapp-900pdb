@@ -9,17 +9,6 @@ Imports System.Web.Configuration
 Partial Public Class SuppliersProductImport
     Inherits CommonPage
 
-
-#Region " Web フォーム デザイナで生成されたコード "
-    '*****（Region内は変更しないこと）*****
-    <System.Diagnostics.DebuggerStepThrough()> Private Sub InitializeComponent()
-    End Sub
-
-    Private Sub Page_Init(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Init
-        InitializeComponent()
-    End Sub
-#End Region
-
     ''' <summary>
     ''' エラー表示メッセージ定数です。
     ''' </summary>
@@ -351,12 +340,6 @@ Partial Public Class SuppliersProductImport
 
         tbExcel = dsExcel.Tables("SuppliersProductExcel")
 
-        'Excel行数チェック
-        If tbExcel.Rows.Count > 1000 Then
-            Msg.Text = "Excel_Dateを1000行以下にして下さい"
-            Return Nothing
-        End If
-
         '実験実装　カラム名のコード内設定
         If tbExcel.Columns.Count < 4 Then
             Msg.Text = "Excelの列が足りません"
@@ -382,11 +365,34 @@ Partial Public Class SuppliersProductImport
         tbExcel.Columns.Add("WA", TYPE_OF_STRING)
         tbExcel.Columns.Add("KA", TYPE_OF_STRING)
 
-        'データ長エラーチェック
+        Dim st_CASNUmber As String
         Dim st_SupplierItemNumber As String
         Dim st_SupplierItemName As String
         Dim st_Note As String
 
+        '空行削除
+        Dim i_RowIndex As Integer = 0
+        While i_RowIndex <= tbExcel.Rows.Count - 1
+            st_CASNUmber = tbExcel.Rows(i_RowIndex).Item("CAS Number").ToString.Trim()
+            st_SupplierItemNumber = tbExcel.Rows(i_RowIndex).Item("Supplier Item Number").ToString.Trim()
+            st_SupplierItemName = tbExcel.Rows(i_RowIndex).Item("Supplier Item Name").ToString.Trim()
+            st_Note = tbExcel.Rows(i_RowIndex).Item("Note").ToString.Trim()
+
+            If st_CASNUmber = String.Empty And st_SupplierItemNumber = String.Empty And _
+             st_SupplierItemName = String.Empty And st_Note = String.Empty Then
+                tbExcel.Rows.RemoveAt(i_RowIndex)
+            Else
+                i_RowIndex += 1
+            End If
+        End While
+
+        'Excel行数チェック
+        If tbExcel.Rows.Count > 1000 Then
+            Msg.Text = "Excel_Dateを1000行以下にして下さい"
+            Return Nothing
+        End If
+
+        'データ長エラーチェック
         For j As Integer = 0 To tbExcel.Rows.Count - 1
 
             tbExcel.Rows(j).Item("CAS Number") = tbExcel.Rows(j).Item("CAS Number").ToString().Trim()
