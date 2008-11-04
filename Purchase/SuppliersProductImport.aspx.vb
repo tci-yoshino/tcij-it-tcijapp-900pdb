@@ -351,6 +351,12 @@ Partial Public Class SuppliersProductImport
 
         tbExcel = dsExcel.Tables("SuppliersProductExcel")
 
+        'Excel行数チェック
+        If tbExcel.Rows.Count > 1000 Then
+            Msg.Text = "Excel_Dateを1000行以下にして下さい"
+            Return Nothing
+        End If
+
         '実験実装　カラム名のコード内設定
         If tbExcel.Columns.Count < 4 Then
             Msg.Text = "Excelの列が足りません"
@@ -450,16 +456,22 @@ Partial Public Class SuppliersProductImport
 
         Dim st_CASNumber As String = String.Empty
         Dim competitorProduct As CompetitorProductType
+        Dim COMPETITOR_PRODUCT_VALUE_0 As String = "0"
 
         For Each row As DataRow In Table.Rows
-
             st_CASNumber = row("CAS Number")
-            competitorProduct = GetCompetitorProductByCASNumber(st_CASNumber)
-
-            row("AD") = competitorProduct.ALDRICH
-            row("AF") = competitorProduct.ALFA
-            row("WA") = competitorProduct.WAKO
-            row("KA") = competitorProduct.KANTO
+            If st_CASNumber.Trim = "" Then
+                row("AD") = COMPETITOR_PRODUCT_VALUE_0
+                row("AF") = COMPETITOR_PRODUCT_VALUE_0
+                row("WA") = COMPETITOR_PRODUCT_VALUE_0
+                row("KA") = COMPETITOR_PRODUCT_VALUE_0
+            Else
+                competitorProduct = GetCompetitorProductByCASNumber(st_CASNumber)
+                row("AD") = competitorProduct.ALDRICH
+                row("AF") = competitorProduct.ALFA
+                row("WA") = competitorProduct.WAKO
+                row("KA") = competitorProduct.KANTO
+            End If
         Next
 
     End Sub
