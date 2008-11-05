@@ -32,6 +32,9 @@ Partial Public Class SuppliersProductImport
     'チェック画像表示HTMLタグ定数です。
     Const FILE_NAME_CHECK_IMAGE As String = "<img src='./Image/Check.gif' />"
 
+    'タイムアウト設定秒数です。
+    Const TIME_OUT_SECOUND As Integer = 300
+
     ''' <summary>
     ''' 他社プロダクト構造体です。
     ''' </summary>
@@ -55,6 +58,8 @@ Partial Public Class SuppliersProductImport
         End Sub
     End Structure
 
+
+
     ''' <summary>
     ''' このページのロードイベントです。
     ''' </summary>
@@ -62,6 +67,9 @@ Partial Public Class SuppliersProductImport
     ''' <param name="e">ASP.NETの規定値</param>
     ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
+        Server.ScriptTimeout = TIME_OUT_SECOUND
+
         If IsPostBack = False Then
             If Request.QueryString("Supplier") <> "" Then
                 Dim st_SupplierCode = Request.QueryString("Supplier").ToString()
@@ -387,10 +395,10 @@ Partial Public Class SuppliersProductImport
         End While
 
         'Excel行数チェック
-        If tbExcel.Rows.Count > 1000 Then
-            Msg.Text = "Excel_Dateを1000行以下にして下さい"
-            Return Nothing
-        End If
+        'If tbExcel.Rows.Count > 1000 Then
+        '    Msg.Text = "Excel_Dateを1000行以下にして下さい"
+        '    Return Nothing
+        'End If
 
         'データ長エラーチェック
         For j As Integer = 0 To tbExcel.Rows.Count - 1
