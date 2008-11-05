@@ -395,10 +395,10 @@ Partial Public Class SuppliersProductImport
         End While
 
         'Excel行数チェック
-        'If tbExcel.Rows.Count > 1000 Then
-        '    Msg.Text = "Excel_Dateを1000行以下にして下さい"
-        '    Return Nothing
-        'End If
+        If tbExcel.Rows.Count > 1000 Then
+            Msg.Text = "Excel_Dateを1000行以下にして下さい"
+            Return Nothing
+        End If
 
         'データ長エラーチェック
         For j As Integer = 0 To tbExcel.Rows.Count - 1
