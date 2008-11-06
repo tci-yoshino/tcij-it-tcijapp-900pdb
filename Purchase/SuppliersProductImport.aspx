@@ -48,6 +48,7 @@
                         <ul>
                             <li>Sheet name has to be "Sheet1"</li>
                             <li>You may freely use column from column-E</li>
+                            <li>Please split a file with more than 1000 lines</li>
                         </ul>
                     </li>
                     <li>Original MS Excel file has to be closed when you preview the import data through the system.</li>
