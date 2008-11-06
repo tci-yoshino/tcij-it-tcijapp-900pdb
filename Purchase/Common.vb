@@ -190,19 +190,25 @@ Public Class Common
     ''' エラーメッセージ 「データは他のユーザによって削除されました。」
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const ERR_DELETED_BY_ANOTHER_USER As String = "Your requested record has already deleted by other user."
+    Public Const ERR_DELETED_BY_ANOTHER_USER As String = "Your requested record has already been deleted by another user."
 
     ''' <summary>
-    ''' エラーメッセージ 「○○には3000文字以上登録することができません」
+    ''' エラーメッセージ 「○○には 128 文字以上登録することができません」
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const ERR_OVER_3000 As String = " には3000文字以上登録することができません。"
+    Public Const ERR_OVER_128 As String = " cannot contain more than 128 characters."
 
     ''' <summary>
-    ''' エラーメッセージ 「○○には255文字以上登録することができません」
+    ''' エラーメッセージ 「○○には 255 文字以上登録することができません」
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const ERR_OVER_255 As String = " には255文字以上登録することができません。"
+    Public Const ERR_OVER_255 As String = " cannot contain more than 255 characters."
+
+    ''' <summary>
+    ''' エラーメッセージ 「○○には 3000 文字以上登録することができません」
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const ERR_OVER_3000 As String = " cannot contain more than 3000 characters."
 
     ''' <summary>
     ''' エラーメッセージ 「○○は長すぎます。」
