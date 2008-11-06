@@ -41,6 +41,19 @@
                 <p><a href="./Sample.xls">Sample Download</a></p>
             </div>
 
+            <div class="note">
+                <strong>&lt;&lt; Attention &gt;&gt;</strong>
+                <ul>
+                    <li>"Sheet1" has to contain the same column as "Sample" sheet.
+                        <ul>
+                            <li>Sheet name has to be "Sheet1"</li>
+                            <li>You may freely use column from column-E</li>
+                        </ul>
+                    </li>
+                    <li>Original MS Excel file has to be closed when you preview the import data through the system.</li>
+                </ul>
+            </div>
+
             <hr />
 
             <div class="list">
