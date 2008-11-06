@@ -56,7 +56,7 @@
 					</tr>
 				</table>
 
-				<table class="left" style="margin-left:21px">
+				<table class="left" style="margin-left:4em">
 					<tr>
 						<th rowspan="3"><span class="r3">Address</span><span class="required">*</span> : </th>
 						<td><asp:TextBox ID="Address1" runat="server"  Width="21em" MaxLength="255"></asp:TextBox></td>
@@ -122,7 +122,9 @@
 					</tr>
 				</table>
                 <asp:HiddenField ID="Action" runat="server" value="Save" />
-
+                
+                <span class="r3" style="font-weight:bold; font-style:italic">Items in blue letters are automatically revised based on R/3.</span>
+				
 				<div class="btns">
 				    <p class="message"><asp:Label ID="RunMsg" runat="server"></asp:Label></p>
                     <asp:Button ID="Save" runat="server" Text="Save" UseSubmitBehavior="False" />
