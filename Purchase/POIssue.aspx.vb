@@ -19,7 +19,7 @@ Partial Public Class POIssue
     Private Const ERR_NO_QUOTATION_REPLY As String = "No quotation record found.<br />(You can not issue any order without quotation record.)"
     Private Const ERR_R3_SUPPLIER_DOES_NOT_EXIST As String = "No R3 Company code found.<br />(You can not issue any order without R3 company code.)"
     Private Const ERR_CHI_PO_ALREADY_EXISTS As String = "Other child PO has already issued."
-    Private Const ERR_PAR_PO_NOT_ASSIGN As String = "親 PO の発注先担当者が割当てられていません。"
+    Private Const ERR_PAR_PO_NOT_ASSIGN As String = "The parent PO is assigned to nobody."
     Private Const EXP_PO_ISSUE_ERROR As String = "POIssue.Issue_Click: 発注番号が採番されませんでした。"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
