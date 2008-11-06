@@ -190,7 +190,7 @@ Public Class Common
     ''' エラーメッセージ 「データは他のユーザによって削除されました。」
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const ERR_DELETED_BY_ANOTHER_USER As String = "Your requested record has already delated by other user."
+    Public Const ERR_DELETED_BY_ANOTHER_USER As String = "Your requested record has already deleted by other user."
 
     ''' <summary>
     ''' エラーメッセージ 「○○には3000文字以上登録することができません」
