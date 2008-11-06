@@ -37,11 +37,19 @@ window.onload = function() {
                         <td><asp:TextBox ID="Code" runat="server" Width="7em" MaxLength="32"></asp:TextBox></td>
                     </tr>
                 </table>
-                
                 <asp:Button ID="Search" runat="server" Text="Search" />
                 <input type="button" value="Clear" onclick="clearForm('SearchForm')"/>
                 <asp:HiddenField ID="Action" runat="server" value="Search" />
             </form>
+        </div>
+        
+        <div class="note">
+            Product Number could be:
+            <ul>
+                <li>TCI product number</li>
+                <li>New item registry number</li>
+                <li>CAS Number</li>
+            </ul>(This CAS Product Number is only for data strage use, and can not be used to make enquiry record or issue PO.)
         </div>
 
         <hr />
