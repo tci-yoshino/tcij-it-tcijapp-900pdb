@@ -366,6 +366,18 @@ tr.attention td {
 	font-weight: bold;
 }
 
+.note {
+    border: solid 1px #ffd700;
+    margin: 5px 2px;
+    padding: 5px;
+    background-color: #fafad2;
+}
+
+.note ul {
+    margin: 2px;
+    padding-left: 15px;
+}
+
 .r3 {
 	color: #2651a5;
 	/* font-weight: bold; */
