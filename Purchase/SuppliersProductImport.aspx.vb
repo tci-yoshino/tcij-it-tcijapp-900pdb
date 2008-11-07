@@ -14,6 +14,9 @@ Partial Public Class SuppliersProductImport
     ''' </summary>
     ''' <remarks></remarks>
     Const MSG_NOT_TEMP_DIR = "SuppliersProductImport.Preview_Click：サーバに作業ディレクトリがありません"
+    Const MSG_NOT_SHEET1 = "'Sheet1' can not be found in your defined MS Excel file.<br />Sheet name has to be 'Sheet1' to import."
+    Const MSG_FEW_COLUMN = "Your defined 'Sheet1' does not contain an essential column."
+    Const MSG_OVER_LINES = "There is too much data. Please split the file if it contains more than 1000 lines."
 
     ''' <summary>
     ''' SupplierProductList列位置定数
@@ -342,7 +345,7 @@ Partial Public Class SuppliersProductImport
                 da.Fill(dsExcel, "SuppliersProductExcel")
             End Using
         Catch ex As Exception
-            Msg.Text = "ExcelにSheet1がありません"
+            Msg.Text = MSG_NOT_SHEET1     'ExcelにSheet1がありません
             Return Nothing
         End Try
 
@@ -350,7 +353,7 @@ Partial Public Class SuppliersProductImport
 
         '実験実装　カラム名のコード内設定
         If tbExcel.Columns.Count < 4 Then
-            Msg.Text = "Excelの列が足りません"
+            Msg.Text = MSG_FEW_COLUMN     'Excelの列が足りません
             Return Nothing
         End If
 
@@ -396,7 +399,7 @@ Partial Public Class SuppliersProductImport
 
         'Excel行数チェック
         If tbExcel.Rows.Count > 1000 Then
-            Msg.Text = "Excel_Dateを1000行以下にして下さい"
+            Msg.Text = MSG_OVER_LINES       'Excel_Dateを1000行以下にして下さい
             Return Nothing
         End If
 
@@ -407,13 +410,13 @@ Partial Public Class SuppliersProductImport
 
             st_SupplierItemNumber = tbExcel.Rows(j).Item("Supplier Item Number").ToString()
             If st_SupplierItemNumber.Length > 128 Then
-                Msg.Text = "Supplier Item Numberの文字数がオーバー"
+                Msg.Text = "Supplier Item Number" + Common.ERR_OVER_128   'Supplier Item Numberの文字数がオーバー
                 Return Nothing
             End If
 
             st_SupplierItemName = tbExcel.Rows(j).Item("Supplier Item Name").ToString()
             If st_SupplierItemName.Length > 1000 Then
-                Msg.Text = "Supplier Item Nameの文字数がオーバー"
+                Msg.Text = ERR_OVER_1000    'Supplier Item Nameの文字数がオーバー
                 Return Nothing
             End If
 
