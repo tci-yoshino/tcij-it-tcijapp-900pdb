@@ -16,7 +16,7 @@ Partial Public Class RFQIssue
     Private Const ERR_REQUIRED_SUPPLIERCODE As String = "SupplierCode" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_QUOLOCATION As String = "Quo-Location" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_PURPOSE As String = "Purpose" & ERR_REQUIRED_FIELD
-    Private Const ERR_REQUIRED_ENQQUANTITY As String = "Please enter a item."
+    Private Const ERR_REQUIRED_ENQQUANTITY As String = "Please enter an item."
     Private Const ERR_ISCASNUMBER As String = "You can not enquire with CAS Number. Please convert it into either ""New Product Registry Number"" or ""TCI Product Number""."
     'エラーメッセージ(文字数制限オーバー)
     Private Const ERR_COMMENT_OVER As String = "Comment" & ERR_OVER_3000
