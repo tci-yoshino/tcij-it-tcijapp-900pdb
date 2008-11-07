@@ -205,6 +205,12 @@ Public Class Common
     Public Const ERR_OVER_255 As String = " cannot contain more than 255 characters."
 
     ''' <summary>
+    ''' エラーメッセージ 「○○には 1000 文字以上登録することができません」
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const ERR_OVER_1000 As String = " cannot contain more than 1000 characters."
+
+    ''' <summary>
     ''' エラーメッセージ 「○○には 3000 文字以上登録することができません」
     ''' </summary>
     ''' <remarks></remarks>
