@@ -193,6 +193,12 @@ Public Class Common
     Public Const ERR_DELETED_BY_ANOTHER_USER As String = "Your requested record has already been deleted by another user."
 
     ''' <summary>
+    ''' エラーメッセージ 「○○には 32 文字以上登録することができません」
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const ERR_OVER_32 As String = " cannot contain more than 32 characters."
+
+    ''' <summary>
     ''' エラーメッセージ 「○○には 128 文字以上登録することができません」
     ''' </summary>
     ''' <remarks></remarks>
@@ -215,12 +221,6 @@ Public Class Common
     ''' </summary>
     ''' <remarks></remarks>
     Public Const ERR_OVER_3000 As String = " cannot contain more than 3000 characters."
-
-    ''' <summary>
-    ''' エラーメッセージ 「○○は長すぎます。」
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Const ERR_TOO_LONG As String = " が長すぎます。"
 
     Private Const LOCATION_JP As String = "JP"
 
