@@ -43,6 +43,15 @@ window.onload = function() {
             </form>
         </div>
 
+        <div class="note">
+            Product Number could be:
+            <ul>
+                <li>TCI product number</li>
+                <li>New item registry number</li>
+                <li>CAS Number</li>
+            </ul>(This CAS Product Number is only for data strage use, and can not be used to make enquiry record or issue PO.)
+        </div>
+
         <hr />
 
         <div class="list">
