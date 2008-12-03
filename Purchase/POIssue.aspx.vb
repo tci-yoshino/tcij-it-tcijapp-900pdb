@@ -21,6 +21,7 @@ Partial Public Class POIssue
     Private Const ERR_CHI_PO_ALREADY_EXISTS As String = "Other child PO has already issued."
     Private Const ERR_PAR_PO_NOT_ASSIGN As String = "The parent PO is assigned to nobody."
     Private Const EXP_PO_ISSUE_ERROR As String = "POIssue.Issue_Click: 発注番号が採番されませんでした。"
+    Private Const EXP_RFQ_UNIT_CODE_UNUSABLE As String = "The Enq-Unit 'ZZ' is unusable for PO."
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -66,7 +67,12 @@ Partial Public Class POIssue
                     Msg.Text = ERR_PAR_PO_NOT_ASSIGN
                     Exit Sub
                 End If
+            End If
 
+            'パラメータ RFQLineNumber に該当する RFQLine.EnqUnitCode が 'ZZ' の場合はエラーとします。
+            If GetEnqUnitCode(st_RFQLineNumber) = "ZZ" Then
+                Msg.Text = EXP_RFQ_UNIT_CODE_UNUSABLE
+                Exit Sub
             End If
 
             If SetControl() = False Then
@@ -124,10 +130,11 @@ Partial Public Class POIssue
             Return False
         End If
 
-        If IsDBNull(ds.Tables("RFQLine").Rows(0)("R3SupplierCode")) Then
-            Msg.Text = ERR_R3_SUPPLIER_DOES_NOT_EXIST
-            Return False
-        End If
+        'HACK BugTrack-Purchase/227 R/3と連携まで'R3SupplierCode'の確認はしない
+        'If IsDBNull(ds.Tables("RFQLine").Rows(0)("R3SupplierCode")) Then
+        '    Msg.Text = ERR_R3_SUPPLIER_DOES_NOT_EXIST
+        '    Return False
+        'End If
 
         If IsDBNull(ds.Tables("RFQLine").Rows(0)("EnqQuantity")) _
             Or IsDBNull(ds.Tables("RFQLine").Rows(0)("EnqPiece")) _
@@ -215,8 +222,7 @@ Partial Public Class POIssue
             Return obj_Return.ToString()
 
         Finally
-
-            If sqlConn Is Nothing Then
+            If Not (sqlConn Is Nothing) Then
                 sqlConn.Close()
                 sqlConn.Dispose()
             End If
@@ -225,6 +231,38 @@ Partial Public Class POIssue
 
     End Function
 
+    Public Function GetEnqUnitCode(ByVal RFQLineNumber As String) As String
+
+        If RFQLineNumber = String.Empty Then
+            Return String.Empty
+        End If
+
+        Dim sqlConn As SqlConnection = Nothing
+
+        Try
+            sqlConn = New SqlConnection(DB_CONNECT_STRING)
+            Dim sqlCmd As New SqlCommand(GetSQL_SelectEnqUnitCode(), sqlConn)
+            sqlCmd.Parameters.AddWithValue("RFQLineNumber", RFQLineNumber)
+            sqlConn.Open()
+
+            Dim obj_Return As Object = sqlCmd.ExecuteScalar()
+
+            If obj_Return Is Nothing Then
+                Return String.Empty
+            End If
+
+            Return obj_Return.ToString()
+
+        Finally
+
+            If Not (sqlConn Is Nothing) Then
+                sqlConn.Close()
+                sqlConn.Dispose()
+            End If
+
+        End Try
+
+    End Function
 
 
     Private Sub SetControl_SrcUser()
@@ -545,5 +583,20 @@ Partial Public Class POIssue
         Return sb_Sql.ToString()
 
     End Function
+
+    Private Function GetSQL_SelectEnqUnitCode() As String
+        Dim sb_Sql As StringBuilder = New StringBuilder
+
+        sb_Sql.Append("SELECT ")
+        sb_Sql.Append("	EnqUnitCode ")
+        sb_Sql.Append("FROM ")
+        sb_Sql.Append("	RFQLine ")
+        sb_Sql.Append("WHERE ")
+        sb_Sql.Append("	RFQLineNumber = @RFQLineNumber")
+
+        Return sb_Sql.ToString()
+
+    End Function
+
 
 End Class
