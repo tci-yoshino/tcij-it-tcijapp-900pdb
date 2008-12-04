@@ -51,6 +51,9 @@
           </assemblies>
 
         </compilation>
+
+        <httpRuntime executionTimeout="180" />
+
         <pages>
           <namespaces>
             <clear />
