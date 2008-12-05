@@ -1,0 +1,9 @@
+C:\Purchase\Purchase\bin\Purchase.dll
+C:\Purchase\Purchase\bin\Purchase.pdb
+C:\Purchase\Purchase\bin\Purchase.xml
+C:\Purchase\Purchase\obj\Debug\ResolveAssemblyReference.cache
+C:\Purchase\Purchase\obj\Debug\Purchase.Resources.resources
+C:\Purchase\Purchase\obj\Debug\Purchase.vbproj.GenerateResource.Cache
+C:\Purchase\Purchase\obj\Debug\Purchase.dll
+C:\Purchase\Purchase\obj\Debug\Purchase.xml
+C:\Purchase\Purchase\obj\Debug\Purchase.pdb
