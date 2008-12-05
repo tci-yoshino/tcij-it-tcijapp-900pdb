@@ -53,7 +53,7 @@ window.onload = function() {
                     <table ID="itemPlaceholderContainer" runat="server">
                         <tr id="Tr1" runat="server">
                             <th id="Th1" runat="server" style="width:15%">Supplier Code</th>
-                            <th id="Th2" runat="server" style="width:15%">R/3 Supplier Code</th>
+                            <th id="Th2" runat="server" style="width:15%">TCI-J Supplier Code</th>
                             <th id="Th3" runat="server" style="width:65%">Supplier Name</th>
                             <th style="width:5%"></th>
                         </tr>
