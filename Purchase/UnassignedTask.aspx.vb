@@ -134,14 +134,14 @@
     End Sub
 
     Protected Sub SrcRFQ_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcRFQ.Selecting
-        e.Command.CommandTimeout = 300
+        e.Command.CommandTimeout = 0
     End Sub
 
     Protected Sub SrcPO_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcPO.Selecting
-        e.Command.CommandTimeout = 300
+        e.Command.CommandTimeout = 0
     End Sub
 
     Protected Sub SrcUser_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcUser.Selecting
-        e.Command.CommandTimeout = 300
+        e.Command.CommandTimeout = 0
     End Sub
 End Class
