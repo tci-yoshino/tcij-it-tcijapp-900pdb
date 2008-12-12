@@ -24,4 +24,7 @@
 <Configuration ConfiguredType="Property" Path="\Package.Variables[User::Mail_To].Properties[Value]" ValueType="String">
   <ConfiguredValue>app@tokyokasei.co.jp</ConfiguredValue>
 </Configuration>
+<Configuration ConfiguredType="Property" Path="\Package.Variables[User::SPTimeOut].Properties[Value]" ValueType="Int32">
+  <ConfiguredValue>30</ConfiguredValue>
+</Configuration>
 </DTSConfiguration>
