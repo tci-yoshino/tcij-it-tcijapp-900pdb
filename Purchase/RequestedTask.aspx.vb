@@ -13,4 +13,8 @@
 
     End Sub
 
+    Protected Sub SrcRFQ_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcRFQ.Selecting
+        e.Command.CommandTimeout = 0
+    End Sub
+
 End Class
