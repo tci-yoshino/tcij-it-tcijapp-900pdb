@@ -135,8 +135,8 @@
             & "WHERE " _
             & "  QuoUserID = @UserID " _
             & "  AND EnqUserID != @UserID " _
-            & "  AND StatusCode NOT IN ('Q','C') " _
-            & "  OR  (StatusCode IN ('Q','C') AND RR.RFQHistoryNumber IS NOT NULL) " _
+            & "  AND ((StatusCode NOT IN ('Q','C')) " _
+            & "       OR (StatusCode IN ('Q','C') AND RR.RFQHistoryNumber IS NOT NULL)) " _
             & "ORDER BY " _
             & "  StatusSortOrder, StatusChangeDate ASC  "
         RFQList.DataSourceID = "SrcRFQ"
