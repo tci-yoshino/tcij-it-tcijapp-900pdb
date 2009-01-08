@@ -200,7 +200,8 @@
                             </asp:DropDownList>
                         </td>
                         <td><asp:TextBox ID="UnitPrice_1" runat="server" Width="5em" MaxLength="14" CssClass="number"></asp:TextBox></td>
-                        <td><asp:TextBox ID="QuoPer_1" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox></td>
+                        <td><asp:TextBox ID="QuoPer_1" runat="server" Width="5em" MaxLength="9" 
+                                CssClass="number"></asp:TextBox></td>
                         <td>
                             <asp:DropDownList ID="QuoUnit_1" runat="server" 
                                 DataSourceID="SDS_RFQUpdate_Unit" DataTextField="UnitCode" 
@@ -267,7 +268,8 @@
                             </asp:DropDownList>
                         </td>
                         <td><asp:TextBox ID="UnitPrice_2" runat="server" Width="5em" MaxLength="14" CssClass="number"></asp:TextBox></td>
-                        <td><asp:TextBox ID="QuoPer_2" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox></td>
+                        <td><asp:TextBox ID="QuoPer_2" runat="server" Width="5em" MaxLength="9" 
+                                CssClass="number"></asp:TextBox></td>
                         <td>
                             <asp:DropDownList ID="QuoUnit_2" runat="server" 
                                 DataSourceID="SDS_RFQUpdate_Unit" DataTextField="UnitCode" 
@@ -321,7 +323,8 @@
                             </asp:DropDownList>
                         </td>
                         <td><asp:TextBox ID="UnitPrice_3" runat="server" Width="5em" MaxLength="14" CssClass="number"></asp:TextBox></td>
-                        <td><asp:TextBox ID="QuoPer_3" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox></td>
+                        <td><asp:TextBox ID="QuoPer_3" runat="server" Width="5em" MaxLength="9" 
+                                CssClass="number"></asp:TextBox></td>
                         <td>
                             <asp:DropDownList ID="QuoUnit_3" runat="server" 
                                 DataSourceID="SDS_RFQUpdate_Unit" DataTextField="UnitCode" 
@@ -375,7 +378,8 @@
                             </asp:DropDownList>
                         </td>
                         <td><asp:TextBox ID="UnitPrice_4" runat="server" Width="5em" MaxLength="14" CssClass="number"></asp:TextBox></td>
-                        <td><asp:TextBox ID="QuoPer_4" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox></td>
+                        <td><asp:TextBox ID="QuoPer_4" runat="server" Width="5em" MaxLength="9" 
+                                CssClass="number"></asp:TextBox></td>
                         <td>
                             <asp:DropDownList ID="QuoUnit_4" runat="server" 
                                 DataSourceID="SDS_RFQUpdate_Unit" DataTextField="UnitCode" 
