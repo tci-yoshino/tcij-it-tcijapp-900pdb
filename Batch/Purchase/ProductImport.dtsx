@@ -1,9 +1,9 @@
-<?xml version="1.0"?><DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts" DTS:ExecutableType="MSDTS.Package.1"><DTS:Property DTS:Name="PackageFormatVersion">2</DTS:Property><DTS:Property DTS:Name="VersionComments"></DTS:Property><DTS:Property DTS:Name="CreatorName">akutsu</DTS:Property><DTS:Property DTS:Name="CreatorComputerName">HS-SYS0204</DTS:Property><DTS:Property DTS:Name="CreationDate" DTS:DataType="7">7/3/2008 11:57:21 AM</DTS:Property><DTS:Property DTS:Name="PackageType">5</DTS:Property><DTS:Property DTS:Name="ProtectionLevel">0</DTS:Property><DTS:Property DTS:Name="MaxConcurrentExecutables">-1</DTS:Property><DTS:Property DTS:Name="PackagePriorityClass">0</DTS:Property><DTS:Property DTS:Name="VersionMajor">1</DTS:Property><DTS:Property DTS:Name="VersionMinor">0</DTS:Property><DTS:Property DTS:Name="VersionBuild">336</DTS:Property><DTS:Property DTS:Name="VersionGUID">{3D691855-B6B3-4310-844F-83ADB18B46B1}</DTS:Property><DTS:Property DTS:Name="EnableConfig">-1</DTS:Property><DTS:Property DTS:Name="CheckpointFileName"></DTS:Property><DTS:Property DTS:Name="SaveCheckpoints">0</DTS:Property><DTS:Property DTS:Name="CheckpointUsage">0</DTS:Property><DTS:Property DTS:Name="SuppressConfigurationWarnings">0</DTS:Property>
-<DTS:ConnectionManager><DTS:Property DTS:Name="DelayValidation">0</DTS:Property><DTS:Property DTS:Name="ObjectName">ADO.Purchase</DTS:Property><DTS:Property DTS:Name="DTSID">{69167A28-F72C-473C-954D-6D792A9A6420}</DTS:Property><DTS:Property DTS:Name="Description"></DTS:Property><DTS:Property DTS:Name="CreationName">ADO.NET:System.Data.SqlClient.SqlConnection, System.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</DTS:Property><DTS:ObjectData><DTS:ConnectionManager><DTS:Password DTS:Name="Password" Sensitive="1"></DTS:Password><DTS:Property DTS:Name="ConnectionString">Data Source=TCIJ-08049;User ID=Purchase;Initial Catalog=AKUTSU_TEST;Persist Security Info=True;</DTS:Property></DTS:ConnectionManager></DTS:ObjectData></DTS:ConnectionManager>
+<?xml version="1.0"?><DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts" DTS:ExecutableType="MSDTS.Package.1"><DTS:Property DTS:Name="PackageFormatVersion">2</DTS:Property><DTS:Property DTS:Name="VersionComments"></DTS:Property><DTS:Property DTS:Name="CreatorName">akutsu</DTS:Property><DTS:Property DTS:Name="CreatorComputerName">HS-SYS0204</DTS:Property><DTS:Property DTS:Name="CreationDate" DTS:DataType="7">7/3/2008 11:57:21 AM</DTS:Property><DTS:Property DTS:Name="PackageType">5</DTS:Property><DTS:Property DTS:Name="ProtectionLevel">0</DTS:Property><DTS:Property DTS:Name="MaxConcurrentExecutables">-1</DTS:Property><DTS:Property DTS:Name="PackagePriorityClass">0</DTS:Property><DTS:Property DTS:Name="VersionMajor">1</DTS:Property><DTS:Property DTS:Name="VersionMinor">0</DTS:Property><DTS:Property DTS:Name="VersionBuild">341</DTS:Property><DTS:Property DTS:Name="VersionGUID">{A5411314-1F73-43C7-A889-1FA1D53588A3}</DTS:Property><DTS:Property DTS:Name="EnableConfig">-1</DTS:Property><DTS:Property DTS:Name="CheckpointFileName"></DTS:Property><DTS:Property DTS:Name="SaveCheckpoints">0</DTS:Property><DTS:Property DTS:Name="CheckpointUsage">0</DTS:Property><DTS:Property DTS:Name="SuppressConfigurationWarnings">0</DTS:Property>
+<DTS:ConnectionManager><DTS:Property DTS:Name="DelayValidation">0</DTS:Property><DTS:Property DTS:Name="ObjectName">ADO.Purchase</DTS:Property><DTS:Property DTS:Name="DTSID">{69167A28-F72C-473C-954D-6D792A9A6420}</DTS:Property><DTS:Property DTS:Name="Description"></DTS:Property><DTS:Property DTS:Name="CreationName">ADO.NET:System.Data.SqlClient.SqlConnection, System.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</DTS:Property><DTS:ObjectData><DTS:ConnectionManager><DTS:Password DTS:Name="Password" Sensitive="1"></DTS:Password><DTS:Property DTS:Name="ConnectionString">Data Source=TCIJ-08049;User ID=Purchase;Initial Catalog=PurchaseProduct;Persist Security Info=True;</DTS:Property></DTS:ConnectionManager></DTS:ObjectData></DTS:ConnectionManager>
 <DTS:ConnectionManager><DTS:Property DTS:Name="DelayValidation">0</DTS:Property><DTS:Property DTS:Name="ObjectName">SMTP</DTS:Property><DTS:Property DTS:Name="DTSID">{0558022D-9833-4694-B076-1EBC3ECE55AD}</DTS:Property><DTS:Property DTS:Name="Description">PurchaseDB ProductImport.dtsx エラーメール送信</DTS:Property><DTS:Property DTS:Name="CreationName">SMTP</DTS:Property><DTS:ObjectData><SmtpConnectionManager ConnectionString="SmtpServer=tex1.tci.tokyokasei;UseWindowsAuthentication=True;EnableSsl=False;"/></DTS:ObjectData></DTS:ConnectionManager>
 <DTS:Configuration><DTS:Property DTS:Name="ConfigurationType">1</DTS:Property><DTS:Property DTS:Name="ConfigurationString">C:\tcijapp\Purchase\Batch\Purchase\ProductImport.dtsConfig</DTS:Property><DTS:Property DTS:Name="ConfigurationVariable"></DTS:Property><DTS:Property DTS:Name="ObjectName">構成 1</DTS:Property><DTS:Property DTS:Name="DTSID">{BC434C53-6F5C-47E7-BF1B-945FA1EF307F}</DTS:Property><DTS:Property DTS:Name="Description"></DTS:Property><DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:Configuration>
 <DTS:PackageVariable><DTS:Property DTS:Name="PackageVariableValue" DTS:DataType="8">&lt;Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:DtsControlFlowDiagram&gt;&lt;dwd:BoundingLeft&gt;-3133&lt;/dwd:BoundingLeft&gt;&lt;dwd:BoundingTop&gt;-2679&lt;/dwd:BoundingTop&gt;&lt;dwd:Layout&gt;&lt;dds&gt;
-  &lt;diagram fontclsid="{0BE35203-8F91-11CE-9DE3-00AA004BB851}" mouseiconclsid="{0BE35204-8F91-11CE-9DE3-00AA004BB851}" defaultlayout="Microsoft.DataWarehouse.Layout.GraphLayout" defaultlineroute="Microsoft.DataWarehouse.Layout.GraphLayout" version="7" nextobject="33" scale="100" pagebreakanchorx="0" pagebreakanchory="0" pagebreaksizex="0" pagebreaksizey="0" scrollleft="-4133" scrolltop="-3175" gridx="150" gridy="150" marginx="1000" marginy="1000" zoom="100" x="16775" y="10927" backcolor="15334399" defaultpersistence="2" PrintPageNumbersMode="3" PrintMarginTop="0" PrintMarginBottom="635" PrintMarginLeft="0" PrintMarginRight="0" marqueeselectionmode="1" mousepointer="0" snaptogrid="0" autotypeannotation="1" showscrollbars="0" viewpagebreaks="0" donotforceconnectorsbehindshapes="1" backpictureclsid="{00000000-0000-0000-0000-000000000000}"&gt;
+  &lt;diagram fontclsid="{0BE35203-8F91-11CE-9DE3-00AA004BB851}" mouseiconclsid="{0BE35204-8F91-11CE-9DE3-00AA004BB851}" defaultlayout="Microsoft.DataWarehouse.Layout.GraphLayout" defaultlineroute="Microsoft.DataWarehouse.Layout.GraphLayout" version="7" nextobject="33" scale="100" pagebreakanchorx="0" pagebreakanchory="0" pagebreaksizex="0" pagebreaksizey="0" scrollleft="-4133" scrolltop="-3175" gridx="150" gridy="150" marginx="1000" marginy="1000" zoom="100" x="18150" y="13309" backcolor="15334399" defaultpersistence="2" PrintPageNumbersMode="3" PrintMarginTop="0" PrintMarginBottom="635" PrintMarginLeft="0" PrintMarginRight="0" marqueeselectionmode="1" mousepointer="0" snaptogrid="0" autotypeannotation="1" showscrollbars="0" viewpagebreaks="0" donotforceconnectorsbehindshapes="1" backpictureclsid="{00000000-0000-0000-0000-000000000000}"&gt;
     &lt;font&gt;
       &lt;ddsxmlobjectstreamwrapper binary="010100009001905f01000c4d5320554920476f74686963" /&gt;
     &lt;/font&gt;
@@ -239,7 +239,7 @@
     &lt;/layoutobject&gt;
     &lt;shape groupshapeid="0" groupnode="0" /&gt;
   &lt;/ddscontrol&gt;
-&lt;/dds&gt;&lt;/dwd:Layout&gt;&lt;dwd:PersistedViewPortLeft&gt;-4133&lt;/dwd:PersistedViewPortLeft&gt;&lt;dwd:PersistedViewPortTop&gt;-3175&lt;/dwd:PersistedViewPortTop&gt;&lt;/dwd:DtsControlFlowDiagram&gt;&lt;/Package&gt;</DTS:Property><DTS:Property DTS:Name="Namespace">dts-designer-1.0</DTS:Property><DTS:Property DTS:Name="ObjectName">{19D05BC8-92A0-47B5-B85E-BAD0746F3CA5}</DTS:Property><DTS:Property DTS:Name="DTSID">{484E56BB-C38B-429B-A774-4A40C6DE30C2}</DTS:Property><DTS:Property DTS:Name="Description"></DTS:Property><DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:PackageVariable><DTS:Property DTS:Name="ForceExecValue">0</DTS:Property><DTS:Property DTS:Name="ExecValue" DTS:DataType="3">0</DTS:Property><DTS:Property DTS:Name="ForceExecutionResult">-1</DTS:Property><DTS:Property DTS:Name="Disabled">0</DTS:Property><DTS:Property DTS:Name="FailPackageOnFailure">0</DTS:Property><DTS:Property DTS:Name="FailParentOnFailure">0</DTS:Property><DTS:Property DTS:Name="MaxErrorCount">1</DTS:Property><DTS:Property DTS:Name="ISOLevel">1048576</DTS:Property><DTS:Property DTS:Name="LocaleID">1041</DTS:Property><DTS:Property DTS:Name="TransactionOption">1</DTS:Property><DTS:Property DTS:Name="DelayValidation">0</DTS:Property>
+&lt;/dds&gt;&lt;/dwd:Layout&gt;&lt;dwd:PersistedViewPortLeft&gt;-4133&lt;/dwd:PersistedViewPortLeft&gt;&lt;dwd:PersistedViewPortTop&gt;-3175&lt;/dwd:PersistedViewPortTop&gt;&lt;/dwd:DtsControlFlowDiagram&gt;&lt;/Package&gt;</DTS:Property><DTS:Property DTS:Name="Namespace">dts-designer-1.0</DTS:Property><DTS:Property DTS:Name="ObjectName">{19D05BC8-92A0-47B5-B85E-BAD0746F3CA5}</DTS:Property><DTS:Property DTS:Name="DTSID">{5F861E33-0233-4A08-8D02-FD55E23F4D91}</DTS:Property><DTS:Property DTS:Name="Description"></DTS:Property><DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:PackageVariable><DTS:Property DTS:Name="ForceExecValue">0</DTS:Property><DTS:Property DTS:Name="ExecValue" DTS:DataType="3">0</DTS:Property><DTS:Property DTS:Name="ForceExecutionResult">-1</DTS:Property><DTS:Property DTS:Name="Disabled">0</DTS:Property><DTS:Property DTS:Name="FailPackageOnFailure">0</DTS:Property><DTS:Property DTS:Name="FailParentOnFailure">0</DTS:Property><DTS:Property DTS:Name="MaxErrorCount">1</DTS:Property><DTS:Property DTS:Name="ISOLevel">1048576</DTS:Property><DTS:Property DTS:Name="LocaleID">1041</DTS:Property><DTS:Property DTS:Name="TransactionOption">1</DTS:Property><DTS:Property DTS:Name="DelayValidation">0</DTS:Property>
 <DTS:Variable><DTS:Property DTS:Name="Expression"></DTS:Property><DTS:Property DTS:Name="EvaluateAsExpression">0</DTS:Property><DTS:Property DTS:Name="Namespace">User</DTS:Property><DTS:Property DTS:Name="ReadOnly">0</DTS:Property><DTS:Property DTS:Name="RaiseChangedEvent">0</DTS:Property><DTS:VariableValue DTS:DataType="8"></DTS:VariableValue><DTS:Property DTS:Name="ObjectName">Comment</DTS:Property><DTS:Property DTS:Name="DTSID">{F1F71E82-5170-4290-8EC0-2D85E1FA864F}</DTS:Property><DTS:Property DTS:Name="Description"></DTS:Property><DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:Variable>
 <DTS:Variable><DTS:Property DTS:Name="Expression"></DTS:Property><DTS:Property DTS:Name="EvaluateAsExpression">0</DTS:Property><DTS:Property DTS:Name="Namespace">User</DTS:Property><DTS:Property DTS:Name="ReadOnly">0</DTS:Property><DTS:Property DTS:Name="RaiseChangedEvent">0</DTS:Property><DTS:VariableValue DTS:DataType="8">C:\tcijapp\data\</DTS:VariableValue><DTS:Property DTS:Name="ObjectName">Dir_File</DTS:Property><DTS:Property DTS:Name="DTSID">{414111A0-CA85-4D87-A24D-C018CCC3136F}</DTS:Property><DTS:Property DTS:Name="Description"></DTS:Property><DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:Variable>
 <DTS:Variable><DTS:Property DTS:Name="Expression"></DTS:Property><DTS:Property DTS:Name="EvaluateAsExpression">0</DTS:Property><DTS:Property DTS:Name="Namespace">User</DTS:Property><DTS:Property DTS:Name="ReadOnly">0</DTS:Property><DTS:Property DTS:Name="RaiseChangedEvent">0</DTS:Property><DTS:VariableValue DTS:DataType="8">C:\tcijapp\Purchase\Batch\log\</DTS:VariableValue><DTS:Property DTS:Name="ObjectName">Dir_Log</DTS:Property><DTS:Property DTS:Name="DTSID">{F7830F45-8AEF-4FDE-BF30-F19A70875D1F}</DTS:Property><DTS:Property DTS:Name="Description"></DTS:Property><DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:Variable>
@@ -666,31 +666,31 @@ Public Class ScriptMain
                 Dim command As New SqlCommand("sp_NewProductImport", connection) ' コマンド定義 
                 command.CommandType = CommandType.StoredProcedure ' コマンドタイプをストアドプロシージャに指定
                 Dim RETURN_VALUE As SqlParameter = command.Parameters.Add("RETURN_VALUE", SqlDbType.Int) ' ストアドプロシージャからRETURN値(@RETURN_VALUE)を取得する変数
-                Dim ErNUMBER As SqlParameter = command.Parameters.Add("ErNUMBER", SqlDbType.Int)
-                Dim ErSTATE As SqlParameter = command.Parameters.Add("ErSTATE", SqlDbType.Int)
-                Dim ErLINE As SqlParameter = command.Parameters.Add("ErLINE", SqlDbType.Int)
-                Dim ErMESSAGE As SqlParameter = command.Parameters.Add("ErMESSAGE", SqlDbType.NVarChar, 2000)
-                Dim ErPNumber As SqlParameter = command.Parameters.Add("ErPNumber", SqlDbType.NVarChar, 2000)
+                Dim ErrNUMBER As SqlParameter = command.Parameters.Add("ErrNUMBER", SqlDbType.Int)
+                Dim ErrSTATE As SqlParameter = command.Parameters.Add("ErrSTATE", SqlDbType.Int)
+                Dim ErrLINE As SqlParameter = command.Parameters.Add("ErrLINE", SqlDbType.Int)
+                Dim ErrMESSAGE As SqlParameter = command.Parameters.Add("ErrMESSAGE", SqlDbType.NVarChar, 2000)
+                Dim ErrNotice As SqlParameter = command.Parameters.Add("ErrNotice", SqlDbType.NVarChar, 2000)
 
                 RETURN_VALUE.Direction = ParameterDirection.ReturnValue
-                ErNUMBER.Direction = ParameterDirection.Output
-                ErSTATE.Direction = ParameterDirection.Output
-                ErLINE.Direction = ParameterDirection.Output
-                ErMESSAGE.Direction = ParameterDirection.Output
-                ErPNumber.Direction = ParameterDirection.Output
+                ErrNUMBER.Direction = ParameterDirection.Output
+                ErrSTATE.Direction = ParameterDirection.Output
+                ErrLINE.Direction = ParameterDirection.Output
+                ErrMESSAGE.Direction = ParameterDirection.Output
+                ErrNotice.Direction = ParameterDirection.Output
 
                 command.ExecuteNonQuery() ' ストアドプロシージャの実行
 
                 ' Error処理
                 If CInt(RETURN_VALUE.Value) = 0 Then  ' ストアドプロシージャ戻り値チェック
-                    If Not IsDBNull(ErPNumber.Value) Then
-                        stb_comments.Append(CStr(ErPNumber.Value) & vbCrLf)
+                    If Not IsDBNull(ErrNotice.Value) Then
+                        stb_comments.Append(CStr(ErrNotice.Value) & vbCrLf)
                     End If
                 Else
-                    stb_error_comments.Append("ERROR NUMBER  : " & CStr(ErNUMBER.Value) & vbCrLf)
-                    stb_error_comments.Append("ERROR STATE   : " & CStr(ErSTATE.Value) & vbCrLf)
-                    stb_error_comments.Append("ERROR LINE    : " & CStr(ErLINE.Value) & vbCrLf)
-                    stb_error_comments.Append("ERROR MESSAGE : " & CStr(ErMESSAGE.Value) & vbCrLf)
+                    stb_error_comments.Append("ERROR NUMBER  : " & CStr(ErrNUMBER.Value) & vbCrLf)
+                    stb_error_comments.Append("ERROR STATE   : " & CStr(ErrSTATE.Value) & vbCrLf)
+                    stb_error_comments.Append("ERROR LINE    : " & CStr(ErrLINE.Value) & vbCrLf)
+                    stb_error_comments.Append("ERROR MESSAGE : " & CStr(ErrMESSAGE.Value) & vbCrLf)
                     stb_error_comments.Append(command.CommandText & vbCrLf)
                 End If
             End Using
@@ -822,16 +822,16 @@ Public Class ScriptMain
                 Dim command As New SqlCommand("sp_ProductNameImport", connection) 'コマンド定義
                 command.CommandType = CommandType.StoredProcedure 'コマンドタイプをストアドプロシージャに指定
                 Dim RETURN_VALUE As SqlParameter = command.Parameters.Add("RETURN_VALUE", SqlDbType.Int) 'ストアドプロシージャからRETURN値(@RETURN_VALUE)を取得する変数
-                Dim ErNUMBER As SqlParameter = command.Parameters.Add("ErNUMBER", SqlDbType.Int)
-                Dim ErSTATE As SqlParameter = command.Parameters.Add("ErSTATE", SqlDbType.Int)
-                Dim ErLINE As SqlParameter = command.Parameters.Add("ErLINE", SqlDbType.Int)
-                Dim ErMESSAGE As SqlParameter = command.Parameters.Add("ErMESSAGE", SqlDbType.NVarChar, 2000)
+                Dim ErrNUMBER As SqlParameter = command.Parameters.Add("ErrNUMBER", SqlDbType.Int)
+                Dim ErrSTATE As SqlParameter = command.Parameters.Add("ErrSTATE", SqlDbType.Int)
+                Dim ErrLINE As SqlParameter = command.Parameters.Add("ErrLINE", SqlDbType.Int)
+                Dim ErrMESSAGE As SqlParameter = command.Parameters.Add("ErrMESSAGE", SqlDbType.NVarChar, 2000)
 
                 RETURN_VALUE.Direction = ParameterDirection.ReturnValue
-                ErNUMBER.Direction = ParameterDirection.Output
-                ErSTATE.Direction = ParameterDirection.Output
-                ErLINE.Direction = ParameterDirection.Output
-                ErMESSAGE.Direction = ParameterDirection.Output
+                ErrNUMBER.Direction = ParameterDirection.Output
+                ErrSTATE.Direction = ParameterDirection.Output
+                ErrLINE.Direction = ParameterDirection.Output
+                ErrMESSAGE.Direction = ParameterDirection.Output
 
                 command.ExecuteNonQuery() ' ストアドプロシージャの実行
 
@@ -839,10 +839,10 @@ Public Class ScriptMain
                 If CInt(RETURN_VALUE.Value) = 0 Then
                     ' なにもしない
                 Else
-                    stb_error_comments.Append("ERROR NUMBER  : " & CStr(ErNUMBER.Value) & vbCrLf)
-                    stb_error_comments.Append("ERROR STATE   : " & CStr(ErSTATE.Value) & vbCrLf)
-                    stb_error_comments.Append("ERROR LINE    : " & CStr(ErLINE.Value) & vbCrLf)
-                    stb_error_comments.Append("ERROR MESSAGE : " & CStr(ErMESSAGE.Value) & vbCrLf)
+                    stb_error_comments.Append("ERROR NUMBER  : " & CStr(ErrNUMBER.Value) & vbCrLf)
+                    stb_error_comments.Append("ERROR STATE   : " & CStr(ErrSTATE.Value) & vbCrLf)
+                    stb_error_comments.Append("ERROR LINE    : " & CStr(ErrLINE.Value) & vbCrLf)
+                    stb_error_comments.Append("ERROR MESSAGE : " & CStr(ErrMESSAGE.Value) & vbCrLf)
                     stb_error_comments.Append(command.CommandText & vbCrLf)
                 End If
             End Using
