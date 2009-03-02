@@ -3,6 +3,8 @@
 <DTSConfigurationHeading>
 <DTSConfigurationFileInfo GeneratedBy="akutsu" GeneratedFromPackageName="ProductImport" GeneratedFromPackageID="{19D05BC8-92A0-47B5-B85E-BAD0746F3CA5}" GeneratedDate="2008/07/11 12:16:08"/>
 </DTSConfigurationHeading>
+
+<!-- DB Settings -->
 <Configuration ConfiguredType="Property" Path="\Package.Connections[ADO.Purchase].Properties[ServerName]" ValueType="String">
   <ConfiguredValue>TDB1</ConfiguredValue>
 </Configuration>
@@ -15,22 +17,26 @@
 <Configuration ConfiguredType="Property" Path="\Package.Connections[ADO.Purchase].Properties[InitialCatalog]" ValueType="String">
   <ConfiguredValue>Purchase</ConfiguredValue>
 </Configuration>
+
+<!-- Error Mail Setting -->
 <Configuration ConfiguredType="Property" Path="\Package.Connections[SMTP].Properties[SmtpServer]" ValueType="String">
   <ConfiguredValue>tex1.tci.tokyokasei</ConfiguredValue>
-</Configuration>
-<Configuration ConfiguredType="Property" Path="\Package.Variables[User::Dir_Log].Properties[Value]" ValueType="String">
-  <ConfiguredValue>C:\tcijapp\Purchase\Batch\log\</ConfiguredValue>
 </Configuration>
 <Configuration ConfiguredType="Property" Path="\Package.Variables[User::Mail_To].Properties[Value]" ValueType="String">
   <ConfiguredValue>app@tokyokasei.co.jp</ConfiguredValue>
 </Configuration>
+
+<!-- Directory and File Settings -->
 <Configuration ConfiguredType="Property" Path="\Package.Variables[User::Dir_File].Properties[Value]" ValueType="String">
   <ConfiguredValue>\\tdb1\if$\Purchase\</ConfiguredValue>
+</Configuration>
+<Configuration ConfiguredType="Property" Path="\Package.Variables[User::File_New_Product].Properties[Value]" ValueType="String">
+  <ConfiguredValue>NewProduct.txt</ConfiguredValue>
 </Configuration>
 <Configuration ConfiguredType="Property" Path="\Package.Variables[User::Dir_Temp].Properties[Value]" ValueType="String">
   <ConfiguredValue>C:\tcijapp\Purchase\Batch\temp\</ConfiguredValue>
 </Configuration>
-<Configuration ConfiguredType="Property" Path="\Package.Variables[User::File_New_Product].Properties[Value]" ValueType="String">
-  <ConfiguredValue>NewProduct.txt</ConfiguredValue>
+<Configuration ConfiguredType="Property" Path="\Package.Variables[User::Dir_Log].Properties[Value]" ValueType="String">
+  <ConfiguredValue>C:\tcijapp\Purchase\Batch\log\</ConfiguredValue>
 </Configuration>
 </DTSConfiguration>
