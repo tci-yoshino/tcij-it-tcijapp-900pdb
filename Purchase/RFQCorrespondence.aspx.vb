@@ -2,7 +2,6 @@
 
 Imports System.Data.SqlClient
 Imports Purchase.Common
-Imports TCICommon.Func
 
 Partial Public Class RFQCorrespondence
     Inherits CommonPage
