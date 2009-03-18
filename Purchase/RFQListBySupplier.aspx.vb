@@ -6,9 +6,9 @@
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         ' パラメータ取得
-        If Request.RequestType = "POST" Then
+        If Request.RequestType = "POST" And IsPostBack = False Then
             st_SupplierCode = IIf(Request.Form("SupplierCode") = Nothing, "", Request.Form("SupplierCode"))
-        ElseIf Request.RequestType = "GET" Then
+        ElseIf Request.RequestType = "GET" Or IsPostBack = True Then
             st_SupplierCode = IIf(Request.QueryString("SupplierCode") = Nothing, "", Request.QueryString("SupplierCode"))
         End If
 
