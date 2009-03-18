@@ -33,6 +33,6 @@
 
 <!-- Stored Procedure time out setting -->
 <Configuration ConfiguredType="Property" Path="\Package.Variables[User::SPTimeOut].Properties[Value]" ValueType="Int32">
-  <ConfiguredValue>30</ConfiguredValue>
+  <ConfiguredValue>300</ConfiguredValue>
 </Configuration>
 </DTSConfiguration>
