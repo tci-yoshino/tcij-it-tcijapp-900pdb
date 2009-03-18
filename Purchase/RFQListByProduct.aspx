@@ -10,6 +10,7 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
 </head>
 <body>
+    <form id="Form" runat="server">
     <div id="content">
         <div class="main">
             <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
@@ -39,9 +40,38 @@
         <div class="list">
             <asp:ListView ID="RFQHeaderList" runat="server" DataSourceID="SrcRFQHeader">
                 <LayoutTemplate>
+                    <div style="float:right">
+                        <asp:DataPager ID="RFQPagerTop" runat="server" PageSize="10">    
+                            <Fields>
+                                <asp:TemplatePagerField>              
+                                    <PagerTemplate>
+                                    <b>
+                                    Page
+                                    <asp:Label runat="server" ID="CurrentPageLabel" 
+                                    Text="<%# IIf(Container.TotalRowCount>0,  (Container.StartRowIndex / Container.PageSize) + 1 , 0) %>" />
+                                    of
+                                    <asp:Label runat="server" ID="TotalPagesLabel" 
+                                    Text="<%# Math.Ceiling (System.Convert.ToDouble(Container.TotalRowCount) / Container.PageSize) %>" />
+                                    (
+                                    <asp:Label runat="server" ID="TotalItemsLabel" Text="<%# Container.TotalRowCount%>" /> records)
+                                    </b>
+                                    </PagerTemplate>
+                                </asp:TemplatePagerField>
+                            </Fields>
+                        </asp:DataPager>
+                    </div>
                     <div ID="itemPlaceholderContainer" runat="server">
                         <div ID="itemPlaceholder" runat="server">
                         </div>
+                    </div>
+                    <div style="text-align:center">
+                        <div style="margin-left:auto;margin-right:auto">                        
+                            <asp:DataPager ID="RFQPagerBottom" runat="server" PageSize="10">
+                                <Fields>
+                                    <asp:NumericPagerField ButtonCount="10" />
+                                </Fields>
+                            </asp:DataPager>
+                        </div>                    
                     </div>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
@@ -133,5 +163,6 @@
 
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
+</form>    
 </body>
 </html>

@@ -24,9 +24,9 @@ Partial Public Class RFQListByProduct
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         ' パラメータ取得
-        If Request.RequestType = "POST" Then
+        If Request.RequestType = "POST" And IsPostBack = False Then
             st_ProductID = CType(IIf(Request.Form("ProductID") = Nothing, "", Request.Form("ProductID")), String)
-        ElseIf Request.RequestType = "GET" Then
+        ElseIf Request.RequestType = "GET" Or IsPostBack = True Then
             st_ProductID = CType(IIf(Request.QueryString("ProductID") = Nothing, "", Request.QueryString("ProductID")), String)
         End If
 
@@ -83,6 +83,7 @@ Partial Public Class RFQListByProduct
     Private Sub SearchRFQHeader(ByVal st_ProductID As String)
 
         SrcRFQHeader.SelectCommand = CreateRFQHeaderSelectSQL()
+        SrcRFQHeader.SelectParameters.Clear()
         SrcRFQHeader.SelectParameters.Add("ProductID", st_ProductID)
         RFQHeaderList.DataBind()
 
