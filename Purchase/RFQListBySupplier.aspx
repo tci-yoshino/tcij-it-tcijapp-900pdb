@@ -10,7 +10,7 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
 </head>
 <body>
-    <form id="Form" runat="server">
+    <form id="RFQListForm" runat="server">
     <!-- Main Content Area -->
     <div id="content">
         <div class="main">

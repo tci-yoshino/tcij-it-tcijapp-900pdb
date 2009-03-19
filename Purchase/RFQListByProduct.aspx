@@ -10,7 +10,7 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
 </head>
 <body>
-    <form id="Form" runat="server">
+    <form id="RFQListForm" runat="server">
     <div id="content">
         <div class="main">
             <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
