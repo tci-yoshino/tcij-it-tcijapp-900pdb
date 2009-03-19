@@ -2,6 +2,7 @@
     Inherits CommonPage
 
     Private Const ASSIGN_ACTION As String = "Assign"
+    Private ds_User As New DataSet
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -9,29 +10,9 @@
 
         Msg.Text = ""
 
-        SrcRFQ.SelectCommand = _
-              "SELECT VRH.RFQNumber, VRH.StatusChangeDate, VRH.Status, VRH.ProductNumber, VRH.ProductName, " _
-            & "       VRH.Purpose, VRH.EnqUserName, VRH.EnqLocationName, VRH.SupplierName, VRH.MakerName, " _
-            & "       CONVERT(VARCHAR, VRH.UpdateDate, 120) AS UpdateDate " _
-            & "FROM v_RFQHeader AS VRH " _
-            & "WHERE " _
-            & "  VRH.QuoLocationCode = '" & st_Login_Location & "' " _
-            & "  AND VRH.StatusCode = 'N' " _
-            & "  AND VRH.QuoUserID IS NULL " _
-            & "ORDER BY VRH.RFQNumber ASC "
-
-        SrcPO.SelectCommand = _
-              "SELECT VP.PONumber, VP.PODate, VP.POLocationCode, VP.POLocationName, VP.POUserID, VP.POUserName, " _
-            & "       VP.ProductNumber, VP.ProductName, VP.SupplierCode, VP.SupplierName, " _
-            & "       VP.MakerCode, VP.MakerName, VP.ParPONumber, VP.StatusCode, VP.StatusChangeDate, " _
-            & "       CONVERT(VARCHAR, VP.UpdateDate, 120) AS UpdateDate " _
-            & "FROM v_PO AS VP " _
-            & "WHERE " _
-            & "  VP.SOLocationCode = '" & st_Login_Location & "' " _
-            & "  AND VP.SOUserID IS NULL " _
-            & "ORDER BY VP.PONumber ASC "
-
-        SrcUser.SelectCommand = "SELECT UserID, Name FROM v_User WHERE isDisabled = 0 AND LocationCode = '" & st_Login_Location & "' ORDER BY Name ASC "
+        SrcRFQ.SelectCommand = CreateRHQHeaderSelectSQL(st_Login_Location)
+        SrcPO.SelectCommand = CreatePOSelectSQL(st_Login_Location)
+        ds_User = GetAssginUser(ds_User, st_Login_Location)
 
     End Sub
 
@@ -70,10 +51,7 @@
         SrcRFQ.UpdateParameters.Add("UpdateDate", st_UpdateDate)
 
         ' Update 文作成
-        SrcRFQ.UpdateCommand = _
-              "UPDATE RFQHeader " _
-            & "SET QuoUserID = @QuoUserID, RFQStatusCode = 'A', UpdateDate = GETDATE(), UpdatedBy = @UpdatedBy " _
-            & "WHERE RFQNumber = @RFQNumber "
+        SrcRFQ.UpdateCommand = CreateRFQQuoUserUpdateSQL()
         SrcRFQ.Update()
 
     End Sub
@@ -113,24 +91,9 @@
         SrcPO.UpdateParameters.Add("UpdateDate", st_UpdateDate)
 
         ' Update 文作成
-        SrcPO.UpdateCommand = _
-              "UPDATE PO " _
-            & "SET SOUserID = @SOUserID, UpdateDate = GETDATE(), UpdatedBy = @UpdatedBy " _
-            & "WHERE PONumber = @PONumber "
+        SrcPO.UpdateCommand = CreatePOSOUserUpdateSQL()
         SrcPO.Update()
 
-    End Sub
-
-    ' 更新日取得
-    Private Sub SetRFQUpdateDate(ByVal sender As Object, ByVal e As ListViewItemEventArgs) Handles RFQList.ItemDataBound
-        Dim st_RFQNumber As String = CType(e.Item.FindControl("RFQNumber"), Label).Text
-        CType(e.Item.FindControl("UpdateDate"), HiddenField).Value = Common.GetUpdateDate("RFQHeader", "RFQNumber", st_RFQNumber)
-    End Sub
-
-    ' 更新日取得
-    Private Sub SetPOUpdateDate(ByVal sender As Object, ByVal e As ListViewItemEventArgs) Handles POList.ItemDataBound
-        Dim st_PONumber As String = CType(e.Item.FindControl("PONumber"), Label).Text
-        CType(e.Item.FindControl("UpdateDate"), HiddenField).Value = Common.GetUpdateDate("PO", "PONumber", st_PONumber)
     End Sub
 
     Protected Sub SrcRFQ_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcRFQ.Selecting
@@ -141,7 +104,150 @@
         e.Command.CommandTimeout = 0
     End Sub
 
-    Protected Sub SrcUser_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcUser.Selecting
-        e.Command.CommandTimeout = 0
+    ' ユーザ選択プルダウン用のユーザリストを取得する
+    Private Function GetAssginUser(ByVal ds As DataSet, ByVal st_LocationCode As String) As DataSet
+        Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
+
+            Dim st_query As String = CreateUserSelectSQL(st_LocationCode)
+            Dim command As New SqlClient.SqlCommand(st_query, connection)
+
+            command.Parameters.AddWithValue("LocationCode", st_LocationCode)
+            connection.Open()
+            command.CommandText = st_query
+            Dim adapter As New SqlClient.SqlDataAdapter()
+
+            ' データベースからデータを取得
+            adapter.SelectCommand = command
+            adapter.Fill(ds)
+
+            Return ds
+        End Using
+    End Function
+
+    ' ユーザ選択プルダウンにユーザリストをセットする
+    Private Sub SetAssinUser(ByVal sender As Object, ByVal e As ListViewItemEventArgs) Handles RFQList.ItemDataBound, POList.ItemDataBound
+        Dim st_UserType As String = CType(CType(e.Item, ListViewItem).BindingContainer, System.Web.UI.Control).ID
+
+        If st_UserType = "RFQList" Then
+            CType(e.Item.FindControl("QuoUser"), DropDownList).DataSource = ds_User
+            CType(e.Item.FindControl("QuoUser"), DropDownList).DataBind()
+        Else
+            CType(e.Item.FindControl("SOUser"), DropDownList).DataSource = ds_User
+            CType(e.Item.FindControl("SOUser"), DropDownList).DataBind()
+        End If
     End Sub
+
+    Private Function CreateRHQHeaderSelectSQL(ByVal st_LocationCode As String) As String
+
+        Dim sb_SQL As New Text.StringBuilder
+
+        'SQL文字列の作成
+        sb_SQL.Append("SELECT")
+        sb_SQL.Append("  RH.RFQNumber, ")
+        sb_SQL.Append("  RH.StatusChangeDate, ")
+        sb_SQL.Append("  RH.Status, ")
+        sb_SQL.Append("  RH.ProductNumber, ")
+        sb_SQL.Append("  RH.ProductName, ")
+        sb_SQL.Append("  RH.Purpose, ")
+        sb_SQL.Append("  RH.EnqUserName, ")
+        sb_SQL.Append("  RH.EnqLocationName, ")
+        sb_SQL.Append("  RH.SupplierName, ")
+        sb_SQL.Append("  RH.MakerName, ")
+        sb_SQL.Append("  CONVERT(VARCHAR, RH.UpdateDate, 120) AS UpdateDate ")
+        sb_SQL.Append("FROM ")
+        sb_SQL.Append("  v_RFQHeader AS RH ")
+        sb_SQL.Append("WHERE ")
+        sb_SQL.Append("  RH.QuoLocationCode = '" & st_LocationCode & "' ")
+        sb_SQL.Append("  AND RH.StatusCode = 'N' ")
+        sb_SQL.Append("  AND RH.QuoUserID IS NULL ")
+        sb_SQL.Append("ORDER BY ")
+        sb_SQL.Append("  RH.RFQNumber ASC ")
+
+        Return sb_SQL.ToString()
+
+    End Function
+
+    Private Function CreatePOSelectSQL(ByVal st_LocationCode As String) As String
+        Dim sb_SQL As New Text.StringBuilder
+
+        'SQL文字列の作成
+        sb_SQL.Append("SELECT ")
+        sb_SQL.Append("  VP.PONumber, ")
+        sb_SQL.Append("  VP.PODate, ")
+        sb_SQL.Append("  VP.POLocationCode, ")
+        sb_SQL.Append("  VP.POLocationName, ")
+        sb_SQL.Append("  VP.POUserID, ")
+        sb_SQL.Append("  VP.POUserName, ")
+        sb_SQL.Append("  VP.ProductNumber, ")
+        sb_SQL.Append("  VP.ProductName, ")
+        sb_SQL.Append("  VP.SupplierCode, ")
+        sb_SQL.Append("  VP.SupplierName, ")
+        sb_SQL.Append("  VP.MakerCode, ")
+        sb_SQL.Append("  VP.MakerName, ")
+        sb_SQL.Append("  VP.ParPONumber, ")
+        sb_SQL.Append("  VP.StatusCode, ")
+        sb_SQL.Append("  VP.StatusChangeDate, ")
+        sb_SQL.Append("  CONVERT(VARCHAR, VP.UpdateDate, 120) AS UpdateDate ")
+        sb_SQL.Append("FROM ")
+        sb_SQL.Append("  v_PO AS VP ")
+        sb_SQL.Append("WHERE ")
+        sb_SQL.Append("  VP.SOLocationCode = '" & st_LocationCode & "' ")
+        sb_SQL.Append("  AND VP.SOUserID IS NULL ")
+        sb_SQL.Append("ORDER BY ")
+        sb_SQL.Append("  VP.PONumber ASC ")
+
+        Return sb_SQL.ToString()
+    End Function
+
+    Private Function CreateUserSelectSQL(ByVal st_LocationCode As String) As String
+        Dim sb_SQL As New Text.StringBuilder
+
+        'SQL文字列の作成
+        sb_SQL.Append("SELECT ")
+        sb_SQL.Append("  UserID, ")
+        sb_SQL.Append("  Name ")
+        sb_SQL.Append("FROM ")
+        sb_SQL.Append("  v_User ")
+        sb_SQL.Append("WHERE ")
+        sb_SQL.Append("  isDisabled = '0' ")
+        sb_SQL.Append("  AND LocationCode = '" & st_LocationCode & "' ")
+        sb_SQL.Append("ORDER BY ")
+        sb_SQL.Append("  Name ASC ")
+
+        Return sb_SQL.ToString()
+    End Function
+
+    Private Function CreateRFQQuoUserUpdateSQL() As String
+        Dim sb_SQL As New Text.StringBuilder
+
+        'SQL文字列の作成
+        sb_SQL.Append("UPDATE ")
+        sb_SQL.Append("  RFQHeader ")
+        sb_SQL.Append("SET ")
+        sb_SQL.Append("  QuoUserID = @QuoUserID, ")
+        sb_SQL.Append("  RFQStatusCode = 'A', ")
+        sb_SQL.Append("  UpdateDate = GETDATE(), ")
+        sb_SQL.Append("  UpdatedBy = @UpdatedBy ")
+        sb_SQL.Append("WHERE ")
+        sb_SQL.Append("  RFQNumber = @RFQNumber ")
+
+        Return sb_SQL.ToString()
+    End Function
+
+    Private Function CreatePOSOUserUpdateSQL() As String
+        Dim sb_SQL As New Text.StringBuilder
+
+        'SQL文字列の作成
+        sb_SQL.Append("UPDATE ")
+        sb_SQL.Append("  PO ")
+        sb_SQL.Append("SET ")
+        sb_SQL.Append("  SOUserID = @SOUserID, ")
+        sb_SQL.Append("  UpdateDate = GETDATE(), ")
+        sb_SQL.Append("  UpdatedBy = @UpdatedBy ")
+        sb_SQL.Append("WHERE ")
+        sb_SQL.Append("  PONumber = @PONumber ")
+
+        Return sb_SQL.ToString()
+    End Function
+
 End Class

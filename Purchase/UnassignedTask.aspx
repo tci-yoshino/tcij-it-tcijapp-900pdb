@@ -41,8 +41,8 @@
                             <asp:Label ID="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:Label><span class="indent"><asp:Label ID="RFQStatus" runat="server" Text='<%#Eval("Status")%>'></asp:Label></span>
                         </th>
                         <th class="subhead" colspan="2" style="text-align:right">
-                            Assign to : <asp:DropDownList ID="QuoUser" runat="server" DataSourceID="SrcUser" DataTextField="Name" DataValueField="UserID"></asp:DropDownList>
-                            <asp:HiddenField runat="server" ID="UpdateDate" Value="" />
+                            Assign to : <asp:DropDownList ID="QuoUser" runat="server" DataTextField="Name" DataValueField="UserID"></asp:DropDownList>
+                            <asp:HiddenField runat="server" ID="UpdateDate" Value='<%#Eval("UpdateDate")%>' />
                             <asp:Button ID="Assign" runat="server" Text="Assign" CommandArgument="" />
                         </th>
                     </tr>
@@ -95,8 +95,8 @@
                             <span class="indent"><asp:Label ID="POStatus" runat="server" Text='<%#Eval("StatusCode")%>'></asp:Label></span>
                         </th>
                         <th class="subhead" style="text-align:right">
-                            Assign to : <asp:DropDownList ID="SOUser" runat="server" DataSourceID="SrcUser" DataTextField="Name" DataValueField="UserID"></asp:DropDownList>
-                            <asp:HiddenField runat="server" ID="UpdateDate" Value="" />
+                            Assign to : <asp:DropDownList ID="SOUser" runat="server" DataTextField="Name" DataValueField="UserID"></asp:DropDownList>
+                            <asp:HiddenField runat="server" ID="UpdateDate" Value='<%#Eval("UpdateDate")%>' />
                             <asp:Button ID="Assign" runat="server" Text="Assign" />
                         </th>
                     </tr>
@@ -120,8 +120,6 @@
     </div><!-- Main Content Area END -->
     <asp:SqlDataSource ID="SrcRFQ" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
     <asp:SqlDataSource ID="SrcPO" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
-	<asp:SqlDataSource ID="SrcUser" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
-
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
 </body>
