@@ -9,7 +9,6 @@
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
-        ' コントロール初期化
         Msg.Text = ""
 
         ' パラメータ UserID 取得
@@ -23,62 +22,49 @@
             st_UserID = Session("UserID")
         End If
 
-        ' User 一覧取得
+        ' セッション変数 PrivilegeLevel が  'P' の場合は 
+        ' 変数 st_UserID がログインユーザと同じ拠点かをチェックし、ビュー v_User からデータ取得。
+        ' セッション変数 PrivilegeLevel が 'A' の場合は v_UserAll からデータ取得。
         Dim ds As DataSet = New DataSet
         ds.Tables.Add("UserID")
 
         If Session("Purchase.PrivilegeLevel") = "P" Then
-
             Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
 
-                Dim st_query As String = "SELECT count(UserID) as count FROM v_User WHERE LocationCode = @LocationCode AND UserID = @UserID"
+                ' 拠点チェック
+                Dim st_query As String = CreateUserCheckSQL()
                 Dim command As New SqlClient.SqlCommand(st_query, connection)
-
-                ' SQL SELECT パラメータの追加
                 command.Parameters.AddWithValue("UserID", st_UserID)
                 command.Parameters.AddWithValue("LocationCode", Session("LocationCode"))
-
-                ' SqlDataReader を生成し、検索処理を実行。
                 connection.Open()
-                Dim reader As SqlClient.SqlDataReader = command.ExecuteReader()
 
-                ' 取得件数が 1 件以上の場合は True, 0 件の場合は False を取得。
+                Dim reader As SqlClient.SqlDataReader = command.ExecuteReader()
                 Dim b_hasrows As Boolean = reader.HasRows
                 reader.Close()
 
-                ' 取得件数が 1 件以上ある場合
+                ' 同拠点ならばデータ取得
                 If b_hasrows Then
-
-                    ' クエリ、コマンド、アダプタの生成
-                    st_query = "SELECT UserID, [Name] FROM v_User WHERE isDisabled = 0 AND LocationCode = @LocationCode ORDER BY [Name] ASC "
+                    st_query = CreateUserSelectSQL(Session("Purchase.PrivilegeLevel"))
                     command.CommandText = st_query
-                    Dim adapter As New SqlClient.SqlDataAdapter()
 
-                    ' データベースからデータを取得
+                    Dim adapter As New SqlClient.SqlDataAdapter()
                     adapter.SelectCommand = command
                     adapter.Fill(ds.Tables("UserID"))
 
-                    ' User プルダウンにバインド
                     UserID.DataValueField = "UserID"
                     UserID.DataTextField = "Name"
                     UserID.DataSource = ds.Tables("UserID")
                     UserID.DataBind()
                 End If
-
             End Using
-
         ElseIf Session("Purchase.PrivilegeLevel") = "A" Then
             Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
-                ' クエリ、アダプタ、SQLコマンド オブジェクトの生成
-                Dim st_query As String = "SELECT UserID, [Name] FROM v_User ORDER BY [Name] ASC "
+                Dim st_query As String = CreateUserSelectSQL(Session("Purchase.PrivilegeLevel"))
                 Dim adapter As New SqlClient.SqlDataAdapter()
                 Dim command As New SqlClient.SqlCommand(st_query, connection)
-
-                ' データベースからデータを取得
                 adapter.SelectCommand = command
                 adapter.Fill(ds.Tables("UserID"))
 
-                ' User プルダウンにバインド
                 UserID.DataValueField = "UserID"
                 UserID.DataTextField = "Name"
                 UserID.DataSource = ds.Tables("UserID")
@@ -120,87 +106,60 @@
         SrcPO_PPI.SelectParameters.Add("UserID", st_UserID)
         SrcPO_Par.SelectParameters.Add("UserID", st_UserID)
 
-        ' 見積一覧データ取得、バインド
-        SrcRFQ.SelectCommand = _
-              "SELECT " _
-            & "  RH.RFQNumber, RH.StatusChangeDate, RH.Status, RH.ProductNumber, " _
-            & "  RH.ProductName AS ProductName, " _
-            & "  RH.Purpose, RH.QuoUserName, RH.QuoLocationName, RH.EnqUserName, " _
-            & "  RH.EnqLocationName, RH.SupplierName, RH.MakerName, " _
-            & "  RR.RFQCorres AS RFQCorrespondence " _
-            & "FROM " _
-            & "  v_RFQHeader AS RH " _
-            & "  LEFT OUTER JOIN v_RFQReminder AS RR " _
-            & "    ON RH.RFQNumber = RR.RFQNumber AND @UserID = RR.RcptUserID " _
-            & "WHERE " _
-            & "  QuoUserID = @UserID " _
-            & "  AND EnqUserID != @UserID " _
-            & "  AND StatusCode NOT IN ('Q','C') " _
-            & "  OR  (StatusCode IN ('Q','C') AND RR.RFQHistoryNumber IS NOT NULL) " _
-            & "ORDER BY " _
-            & "  StatusSortOrder, StatusChangeDate ASC  "
+        ' RFQ データ取得用 SQLDataSource の設定
+        SrcRFQ.SelectCommand = CreateRFQSelectSQL()
         RFQList.DataSourceID = "SrcRFQ"
-        RFQList.DataBind()
 
-        ' 購買発注一覧データ取得、バインド
-        ' SrcPO_PPI の NOT IN () には、SrcPO_Overdue で取得した PONumber が入る。
-        ' SrcPO_Par の NOT IN () には、SrcPO_Overdue, SrcPO_PPI で取得した PONumber が入る。
-        ' 取得した PONumber が空の場合は '' が入る。(重複を避けるための処理)
-        SrcPO_Overdue.SelectCommand = _
-              "SELECT P.PONumber, P.StatusChangeDate, P.StatusCode, P.ProductNumber, P.ProductName, " _
-            & "       P.PODate, P.POUserName, P.POLocationName, P.SupplierName, P.MakerName, P.DeliveryDate, " _
-            & "       P.OrderQuantity, P.OrderUnitCode, P.CurrencyCode, P.UnitPrice, P.PerQuantity, P.PerUnitCode, PR.POCorres as POCorrespondence " _
-            & "FROM v_PO AS P LEFT OUTER JOIN " _
-            & "     v_POReminder AS PR ON PR.PONumber = P.PONumber AND PR.RcptUserID = @UserID " _
-            & "WHERE POUserID = @UserID " _
-            & "  AND CONVERT(VARCHAR,P.DueDate,112) <= CONVERT(VARCHAR,GETDATE(),112) " _
-            & "  AND ((P.ParPONumber IS NULL) AND (P.StatusSortOrder <= 11) " _
-            & "        OR (P.ParPONumber IS NOT NULL) AND (P.StatusCode = 'CPI')) " _
-            & "ORDER BY DueDate ASC "
-        POList_Overdue.DataSourceID = "SrcPO_Overdue"
+        ' PO データ取得
+        ' PO はクエリが複雑なため、別関数(GetPOList)で SqlDataAdapter を使用してデータ取得している。
+        Dim dt_PO As New DataTable
+        dt_PO = GetPOList(dt_PO, st_UserID)
+
+        Dim dv_POOverDue As DataView = New DataView(dt_PO, "TaskType = 'OverDue'", "DueDate", DataViewRowState.CurrentRows)
+        POList_Overdue.DataSource = dv_POOverDue
         POList_Overdue.DataBind()
 
-        SrcPO_PPI.SelectCommand = _
-              "SELECT P.PONumber, P.StatusChangeDate, P.StatusCode, P.ProductNumber, P.ProductName, " _
-            & "       P.PODate, P.POUserName, P.POLocationName, P.SupplierName, P.MakerName, P.DeliveryDate, " _
-            & "       P.OrderQuantity, P.OrderUnitCode, P.CurrencyCode, P.UnitPrice, P.PerQuantity, P.PerUnitCode, PR.POCorres as POCorrespondence " _
-            & "FROM v_PO AS P LEFT OUTER JOIN " _
-            & "     v_POReminder AS PR ON PR.PONumber = P.PONumber AND PR.RcptUserID = @UserID " _
-            & "WHERE P.SOUserID = @UserID " _
-            & "  AND P.StatusCode = 'PPI' " _
-            & "  AND P.PONumber NOT IN (" & IIf(String.IsNullOrEmpty(stb_PONumbers.ToString), "''", stb_PONumbers.ToString.Trim(",")) & ") "
-        POList_PPI.DataSourceID = "SrcPO_PPI"
+        Dim dv_POPPI As DataView = New DataView(dt_PO, "TaskType = 'PPI'", "", DataViewRowState.CurrentRows)
+        POList_PPI.DataSource = dv_POPPI
         POList_PPI.DataBind()
 
-        SrcPO_Par.SelectCommand = _
-              "SELECT P.PONumber, P.StatusChangeDate, P.StatusCode, P.ProductNumber, P.ProductName, " _
-            & "       P.PODate, P.POUserName, P.POLocationName, P.SupplierName, P.MakerName, P.DeliveryDate, " _
-            & "       P.OrderQuantity, P.OrderUnitCode, P.CurrencyCode, P.UnitPrice, P.PerQuantity, P.PerUnitCode, PR.POCorres as POCorrespondence " _
-            & "FROM v_PO AS P INNER JOIN " _
-            & "     v_POReminder AS PR ON PR.PONumber = P.PONumber AND PR.RcptUserID = @UserID " _
-            & "WHERE ((P.SOUserID = @UserID) OR (P.POUserID = @UserID)) " _
-            & "  AND P.ParPONumber IS NULL " _
-            & "  AND P.PONumber NOT IN (" & IIf(String.IsNullOrEmpty(stb_PONumbers.ToString), "''", stb_PONumbers.ToString.Trim(",")) & ") " _
-            & "ORDER BY P.StatusSortOrder ASC "
-        POList_Par.DataSourceID = "SrcPO_Par"
+        Dim dv_POReminder As DataView = New DataView(dt_PO, "TaskType = 'Reminder'", "StatusSortOrder", DataViewRowState.CurrentRows)
+        POList_Par.DataSource = dv_POReminder
         POList_Par.DataBind()
 
     End Sub
 
-    ' POList_Overdue と POList_PPI のバインド終了時に PONumber を取得
-    Protected Sub GetPONumberOverdue(ByVal sender As Object, ByVal e As EventArgs) Handles POList_Overdue.DataBound, POList_PPI.DataBound
+    ' ユーザ選択プルダウンを前回選択したユーザに設定する
+    Private Sub SetCtrl_UserIDSelected(ByVal sender As Object, ByVal e As System.EventArgs) Handles UserID.DataBound
+        Dim ddl As DropDownList = sender
 
-        Dim lv As ListView = CType(sender, ListView)
-        Dim label As Label = New Label
-
-        If lv.Items.Count > 0 Then
-            For i As Integer = 0 To lv.Items.Count - 1
-                label.Text = CType(lv.Items(i).FindControl("PONumber"), Label).Text
-                stb_PONumbers.Append(", " & label.Text)
-            Next i
-        End If
+        For Each item As ListItem In ddl.Items
+            If item.Value = st_UserID Then
+                ddl.SelectedValue = item.Value
+            End If
+        Next
 
     End Sub
+
+    ' POリスト取得
+    Private Function GetPOList(ByVal ds As DataTable, ByVal st_UserID As String) As DataTable
+        Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
+
+            Dim st_query As String = CreatePOSelectSQL()
+            Dim command As New SqlClient.SqlCommand(st_query, connection)
+
+            command.Parameters.AddWithValue("UserID", st_UserID)
+            connection.Open()
+            command.CommandText = st_query
+            Dim adapter As New SqlClient.SqlDataAdapter()
+
+            ' データベースからデータを取得
+            adapter.SelectCommand = command
+            adapter.Fill(ds)
+
+            Return ds
+        End Using
+    End Function
 
     ' POList_Par の項目バインド時にその項目の子データがあった場合は取得する
     Protected Sub SetChildPO(ByVal sender As Object, ByVal e As ListViewItemEventArgs) Handles POList_Par.ItemDataBound
@@ -211,26 +170,9 @@
 
         src.SelectParameters.Clear()
         src.SelectParameters.Add("PONumber", label.Text)
-        src.SelectCommand = _
-              "SELECT P.PONumber, P.ProductNumber, P.ProductName, " _
-            & "       P.PODate, P.POUserName, P.POLocationName, P.SupplierName, P.MakerName, P.DeliveryDate, " _
-            & "       P.OrderQuantity, P.OrderUnitCode, P.CurrencyCode, P.UnitPrice, P.PerQuantity, P.PerUnitCode " _
-            & "FROM v_PO AS P " _
-            & "WHERE P.ParPONumber = @PONumber " _
-            & "ORDER BY P.StatusSortOrder ASC "
+        src.SelectCommand = CreatePOChildSelectSQL()
         lv.DataSourceID = src.ID
         lv.DataBind()
-    End Sub
-
-    Private Sub SetCtrl_UserIDSelected(ByVal sender As Object, ByVal e As System.EventArgs) Handles UserID.DataBound
-        Dim ddl As DropDownList = sender
-
-        For Each item As ListItem In ddl.Items
-            If item.Value = st_UserID Then
-                ddl.SelectedValue = item.Value
-            End If
-        Next
-
     End Sub
 
     Protected Sub SrcRFQ_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcRFQ.Selecting
@@ -249,5 +191,139 @@
         e.Command.CommandTimeout = 0
     End Sub
 
+    Private Function CreateUserCheckSQL() As String
+        Dim sb_SQL As New Text.StringBuilder
+        sb_SQL.Append("SELECT ")
+        sb_SQL.Append("  count(UserID) as count ")
+        sb_SQL.Append("FROM ")
+        sb_SQL.Append("  v_User ")
+        sb_SQL.Append("WHERE ")
+        sb_SQL.Append("  LocationCode = @LocationCode ")
+        sb_SQL.Append("  AND UserID = @UserID ")
+        Return sb_SQL.ToString()
+    End Function
 
+    Private Function CreateUserSelectSQL(ByVal PrivilegeLevel As String) As String
+        Dim sb_SQL As New Text.StringBuilder
+        sb_SQL.Append("SELECT ")
+        sb_SQL.Append("  UserID, ")
+        sb_SQL.Append("  [Name] ")
+        sb_SQL.Append("FROM ")
+        sb_SQL.Append("  v_User ")
+        If PrivilegeLevel = "P" Then
+            sb_SQL.Append("WHERE ")
+            sb_SQL.Append("  isDisabled = 0 ")
+            sb_SQL.Append("  AND LocationCode = @LocationCode ")
+        End If
+        sb_SQL.Append("ORDER BY ")
+        sb_SQL.Append("  [Name] ASC  ")
+
+        Return sb_SQL.ToString()
+    End Function
+
+    Private Function CreateRFQSelectSQL() As String
+        Dim sb_SQL As New Text.StringBuilder
+        sb_SQL.Append("SELECT ")
+        sb_SQL.Append("  RH.RFQNumber, ")
+        sb_SQL.Append("  RH.StatusChangeDate, ")
+        sb_SQL.Append("  RH.Status, ")
+        sb_SQL.Append("  RH.ProductNumber, ")
+        sb_SQL.Append("  RH.ProductName AS ProductName, ")
+        sb_SQL.Append("  RH.Purpose, ")
+        sb_SQL.Append("  RH.QuoUserName, ")
+        sb_SQL.Append("  RH.QuoLocationName, ")
+        sb_SQL.Append("  RH.EnqUserName, ")
+        sb_SQL.Append("  RH.EnqLocationName, ")
+        sb_SQL.Append("  RH.SupplierName, ")
+        sb_SQL.Append("  RH.MakerName, ")
+        sb_SQL.Append("  RR.RFQCorres AS RFQCorrespondence ")
+        sb_SQL.Append("FROM ")
+        sb_SQL.Append("  v_RFQHeader AS RH ")
+        sb_SQL.Append("    LEFT OUTER JOIN v_RFQReminder AS RR ON RH.RFQNumber = RR.RFQNumber AND @UserID = RR.RcptUserID ")
+        sb_SQL.Append("WHERE ")
+        sb_SQL.Append("  QuoUserID = @UserID ")
+        sb_SQL.Append("  AND EnqUserID != @UserID ")
+        sb_SQL.Append("  AND NOT (RH.StatusCode = 'Q' AND RR.RFQHistoryNumber IS NULL) ")
+        sb_SQL.Append("  AND NOT (RH.StatusCode = 'C' AND RR.RFQHistoryNumber IS NULL) ")
+        sb_SQL.Append("ORDER BY ")
+        sb_SQL.Append("  StatusSortOrder, StatusChangeDate ASC ")
+        Return sb_SQL.ToString()
+    End Function
+
+    Private Function CreatePOSelectSQL() As String
+        Dim sb_SQL As New Text.StringBuilder
+        sb_SQL.Append("SELECT ")
+        sb_SQL.Append("  P.PONumber, ")
+        sb_SQL.Append("  P.StatusSortOrder, ")
+        sb_SQL.Append("  P.StatusChangeDate, ")
+        sb_SQL.Append("  P.StatusCode, ")
+        sb_SQL.Append("  P.ProductNumber, ")
+        sb_SQL.Append("  P.ProductName, ")
+        sb_SQL.Append("  P.PODate, ")
+        sb_SQL.Append("  P.POUserName, ")
+        sb_SQL.Append("  P.POLocationName, ")
+        sb_SQL.Append("  P.SupplierName, ")
+        sb_SQL.Append("  P.MakerName, ")
+        sb_SQL.Append("  P.DeliveryDate, ")
+        sb_SQL.Append("  P.OrderQuantity, ")
+        sb_SQL.Append("  P.OrderUnitCode, ")
+        sb_SQL.Append("  P.CurrencyCode, ")
+        sb_SQL.Append("  P.UnitPrice, ")
+        sb_SQL.Append("  P.PerQuantity, ")
+        sb_SQL.Append("  P.PerUnitCode, ")
+        sb_SQL.Append("  P.DueDate, ")
+        sb_SQL.Append("  PR.POCorres as POCorrespondence, ")
+        sb_SQL.Append("  CASE ")
+        sb_SQL.Append("    WHEN ")
+        sb_SQL.Append("      P.POUserID = @UserID ")
+        sb_SQL.Append("      AND P.DueDate <= GETDATE() ")
+        sb_SQL.Append("      AND ((P.ParPONumber IS NULL) AND (P.StatusSortOrder <= 11) ")
+        sb_SQL.Append("        OR (P.ParPONumber IS NOT NULL) AND (P.StatusCode = 'CPI')) ")
+        sb_SQL.Append("    THEN ")
+        sb_SQL.Append("      'Overdue' ")
+        sb_SQL.Append("    WHEN ")
+        sb_SQL.Append("      P.SOUserID = @UserID ")
+        sb_SQL.Append("      AND P.StatusCode = 'PPI' ")
+        sb_SQL.Append("    THEN ")
+        sb_SQL.Append("      'PPI' ")
+        sb_SQL.Append("    WHEN ")
+        sb_SQL.Append("      P.ParPONumber IS NULL ")
+        sb_SQL.Append("      AND PR.POHistoryNumber IS NOT NULL ")
+        sb_SQL.Append("    THEN ")
+        sb_SQL.Append("      'Reminder' ")
+        sb_SQL.Append("    END AS TaskType ")
+        sb_SQL.Append("FROM ")
+        sb_SQL.Append("  v_PO AS P ")
+        sb_SQL.Append("    LEFT OUTER JOIN v_POReminder AS PR ON PR.PONumber = P.PONumber AND PR.RcptUserID = @UserID ")
+        sb_SQL.Append("WHERE ")
+        sb_SQL.Append("  (POUserID = @UserID OR SOUserID = @UserID) ")
+        Return sb_SQL.ToString()
+    End Function
+
+    Private Function CreatePOChildSelectSQL() As String
+        Dim sb_SQL As New Text.StringBuilder
+        sb_SQL.Append("SELECT ")
+        sb_SQL.Append("  P.PONumber, ")
+        sb_SQL.Append("  P.ProductNumber, ")
+        sb_SQL.Append("  P.ProductName, ")
+        sb_SQL.Append("  P.PODate, ")
+        sb_SQL.Append("  P.POUserName, ")
+        sb_SQL.Append("  P.POLocationName, ")
+        sb_SQL.Append("  P.SupplierName, ")
+        sb_SQL.Append("  P.MakerName, ")
+        sb_SQL.Append("  P.DeliveryDate, ")
+        sb_SQL.Append("  P.OrderQuantity, ")
+        sb_SQL.Append("  P.OrderUnitCode, ")
+        sb_SQL.Append("  P.CurrencyCode, ")
+        sb_SQL.Append("  P.UnitPrice, ")
+        sb_SQL.Append("  P.PerQuantity, ")
+        sb_SQL.Append("  P.PerUnitCode ")
+        sb_SQL.Append("FROM ")
+        sb_SQL.Append("  v_PO AS P ")
+        sb_SQL.Append("WHERE ")
+        sb_SQL.Append("  P.ParPONumber = @PONumber ")
+        sb_SQL.Append("ORDER BY ")
+        sb_SQL.Append("  P.StatusSortOrder ASC ")
+        Return sb_SQL.ToString()
+    End Function
 End Class
