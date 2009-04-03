@@ -233,6 +233,27 @@ pre {
     margin: 0 0 5px 0;
 }
 
+.pagingHead {
+    text-align: right;
+    font-weight: bold;
+}
+
+.paging {
+    font-size: 120%;
+    margin-top: 2ex;
+    text-align: center;
+}
+
+/*
+.paging.current {
+    font-weight: bold;
+}
+
+.paging span {
+    margin-left: 10px;
+}
+*/
+
 .list {
     margin: 0 0 10px 0;
     padding: 0;
