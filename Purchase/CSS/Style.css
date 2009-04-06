@@ -244,15 +244,14 @@ pre {
     text-align: center;
 }
 
-/*
-.paging.current {
+.paging span.current {
+    margin-left: 10px;
     font-weight: bold;
 }
 
-.paging span {
+.paging a.numeric {
     margin-left: 10px;
 }
-*/
 
 .list {
     margin: 0 0 10px 0;
