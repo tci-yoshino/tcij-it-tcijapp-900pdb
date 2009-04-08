@@ -6,9 +6,9 @@ path C:\Program Files\TortoiseSVN\bin;%path%
 rem 環境変数の設定
 set WORK_DIR=""
 set WORK_DIR_PROMPT=""
-set SVN_URL=svn+ssh://tcisyslog/data/svn/tcijapp/Purchase
+rem set SVN_URL=svn+ssh://tcisyslog/data/svn/tcijapp/Purchase
 rem 単体テスト用ローカルSVNパス設定
-rem set SVN_URL=file:///D:/nokuda_workspace/SVNRepository/Purchase
+set SVN_URL=file:///D:/nokuda_workspace/SVNRepository/Purchase
 
 :WorkDirectoryPathPrompt
 
@@ -59,6 +59,11 @@ TortoiseProc /command:checkout /url:%SVN_URL%/trunk/ /path:%WORK_DIR% /closeonen
 if not ERRORLEVEL 0	goto ErrorProcessEnd
 echo SVNチェックアウトダイアログ表示終了
 
+rem WebConfigリネーム
+echo WebConfigリネーム開始
+rename %WORK_DIR%\Purchase\Web.config-dist Web.config
+echo WebConfigリネーム終了
+
 rem MSBuildコンパイルコマンド
 echo MSBuildeコンパイル開始
 msbuild.exe "%WORK_DIR%\Purchase\Purchase.vbproj"
@@ -67,14 +72,14 @@ echo MSBuildeコンパイル終了
 
 rem SVNコピーコマンド
 rem logmsgはVersion 1.5.0RC1以降で有効
-echo SVNタグ追加ダイアログ表示
+echo SVNタグ追加ダイアログ表示開始
 TortoiseProc /command:copy /url:%SVN_URL%/tags/ver-x.x.x /path:%WORK_DIR% /logmsg:"tags message here" /closeonend:1
 if not ERRORLEVEL 0 goto ErrorProcessEnd
 echo SVNタグ追加ダイアログ表示終了
 
 rem SVN管理下ファイル追加
 echo SVN管理ファイル追加開始
-TortoiseProc /command:add /path:%WORK_DIR%\Purchase\bin*%WORK_DIR%\Purchase\obj /notempfile /closeonend:1
+TortoiseProc /command:add /path:%WORK_DIR%\Purchase\bin*%WORK_DIR%\Purchase\obj*%WORK_DIR%\Purchase\Web.config /notempfile /closeonend:1
 if not ERRORLEVEL 0 goto ErrorProcessEnd
 echo SVN管理ファイル追加終了
 
