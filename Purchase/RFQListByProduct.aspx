@@ -57,7 +57,8 @@
                                 </asp:TemplatePagerField>
                             </Fields>
                         </asp:DataPager>
-                        
+                    </div>   
+                     
                     <div class="paging">
                         <asp:DataPager ID="RFQPagerLinkTop" runat="server" PageSize="10">
                             <Fields>
@@ -66,7 +67,7 @@
                         </asp:DataPager>
                     </div>
                         
-                    </div><div ID="itemPlaceholderContainer" runat="server">
+                    <div ID="itemPlaceholderContainer" runat="server">
                         <div ID="itemPlaceholder" runat="server">
                         </div>
                     </div>
