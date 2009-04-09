@@ -40,8 +40,47 @@
         <div class="list">
             <asp:ListView ID="RFQHeaderList" runat="server" DataSourceID="SrcRFQHeader">
                 <LayoutTemplate>
+                
                     <div class="pagingHead">
-                        <asp:DataPager ID="RFQPagerTop" runat="server" PageSize="10">    
+                        <asp:DataPager ID="RFQPagerCountTop" runat="server" PageSize="10">    
+                            <Fields>
+                                <asp:TemplatePagerField>              
+                                    <PagerTemplate>
+                                    Page
+                                    <asp:Label runat="server" ID="CurrentPageLabel" 
+                                    Text="<%# IIf(Container.TotalRowCount>0,  (Container.StartRowIndex / Container.PageSize) + 1 , 0) %>" />
+                                    of
+                                    <asp:Label runat="server" ID="TotalPagesLabel" 
+                                    Text="<%# Math.Ceiling (System.Convert.ToDouble(Container.TotalRowCount) / Container.PageSize) %>" />
+                                    (<asp:Label runat="server" ID="TotalItemsLabel" Text="<%# Container.TotalRowCount%>" /> records)
+                                    </PagerTemplate>
+                                </asp:TemplatePagerField>
+                            </Fields>
+                        </asp:DataPager>
+                        
+                    <div class="paging">
+                        <asp:DataPager ID="RFQPagerLinkTop" runat="server" PageSize="10">
+                            <Fields>
+                                <asp:NumericPagerField ButtonCount="10" CurrentPageLabelCssClass="current" NumericButtonCssClass="numeric" />
+                            </Fields>
+                        </asp:DataPager>
+                    </div>
+                        
+                    </div><div ID="itemPlaceholderContainer" runat="server">
+                        <div ID="itemPlaceholder" runat="server">
+                        </div>
+                    </div>
+                    
+                    <div class="paging">
+                        <asp:DataPager ID="RFQPagerLinkBottom" runat="server" PageSize="10">
+                            <Fields>
+                                <asp:NumericPagerField ButtonCount="10" CurrentPageLabelCssClass="current" NumericButtonCssClass="numeric" />
+                            </Fields>
+                        </asp:DataPager>
+                    </div>                    
+                    
+                    <div class="pagingHead">
+                        <asp:DataPager ID="RFQPagerCountBottom" runat="server" PageSize="10">    
                             <Fields>
                                 <asp:TemplatePagerField>              
                                     <PagerTemplate>
@@ -57,17 +96,7 @@
                             </Fields>
                         </asp:DataPager>
                     </div>
-                    <div ID="itemPlaceholderContainer" runat="server">
-                        <div ID="itemPlaceholder" runat="server">
-                        </div>
-                    </div>
-                    <div class="paging">
-                        <asp:DataPager ID="RFQPagerBottom" runat="server" PageSize="10">
-                            <Fields>
-                                <asp:NumericPagerField ButtonCount="10" CurrentPageLabelCssClass="current" NumericButtonCssClass="numeric" />
-                            </Fields>
-                        </asp:DataPager>
-                    </div>
+
                 </LayoutTemplate>
                 <EmptyDataTemplate>
                     <h3 style="font-style:italic"><% =Purchase.Common.MSG_NO_DATA_FOUND%></h3>
