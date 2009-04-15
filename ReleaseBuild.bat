@@ -79,7 +79,7 @@ echo SVNタグ追加ダイアログ表示終了
 
 rem SVN管理下ファイル追加
 echo SVN管理ファイル追加開始
-TortoiseProc /command:add /path:%WORK_DIR%\Purchase\bin*%WORK_DIR%\Purchase\obj*%WORK_DIR%\Purchase\Web.config /notempfile /closeonend:1
+TortoiseProc /command:add /path:%WORK_DIR%\Purchase\bin*%WORK_DIR%\Purchase\obj /notempfile /closeonend:1
 if not ERRORLEVEL 0 goto ErrorProcessEnd
 echo SVN管理ファイル追加終了
 
