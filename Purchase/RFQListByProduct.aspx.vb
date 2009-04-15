@@ -177,6 +177,7 @@ Partial Public Class RFQListByProduct
         sb_SQL.Append("	rfh.SupplierCountryCode = scry.CountryCode ")
         sb_SQL.Append("	AND ProductID = @ProductID ")
         sb_SQL.Append("ORDER BY ")
+        sb_SQL.Append(" rfh.StatusSortOrder ASC, ")
         sb_SQL.Append(" rfh.QuotedDate DESC, ")
         sb_SQL.Append(" rfh.StatusChangeDate DESC, ")
         sb_SQL.Append(" rfh.RFQNumber ASC")
