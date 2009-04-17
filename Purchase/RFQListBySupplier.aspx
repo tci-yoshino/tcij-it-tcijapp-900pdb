@@ -68,7 +68,7 @@
                     <div class="paging">
                         <asp:DataPager ID="RFQPagerLinkTop" runat="server" PageSize="10">
                             <Fields>
-                                <asp:NumericPagerField ButtonCount="10" CurrentPageLabelCssClass="current" NumericButtonCssClass="numeric" />
+                                <asp:NumericPagerField ButtonCount="10" CurrentPageLabelCssClass="current" NumericButtonCssClass="numeric" PreviousPageText="&laquo; Previous" NextPageText="Next &raquo;" />
                             </Fields>
                         </asp:DataPager>
                     </div>                    
@@ -81,7 +81,7 @@
                     <div class="paging">
                         <asp:DataPager ID="RFQPagerLinkBottom" runat="server" PageSize="10">
                             <Fields>
-                                <asp:NumericPagerField ButtonCount="10" CurrentPageLabelCssClass="current" NumericButtonCssClass="numeric" />
+                                <asp:NumericPagerField ButtonCount="10" CurrentPageLabelCssClass="current" NumericButtonCssClass="numeric" PreviousPageText="&laquo; Previous" NextPageText="Next &raquo;" />
                             </Fields>
                         </asp:DataPager>
                     </div>
