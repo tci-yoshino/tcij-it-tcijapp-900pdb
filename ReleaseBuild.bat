@@ -6,9 +6,9 @@ path C:\Program Files\TortoiseSVN\bin;%path%
 rem 環境変数の設定
 set WORK_DIR=""
 set WORK_DIR_PROMPT=""
-rem set SVN_URL=svn+ssh://tcisyslog/data/svn/tcijapp/Purchase
+set SVN_URL=svn+ssh://tcisyslog/data/svn/tcijapp/Purchase
 rem 単体テスト用ローカルSVNパス設定
-set SVN_URL=file:///D:/nokuda_workspace/SVNRepository/Purchase
+rem set SVN_URL=file:///D:/nokuda_workspace/SVNRepository/Purchase
 
 :WorkDirectoryPathPrompt
 
@@ -59,10 +59,10 @@ TortoiseProc /command:checkout /url:%SVN_URL%/trunk/ /path:%WORK_DIR% /closeonen
 if not ERRORLEVEL 0	goto ErrorProcessEnd
 echo SVNチェックアウトダイアログ表示終了
 
-rem WebConfigリネーム
-echo WebConfigリネーム開始
-rename %WORK_DIR%\Purchase\Web.config-dist Web.config
-echo WebConfigリネーム終了
+rem WebConfigコピー
+echo WebConfigコピー開始
+copy %WORK_DIR%\Purchase\Web.config-dist Web.config
+echo WebConfigコピー終了
 
 rem MSBuildコンパイルコマンド
 echo MSBuildeコンパイル開始
