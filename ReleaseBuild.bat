@@ -61,7 +61,7 @@ echo SVNチェックアウトダイアログ表示終了
 
 rem WebConfigコピー
 echo WebConfigコピー開始
-copy %WORK_DIR%\Purchase\Web.config-dist Web.config
+copy %WORK_DIR%\Purchase\Web.config-dist %WORK_DIR%\Purchase\Web.config
 echo WebConfigコピー終了
 
 rem MSBuildコンパイルコマンド
