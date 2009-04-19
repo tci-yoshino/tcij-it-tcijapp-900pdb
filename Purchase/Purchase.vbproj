@@ -117,6 +117,7 @@
     <Content Include="RFQSearchByProduct.aspx" />
     <Content Include="RFQSearchBySupplier.aspx" />
     <Content Include="RFQSelect.aspx" />
+    <Content Include="RFQStatus.aspx" />
     <Content Include="RFQUpdate.aspx" />
     <Content Include="Setting.html" />
     <Content Include="SupplierListByProduct.aspx" />
@@ -309,6 +310,13 @@
       <DependentUpon>RFQSelect.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="RFQStatus.aspx.designer.vb">
+      <DependentUpon>RFQStatus.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RFQStatus.aspx.vb">
+      <DependentUpon>RFQStatus.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="RFQUpdate.aspx.designer.vb">
       <DependentUpon>RFQUpdate.aspx</DependentUpon>
     </Compile>
@@ -433,6 +441,9 @@
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
