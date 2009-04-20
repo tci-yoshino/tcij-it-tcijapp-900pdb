@@ -20,8 +20,8 @@ function navi(menu) {
     doc.getElementById('product').className = '';
     doc.getElementById('supplier').className = '';
 //    doc.getElementById('product_type').className = '';
-//    doc.getElementById('rfq_status').className = '';
-//    doc.getElementById('po_status').className = '';
+    doc.getElementById('rfq_status').className = '';
+    doc.getElementById('po_status').className = '';
     doc.getElementById('setting').className = '';
 //    doc.getElementById('personal_setting').className = '';
 
