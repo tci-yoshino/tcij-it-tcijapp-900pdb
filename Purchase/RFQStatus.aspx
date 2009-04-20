@@ -9,14 +9,14 @@
     <script type="text/javascript" src="./JS/Common.js"></script>
     <script type="text/javascript" src="./JS/Colorful.js"></script>
     <script type="text/javascript">
-    <!--
+    //<![CDATA[
         window.onload = function() {
             colorful.set();
             if (document.SearchForm) {
                 document.SearchForm.StatusSortOrderFrom.focus();
             }
         }
-    -->
+    //]]>
     </script>
 </head>
 <body>
