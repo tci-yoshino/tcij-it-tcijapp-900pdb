@@ -124,7 +124,7 @@ pre {
 
 #navi li {
     float: left;
-    padding: 0 0 5px 0;
+    padding: 0 3px 5px 0;
 }
 
 #navi a {
@@ -133,19 +133,18 @@ pre {
     font-weight: bold;
     text-decoration: none;
     color: #fff;
+    -moz-border-radius: 5px 5px 0 0;
 }
 
 #navi a:hover {
     background-color: #fff;
     color: #2651a5;
-    -moz-border-radius: 5px 5px 0 0;
 }
 
 #navi li.current a,
 #navi li.current a:hover {
     background-color: #fff;
     color: #333631;
-    -moz-border-radius: 5px 5px 0 0;
 }
 
 /* Sub Navigation Rules */
@@ -289,9 +288,14 @@ pre {
     padding: 2px 5px;
 }
 
+.list table.alternative td {
+    background-color: #fce4d6;
+    padding: 2px 5px;
+}
+
 .list td.over 
 {
-	cursor: pointer;
+    cursor: pointer;
     background-color: #aad7ff;
     padding: 2px 5px;
 }
