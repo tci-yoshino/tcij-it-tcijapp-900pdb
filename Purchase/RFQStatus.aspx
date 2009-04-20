@@ -1,4 +1,4 @@
-﻿<%@ Page Language="vb" AutoEventWireup="false" CodeBehind="POIssue.aspx.vb" Inherits="Purchase.POIssue" %>
+﻿<%@ Page Language="vb" AutoEventWireup="false" CodeBehind="RFQStatus.aspx.vb" Inherits="Purchase.RFQStatus" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 

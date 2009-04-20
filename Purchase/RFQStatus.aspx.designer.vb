@@ -13,7 +13,7 @@ Option Explicit On
 
 
 
-Partial Public Class POIssue
+Partial Public Class RFQStatus
 
     '''<summary>
     '''Head1 コントロール。
