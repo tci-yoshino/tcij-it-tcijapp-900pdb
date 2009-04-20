@@ -104,6 +104,7 @@
     <Content Include="POCorrespondence.aspx" />
     <Content Include="POIssue.aspx" />
     <Content Include="POListByRFQ.aspx" />
+    <Content Include="POStatus.aspx" />
     <Content Include="POUpdate.aspx" />
     <Content Include="ProductListBySupplier.aspx" />
     <Content Include="ProductSearch.aspx" />
@@ -217,6 +218,13 @@
     </Compile>
     <Compile Include="POListByRFQ.aspx.vb">
       <DependentUpon>POListByRFQ.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="POStatus.aspx.designer.vb">
+      <DependentUpon>POStatus.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="POStatus.aspx.vb">
+      <DependentUpon>POStatus.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="POUpdate.aspx.designer.vb">
