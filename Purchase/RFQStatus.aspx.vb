@@ -41,6 +41,8 @@ Partial Public Class RFQStatus
                 QuoLocationCode.Items.Add(New ListItem(DBReader("Name"), DBReader("LocationCode")))
             Loop
             DBReader.Close()
+
+            '[PaymentTermCodeの値設定]----------------------------------------------------------
             DBCommand.CommandText = "SELECT Text, PaymentTermCode FROM PurchasingPaymentTerm ORDER BY PaymentTermCode"
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()

@@ -96,7 +96,7 @@
 
             <div class="list">
                 <asp:ListView ID="RFQHeaderList" runat="server" DataSourceID="SrcRFQHeader">
-                    <AlternatingItemTemplate>
+                    <%--<AlternatingItemTemplate>
                         <table class="alternative">
                             <tr>
                                 <th class="subhead" colspan="2">RFQ Reference Number : <a href='<%#"./RFQUpdate.aspx?RFQNumber=" & Eval("RFQNumber")%>'><asp:Label ID="RFQNumber" runat="server" Text='<%#Eval("RFQNumber")%>'></asp:Label></a></th>
@@ -134,7 +134,7 @@
                                 <td colspan="5"><asp:Label ID="Comment" runat="server" Text='<%#Replace(Eval("Comment").ToString(), vbCrLf, "<br />")%>'></asp:Label></td>
                             </tr>
                         </table>
-                    </AlternatingItemTemplate>
+                    </AlternatingItemTemplate>--%>
                     
                     <LayoutTemplate>
                         <div class="pagingHead" >
