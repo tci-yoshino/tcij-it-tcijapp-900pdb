@@ -34,6 +34,15 @@ Partial Public Class RFQStatus
     Protected WithEvents SearchForm As Global.System.Web.UI.HtmlControls.HtmlForm
 
     '''<summary>
+    '''Msg コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
     '''StatusSortOrderFrom コントロール。
     '''</summary>
     '''<remarks>
@@ -124,6 +133,15 @@ Partial Public Class RFQStatus
     Protected WithEvents StatusChangeDateTo As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
+    '''PaymentTermCode コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents PaymentTermCode As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
     '''Search コントロール。
     '''</summary>
     '''<remarks>
@@ -133,6 +151,15 @@ Partial Public Class RFQStatus
     Protected WithEvents Search As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
+    '''Clear コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Clear As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
     '''RFQHeaderList コントロール。
     '''</summary>
     '''<remarks>
@@ -140,4 +167,22 @@ Partial Public Class RFQStatus
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents RFQHeaderList As Global.System.Web.UI.WebControls.ListView
+
+    '''<summary>
+    '''SrcRFQHeader コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SrcRFQHeader As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
+    '''Action コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
 End Class
