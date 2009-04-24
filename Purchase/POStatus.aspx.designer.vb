@@ -25,6 +25,15 @@ Partial Public Class POStatus
     Protected WithEvents SearchForm As Global.System.Web.UI.HtmlControls.HtmlForm
 
     '''<summary>
+    '''Msg コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
     '''StatusSortOrderFrom コントロール。
     '''</summary>
     '''<remarks>
@@ -106,6 +115,15 @@ Partial Public Class POStatus
     Protected WithEvents Search As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
+    '''Clear コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Clear As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
     '''POList コントロール。
     '''</summary>
     '''<remarks>
@@ -122,4 +140,13 @@ Partial Public Class POStatus
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents SrcPO As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
+    '''Action コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
 End Class

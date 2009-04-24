@@ -1,8 +1,187 @@
-﻿Public Partial Class POStatus
+﻿Imports Purchase.Common
+
+Partial Public Class POStatus
     Inherits CommonPage
 
-    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+    Dim DBConn As New System.Data.SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
+    Dim DBCommand As System.Data.SqlClient.SqlCommand
+    Dim DBReader As System.Data.SqlClient.SqlDataReader
 
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        If IsPostBack = False Then
+            '[ERR_NO_MATCH_FOUND表示防止]-------------------------------------------------------
+            POList.Visible = False
+
+            '[StatusSortOrderFrom,StatusSortOrderToの値設定]------------------------------------
+            DBCommand = DBConn.CreateCommand()
+            DBConn.Open()
+            DBCommand.CommandText = "SELECT Text, SortOrder FROM POStatus ORDER BY SortOrder"
+            DBReader = DBCommand.ExecuteReader()
+            DBCommand.Dispose()
+            StatusSortOrderFrom.Items.Clear()
+            StatusSortOrderFrom.Items.Add(New ListItem("", ""))
+            StatusSortOrderTo.Items.Clear()
+            StatusSortOrderTo.Items.Add(New ListItem("", ""))
+            Do Until DBReader.Read = False
+                StatusSortOrderFrom.Items.Add(New ListItem(DBReader("Text"), DBReader("SortOrder")))
+                StatusSortOrderTo.Items.Add(New ListItem(DBReader("Text"), DBReader("SortOrder")))
+            Loop
+            DBReader.Close()
+
+            '[POLocationCodeの値設定]-----------------------------------------------------------
+            DBCommand.CommandText = "SELECT LocationCode, Name FROM s_Location ORDER BY Name"
+            DBReader = DBCommand.ExecuteReader()
+            DBCommand.Dispose()
+            POLocationCode.Items.Clear()
+            POLocationCode.Items.Add(New ListItem("", ""))
+            Do Until DBReader.Read = False
+                POLocationCode.Items.Add(New ListItem(DBReader("Name"), DBReader("LocationCode")))
+            Loop
+            DBReader.Close()
+        End If
     End Sub
 
+    Protected Sub POLocationCode_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles POLocationCode.SelectedIndexChanged
+        '[POUserIDの値設定]--------------------------------------------------------------------
+        Msg.Text = String.Empty
+        DBCommand = DBConn.CreateCommand()
+        DBCommand.CommandText = "SELECT v_User.Name AS POUserName, PO.POUserID FROM PO INNER JOIN v_User ON PO.POUserID = v_User.UserID WHERE PO.POLocationCode = '" & POLocationCode.SelectedValue & "' GROUP BY PO.POUserID, v_User.Name ORDER BY POUserName"
+        DBConn.Open()
+        DBReader = DBCommand.ExecuteReader()
+        DBCommand.Dispose()
+        POUserID.Items.Clear()
+        POUserID.Items.Add(New ListItem("", ""))
+        Do Until DBReader.Read = False
+            POUserID.Items.Add(New ListItem(DBReader("POUserName"), DBReader("POUserID")))
+        Loop
+        DBReader.Close()
+        DBConn.Close()
+    End Sub
+
+    Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
+        '[Search実行可能確認]-------------------------------------------------------------------
+        If Action.Value <> "Search" Then
+            Msg.Text = ERR_INVALID_PARAMETER
+            Exit Sub
+        End If
+
+        '[POPagerCountTop,POPagerCountBottomのカウントを1にする為実行]--------------------------
+        SrcPO.SelectCommand = getBasePOSQL() + "WHERE 1=0"
+        POList.DataBind()
+
+        SearchPO()
+    End Sub
+
+    Private Sub SearchPO()
+        Msg.Text = String.Empty
+        SrcPO.SelectCommand = ""
+        POList.Visible = False
+
+        '[Status設定順序チェック]---------------------------------------------------------------
+        If StatusSortOrderFrom.Text = "" And StatusSortOrderTo.Text <> "" Then Exit Sub
+        If StatusSortOrderFrom.Text <> "" And StatusSortOrderTo.Text <> "" Then
+            If StatusSortOrderTo.Text < StatusSortOrderFrom.Text Then Exit Sub
+        End If
+
+        '[入力データを1Byte形式に変換する]------------------------------------------------------
+        SupplierCode.Text = Trim(StrConv(SupplierCode.Text, VbStrConv.Narrow))
+        SupplierName.Text = Trim(StrConv(SupplierName.Text, VbStrConv.Narrow))
+        PODateFrom.Text = StrConv(PODateFrom.Text, VbStrConv.Narrow)
+        PODateTo.Text = StrConv(PODateTo.Text, VbStrConv.Narrow)
+
+        '[入力データを1Byte形式に変換する]------------------------------------------------------
+        If SupplierCode.Text <> "" And Not Regex.IsMatch(SupplierCode.Text, "^[0-9]{1,10}$") Then
+            Msg.Text = "Supplier Code" & ERR_INVALID_NUMBER
+            Exit Sub
+        End If
+
+        '[日付妥当性チェック]-------------------------------------------------------------------
+        If PODateFrom.Text <> "" And Not (IsDate(PODateFrom.Text) And Regex.IsMatch(PODateFrom.Text, DATE_REGEX_OPTIONAL)) Then
+            Msg.Text = "PO Date (From) " & ERR_INVALID_DATE
+            Exit Sub
+        End If
+        If PODateTo.Text <> "" And Not (IsDate(PODateTo.Text) And Regex.IsMatch(PODateTo.Text, DATE_REGEX_OPTIONAL)) Then
+            Msg.Text = "PO Date (To) " & ERR_INVALID_DATE
+            Exit Sub
+        End If
+
+        '[日付設定順序チェック]-----------------------------------------------------------------
+        If PODateFrom.Text = "" And PODateTo.Text <> "" Then Exit Sub
+        If PODateFrom.Text <> "" And PODateTo.Text <> "" Then
+            If PODateTo.Text < PODateFrom.Text Then Exit Sub
+        End If
+
+        '[SrcPOの値設定]------------------------------------------------------------------------
+        Dim st_SQL As New Text.StringBuilder
+        st_SQL.Append("" & getBasePOSQL() & "")
+
+        'WHERE句の作成
+        Dim st_WHR As String = String.Empty
+        If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue = "" Then st_WHR = st_WHR & "StatusSortOrder = '" & StatusSortOrderFrom.SelectedValue & "' AND "
+        If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue <> "" Then st_WHR = st_WHR & "StatusSortOrder >= '" & StatusSortOrderFrom.SelectedValue & "' AND StatusSortOrder <= '" & StatusSortOrderTo.SelectedValue & "' AND "
+        If POLocationCode.SelectedValue <> "" Then st_WHR = st_WHR & "POLocationCode = '" & POLocationCode.SelectedValue & "' AND "
+        If POUserID.SelectedValue <> "" Then st_WHR = st_WHR & "POUserID = '" & POUserID.SelectedValue & "' AND "
+        If SupplierCode.Text <> "" Then st_WHR = st_WHR & "SupplierCode = " & SupplierCode.Text & " AND "
+        If SupplierName.Text <> "" Then st_WHR = st_WHR & "SupplierName LIKE '%" & SupplierName.Text & "%' AND "
+        If PODateFrom.Text <> "" And PODateTo.Text = "" Then st_WHR = st_WHR & "PODate = '" & PODateFrom.Text & "' AND "
+        If PODateFrom.Text <> "" And PODateTo.Text <> "" Then st_WHR = st_WHR & "PODate >= '" & PODateFrom.Text & "' AND PODate <= '" & PODateTo.Text & "' AND "
+        If st_WHR <> String.Empty Then
+            st_SQL.Append("WHERE ")
+            st_WHR = Left(st_WHR.ToString, st_WHR.Length - 4)
+            st_SQL.Append("" & st_WHR & "")
+        Else
+            '検索条件が何も指定されなかった場合の対応
+            st_SQL.Append("WHERE 1=0 ")
+        End If
+
+        st_SQL.Append("ORDER BY ")
+        st_SQL.Append(" PONumber ")
+        SrcPO.SelectCommand = st_SQL.ToString
+        POList.DataBind()
+        POList.Visible = True
+    End Sub
+
+    Protected Sub Clear_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Clear.Click
+        Msg.Text = ""
+        StatusSortOrderFrom.SelectedIndex = 0
+        StatusSortOrderTo.SelectedIndex = 0
+        POLocationCode.SelectedIndex = 0
+        POUserID.SelectedIndex = -1
+        POUserID.Items.Clear()
+    End Sub
+
+    Private Function getBasePOSQL() As String
+        '[SrcPOの値設定]------------------------------------------------------------------------
+        Dim st_SQL As New Text.StringBuilder
+        st_SQL.Append("SELECT ")
+        st_SQL.Append("	PONumber, ")
+        st_SQL.Append("	StatusChangeDate, ")
+        st_SQL.Append("	Status, ")
+        st_SQL.Append("	ProductNumber, ")
+        st_SQL.Append("	ProductName, ")
+        st_SQL.Append("	PODate, ")
+        st_SQL.Append("	POUserName, ")
+        st_SQL.Append("	POLocationName, ")
+        st_SQL.Append("	SupplierName, ")
+        st_SQL.Append("	MakerName, ")
+        st_SQL.Append("	DeliveryDate, ")
+        st_SQL.Append("	OrderQuantity, ")
+        st_SQL.Append("	OrderUnitCode, ")
+        st_SQL.Append("	CurrencyCode, ")
+        st_SQL.Append("	UnitPrice, ")
+        st_SQL.Append("	PerQuantity, ")
+        st_SQL.Append("	PerUnitCode ")
+        st_SQL.Append("FROM ")
+        st_SQL.Append(" v_PO ")
+        Return st_SQL.ToString()
+    End Function
+
+    Protected Sub SrcPO_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcPO.Selecting
+        '[本ページのタイムアウトを無限にする]---------------------------------------------------
+        'e.Command.CommandTimeout = 0
+    End Sub
+
+    Protected Sub POList_PagePropertiesChanged(ByVal sender As Object, ByVal e As EventArgs) Handles POList.PagePropertiesChanged
+        SearchPO()
+    End Sub
 End Class

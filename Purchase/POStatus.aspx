@@ -10,12 +10,12 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
     <script type="text/javascript">
     //<![CDATA[
-        window.onload = function() {
-            colorful.set();
-            if (document.SearchForm) {
-                document.SearchForm.StatusSortOrderFrom.focus();
-            }
-        }
+//        window.onload = function() {
+//            colorful.set();
+//            if (document.SearchForm) {
+//                document.SearchForm.StatusSortOrderFrom.focus();
+//            }
+//        }
     //]]>
     </script>
 </head>
@@ -28,9 +28,10 @@
             <h3>PO Status</h3>
 
             <div class="main">
+            <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
                 <table>
                     <tr>
-                        <th>Current Status <span class="required">*</span> : </th>
+                        <th>Current Status <span class="required"></span> : </th>
                         <td>
                             from <asp:DropDownList ID="StatusSortOrderFrom" runat="server">
                                     <asp:ListItem></asp:ListItem>
@@ -43,7 +44,7 @@
                     <tr>
                         <th>PO Location / User : </th>
                         <td>
-                            <asp:DropDownList ID="POLocationCode" runat="server">
+                            <asp:DropDownList ID="POLocationCode" runat="server" AutoPostBack="True">
                                 <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                             <span class="indent"></span>
@@ -69,8 +70,8 @@
                     </tr>
                 </table>
                 <asp:Button ID="Search" runat="server" Text="Search" />
-                <input type="button" value="Clear" onclick="clearForm('SearchForm')"/>
-            </div>
+                <asp:Button ID="Clear" runat="server" Text="Clear" OnClientClick ="clearForm('SearchForm');" />
+                </div>
 
             <hr />
 
@@ -84,7 +85,7 @@
                                         <PagerTemplate>
                                         Page
                                         <asp:Label runat="server" ID="CurrentPageLabel" 
-                                        Text="<%# IIf(Container.TotalRowCount>0,  (Container.StartRowIndex / Container.PageSize) + 1 , 0) %>" />
+                                        Text="<%# IIf(Container.TotalRowCount>0,  CInt(Container.StartRowIndex / Container.PageSize) + 1 , 0) %>" />
                                         of
                                         <asp:Label runat="server" ID="TotalPagesLabel" 
                                         Text="<%# Math.Ceiling (System.Convert.ToDouble(Container.TotalRowCount) / Container.PageSize) %>" />
@@ -123,7 +124,7 @@
                                         <PagerTemplate>
                                         Page
                                         <asp:Label runat="server" ID="CurrentPageLabel" 
-                                        Text="<%# IIf(Container.TotalRowCount>0,  (Container.StartRowIndex / Container.PageSize) + 1 , 0) %>" />
+                                        Text="<%# IIf(Container.TotalRowCount>0,  CInt(Container.StartRowIndex / Container.PageSize) + 1 , 0) %>" />
                                         of
                                         <asp:Label runat="server" ID="TotalPagesLabel" 
                                         Text="<%# Math.Ceiling (System.Convert.ToDouble(Container.TotalRowCount) / Container.PageSize) %>" />
@@ -174,6 +175,7 @@
 
         <!-- Footer -->
         <!--#include virtual="./Footer.html" --><!-- Footer END -->
+    <asp:HiddenField ID="Action" runat="server" Value="Search" />
     </form>
 
 </body>
