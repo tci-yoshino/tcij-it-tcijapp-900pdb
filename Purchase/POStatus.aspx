@@ -10,12 +10,13 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
     <script type="text/javascript">
     //<![CDATA[
-//        window.onload = function() {
-//            colorful.set();
+        window.onload = function() {
+            colorful.set();
+            navi('po_status');
 //            if (document.SearchForm) {
 //                document.SearchForm.StatusSortOrderFrom.focus();
 //            }
-//        }
+        }
     //]]>
     </script>
 </head>
