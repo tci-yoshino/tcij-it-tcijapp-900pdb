@@ -10,12 +10,12 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
     <script type="text/javascript">
     //<![CDATA[
-        window.onload = function() {
-            colorful.set();
-            if (document.SearchForm) {
-                document.SearchForm.StatusSortOrderFrom.focus();
-            }
-        }
+//        window.onload = function() {
+//            colorful.set();
+//            if (document.SearchForm) {
+//                document.SearchForm.StatusSortOrderFrom.focus();
+//            }
+//        }
     //]]>
     </script>
 </head>
@@ -144,7 +144,7 @@
                                         <PagerTemplate>
                                         Page
                                         <asp:Label runat="server" ID="CurrentPageLabel" 
-                                        Text="<%# IIf(Container.TotalRowCount>0,  (Container.StartRowIndex / Container.PageSize) + 1 , 0) %>" />
+                                        Text="<%# IIf(Container.TotalRowCount>0,  CInt(Container.StartRowIndex / Container.PageSize) + 1 , 0) %>" />
                                         of
                                         <asp:Label runat="server" ID="TotalPagesLabel" 
                                         Text="<%# Math.Ceiling (System.Convert.ToDouble(Container.TotalRowCount) / Container.PageSize) %>" />
@@ -183,7 +183,7 @@
                                         <PagerTemplate>
                                         Page
                                         <asp:Label runat="server" ID="CurrentPageLabel" 
-                                        Text="<%# IIf(Container.TotalRowCount>0,  (Container.StartRowIndex / Container.PageSize) + 1 , 0) %>" />
+                                        Text="<%# IIf(Container.TotalRowCount>0,  CInt(Container.StartRowIndex / Container.PageSize) + 1 , 0) %>" />
                                         of
                                         <asp:Label runat="server" ID="TotalPagesLabel" 
                                         Text="<%# Math.Ceiling (System.Convert.ToDouble(Container.TotalRowCount) / Container.PageSize) %>" />

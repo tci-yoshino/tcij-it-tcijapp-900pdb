@@ -29,7 +29,7 @@ Partial Public Class RFQStatus
             DBReader.Close()
 
             '[EnqLocationCode,QuoLocationCodeの値設定]------------------------------------------
-            DBCommand.CommandText = "SELECT LocationCode, Name FROM dbo.s_Location ORDER BY Name"
+            DBCommand.CommandText = "SELECT LocationCode, Name FROM s_Location ORDER BY Name"
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             EnqLocationCode.Items.Clear()
@@ -79,6 +79,7 @@ Partial Public Class RFQStatus
 
     Protected Sub EnqLocationCode_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles EnqLocationCode.SelectedIndexChanged
         '[EnqUserIDの値設定]--------------------------------------------------------------------
+        Msg.Text = String.Empty
         DBCommand = DBConn.CreateCommand()
         DBCommand.CommandText = "SELECT Name AS EnqUserName, EnqUserID FROM RFQHeader, v_User WHERE RFQHeader.EnqUserID = v_User.UserID AND EnqLocationCode = '" & EnqLocationCode.SelectedValue & "' Group BY EnqUserID, Name ORDER BY Name"
         DBConn.Open()
@@ -95,6 +96,7 @@ Partial Public Class RFQStatus
 
     Protected Sub QuoLocationCode_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles QuoLocationCode.SelectedIndexChanged
         '[QuoUserIDの値設定]--------------------------------------------------------------------
+        Msg.Text = String.Empty
         DBCommand = DBConn.CreateCommand()
         DBCommand.CommandText = "SELECT Name AS QuoUserName, QuoUserID FROM RFQHeader, v_User WHERE RFQHeader.QuoUserID = v_User.UserID AND QuoLocationCode = '" & QuoLocationCode.SelectedValue & "' Group BY QuoUserID, Name ORDER BY Name"
         DBConn.Open()
@@ -110,13 +112,15 @@ Partial Public Class RFQStatus
     End Sub
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
-
-
         '[Search実行可能確認]-------------------------------------------------------------------
         If Action.Value <> "Search" Then
             Msg.Text = ERR_INVALID_PARAMETER
             Exit Sub
         End If
+
+        '[RFQPagerCountTop,RFQPagerCountBottomのカウントを1にする為実行]------------------------
+        SrcRFQHeader.SelectCommand = getBaseRFQHeaderSQL() + "WHERE 1=0"
+        RFQHeaderList.DataBind()
 
         SearchRFQHeader()
     End Sub
@@ -125,15 +129,6 @@ Partial Public Class RFQStatus
         Msg.Text = String.Empty
         SrcRFQHeader.SelectCommand = ""
         RFQHeaderList.Visible = False
-
-        '[検索項目未設定時は検索しない]---------------------------------------------------------
-        Dim SearchItemLength As Integer = 0
-        SearchItemLength = StatusSortOrderFrom.Text.Length + StatusSortOrderTo.Text.Length + _
-                           EnqLocationCode.Text.Length + EnqUserID.Text.Length + _
-                           QuoLocationCode.Text.Length + QuoUserID.Text.Length + _
-                           QuotedDateFrom.Text.Length + QuotedDateTo.Text.Length + _
-                           StatusChangeDateFrom.Text.Length + StatusChangeDateTo.Text.Length
-        If SearchItemLength = 0 Then Exit Sub
 
         '[Status設定順序チェック]---------------------------------------------------------------
         If StatusSortOrderFrom.Text = "" And StatusSortOrderTo.Text <> "" Then Exit Sub
@@ -177,6 +172,43 @@ Partial Public Class RFQStatus
 
         '[SrcRFQHeaderの値設定]-----------------------------------------------------------------
         Dim st_SQL As New Text.StringBuilder
+        st_SQL.Append("" & getBaseRFQHeaderSQL() & "")
+
+        'WHERE句の作成
+        Dim st_WHR As String = String.Empty
+        If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue = "" Then st_WHR = st_WHR & "StatusSortOrder = '" & StatusSortOrderFrom.SelectedValue & "' AND "
+        If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue <> "" Then st_WHR = st_WHR & "StatusSortOrder >= '" & StatusSortOrderFrom.SelectedValue & "' AND StatusSortOrder <= '" & StatusSortOrderTo.SelectedValue & "' AND "
+        If EnqLocationCode.SelectedValue <> "" Then st_WHR = st_WHR & "EnqLocationCode = '" & EnqLocationCode.SelectedValue & "' AND "
+        If EnqUserID.SelectedValue <> "" Then st_WHR = st_WHR & "EnqUserID = '" & EnqUserID.SelectedValue & "' AND "
+        If QuoLocationCode.SelectedValue <> "" Then st_WHR = st_WHR & "QuoLocationCode = '" & QuoLocationCode.SelectedValue & "' AND "
+        If QuoUserID.SelectedValue <> "" Then st_WHR = st_WHR & "QuoUserID = '" & QuoUserID.SelectedValue & "' AND "
+        If QuotedDateFrom.Text <> "" And QuotedDateTo.Text = "" Then st_WHR = st_WHR & "QuoTedDate = '" & QuotedDateFrom.Text & "' AND "
+        If QuotedDateFrom.Text <> "" And QuotedDateTo.Text <> "" Then st_WHR = st_WHR & "QuoTedDate >= '" & QuotedDateFrom.Text & "' AND QuoTedDate <= '" & QuotedDateTo.Text & "' AND "
+        If StatusChangeDateFrom.Text <> "" And StatusChangeDateTo.Text = "" Then st_WHR = st_WHR & "StatusChangeDate = '" & StatusChangeDateFrom.Text & "' AND "
+        If StatusChangeDateFrom.Text <> "" And StatusChangeDateTo.Text <> "" Then st_WHR = st_WHR & "StatusChangeDate >= '" & StatusChangeDateFrom.Text & "' AND StatusChangeDate <= '" & StatusChangeDateTo.Text & "' AND "
+        If PaymentTermCode.Text <> "" Then st_WHR = st_WHR & "PaymentTermCode = '" & PaymentTermCode.Text & "' AND "
+        If st_WHR <> String.Empty Then
+            st_SQL.Append("WHERE ")
+            st_WHR = Left(st_WHR.ToString, st_WHR.Length - 4)
+            st_SQL.Append("" & st_WHR & "")
+        Else
+            '検索条件が何も指定されなかった場合の対応
+            st_SQL.Append("WHERE 1=0 ")
+        End If
+
+        st_SQL.Append("ORDER BY StatusSortOrder, QuotedDate DESC, StatusChangeDate DESC, RFQNumber")
+        SrcRFQHeader.SelectCommand = st_SQL.ToString
+        RFQHeaderList.DataBind()
+        RFQHeaderList.Visible = True
+    End Sub
+
+    Protected Sub RFQHeaderList_PagePropertiesChanged(ByVal sender As Object, ByVal e As EventArgs) Handles RFQHeaderList.PagePropertiesChanged
+        SearchRFQHeader()
+    End Sub
+
+    Private Function getBaseRFQHeaderSQL() As String
+        '[SrcRFQHeaderの値設定]-----------------------------------------------------------------
+        Dim st_SQL As New Text.StringBuilder
         st_SQL.Append("SELECT ")
         st_SQL.Append("	RFQNumber, ")
         st_SQL.Append("	EnqLocationName, ")
@@ -203,32 +235,8 @@ Partial Public Class RFQStatus
         st_SQL.Append(" s_Country AS sc1 ON sc1.CountryCode = v_RFQHeader.SupplierCountryCode LEFT OUTER JOIN ")
         st_SQL.Append(" s_Country AS sc2 ON sc2.CountryCode = v_RFQHeader.MakerCountryCode INNER JOIN ")
         st_SQL.Append(" Product ON v_RFQHeader.ProductID = Product.ProductID ")
-        st_SQL.Append("WHERE ")
-
-        Dim st_WHR As String = String.Empty
-        If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue = "" Then st_WHR = st_WHR & "StatusSortOrder = '" & StatusSortOrderFrom.SelectedValue & "' AND "
-        If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue <> "" Then st_WHR = st_WHR & "StatusSortOrder >= '" & StatusSortOrderFrom.SelectedValue & "' AND StatusSortOrder <= '" & StatusSortOrderTo.SelectedValue & "' AND "
-        If EnqLocationCode.SelectedValue <> "" Then st_WHR = st_WHR & "EnqLocationCode = '" & EnqLocationCode.SelectedValue & "' AND "
-        If EnqUserID.SelectedValue <> "" Then st_WHR = st_WHR & "EnqUserID = '" & EnqUserID.SelectedValue & "' AND "
-        If QuoLocationCode.SelectedValue <> "" Then st_WHR = st_WHR & "QuoLocationCode = '" & QuoLocationCode.SelectedValue & "' AND "
-        If QuoUserID.SelectedValue <> "" Then st_WHR = st_WHR & "QuoUserID = '" & QuoUserID.SelectedValue & "' AND "
-        If QuotedDateFrom.Text <> "" And QuotedDateTo.Text = "" Then st_WHR = st_WHR & "QuoTedDate = '" & QuotedDateFrom.Text & "' AND "
-        If QuotedDateFrom.Text <> "" And QuotedDateTo.Text <> "" Then st_WHR = st_WHR & "QuoTedDate >= '" & QuotedDateFrom.Text & "' AND QuoTedDate <= '" & QuotedDateTo.Text & "' AND "
-        If StatusChangeDateFrom.Text <> "" And StatusChangeDateTo.Text = "" Then st_WHR = st_WHR & "StatusChangeDate = '" & StatusChangeDateFrom.Text & "' AND "
-        If StatusChangeDateFrom.Text <> "" And StatusChangeDateTo.Text <> "" Then st_WHR = st_WHR & "StatusChangeDate >= '" & StatusChangeDateFrom.Text & "' AND StatusChangeDate <= '" & StatusChangeDateTo.Text & "' AND "
-        If PaymentTermCode.Text <> "" Then st_WHR = st_WHR & "PaymentTermCode = '" & PaymentTermCode.Text & "' AND "
-        st_WHR = Left(st_WHR.ToString, st_WHR.Length - 4)
-        st_SQL.Append("" & st_WHR & "")
-
-        st_SQL.Append("ORDER BY StatusSortOrder, QuotedDate DESC, StatusChangeDate DESC, RFQNumber")
-        SrcRFQHeader.SelectCommand = st_SQL.ToString
-        RFQHeaderList.DataBind()
-        RFQHeaderList.Visible = True
-    End Sub
-
-    Protected Sub RFQHeaderList_PagePropertiesChanged(ByVal sender As Object, ByVal e As EventArgs) Handles RFQHeaderList.PagePropertiesChanged
-        SearchRFQHeader()
-    End Sub
+        Return st_SQL.ToString()
+    End Function
 
     Protected Sub Clear_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Clear.Click
         Msg.Text=""
@@ -243,4 +251,8 @@ Partial Public Class RFQStatus
         PaymentTermCode.SelectedIndex = 0
     End Sub
 
+    Protected Sub SrcRFQHeader_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcRFQHeader.Selecting
+        '[本ページのタイムアウトを無限にする]---------------------------------------------------
+        'e.Command.CommandTimeout = 0
+    End Sub
 End Class
