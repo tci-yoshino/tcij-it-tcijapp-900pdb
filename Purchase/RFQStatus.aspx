@@ -10,12 +10,13 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
     <script type="text/javascript">
     //<![CDATA[
-//        window.onload = function() {
-//            colorful.set();
+        window.onload = function() {
+            colorful.set();
+            navi('rfq_status');
 //            if (document.SearchForm) {
 //                document.SearchForm.StatusSortOrderFrom.focus();
 //            }
-//        }
+        }
     //]]>
     </script>
 </head>
@@ -96,7 +97,7 @@
 
             <div class="list">
                 <asp:ListView ID="RFQHeaderList" runat="server" DataSourceID="SrcRFQHeader">
-                    <%--<AlternatingItemTemplate>
+                <%--    <AlternatingItemTemplate>
                         <table class="alternative">
                             <tr>
                                 <th class="subhead" colspan="2">RFQ Reference Number : <a href='<%#"./RFQUpdate.aspx?RFQNumber=" & Eval("RFQNumber")%>'><asp:Label ID="RFQNumber" runat="server" Text='<%#Eval("RFQNumber")%>'></asp:Label></a></th>
