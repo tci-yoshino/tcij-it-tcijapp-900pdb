@@ -89,7 +89,7 @@ Partial Public Class POStatus
         PODateFrom.Text = StrConv(PODateFrom.Text, VbStrConv.Narrow)
         PODateTo.Text = StrConv(PODateTo.Text, VbStrConv.Narrow)
 
-        '[入力データを1Byte形式に変換する]------------------------------------------------------
+        '[SupplierCodeの数字構成チェック]-------------------------------------------------------
         If SupplierCode.Text <> "" And Not Regex.IsMatch(SupplierCode.Text, "^[0-9]{1,10}$") Then
             Msg.Text = "Supplier Code" & ERR_INVALID_NUMBER
             Exit Sub
@@ -117,14 +117,31 @@ Partial Public Class POStatus
 
         'WHERE句の作成
         Dim st_WHR As String = String.Empty
-        If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue = "" Then st_WHR = st_WHR & "StatusSortOrder = '" & StatusSortOrderFrom.SelectedValue & "' AND "
-        If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue <> "" Then st_WHR = st_WHR & "StatusSortOrder >= '" & StatusSortOrderFrom.SelectedValue & "' AND StatusSortOrder <= '" & StatusSortOrderTo.SelectedValue & "' AND "
-        If POLocationCode.SelectedValue <> "" Then st_WHR = st_WHR & "POLocationCode = '" & POLocationCode.SelectedValue & "' AND "
-        If POUserID.SelectedValue <> "" Then st_WHR = st_WHR & "POUserID = '" & POUserID.SelectedValue & "' AND "
-        If SupplierCode.Text <> "" Then st_WHR = st_WHR & "SupplierCode = " & SupplierCode.Text & " AND "
-        If SupplierName.Text <> "" Then st_WHR = st_WHR & "SupplierName LIKE '%" & SupplierName.Text & "%' AND "
-        If PODateFrom.Text <> "" And PODateTo.Text = "" Then st_WHR = st_WHR & "PODate = '" & PODateFrom.Text & "' AND "
-        If PODateFrom.Text <> "" And PODateTo.Text <> "" Then st_WHR = st_WHR & "PODate >= '" & PODateFrom.Text & "' AND PODate <= '" & PODateTo.Text & "' AND "
+        If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue = "" Then
+            st_WHR = st_WHR & "StatusSortOrder = '" & StatusSortOrderFrom.SelectedValue & "' AND "
+        End If
+        If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue <> "" Then
+            st_WHR = st_WHR & "StatusSortOrder >= '" & StatusSortOrderFrom.SelectedValue & "' AND StatusSortOrder <= '" & StatusSortOrderTo.SelectedValue & "' AND "
+        End If
+        If POLocationCode.SelectedValue <> "" Then
+            st_WHR = st_WHR & "POLocationCode = '" & POLocationCode.SelectedValue & "' AND "
+        End If
+        If POUserID.SelectedValue <> "" Then
+            st_WHR = st_WHR & "POUserID = '" & POUserID.SelectedValue & "' AND "
+        End If
+        If SupplierCode.Text <> "" Then
+            st_WHR = st_WHR & "SupplierCode = " & SupplierCode.Text & " AND "
+        End If
+        If SupplierName.Text <> "" Then
+            st_WHR = st_WHR & "SupplierName LIKE '%" & SupplierName.Text & "%' AND "
+        End If
+        If PODateFrom.Text <> "" And PODateTo.Text = "" Then
+            st_WHR = st_WHR & "PODate = '" & PODateFrom.Text & "' AND "
+        End If
+        If PODateFrom.Text <> "" And PODateTo.Text <> "" Then
+            st_WHR = st_WHR & "PODate >= '" & PODateFrom.Text & "' AND PODate <= '" & PODateTo.Text & "' AND "
+        End If
+
         If st_WHR <> String.Empty Then
             st_SQL.Append("WHERE ")
             st_WHR = Left(st_WHR.ToString, st_WHR.Length - 4)
