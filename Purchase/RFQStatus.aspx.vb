@@ -176,17 +176,40 @@ Partial Public Class RFQStatus
 
         'WHERE句の作成
         Dim st_WHR As String = String.Empty
-        If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue = "" Then st_WHR = st_WHR & "StatusSortOrder = '" & StatusSortOrderFrom.SelectedValue & "' AND "
-        If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue <> "" Then st_WHR = st_WHR & "StatusSortOrder >= '" & StatusSortOrderFrom.SelectedValue & "' AND StatusSortOrder <= '" & StatusSortOrderTo.SelectedValue & "' AND "
-        If EnqLocationCode.SelectedValue <> "" Then st_WHR = st_WHR & "EnqLocationCode = '" & EnqLocationCode.SelectedValue & "' AND "
-        If EnqUserID.SelectedValue <> "" Then st_WHR = st_WHR & "EnqUserID = '" & EnqUserID.SelectedValue & "' AND "
-        If QuoLocationCode.SelectedValue <> "" Then st_WHR = st_WHR & "QuoLocationCode = '" & QuoLocationCode.SelectedValue & "' AND "
-        If QuoUserID.SelectedValue <> "" Then st_WHR = st_WHR & "QuoUserID = '" & QuoUserID.SelectedValue & "' AND "
-        If QuotedDateFrom.Text <> "" And QuotedDateTo.Text = "" Then st_WHR = st_WHR & "QuoTedDate = '" & QuotedDateFrom.Text & "' AND "
-        If QuotedDateFrom.Text <> "" And QuotedDateTo.Text <> "" Then st_WHR = st_WHR & "QuoTedDate >= '" & QuotedDateFrom.Text & "' AND QuoTedDate <= '" & QuotedDateTo.Text & "' AND "
-        If StatusChangeDateFrom.Text <> "" And StatusChangeDateTo.Text = "" Then st_WHR = st_WHR & "StatusChangeDate = '" & StatusChangeDateFrom.Text & "' AND "
-        If StatusChangeDateFrom.Text <> "" And StatusChangeDateTo.Text <> "" Then st_WHR = st_WHR & "StatusChangeDate >= '" & StatusChangeDateFrom.Text & "' AND StatusChangeDate <= '" & StatusChangeDateTo.Text & "' AND "
-        If PaymentTermCode.Text <> "" Then st_WHR = st_WHR & "PaymentTermCode = '" & PaymentTermCode.Text & "' AND "
+        If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue = "" Then
+            st_WHR = st_WHR & "StatusSortOrder = '" & StatusSortOrderFrom.SelectedValue & "' AND "
+        End If
+        If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue <> "" Then
+            st_WHR = st_WHR & "StatusSortOrder >= '" & StatusSortOrderFrom.SelectedValue & "' AND StatusSortOrder <= '" & StatusSortOrderTo.SelectedValue & "' AND "
+        End If
+        If EnqLocationCode.SelectedValue <> "" Then
+            st_WHR = st_WHR & "EnqLocationCode = '" & EnqLocationCode.SelectedValue & "' AND "
+        End If
+        If EnqUserID.SelectedValue <> "" Then
+            st_WHR = st_WHR & "EnqUserID = '" & EnqUserID.SelectedValue & "' AND "
+        End If
+        If QuoLocationCode.SelectedValue <> "" Then
+            st_WHR = st_WHR & "QuoLocationCode = '" & QuoLocationCode.SelectedValue & "' AND "
+        End If
+        If QuoUserID.SelectedValue <> "" Then
+            st_WHR = st_WHR & "QuoUserID = '" & QuoUserID.SelectedValue & "' AND "
+        End If
+        If QuotedDateFrom.Text <> "" And QuotedDateTo.Text = "" Then
+            st_WHR = st_WHR & "QuoTedDate = '" & QuotedDateFrom.Text & "' AND "
+        End If
+        If QuotedDateFrom.Text <> "" And QuotedDateTo.Text <> "" Then
+            st_WHR = st_WHR & "QuoTedDate >= '" & QuotedDateFrom.Text & "' AND QuoTedDate <= '" & QuotedDateTo.Text & "' AND "
+        End If
+        If StatusChangeDateFrom.Text <> "" And StatusChangeDateTo.Text = "" Then
+            st_WHR = st_WHR & "StatusChangeDate = '" & StatusChangeDateFrom.Text & "' AND "
+        End If
+        If StatusChangeDateFrom.Text <> "" And StatusChangeDateTo.Text <> "" Then
+            st_WHR = st_WHR & "StatusChangeDate >= '" & StatusChangeDateFrom.Text & "' AND StatusChangeDate <= '" & StatusChangeDateTo.Text & "' AND "
+        End If
+        If PaymentTermCode.Text <> "" Then
+            st_WHR = st_WHR & "PaymentTermCode = '" & PaymentTermCode.Text & "' AND "
+        End If
+
         If st_WHR <> String.Empty Then
             st_SQL.Append("WHERE ")
             st_WHR = Left(st_WHR.ToString, st_WHR.Length - 4)
