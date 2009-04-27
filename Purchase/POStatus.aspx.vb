@@ -133,7 +133,7 @@ Partial Public Class POStatus
             st_WHR = st_WHR & "SupplierCode = " & SupplierCode.Text & " AND "
         End If
         If SupplierName.Text <> "" Then
-            st_WHR = st_WHR & "SupplierName LIKE '%" & SupplierName.Text & "%' AND "
+            st_WHR = st_WHR & "SupplierName LIKE '%" & SafeSqlLikeClauseLiteral(SupplierName.Text) & "%' AND "
         End If
         If PODateFrom.Text <> "" And PODateTo.Text = "" Then
             st_WHR = st_WHR & "PODate = '" & PODateFrom.Text & "' AND "
