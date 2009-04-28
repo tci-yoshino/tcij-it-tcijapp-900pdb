@@ -1,4 +1,7 @@
-﻿Imports Purchase.Common
+﻿Option Explicit On
+Option Strict On
+
+Imports Purchase.Common
 
 Partial Public Class POStatus
     Inherits CommonPage
@@ -23,8 +26,8 @@ Partial Public Class POStatus
             StatusSortOrderTo.Items.Clear()
             StatusSortOrderTo.Items.Add(New ListItem("", ""))
             Do Until DBReader.Read = False
-                StatusSortOrderFrom.Items.Add(New ListItem(DBReader("Text"), DBReader("SortOrder")))
-                StatusSortOrderTo.Items.Add(New ListItem(DBReader("Text"), DBReader("SortOrder")))
+                StatusSortOrderFrom.Items.Add(New ListItem(DBReader("Text").ToString, DBReader("SortOrder").ToString))
+                StatusSortOrderTo.Items.Add(New ListItem(DBReader("Text").ToString, DBReader("SortOrder").ToString))
             Loop
             DBReader.Close()
 
@@ -35,7 +38,7 @@ Partial Public Class POStatus
             POLocationCode.Items.Clear()
             POLocationCode.Items.Add(New ListItem("", ""))
             Do Until DBReader.Read = False
-                POLocationCode.Items.Add(New ListItem(DBReader("Name"), DBReader("LocationCode")))
+                POLocationCode.Items.Add(New ListItem(DBReader("Name").ToString, DBReader("LocationCode").ToString))
             Loop
             DBReader.Close()
         End If
@@ -52,7 +55,7 @@ Partial Public Class POStatus
         POUserID.Items.Clear()
         POUserID.Items.Add(New ListItem("", ""))
         Do Until DBReader.Read = False
-            POUserID.Items.Add(New ListItem(DBReader("POUserName"), DBReader("POUserID")))
+            POUserID.Items.Add(New ListItem(DBReader("POUserName").ToString, DBReader("POUserID").ToString))
         Loop
         DBReader.Close()
         DBConn.Close()
@@ -78,9 +81,16 @@ Partial Public Class POStatus
         POList.Visible = False
 
         '[Status設定順序チェック]---------------------------------------------------------------
-        If StatusSortOrderFrom.Text = "" And StatusSortOrderTo.Text <> "" Then Exit Sub
+        If StatusSortOrderFrom.Text = "" And StatusSortOrderTo.Text <> "" Then
+            Msg.Text = ""
+            Exit Sub
+        End If
+
         If StatusSortOrderFrom.Text <> "" And StatusSortOrderTo.Text <> "" Then
-            If StatusSortOrderTo.Text < StatusSortOrderFrom.Text Then Exit Sub
+            If StatusSortOrderTo.Text < StatusSortOrderFrom.Text Then
+                Msg.Text = ""
+                Exit Sub
+            End If
         End If
 
         '[入力データを1Byte形式に変換する]------------------------------------------------------
@@ -90,7 +100,7 @@ Partial Public Class POStatus
         PODateTo.Text = StrConv(PODateTo.Text, VbStrConv.Narrow)
 
         '[SupplierCodeの数字構成チェック]-------------------------------------------------------
-        If SupplierCode.Text <> "" And Not Regex.IsMatch(SupplierCode.Text, "^[0-9]{1,10}$") Then
+        If Not Regex.IsMatch(SupplierCode.Text, DECIMAL_10_REGEX_OPTIONAL) Then
             Msg.Text = "Supplier Code" & ERR_INVALID_NUMBER
             Exit Sub
         End If
@@ -106,9 +116,15 @@ Partial Public Class POStatus
         End If
 
         '[日付設定順序チェック]-----------------------------------------------------------------
-        If PODateFrom.Text = "" And PODateTo.Text <> "" Then Exit Sub
+        If PODateFrom.Text = "" And PODateTo.Text <> "" Then
+            Msg.Text = ""
+            Exit Sub
+        End If
         If PODateFrom.Text <> "" And PODateTo.Text <> "" Then
-            If PODateTo.Text < PODateFrom.Text Then Exit Sub
+            If PODateTo.Text < PODateFrom.Text Then
+                Msg.Text = ""
+                Exit Sub
+            End If
         End If
 
         '[SrcPOの値設定]------------------------------------------------------------------------
@@ -144,8 +160,8 @@ Partial Public Class POStatus
 
         If st_WHR <> String.Empty Then
             st_SQL.Append("WHERE ")
-            st_WHR = Left(st_WHR.ToString, st_WHR.Length - 4)
-            st_SQL.Append("" & st_WHR & "")
+            st_WHR = Left(st_WHR, st_WHR.Length - 4)
+            st_SQL.Append(st_WHR)
         Else
             '検索条件が何も指定されなかった場合の対応
             st_SQL.Append("WHERE 1=0 ")
