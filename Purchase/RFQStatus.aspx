@@ -97,8 +97,8 @@
 
             <div class="list">
                 <asp:ListView ID="RFQHeaderList" runat="server" DataSourceID="SrcRFQHeader">
-                <%--    <AlternatingItemTemplate>
-                        <table class="alternative">
+                    <AlternatingItemTemplate>
+                       <table class="alternative">
                             <tr>
                                 <th class="subhead" colspan="2">RFQ Reference Number : <a href='<%#"./RFQUpdate.aspx?RFQNumber=" & Eval("RFQNumber")%>'><asp:Label ID="RFQNumber" runat="server" Text='<%#Eval("RFQNumber")%>'></asp:Label></a></th>
                                 <th class="subhead" colspan="2">Quoted Date : <asp:Label ID="QuotedDate" runat="server" Text='<%#if(isDBNull(Eval("QuotedDate")), "", Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("QuotedDate"), False, False)) %>'></asp:Label></th>
@@ -135,7 +135,45 @@
                                 <td colspan="5"><asp:Label ID="Comment" runat="server" Text='<%#Replace(Eval("Comment").ToString(), vbCrLf, "<br />")%>'></asp:Label></td>
                             </tr>
                         </table>
-                    </AlternatingItemTemplate>--%>
+                        <asp:ListView ID="RFQLineList" runat="server" DataSourceID="SrcRFQLine">
+                            <LayoutTemplate>
+                                <table ID="itemPlaceholderContainer" runat="server" border="0" style="" class="alternative">
+                                    <tr>
+                                        <th id="Th1"  runat="server" style="width:5%">No.</th>
+                                        <th id="Th2"  runat="server" style="width:10%">Enq-Quantity</th>
+                                        <th id="Th3"  runat="server" style="width:8%">Currency</th>
+                                        <th id="Th4"  runat="server" style="width:8%">Price</th>
+                                        <th id="Th5"  runat="server" style="width:10%">Quo-Quantity</th>
+                                        <th id="Th6"  runat="server" style="width:10%">Lead Time</th>
+                                        <th id="Th7"  runat="server" style="width:10%">Packing</th>
+                                        <th id="Th8"  runat="server" style="width:10%">Purity</th>
+                                        <th id="Th9" runat="server" style="width:10%">Method</th>
+                                        <th id="Th11" runat="server" style="width:14%">Reason for "No Offer"</th>
+                                        <th id="Th10" runat="server" style="width:5%">PO</th>
+                                    </tr>
+                                    <tr ID="itemPlaceholder" runat="server">
+                                    </tr>
+                                </table>
+                            </LayoutTemplate>
+                            <EmptyDataTemplate></EmptyDataTemplate>
+                            <ItemTemplate>
+                            <tr ID="itemPlaceholder" runat="server">
+                                <th><asp:Label ID="Seq" runat="server" Text='<%# Container.DataItemIndex + 1 %>'></asp:Label></th>
+                                <td><asp:Label ID="EnqQuantity" runat="server" Text='<%#Eval("EnqQuantity","{0:G29}") %>'></asp:Label> <asp:Label ID="EnqUnit" runat="server" Text='<%#Eval("EnqUnitCode") %>'></asp:Label> x <asp:Label ID="EnqPiece" runat="server" Text='<%#Eval("EnqPiece") %>'></asp:Label></td>
+                                <td><asp:Label ID="Currency" runat="server" Text='<%#Eval("CurrencyCode") %>'></asp:Label></td>
+                                <td class="number"><asp:Label ID="UnitPrice" runat="server" Text='<%#Eval("UnitPrice","{0:G29}")%>'></asp:Label></td>
+                                <td class="number"><asp:Label ID="QuoPer" runat="server" Text='<%#Eval("QuoPer","{0:G29}") %>'></asp:Label> <asp:Label ID="QuoUnit" runat="server" Text='<%#Eval("QuoUnitCode") %>'></asp:Label></td>
+                                <td><asp:Label ID="LeadTime" runat="server" Text='<%#Eval("LeadTime") %>'></asp:Label></td>
+                                <td><asp:Label ID="Packing" runat="server" Text='<%#Eval("Packing") %>'></asp:Label></td>
+                                <td><asp:Label ID="Purity" runat="server" Text='<%#Eval("Purity") %>'></asp:Label></td>
+                                <td><asp:Label ID="QMMethod" runat="server" Text='<%#Eval("QMMethod") %>'></asp:Label></td>
+                                <td><asp:Label ID="NoOfferReason" runat="server" Text='<%#Eval("NoOfferReason") %>'></asp:Label></td>
+                                <td><asp:HyperLink ID="PO" runat="server" NavigateUrl='<%#If(IsDBNull(Eval("PO")), "", "./POListByRFQ.aspx?RFQLineNumber=" & Eval("RFQLineNumber"))%>'><%#If(IsDBNull(Eval("PO")), "", "PO")%></asp:HyperLink></td>
+                            </tr>
+                            </ItemTemplate>
+                        </asp:ListView>
+                        <asp:SqlDataSource ID="SrcRFQLine" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+                    </AlternatingItemTemplate>
                     
                     <LayoutTemplate>
                         <div class="pagingHead" >

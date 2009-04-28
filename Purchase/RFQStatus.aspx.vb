@@ -1,4 +1,7 @@
-﻿Imports Purchase.Common
+﻿Option Explicit On
+Option Strict On
+
+Imports Purchase.Common
 
 Partial Public Class RFQStatus
     Inherits CommonPage
@@ -23,8 +26,8 @@ Partial Public Class RFQStatus
             StatusSortOrderTo.Items.Clear()
             StatusSortOrderTo.Items.Add(New ListItem("", ""))
             Do Until DBReader.Read = False
-                StatusSortOrderFrom.Items.Add(New ListItem(DBReader("Text"), DBReader("SortOrder")))
-                StatusSortOrderTo.Items.Add(New ListItem(DBReader("Text"), DBReader("SortOrder")))
+                StatusSortOrderFrom.Items.Add(New ListItem(DBReader("Text").ToString, DBReader("SortOrder").ToString))
+                StatusSortOrderTo.Items.Add(New ListItem(DBReader("Text").ToString, DBReader("SortOrder").ToString))
             Loop
             DBReader.Close()
 
@@ -37,8 +40,8 @@ Partial Public Class RFQStatus
             QuoLocationCode.Items.Clear()
             QuoLocationCode.Items.Add(New ListItem("", ""))
             Do Until DBReader.Read = False
-                EnqLocationCode.Items.Add(New ListItem(DBReader("Name"), DBReader("LocationCode")))
-                QuoLocationCode.Items.Add(New ListItem(DBReader("Name"), DBReader("LocationCode")))
+                EnqLocationCode.Items.Add(New ListItem(DBReader("Name").ToString, DBReader("LocationCode").ToString))
+                QuoLocationCode.Items.Add(New ListItem(DBReader("Name").ToString, DBReader("LocationCode").ToString))
             Loop
             DBReader.Close()
 
@@ -49,7 +52,7 @@ Partial Public Class RFQStatus
             PaymentTermCode.Items.Clear()
             PaymentTermCode.Items.Add(New ListItem("", ""))
             Do Until DBReader.Read = False
-                PaymentTermCode.Items.Add(New ListItem(DBReader("Text"), DBReader("PaymentTermCode")))
+                PaymentTermCode.Items.Add(New ListItem(DBReader("Text").ToString, DBReader("PaymentTermCode").ToString))
             Loop
             DBReader.Close()
             DBConn.Close()
@@ -88,7 +91,7 @@ Partial Public Class RFQStatus
         EnqUserID.Items.Clear()
         EnqUserID.Items.Add(New ListItem("", ""))
         Do Until DBReader.Read = False
-            EnqUserID.Items.Add(New ListItem(DBReader("EnqUserName"), DBReader("EnqUserID")))
+            EnqUserID.Items.Add(New ListItem(DBReader("EnqUserName").ToString, DBReader("EnqUserID").ToString))
         Loop
         DBReader.Close()
         DBConn.Close()
@@ -105,7 +108,7 @@ Partial Public Class RFQStatus
         QuoUserID.Items.Clear()
         QuoUserID.Items.Add(New ListItem("", ""))
         Do Until DBReader.Read = False
-            QuoUserID.Items.Add(New ListItem(DBReader("QuoUserName"), DBReader("QuoUserID")))
+            QuoUserID.Items.Add(New ListItem(DBReader("QuoUserName").ToString, DBReader("QuoUserID").ToString))
         Loop
         DBReader.Close()
         DBConn.Close()
@@ -131,9 +134,15 @@ Partial Public Class RFQStatus
         RFQHeaderList.Visible = False
 
         '[Status設定順序チェック]---------------------------------------------------------------
-        If StatusSortOrderFrom.Text = "" And StatusSortOrderTo.Text <> "" Then Exit Sub
+        If StatusSortOrderFrom.Text = "" And StatusSortOrderTo.Text <> "" Then
+            Msg.Text = ""
+            Exit Sub
+        End If
         If StatusSortOrderFrom.Text <> "" And StatusSortOrderTo.Text <> "" Then
-            If StatusSortOrderTo.Text < StatusSortOrderFrom.Text Then Exit Sub
+            If StatusSortOrderTo.Text < StatusSortOrderFrom.Text Then
+                Msg.Text = ""
+                Exit Sub
+            End If
         End If
 
         '[Dateを1Byte形式に変換する]------------------------------------------------------------
@@ -161,13 +170,25 @@ Partial Public Class RFQStatus
         End If
 
         '[日付設定順序チェック]-----------------------------------------------------------------
-        If QuotedDateFrom.Text = "" And QuotedDateTo.Text <> "" Then Exit Sub
-        If QuotedDateFrom.Text <> "" And QuotedDateTo.Text <> "" Then
-            If QuotedDateTo.Text < QuotedDateFrom.Text Then Exit Sub
+        If QuotedDateFrom.Text = "" And QuotedDateTo.Text <> "" Then
+            Msg.Text = ""
+            Exit Sub
         End If
-        If StatusChangeDateFrom.Text = "" And StatusChangeDateTo.Text <> "" Then Exit Sub
+        If QuotedDateFrom.Text <> "" And QuotedDateTo.Text <> "" Then
+            If QuotedDateTo.Text < QuotedDateFrom.Text Then
+                Msg.Text = ""
+                Exit Sub
+            End If
+        End If
+        If StatusChangeDateFrom.Text = "" And StatusChangeDateTo.Text <> "" Then
+            Msg.Text = ""
+            Exit Sub
+        End If
         If StatusChangeDateFrom.Text <> "" And StatusChangeDateTo.Text <> "" Then
-            If StatusChangeDateTo.Text < StatusChangeDateFrom.Text Then Exit Sub
+            If StatusChangeDateTo.Text < StatusChangeDateFrom.Text Then
+                Msg.Text = ""
+                Exit Sub
+            End If
         End If
 
         '[SrcRFQHeaderの値設定]-----------------------------------------------------------------
@@ -212,8 +233,8 @@ Partial Public Class RFQStatus
 
         If st_WHR <> String.Empty Then
             st_SQL.Append("WHERE ")
-            st_WHR = Left(st_WHR.ToString, st_WHR.Length - 4)
-            st_SQL.Append("" & st_WHR & "")
+            st_WHR = Left(st_WHR, st_WHR.Length - 4)
+            st_SQL.Append(st_WHR)
         Else
             '検索条件が何も指定されなかった場合の対応
             st_SQL.Append("WHERE 1=0 ")
