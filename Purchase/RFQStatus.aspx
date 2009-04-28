@@ -83,7 +83,7 @@
                     <tr>
                         <th>Payment Term Code : </th>
                         <td>
-                            <asp:DropDownList ID="PaymentTermCode" runat="server" AutoPostBack="True">
+                            <asp:DropDownList ID="PaymentTermCode" runat="server">
                                 <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                         </td>
