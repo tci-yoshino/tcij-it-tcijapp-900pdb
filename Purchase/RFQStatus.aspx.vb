@@ -199,7 +199,7 @@ Partial Public Class RFQStatus
 
         Dim s_QuotedDateFromStart As String = String.Empty
         Dim s_QuotedDateFromEnd As String = String.Empty
-        Dim s_QuotedDateToStart As String = String.Empty
+        Dim s_QuotedDateToStart As String = String.Empty    '値は求めているが利用はしていない
         Dim s_QuotedDateToEnd As String = String.Empty
         If QuotedDateFrom.Text <> "" Then
             '[QuotedDateFromから日差補正後のs_QuotedDateFromStartを求める]----------------------
