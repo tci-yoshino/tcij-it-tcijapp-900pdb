@@ -95,7 +95,7 @@ Partial Public Class POStatus
 
         '[入力データを1Byte形式に変換する]------------------------------------------------------
         SupplierCode.Text = Trim(StrConv(SupplierCode.Text, VbStrConv.Narrow))
-        SupplierName.Text = Trim(StrConv(SupplierName.Text, VbStrConv.Narrow))
+        SupplierName.Text = Trim(SupplierName.Text)
         PODateFrom.Text = StrConv(PODateFrom.Text, VbStrConv.Narrow)
         PODateTo.Text = StrConv(PODateTo.Text, VbStrConv.Narrow)
 
