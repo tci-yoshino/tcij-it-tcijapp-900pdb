@@ -115,6 +115,12 @@ Partial Public Class POStatus
             Exit Sub
         End If
 
+        '[最小日付チェック(1900-01-01以下エラー)]-----------------------------------------------
+        If PODateFrom.Text <> "" And PODateFrom.Text < "1900-01-01" Then
+            Msg.Text = "PO Date (From) " & ERR_INVALID_DATE
+            Exit Sub
+        End If
+
         '[日付設定順序チェック]-----------------------------------------------------------------
         If PODateFrom.Text = "" And PODateTo.Text <> "" Then
             Msg.Text = ""
@@ -236,7 +242,7 @@ Partial Public Class POStatus
 
     Protected Sub SrcPO_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcPO.Selecting
         '[本ページのタイムアウトを無限にする]---------------------------------------------------
-        e.Command.CommandTimeout = 0
+        'e.Command.CommandTimeout = 0
     End Sub
 
     Protected Sub POList_PagePropertiesChanged(ByVal sender As Object, ByVal e As EventArgs) Handles POList.PagePropertiesChanged
