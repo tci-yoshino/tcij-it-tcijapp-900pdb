@@ -135,7 +135,7 @@ Partial Public Class POStatus
 
         Dim s_PODateFromStart As String = String.Empty
         Dim s_PODateFromEnd As String = String.Empty
-        Dim s_PODateToStart As String = String.Empty
+        Dim s_PODateToStart As String = String.Empty   '値は求めているが利用はしていない
         Dim s_PODateToEnd As String = String.Empty
         If PODateFrom.Text <> "" Then
             '[PODateFromから日差補正後のs_PODateFromStartを求める]------------------------------
