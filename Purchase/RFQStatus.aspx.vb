@@ -237,7 +237,7 @@ Partial Public Class RFQStatus
 
         '[SrcRFQHeaderの値設定]-----------------------------------------------------------------
         Dim st_SQL As New Text.StringBuilder
-        st_SQL.Append("" & getBaseRFQHeaderSQL() & "")
+        st_SQL.Append(getBaseRFQHeaderSQL())
 
         'WHERE句の作成
         Dim st_WHR As String = String.Empty
