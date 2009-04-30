@@ -154,7 +154,7 @@ Partial Public Class POStatus
 
         '[SrcPOの値設定]------------------------------------------------------------------------
         Dim st_SQL As New Text.StringBuilder
-        st_SQL.Append("" & getBasePOSQL() & "")
+        st_SQL.Append(getBasePOSQL())
 
         'WHERE句の作成
         Dim st_WHR As String = String.Empty
