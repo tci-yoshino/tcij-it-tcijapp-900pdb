@@ -222,14 +222,14 @@ Partial Public Class RFQStatus
         Dim s_StatusChangeDateToEnd As String = String.Empty
         If StatusChangeDateFrom.Text <> "" Then
             '[StatusChangeDateFromから日差補正後のs_StatusChangeDateFromStartを求める]----------
-            Dim dt_StatusChangeDateFrom As DateTime = CType(GetDatabaseTime(s_LocationCode, StatusChangeDateFrom.Text), Date).AddHours(DATE_ADJUST_HOUR)
+            Dim dt_StatusChangeDateFrom As DateTime = CType(GetDatabaseTime(s_LocationCode, StatusChangeDateFrom.Text), Date)
             s_StatusChangeDateFromStart = dt_StatusChangeDateFrom.ToString("yyyy-MM-dd HH:mm:ss")
             '[更に1日後のs_StatusChangeDateFromEndを求める]-------------------------------------
             s_StatusChangeDateFromEnd = dt_StatusChangeDateFrom.AddDays(1).ToString("yyyy-MM-dd HH:mm:ss")
         End If
         If StatusChangeDateTo.Text <> "" Then
             '[StatusChangeDateToから日差補正後のs_StatusChangeDateToStartを求める]--------------
-            Dim dt_StatusChangeDateTo As DateTime = CType(GetDatabaseTime(s_LocationCode, StatusChangeDateTo.Text), Date).AddHours(DATE_ADJUST_HOUR)
+            Dim dt_StatusChangeDateTo As DateTime = CType(GetDatabaseTime(s_LocationCode, StatusChangeDateTo.Text), Date)
             s_StatusChangeDateToStart = dt_StatusChangeDateTo.ToString("yyyy-MM-dd HH:mm:ss")
             '[更に1日後のs_StatusChangeDateToEndを求める]---------------------------------------
             s_StatusChangeDateToEnd = dt_StatusChangeDateTo.AddDays(1).ToString("yyyy-MM-dd HH:mm:ss")
