@@ -191,6 +191,50 @@ Partial Public Class RFQStatus
             End If
         End If
 
+        Const SESSION_KEY_LOCATION As String = "LocationCode"
+        Dim s_LocationCode As String = Session(SESSION_KEY_LOCATION).ToString()
+
+        '日差補正関数（TCI国際化対応12時間）
+        Const DATE_ADJUST_HOUR As Integer = -12
+
+        Dim s_QuotedDateFromStart As String = String.Empty
+        Dim s_QuotedDateFromEnd As String = String.Empty
+        Dim s_QuotedDateToStart As String = String.Empty
+        Dim s_QuotedDateToEnd As String = String.Empty
+        If QuotedDateFrom.Text <> "" Then
+            '[QuotedDateFromから日差補正後のs_QuotedDateFromStartを求める]----------------------
+            Dim dt_QuotedDateFrom As DateTime = CType(GetDatabaseTime(s_LocationCode, QuotedDateFrom.Text), Date).AddHours(DATE_ADJUST_HOUR)
+            s_QuotedDateFromStart = dt_QuotedDateFrom.ToString("yyyy-MM-dd HH:mm:ss")
+            '[更に1日後のs_QuotedDateFromEndを求める]-------------------------------------------
+            s_QuotedDateFromEnd = dt_QuotedDateFrom.AddDays(1).ToString("yyyy-MM-dd HH:mm:ss")
+        End If
+        If QuotedDateTo.Text <> "" Then
+            '[QuotedDateToから日差補正後のs_QuotedDateToStartを求める]--------------------------
+            Dim dt_QuotedDateTo As DateTime = CType(GetDatabaseTime(s_LocationCode, QuotedDateTo.Text), Date).AddHours(DATE_ADJUST_HOUR)
+            s_QuotedDateToStart = dt_QuotedDateTo.ToString("yyyy-MM-dd HH:mm:ss")
+            '[更に1日後のs_QuotedDateToEndを求める]---------------------------------------------
+            s_QuotedDateToEnd = dt_QuotedDateTo.AddDays(1).ToString("yyyy-MM-dd HH:mm:ss")
+        End If
+
+        Dim s_StatusChangeDateFromStart As String = String.Empty
+        Dim s_StatusChangeDateFromEnd As String = String.Empty
+        Dim s_StatusChangeDateToStart As String = String.Empty
+        Dim s_StatusChangeDateToEnd As String = String.Empty
+        If StatusChangeDateFrom.Text <> "" Then
+            '[StatusChangeDateFromから日差補正後のs_StatusChangeDateFromStartを求める]----------
+            Dim dt_StatusChangeDateFrom As DateTime = CType(GetDatabaseTime(s_LocationCode, StatusChangeDateFrom.Text), Date).AddHours(DATE_ADJUST_HOUR)
+            s_StatusChangeDateFromStart = dt_StatusChangeDateFrom.ToString("yyyy-MM-dd HH:mm:ss")
+            '[更に1日後のs_StatusChangeDateFromEndを求める]-------------------------------------
+            s_StatusChangeDateFromEnd = dt_StatusChangeDateFrom.AddDays(1).ToString("yyyy-MM-dd HH:mm:ss")
+        End If
+        If StatusChangeDateTo.Text <> "" Then
+            '[StatusChangeDateToから日差補正後のs_StatusChangeDateToStartを求める]--------------
+            Dim dt_StatusChangeDateTo As DateTime = CType(GetDatabaseTime(s_LocationCode, StatusChangeDateTo.Text), Date).AddHours(DATE_ADJUST_HOUR)
+            s_StatusChangeDateToStart = dt_StatusChangeDateTo.ToString("yyyy-MM-dd HH:mm:ss")
+            '[更に1日後のs_StatusChangeDateToEndを求める]---------------------------------------
+            s_StatusChangeDateToEnd = dt_StatusChangeDateTo.AddDays(1).ToString("yyyy-MM-dd HH:mm:ss")
+        End If
+
         '[SrcRFQHeaderの値設定]-----------------------------------------------------------------
         Dim st_SQL As New Text.StringBuilder
         st_SQL.Append("" & getBaseRFQHeaderSQL() & "")
@@ -198,34 +242,34 @@ Partial Public Class RFQStatus
         'WHERE句の作成
         Dim st_WHR As String = String.Empty
         If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue = "" Then
-            st_WHR = st_WHR & "StatusSortOrder = '" & StatusSortOrderFrom.SelectedValue & "' AND "
+            st_WHR &= "StatusSortOrder = '" & StatusSortOrderFrom.SelectedValue & "' AND "
         End If
         If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue <> "" Then
-            st_WHR = st_WHR & "StatusSortOrder >= '" & StatusSortOrderFrom.SelectedValue & "' AND StatusSortOrder <= '" & StatusSortOrderTo.SelectedValue & "' AND "
+            st_WHR &= "StatusSortOrder >= '" & StatusSortOrderFrom.SelectedValue & "' AND StatusSortOrder <= '" & StatusSortOrderTo.SelectedValue & "' AND "
         End If
         If EnqLocationCode.SelectedValue <> "" Then
-            st_WHR = st_WHR & "EnqLocationCode = '" & EnqLocationCode.SelectedValue & "' AND "
+            st_WHR &= "EnqLocationCode = '" & EnqLocationCode.SelectedValue & "' AND "
         End If
         If EnqUserID.SelectedValue <> "" Then
-            st_WHR = st_WHR & "EnqUserID = '" & EnqUserID.SelectedValue & "' AND "
+            st_WHR &= "EnqUserID = '" & EnqUserID.SelectedValue & "' AND "
         End If
         If QuoLocationCode.SelectedValue <> "" Then
-            st_WHR = st_WHR & "QuoLocationCode = '" & QuoLocationCode.SelectedValue & "' AND "
+            st_WHR &= "QuoLocationCode = '" & QuoLocationCode.SelectedValue & "' AND "
         End If
         If QuoUserID.SelectedValue <> "" Then
-            st_WHR = st_WHR & "QuoUserID = '" & QuoUserID.SelectedValue & "' AND "
+            st_WHR &= "QuoUserID = '" & QuoUserID.SelectedValue & "' AND "
         End If
         If QuotedDateFrom.Text <> "" And QuotedDateTo.Text = "" Then
-            st_WHR = st_WHR & "QuoTedDate = '" & QuotedDateFrom.Text & "' AND "
+            st_WHR &= "QuoTedDate >= '" & s_QuotedDateFromStart & "' AND QuoTedDate < '" & s_QuotedDateFromEnd & "' AND "
         End If
         If QuotedDateFrom.Text <> "" And QuotedDateTo.Text <> "" Then
-            st_WHR = st_WHR & "QuoTedDate >= '" & QuotedDateFrom.Text & "' AND QuoTedDate <= '" & QuotedDateTo.Text & "' AND "
-        End If
+            st_WHR &= "QuoTedDate >= '" & s_QuotedDateFromStart & "' AND QuoTedDate < '" & s_QuotedDateToEnd & "' AND " 
+         End If
         If StatusChangeDateFrom.Text <> "" And StatusChangeDateTo.Text = "" Then
-            st_WHR = st_WHR & "StatusChangeDate = '" & StatusChangeDateFrom.Text & "' AND "
+            st_WHR &= "StatusChangeDate >= '" & s_StatusChangeDateFromStart & "' AND StatusChangeDate < '" & s_StatusChangeDateFromEnd & "' AND "
         End If
         If StatusChangeDateFrom.Text <> "" And StatusChangeDateTo.Text <> "" Then
-            st_WHR = st_WHR & "StatusChangeDate >= '" & StatusChangeDateFrom.Text & "' AND StatusChangeDate <= '" & StatusChangeDateTo.Text & "' AND "
+            st_WHR &= "StatusChangeDate >= '" & s_StatusChangeDateFromStart & "' AND StatusChangeDate <= '" & s_StatusChangeDateToEnd & "' AND "
         End If
         If PaymentTermCode.Text <> "" Then
             st_WHR = st_WHR & "PaymentTermCode = '" & PaymentTermCode.Text & "' AND "
@@ -297,6 +341,6 @@ Partial Public Class RFQStatus
 
     Protected Sub SrcRFQHeader_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcRFQHeader.Selecting
         '[本ページのタイムアウトを無限にする]---------------------------------------------------
-        'e.Command.CommandTimeout = 0
+        e.Command.CommandTimeout = 0
     End Sub
 End Class
