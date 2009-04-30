@@ -169,6 +169,16 @@ Partial Public Class RFQStatus
             Exit Sub
         End If
 
+        '[最小日付チェック(1900-01-01以下エラー)]-----------------------------------------------
+        If QuotedDateFrom.Text <> "" And QuotedDateFrom.Text < "1900-01-01" Then
+            Msg.Text = "Quoted Date (From) " & ERR_INVALID_DATE
+            Exit Sub
+        End If
+        If StatusChangeDateFrom.Text <> "" And StatusChangeDateFrom.Text < "1900-01-01" Then
+            Msg.Text = "Status Change Date (From) " & ERR_INVALID_DATE
+            Exit Sub
+        End If
+
         '[日付設定順序チェック]-----------------------------------------------------------------
         If QuotedDateFrom.Text = "" And QuotedDateTo.Text <> "" Then
             Msg.Text = ""
@@ -263,8 +273,8 @@ Partial Public Class RFQStatus
             st_WHR &= "QuoTedDate >= '" & s_QuotedDateFromStart & "' AND QuoTedDate < '" & s_QuotedDateFromEnd & "' AND "
         End If
         If QuotedDateFrom.Text <> "" And QuotedDateTo.Text <> "" Then
-            st_WHR &= "QuoTedDate >= '" & s_QuotedDateFromStart & "' AND QuoTedDate < '" & s_QuotedDateToEnd & "' AND " 
-         End If
+            st_WHR &= "QuoTedDate >= '" & s_QuotedDateFromStart & "' AND QuoTedDate < '" & s_QuotedDateToEnd & "' AND "
+        End If
         If StatusChangeDateFrom.Text <> "" And StatusChangeDateTo.Text = "" Then
             st_WHR &= "StatusChangeDate >= '" & s_StatusChangeDateFromStart & "' AND StatusChangeDate < '" & s_StatusChangeDateFromEnd & "' AND "
         End If
@@ -341,6 +351,6 @@ Partial Public Class RFQStatus
 
     Protected Sub SrcRFQHeader_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcRFQHeader.Selecting
         '[本ページのタイムアウトを無限にする]---------------------------------------------------
-        e.Command.CommandTimeout = 0
+        'e.Command.CommandTimeout = 0
     End Sub
 End Class
