@@ -127,6 +127,31 @@ Partial Public Class POStatus
             End If
         End If
 
+        Const SESSION_KEY_LOCATION As String = "LocationCode"
+        Dim s_LocationCode As String = Session(SESSION_KEY_LOCATION).ToString()
+
+        '日差補正関数（TCI国際化対応12時間）
+        Const DATE_ADJUST_HOUR As Integer = -12
+
+        Dim s_PODateFromStart As String = String.Empty
+        Dim s_PODateFromEnd As String = String.Empty
+        Dim s_PODateToStart As String = String.Empty
+        Dim s_PODateToEnd As String = String.Empty
+        If PODateFrom.Text <> "" Then
+            '[PODateFromから日差補正後のs_PODateFromStartを求める]------------------------------
+            Dim dt_PODateFrom As DateTime = CType(GetDatabaseTime(s_LocationCode, PODateFrom.Text), Date).AddHours(DATE_ADJUST_HOUR)
+            s_PODateFromStart = dt_PODateFrom.ToString("yyyy-MM-dd HH:mm:ss")
+            '[更に1日後のs_PODateFromEndを求める]-----------------------------------------------
+            s_PODateFromEnd = dt_PODateFrom.AddDays(1).ToString("yyyy-MM-dd HH:mm:ss")
+        End If
+        If PODateTo.Text <> "" Then
+            '[PODateToから日差補正後のs_PODateToStartを求める]----------------------------------
+            Dim dt_PODateTo As DateTime = CType(GetDatabaseTime(s_LocationCode, PODateTo.Text), Date).AddHours(DATE_ADJUST_HOUR)
+            s_PODateToStart = dt_PODateTo.ToString("yyyy-MM-dd HH:mm:ss")
+            '[更に1日後のs_PODateToEndを求める]-------------------------------------------------
+            s_PODateToEnd = dt_PODateTo.AddDays(1).ToString("yyyy-MM-dd HH:mm:ss")
+        End If
+
         '[SrcPOの値設定]------------------------------------------------------------------------
         Dim st_SQL As New Text.StringBuilder
         st_SQL.Append("" & getBasePOSQL() & "")
@@ -134,28 +159,28 @@ Partial Public Class POStatus
         'WHERE句の作成
         Dim st_WHR As String = String.Empty
         If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue = "" Then
-            st_WHR = st_WHR & "StatusSortOrder = '" & StatusSortOrderFrom.SelectedValue & "' AND "
+            st_WHR &= "StatusSortOrder = '" & StatusSortOrderFrom.SelectedValue & "' AND "
         End If
         If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue <> "" Then
-            st_WHR = st_WHR & "StatusSortOrder >= '" & StatusSortOrderFrom.SelectedValue & "' AND StatusSortOrder <= '" & StatusSortOrderTo.SelectedValue & "' AND "
+            st_WHR &= "StatusSortOrder >= '" & StatusSortOrderFrom.SelectedValue & "' AND StatusSortOrder <= '" & StatusSortOrderTo.SelectedValue & "' AND "
         End If
         If POLocationCode.SelectedValue <> "" Then
-            st_WHR = st_WHR & "POLocationCode = '" & POLocationCode.SelectedValue & "' AND "
+            st_WHR &= "POLocationCode = '" & POLocationCode.SelectedValue & "' AND "
         End If
         If POUserID.SelectedValue <> "" Then
-            st_WHR = st_WHR & "POUserID = '" & POUserID.SelectedValue & "' AND "
+            st_WHR &= "POUserID = '" & POUserID.SelectedValue & "' AND "
         End If
         If SupplierCode.Text <> "" Then
-            st_WHR = st_WHR & "SupplierCode = " & SupplierCode.Text & " AND "
+            st_WHR &= "SupplierCode = " & SupplierCode.Text & " AND "
         End If
         If SupplierName.Text <> "" Then
-            st_WHR = st_WHR & "SupplierName LIKE '%" & SafeSqlLikeClauseLiteral(SupplierName.Text) & "%' AND "
+            st_WHR &= "SupplierName LIKE '%" & SafeSqlLikeClauseLiteral(SupplierName.Text) & "%' AND "
         End If
         If PODateFrom.Text <> "" And PODateTo.Text = "" Then
-            st_WHR = st_WHR & "PODate = '" & PODateFrom.Text & "' AND "
+            st_WHR &= "PODate >= '" & s_PODateFromStart & "' AND PODate < '" & s_PODateFromEnd & "' AND "
         End If
         If PODateFrom.Text <> "" And PODateTo.Text <> "" Then
-            st_WHR = st_WHR & "PODate >= '" & PODateFrom.Text & "' AND PODate <= '" & PODateTo.Text & "' AND "
+            st_WHR &= "PODate >= '" & s_PODateFromStart & "' AND PODate < '" & s_PODateToEnd & "' AND "
         End If
 
         If st_WHR <> String.Empty Then
@@ -211,7 +236,7 @@ Partial Public Class POStatus
 
     Protected Sub SrcPO_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcPO.Selecting
         '[本ページのタイムアウトを無限にする]---------------------------------------------------
-        'e.Command.CommandTimeout = 0
+        e.Command.CommandTimeout = 0
     End Sub
 
     Protected Sub POList_PagePropertiesChanged(ByVal sender As Object, ByVal e As EventArgs) Handles POList.PagePropertiesChanged
