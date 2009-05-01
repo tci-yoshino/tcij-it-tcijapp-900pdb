@@ -106,7 +106,7 @@
                             </tr>
                             <tr>
                                 <th>Product Number / Name</th>
-                                <td colspan="3"><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label><span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Eval("ProductName")%>'></asp:Label></span></td>
+                                <td colspan="3"><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label><span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("ProductName").ToString())%>'></asp:Label></span></td>
                                 <th>CAS Number</th>
                                 <td><asp:Label ID="CASNumber" runat="server" Text='<%#Eval("CASNumber")%>'></asp:Label></td>
                             </tr>
@@ -245,7 +245,7 @@
                             </tr>
                             <tr>
                                 <th>Product Number / Name</th>
-                                <td colspan="3"><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label><span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Eval("ProductName")%>'></asp:Label></span></td>
+                                <td colspan="3"><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label><span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("ProductName").ToString())%>'></asp:Label></span></td>
                                 <th>CAS Number</th>
                                 <td><asp:Label ID="CASNumber" runat="server" Text='<%#Eval("CASNumber")%>'></asp:Label></td>
                             </tr>
