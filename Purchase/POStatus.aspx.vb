@@ -86,7 +86,7 @@ Partial Public Class POStatus
 
         '[Status設定チェック]-------------------------------------------------------------------
         If StatusSortOrderFrom.Text = String.Empty And StatusSortOrderTo.Text <> String.Empty Then
-            Msg.Text = "[From]" & ERR_REQUIRED_FIELD
+            Msg.Text = "Current Status (From)" & ERR_REQUIRED_FIELD
             Exit Sub
         End If
 
@@ -104,23 +104,27 @@ Partial Public Class POStatus
 
         '[日付妥当性チェック]-------------------------------------------------------------------
         If PODateFrom.Text <> String.Empty And Not (IsDate(PODateFrom.Text) And Regex.IsMatch(PODateFrom.Text, DATE_REGEX_OPTIONAL)) Then
-            Msg.Text = "PO Date (From) " & ERR_INVALID_DATE
+            Msg.Text = "PO Date (From)" & ERR_INVALID_DATE
             Exit Sub
         End If
         If PODateTo.Text <> String.Empty And Not (IsDate(PODateTo.Text) And Regex.IsMatch(PODateTo.Text, DATE_REGEX_OPTIONAL)) Then
-            Msg.Text = "PO Date (To) " & ERR_INVALID_DATE
+            Msg.Text = "PO Date (To)" & ERR_INVALID_DATE
             Exit Sub
         End If
 
         '[最小日付チェック(1900-01-01以下エラー)]-----------------------------------------------
         If PODateFrom.Text <> String.Empty And PODateFrom.Text < MinDate Then
-            Msg.Text = "PO Date (From) " & ERR_INVALID_DATE
+            Msg.Text = "PO Date (From)" & ERR_INVALID_DATE
+            Exit Sub
+        End If
+        If PODateTo.Text <> String.Empty And PODateTo.Text < MinDate Then
+            Msg.Text = "PO Date (To)" & ERR_INVALID_DATE
             Exit Sub
         End If
 
         '[日付設定順序チェック]-----------------------------------------------------------------
         If PODateFrom.Text = String.Empty And PODateTo.Text <> String.Empty Then
-            Msg.Text = "[From]" & ERR_REQUIRED_FIELD
+            Msg.Text = "PO Date (From)" & ERR_REQUIRED_FIELD
             Exit Sub
         End If
 
