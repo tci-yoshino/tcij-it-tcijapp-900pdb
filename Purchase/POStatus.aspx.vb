@@ -10,6 +10,10 @@ Partial Public Class POStatus
     Dim DBCommand As System.Data.SqlClient.SqlCommand
     Dim DBReader As System.Data.SqlClient.SqlDataReader
 
+    Const MinDate As String = "1900-01-01"     '検索最小日付
+    Const SESSION_KEY_LOCATION As String = "LocationCode"
+    Const DATE_ADJUST_HOUR As Integer = -12    '日差補正関数（TCI国際化対応12時間）
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If IsPostBack = False Then
             '[ERR_NO_MATCH_FOUND表示防止]-------------------------------------------------------
@@ -22,9 +26,9 @@ Partial Public Class POStatus
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             StatusSortOrderFrom.Items.Clear()
-            StatusSortOrderFrom.Items.Add(New ListItem("", ""))
+            StatusSortOrderFrom.Items.Add(New ListItem(String.Empty, String.Empty))
             StatusSortOrderTo.Items.Clear()
-            StatusSortOrderTo.Items.Add(New ListItem("", ""))
+            StatusSortOrderTo.Items.Add(New ListItem(String.Empty, String.Empty))
             Do Until DBReader.Read = False
                 StatusSortOrderFrom.Items.Add(New ListItem(DBReader("Text").ToString, DBReader("SortOrder").ToString))
                 StatusSortOrderTo.Items.Add(New ListItem(DBReader("Text").ToString, DBReader("SortOrder").ToString))
@@ -36,7 +40,7 @@ Partial Public Class POStatus
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             POLocationCode.Items.Clear()
-            POLocationCode.Items.Add(New ListItem("", ""))
+            POLocationCode.Items.Add(New ListItem(String.Empty, String.Empty))
             Do Until DBReader.Read = False
                 POLocationCode.Items.Add(New ListItem(DBReader("Name").ToString, DBReader("LocationCode").ToString))
             Loop
@@ -48,12 +52,12 @@ Partial Public Class POStatus
         '[POUserIDの値設定]--------------------------------------------------------------------
         Msg.Text = String.Empty
         DBCommand = DBConn.CreateCommand()
-        DBCommand.CommandText = "SELECT v_User.Name AS POUserName, PO.POUserID FROM PO INNER JOIN v_User ON PO.POUserID = v_User.UserID WHERE PO.POLocationCode = '" & POLocationCode.SelectedValue & "' GROUP BY PO.POUserID, v_User.Name ORDER BY POUserName"
+        DBCommand.CommandText = "SELECT v_UserAll.Name AS POUserName, PO.POUserID FROM PO INNER JOIN v_UserAll ON PO.POUserID = v_UserAll.UserID WHERE PO.POLocationCode = '" & POLocationCode.SelectedValue & "' GROUP BY PO.POUserID, v_UserAll.Name ORDER BY POUserName"
         DBConn.Open()
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
         POUserID.Items.Clear()
-        POUserID.Items.Add(New ListItem("", ""))
+        POUserID.Items.Add(New ListItem(String.Empty, String.Empty))
         Do Until DBReader.Read = False
             POUserID.Items.Add(New ListItem(DBReader("POUserName").ToString, DBReader("POUserID").ToString))
         Loop
@@ -69,7 +73,7 @@ Partial Public Class POStatus
         End If
 
         '[POPagerCountTop,POPagerCountBottomのカウントを1にする為実行]--------------------------
-        SrcPO.SelectCommand = getBasePOSQL() + "WHERE 1=0"
+        SrcPO.SelectCommand = getBasePOSQL() & "WHERE 1=0"
         POList.DataBind()
 
         SearchPO()
@@ -77,20 +81,13 @@ Partial Public Class POStatus
 
     Private Sub SearchPO()
         Msg.Text = String.Empty
-        SrcPO.SelectCommand = ""
+        SrcPO.SelectCommand = String.Empty
         POList.Visible = False
 
-        '[Status設定順序チェック]---------------------------------------------------------------
-        If StatusSortOrderFrom.Text = "" And StatusSortOrderTo.Text <> "" Then
-            Msg.Text = ""
+        '[Status設定チェック]-------------------------------------------------------------------
+        If StatusSortOrderFrom.Text = String.Empty And StatusSortOrderTo.Text <> String.Empty Then
+            Msg.Text = "[From]" & ERR_REQUIRED_FIELD
             Exit Sub
-        End If
-
-        If StatusSortOrderFrom.Text <> "" And StatusSortOrderTo.Text <> "" Then
-            If StatusSortOrderTo.Text < StatusSortOrderFrom.Text Then
-                Msg.Text = ""
-                Exit Sub
-            End If
         End If
 
         '[入力データを1Byte形式に変換する]------------------------------------------------------
@@ -106,51 +103,40 @@ Partial Public Class POStatus
         End If
 
         '[日付妥当性チェック]-------------------------------------------------------------------
-        If PODateFrom.Text <> "" And Not (IsDate(PODateFrom.Text) And Regex.IsMatch(PODateFrom.Text, DATE_REGEX_OPTIONAL)) Then
+        If PODateFrom.Text <> String.Empty And Not (IsDate(PODateFrom.Text) And Regex.IsMatch(PODateFrom.Text, DATE_REGEX_OPTIONAL)) Then
             Msg.Text = "PO Date (From) " & ERR_INVALID_DATE
             Exit Sub
         End If
-        If PODateTo.Text <> "" And Not (IsDate(PODateTo.Text) And Regex.IsMatch(PODateTo.Text, DATE_REGEX_OPTIONAL)) Then
+        If PODateTo.Text <> String.Empty And Not (IsDate(PODateTo.Text) And Regex.IsMatch(PODateTo.Text, DATE_REGEX_OPTIONAL)) Then
             Msg.Text = "PO Date (To) " & ERR_INVALID_DATE
             Exit Sub
         End If
 
         '[最小日付チェック(1900-01-01以下エラー)]-----------------------------------------------
-        If PODateFrom.Text <> "" And PODateFrom.Text < "1900-01-01" Then
+        If PODateFrom.Text <> String.Empty And PODateFrom.Text < MinDate Then
             Msg.Text = "PO Date (From) " & ERR_INVALID_DATE
             Exit Sub
         End If
 
         '[日付設定順序チェック]-----------------------------------------------------------------
-        If PODateFrom.Text = "" And PODateTo.Text <> "" Then
-            Msg.Text = ""
+        If PODateFrom.Text = String.Empty And PODateTo.Text <> String.Empty Then
+            Msg.Text = "[From]" & ERR_REQUIRED_FIELD
             Exit Sub
         End If
-        If PODateFrom.Text <> "" And PODateTo.Text <> "" Then
-            If PODateTo.Text < PODateFrom.Text Then
-                Msg.Text = ""
-                Exit Sub
-            End If
-        End If
 
-        Const SESSION_KEY_LOCATION As String = "LocationCode"
         Dim s_LocationCode As String = Session(SESSION_KEY_LOCATION).ToString()
-
-        '日差補正関数（TCI国際化対応12時間）
-        Const DATE_ADJUST_HOUR As Integer = -12
-
         Dim s_PODateFromStart As String = String.Empty
         Dim s_PODateFromEnd As String = String.Empty
         Dim s_PODateToStart As String = String.Empty   '値は求めているが利用はしていない
         Dim s_PODateToEnd As String = String.Empty
-        If PODateFrom.Text <> "" Then
+        If PODateFrom.Text <> String.Empty Then
             '[PODateFromから日差補正後のs_PODateFromStartを求める]------------------------------
             Dim dt_PODateFrom As DateTime = CType(GetDatabaseTime(s_LocationCode, PODateFrom.Text), Date).AddHours(DATE_ADJUST_HOUR)
             s_PODateFromStart = dt_PODateFrom.ToString("yyyy-MM-dd HH:mm:ss")
             '[更に1日後のs_PODateFromEndを求める]-----------------------------------------------
             s_PODateFromEnd = dt_PODateFrom.AddDays(1).ToString("yyyy-MM-dd HH:mm:ss")
         End If
-        If PODateTo.Text <> "" Then
+        If PODateTo.Text <> String.Empty Then
             '[PODateToから日差補正後のs_PODateToStartを求める]----------------------------------
             Dim dt_PODateTo As DateTime = CType(GetDatabaseTime(s_LocationCode, PODateTo.Text), Date).AddHours(DATE_ADJUST_HOUR)
             s_PODateToStart = dt_PODateTo.ToString("yyyy-MM-dd HH:mm:ss")
@@ -164,34 +150,36 @@ Partial Public Class POStatus
 
         'WHERE句の作成
         Dim st_WHR As String = String.Empty
-        If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue = "" Then
+        If StatusSortOrderFrom.SelectedValue <> String.Empty And StatusSortOrderTo.SelectedValue = String.Empty Then
             st_WHR &= "StatusSortOrder = '" & StatusSortOrderFrom.SelectedValue & "' AND "
         End If
-        If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue <> "" Then
+        If StatusSortOrderFrom.SelectedValue <> String.Empty And StatusSortOrderTo.SelectedValue <> String.Empty Then
             st_WHR &= "StatusSortOrder >= '" & StatusSortOrderFrom.SelectedValue & "' AND StatusSortOrder <= '" & StatusSortOrderTo.SelectedValue & "' AND "
         End If
-        If POLocationCode.SelectedValue <> "" Then
+        If POLocationCode.SelectedValue <> String.Empty Then
             st_WHR &= "POLocationCode = '" & POLocationCode.SelectedValue & "' AND "
         End If
-        If POUserID.SelectedValue <> "" Then
+        If POUserID.SelectedValue <> String.Empty Then
             st_WHR &= "POUserID = '" & POUserID.SelectedValue & "' AND "
         End If
-        If SupplierCode.Text <> "" Then
+        If SupplierCode.Text <> String.Empty Then
             st_WHR &= "SupplierCode = " & SupplierCode.Text & " AND "
         End If
-        If SupplierName.Text <> "" Then
+        If SupplierName.Text <> String.Empty Then
             st_WHR &= "SupplierName LIKE '%" & SafeSqlLikeClauseLiteral(SupplierName.Text) & "%' AND "
         End If
-        If PODateFrom.Text <> "" And PODateTo.Text = "" Then
+        If PODateFrom.Text <> String.Empty And PODateTo.Text = String.Empty Then
             st_WHR &= "PODate >= '" & s_PODateFromStart & "' AND PODate < '" & s_PODateFromEnd & "' AND "
         End If
-        If PODateFrom.Text <> "" And PODateTo.Text <> "" Then
+        If PODateFrom.Text <> String.Empty And PODateTo.Text <> String.Empty Then
             st_WHR &= "PODate >= '" & s_PODateFromStart & "' AND PODate < '" & s_PODateToEnd & "' AND "
         End If
 
         If st_WHR <> String.Empty Then
-            st_SQL.Append("WHERE ")
+            'st_WHRの最後の'AND 'を取り除く
             st_WHR = Left(st_WHR, st_WHR.Length - 4)
+
+            st_SQL.Append("WHERE ")
             st_SQL.Append(st_WHR)
         Else
             '検索条件が何も指定されなかった場合の対応
@@ -206,11 +194,10 @@ Partial Public Class POStatus
     End Sub
 
     Protected Sub Clear_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Clear.Click
-        Msg.Text = ""
+        Msg.Text = String.Empty
         StatusSortOrderFrom.SelectedIndex = 0
         StatusSortOrderTo.SelectedIndex = 0
         POLocationCode.SelectedIndex = 0
-        POUserID.SelectedIndex = -1
         POUserID.Items.Clear()
     End Sub
 
