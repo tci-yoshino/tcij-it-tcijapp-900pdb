@@ -88,7 +88,7 @@ Partial Public Class RFQStatus
         '[EnqUserIDの値設定]--------------------------------------------------------------------
         Msg.Text = String.Empty
         DBCommand = DBConn.CreateCommand()
-        DBCommand.CommandText = "SELECT Name AS EnqUserName, EnqUserID FROM RFQHeader, v_User WHERE RFQHeader.EnqUserID = v_User.UserID AND EnqLocationCode = '" & EnqLocationCode.SelectedValue & "' Group BY EnqUserID, Name ORDER BY Name"
+        DBCommand.CommandText = "SELECT Name AS EnqUserName, EnqUserID FROM RFQHeader, v_UserAll WHERE RFQHeader.EnqUserID = v_UserAll.UserID AND EnqLocationCode = '" & EnqLocationCode.SelectedValue & "' Group BY EnqUserID, Name ORDER BY Name"
         DBConn.Open()
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
@@ -105,7 +105,7 @@ Partial Public Class RFQStatus
         '[QuoUserIDの値設定]--------------------------------------------------------------------
         Msg.Text = String.Empty
         DBCommand = DBConn.CreateCommand()
-        DBCommand.CommandText = "SELECT Name AS QuoUserName, QuoUserID FROM RFQHeader, v_User WHERE RFQHeader.QuoUserID = v_User.UserID AND QuoLocationCode = '" & QuoLocationCode.SelectedValue & "' Group BY QuoUserID, Name ORDER BY Name"
+        DBCommand.CommandText = "SELECT Name AS QuoUserName, QuoUserID FROM RFQHeader, v_UserAll WHERE RFQHeader.QuoUserID = v_UserAll.UserID AND QuoLocationCode = '" & QuoLocationCode.SelectedValue & "' Group BY QuoUserID, Name ORDER BY Name"
         DBConn.Open()
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
