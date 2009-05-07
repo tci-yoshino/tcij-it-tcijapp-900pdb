@@ -10,6 +10,10 @@ Partial Public Class RFQStatus
     Dim DBCommand As System.Data.SqlClient.SqlCommand
     Dim DBReader As System.Data.SqlClient.SqlDataReader
 
+    Const MinDate As String = "1900-01-01"       '検索最小日付
+    Const SESSION_KEY_LOCATION As String = "LocationCode"
+    Const DATE_ADJUST_HOUR As Integer = -12      '日差補正関数（TCI国際化対応12時間）
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If IsPostBack = False Then
             '[ERR_NO_MATCH_FOUND表示防止]-------------------------------------------------------
@@ -22,9 +26,9 @@ Partial Public Class RFQStatus
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             StatusSortOrderFrom.Items.Clear()
-            StatusSortOrderFrom.Items.Add(New ListItem("", ""))
+            StatusSortOrderFrom.Items.Add(New ListItem(String.Empty, String.Empty))
             StatusSortOrderTo.Items.Clear()
-            StatusSortOrderTo.Items.Add(New ListItem("", ""))
+            StatusSortOrderTo.Items.Add(New ListItem(String.Empty, String.Empty))
             Do Until DBReader.Read = False
                 StatusSortOrderFrom.Items.Add(New ListItem(DBReader("Text").ToString, DBReader("SortOrder").ToString))
                 StatusSortOrderTo.Items.Add(New ListItem(DBReader("Text").ToString, DBReader("SortOrder").ToString))
@@ -36,9 +40,9 @@ Partial Public Class RFQStatus
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             EnqLocationCode.Items.Clear()
-            EnqLocationCode.Items.Add(New ListItem("", ""))
+            EnqLocationCode.Items.Add(New ListItem(String.Empty, String.Empty))
             QuoLocationCode.Items.Clear()
-            QuoLocationCode.Items.Add(New ListItem("", ""))
+            QuoLocationCode.Items.Add(New ListItem(String.Empty, String.Empty))
             Do Until DBReader.Read = False
                 EnqLocationCode.Items.Add(New ListItem(DBReader("Name").ToString, DBReader("LocationCode").ToString))
                 QuoLocationCode.Items.Add(New ListItem(DBReader("Name").ToString, DBReader("LocationCode").ToString))
@@ -50,13 +54,13 @@ Partial Public Class RFQStatus
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             PaymentTermCode.Items.Clear()
-            PaymentTermCode.Items.Add(New ListItem("", ""))
+            PaymentTermCode.Items.Add(New ListItem(String.Empty, String.Empty))
             Do Until DBReader.Read = False
                 PaymentTermCode.Items.Add(New ListItem(DBReader("Text").ToString, DBReader("PaymentTermCode").ToString))
             Loop
             DBReader.Close()
             DBConn.Close()
-            SrcRFQHeader.SelectCommand = ""
+            SrcRFQHeader.SelectCommand = String.Empty
         End If
     End Sub
 
@@ -89,7 +93,7 @@ Partial Public Class RFQStatus
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
         EnqUserID.Items.Clear()
-        EnqUserID.Items.Add(New ListItem("", ""))
+        EnqUserID.Items.Add(New ListItem(String.Empty, String.Empty))
         Do Until DBReader.Read = False
             EnqUserID.Items.Add(New ListItem(DBReader("EnqUserName").ToString, DBReader("EnqUserID").ToString))
         Loop
@@ -106,7 +110,7 @@ Partial Public Class RFQStatus
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
         QuoUserID.Items.Clear()
-        QuoUserID.Items.Add(New ListItem("", ""))
+        QuoUserID.Items.Add(New ListItem(String.Empty, String.Empty))
         Do Until DBReader.Read = False
             QuoUserID.Items.Add(New ListItem(DBReader("QuoUserName").ToString, DBReader("QuoUserID").ToString))
         Loop
@@ -130,19 +134,13 @@ Partial Public Class RFQStatus
 
     Private Sub SearchRFQHeader()
         Msg.Text = String.Empty
-        SrcRFQHeader.SelectCommand = ""
+        SrcRFQHeader.SelectCommand = String.Empty
         RFQHeaderList.Visible = False
 
         '[Status設定順序チェック]---------------------------------------------------------------
-        If StatusSortOrderFrom.Text = "" And StatusSortOrderTo.Text <> "" Then
-            Msg.Text = ""
+        If StatusSortOrderFrom.Text = String.Empty And StatusSortOrderTo.Text <> String.Empty Then
+            Msg.Text = "Current Status (From) " & ERR_REQUIRED_FIELD
             Exit Sub
-        End If
-        If StatusSortOrderFrom.Text <> "" And StatusSortOrderTo.Text <> "" Then
-            If StatusSortOrderTo.Text < StatusSortOrderFrom.Text Then
-                Msg.Text = ""
-                Exit Sub
-            End If
         End If
 
         '[Dateを1Byte形式に変換する]------------------------------------------------------------
@@ -152,73 +150,65 @@ Partial Public Class RFQStatus
         StatusChangeDateTo.Text = StrConv(StatusChangeDateTo.Text, VbStrConv.Narrow)
 
         '[日付妥当性チェック]-------------------------------------------------------------------
-        If QuotedDateFrom.Text <> "" And Not (IsDate(QuotedDateFrom.Text) And Regex.IsMatch(QuotedDateFrom.Text, DATE_REGEX_OPTIONAL)) Then
-            Msg.Text = "Quoted Date (From) " & ERR_INVALID_DATE
+        If QuotedDateFrom.Text <> String.Empty And Not (IsDate(QuotedDateFrom.Text) And Regex.IsMatch(QuotedDateFrom.Text, DATE_REGEX_OPTIONAL)) Then
+            Msg.Text = "Quoted Date (From)" & ERR_INVALID_DATE
             Exit Sub
         End If
-        If QuotedDateTo.Text <> "" And Not (IsDate(QuotedDateTo.Text) And Regex.IsMatch(QuotedDateTo.Text, DATE_REGEX_OPTIONAL)) Then
-            Msg.Text = "Quoted Date (To) " & ERR_INVALID_DATE
+        If QuotedDateTo.Text <> String.Empty And Not (IsDate(QuotedDateTo.Text) And Regex.IsMatch(QuotedDateTo.Text, DATE_REGEX_OPTIONAL)) Then
+            Msg.Text = "Quoted Date (To)" & ERR_INVALID_DATE
             Exit Sub
         End If
-        If StatusChangeDateFrom.Text <> "" And Not (IsDate(StatusChangeDateFrom.Text) And Regex.IsMatch(StatusChangeDateFrom.Text, DATE_REGEX_OPTIONAL)) Then
-            Msg.Text = "Status Change Date (From) " & ERR_INVALID_DATE
+        If StatusChangeDateFrom.Text <> String.Empty And Not (IsDate(StatusChangeDateFrom.Text) And Regex.IsMatch(StatusChangeDateFrom.Text, DATE_REGEX_OPTIONAL)) Then
+            Msg.Text = "Status Change Date (From)" & ERR_INVALID_DATE
             Exit Sub
         End If
-        If StatusChangeDateTo.Text <> "" And Not (IsDate(StatusChangeDateTo.Text) And Regex.IsMatch(StatusChangeDateTo.Text, DATE_REGEX_OPTIONAL)) Then
-            Msg.Text = "Status Change Date (To) " & ERR_INVALID_DATE
+        If StatusChangeDateTo.Text <> String.Empty And Not (IsDate(StatusChangeDateTo.Text) And Regex.IsMatch(StatusChangeDateTo.Text, DATE_REGEX_OPTIONAL)) Then
+            Msg.Text = "Status Change Date (To)" & ERR_INVALID_DATE
             Exit Sub
         End If
 
         '[最小日付チェック(1900-01-01以下エラー)]-----------------------------------------------
-        If QuotedDateFrom.Text <> "" And QuotedDateFrom.Text < "1900-01-01" Then
-            Msg.Text = "Quoted Date (From) " & ERR_INVALID_DATE
+        If QuotedDateFrom.Text <> String.Empty And QuotedDateFrom.Text < MinDate Then
+            Msg.Text = "Quoted Date (From)" & ERR_INVALID_DATE
             Exit Sub
         End If
-        If StatusChangeDateFrom.Text <> "" And StatusChangeDateFrom.Text < "1900-01-01" Then
-            Msg.Text = "Status Change Date (From) " & ERR_INVALID_DATE
+        If QuotedDateTo.Text <> String.Empty And QuotedDateTo.Text < MinDate Then
+            Msg.Text = "Quoted Date (To)" & ERR_INVALID_DATE
+            Exit Sub
+        End If
+
+        If StatusChangeDateFrom.Text <> String.Empty And StatusChangeDateFrom.Text < MinDate Then
+            Msg.Text = "Status Change Date (From)" & ERR_INVALID_DATE
+            Exit Sub
+        End If
+        If StatusChangeDateTo.Text <> String.Empty And StatusChangeDateTo.Text < MinDate Then
+            Msg.Text = "Status Change Date (To)" & ERR_INVALID_DATE
             Exit Sub
         End If
 
         '[日付設定順序チェック]-----------------------------------------------------------------
-        If QuotedDateFrom.Text = "" And QuotedDateTo.Text <> "" Then
-            Msg.Text = ""
+        If QuotedDateFrom.Text = String.Empty And QuotedDateTo.Text <> String.Empty Then
+            Msg.Text = "Quoted Date (From)" & ERR_REQUIRED_FIELD
             Exit Sub
         End If
-        If QuotedDateFrom.Text <> "" And QuotedDateTo.Text <> "" Then
-            If QuotedDateTo.Text < QuotedDateFrom.Text Then
-                Msg.Text = ""
-                Exit Sub
-            End If
-        End If
-        If StatusChangeDateFrom.Text = "" And StatusChangeDateTo.Text <> "" Then
-            Msg.Text = ""
+        If StatusChangeDateFrom.Text = String.Empty And StatusChangeDateTo.Text <> String.Empty Then
+            Msg.Text = "Status Change Date (From)" & ERR_REQUIRED_FIELD
             Exit Sub
-        End If
-        If StatusChangeDateFrom.Text <> "" And StatusChangeDateTo.Text <> "" Then
-            If StatusChangeDateTo.Text < StatusChangeDateFrom.Text Then
-                Msg.Text = ""
-                Exit Sub
-            End If
         End If
 
-        Const SESSION_KEY_LOCATION As String = "LocationCode"
         Dim s_LocationCode As String = Session(SESSION_KEY_LOCATION).ToString()
-
-        '日差補正関数（TCI国際化対応12時間）
-        Const DATE_ADJUST_HOUR As Integer = -12
-
         Dim s_QuotedDateFromStart As String = String.Empty
         Dim s_QuotedDateFromEnd As String = String.Empty
         Dim s_QuotedDateToStart As String = String.Empty    '値は求めているが利用はしていない
         Dim s_QuotedDateToEnd As String = String.Empty
-        If QuotedDateFrom.Text <> "" Then
+        If QuotedDateFrom.Text <> String.Empty Then
             '[QuotedDateFromから日差補正後のs_QuotedDateFromStartを求める]----------------------
             Dim dt_QuotedDateFrom As DateTime = CType(GetDatabaseTime(s_LocationCode, QuotedDateFrom.Text), Date).AddHours(DATE_ADJUST_HOUR)
             s_QuotedDateFromStart = dt_QuotedDateFrom.ToString("yyyy-MM-dd HH:mm:ss")
             '[更に1日後のs_QuotedDateFromEndを求める]-------------------------------------------
             s_QuotedDateFromEnd = dt_QuotedDateFrom.AddDays(1).ToString("yyyy-MM-dd HH:mm:ss")
         End If
-        If QuotedDateTo.Text <> "" Then
+        If QuotedDateTo.Text <> String.Empty Then
             '[QuotedDateToから日差補正後のs_QuotedDateToStartを求める]--------------------------
             Dim dt_QuotedDateTo As DateTime = CType(GetDatabaseTime(s_LocationCode, QuotedDateTo.Text), Date).AddHours(DATE_ADJUST_HOUR)
             s_QuotedDateToStart = dt_QuotedDateTo.ToString("yyyy-MM-dd HH:mm:ss")
@@ -228,16 +218,16 @@ Partial Public Class RFQStatus
 
         Dim s_StatusChangeDateFromStart As String = String.Empty
         Dim s_StatusChangeDateFromEnd As String = String.Empty
-        Dim s_StatusChangeDateToStart As String = String.Empty
+        Dim s_StatusChangeDateToStart As String = String.Empty     '値は求めているが利用はしていない
         Dim s_StatusChangeDateToEnd As String = String.Empty
-        If StatusChangeDateFrom.Text <> "" Then
+        If StatusChangeDateFrom.Text <> String.Empty Then
             '[StatusChangeDateFromから日差補正後のs_StatusChangeDateFromStartを求める]----------
             Dim dt_StatusChangeDateFrom As DateTime = CType(GetDatabaseTime(s_LocationCode, StatusChangeDateFrom.Text), Date)
             s_StatusChangeDateFromStart = dt_StatusChangeDateFrom.ToString("yyyy-MM-dd HH:mm:ss")
             '[更に1日後のs_StatusChangeDateFromEndを求める]-------------------------------------
             s_StatusChangeDateFromEnd = dt_StatusChangeDateFrom.AddDays(1).ToString("yyyy-MM-dd HH:mm:ss")
         End If
-        If StatusChangeDateTo.Text <> "" Then
+        If StatusChangeDateTo.Text <> String.Empty Then
             '[StatusChangeDateToから日差補正後のs_StatusChangeDateToStartを求める]--------------
             Dim dt_StatusChangeDateTo As DateTime = CType(GetDatabaseTime(s_LocationCode, StatusChangeDateTo.Text), Date)
             s_StatusChangeDateToStart = dt_StatusChangeDateTo.ToString("yyyy-MM-dd HH:mm:ss")
@@ -251,43 +241,45 @@ Partial Public Class RFQStatus
 
         'WHERE句の作成
         Dim st_WHR As String = String.Empty
-        If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue = "" Then
+        If StatusSortOrderFrom.SelectedValue <> String.Empty And StatusSortOrderTo.SelectedValue = String.Empty Then
             st_WHR &= "StatusSortOrder = '" & StatusSortOrderFrom.SelectedValue & "' AND "
         End If
-        If StatusSortOrderFrom.SelectedValue <> "" And StatusSortOrderTo.SelectedValue <> "" Then
+        If StatusSortOrderFrom.SelectedValue <> String.Empty And StatusSortOrderTo.SelectedValue <> String.Empty Then
             st_WHR &= "StatusSortOrder >= '" & StatusSortOrderFrom.SelectedValue & "' AND StatusSortOrder <= '" & StatusSortOrderTo.SelectedValue & "' AND "
         End If
-        If EnqLocationCode.SelectedValue <> "" Then
+        If EnqLocationCode.SelectedValue <> String.Empty Then
             st_WHR &= "EnqLocationCode = '" & EnqLocationCode.SelectedValue & "' AND "
         End If
-        If EnqUserID.SelectedValue <> "" Then
+        If EnqUserID.SelectedValue <> String.Empty Then
             st_WHR &= "EnqUserID = '" & EnqUserID.SelectedValue & "' AND "
         End If
-        If QuoLocationCode.SelectedValue <> "" Then
+        If QuoLocationCode.SelectedValue <> String.Empty Then
             st_WHR &= "QuoLocationCode = '" & QuoLocationCode.SelectedValue & "' AND "
         End If
-        If QuoUserID.SelectedValue <> "" Then
+        If QuoUserID.SelectedValue <> String.Empty Then
             st_WHR &= "QuoUserID = '" & QuoUserID.SelectedValue & "' AND "
         End If
-        If QuotedDateFrom.Text <> "" And QuotedDateTo.Text = "" Then
+        If QuotedDateFrom.Text <> String.Empty And QuotedDateTo.Text = String.Empty Then
             st_WHR &= "QuoTedDate >= '" & s_QuotedDateFromStart & "' AND QuoTedDate < '" & s_QuotedDateFromEnd & "' AND "
         End If
-        If QuotedDateFrom.Text <> "" And QuotedDateTo.Text <> "" Then
+        If QuotedDateFrom.Text <> String.Empty And QuotedDateTo.Text <> String.Empty Then
             st_WHR &= "QuoTedDate >= '" & s_QuotedDateFromStart & "' AND QuoTedDate < '" & s_QuotedDateToEnd & "' AND "
         End If
-        If StatusChangeDateFrom.Text <> "" And StatusChangeDateTo.Text = "" Then
+        If StatusChangeDateFrom.Text <> String.Empty And StatusChangeDateTo.Text = String.Empty Then
             st_WHR &= "StatusChangeDate >= '" & s_StatusChangeDateFromStart & "' AND StatusChangeDate < '" & s_StatusChangeDateFromEnd & "' AND "
         End If
-        If StatusChangeDateFrom.Text <> "" And StatusChangeDateTo.Text <> "" Then
+        If StatusChangeDateFrom.Text <> String.Empty And StatusChangeDateTo.Text <> String.Empty Then
             st_WHR &= "StatusChangeDate >= '" & s_StatusChangeDateFromStart & "' AND StatusChangeDate <= '" & s_StatusChangeDateToEnd & "' AND "
         End If
-        If PaymentTermCode.Text <> "" Then
+        If PaymentTermCode.Text <> String.Empty Then
             st_WHR = st_WHR & "PaymentTermCode = '" & PaymentTermCode.Text & "' AND "
         End If
 
         If st_WHR <> String.Empty Then
-            st_SQL.Append("WHERE ")
+            'st_WHRの最後の'AND 'を取り除く
             st_WHR = Left(st_WHR, st_WHR.Length - 4)
+
+            st_SQL.Append("WHERE ")
             st_SQL.Append(st_WHR)
         Else
             '検索条件が何も指定されなかった場合の対応
@@ -337,14 +329,12 @@ Partial Public Class RFQStatus
     End Function
 
     Protected Sub Clear_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Clear.Click
-        Msg.Text=""
+        Msg.Text = String.Empty
         StatusSortOrderFrom.SelectedIndex = 0
         StatusSortOrderTo.SelectedIndex = 0
         EnqLocationCode.SelectedIndex = 0
-        EnqUserID.SelectedIndex = -1
         EnqUserID.Items.Clear()
         QuoLocationCode.SelectedIndex = 0
-        QuoUserID.SelectedIndex = -1
         QuoUserID.Items.Clear()
         PaymentTermCode.SelectedIndex = 0
     End Sub
