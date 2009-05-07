@@ -139,7 +139,7 @@ Partial Public Class RFQStatus
 
         '[Status設定順序チェック]---------------------------------------------------------------
         If StatusSortOrderFrom.Text = String.Empty And StatusSortOrderTo.Text <> String.Empty Then
-            Msg.Text = "Current Status (From) " & ERR_REQUIRED_FIELD
+            Msg.Text = "Current Status (from) " & ERR_REQUIRED_FIELD
             Exit Sub
         End If
 
@@ -151,48 +151,48 @@ Partial Public Class RFQStatus
 
         '[日付妥当性チェック]-------------------------------------------------------------------
         If QuotedDateFrom.Text <> String.Empty And Not (IsDate(QuotedDateFrom.Text) And Regex.IsMatch(QuotedDateFrom.Text, DATE_REGEX_OPTIONAL)) Then
-            Msg.Text = "Quoted Date (From)" & ERR_INVALID_DATE
+            Msg.Text = "Quoted Date (from)" & ERR_INVALID_DATE
             Exit Sub
         End If
         If QuotedDateTo.Text <> String.Empty And Not (IsDate(QuotedDateTo.Text) And Regex.IsMatch(QuotedDateTo.Text, DATE_REGEX_OPTIONAL)) Then
-            Msg.Text = "Quoted Date (To)" & ERR_INVALID_DATE
+            Msg.Text = "Quoted Date (to)" & ERR_INVALID_DATE
             Exit Sub
         End If
         If StatusChangeDateFrom.Text <> String.Empty And Not (IsDate(StatusChangeDateFrom.Text) And Regex.IsMatch(StatusChangeDateFrom.Text, DATE_REGEX_OPTIONAL)) Then
-            Msg.Text = "Status Change Date (From)" & ERR_INVALID_DATE
+            Msg.Text = "Status Change Date (from)" & ERR_INVALID_DATE
             Exit Sub
         End If
         If StatusChangeDateTo.Text <> String.Empty And Not (IsDate(StatusChangeDateTo.Text) And Regex.IsMatch(StatusChangeDateTo.Text, DATE_REGEX_OPTIONAL)) Then
-            Msg.Text = "Status Change Date (To)" & ERR_INVALID_DATE
+            Msg.Text = "Status Change Date (to)" & ERR_INVALID_DATE
             Exit Sub
         End If
 
         '[最小日付チェック(1900-01-01以下エラー)]-----------------------------------------------
         If QuotedDateFrom.Text <> String.Empty And QuotedDateFrom.Text < MinDate Then
-            Msg.Text = "Quoted Date (From)" & ERR_INVALID_DATE
+            Msg.Text = "Quoted Date (from)" & ERR_INVALID_DATE
             Exit Sub
         End If
         If QuotedDateTo.Text <> String.Empty And QuotedDateTo.Text < MinDate Then
-            Msg.Text = "Quoted Date (To)" & ERR_INVALID_DATE
+            Msg.Text = "Quoted Date (to)" & ERR_INVALID_DATE
             Exit Sub
         End If
 
         If StatusChangeDateFrom.Text <> String.Empty And StatusChangeDateFrom.Text < MinDate Then
-            Msg.Text = "Status Change Date (From)" & ERR_INVALID_DATE
+            Msg.Text = "Status Change Date (from)" & ERR_INVALID_DATE
             Exit Sub
         End If
         If StatusChangeDateTo.Text <> String.Empty And StatusChangeDateTo.Text < MinDate Then
-            Msg.Text = "Status Change Date (To)" & ERR_INVALID_DATE
+            Msg.Text = "Status Change Date (to)" & ERR_INVALID_DATE
             Exit Sub
         End If
 
         '[日付設定順序チェック]-----------------------------------------------------------------
         If QuotedDateFrom.Text = String.Empty And QuotedDateTo.Text <> String.Empty Then
-            Msg.Text = "Quoted Date (From)" & ERR_REQUIRED_FIELD
+            Msg.Text = "Quoted Date (from)" & ERR_REQUIRED_FIELD
             Exit Sub
         End If
         If StatusChangeDateFrom.Text = String.Empty And StatusChangeDateTo.Text <> String.Empty Then
-            Msg.Text = "Status Change Date (From)" & ERR_REQUIRED_FIELD
+            Msg.Text = "Status Change Date (from)" & ERR_REQUIRED_FIELD
             Exit Sub
         End If
 
