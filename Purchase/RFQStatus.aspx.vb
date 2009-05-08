@@ -340,7 +340,7 @@ Partial Public Class RFQStatus
     End Sub
 
     Protected Sub SrcRFQHeader_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcRFQHeader.Selecting
-        '[本ページのタイムアウトを無限にする]---------------------------------------------------
-        'e.Command.CommandTimeout = 0
+        'HACK 応答速度が充分得られないため、暫定的に180秒（3分）に変更　
+        e.Command.CommandTimeout = 180
     End Sub
 End Class
