@@ -235,10 +235,6 @@ Partial Public Class RFQStatus
             s_StatusChangeDateToEnd = dt_StatusChangeDateTo.AddDays(1).ToString("yyyy-MM-dd HH:mm:ss")
         End If
 
-        '[SrcRFQHeaderの値設定]-----------------------------------------------------------------
-        Dim st_SQL As New Text.StringBuilder
-        st_SQL.Append(getBaseRFQHeaderSQL())
-
         'WHERE句の作成
         Dim st_WHR As String = String.Empty
         If StatusSortOrderFrom.SelectedValue <> String.Empty And StatusSortOrderTo.SelectedValue = String.Empty Then
@@ -251,7 +247,7 @@ Partial Public Class RFQStatus
             st_WHR &= "EnqLocationCode = '" & EnqLocationCode.SelectedValue & "' AND "
         End If
         If EnqUserID.SelectedValue <> String.Empty Then
-            st_WHR &= "EnqUserID = '" & EnqUserID.SelectedValue & "' AND "
+            st_WHR &= "EnqUserID = " & EnqUserID.SelectedValue & " AND "
         End If
         If QuoLocationCode.SelectedValue <> String.Empty Then
             st_WHR &= "QuoLocationCode = '" & QuoLocationCode.SelectedValue & "' AND "
@@ -275,18 +271,31 @@ Partial Public Class RFQStatus
             st_WHR = st_WHR & "PaymentTermCode = '" & PaymentTermCode.Text & "' AND "
         End If
 
-        If st_WHR <> String.Empty Then
-            'st_WHRの最後の'AND 'を取り除く
-            st_WHR = Left(st_WHR, st_WHR.Length - 4)
+        '[SrcRFQHeaderの値設定]-----------------------------------------------------------------
+        Dim st_SQL As New Text.StringBuilder
+        st_SQL.Append(getBaseRFQHeaderSQL())
 
-            st_SQL.Append("WHERE ")
-            st_SQL.Append(st_WHR)
+        If st_WHR <> String.Empty Then
+            '[検索結果数の確認]-----------------------------------------------------------------
+            DBCommand = DBConn.CreateCommand()
+            DBConn.Open()
+            st_WHR = "WHERE " & Left(st_WHR, st_WHR.Length - 4)   'st_WHRの最後の'AND 'を取り除く
+            DBCommand.CommandText = getCountRFQHeaderSQL() & st_WHR & " OPTION(FORCE ORDER)"
+            Dim i_RFQCount As Integer = CInt(DBCommand.ExecuteScalar())
+            DBConn.Close()
+            If i_RFQCount > 1000 Then
+                Msg.Text = Common.MSG_RESULT_OVER_1000
+                Exit Sub
+            Else
+                st_SQL.Append(st_WHR)
+            End If
         Else
             '検索条件が何も指定されなかった場合の対応
             st_SQL.Append("WHERE 1=0 ")
         End If
 
         st_SQL.Append("ORDER BY StatusSortOrder, QuotedDate DESC, StatusChangeDate DESC, RFQNumber")
+        st_SQL.Append(" OPTION(FORCE ORDER)")
         SrcRFQHeader.SelectCommand = st_SQL.ToString
         RFQHeaderList.DataBind()
         RFQHeaderList.Visible = True
@@ -295,6 +304,18 @@ Partial Public Class RFQStatus
     Protected Sub RFQHeaderList_PagePropertiesChanged(ByVal sender As Object, ByVal e As EventArgs) Handles RFQHeaderList.PagePropertiesChanged
         SearchRFQHeader()
     End Sub
+
+    Private Function getCountRFQHeaderSQL() As String
+        '[SrcRFQHeaderの値設定]-----------------------------------------------------------------
+        Dim st_SQL As New Text.StringBuilder
+        st_SQL.Append("SELECT COUNT(*) AS RFQCount ")
+        st_SQL.Append("FROM ")
+        st_SQL.Append(" v_RFQheader INNER JOIN ")
+        st_SQL.Append(" s_Country AS sc1 ON sc1.CountryCode = v_RFQheader.SupplierCountryCode LEFT OUTER JOIN ")
+        st_SQL.Append(" s_Country AS sc2 ON sc2.CountryCode = v_RFQheader.MakerCountryCode INNER JOIN ")
+        st_SQL.Append(" Product ON v_RFQheader.ProductID = Product.ProductID ")
+        Return st_SQL.ToString()
+    End Function
 
     Private Function getBaseRFQHeaderSQL() As String
         '[SrcRFQHeaderの値設定]-----------------------------------------------------------------
@@ -305,7 +326,7 @@ Partial Public Class RFQStatus
         st_SQL.Append("	EnqUserName, ")
         st_SQL.Append("	QuoLocationName, ")
         st_SQL.Append("	QuoUserName, ")
-        st_SQL.Append("	v_RFQHeader.ProductNumber, ")
+        st_SQL.Append("	v_RFQheader.ProductNumber, ")
         st_SQL.Append("	ProductName, ")
         st_SQL.Append("	SupplierName, ")
         st_SQL.Append("	sc1.Name AS SupplierCountryName, ")
@@ -315,16 +336,16 @@ Partial Public Class RFQStatus
         st_SQL.Append("	SupplierItemName, ")
         st_SQL.Append("	ShippingHandlingFee, ")
         st_SQL.Append("	ShippingHandlingCurrencyCode, ")
-        st_SQL.Append("	v_RFQHeader.Comment, ")
+        st_SQL.Append("	v_RFQheader.Comment, ")
         st_SQL.Append("	QuotedDate, ")
-        st_SQL.Append("	v_RFQHeader.Status, ")
+        st_SQL.Append("	v_RFQheader.Status, ")
         st_SQL.Append("	StatusChangeDate, ")
         st_SQL.Append("	CASNumber ")
         st_SQL.Append("FROM ")
-        st_SQL.Append(" v_RFQHeader INNER JOIN ")
-        st_SQL.Append(" s_Country AS sc1 ON sc1.CountryCode = v_RFQHeader.SupplierCountryCode LEFT OUTER JOIN ")
-        st_SQL.Append(" s_Country AS sc2 ON sc2.CountryCode = v_RFQHeader.MakerCountryCode INNER JOIN ")
-        st_SQL.Append(" Product ON v_RFQHeader.ProductID = Product.ProductID ")
+        st_SQL.Append(" v_RFQheader INNER JOIN ")
+        st_SQL.Append(" s_Country AS sc1 ON sc1.CountryCode = v_RFQheader.SupplierCountryCode LEFT OUTER JOIN ")
+        st_SQL.Append(" s_Country AS sc2 ON sc2.CountryCode = v_RFQheader.MakerCountryCode INNER JOIN ")
+        st_SQL.Append(" Product ON v_RFQheader.ProductID = Product.ProductID ")
         Return st_SQL.ToString()
     End Function
 
@@ -340,7 +361,7 @@ Partial Public Class RFQStatus
     End Sub
 
     Protected Sub SrcRFQHeader_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcRFQHeader.Selecting
-        'HACK 応答速度が充分得られないため、暫定的に180秒（3分）に変更　
+        'HACK 応答速度が充分得られないため、暫定的に180秒（3分）に変更　      
         e.Command.CommandTimeout = 180
     End Sub
 End Class
