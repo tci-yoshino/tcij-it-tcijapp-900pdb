@@ -139,6 +139,12 @@ Public Class Common
     Public Const MSG_DATA_UPDATED As String = "Record updated."
 
     ''' <summary>
+    ''' 「検索結果が1000以上です」
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const MSG_RESULT_OVER_1000 As String = "The result is over 1000 hits as the limit.<br />Please change the criteria and search again."
+
+    ''' <summary>
     ''' エラーメッセージ 「不正なパラメータを受け取りました」
     ''' </summary>
     ''' <remarks></remarks>
