@@ -148,10 +148,6 @@ Partial Public Class POStatus
             s_PODateToEnd = dt_PODateTo.AddDays(1).ToString("yyyy-MM-dd HH:mm:ss")
         End If
 
-        '[SrcPOの値設定]------------------------------------------------------------------------
-        Dim st_SQL As New Text.StringBuilder
-        st_SQL.Append(getBasePOSQL())
-
         'WHERE句の作成
         Dim st_WHR As String = String.Empty
         If StatusSortOrderFrom.SelectedValue <> String.Empty And StatusSortOrderTo.SelectedValue = String.Empty Then
@@ -179,12 +175,24 @@ Partial Public Class POStatus
             st_WHR &= "PODate >= '" & s_PODateFromStart & "' AND PODate < '" & s_PODateToEnd & "' AND "
         End If
 
-        If st_WHR <> String.Empty Then
-            'st_WHRの最後の'AND 'を取り除く
-            st_WHR = Left(st_WHR, st_WHR.Length - 4)
+        '[SrcPOの値設定]------------------------------------------------------------------------
+        Dim st_SQL As New Text.StringBuilder
+        st_SQL.Append(getBasePOSQL())
 
-            st_SQL.Append("WHERE ")
-            st_SQL.Append(st_WHR)
+        If st_WHR <> String.Empty Then
+            '[検索結果数の確認]-----------------------------------------------------------------
+            DBCommand = DBConn.CreateCommand()
+            DBConn.Open()
+            st_WHR = "WHERE " & Left(st_WHR, st_WHR.Length - 4)   'st_WHRの最後の'AND 'を取り除く
+            DBCommand.CommandText = getCountPOSQL() & st_WHR & " OPTION(FORCE ORDER)"
+            Dim i_RFQCount As Integer = CInt(DBCommand.ExecuteScalar())
+            DBConn.Close()
+            If i_RFQCount > 1000 Then
+                Msg.Text = Common.MSG_RESULT_OVER_1000
+                Exit Sub
+            Else
+                st_SQL.Append(st_WHR)
+            End If
         Else
             '検索条件が何も指定されなかった場合の対応
             st_SQL.Append("WHERE 1=0 ")
@@ -192,6 +200,7 @@ Partial Public Class POStatus
 
         st_SQL.Append("ORDER BY ")
         st_SQL.Append(" PONumber ")
+        st_SQL.Append(" OPTION(FORCE ORDER)")
         SrcPO.SelectCommand = st_SQL.ToString
         POList.DataBind()
         POList.Visible = True
@@ -204,6 +213,15 @@ Partial Public Class POStatus
         POLocationCode.SelectedIndex = 0
         POUserID.Items.Clear()
     End Sub
+
+    Private Function getCountPOSQL() As String
+        '[SrcPOの値設定]------------------------------------------------------------------------
+        Dim st_SQL As New Text.StringBuilder
+        st_SQL.Append("SELECT COUNT(*) AS POCount ")
+        st_SQL.Append("FROM ")
+        st_SQL.Append(" v_PO ")
+        Return st_SQL.ToString()
+    End Function
 
     Private Function getBasePOSQL() As String
         '[SrcPOの値設定]------------------------------------------------------------------------
