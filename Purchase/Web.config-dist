@@ -19,7 +19,6 @@
 
     <appSettings>
         <add key="Debug" value="false"/>
-        <add key="ErrorMailTo" value="app@tokyokasei.co.jp"/>
         <add key="TempDir" value="d:\temp\purchase\"/>
     </appSettings>
 
@@ -180,11 +179,4 @@
       </assemblyBinding>
     </runtime>
 
-    <system.net>
-      <mailSettings>
-        <smtp from="app@tokyokasei.co.jp">
-          <network defaultCredentials="true" host="tex1.tci.tokyokasei" password="" userName="" />
-        </smtp>
-      </mailSettings>
-    </system.net>
 </configuration>
