@@ -271,6 +271,7 @@
         sb_SQL.Append("  AND RR.RFQHistoryNumber IS NOT NULL ")
         sb_SQL.Append("ORDER BY ")
         sb_SQL.Append("  RH.StatusSortOrder, RH.StatusChangeDate ASC ")
+        sb_SQL.Append("OPTION (RECOMPILE) ")
         Return sb_SQL.ToString()
     End Function
 
