@@ -129,7 +129,15 @@
                         <td><asp:TextBox ID="Specification" runat="server" Columns="50" Rows="3" TextMode="MultiLine"></asp:TextBox></td>
                     </tr>
                     <tr>
-                        <th>Enq-User : </th><td><asp:Label ID="EnqUser" runat="server" Text=""></asp:Label><span class="indent">(<asp:Label ID="EnqLocation" runat="server" Text=""></asp:Label>)</span></td>
+                        <th>Enq-User <span class="required">*</span> : </th>
+                        <td>
+                            <asp:DropDownList ID="EnqUser" runat="server" 
+                                DataSourceID="SDS_RFQUpdate_EnqUser" DataTextField="Name" 
+                                DataValueField="UserID">
+                            </asp:DropDownList>
+                            <asp:SqlDataSource ID="SDS_RFQUpdate_EnqUser" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+                            (<asp:Label ID="EnqLocation" runat="server" Text=""></asp:Label>)
+                        </td>
                     </tr>
                     <tr>
                         <th>Quo-User <span class="required">*</span> : </th>

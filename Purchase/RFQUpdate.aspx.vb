@@ -16,6 +16,7 @@ Partial Public Class RFQUpdate
     'エラーメッセージ(必須入力項目)
     Private Const ERR_INCORRECT_ENQQUANTITY As String = "Enq-Quantity" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_SUPPLIERCODE As String = "SupplierCode" & ERR_REQUIRED_FIELD
+    Private Const ERR_REQUIRED_ENQUSER As String = "Enq-User" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_QUOUSER As String = "Quo-User" & ERR_REQUIRED_FIELD
     'エラーメッセージ(更新処理失敗)(Exception扱いなので日本語のままとする。)
     Private Const ERR_GET_RFQDATA_FAILURE As String = "RFQ データの更新に失敗しましたが、エラーが検出されませんでした。"
@@ -154,12 +155,13 @@ Partial Public Class RFQUpdate
                     st_QuotedDate = ", QuotedDate = '" & st_QuoDate & "'"
                 End If
             End If
-            DBCommand.CommandText = "Update RFQHeader SET QuoUserID = @QuoUserID, SupplierCode = @SupplierCode, MakerCode = @MakerCode," _
+            DBCommand.CommandText = "Update RFQHeader SET EnqUserID = @EnqUserID, QuoUserID = @QuoUserID, SupplierCode = @SupplierCode, MakerCode = @MakerCode," _
             & "SpecSheet = @SpecSheet, Specification = @Specification, SupplierContactPerson = @SupplierContactPerson," _
             & "SupplierItemName = @SupplierItemName, ShippingHandlingFee = @ShippingHandlingFee," _
             & "ShippingHandlingCurrencyCode = @ShippingHandlingCurrencyCode, PaymentTermCode = @PaymentTermCode," _
             & "Comment = @Comment, UpdatedBy = @UpdatedBy, UpdateDate = GETDATE()" & RFQStatusCode & st_QuotedDate _
             & " Where RFQNumber = @RFQNumber "
+            DBCommand.Parameters.Add("@EnqUserID", SqlDbType.Int).Value = ConvertStringToInt(EnqUser.SelectedValue)
             DBCommand.Parameters.Add("@QuoUserID", SqlDbType.Int).Value = ConvertStringToInt(QuoUser.SelectedValue)
             DBCommand.Parameters.Add("@SupplierCode", SqlDbType.Int).Value = Integer.Parse(SupplierCode.Text)
             DBCommand.Parameters.Add("@MakerCode", SqlDbType.Int).Value = ConvertStringToInt(MakerCode.Text)
@@ -291,7 +293,7 @@ Partial Public Class RFQUpdate
         Call ClearLineData()
         If Integer.TryParse(st_RFQNumber, i_TryParse) Then
             DBCommand = New SqlCommand("Select " _
-& "EnqLocationName, EnqUserName, QuoLocationName, QuoUserID, QuoUserName, ProductNumber, " _
+& "EnqLocationName, EnqUserID, EnqUserName, QuoLocationName, QuoUserID, QuoUserName, ProductNumber, " _
 & "ProductName, SupplierCode, R3SupplierCode, SupplierName, SupplierCountryCode, MakerCode, " _
 & "MakerName, MakerCountryCode, SupplierContactPerson, PaymentTermCode, RequiredPurity, " _
 & "RequiredQMMethod, RequiredSpecification, SpecSheet, Specification, Purpose, SupplierItemName, " _
@@ -340,7 +342,11 @@ Partial Public Class RFQUpdate
                 SpecSheet.Checked = False
             End If
             Specification.Text = DS.Tables("RFQHeader").Rows(0)("Specification").ToString
-            EnqUser.Text = DS.Tables("RFQHeader").Rows(0)("EnqUserName").ToString
+
+            SDS_RFQUpdate_EnqUser.SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0) " _
+                                             & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1}) ORDER BY [Name]" _
+                                             , EnqLocationCode.Value, DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString)
+            EnqUser.SelectedValue = DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString
             EnqLocation.Text = DS.Tables("RFQHeader").Rows(0)("EnqLocationName").ToString
 
             If DS.Tables("RFQHeader").Rows(0)("QuoLocationName").ToString = String.Empty Then
