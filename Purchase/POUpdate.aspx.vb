@@ -121,7 +121,6 @@ Partial Public Class POUpdate
         Public UpdateDate As DateTime?
     End Structure
 
-
     ''' <summary>
     ''' このページのロードイベントです。
     ''' </summary>
@@ -261,7 +260,6 @@ Partial Public Class POUpdate
         RunMsg.Text = Common.MSG_DATA_UPDATED
     End Sub
 
-
     ''' <summary>
     ''' フォームの表示・入力項目を初期化します。
     ''' </summary>
@@ -273,8 +271,7 @@ Partial Public Class POUpdate
         ParPONumber.Text = String.Empty
         R3POLineNumber.Text = String.Empty
         PODate.Text = String.Empty
-        POUser.Text = String.Empty
-        POLocation.Text = String.Empty
+        POLocationName.Text = String.Empty
         ProductNumber.Text = String.Empty
         ProductName.Text = String.Empty
         OrderQuantity.Text = String.Empty
@@ -313,7 +310,6 @@ Partial Public Class POUpdate
 
     End Sub
 
-
     ''' <summary>
     ''' 指定されたPOデータを画面に表示します。
     ''' </summary>
@@ -337,8 +333,8 @@ Partial Public Class POUpdate
         ParPONumber.Text = NullableIntToString(POInformation.ParPONumber)
         R3POLineNumber.Text = POInformation.R3POLineNumber
         PODate.Text = GetLocalTime(POInformation.PODate)
-        POUser.Text = POInformation.POUserName
-        POLocation.Text = POInformation.POLocationName
+        POUser.SelectedValue = POInformation.POUserID.ToString
+        POLocationName.Text = POInformation.POLocationName
         ProductNumber.Text = POInformation.ProductNumber
         'ProductNameは表示時に40文字制限があります
         ProductName.Text = CutShort(POInformation.ProductName.ToString())
@@ -397,6 +393,9 @@ Partial Public Class POUpdate
             b_ChiPOIssueVisible = False
         End If
 
+        ' PO-User プルダウンの設定
+        SetControl_SrcUser(POInformation.POLocationCode, CInt(POInformation.POUserID))
+
     End Sub
 
     ''' <summary>
@@ -416,7 +415,7 @@ Partial Public Class POUpdate
 
         'POInformation.isCancelled = True
 
-        UpdatePOInfomation(POInformation)
+        UpdatePOInfomation(POInformation, POInformation)
 
     End Sub
 
@@ -426,28 +425,31 @@ Partial Public Class POUpdate
     ''' <param name="PONumber">POテーブルの一意ID</param>
     ''' <remarks></remarks>
     Private Sub UpdatePOInfomationFromForm(ByVal PONumber As Integer)
-        Dim POInformation As POInformationType = SelectPOInformation(PONumber)
+        Dim SrcPOInformation As POInformationType = SelectPOInformation(PONumber)
+        Dim DstPOInformation As POInformationType = SrcPOInformation
 
         'フォーム左段
-        POInformation.R3PONumber = StrToNullableString(R3PONumber.Text.Trim())
-        POInformation.R3POLineNumber = StrToNullableString(R3POLineNumber.Text.Trim())
-        POInformation.DeliveryDate = GetDatabaseTime(DeliveryDate.Text.Trim())
+        DstPOInformation.R3PONumber = StrToNullableString(R3PONumber.Text.Trim())
+        DstPOInformation.R3POLineNumber = StrToNullableString(R3POLineNumber.Text.Trim())
+        DstPOInformation.POUserID = CInt(POUser.SelectedValue)
+        DstPOInformation.DeliveryDate = GetDatabaseTime(DeliveryDate.Text.Trim())
 
         'フォーム右段
-        POInformation.DueDate = GetDatabaseTime(DueDate.Text.Trim())
-        POInformation.GoodsArrivedDate = GetDatabaseTime(GoodsArrivedDate.Text.Trim())
-        POInformation.LotNumber = StrToNullableString(LotNumber.Text.Trim())
-        POInformation.InvoiceReceivedDate = GetDatabaseTime(InvoceReceivedDate.Text.Trim())
-        POInformation.ImportCustomClearanceDate = GetDatabaseTime(ImportCustomClearanceDate.Text.Trim())
-        POInformation.QMStartingDate = GetDatabaseTime(QMStartingDate.Text.Trim())
-        POInformation.QMFinishDate = GetDatabaseTime(QMFinishDate.Text.Trim())
-        POInformation.QMResult = StrToNullableString(QMResult.Text.Trim())
-        POInformation.RequestQuantity = StrToNullableString(RequestQuantity.Text.Trim())
-        POInformation.ScheduledExportDate = GetDatabaseTime(ScheduledExportDate.Text.Trim())
-        POInformation.PurchasingRequisitionNumber = StrToNullableString(PurchasingRequisitionNumber.Text.Trim())
-        POInformation.CancellationDate = GetDatabaseTime(CancellationDate.Text.Trim())
+        DstPOInformation.DueDate = GetDatabaseTime(DueDate.Text.Trim())
+        DstPOInformation.GoodsArrivedDate = GetDatabaseTime(GoodsArrivedDate.Text.Trim())
+        DstPOInformation.LotNumber = StrToNullableString(LotNumber.Text.Trim())
+        DstPOInformation.InvoiceReceivedDate = GetDatabaseTime(InvoceReceivedDate.Text.Trim())
+        DstPOInformation.ImportCustomClearanceDate = GetDatabaseTime(ImportCustomClearanceDate.Text.Trim())
+        DstPOInformation.QMStartingDate = GetDatabaseTime(QMStartingDate.Text.Trim())
+        DstPOInformation.QMFinishDate = GetDatabaseTime(QMFinishDate.Text.Trim())
+        DstPOInformation.QMResult = StrToNullableString(QMResult.Text.Trim())
+        DstPOInformation.RequestQuantity = StrToNullableString(RequestQuantity.Text.Trim())
+        DstPOInformation.ScheduledExportDate = GetDatabaseTime(ScheduledExportDate.Text.Trim())
+        DstPOInformation.PurchasingRequisitionNumber = StrToNullableString(PurchasingRequisitionNumber.Text.Trim())
+        DstPOInformation.CancellationDate = GetDatabaseTime(CancellationDate.Text.Trim())
 
-        UpdatePOInfomation(POInformation)
+        UpdatePOInfomation(SrcPOInformation, DstPOInformation)
+
     End Sub
 
     ''' <summary>
@@ -520,7 +522,6 @@ Partial Public Class POUpdate
 
     End Function
 
-
     ''' <summary>
     ''' 半角が期待されるフィールドの入力値を半角に変換します。
     ''' </summary>
@@ -532,7 +533,6 @@ Partial Public Class POUpdate
         LotNumber.Text = StrConv(LotNumber.Text, VbStrConv.Narrow)
 
     End Sub
-
 
     ''' <summary>
     ''' Update,Cancel時のパラメータ、設定値の正当性チェックを行います。
@@ -579,7 +579,6 @@ Partial Public Class POUpdate
         Return ExistenceConfirmation(VIEW_NAME_PO, PK_NAME_PO, PONumber)
 
     End Function
-
 
     ''' <summary>
     ''' 指定したサプライヤーに設定されているLocationCodeを取得します。
@@ -646,7 +645,6 @@ Partial Public Class POUpdate
 
     End Function
 
-
     ''' <summary>
     ''' データベースから現在の時刻を取得します。
     ''' </summary>
@@ -673,7 +671,6 @@ Partial Public Class POUpdate
         Return dt_Current
 
     End Function
-
 
     ''' <summary>
     ''' POテーブルのデータを取得します。
@@ -858,66 +855,84 @@ Partial Public Class POUpdate
     ''' <summary>
     ''' POテーブルのデータを更新します。
     ''' </summary>
-    ''' <param name="POInfomation">更新するPOInformationType型データ</param>
+    ''' <param name="SrcPOInformation">更新前の PO レコード</param>
+    ''' <param name="DstPOInformation">更新後の PO レコード</param>
     ''' <remarks></remarks>
-    Private Sub UpdatePOInfomation(ByRef POInfomation As POInformationType)
-
+    Private Sub UpdatePOInfomation(ByRef SrcPOInformation As POInformationType, ByRef DstPOInformation As POInformationType)
+        Dim st_Sql As String = String.Empty
         Dim conn As SqlConnection = Nothing
+
+        conn = New SqlConnection(DB_CONNECT_STRING)
+        conn.Open()
+        Dim trans As SqlTransaction = conn.BeginTransaction
         Try
-            conn = New SqlConnection(DB_CONNECT_STRING)
             Dim cmd As SqlCommand = conn.CreateCommand()
+            cmd.Transaction = trans
 
             cmd.CommandText = CreateSQLForUpdatePOInfomation()
 
-            cmd.Parameters.AddWithValue("R3PONumber", NullableStringToDBObject(POInfomation.R3PONumber))
-            cmd.Parameters.AddWithValue("R3POLineNumber", NullableVariableToDBObject(POInfomation.R3POLineNumber))
-            cmd.Parameters.AddWithValue("PODate", NullableVariableToDBObject(POInfomation.PODate))
-            cmd.Parameters.AddWithValue("POLocationCode", NullableVariableToDBObject(POInfomation.POLocationCode))
-            cmd.Parameters.AddWithValue("POUserID", NullableVariableToDBObject(POInfomation.POUserID))
-            cmd.Parameters.AddWithValue("SOLocationCode", NullableVariableToDBObject(POInfomation.SOLocationCode))
-            cmd.Parameters.AddWithValue("SOUserID", NullableVariableToDBObject(POInfomation.SOUserID))
-            cmd.Parameters.AddWithValue("ProductID", NullableVariableToDBObject(POInfomation.ProductID))
-            cmd.Parameters.AddWithValue("SupplierCode", NullableVariableToDBObject(POInfomation.SupplierCode))
-            cmd.Parameters.AddWithValue("MakerCode", NullableVariableToDBObject(POInfomation.MakerCode))
-            cmd.Parameters.AddWithValue("OrderQuantity", NullableVariableToDBObject(POInfomation.OrderQuantity))
-            cmd.Parameters.AddWithValue("OrderUnitCode", NullableVariableToDBObject(POInfomation.OrderUnitCode))
-            cmd.Parameters.AddWithValue("DeliveryDate", NullableVariableToDBObject(POInfomation.DeliveryDate))
-            cmd.Parameters.AddWithValue("CurrencyCode", NullableVariableToDBObject(POInfomation.CurrencyCode))
-            cmd.Parameters.AddWithValue("UnitPrice", NullableVariableToDBObject(POInfomation.UnitPrice))
-            cmd.Parameters.AddWithValue("PerQuantity", NullableVariableToDBObject(POInfomation.PerQuantity))
-            cmd.Parameters.AddWithValue("PerUnitCode", NullableVariableToDBObject(POInfomation.PerUnitCode))
-            cmd.Parameters.AddWithValue("PaymentTermCode", NullableVariableToDBObject(POInfomation.PaymentTermCode))
-            cmd.Parameters.AddWithValue("IncotermsCode", NullableVariableToDBObject(POInfomation.IncotermsCode))
-            cmd.Parameters.AddWithValue("DeliveryTerm", NullableVariableToDBObject(POInfomation.DeliveryTerm))
-            cmd.Parameters.AddWithValue("PurposeCode", NullableVariableToDBObject(POInfomation.PurposeCode))
-            cmd.Parameters.AddWithValue("RawMaterialFor", NullableVariableToDBObject(POInfomation.RawMaterialFor))
-            cmd.Parameters.AddWithValue("RequestedBy", NullableVariableToDBObject(POInfomation.RequestedBy))
-            cmd.Parameters.AddWithValue("SupplierItemNumber", NullableVariableToDBObject(POInfomation.SupplierItemNumber))
-            cmd.Parameters.AddWithValue("SupplierLotNumber", NullableVariableToDBObject(POInfomation.SupplierLotNumber))
-            cmd.Parameters.AddWithValue("DueDate", NullableVariableToDBObject(POInfomation.DueDate))
-            cmd.Parameters.AddWithValue("GoodsArrivedDate", NullableVariableToDBObject(POInfomation.GoodsArrivedDate))
-            cmd.Parameters.AddWithValue("LotNumber", NullableVariableToDBObject(POInfomation.LotNumber))
-            cmd.Parameters.AddWithValue("InvoiceReceivedDate", NullableVariableToDBObject(POInfomation.InvoiceReceivedDate))
-            cmd.Parameters.AddWithValue("ImportCustomClearanceDate", NullableVariableToDBObject(POInfomation.ImportCustomClearanceDate))
-            cmd.Parameters.AddWithValue("QMStartingDate", NullableVariableToDBObject(POInfomation.QMStartingDate))
-            cmd.Parameters.AddWithValue("QMFinishDate", NullableVariableToDBObject(POInfomation.QMFinishDate))
-            cmd.Parameters.AddWithValue("QMResult", NullableVariableToDBObject(POInfomation.QMResult))
-            cmd.Parameters.AddWithValue("RequestQuantity", NullableVariableToDBObject(POInfomation.RequestQuantity))
-            cmd.Parameters.AddWithValue("ScheduledExportDate", NullableVariableToDBObject(POInfomation.ScheduledExportDate))
-            cmd.Parameters.AddWithValue("PurchasingRequisitionNumber", NullableVariableToDBObject(POInfomation.PurchasingRequisitionNumber))
-            'cmd.Parameters.AddWithValue("isCancelled", NullableVariableToDBObject(POInfomation.isCancelled))
-            cmd.Parameters.AddWithValue("CancellationDate", NullableVariableToDBObject(POInfomation.CancellationDate))
-            cmd.Parameters.AddWithValue("RFQLineNumber", NullableVariableToDBObject(POInfomation.RFQLineNumber))
-            cmd.Parameters.AddWithValue("ParPONumber", NullableVariableToDBObject(POInfomation.ParPONumber))
-            cmd.Parameters.AddWithValue("CreatedBy", NullableVariableToDBObject(POInfomation.CreatedBy))
-            cmd.Parameters.AddWithValue("CreateDate", NullableVariableToDBObject(POInfomation.CreateDate))
+            cmd.Parameters.AddWithValue("R3PONumber", NullableStringToDBObject(DstPOInformation.R3PONumber))
+            cmd.Parameters.AddWithValue("R3POLineNumber", NullableVariableToDBObject(DstPOInformation.R3POLineNumber))
+            cmd.Parameters.AddWithValue("PODate", NullableVariableToDBObject(DstPOInformation.PODate))
+            cmd.Parameters.AddWithValue("POLocationCode", NullableVariableToDBObject(DstPOInformation.POLocationCode))
+            cmd.Parameters.AddWithValue("POUserID", NullableVariableToDBObject(DstPOInformation.POUserID))
+            cmd.Parameters.AddWithValue("SOLocationCode", NullableVariableToDBObject(DstPOInformation.SOLocationCode))
+            cmd.Parameters.AddWithValue("SOUserID", NullableVariableToDBObject(DstPOInformation.SOUserID))
+            cmd.Parameters.AddWithValue("ProductID", NullableVariableToDBObject(DstPOInformation.ProductID))
+            cmd.Parameters.AddWithValue("SupplierCode", NullableVariableToDBObject(DstPOInformation.SupplierCode))
+            cmd.Parameters.AddWithValue("MakerCode", NullableVariableToDBObject(DstPOInformation.MakerCode))
+            cmd.Parameters.AddWithValue("OrderQuantity", NullableVariableToDBObject(DstPOInformation.OrderQuantity))
+            cmd.Parameters.AddWithValue("OrderUnitCode", NullableVariableToDBObject(DstPOInformation.OrderUnitCode))
+            cmd.Parameters.AddWithValue("DeliveryDate", NullableVariableToDBObject(DstPOInformation.DeliveryDate))
+            cmd.Parameters.AddWithValue("CurrencyCode", NullableVariableToDBObject(DstPOInformation.CurrencyCode))
+            cmd.Parameters.AddWithValue("UnitPrice", NullableVariableToDBObject(DstPOInformation.UnitPrice))
+            cmd.Parameters.AddWithValue("PerQuantity", NullableVariableToDBObject(DstPOInformation.PerQuantity))
+            cmd.Parameters.AddWithValue("PerUnitCode", NullableVariableToDBObject(DstPOInformation.PerUnitCode))
+            cmd.Parameters.AddWithValue("PaymentTermCode", NullableVariableToDBObject(DstPOInformation.PaymentTermCode))
+            cmd.Parameters.AddWithValue("IncotermsCode", NullableVariableToDBObject(DstPOInformation.IncotermsCode))
+            cmd.Parameters.AddWithValue("DeliveryTerm", NullableVariableToDBObject(DstPOInformation.DeliveryTerm))
+            cmd.Parameters.AddWithValue("PurposeCode", NullableVariableToDBObject(DstPOInformation.PurposeCode))
+            cmd.Parameters.AddWithValue("RawMaterialFor", NullableVariableToDBObject(DstPOInformation.RawMaterialFor))
+            cmd.Parameters.AddWithValue("RequestedBy", NullableVariableToDBObject(DstPOInformation.RequestedBy))
+            cmd.Parameters.AddWithValue("SupplierItemNumber", NullableVariableToDBObject(DstPOInformation.SupplierItemNumber))
+            cmd.Parameters.AddWithValue("SupplierLotNumber", NullableVariableToDBObject(DstPOInformation.SupplierLotNumber))
+            cmd.Parameters.AddWithValue("DueDate", NullableVariableToDBObject(DstPOInformation.DueDate))
+            cmd.Parameters.AddWithValue("GoodsArrivedDate", NullableVariableToDBObject(DstPOInformation.GoodsArrivedDate))
+            cmd.Parameters.AddWithValue("LotNumber", NullableVariableToDBObject(DstPOInformation.LotNumber))
+            cmd.Parameters.AddWithValue("InvoiceReceivedDate", NullableVariableToDBObject(DstPOInformation.InvoiceReceivedDate))
+            cmd.Parameters.AddWithValue("ImportCustomClearanceDate", NullableVariableToDBObject(DstPOInformation.ImportCustomClearanceDate))
+            cmd.Parameters.AddWithValue("QMStartingDate", NullableVariableToDBObject(DstPOInformation.QMStartingDate))
+            cmd.Parameters.AddWithValue("QMFinishDate", NullableVariableToDBObject(DstPOInformation.QMFinishDate))
+            cmd.Parameters.AddWithValue("QMResult", NullableVariableToDBObject(DstPOInformation.QMResult))
+            cmd.Parameters.AddWithValue("RequestQuantity", NullableVariableToDBObject(DstPOInformation.RequestQuantity))
+            cmd.Parameters.AddWithValue("ScheduledExportDate", NullableVariableToDBObject(DstPOInformation.ScheduledExportDate))
+            cmd.Parameters.AddWithValue("PurchasingRequisitionNumber", NullableVariableToDBObject(DstPOInformation.PurchasingRequisitionNumber))
+            'cmd.Parameters.AddWithValue("isCancelled", NullableVariableToDBObject(DstPOInformation.isCancelled))
+            cmd.Parameters.AddWithValue("CancellationDate", NullableVariableToDBObject(DstPOInformation.CancellationDate))
+            cmd.Parameters.AddWithValue("RFQLineNumber", NullableVariableToDBObject(DstPOInformation.RFQLineNumber))
+            cmd.Parameters.AddWithValue("ParPONumber", NullableVariableToDBObject(DstPOInformation.ParPONumber))
+            cmd.Parameters.AddWithValue("CreatedBy", NullableVariableToDBObject(DstPOInformation.CreatedBy))
+            cmd.Parameters.AddWithValue("CreateDate", NullableVariableToDBObject(DstPOInformation.CreateDate))
             cmd.Parameters.AddWithValue("UpdatedBy", i_OperatingUserID)
             'UpdateDateフィールドはSQL内にGETDATE()を明示してあるため不要
-            'cmd.Parameters.AddWithValue("UpdateDate", NullableVariableToDBObject(POInfomation.UpdateDate))
-            cmd.Parameters.AddWithValue("PONumber", NullableVariableToDBObject(POInfomation.PONumber))
-
-            conn.Open()
+            'cmd.Parameters.AddWithValue("UpdateDate", NullableVariableToDBObject(DstPOInformation.UpdateDate))
+            cmd.Parameters.AddWithValue("PONumber", NullableVariableToDBObject(DstPOInformation.PONumber))
             cmd.ExecuteNonQuery()
+
+            If (Not IsDBNull(DstPOInformation.ParPONumber)) And (SrcPOInformation.POUserID <> DstPOInformation.POUserID) Then
+                cmd.Parameters.Clear()
+                cmd.CommandText = "UPDATE PO SET SOUserID = @SOUserID, UpdatedBy = @UpdatedBy, UpdateDate = GETDATE() WHERE PONumber = @PONumber"
+                cmd.Parameters.AddWithValue("SOUserID", NullableVariableToDBObject(DstPOInformation.POUserID))
+                cmd.Parameters.AddWithValue("UpdatedBy", i_OperatingUserID)
+                cmd.Parameters.AddWithValue("PONumber", NullableVariableToDBObject(DstPOInformation.ParPONumber))
+                cmd.ExecuteNonQuery()
+            End If
+
+            trans.Commit()
+
+        Catch exception As Exception
+            trans.Rollback()
+            Throw
 
         Finally
             If Not conn Is Nothing Then
@@ -984,8 +999,6 @@ Partial Public Class POUpdate
         Return sb_SQL.ToString()
     End Function
 
-
-
     ''' <summary>
     ''' DBオブジェクトをSystem.stringに変換します。
     ''' </summary>
@@ -1008,7 +1021,6 @@ Partial Public Class POUpdate
             Return value.ToString()
         End If
     End Function
-
 
     ''' <summary>
     ''' DBオブジェクトをNullable System.Int32に変換します。
@@ -1058,8 +1070,6 @@ Partial Public Class POUpdate
         End If
     End Function
 
-
-
     ''' <summary>
     ''' Nullable オブジェクトをDBNullを含んだSystem.Objectオブジェクトに変換します。
     ''' </summary>
@@ -1075,8 +1085,6 @@ Partial Public Class POUpdate
         Return value
     End Function
 
-
-
     ''' <summary>
     ''' DBオブジェクトをNullable DateTimeオブジェクトに変換します。
     ''' </summary>
@@ -1090,7 +1098,6 @@ Partial Public Class POUpdate
             Return Nothing
         End If
     End Function
-
 
     ''' <summary>
     ''' DBオブジェクトをNullable System.Booleanに変換します。
@@ -1147,6 +1154,31 @@ Partial Public Class POUpdate
 
     End Function
 
+    Private Sub SetControl_SrcUser(ByVal LocationCode As String, ByVal UserID As Integer)
+        Dim sb_Sql As StringBuilder = New StringBuilder
 
+        sb_Sql.Append("SELECT ")
+        sb_Sql.Append("  UserID, Name ")
+        sb_Sql.Append("FROM ")
+        sb_Sql.Append("  v_User ")
+        sb_Sql.Append("WHERE ")
+        sb_Sql.Append("  LocationCode = @LocationCode ")
+        sb_Sql.Append("  AND isDisabled = 0 ")
+        sb_Sql.Append("UNION ")
+        sb_Sql.Append("SELECT ")
+        sb_Sql.Append("  UserID, Name ")
+        sb_Sql.Append("FROM ")
+        sb_Sql.Append("  v_UserAll ")
+        sb_Sql.Append("WHERE ")
+        sb_Sql.Append("  UserID = @UserID ")
+        sb_Sql.Append("ORDER BY ")
+        sb_Sql.Append("  Name ")
+
+        SrcUser.SelectCommand = sb_Sql.ToString
+        SrcUser.SelectParameters.Clear()
+        SrcUser.SelectParameters.Add("LocationCode", LocationCode)
+        SrcUser.SelectParameters.Add("UserID", UserID.ToString)
+
+    End Sub
 
 End Class

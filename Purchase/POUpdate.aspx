@@ -44,8 +44,11 @@
                         </tr>
                         <tr>
                             <th>PO-User  : </th>
-                            <td><asp:Label ID="POUser" runat="server" Text=""></asp:Label>
-                                <span class="indent">(<asp:Label ID="POLocation" runat="server" Text=""></asp:Label>)</span>
+                            <td>
+                                <asp:DropDownList ID="POUser" runat="server" DataSourceID="SrcUser" DataTextField="Name" DataValueField="UserID">
+                                </asp:DropDownList>
+                                <asp:SqlDataSource ID="SrcUser" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+                                (<asp:Label ID="POLocationName" runat="server" Text=""></asp:Label>)
                             </td>
                         </tr>
                         <tr>
