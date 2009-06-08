@@ -228,6 +228,12 @@ Public Class Common
     ''' <remarks></remarks>
     Public Const ERR_OVER_3000 As String = " cannot contain more than 3000 characters."
 
+    ''' <summary>
+    ''' エラーメッセージ 「未処理のコレポンが存在します」
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const ERR_UNTREATED_CORRESPONDENCE As String = "There are any untreated correspondences."
+
     Private Const LOCATION_JP As String = "JP"
 
     ''' <summary>
