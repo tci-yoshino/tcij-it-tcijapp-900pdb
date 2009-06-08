@@ -6,6 +6,8 @@
     Private stb_PONumbers As StringBuilder = New StringBuilder ' PONumber を格納するオブジェクト。この値を見て、重複するPONumber を除外する。
 
     Const SWITCH_ACTION As String = "Switch"
+    Const RFQ_ACTION As String = "ReAssign_RFQ"
+    Const PO_ACTION As String = "ReAssign_PO"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -129,6 +131,74 @@
 
     End Sub
 
+    Protected Sub ButtonRFQ_Click(ByVal source As Object, ByVal e As ListViewCommandEventArgs) Handles RFQList.ItemCommand
+        ' Action チェック
+        st_Action = Request.QueryString("Action")
+        If st_Action <> RFQ_ACTION Then
+            Msg.Text = Common.ERR_INVALID_PARAMETER
+            st_Action = ""
+            Exit Sub
+        End If
+
+        '[SQL接続定義作成]--------------------------------------------------------------
+        Dim connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
+        Dim command As SqlClient.SqlCommand
+
+        '[選択されたRFQNumberの取得]----------------------------------------------------
+        Dim st_RFQNumber As String = CType(e.Item.FindControl("RFQNumber"), Label).Text
+
+        '[QuoUserID=Nullにする]---------------------------------------------------------
+        Dim sb_SQL As New Text.StringBuilder
+        sb_SQL.Append("UPDATE ")
+        sb_SQL.Append("  RFQHeader ")
+        sb_SQL.Append("SET ")
+        sb_SQL.Append("  QuoUserID=Null ")
+        sb_SQL.Append("WHERE ")
+        sb_SQL.Append("  RFQNumber= " & st_RFQNumber)
+        command = connection.CreateCommand
+        command.CommandText = sb_SQL.ToString
+        connection.Open()
+        command.ExecuteNonQuery()
+        connection.Close()
+
+        '[RFQList再表示]----------------------------------------------------------------
+        Switch_Click()
+    End Sub
+
+    Protected Sub ButtonPO_Click(ByVal source As Object, ByVal e As ListViewCommandEventArgs) Handles POList_PPI.ItemCommand
+        ' Action チェック
+        st_Action = Request.QueryString("Action")
+        If st_Action <> PO_ACTION Then
+            Msg.Text = Common.ERR_INVALID_PARAMETER
+            st_Action = ""
+            Exit Sub
+        End If
+
+        '[SQL接続定義作成]--------------------------------------------------------------
+        Dim connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
+        Dim command As SqlClient.SqlCommand
+
+        '[選択されたRFQNumberの取得]----------------------------------------------------
+        Dim st_PONumber As String = CType(e.Item.FindControl("PONumber"), Label).Text
+
+        '[POUserID=Nullにする]----------------------------------------------------------
+        Dim sb_SQL As New Text.StringBuilder
+        sb_SQL.Append("UPDATE ")
+        sb_SQL.Append("  PO ")
+        sb_SQL.Append("SET ")
+        sb_SQL.Append("  SOUserID=Null ")
+        sb_SQL.Append("WHERE ")
+        sb_SQL.Append("  PONumber= " & st_PONumber)
+        command = connection.CreateCommand
+        command.CommandText = sb_SQL.ToString
+        connection.Open()
+        command.ExecuteNonQuery()
+        connection.Close()
+
+        '[POList_PPI再表示]-------------------------------------------------------------
+        Switch_Click()
+    End Sub
+
     ' ユーザ選択プルダウンを前回選択したユーザに設定する
     Private Sub SetCtrl_UserIDSelected(ByVal sender As Object, ByVal e As System.EventArgs) Handles UserID.DataBound
         Dim ddl As DropDownList = sender
@@ -173,6 +243,19 @@
         src.SelectCommand = CreatePOChildSelectSQL()
         lv.DataSourceID = src.ID
         lv.DataBind()
+    End Sub
+
+    Protected Sub SetRFQReAssign(ByVal sender As Object, ByVal e As ListViewItemEventArgs) Handles RFQList.ItemDataBound
+        '[ButtonRFQ]の表示-------------------------------------------------------------
+        If DirectCast(e.Item.FindControl("StatusCode"), HiddenField).Value = "A" Then
+            e.Item.FindControl("ButtonRFQ").Visible = True
+            CType(e.Item.FindControl("ButtonRFQ"), Button).PostBackUrl = "MyTask.aspx?Action=" & RFQ_ACTION
+        End If
+    End Sub
+
+    Protected Sub SetPOReAssign(ByVal sender As Object, ByVal e As ListViewItemEventArgs) Handles POList_PPI.ItemDataBound
+        '[ButtonRFQ]の表示-------------------------------------------------------------
+        CType(e.Item.FindControl("ButtonPO"), Button).PostBackUrl = "MyTask.aspx?Action=" & PO_ACTION
     End Sub
 
     Protected Sub SrcRFQ_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcRFQ.Selecting
@@ -228,6 +311,7 @@
         sb_SQL.Append("  RH.StatusSortOrder, ")
         sb_SQL.Append("  RH.StatusChangeDate, ")
         sb_SQL.Append("  RH.Status, ")
+        sb_SQL.Append("  RH.StatusCode, ")
         sb_SQL.Append("  RH.ProductNumber, ")
         sb_SQL.Append("  RH.ProductName AS ProductName, ")
         sb_SQL.Append("  RH.Purpose, ")
@@ -251,6 +335,7 @@
         sb_SQL.Append("  RH.StatusSortOrder, ")
         sb_SQL.Append("  RH.StatusChangeDate, ")
         sb_SQL.Append("  RH.Status, ")
+        sb_SQL.Append("  RH.StatusCode, ")
         sb_SQL.Append("  RH.ProductNumber, ")
         sb_SQL.Append("  RH.ProductName AS ProductName, ")
         sb_SQL.Append("  RH.Purpose, ")

@@ -26,9 +26,9 @@ window.onload = function() {
     </div><!-- Sub Navigation END -->
 
     <!-- Main Content Area -->
-    <div id="content">       
+    <div id="content">   
+        <form ID="SwitchForm" runat="server">
         <div class="main switch">
-            <form ID="SwitchForm" runat="server">
                 <table style="margin-bottom:0">
                     <tr>
                         <th>User : </th>
@@ -40,7 +40,6 @@ window.onload = function() {
                     </tr>
                 </table>
                 <asp:HiddenField runat="server" ID="Action" Value="Switch" />
-            </form>
         </div>
 
        <div class="main">
@@ -68,8 +67,12 @@ window.onload = function() {
                             RFQ Reference Number : <asp:HyperLink ID="RFQUpdate" runat="server" NavigateUrl='<%# "./RFQUpdate.aspx?RFQNumber=" & Eval("RFQNumber") %>'><asp:label id="RFQNumber" runat="server" Text='<%# Eval("RFQNumber") %>'></asp:label></asp:HyperLink>
                             <span class="indent"><em><asp:label id="RFQCorrespondence" runat="server" Text='<%# Eval("RFQCorrespondence") %>'></asp:label></em></span>
                         </th>
-                        <th class="subhead" colspan="4">
+                        <th class="subhead" colspan="3">
                             <asp:label id="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:label><span class="indent"><asp:label id="RFQStatus" runat="server" Text='<%# Eval("Status") %>'></asp:label></span>
+                        </th>
+                        <th class="subhead" style="text-align:right">
+                           <asp:Button ID="ButtonRFQ" runat="server" Text="ReAssigned" Visible="False" />
+                           <asp:HiddenField ID="StatusCode" runat="server" Value='<%# Eval("StatusCode") %>'/>
                         </th>
                     </tr>
                     <tr>
@@ -144,7 +147,10 @@ window.onload = function() {
                     <table>
                         <tr>
                             <th class="subhead" colspan="2">PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber") %>'><asp:label id="PONumber" runat="server" Text='<%# Eval("PONumber") %>'></asp:label></asp:HyperLink><span class="indent"><asp:label id="PPI" runat="server" Text="Par-PO Issued"></asp:label></span><span class="indent"><em><asp:label id="POCorrespondence" runat="server" Text='<%# Eval("POCorrespondence") %>'></asp:label></em></span></th>
-                            <th class="subhead" colspan="4"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%# Eval("StatusCode") %>'></asp:label></span></th>
+                            <th class="subhead" colspan="3"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%# Eval("StatusCode") %>'></asp:label></span></th>
+                            <th class="subhead" style="text-align:right">
+                                <asp:Button ID="ButtonPO" runat="server" Text="ReAssigned" />
+                            </th>
                         </tr>
                         <tr>
                             <th style="width:17%">Product Number / Name</th>
@@ -254,6 +260,7 @@ window.onload = function() {
         <% End If%>
         </div>
 <%End If%>
+        </form>
     </div><!-- Main Content Area END -->
     <asp:SqlDataSource ID="SrcRFQ" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
     <asp:SqlDataSource ID="SrcPO_Overdue" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
