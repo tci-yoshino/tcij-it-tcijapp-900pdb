@@ -503,7 +503,7 @@ Public Class Common
     ''' <param name="UpdateDate">検索条件の更新日(yyyy-mm-dd hh:mi:ss)</param>
     ''' <returns>更新日が同一である場合は True 、そうでない場合は False を返します。</returns>
     ''' <remarks></remarks>
-    Public Shared Function isLatestData(ByVal TableName As String, ByVal TableField As String, ByVal CheckData As String, ByVal UpdateDate As String) As Boolean
+    Public Shared Function IsLatestData(ByVal TableName As String, ByVal TableField As String, ByVal CheckData As String, ByVal UpdateDate As String) As Boolean
 
         Dim st_SQLCommand As String = String.Empty
         st_SQLCommand = String.Format("SELECT COUNT(*) AS RecordCount FROM {0} WHERE {1} = @CheckData AND CONVERT(VARCHAR,UpdateDate,120) = @UpdateDate ", _
