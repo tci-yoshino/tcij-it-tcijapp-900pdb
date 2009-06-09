@@ -24,7 +24,7 @@ Partial Public Class POUpdate
     ''' エラー定数です。
     ''' </summary>
     ''' <remarks></remarks>
-    Const ERR_LOCATION_INCONSITENT As String = "You can not edit PO of other locations." '"拠点が一致しません。"
+    Const ERR_LOCATION_INCONSISTENT As String = "You can not edit PO of other locations." '"拠点が一致しません。"
     Const ERR_LENGTH_OVER As String = "{0} には{1}文字以上登録することができません。"
 
 
@@ -211,11 +211,11 @@ Partial Public Class POUpdate
             Return
         End If
 
-        If ValidateCommon() = False Then
+        If ValidateForUpdate() = False Then
             Exit Sub
         End If
 
-        If ValidateForUpdate() = False Then
+        If ValidateCommon() = False Then
             Exit Sub
         End If
 
@@ -244,12 +244,12 @@ Partial Public Class POUpdate
             Return
         End If
 
-        If ValidateCommon() = False Then
+        If Not ValidateDateTextBox(CancellationDate) Then
+            Msg.Text = "Cancellation Date" & ERR_INCORRECT_FORMAT
             Exit Sub
         End If
 
-        If Not ValidateDateTextBox(CancellationDate) Then
-            Msg.Text = "Cancellation Date" & ERR_INCORRECT_FORMAT
+        If ValidateCommon() = False Then
             Exit Sub
         End If
 
@@ -547,22 +547,36 @@ Partial Public Class POUpdate
         End If
 
         Dim i_PONumber As Integer = Integer.Parse(st_PONumber)
+        Dim i_ParPONumber As Integer = i_PONumber
 
         Dim POInformation As POInformationType = SelectPOInformation(i_PONumber)
-        If CBool(Session(SESSION_KEY_ADMIN)) = False And POInformation.POLocationCode <> Session(SESSION_KEY_LOCATION).ToString() Then
-            Msg.Text = ERR_LOCATION_INCONSITENT
-            Return False
-        End If
-
-        If ExistsPO(i_PONumber.ToString()) = False Then
+        If POInformation.PONumber Is Nothing Then
             Msg.Text = ERR_DELETED_BY_ANOTHER_USER
             Return False
         End If
 
-        If isLatestData(TABLE_NAME_PO, PK_NAME_PO, i_PONumber.ToString(), UpdateDate.Value) = False Then
+        If CBool(Session(SESSION_KEY_ADMIN)) = False And POInformation.POLocationCode <> Session(SESSION_KEY_LOCATION).ToString() Then
+            Msg.Text = ERR_LOCATION_INCONSISTENT
+            Return False
+        End If
+
+        If Not POInformation.ParPONumber Is Nothing Then
+            i_ParPONumber = CInt(POInformation.ParPONumber)
+        End If
+
+        ' 変更前の PO-User 宛てに未処理のコレポンがある場合は、PO-User を変更できない
+        If POInformation.POUserID <> CInt(POUser.SelectedValue) Then
+            If UntreatedCorrespondence(i_ParPONumber, CInt(POInformation.POUserID)) = True Then
+                Msg.Text = ERR_UNTREATED_CORRESPONDENCE
+                Return False
+            End If
+        End If
+
+        If IsLatestData(TABLE_NAME_PO, PK_NAME_PO, i_PONumber.ToString(), UpdateDate.Value) = False Then
             Msg.Text = ERR_UPDATED_BY_ANOTHER_USER
             Return False
         End If
+
         Return True
 
     End Function
@@ -1181,4 +1195,40 @@ Partial Public Class POUpdate
 
     End Sub
 
+    Private Function UntreatedCorrespondence(ByVal PONumber As Integer, ByVal UserID As Integer) As Boolean
+        Dim sb_Sql As StringBuilder = New StringBuilder
+
+        sb_Sql.Append("SELECT 1 ")
+        sb_Sql.Append("FROM ")
+        sb_Sql.Append("  v_POReminder ")
+        sb_Sql.Append("WHERE ")
+        sb_Sql.Append("  PONumber = @PONumber ")
+        sb_Sql.Append("  AND RcptUserID = @RcptUserID ")
+
+        Dim sqlConn As SqlConnection = Nothing
+        Try
+            sqlConn = New SqlConnection(DB_CONNECT_STRING)
+            Dim sqlCmd As New SqlCommand(sb_Sql.ToString, sqlConn)
+
+            sqlCmd.Parameters.AddWithValue("PONumber", PONumber)
+            sqlCmd.Parameters.AddWithValue("RcptUserID", UserID)
+            sqlConn.Open()
+
+            Dim obj_Return As Object = sqlCmd.ExecuteScalar()
+
+            If obj_Return Is Nothing Then
+                Return False
+            End If
+
+            Return True
+
+        Finally
+            If Not (sqlConn Is Nothing) Then
+                sqlConn.Close()
+                sqlConn.Dispose()
+            End If
+
+        End Try
+
+    End Function
 End Class
