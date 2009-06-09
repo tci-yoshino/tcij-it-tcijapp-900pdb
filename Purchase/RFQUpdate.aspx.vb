@@ -26,6 +26,10 @@ Partial Public Class RFQUpdate
     Private Const ERR_COMMENT_OVER As String = "Comment" & ERR_OVER_3000
     Private Const ERR_SPECIFICATION_OVER As String = "Specification" & ERR_OVER_255
 
+    '更新前 EnqUserID, QuoUserID を格納する ViewState のキー名定数
+    Private Const OLD_ENQUSER_ID As String = "OldEnqUserID"
+    Private Const OLD_QUOUSER_ID As String = "OldQuoUserID"
+
     '画面表示フラグ
     Protected Parameter As Boolean = True
     'RFQNumber
@@ -121,6 +125,20 @@ Partial Public Class RFQUpdate
         If ItemCheck() = False Then
             '入力された項目の型をチェックする(DB登録時にエラーになるもののみ)
             Exit Sub
+        End If
+        '変更前 Enq-User のコレポンチェック (False = 未処理コレポン有り)
+        If ViewState(OLD_ENQUSER_ID) <> EnqUser.SelectedValue Then
+            If CheckUntreatedCorrespondence(RFQNumber.Text, ViewState(OLD_ENQUSER_ID)) = False Then
+                Msg.Text = ERR_UNTREATED_CORRESPONDENCE
+                Exit Sub
+            End If
+        End If
+        '変更前 Quo-User のコレポンチェック (False = 未処理コレポン有り)
+        If ViewState(OLD_QUOUSER_ID) <> QuoUser.SelectedValue Then
+            If CheckUntreatedCorrespondence(RFQNumber.Text, ViewState(OLD_QUOUSER_ID)) = False Then
+                Msg.Text = ERR_UNTREATED_CORRESPONDENCE
+                Exit Sub
+            End If
         End If
         '更新可能拠点の確認
         If CheckLocation() = False Then
@@ -347,6 +365,7 @@ Partial Public Class RFQUpdate
                                              & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1}) ORDER BY [Name]" _
                                              , EnqLocationCode.Value, DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString)
             EnqUser.SelectedValue = DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString
+            ViewState(OLD_ENQUSER_ID) = DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString
             EnqLocation.Text = DS.Tables("RFQHeader").Rows(0)("EnqLocationName").ToString
 
             If DS.Tables("RFQHeader").Rows(0)("QuoLocationName").ToString = String.Empty Then
@@ -366,6 +385,7 @@ Partial Public Class RFQUpdate
             SDS_RFQUpdate_QuoUser.DataBind()
             If IsDBNull(DS.Tables("RFQHeader").Rows(0)("QuoUserID")) = False Then
                 QuoUser.SelectedValue = DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString
+                ViewState(OLD_QUOUSER_ID) = DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString
             End If
             Comment.Text = DS.Tables("RFQHeader").Rows(0)("Comment").ToString
 
@@ -501,6 +521,33 @@ Partial Public Class RFQUpdate
             End If
         End If
         Return True
+    End Function
+
+    Protected Function CheckUntreatedCorrespondence(ByVal RFQNumber As Integer, ByVal UserID As Integer) As Boolean
+        ' 未処理コレポンチェック。未処理コレポンがある場合False を返す。
+        Dim b_flag As Boolean = True
+
+        Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
+
+            Dim command As New SqlClient.SqlCommand("SELECT 1 FROM v_RFQReminder WHERE RFQNumber = @RFQNumber AND RcptUserID = @UserID", connection)
+            Dim reader As SqlClient.SqlDataReader
+
+            command.Parameters.AddWithValue("UserID", SafeSqlLiteral(UserID))
+            command.Parameters.AddWithValue("RFQNumber", SafeSqlLiteral(RFQNumber))
+            connection.Open()
+
+            reader = command.ExecuteReader()
+            If reader.HasRows Then
+                b_flag = False
+            End If
+
+            reader.Close()
+            connection.Close()
+
+        End Using
+
+        Return b_flag
+
     End Function
 
     Private Sub SetPostBackUrl()
@@ -681,4 +728,5 @@ Partial Public Class RFQUpdate
             NoOfferReason(i).DataBind()
         Next
     End Sub
+
 End Class
