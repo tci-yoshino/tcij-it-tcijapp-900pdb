@@ -71,7 +71,7 @@ window.onload = function() {
                             <asp:label id="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:label><span class="indent"><asp:label id="RFQStatus" runat="server" Text='<%# Eval("Status") %>'></asp:label></span>
                         </th>
                         <th class="subhead" style="text-align:right">
-                           <asp:Button ID="ButtonRFQ" runat="server" Text="ReAssigned" Visible="False" />
+                           <asp:Button ID="RFQCancelAssign" runat="server" Text="Cancel Assignment" Visible="False" />
                            <asp:HiddenField ID="StatusCode" runat="server" Value='<%# Eval("StatusCode") %>'/>
                         </th>
                     </tr>
@@ -149,7 +149,7 @@ window.onload = function() {
                             <th class="subhead" colspan="2">PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber") %>'><asp:label id="PONumber" runat="server" Text='<%# Eval("PONumber") %>'></asp:label></asp:HyperLink><span class="indent"><asp:label id="PPI" runat="server" Text="Par-PO Issued"></asp:label></span><span class="indent"><em><asp:label id="POCorrespondence" runat="server" Text='<%# Eval("POCorrespondence") %>'></asp:label></em></span></th>
                             <th class="subhead" colspan="3"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%# Eval("StatusCode") %>'></asp:label></span></th>
                             <th class="subhead" style="text-align:right">
-                                <asp:Button ID="ButtonPO" runat="server" Text="ReAssigned" />
+                                <asp:Button ID="POCancelAssign" runat="server" Text="Cancel Assignment" />
                             </th>
                         </tr>
                         <tr>

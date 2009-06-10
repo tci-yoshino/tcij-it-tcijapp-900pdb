@@ -6,8 +6,7 @@
     Private stb_PONumbers As StringBuilder = New StringBuilder ' PONumber を格納するオブジェクト。この値を見て、重複するPONumber を除外する。
 
     Const SWITCH_ACTION As String = "Switch"
-    Const RFQ_ACTION As String = "ReAssign_RFQ"
-    Const PO_ACTION As String = "ReAssign_PO"
+    Const RFQ_PO_ACTION As String = "Cancel"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -131,10 +130,10 @@
 
     End Sub
 
-    Protected Sub ButtonRFQ_Click(ByVal source As Object, ByVal e As ListViewCommandEventArgs) Handles RFQList.ItemCommand
+    Protected Sub RFQCancelAssign_Click(ByVal source As Object, ByVal e As ListViewCommandEventArgs) Handles RFQList.ItemCommand
         ' Action チェック
         st_Action = Request.QueryString("Action")
-        If st_Action <> RFQ_ACTION Then
+        If st_Action <> RFQ_PO_ACTION Then
             Msg.Text = Common.ERR_INVALID_PARAMETER
             st_Action = ""
             Exit Sub
@@ -152,7 +151,7 @@
         sb_SQL.Append("UPDATE ")
         sb_SQL.Append("  RFQHeader ")
         sb_SQL.Append("SET ")
-        sb_SQL.Append("  QuoUserID=Null ")
+        sb_SQL.Append("  QuoUserID=Null,RFQStatusCode = 'N' ")
         sb_SQL.Append("WHERE ")
         sb_SQL.Append("  RFQNumber= " & st_RFQNumber)
         command = connection.CreateCommand
@@ -165,10 +164,10 @@
         Switch_Click()
     End Sub
 
-    Protected Sub ButtonPO_Click(ByVal source As Object, ByVal e As ListViewCommandEventArgs) Handles POList_PPI.ItemCommand
+    Protected Sub POCancelAssign_Click(ByVal source As Object, ByVal e As ListViewCommandEventArgs) Handles POList_PPI.ItemCommand
         ' Action チェック
         st_Action = Request.QueryString("Action")
-        If st_Action <> PO_ACTION Then
+        If st_Action <> RFQ_PO_ACTION Then
             Msg.Text = Common.ERR_INVALID_PARAMETER
             st_Action = ""
             Exit Sub
@@ -245,17 +244,17 @@
         lv.DataBind()
     End Sub
 
-    Protected Sub SetRFQReAssign(ByVal sender As Object, ByVal e As ListViewItemEventArgs) Handles RFQList.ItemDataBound
-        '[ButtonRFQ]の表示-------------------------------------------------------------
+    Protected Sub SetRFQCancelAssign(ByVal sender As Object, ByVal e As ListViewItemEventArgs) Handles RFQList.ItemDataBound
+        '[RFQCancelAssignの表示、Action設定]--------------------------------------------
         If DirectCast(e.Item.FindControl("StatusCode"), HiddenField).Value = "A" Then
-            e.Item.FindControl("ButtonRFQ").Visible = True
-            CType(e.Item.FindControl("ButtonRFQ"), Button).PostBackUrl = "MyTask.aspx?Action=" & RFQ_ACTION
+            e.Item.FindControl("RFQCancelAssign").Visible = True
+            CType(e.Item.FindControl("RFQCancelAssign"), Button).PostBackUrl = "MyTask.aspx?Action=" & RFQ_PO_ACTION
         End If
     End Sub
 
-    Protected Sub SetPOReAssign(ByVal sender As Object, ByVal e As ListViewItemEventArgs) Handles POList_PPI.ItemDataBound
-        '[ButtonRFQ]の表示-------------------------------------------------------------
-        CType(e.Item.FindControl("ButtonPO"), Button).PostBackUrl = "MyTask.aspx?Action=" & PO_ACTION
+    Protected Sub SetPOCancelAssign(ByVal sender As Object, ByVal e As ListViewItemEventArgs) Handles POList_PPI.ItemDataBound
+        '[Action設定]------------------------------------------------------------------
+        CType(e.Item.FindControl("POCancelAssign"), Button).PostBackUrl = "MyTask.aspx?Action=" & RFQ_PO_ACTION
     End Sub
 
     Protected Sub SrcRFQ_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcRFQ.Selecting
