@@ -374,10 +374,10 @@ Partial Public Class RFQUpdate
                 QuoLocation.Text = DS.Tables("RFQHeader").Rows(0)("QuoLocationName").ToString
             End If
             If DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString.Trim = String.Empty Then
-                st_SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}') ORDER BY [Name]" _
+                st_SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0) ORDER BY [Name]" _
                                              , QuoLocationCode.Value)
             Else
-                st_SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}') " _
+                st_SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0) " _
                                              & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1}) ORDER BY [Name]" _
                                              , QuoLocationCode.Value, DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString)
             End If
