@@ -74,7 +74,7 @@
         End If
 
         If Not IsPostBack Then
-            Switch_Click()
+            ShowList()
         End If
 
     End Sub
@@ -82,10 +82,10 @@
     Protected Sub Switch_Click()
 
         ' パラメータ取得
-        If Request.RequestType = "POST" Then
-            st_Action = IIf(String.IsNullOrEmpty(Request.Form("Action")), "", Request.Form("Action"))
-        ElseIf Request.RequestType = "GET" Then
-            st_Action = IIf(String.IsNullOrEmpty(Request.QueryString("Action")), "", Request.QueryString("Action"))
+        If String.IsNullOrEmpty(Request.Form("Action")) Then
+            st_Action = Request.QueryString("Action")
+        Else
+            st_Action = Request.Form("Action")
         End If
 
         ' Action チェック
@@ -95,6 +95,10 @@
             Exit Sub
         End If
 
+        ShowList()
+    End Sub
+
+    Protected Sub ShowList()
         ' 前回の SQL パラメータを削除
         SrcRFQ.SelectParameters.Clear()
         SrcPO_Overdue.SelectParameters.Clear()
@@ -127,7 +131,6 @@
         Dim dv_POReminder As DataView = New DataView(dt_PO, "TaskType = 'Reminder'", "StatusSortOrder", DataViewRowState.CurrentRows)
         POList_Par.DataSource = dv_POReminder
         POList_Par.DataBind()
-
     End Sub
 
     Protected Sub RFQCancelAssign_Click(ByVal source As Object, ByVal e As ListViewCommandEventArgs) Handles RFQList.ItemCommand
@@ -161,7 +164,7 @@
         connection.Close()
 
         '[RFQList再表示]----------------------------------------------------------------
-        Switch_Click()
+        ShowList()
     End Sub
 
     Protected Sub POCancelAssign_Click(ByVal source As Object, ByVal e As ListViewCommandEventArgs) Handles POList_PPI.ItemCommand
@@ -195,7 +198,7 @@
         connection.Close()
 
         '[POList_PPI再表示]-------------------------------------------------------------
-        Switch_Click()
+        ShowList()
     End Sub
 
     ' ユーザ選択プルダウンを前回選択したユーザに設定する

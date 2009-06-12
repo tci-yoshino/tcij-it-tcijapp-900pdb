@@ -36,10 +36,9 @@ window.onload = function() {
                             <asp:DropDownList ID="UserID" runat="server">
                             </asp:DropDownList>
                         </td>
-                        <td><asp:Button ID="Switch" runat="server" Text="Switch" OnClick="Switch_Click" /></td>
+                        <td><asp:Button ID="Switch" runat="server" Text="Switch" OnClick="Switch_Click" PostBackUrl="MyTask.aspx?Action=Switch" /></td>
                     </tr>
                 </table>
-                <asp:HiddenField runat="server" ID="Action" Value="Switch" />
         </div>
 
        <div class="main">
