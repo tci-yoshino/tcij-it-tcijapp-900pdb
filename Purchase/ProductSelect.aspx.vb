@@ -92,12 +92,12 @@
         ' Where 句の生成
         Dim st_where As String = String.Empty
         If Not String.IsNullOrEmpty(st_ProductNumber) Then
-            SrcProduct.SelectParameters.Add("ProductNumber", Common.SafeSqlLiteral(st_ProductNumber))
+            SrcProduct.SelectParameters.Add("ProductNumber", st_ProductNumber)
             st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
             st_where = st_where & " ProductNumber = @ProductNumber "
         End If
         If Not String.IsNullOrEmpty(st_CASNumber) Then
-            SrcProduct.SelectParameters.Add("CASNumber", Common.SafeSqlLiteral(st_CASNumber))
+            SrcProduct.SelectParameters.Add("CASNumber", st_CASNumber)
             st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
             st_where = st_where & " CASNumber = @CASNumber "
         End If

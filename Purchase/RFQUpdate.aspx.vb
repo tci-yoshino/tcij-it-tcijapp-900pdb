@@ -532,8 +532,8 @@ Partial Public Class RFQUpdate
             Dim command As New SqlClient.SqlCommand("SELECT 1 FROM v_RFQReminder WHERE RFQNumber = @RFQNumber AND RcptUserID = @UserID", connection)
             Dim reader As SqlClient.SqlDataReader
 
-            command.Parameters.AddWithValue("UserID", SafeSqlLiteral(UserID))
-            command.Parameters.AddWithValue("RFQNumber", SafeSqlLiteral(RFQNumber))
+            command.Parameters.AddWithValue("UserID", UserID)
+            command.Parameters.AddWithValue("RFQNumber", RFQNumber)
             connection.Open()
 
             reader = command.ExecuteReader()

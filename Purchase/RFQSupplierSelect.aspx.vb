@@ -101,9 +101,9 @@
         End If
 
         SrcSupplier.SelectParameters.Clear()
-        SrcSupplier.SelectParameters.Add("Code", Common.SafeSqlLiteral(st_Code))
+        SrcSupplier.SelectParameters.Add("Code", st_Code)
         SrcSupplier.SelectParameters.Add("Name", Common.SafeSqlLikeClauseLiteral(st_Name))
-        SrcSupplier.SelectParameters.Add("Location", Common.SafeSqlLiteral(st_Location))
+        SrcSupplier.SelectParameters.Add("Location", st_Location)
         SrcSupplier.SelectCommand = CreateSql_SelectSupplier()
 
     End Sub

@@ -66,7 +66,7 @@
 
         ' Where 句の生成
         If Not String.IsNullOrEmpty(st_Code) Then
-            SrcCountry.SelectParameters.Add("CountryCode", Common.SafeSqlLiteral(st_Code))
+            SrcCountry.SelectParameters.Add("CountryCode", st_Code)
             st_Where = IIf(st_Where.Length > 1, st_Where & " AND ", st_Where)
             st_Where = st_Where & " CountryCode = @CountryCode "
         End If

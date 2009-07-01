@@ -74,7 +74,7 @@
         ' Where 句の生成
         Dim st_where As String = String.Empty
         If Not String.IsNullOrEmpty(st_Code) Then
-            SrcMaker.SelectParameters.Add("Code", Common.SafeSqlLiteral(st_Code))
+            SrcMaker.SelectParameters.Add("Code", st_Code)
             st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
             st_where = st_where & " Supplier.SupplierCode = @Code "
         End If
