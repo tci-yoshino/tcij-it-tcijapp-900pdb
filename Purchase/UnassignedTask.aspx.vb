@@ -192,6 +192,7 @@
         sb_SQL.Append("  v_PO AS VP ")
         sb_SQL.Append("WHERE ")
         sb_SQL.Append("  VP.SOLocationCode = '" & st_LocationCode & "' ")
+        sb_SQL.Append("  AND VP.StatusCode = 'PPI' ")
         sb_SQL.Append("  AND VP.SOUserID IS NULL ")
         sb_SQL.Append("ORDER BY ")
         sb_SQL.Append("  VP.PONumber ASC ")
