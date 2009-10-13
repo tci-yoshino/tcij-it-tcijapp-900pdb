@@ -6,14 +6,10 @@
     Dim DBReader As System.Data.SqlClient.SqlDataReader
 
     Private st_UserID As String = String.Empty
-    'Private st_Name As String = String.Empty
+    Private st_LocationName As String = String.Empty
     'Const SEARCH_ACTION As String = "Search"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        '[DBの接続]-----------------------------------------------------------------------
-        DBConn.Open()
-        DBCommand = DBConn.CreateCommand()
-
         '[Msgのクリア]---------------------------------------------------------------------
         Msg.Text = ""
 
@@ -33,86 +29,75 @@
 
             '[全角を半角に変換]--------------------------------------------------------------------
             st_UserID = StrConv(st_UserID, VbStrConv.Narrow)
+
+            '[LocationCode 設定]-------------------------------------------------------------------
+            DBCommand = DBConn.CreateCommand()
+            DBCommand.CommandText = "SELECT Name FROM s_Location ORDER BY Name"
+            DBConn.Open()
+            DBReader = DBCommand.ExecuteReader()
+            LocationName.Items.Clear()
+            LocationName.Items.Add("")
+            Do Until DBReader.Read = False
+                LocationName.Items.Add(DBReader("Name"))
+            Loop
+            DBConn.Close()
+
+            '[データ表示]--------------------------------------------------------------------------
+            If st_UserID <> String.Empty Then
+                DBCommand = DBConn.CreateCommand()
+                DBCommand.CommandText = "SELECT LocationName,AD_DeptName,AD_DisplayName FROM v_UserAll WHERE UserID='" & st_UserID & "'"
+                DBConn.Open()
+                DBReader = DBCommand.ExecuteReader()
+                DBCommand.Dispose()
+                If DBReader.Read = True Then
+                    LocationName.SelectedValue = DBReader("LocationName")
+                    DeptName.Text = DBReader("AD_DeptName")
+                    UserName.Text = DBReader("AD_DisplayName")
+                End If
+                DBReader.Close()
+            End If
+
+            '[検索データ表示]----------------------------------------------------------------------
+            SearchCountryList()
         End If
-
-        '[LocationCode 設定]-----------------------------------------------------------------------
-        DBCommand.CommandText = "SELECT Name FROM s_Location ORDER BY Name"
-        DBReader = DBCommand.ExecuteReader()
-        DBCommand.Dispose()
-        LocationName.Items.Clear()
-        Do Until DBReader.Read = False
-            LocationName.Items.Add(DBReader("Name"))
-        Loop
-        DBReader.Close()
-
-        DBCommand.CommandText = "SELECT LocationName,AD_DeptName,Name,AD_DisplayName FROM v_UserAll WHERE UserID='" & st_UserID & "'"
-        DBReader = DBCommand.ExecuteReader()
-        DBCommand.Dispose()
-        If DBReader.Read = True Then
-            LocationName.SelectedValue = DBReader("LocationName")
-            DeptName.Text = DBReader("AD_DeptName")
-            UserName.Text = DBReader("Name")
-        End If
-        DBReader.Close()
-
-
-        '' コントロール設定
-        ''LocationName.Text = st_Code
-        'UserName.Text = st_Name
-
-        '' GET 且つ QueryString("Code") が空ではない場合は検索処理を実行
-        'If (Request.RequestType = "GET") And (Not String.IsNullOrEmpty(Request.QueryString("Code"))) Then
-        '    SearchCountryList()
-        'End If
-
     End Sub
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Search.Click
-
-        'Dim st_Action As String = String.Empty
-
-        'If Request.Form("Action") = Nothing Then
-        '    st_Action = IIf(Request.QueryString("Action") = Nothing, String.Empty, Request.QueryString("Action")).ToString
-        'Else
-        '    st_Action = Request.Form("Action").ToString
-        'End If
-
-        'If st_Action = SEARCH_ACTION Then
-        '    SearchCountryList()
-        'End If
-
+        SearchCountryList()
     End Sub
 
-    ' 検索処理
     Protected Sub SearchCountryList()
-
-        'Dim st_Where As String = String.Empty
-        'SrcUser.SelectParameters.Clear()
-
-        '' Where 句の生成
-        'If Not String.IsNullOrEmpty(st_Code) Then
-        '    SrcUser.SelectParameters.Add("CountryCode", st_Code)
-        '    st_Where = IIf(st_Where.Length > 1, st_Where & " AND ", st_Where)
-        '    st_Where = st_Where & " CountryCode = @CountryCode "
-        'End If
-
-        'If Not String.IsNullOrEmpty(st_Name) Then
-        '    SrcUser.SelectParameters.Add("CountryName", Common.SafeSqlLikeClauseLiteral(st_Name))
-        '    st_Where = IIf(st_Where.Length > 1, st_Where & " AND ", st_Where)
-        '    st_Where = st_Where & " [Name] LIKE N'%' + @CountryName + '%' "
-        'End If
-
-        '' Where 句が生成できなかった場合は処理終了
-        'If String.IsNullOrEmpty(st_Where) Then
-        '    Exit Sub
-        'End If
-
-        'SrcUser.SelectCommand = _
-        '      " SELECT [CountryCode], [Name] " _
-        '    & " FROM [s_Country] " _
-        '    & " WHERE " & st_Where _
-        '    & " ORDER BY CountryCode, [Name] ASC"
-
+        Dim st_SQL As New Text.StringBuilder
+        Dim st_WHERE As String = String.Empty
+        SrcUser.SelectParameters.Clear()
+        If LocationName.Text = String.Empty And DeptName.Text = String.Empty And UserName.Text = String.Empty Then
+            Exit Sub
+        Else
+            st_SQL.Remove(0, st_SQL.Length)
+            st_SQL.Append("SELECT")
+            st_SQL.Append(" UserID, ")
+            st_SQL.Append(" LocationName, ")
+            st_SQL.Append(" AccountName, ")
+            st_SQL.Append(" AD_DeptName, ")
+            st_SQL.Append(" AD_DisplayName, ")
+            st_SQL.Append(" Name ")
+            st_SQL.Append("FROM ")
+            st_SQL.Append(" v_UserAll ")
+            st_SQL.Append("WHERE ")
+            If LocationName.Text <> String.Empty Then
+                st_WHERE = st_WHERE + "LocationName='" + LocationName.Text + "'"
+            End If
+            If DeptName.Text <> String.Empty Then
+                If st_WHERE <> String.Empty Then st_WHERE = st_WHERE + " AND "
+                st_WHERE = st_WHERE + "AD_DeptName LIKE '%" + DeptName.Text + "%'"
+            End If
+            If UserName.Text <> String.Empty Then
+                If st_WHERE <> String.Empty Then st_WHERE = st_WHERE + " AND "
+                st_WHERE = st_WHERE + "AD_DisplayName LIKE '%" + UserName.Text + "%'"
+            End If
+            st_SQL.Append("" + st_WHERE + "")
+            SrcUser.SelectCommand = st_SQL.ToString
+        End If
     End Sub
 
 End Class

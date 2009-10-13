@@ -43,15 +43,6 @@ Partial Public Class UserSelect
     Protected WithEvents LocationName As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
-    '''DeptName コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents DeptName As Global.System.Web.UI.WebControls.TextBox
-
-    '''<summary>
     '''UserName コントロール。
     '''</summary>
     '''<remarks>
@@ -59,6 +50,15 @@ Partial Public Class UserSelect
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents UserName As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''DeptName コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents DeptName As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
     '''Search コントロール。

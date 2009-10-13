@@ -21,10 +21,12 @@ window.onload = function() {
 }
 
 
-function returnValues(LocationName, UserName) {
-  if(opener){
-      opener.document.getElementById('LocationName').value = LocationName
-      opener.document.getElementById('UserName').value = UserName
+function returnValues(UserID,LocationName, AccountName, Name) {
+  if (opener) {
+      opener.document.getElementById('UserID').value = UserID
+      opener.document.getElementById('Location').value = LocationName
+      opener.document.getElementById('AccountName').value = AccountName
+      opener.document.getElementById('Name').value = Name
   }
   window.close();
 }
@@ -49,17 +51,17 @@ function returnValues(LocationName, UserName) {
                         <td><asp:DropDownList ID="LocationName" runat="server"></asp:DropDownList></td>
                     </tr>
                     <tr>
-                        <th>Dept Name : </th>
-                        <td><asp:TextBox ID="DeptName" runat="server" Width="13em" MaxLength="255"></asp:TextBox></td>
-                    </tr>
-                    <tr>
-                        <th>User Name : </th>
+                        <th>AD_DisplayName : </th>
                         <td><asp:TextBox ID="UserName" runat="server" Width="21em" MaxLength="255"></asp:TextBox></td>
                     </tr>
+                    <tr>
+                        <th>AD_DeptName : </th>
+                        <td><asp:TextBox ID="DeptName" runat="server" Width="13em" MaxLength="255"></asp:TextBox></td>
+                    </tr>   
                 </table>
 
-                <asp:Button ID="Search" runat="server" Text="Search" PostBackUrl="CountrySelect.aspx?Action=Search" />
-                <input type="button" value="Clear" onclick="clearForm('CountryForm')" />
+                <asp:Button ID="Search" runat="server" Text="Search" PostBackUrl="UserSelect.aspx?Action=Search" />
+                <input type="button" value="Clear" onclick="clearForm('UserForm')" />
             </form>
         </div>
 
@@ -83,11 +85,11 @@ function returnValues(LocationName, UserName) {
                     <h3 style="font-style:italic"><%=Purchase.Common.ERR_NO_MATCH_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onclick="returnValues('<%#Eval("CountryCode")%>','<%#Replace(Eval("Name").ToString(), "'", "\'")%>');">
-                        <td><asp:Label ID="LocationLabel" runat="server" Text='<%#Eval("Location")%>' /></td>
-                        <td><asp:Label ID="AD_AccountNameLabel" runat="server" Text='<%#Eval("AD_AccountName")%>' /></td>
+                    <tr onclick="returnValues('<%#Eval("UserID")%>','<%#Eval("LocationName")%>','<%#Eval("AccountName")%>','<%#Eval("Name")%>');">
+                        <td><asp:Label ID="LocationLabel" runat="server" Text='<%#Eval("LocationName")%>' /></td>
+                        <td><asp:Label ID="AD_AccountNameLabel" runat="server" Text='<%#Eval("AccountName")%>' /></td>
                         <td><asp:Label ID="AD_DisplayNameLabel" runat="server" Text='<%#Eval("AD_DisplayName")%>' /></td>
-                        <td><asp:Label ID="AD_DeptNameNameLabel" runat="server" Text='<%#Eval("AD_DeptNameName")%>' /></td>
+                        <td><asp:Label ID="AD_DeptNameNameLabel" runat="server" Text='<%#Eval("AD_DeptName")%>' /></td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>
