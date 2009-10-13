@@ -85,9 +85,9 @@ function returnValues(UserID,LocationName, AccountName, Name) {
                     <h3 style="font-style:italic"><%=Purchase.Common.ERR_NO_MATCH_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onclick="returnValues('<%#Eval("UserID")%>','<%#Eval("LocationName")%>','<%#Eval("AccountName")%>','<%#Eval("Name")%>');">
+                    <tr onclick="returnValues('<%#Eval("UserID")%>','<%#Eval("LocationName")%>','<%#Eval("AD_AccountName")%>','<%#Eval("Name")%>');">
                         <td><asp:Label ID="LocationLabel" runat="server" Text='<%#Eval("LocationName")%>' /></td>
-                        <td><asp:Label ID="AD_AccountNameLabel" runat="server" Text='<%#Eval("AccountName")%>' /></td>
+                        <td><asp:Label ID="AD_AccountNameLabel" runat="server" Text='<%#Eval("AD_AccountName")%>' /></td>
                         <td><asp:Label ID="AD_DisplayNameLabel" runat="server" Text='<%#Eval("AD_DisplayName")%>' /></td>
                         <td><asp:Label ID="AD_DeptNameNameLabel" runat="server" Text='<%#Eval("AD_DeptName")%>' /></td>
                     </tr>

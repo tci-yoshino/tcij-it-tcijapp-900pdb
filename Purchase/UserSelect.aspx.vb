@@ -1,4 +1,6 @@
-﻿Partial Public Class UserSelect
+﻿Imports Purchase.Common
+
+Partial Public Class UserSelect
     Inherits CommonPage
 
     Dim DBConn As New System.Data.SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
@@ -7,6 +9,7 @@
 
     Private st_UserID As String = String.Empty
     Private st_LocationName As String = String.Empty
+    Const SEARCH_ACTION As String = "Search"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         '[Msgのクリア]---------------------------------------------------------------------
@@ -57,15 +60,28 @@
             End If
 
             '[検索データ表示]----------------------------------------------------------------------
-            SearchCountryList()
+            SearchUserList()
         End If
     End Sub
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Search.Click
-        SearchCountryList()
+
+        '[権限データ投入まで有効化しないこと（開発動作に支障）]
+        'Dim st_Action As String = String.Empty
+
+        'If Request.Form("Action") = Nothing Then
+        '    st_Action = IIf(Request.QueryString("Action") = Nothing, String.Empty, Request.QueryString("Action")).ToString
+        'Else
+        '    st_Action = Request.Form("Action").ToString
+        'End If
+
+        'If st_Action = SEARCH_ACTION Then
+        SearchUserList()
+        'End If
+
     End Sub
 
-    Protected Sub SearchCountryList()
+    Protected Sub SearchUserList()
         Dim st_SQL As New Text.StringBuilder
         Dim st_WHERE As String = String.Empty
         SrcUser.SelectParameters.Clear()
@@ -76,7 +92,7 @@
             st_SQL.Append("SELECT")
             st_SQL.Append(" UserID, ")
             st_SQL.Append(" SL.Name AS LocationName, ")
-            st_SQL.Append(" REPLACE(AD_AccountName," + "'" + "," + "\')" + " AS AccountName, ")
+            st_SQL.Append(" AD_AccountName, ")
             st_SQL.Append(" AD_DeptName, ")
             st_SQL.Append(" AD_DisplayName, ")
             st_SQL.Append(" LTRIM(RTRIM(ISNULL(SU.AD_GivenName, '') + ' ' + ISNULL(SU.AD_Surname, ''))) AS Name ")

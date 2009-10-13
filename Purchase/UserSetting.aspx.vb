@@ -1,9 +1,12 @@
-﻿Partial Public Class UserSetting
+﻿Imports System.Data.SqlClient
+Imports System.Text
+
+Partial Public Class UserSetting
     Inherits CommonPage
 
-    Dim DBConn As New System.Data.SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
-    Dim DBCommand As System.Data.SqlClient.SqlCommand
-    Dim DBReader As System.Data.SqlClient.SqlDataReader
+    Dim DBConn As New SqlConnection(Common.DB_CONNECT_STRING)
+    Dim DBCommand As SqlCommand
+    Dim DBReader As SqlDataReader
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         '[Msgのクリア]---------------------------------------------------------------------
@@ -34,7 +37,7 @@
                 UserID.Text = Request.QueryString("UserID")
                 Search.Visible = False
                 DBCommand = DBConn.CreateCommand()
-                DBCommand.CommandText = "SELECT UserID,LocationName,AccountName,""Name"",RoleCode,PrivilegeLevel,isAdmin,isDisabled " & _
+                DBCommand.CommandText = "SELECT UserID,LocationName,AccountName,""Name"",RoleCode,PrivilegeLevel,isAdmin,isDisabled, UpdateDate " & _
                                         "FROM v_UserAll WHERE UserID=" & UserID.Text
                 DBConn.Open()
                 DBReader = DBCommand.ExecuteReader()
@@ -47,6 +50,8 @@
                     PrivilegeLevel.Text = DBReader("PrivilegeLevel")
                     isAdmin.Checked = DBReader("isAdmin")
                     isDisabled.Checked = DBReader("isDisAbled")
+                    '[HiddenField設定]
+                    UpdateDate.Value = DBReader("UpdateDate").ToString()
                 End If
                 DBReader.Close()
                 DBConn.Close()
@@ -54,35 +59,16 @@
                 UserID.CssClass = String.Empty
                 UserID.ReadOnly = False
             End If
-
-            
-
-
-
-
-
-
-
-
-
-
-
-            '    '[最終的に更新するPurchasingCountryのUpdateDateの値をHidden(UpdateDate)にセット]
-            '    DBCommand.CommandText = "SELECT UpdateDate FROM PurchasingCountry WHERE CountryCode = '" + Common.SafeSqlLiteral(UserID.Text) + "'"
-            '    DBReader = DBCommand.ExecuteReader()
-            '    DBCommand.Dispose()
-            '    If DBReader.Read = True Then
-            '        'TODO ToStringで臨時対応
-            '        UpdateDate.Value = DBReader("UpdateDate").ToString()
-            '    End If
-            '    DBReader.Close()
-            'Else
-            '    '[ReadOnly項目の再設定]--------------------------------------------------------
-            '    AccountName.Text = Request.Form("Name")
         End If
     End Sub
 
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
+
+        If Request.Form("Action") <> "Save" Then
+            Msg.Text = Common.ERR_INVALID_PARAMETER
+            Exit Sub
+        End If
+
         Dim st_SQL As String = String.Empty
         DBCommand = DBConn.CreateCommand()
         DBCommand.CommandText = "SELECT UserID FROM PurchasingUser WHERE UserID='" + UserID.Text + "'"
@@ -111,6 +97,17 @@
             st_SQL = st_SQL + Session("UserID") + ","
             st_SQL = st_SQL + "GetDate())"
         Else
+            If Common.ExistenceConfirmation("v_UserAll", "UserID", Session("UserID").ToString()) = False Then
+                '[エラーメッセージの表示]
+                Return
+            End If
+
+            If Common.IsLatestData("v_userAll", "UserID", Session("UserID").ToString(), UpdateDate.Value) = False Then
+                '[エラーメッセージの表示]
+                Return
+            End If
+
+
             st_SQL = "UPDATE PurchasingUser SET "
             st_SQL = st_SQL + "RoleCode='" + RoleCode.Text + "', "
             st_SQL = st_SQL + "PrivilegeLevel='" + PrivilegeLevel.Text + "', "
