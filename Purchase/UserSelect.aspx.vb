@@ -7,7 +7,6 @@
 
     Private st_UserID As String = String.Empty
     Private st_LocationName As String = String.Empty
-    'Const SEARCH_ACTION As String = "Search"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         '[Msgのクリア]---------------------------------------------------------------------
@@ -76,16 +75,18 @@
             st_SQL.Remove(0, st_SQL.Length)
             st_SQL.Append("SELECT")
             st_SQL.Append(" UserID, ")
-            st_SQL.Append(" LocationName, ")
-            st_SQL.Append(" AccountName, ")
+            st_SQL.Append(" SL.Name AS LocationName, ")
+            st_SQL.Append(" REPLACE(AD_AccountName," + "'" + "," + "\')" + " AS AccountName, ")
             st_SQL.Append(" AD_DeptName, ")
             st_SQL.Append(" AD_DisplayName, ")
-            st_SQL.Append(" Name ")
+            st_SQL.Append(" LTRIM(RTRIM(ISNULL(SU.AD_GivenName, '') + ' ' + ISNULL(SU.AD_Surname, ''))) AS Name ")
             st_SQL.Append("FROM ")
-            st_SQL.Append(" v_UserAll ")
+            st_SQL.Append(" s_User AS SU ")
+            st_SQL.Append(" INNER JOIN s_Location AS SL ON SU.LocationCode = SL.LocationCode ")
             st_SQL.Append("WHERE ")
+            'st_SQL.Append(" AD_AccountName<>'' ")
             If LocationName.Text <> String.Empty Then
-                st_WHERE = st_WHERE + "LocationName='" + LocationName.Text + "'"
+                st_WHERE = st_WHERE + "SL.Name='" + LocationName.Text + "'"
             End If
             If DeptName.Text <> String.Empty Then
                 If st_WHERE <> String.Empty Then st_WHERE = st_WHERE + " AND "
@@ -101,5 +102,3 @@
     End Sub
 
 End Class
-
-

@@ -48,7 +48,7 @@
 					</tr>
 					<tr>
 						<th>Privilege Level : </th>
-						<td><asp:DropDownList ID="PrivilegeLavel" runat="server"></asp:DropDownList></td>
+						<td><asp:DropDownList ID="PrivilegeLevel" runat="server"></asp:DropDownList></td>
 					</tr>
 				    <tr>
 				       <th>is Admin : </th>

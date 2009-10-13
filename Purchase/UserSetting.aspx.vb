@@ -6,36 +6,37 @@
     Dim DBReader As System.Data.SqlClient.SqlDataReader
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        '[DBの接続]-----------------------------------------------------------------------
-        DBConn.Open()
-        DBCommand = DBConn.CreateCommand()
-
         '[Msgのクリア]---------------------------------------------------------------------
         Msg.Text = ""
 
-        '[Role Code 設定]------------------------------------------------------------------
-        DBCommand.CommandText = "SELECT RoleCode FROM Role ORDER BY RoleCode"
-        DBReader = DBCommand.ExecuteReader()
-        DBCommand.Dispose()
-        RoleCode.Items.Clear()
-        Do Until DBReader.Read = False
-            RoleCode.Items.Add(DBReader("RoleCode"))
-        Loop
-        DBReader.Close()
-        RoleCode.SelectedValue = "WRITE"
-
-        '[Privilege Label 設定]------------------------------------------------------------
-        PrivilegeLavel.Items.Clear()
-        PrivilegeLavel.Items.Add("P")
-        PrivilegeLavel.Items.Add("A")
-
         If IsPostBack = False Then
+            '[Role Code 設定]------------------------------------------------------------------
+            DBCommand = DBConn.CreateCommand()
+            DBCommand.CommandText = "SELECT RoleCode FROM Role ORDER BY RoleCode"
+            DBConn.Open()
+            DBReader = DBCommand.ExecuteReader()
+            DBCommand.Dispose()
+            RoleCode.Items.Clear()
+            Do Until DBReader.Read = False
+                RoleCode.Items.Add(DBReader("RoleCode"))
+            Loop
+            DBReader.Close()
+            DBConn.Close()
+            RoleCode.SelectedValue = "WRITE"
+
+            '[Privilege Label 設定]------------------------------------------------------------
+            PrivilegeLevel.Items.Clear()
+            PrivilegeLevel.Items.Add("P")
+            PrivilegeLevel.Items.Add("A")
+
             '[処理(登録/修正)の判断]-------------------------------------------------------
             If Request.QueryString("Action") = "Edit" Then
                 UserID.Text = Request.QueryString("UserID")
                 Search.Visible = False
-                DBCommand.CommandText = "SELECT UserID,LocationName,AccountName,""Name"",RoleCode,PrivilegeLevel,R3PurchasingGroup,isAdmin,isDisabled " & _
+                DBCommand = DBConn.CreateCommand()
+                DBCommand.CommandText = "SELECT UserID,LocationName,AccountName,""Name"",RoleCode,PrivilegeLevel,isAdmin,isDisabled " & _
                                         "FROM v_UserAll WHERE UserID=" & UserID.Text
+                DBConn.Open()
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
                 If DBReader.Read = True Then
@@ -43,15 +44,18 @@
                     AccountName.Text = DBReader("AccountName")
                     Name.Text = DBReader("Name")
                     RoleCode.SelectedValue = DBReader("RoleCode")
-                    PrivilegeLavel.Text = DBReader("PrivilegeLevel")
+                    PrivilegeLevel.Text = DBReader("PrivilegeLevel")
+                    isAdmin.Checked = DBReader("isAdmin")
+                    isDisabled.Checked = DBReader("isDisAbled")
                 End If
                 DBReader.Close()
+                DBConn.Close()
             Else
                 UserID.CssClass = String.Empty
                 UserID.ReadOnly = False
-
             End If
 
+            
 
 
 
@@ -79,6 +83,89 @@
     End Sub
 
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
+        Dim st_SQL As String = String.Empty
+        DBCommand = DBConn.CreateCommand()
+        DBCommand.CommandText = "SELECT UserID FROM PurchasingUser WHERE UserID='" + UserID.Text + "'"
+        DBConn.Open()
+        DBReader = DBCommand.ExecuteReader()
+        DBCommand.Dispose()
+        If DBReader.Read = False Then
+            st_SQL = "INSERT INTO PurchasingUser "
+            st_SQL = st_SQL + "(UserID,"
+            st_SQL = st_SQL + "RoleCode,"
+            st_SQL = st_SQL + "PrivilegeLevel,"
+            st_SQL = st_SQL + "isAdmin,"
+            st_SQL = st_SQL + "isDisabled,"
+            st_SQL = st_SQL + "CreatedBy,"
+            st_SQL = st_SQL + "CreateDate,"
+            st_SQL = st_SQL + "UpdatedBy,"
+            st_SQL = st_SQL + "UpdateDate) "
+            st_SQL = st_SQL + "VALUES "
+            st_SQL = st_SQL + "('" + Common.SafeSqlLiteral(UCase(UserID.Text)) + "','"
+            st_SQL = st_SQL + RoleCode.Text + "','"
+            st_SQL = st_SQL + PrivilegeLevel.Text + "',"
+            st_SQL = st_SQL + ConvertBoolToSQLString(isAdmin.Checked) + ","
+            st_SQL = st_SQL + ConvertBoolToSQLString(isDisabled.Checked) + ","
+            st_SQL = st_SQL + Session("UserID") + ","
+            st_SQL = st_SQL + "GetDate(),"
+            st_SQL = st_SQL + Session("UserID") + ","
+            st_SQL = st_SQL + "GetDate())"
+        Else
+            st_SQL = "UPDATE PurchasingUser SET "
+            st_SQL = st_SQL + "RoleCode='" + RoleCode.Text + "', "
+            st_SQL = st_SQL + "PrivilegeLevel='" + PrivilegeLevel.Text + "', "
+            st_SQL = st_SQL + "isAdmin=" + ConvertBoolToSQLString(isAdmin.Checked) + ", "
+            st_SQL = st_SQL + "isDisAbled=" + ConvertBoolToSQLString(isDisabled.Checked) + ", "
+            st_SQL = st_SQL + "UpdatedBy=" + Session("UserID") + ", "
+            st_SQL = st_SQL + "UpdateDate=GetDate() "
+            st_SQL = st_SQL + "WHERE UserID='" + UserID.Text + "'"
+        End If
+        DBReader.Close()
+        DBConn.Close()
+
+        DBCommand = DBConn.CreateCommand()
+        DBCommand.CommandText = st_SQL
+        DBConn.Open()
+        DBCommand.ExecuteNonQuery()
+        DBConn.Close()
+
+        '[呼出元のフォームに戻る]----------------------------------------------------------
+        If Msg.Text.ToString = "" Then
+            Response.Redirect("UserList.aspx")
+        End If
+
+        'st_SQL.Remove(0, st_SQL.Length)
+        'st_SQL.Append("UPDATE ")
+
+
+
+
+        'st_SQL.Append(" UserID, ")
+        'st_SQL.Append(" LocationName, ")
+        'st_SQL.Append(" AccountName, ")
+        'st_SQL.Append(" AD_DeptName, ")
+        'st_SQL.Append(" AD_DisplayName, ")
+        'st_SQL.Append(" Name ")
+        'st_SQL.Append("FROM ")
+        'st_SQL.Append(" v_UserAll ")
+        'st_SQL.Append("WHERE ")
+        'If LocationName.Text <> String.Empty Then
+        '    st_WHERE = st_WHERE + "LocationName='" + LocationName.Text + "'"
+        'End If
+        'If DeptName.Text <> String.Empty Then
+        '    If st_WHERE <> String.Empty Then st_WHERE = st_WHERE + " AND "
+        '    st_WHERE = st_WHERE + "AD_DeptName LIKE '%" + DeptName.Text + "%'"
+        'End If
+        'If UserName.Text <> String.Empty Then
+        '    If st_WHERE <> String.Empty Then st_WHERE = st_WHERE + " AND "
+        '    st_WHERE = st_WHERE + "AD_DisplayName LIKE '%" + UserName.Text + "%'"
+        'End If
+        'st_SQL.Append("" + st_WHERE + "")
+        'SrcUser.SelectCommand = st_SQL.ToString
+
+
+
+
         'Dim st_Location As String = ""
         'If Request.Form("Action") <> "Save" Then
         '    Msg.Text = Common.ERR_INVALID_PARAMETER
@@ -168,7 +255,7 @@
         '        End If
         '    Else
         '        '[PurchasingCountryの追加処理]---------------------------------------------
-        '        DBCommand.CommandText = "INSERT INTO PurchasingCountry (CountryCode,DefaultQuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" + Common.SafeSqlLiteral(UCase(UserID.Text)) + "',null,'" + Session("UserID") + "','" + Now() + "','" + Session("UserID") + "','" + Now() + "')"
+        'DBCommand.CommandText = "INSERT INTO PurchasingCountry (CountryCode,DefaultQuoLocationCode,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ('" + Common.SafeSqlLiteral(UCase(UserID.Text)) + "',null,'" + Session("UserID") + "','" + Now() + "','" + Session("UserID") + "','" + Now() + "')"
         '        DBCommand.ExecuteNonQuery()
         '    End If
         'End If
@@ -190,7 +277,15 @@
     End Sub
 
     Private Sub CountrySetting_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload
-        DBConn.Close()
+        'DBConn.Close()
     End Sub
+
+    Private Function ConvertBoolToSQLString(ByVal value As Boolean) As String
+        If value = True Then
+            Return "1"
+        Else
+            Return "0"
+        End If
+    End Function
 
 End Class

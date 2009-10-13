@@ -88,13 +88,13 @@ Partial Public Class UserSetting
     Protected WithEvents RoleCode As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
-    '''PrivilegeLavel コントロール。
+    '''PrivilegeLevel コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents PrivilegeLavel As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents PrivilegeLevel As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
     '''isAdmin コントロール。
