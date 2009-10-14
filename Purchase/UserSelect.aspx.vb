@@ -47,7 +47,7 @@ Partial Public Class UserSelect
             '[データ表示]--------------------------------------------------------------------------
             If st_UserID <> String.Empty Then
                 DBCommand = DBConn.CreateCommand()
-                DBCommand.CommandText = "SELECT s_Location.Name AS LocationName,AD_DeptName,AD_DisplayName FROM s_User INNER JOIN s_Location ON s_User.LocationCode = s_Location.LocationCode WHERE UserID='" & st_UserID & "'"
+                DBCommand.CommandText = "SELECT s_Location.Name AS LocationName,AD_DeptName,AD_DisplayName FROM s_User INNER JOIN s_Location ON s_User.LocationCode = s_Location.LocationCode WHERE CAST(UserID AS varchar)='" & st_UserID & "'"
                 DBConn.Open()
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()

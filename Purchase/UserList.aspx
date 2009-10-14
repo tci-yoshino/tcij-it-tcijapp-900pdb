@@ -12,7 +12,7 @@
 <body>
     <!-- Main Content Area -->
     <div id="content">
-        <div class="tabs"><a href="./UserSetting.aspx">New User</a></div>
+        <div class="tabs"><a href="./UserSetting.aspx">New User</a>&nbsp;&nbsp;<a href="./UserSetting.aspx">Download</a></div>
 
         <h3>User</h3>
 
