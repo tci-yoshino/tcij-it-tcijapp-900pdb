@@ -63,7 +63,6 @@ Partial Public Class UserSetting
     End Sub
 
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
-
         If Request.Form("Action") <> "Save" Then
             Msg.Text = Common.ERR_INVALID_PARAMETER
             Exit Sub
@@ -275,10 +274,6 @@ Partial Public Class UserSetting
         'End If
     End Sub
 
-    Private Sub CountrySetting_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload
-        'DBConn.Close()
-    End Sub
-
     Private Function ConvertBoolToSQLString(ByVal value As Boolean) As String
         If value = True Then
             Return "1"
@@ -286,5 +281,4 @@ Partial Public Class UserSetting
             Return "0"
         End If
     End Function
-
 End Class
