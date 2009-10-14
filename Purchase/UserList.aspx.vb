@@ -1,8 +1,7 @@
 ﻿Imports System.Data.SqlClient
 
 Partial Public Class UserList
-    Inherits Page
-    'Inherits CommonPage
+    Inherits CommonPage
 
     Dim DBConn As New SqlConnection(Common.DB_CONNECT_STRING)
     Dim DBCommand As SqlCommand
@@ -21,7 +20,8 @@ Partial Public Class UserList
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If IsPostBack = False Then
-            SrcUser.SelectCommand = "SELECT UserID,LocationName,AccountName,SurName,GivenName,RoleCode,PrivilegeLevel,isAdmin,isDisabled,'UserSetting.aspx?Action=Edit&UserID=' + Cast(UserID AS varchar) AS URL " & _
+            SrcUser.SelectCommand = "SELECT UserID,LocationName,AccountName,SurName,GivenName,RoleCode,PrivilegeLevel,isAdmin,isDisabled,'UserSetting.aspx?Action=Edit&UserID=' + Cast(UserID AS varchar) AS URL, " & _
+                                    "CASE isDisabled WHEN 1 THEN 'disable' ELSE '' END AS isDisabled_CSS " & _
                                     "FROM v_UserAll ORDER BY LocationName,isDisabled,SurName,GivenName"
         End If
     End Sub

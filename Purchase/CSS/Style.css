@@ -288,6 +288,14 @@ pre {
     padding: 2px 5px;
 }
 
+/*ListView–³Œøs•\¦*/
+.list td.disable {
+    background-color: #a9a9a9;
+    padding: 2px 5px;
+}
+
+
+
 .list table.alternative td {
     background-color: #fce4d6;
     padding: 2px 5px;

@@ -43,14 +43,14 @@
 --%>                </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr>
-                        <td><asp:Label ID="LocationLabel" runat="server" Text='<%# Eval("LocationName") %>' /></td>
-                        <td><asp:Label ID="AccountNameLabel" runat="server" Text='<%# Eval("AccountName") %>' /></td>
-                        <td><asp:Label ID="SurnameLabel" runat="server" Text='<%# Eval("Surname") %>' /></td>
-                        <td><asp:Label ID="GivenNameLabel" runat="server" Text='<%# Eval("GivenName") %>' /></td>
-                        <td><asp:Label ID="RoleCodeLabel" runat="server" Text='<%# Eval("RoleCode") %>' /></td>
-                        <td><asp:Label ID="PrivilegeLevelLabel" runat="server" Text='<%# Eval("PrivilegeLevel") %>' /></td>
-                        <td><asp:Label ID="isAdminLabel" runat="server" Text='<%# Eval("isAdmin") %>' /></td>
-                        <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl='<%# Eval("Url") %>'>Edit</asp:HyperLink></td>
+                        <td class = "<%# Eval("isDisabled_CSS") %>"><asp:Label ID="LocationLabel" runat="server" Text='<%# Eval("LocationName") %>' /></td>
+                        <td class = "<%# Eval("isDisabled_CSS") %>"><asp:Label ID="AccountNameLabel" runat="server" Text='<%# Eval("AccountName") %>' /></td>
+                        <td class = "<%# Eval("isDisabled_CSS") %>"><asp:Label ID="SurnameLabel" runat="server" Text='<%# Eval("Surname") %>' /></td>
+                        <td class = "<%# Eval("isDisabled_CSS") %>"><asp:Label ID="GivenNameLabel" runat="server" Text='<%# Eval("GivenName") %>' /></td>
+                        <td class = "<%# Eval("isDisabled_CSS") %>"><asp:Label ID="RoleCodeLabel" runat="server" Text='<%# Eval("RoleCode") %>' /></td>
+                        <td class = "<%# Eval("isDisabled_CSS") %>"><asp:Label ID="PrivilegeLevelLabel" runat="server" Text='<%# Eval("PrivilegeLevel") %>' /></td>
+                        <td class = "<%# Eval("isDisabled_CSS") %>"><asp:Label ID="isAdminLabel" runat="server" Text='<%# Eval("isAdmin") %>' /></td>
+                        <td class = "<%# Eval("isDisabled_CSS") %>"><asp:HyperLink ID="Edit" runat="server" NavigateUrl='<%# Eval("Url") %>'>Edit</asp:HyperLink></td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>
