@@ -31,6 +31,19 @@ function returnValues(UserID,LocationName, AccountName, Name) {
   window.close();
 }
 
+function clearSelect(formname) {
+    var name = formname;
+    var targetForm = document.forms[name];
+    var len = targetForm.elements.length;
+
+    for (i = 0; i < len; i++) {
+        if (targetForm.elements[i].type == "select-one") {
+            if (targetForm.elements[i].readOnly) continue;
+            targetForm.elements[i].selectedIndex = 0;
+        }
+    }
+}
+
 -->
 </script>
 </head>
@@ -61,7 +74,7 @@ function returnValues(UserID,LocationName, AccountName, Name) {
                 </table>
 
                 <asp:Button ID="Search" runat="server" Text="Search" PostBackUrl="UserSelect.aspx?Action=Search" />
-                <input type="button" value="Clear" onclick="clearForm('UserForm')" />
+                <input type="button" value="Clear" onclick="clearForm('UserForm');clearSelect('UserForm'); " />
             </form>
         </div>
 
@@ -85,7 +98,7 @@ function returnValues(UserID,LocationName, AccountName, Name) {
                     <h3 style="font-style:italic"><%=Purchase.Common.ERR_NO_MATCH_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onclick="returnValues('<%#Eval("UserID")%>','<%#Eval("LocationName")%>','<%#Eval("AD_AccountName")%>','<%#Eval("Name")%>');">
+                    <tr onclick="returnValues('<%#Eval("UserID")%>','<%#Eval("LocationName")%>','<%#Replace(Eval("AD_AccountName").ToString(), "'", "\'")%>','<%#Eval("Name")%>');">
                         <td><asp:Label ID="LocationLabel" runat="server" Text='<%#Eval("LocationName")%>' /></td>
                         <td><asp:Label ID="AD_AccountNameLabel" runat="server" Text='<%#Eval("AD_AccountName")%>' /></td>
                         <td><asp:Label ID="AD_DisplayNameLabel" runat="server" Text='<%#Eval("AD_DisplayName")%>' /></td>

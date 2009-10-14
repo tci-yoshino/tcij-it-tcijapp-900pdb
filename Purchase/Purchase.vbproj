@@ -133,6 +133,9 @@
     <Content Include="AuthError.html" />
     <Content Include="MakerSelect.aspx" />
     <Content Include="SupplierSelect.aspx" />
+    <Content Include="UserList.aspx" />
+    <Content Include="UserSetting.aspx" />
+    <Content Include="UserSelect.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.vb" />
@@ -402,6 +405,27 @@
       <DependentUpon>SupplierSelect.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
     </Compile>
+    <Compile Include="UserList.aspx.designer.vb">
+      <DependentUpon>UserList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UserList.aspx.vb">
+      <DependentUpon>UserList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UserSetting.aspx.designer.vb">
+      <DependentUpon>UserSetting.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UserSetting.aspx.vb">
+      <DependentUpon>UserSetting.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="UserSelect.aspx.designer.vb">
+      <DependentUpon>UserSelect.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UserSelect.aspx.vb">
+      <DependentUpon>UserSelect.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -444,7 +468,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>2080</DevelopmentServerPort>
+          <DevelopmentServerPort>3607</DevelopmentServerPort>
           <DevelopmentServerVPath>/Purchase</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

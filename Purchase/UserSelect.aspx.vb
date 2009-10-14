@@ -47,7 +47,7 @@ Partial Public Class UserSelect
             '[データ表示]--------------------------------------------------------------------------
             If st_UserID <> String.Empty Then
                 DBCommand = DBConn.CreateCommand()
-                DBCommand.CommandText = "SELECT LocationName,AD_DeptName,AD_DisplayName FROM v_UserAll WHERE UserID='" & st_UserID & "'"
+                DBCommand.CommandText = "SELECT s_Location.Name AS LocationName,AD_DeptName,AD_DisplayName FROM s_User INNER JOIN s_Location ON s_User.LocationCode = s_Location.LocationCode WHERE UserID='" & st_UserID & "'"
                 DBConn.Open()
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
@@ -100,7 +100,7 @@ Partial Public Class UserSelect
             st_SQL.Append(" s_User AS SU ")
             st_SQL.Append(" INNER JOIN s_Location AS SL ON SU.LocationCode = SL.LocationCode ")
             st_SQL.Append("WHERE ")
-            'st_SQL.Append(" AD_AccountName<>'' ")
+            st_SQL.Append(" AD_AccountName<>'' ")
             If LocationName.Text <> String.Empty Then
                 st_WHERE = st_WHERE + "SL.Name='" + LocationName.Text + "'"
             End If
@@ -112,9 +112,10 @@ Partial Public Class UserSelect
                 If st_WHERE <> String.Empty Then st_WHERE = st_WHERE + " AND "
                 st_WHERE = st_WHERE + "AD_DisplayName LIKE '%" + UserName.Text + "%'"
             End If
-            st_SQL.Append("" + st_WHERE + "")
+            If st_WHERE <> String.Empty Then
+                st_SQL.Append(" AND " + st_WHERE + "")
+            End If
             SrcUser.SelectCommand = st_SQL.ToString
         End If
     End Sub
-
 End Class

@@ -99,11 +99,13 @@ Partial Public Class UserSetting
         Else
             If Common.ExistenceConfirmation("v_UserAll", "UserID", Session("UserID").ToString()) = False Then
                 '[エラーメッセージの表示]
+                Msg.Text = "aaa"
                 Return
             End If
 
             If Common.IsLatestData("v_userAll", "UserID", Session("UserID").ToString(), UpdateDate.Value) = False Then
                 '[エラーメッセージの表示]
+                Msg.Text = "bbb"
                 Return
             End If
 
