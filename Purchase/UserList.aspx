@@ -10,10 +10,12 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
 </head>
 <body>
+    <form id="ListForm" runat="server">
+
     <!-- Main Content Area -->
     <div id="content">
-        <div class="tabs"><a href="./UserSetting.aspx">New User</a>&nbsp;&nbsp;<a href="./UserSetting.aspx">Download</a></div>
-
+        <div class="tabs"><a href="./UserSetting.aspx">New User</a>&nbsp;&nbsp;<asp:LinkButton ID="Download" runat="server">Download</asp:LinkButton></div>
+        
         <h3>User</h3>
 
         <div class="list">
@@ -57,7 +59,7 @@
     <asp:SqlDataSource ID="SrcUser" runat="server" 
     ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>">
     </asp:SqlDataSource>
-
+    </form>
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
 </body>
