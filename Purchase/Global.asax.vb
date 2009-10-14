@@ -51,11 +51,11 @@ Public Class Global_asax
             b_IsDebug = False
         End Try
 
-        'If TypeOf ex Is Web.HttpRequestValidationException Then
-        '    Response.Redirect("./FormError.html", True)
-        'Else
-        '    Server.Transfer("./SystemError.aspx")
-        'End If
+        If TypeOf ex Is Web.HttpRequestValidationException Then
+            Response.Redirect("./FormError.html", True)
+        Else
+            Server.Transfer("./SystemError.aspx")
+        End If
 
     End Sub
 

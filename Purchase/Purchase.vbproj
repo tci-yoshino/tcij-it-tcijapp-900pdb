@@ -468,7 +468,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>3607</DevelopmentServerPort>
+          <DevelopmentServerPort>2080</DevelopmentServerPort>
           <DevelopmentServerVPath>/Purchase</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>
