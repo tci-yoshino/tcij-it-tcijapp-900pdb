@@ -109,6 +109,12 @@ Public Class Common
     Public Const URL_REGEX As String = "^[-_.!~*\'()a-zA-Z0-9;\/?:\@&=+\$,%#]+$|^$"
 
     ''' <summary>
+    ''' Excel ContextType
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const EXCEL_CONTENTTYPE As String = "application/octet-stream"
+
+    ''' <summary>
     ''' 文字数チェックで使用する。3000文字用
     ''' </summary>
     ''' <remarks></remarks>
