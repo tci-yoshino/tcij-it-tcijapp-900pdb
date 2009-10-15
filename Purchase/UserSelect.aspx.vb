@@ -20,12 +20,8 @@ Partial Public Class UserSelect
         Msg.Text = String.Empty
 
         If IsPostBack = False Then
-            '[パラメータ取得]------------------------------------------------------------------
-            If Request.RequestType = "POST" Then
-                st_UserID = CStr(IIf(Request.Form("UserID") = Nothing, String.Empty, Request.Form("UserID")))
-            ElseIf Request.RequestType = "GET" Then
-                st_UserID = CStr(IIf(Request.QueryString("UserID") = Nothing, String.Empty, Request.QueryString("UserID")))
-            End If
+            '[パラメータ取得]----------------------------------------------------------------------
+            st_UserID = Common.GetQuery(Request, "UserID")
 
             '[パラメータ正規化]--------------------------------------------------------------------
             st_UserID = st_UserID.Trim
@@ -71,11 +67,9 @@ Partial Public Class UserSelect
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Search.Click
         Dim st_Action As String = String.Empty
-        If Request.Form("Action") = Nothing Then
-            st_Action = IIf(Request.QueryString("Action") = Nothing, String.Empty, Request.QueryString("Action")).ToString
-        Else
-            st_Action = Request.Form("Action").ToString
-        End If
+        '[Action取得]--------------------------------------------------------------------------
+        st_Action = Common.GetAction(Request)
+
         If st_Action = SEARCH_ACTION Then
             SearchUserList()
         End If

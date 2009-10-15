@@ -129,7 +129,7 @@ Partial Public Class UserSetting
                 st_SQL = st_SQL + Session("UserID").ToString + ","
                 st_SQL = st_SQL + "GetDate())"
             Else
-                Msg.Text = "Your requested contry code already exist.<br />(Please check again to avoid duplication.)"
+                Msg.Text = "Your requested User ID already exist.<br />(Please check again to avoid duplication.)"
                 Exit Sub
             End If
         Else

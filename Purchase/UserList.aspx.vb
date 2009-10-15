@@ -21,6 +21,7 @@ Partial Public Class UserList
     Dim st_StartTableLine As String = String.Empty      'Table開始タグ記憶
     Dim st_EndTableLine As String = String.Empty        'Table終了タグ記憶
     Dim st_EndWorkBookLine As String = String.Empty     'Book終了タグ記憶
+    Const DOWNLOAD_ACTION As String = "Download"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If IsPostBack = False Then
@@ -32,9 +33,10 @@ Partial Public Class UserList
 
     Protected Sub Download_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Download.Click
         '[Action確認]---------------------------------------------------------------------------------------------
+        Dim st_Action As String = Common.GetAction(Request)
         'Dim st_Action As String = CStr(IIf(String.IsNullOrEmpty(Request.QueryString("Action")), String.Empty, Request.QueryString("Action")))
-        'If st_Action <> ACTION_ALLDATA Then
-        '    Msg.Text = ERR_INVALID_PARAMETER
+        'If st_Action <> DOWNLOAD_ACTION Then
+        '    Msg.Text = Common.ERR_INVALID_PARAMETER
         '    Exit Sub
         'End If
 

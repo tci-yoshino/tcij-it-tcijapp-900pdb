@@ -14,8 +14,8 @@
 
     <!-- Main Content Area -->
     <div id="content">
-        <div class="tabs"><a href="./UserSetting.aspx">New User</a>&nbsp;&nbsp;<asp:LinkButton ID="Download" runat="server">Download</asp:LinkButton></div>
-        
+        <div class="tabs"><a href="./UserSetting.aspx">New User</a>&nbsp;&nbsp;<asp:LinkButton ID="Download" runat="server" PostBackUrl="UserList.aspx?Action=Download">Download</asp:LinkButton></div>
+
         <h3>User</h3>
 
         <div class="list">
