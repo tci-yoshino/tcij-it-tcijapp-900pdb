@@ -31,16 +31,16 @@
                             <th runat="server" style="width:20%">GivenName</th>
                             <th runat="server" style="width:10%">Role Code</th>
                             <th runat="server" style="width:10%">Privilege Level</th>
-                            <th runat="server" style="width:5%">isAdmin</th>
-                            <th></th>
+                            <th runat="server" style="width:8%">isAdmin</th>
+                            <th style="width:4%"></th>
                         </tr>
                         <tr ID="itemPlaceholder" runat="server">
                         </tr>
                     </table>
                 </LayoutTemplate>
                 <EmptyDataTemplate>
-<%--                    <h3 style="font-style:italic"><% =Purchase.Common.ERR_NO_MATCH_FOUND%></h3>
---%>                </EmptyDataTemplate>
+                   <h3 style="font-style:italic"><% =Purchase.Common.ERR_NO_MATCH_FOUND%></h3>
+                </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr>
                         <td class = "<%# Eval("isDisabled_CSS") %>"><asp:Label ID="LocationLabel" runat="server" Text='<%# Eval("LocationName") %>' /></td>

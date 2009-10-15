@@ -33,23 +33,16 @@ Partial Public Class UserList
 
     Protected Sub Download_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Download.Click
         '[Action確認]---------------------------------------------------------------------------------------------
-        Dim st_Action As String = Common.GetAction(Request)
-        'Dim st_Action As String = CStr(IIf(String.IsNullOrEmpty(Request.QueryString("Action")), String.Empty, Request.QueryString("Action")))
-        'If st_Action <> DOWNLOAD_ACTION Then
-        '    Msg.Text = Common.ERR_INVALID_PARAMETER
-        '    Exit Sub
-        'End If
-
-        '[ダウンロード実行]---------------------------------------------------------------------------------------
-        LoadExcelForm()
-        Response.ContentType = Common.EXCEL_CONTENTTYPE
-        Response.AddHeader("Content-Disposition", "attachment; filename=" & """PurchasingUser_" & Now.ToString("yyyyMMdd") & ".xls""")
-        'Response.Flush()
-        Response.Write(st_HeaderLine)
-        '名称仕様変更 カタログ品名用⇒All Data
-        CreateXML(CreateSQL(), "Purchase DB 全ユーザ一覧")
-        Response.Write(st_EndWorkBookLine)
-        Response.End()
+        If Common.GetAction(Request) = DOWNLOAD_ACTION Then
+            '[ダウンロード実行]-----------------------------------------------------------------------------------
+            LoadExcelForm()
+            Response.ContentType = Common.EXCEL_CONTENTTYPE
+            Response.AddHeader("Content-Disposition", "attachment; filename=" & """PurchasingUser_" & Now.ToString("yyyyMMdd") & ".xls""")
+            Response.Write(st_HeaderLine)
+            CreateXML(CreateSQL(), "Purchase DB 全ユーザ一覧")
+            Response.Write(st_EndWorkBookLine)
+            Response.End()
+        End If
     End Sub
 
     Public Function CreateSQL() As String
@@ -77,42 +70,37 @@ Partial Public Class UserList
 
     Private Sub CreateXML(ByVal sql As String, ByVal ShtName As String)
         '[XML スプレッドシートの作成]-----------------------------------------------------------------------------
-
-        'Try
-
-        'Catch ex As Exception
-
-        'Finally
-
-        'End Try
-
-
         Response.Write(st_StartWorksheetLine.Replace("@SheetName", ShtName))   '[SheetNameの作成]
-
         Response.Write(st_StartTableLine)
-        DBCommand = DBConn.CreateCommand()
-        DBCommand.CommandText = sql
-        DBConn.Open()
-        DBReader = DBCommand.ExecuteReader
-        DBCommand.Dispose()
-        '[見出行の作成]
-        Response.Write(st_StartRowLine & vbCrLf)
-        For i As Integer = 0 To DBReader.FieldCount - 1
-            Response.Write(st_DataLine.Replace("@DataValue", DBReader.GetName(i)) & vbCrLf)
-        Next
-        Response.Write(st_EndRowLine & vbCrLf)
-        '[データ行の作成]
-        Do Until DBReader.Read = False
+
+        Try
+            DBCommand = DBConn.CreateCommand()
+            DBCommand.CommandText = sql
+            DBConn.Open()
+            DBReader = DBCommand.ExecuteReader
+
+            '[見出行の作成]
             Response.Write(st_StartRowLine & vbCrLf)
             For i As Integer = 0 To DBReader.FieldCount - 1
-                Dim st_TempData As String = DBReader(i).ToString.Replace("<", "&lt;")
-                st_TempData = st_TempData.Replace(">", "&gt;")
-                Response.Write(st_DataLine.Replace("@DataValue", st_TempData) & vbCrLf)
+                Response.Write(st_DataLine.Replace("@DataValue", DBReader.GetName(i)) & vbCrLf)
             Next
+
             Response.Write(st_EndRowLine & vbCrLf)
-        Loop
-        DBReader.Close()
-        DBConn.Close()
+            '[データ行の作成]
+            Do Until DBReader.Read = False
+                Response.Write(st_StartRowLine & vbCrLf)
+                For i As Integer = 0 To DBReader.FieldCount - 1
+                    Dim st_TempData As String = DBReader(i).ToString.Replace("<", "&lt;")
+                    st_TempData = st_TempData.Replace(">", "&gt;")
+                    Response.Write(st_DataLine.Replace("@DataValue", st_TempData) & vbCrLf)
+                Next
+                Response.Write(st_EndRowLine & vbCrLf)
+            Loop
+        Finally
+            DBReader.Close()
+            DBConn.Close()
+        End Try
+
         Response.Write(st_EndTableLine)
         Response.Write(st_EndWorksheetLine)
     End Sub
