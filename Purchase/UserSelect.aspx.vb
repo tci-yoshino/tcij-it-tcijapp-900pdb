@@ -1,4 +1,8 @@
-﻿Imports Purchase.Common
+﻿Option Explicit On
+Option Infer Off
+Option Strict On
+
+Imports Purchase.Common
 
 Partial Public Class UserSelect
     Inherits CommonPage
@@ -13,14 +17,14 @@ Partial Public Class UserSelect
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         '[Msgのクリア]---------------------------------------------------------------------
-        Msg.Text = ""
+        Msg.Text = String.Empty
 
         If IsPostBack = False Then
             '[パラメータ取得]------------------------------------------------------------------
             If Request.RequestType = "POST" Then
-                st_UserID = IIf(Request.Form("UserID") = Nothing, "", Request.Form("UserID"))
+                st_UserID = CStr(IIf(Request.Form("UserID") = Nothing, String.Empty, Request.Form("UserID")))
             ElseIf Request.RequestType = "GET" Then
-                st_UserID = IIf(Request.QueryString("UserID") = Nothing, "", Request.QueryString("UserID"))
+                st_UserID = CStr(IIf(Request.QueryString("UserID") = Nothing, String.Empty, Request.QueryString("UserID")))
             End If
 
             '[パラメータ正規化]--------------------------------------------------------------------
@@ -37,10 +41,11 @@ Partial Public Class UserSelect
             DBCommand.CommandText = "SELECT Name FROM s_Location ORDER BY Name"
             DBConn.Open()
             DBReader = DBCommand.ExecuteReader()
+            DBCommand.Dispose()
             LocationName.Items.Clear()
-            LocationName.Items.Add("")
+            LocationName.Items.Add(String.Empty)
             Do Until DBReader.Read = False
-                LocationName.Items.Add(DBReader("Name"))
+                LocationName.Items.Add(DBReader("Name").ToString)
             Loop
             DBConn.Close()
 
@@ -52,9 +57,9 @@ Partial Public Class UserSelect
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
                 If DBReader.Read = True Then
-                    LocationName.SelectedValue = DBReader("LocationName")
-                    DeptName.Text = DBReader("AD_DeptName")
-                    UserName.Text = DBReader("AD_DisplayName")
+                    LocationName.SelectedValue = CStr(DBReader("LocationName"))
+                    DeptName.Text = CStr(DBReader("AD_DeptName"))
+                    UserName.Text = CStr(DBReader("AD_DisplayName"))
                 End If
                 DBReader.Close()
             End If
@@ -65,19 +70,15 @@ Partial Public Class UserSelect
     End Sub
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Search.Click
-
         Dim st_Action As String = String.Empty
-
         If Request.Form("Action") = Nothing Then
             st_Action = IIf(Request.QueryString("Action") = Nothing, String.Empty, Request.QueryString("Action")).ToString
         Else
             st_Action = Request.Form("Action").ToString
         End If
-
         If st_Action = SEARCH_ACTION Then
             SearchUserList()
         End If
-
     End Sub
 
     Protected Sub SearchUserList()
@@ -99,20 +100,16 @@ Partial Public Class UserSelect
             st_SQL.Append(" s_User AS SU ")
             st_SQL.Append(" INNER JOIN s_Location AS SL ON SU.LocationCode = SL.LocationCode ")
             st_SQL.Append("WHERE ")
-            st_SQL.Append(" AD_AccountName<>'' ")
+            st_SQL.Append(" AD_AccountName<>'' AND ")
+
             If LocationName.Text <> String.Empty Then
-                st_WHERE = st_WHERE + "SL.Name='" + LocationName.Text + "'"
+                st_WHERE = "SL.Name='" + LocationName.Text + "'"
             End If
-            If DeptName.Text <> String.Empty Then
-                If st_WHERE <> String.Empty Then st_WHERE = st_WHERE + " AND "
-                st_WHERE = st_WHERE + "AD_DeptName LIKE '%" + DeptName.Text + "%'"
-            End If
-            If UserName.Text <> String.Empty Then
-                If st_WHERE <> String.Empty Then st_WHERE = st_WHERE + " AND "
-                st_WHERE = st_WHERE + "AD_DisplayName LIKE '%" + UserName.Text + "%'"
-            End If
+            If st_WHERE <> String.Empty Then st_WHERE = st_WHERE + " AND "
+            st_WHERE = st_WHERE + "AD_DeptName LIKE '%" + DeptName.Text + "%' AND AD_DisplayName LIKE '%" + UserName.Text + "%'"
+
             If st_WHERE <> String.Empty Then
-                st_SQL.Append(" AND " + st_WHERE + "")
+                st_SQL.Append(st_WHERE)
             End If
             SrcUser.SelectCommand = st_SQL.ToString
         End If

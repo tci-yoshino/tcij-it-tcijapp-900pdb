@@ -1,4 +1,8 @@
-﻿Imports System.Data.SqlClient
+﻿Option Explicit On
+Option Infer Off
+Option Strict On
+
+Imports System.Data.SqlClient
 
 Partial Public Class UserList
     Inherits CommonPage
@@ -28,7 +32,7 @@ Partial Public Class UserList
 
     Protected Sub Download_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Download.Click
         '[Action確認]---------------------------------------------------------------------------------------------
-        'Dim st_Action As String = CStr(IIf(String.IsNullOrEmpty(Request.QueryString("Action")), "", Request.QueryString("Action")))
+        'Dim st_Action As String = CStr(IIf(String.IsNullOrEmpty(Request.QueryString("Action")), String.Empty, Request.QueryString("Action")))
         'If st_Action <> ACTION_ALLDATA Then
         '    Msg.Text = ERR_INVALID_PARAMETER
         '    Exit Sub
@@ -71,8 +75,17 @@ Partial Public Class UserList
 
     Private Sub CreateXML(ByVal sql As String, ByVal ShtName As String)
         '[XML スプレッドシートの作成]-----------------------------------------------------------------------------
-        '[SheetNameの作成]
-        Response.Write(st_StartWorksheetLine.Replace("@SheetName", ShtName))
+
+        'Try
+
+        'Catch ex As Exception
+
+        'Finally
+
+        'End Try
+
+
+        Response.Write(st_StartWorksheetLine.Replace("@SheetName", ShtName))   '[SheetNameの作成]
 
         Response.Write(st_StartTableLine)
         DBCommand = DBConn.CreateCommand()
