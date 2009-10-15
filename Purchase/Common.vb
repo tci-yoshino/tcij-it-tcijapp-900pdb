@@ -580,4 +580,38 @@ Public Class Common
         Return True
     End Function
 
+    ''' <summary>
+    ''' actionパラメータを取得します。
+    ''' </summary>
+    ''' <param name="Request">呼出し元のページのHttpRequestオブジェクト</param>
+    ''' <returns>取得したactionパラメータを返します。見つからない場合は空白を返します。</returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetAction(ByVal Request As HttpRequest) As String
+
+        Return GetQuery(Request, "Action")
+
+    End Function
+
+    ''' <summary>
+    ''' リクエストに含まれるクエリーパラメータの内容を取得します。
+    ''' </summary>
+    ''' <param name="Request">呼出し元のページのHttpRequestオブジェクト</param>
+    ''' <param name="Key">クエリーキー文字列</param>
+    ''' <returns>取得したパラメータを返します。見つからない場合は空白を返します。</returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetQuery(ByVal Request As HttpRequest, ByVal Key As String) As String
+
+        Dim st_Query As String = String.Empty
+
+        If String.IsNullOrEmpty(Request.Form(Key)) Then
+            st_Query = Request.QueryString(Key)
+        Else
+            st_Query = Request.Form(Key).ToString
+        End If
+
+        Return st_Query
+
+    End Function
+
+
 End Class
