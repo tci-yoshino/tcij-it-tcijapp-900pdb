@@ -102,6 +102,8 @@ Partial Public Class UserSelect
             st_SQL &= "AND SL.Name='" & LocationName.Text & "' "
         End If
         st_SQL &= "AND AD_DeptName LIKE '%" & DeptName.Text & "%' AND AD_DisplayName LIKE '%" & UserName.Text & "%'"
+        st_SQL &= "ORDER BY "
+        st_SQL &= " LocationName, AD_DeptName "
         SrcUser.SelectCommand = st_SQL.ToString
     End Sub
 End Class
