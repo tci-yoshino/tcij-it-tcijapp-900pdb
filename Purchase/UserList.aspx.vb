@@ -103,8 +103,9 @@ Partial Public Class UserList
         st_SQL &= " v_UserAll "
         st_SQL &= "ORDER BY "
         st_SQL &= " LocationName, "
-        st_SQL &= " isDisabled DESC, "
-        st_SQL &= " SurName"
+        st_SQL &= " isDisabled, "
+        st_SQL &= " SurName, "
+        st_SQL &= " GivenName"
         Return st_SQL
     End Function
 
