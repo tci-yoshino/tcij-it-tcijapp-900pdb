@@ -3,14 +3,9 @@ Option Infer Off
 Option Strict On
 
 Imports System.Data.SqlClient
-Imports System.Text
 
 Partial Public Class UserSetting
     Inherits CommonPage
-
-    Dim DBConn As New SqlConnection(Common.DB_CONNECT_STRING)
-    Dim DBCommand As SqlCommand
-    Dim DBReader As SqlDataReader
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         '[Msgのクリア]---------------------------------------------------------------------
@@ -18,19 +13,16 @@ Partial Public Class UserSetting
 
         If IsPostBack = False Then
             '[Role Code 設定]------------------------------------------------------------------
-            Try
-                DBCommand = DBConn.CreateCommand()
+            Using DBConn As New SqlConnection(Common.DB_CONNECT_STRING)
+                Dim DBCommand As SqlCommand = DBConn.CreateCommand()
                 DBCommand.CommandText = "SELECT RoleCode FROM Role ORDER BY RoleCode"
                 DBConn.Open()
-                DBReader = DBCommand.ExecuteReader()
+                Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
                 RoleCode.Items.Clear()
                 Do Until DBReader.Read = False
                     RoleCode.Items.Add(DBReader("RoleCode").ToString)
                 Loop
-            Finally
-                DBReader.Close()
-                DBConn.Close()
-            End Try
+            End Using
             RoleCode.SelectedValue = "WRITE"
 
             '[Privilege Label 設定]------------------------------------------------------------
@@ -38,16 +30,33 @@ Partial Public Class UserSetting
             PrivilegeLevel.Items.Add("P")
             PrivilegeLevel.Items.Add("A")
 
-            '[処理(登録/修正)の判断]-------------------------------------------------------
+            '[Action=Edit時、選択データ表示]---------------------------------------------------
             If Request.QueryString("Action") = "Edit" Then
                 UserID.Text = Request.QueryString("UserID")
                 Search.Visible = False
-                Try
-                    DBCommand = DBConn.CreateCommand()
-                    DBCommand.CommandText = "SELECT UserID,LocationName,AccountName,""Name"",RoleCode,PrivilegeLevel,isAdmin,isDisabled, CONVERT(VARCHAR,UpdateDate,120) AS UpdateDate " & _
-                                            "FROM v_UserAll WHERE UserID=" & UserID.Text
+
+                Dim st_SQL As String = String.Empty
+                st_SQL &= "SELECT "
+                st_SQL &= " UserID, "
+                st_SQL &= " LocationName, "
+                st_SQL &= " AccountName, "
+                st_SQL &= """Name"", "
+                st_SQL &= " RoleCode, "
+                st_SQL &= " PrivilegeLevel, "
+                st_SQL &= "isAdmin, "
+                st_SQL &= " isDisabled, "
+                st_SQL &= " CONVERT(VARCHAR,UpdateDate,120) AS UpdateDate "
+                st_SQL &= "FROM "
+                st_SQL &= " v_UserAll "
+                st_SQL &= "WHERE "
+                st_SQL &= "UserID = "
+                st_SQL &= UserID.Text
+
+                Using DBConn As New SqlConnection(Common.DB_CONNECT_STRING)
+                    Dim DBCommand As SqlCommand = DBConn.CreateCommand()
+                    DBCommand.CommandText = st_SQL
                     DBConn.Open()
-                    DBReader = DBCommand.ExecuteReader()
+                    Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
                     If DBReader.Read = True Then
                         Location.Text = CStr(DBReader("LocationName"))
                         AccountName.Text = CStr(DBReader("AccountName"))
@@ -58,11 +67,11 @@ Partial Public Class UserSetting
                         isDisabled.Checked = CBool(DBReader("isDisAbled"))
                         '[HiddenField設定]
                         UpdateDate.Value = DBReader("UpdateDate").ToString()
+                    Else
+                        Msg.Text = Common.MSG_NO_DATA_FOUND
+                        Exit Sub
                     End If
-                Finally
-                    DBReader.Close()
-                    DBConn.Close()
-                End Try
+                End Using
             Else
                 UserID.CssClass = String.Empty
                 UserID.ReadOnly = False
@@ -92,64 +101,61 @@ Partial Public Class UserSetting
         Dim st_SQL As String = String.Empty
         If Request.QueryString("Action") = "Edit" Then
             '[Action=Edit処理]-------------------------------------------------------------
-            If Common.ExistenceConfirmation("PurchasingUser", "UserID", UserID.Text) = True Then    '[入力UserIDのPurchasingUser存在有無]
-                If Common.IsLatestData("PurchasingUser", "UserID", UserID.Text, UpdateDate.Value) = False Then
-                    Msg.Text = Common.ERR_UPDATED_BY_ANOTHER_USER
-                    Exit Sub
-                End If
-                st_SQL = "UPDATE PurchasingUser SET "
-                st_SQL = st_SQL & "RoleCode='" & RoleCode.Text & "', "
-                st_SQL = st_SQL & "PrivilegeLevel='" & PrivilegeLevel.Text & "', "
-                st_SQL = st_SQL & "isAdmin=" & ConvertBoolToSQLString(isAdmin.Checked) & ", "
-                st_SQL = st_SQL & "isDisAbled=" & ConvertBoolToSQLString(isDisabled.Checked) & ", "
-                st_SQL = st_SQL & "UpdatedBy=" & Session("UserID").ToString & ", "
-                st_SQL = st_SQL & "UpdateDate=GetDate() "
-                st_SQL = st_SQL & "WHERE UserID='" & UserID.Text & "'"
-            Else
+            If Common.ExistenceConfirmation("PurchasingUser", "UserID", UserID.Text) = False Then    '[入力UserIDのPurchasingUser存在有無]
+                Msg.Text = Common.ERR_DELETED_BY_ANOTHER_USER
+                Exit Sub
+            End If
+            If Common.IsLatestData("PurchasingUser", "UserID", UserID.Text, UpdateDate.Value) = False Then
                 Msg.Text = Common.ERR_UPDATED_BY_ANOTHER_USER
                 Exit Sub
             End If
+            st_SQL &= "UPDATE PurchasingUser SET "
+            st_SQL &= "RoleCode='" & RoleCode.Text & "', "
+            st_SQL &= "PrivilegeLevel='" & PrivilegeLevel.Text & "', "
+            st_SQL &= "isAdmin=" & ConvertBoolToSQLString(isAdmin.Checked) & ", "
+            st_SQL &= "isDisAbled=" & ConvertBoolToSQLString(isDisabled.Checked) & ", "
+            st_SQL &= "UpdatedBy=" & Session("UserID").ToString & ", "
+            st_SQL &= "UpdateDate=GetDate() "
+            st_SQL &= "WHERE UserID='" & UserID.Text & "'"
+
         ElseIf Request.QueryString("Action") = Nothing Then
             '[Action=Nothing処理]----------------------------------------------------------
-            If Common.ExistenceConfirmation("PurchasingUser", "UserID", UserID.Text) = False Then   '[入力UserIDのPurchasingUser存在有無]
-                st_SQL = "INSERT INTO PurchasingUser "
-                st_SQL = st_SQL & "(UserID,"
-                st_SQL = st_SQL & "RoleCode,"
-                st_SQL = st_SQL & "PrivilegeLevel,"
-                st_SQL = st_SQL & "isAdmin,"
-                st_SQL = st_SQL & "isDisabled,"
-                st_SQL = st_SQL & "CreatedBy,"
-                st_SQL = st_SQL & "CreateDate,"
-                st_SQL = st_SQL & "UpdatedBy,"
-                st_SQL = st_SQL & "UpdateDate) "
-                st_SQL = st_SQL & "VALUES "
-                st_SQL = st_SQL & "(" & Common.SafeSqlLiteral(UserID.Text) & ",'"
-                st_SQL = st_SQL & RoleCode.Text & "','"
-                st_SQL = st_SQL & PrivilegeLevel.Text & "',"
-                st_SQL = st_SQL & ConvertBoolToSQLString(isAdmin.Checked) & ","
-                st_SQL = st_SQL & ConvertBoolToSQLString(isDisabled.Checked) & ","
-                st_SQL = st_SQL & Session("UserID").ToString & ","
-                st_SQL = st_SQL & "GetDate(),"
-                st_SQL = st_SQL & Session("UserID").ToString & ","
-                st_SQL = st_SQL & "GetDate())"
-            Else
+            If Common.ExistenceConfirmation("PurchasingUser", "UserID", UserID.Text) = True Then   '[入力UserIDのPurchasingUser存在有無]
                 Msg.Text = "Your requested User ID already exist.<br />(Please check again to avoid duplication.)"
                 Exit Sub
             End If
+            st_SQL &= "INSERT INTO PurchasingUser "
+            st_SQL &= "(UserID,"
+            st_SQL &= "RoleCode,"
+            st_SQL &= "PrivilegeLevel,"
+            st_SQL &= "isAdmin,"
+            st_SQL &= "isDisabled,"
+            st_SQL &= "CreatedBy,"
+            st_SQL &= "CreateDate,"
+            st_SQL &= "UpdatedBy,"
+            st_SQL &= "UpdateDate) "
+            st_SQL &= "VALUES "
+            st_SQL &= "(" & Common.SafeSqlLiteral(UserID.Text) & ",'"
+            st_SQL &= RoleCode.Text & "','"
+            st_SQL &= PrivilegeLevel.Text & "',"
+            st_SQL &= ConvertBoolToSQLString(isAdmin.Checked) & ","
+            st_SQL &= ConvertBoolToSQLString(isDisabled.Checked) & ","
+            st_SQL &= Session("UserID").ToString & ","
+            st_SQL &= "GetDate(),"
+            st_SQL &= Session("UserID").ToString & ","
+            st_SQL &= "GetDate())"
         Else
             Msg.Text = Common.ERR_INVALID_PARAMETER
             Exit Sub
         End If
 
         '[処理の実行]------------------------------------------------------------------
-        Try
-            DBCommand = DBConn.CreateCommand()
+        Using DBConn As New SqlConnection(Common.DB_CONNECT_STRING)
+            Dim DBCommand As SqlCommand = DBConn.CreateCommand()
             DBCommand.CommandText = st_SQL
             DBConn.Open()
             DBCommand.ExecuteNonQuery()
-        Finally
-            DBConn.Close()
-        End Try
+        End Using
 
         '[呼出元のフォームに戻る]----------------------------------------------------------
         If Msg.Text.ToString = String.Empty Then
