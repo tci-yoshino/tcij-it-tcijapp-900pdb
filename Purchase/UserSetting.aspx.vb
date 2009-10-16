@@ -22,6 +22,7 @@ Partial Public Class UserSetting
                 Do Until DBReader.Read = False
                     RoleCode.Items.Add(DBReader("RoleCode").ToString)
                 Loop
+                DBReader.Close()
             End Using
             RoleCode.SelectedValue = "WRITE"
 
@@ -71,6 +72,7 @@ Partial Public Class UserSetting
                         Msg.Text = Common.MSG_NO_DATA_FOUND
                         Exit Sub
                     End If
+                    DBReader.Close()
                 End Using
             Else
                 UserID.CssClass = String.Empty

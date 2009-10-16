@@ -135,6 +135,7 @@ Partial Public Class UserList
                 Next
                 Response.Write(str_ExcelLine.EndRowLine & vbCrLf)
             Loop
+            DBReader.Close()
         End Using
 
         Response.Write(str_ExcelLine.EndTableLine)

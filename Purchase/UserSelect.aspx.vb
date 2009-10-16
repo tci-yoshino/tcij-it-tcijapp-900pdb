@@ -39,6 +39,7 @@ Partial Public Class UserSelect
                 Do Until DBReader.Read = False
                     LocationName.Items.Add(DBReader("Name").ToString)
                 Loop
+                DBReader.Close()
             End Using
 
             '[テキストボックス等のデータ表示]----------------------------------------------
@@ -63,6 +64,7 @@ Partial Public Class UserSelect
                         DeptName.Text = CStr(DBReader("AD_DeptName"))
                         UserName.Text = CStr(DBReader("AD_DisplayName"))
                     End If
+                    DBReader.Close()
                 End Using
             End If
 
