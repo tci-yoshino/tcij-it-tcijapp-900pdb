@@ -73,7 +73,7 @@ Partial Public Class UserList
         End If
     End Sub
 
-    Public Sub LoadExcelForm()
+    Private Sub LoadExcelForm()
         '[App_DataからExcelFormat読込み]------------------------------------------------------------------
         Dim st_ExcelBase As String
         Using sr As New System.IO.StreamReader(MapPath("./App_Data/ExcelForm.xml"), System.Text.Encoding.UTF8)
@@ -90,7 +90,7 @@ Partial Public Class UserList
         str_ExcelLine.EndWorkBookLine = Regex.Match(st_ExcelBase, "</Workbook>").Value
     End Sub
 
-    Public Function CreateSQL() As String
+    Private Function CreateSQL() As String
         '[Excel出力するデータ取得SQL]---------------------------------------------------------------------
         Dim st_SQL As String = String.Empty
         st_SQL &= "SELECT "
