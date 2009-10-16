@@ -7,11 +7,11 @@ Imports System.Data.SqlClient
 Partial Public Class UserSelect
     Inherits CommonPage
 
-    Private st_UserID As String = String.Empty
-    Private st_LocationName As String = String.Empty
     Const SEARCH_ACTION As String = "Search"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        Dim st_UserID As String = String.Empty
+
         '[Msgのクリア]---------------------------------------------------------------------
         Msg.Text = String.Empty
 
