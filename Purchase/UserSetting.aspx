@@ -63,10 +63,10 @@
                         </td>
                     </tr>
 				</table>
-                <asp:HiddenField ID="Action" runat="server" value="Save" />
+                <asp:HiddenField ID="Mode" runat="server" value="" />
 				<asp:HiddenField ID="UpdateDate" runat="server" />
 				<div class="btns">
-                    <asp:Button ID="Save" runat="server" Text="Save" />
+                    <asp:Button ID="Save" runat="server" Text="Save" PostBackUrl="UserSetting.aspx?Action=Save"/>
 				</div>
 		</div>
 	</div><!-- Main Content Area END -->

@@ -7,6 +7,9 @@ Imports System.Data.SqlClient
 Partial Public Class UserSetting
     Inherits CommonPage
 
+    Const SAVE_ACTION As String = "Save"
+    Const EDIT_ACTION As String = "Edit"
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         '[Msgのクリア]---------------------------------------------------------------------
         Msg.Text = String.Empty
@@ -31,9 +34,12 @@ Partial Public Class UserSetting
             PrivilegeLevel.Items.Add("P")
             PrivilegeLevel.Items.Add("A")
 
+            '[Actionの記憶]--------------------------------------------------------------------
+            Mode.Value = Common.GetAction(Request)
+
             '[Action=Edit時、選択データ表示]---------------------------------------------------
-            If Request.QueryString("Action") = "Edit" Then
-                UserID.Text = Request.QueryString("UserID")
+            If Common.GetAction(Request) = EDIT_ACTION Then
+                UserID.Text = Common.GetQuery(Request, "UserID")
                 Search.Visible = False
 
                 Dim st_SQL As String = String.Empty
@@ -83,7 +89,7 @@ Partial Public Class UserSetting
 
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
         '[Actionのチェック]----------------------------------------------------------------
-        If Request.Form("Action") <> "Save" Then
+        If Common.GetAction(Request) <> SAVE_ACTION Then
             Msg.Text = Common.ERR_INVALID_PARAMETER
             Exit Sub
         End If
@@ -101,7 +107,7 @@ Partial Public Class UserSetting
         End If
 
         Dim st_SQL As String = String.Empty
-        If Request.QueryString("Action") = "Edit" Then
+        If Mode.Value = EDIT_ACTION Then
             '[Action=Edit処理]-------------------------------------------------------------
             If Common.ExistenceConfirmation("PurchasingUser", "UserID", UserID.Text) = False Then    '[入力UserIDのPurchasingUser存在有無]
                 Msg.Text = Common.ERR_DELETED_BY_ANOTHER_USER
@@ -120,7 +126,7 @@ Partial Public Class UserSetting
             st_SQL &= "UpdateDate=GetDate() "
             st_SQL &= "WHERE UserID='" & UserID.Text & "'"
 
-        ElseIf Request.QueryString("Action") = Nothing Then
+        ElseIf Mode.Value = String.Empty Then
             '[Action=Nothing処理]----------------------------------------------------------
             If Common.ExistenceConfirmation("PurchasingUser", "UserID", UserID.Text) = True Then   '[入力UserIDのPurchasingUser存在有無]
                 Msg.Text = "Your requested User ID already exist.<br />(Please check again to avoid duplication.)"
