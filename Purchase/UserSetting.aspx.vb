@@ -109,7 +109,7 @@ Partial Public Class UserSetting
         End If
 
         Dim st_SQL As String = String.Empty
-        If Mode.Value = EDIT_ACTION Then
+        If Common.GetHttpQuery(Request, "Mode") = EDIT_ACTION Then
             '[Action=Edit処理]-------------------------------------------------------------
             If Common.ExistenceConfirmation("PurchasingUser", "UserID", UserID.Text) = False Then    '[入力UserIDのPurchasingUser存在有無]
                 Msg.Text = Common.ERR_DELETED_BY_ANOTHER_USER
