@@ -17,7 +17,7 @@ Partial Public Class UserSelect
 
         If IsPostBack = False Then
             '[パラメータ取得]--------------------------------------------------------------
-            st_UserID = Common.GetQuery(Request, "UserID")
+            st_UserID = Common.GetHttpQuery(Request, "UserID")
 
             '[パラメータトリム]------------------------------------------------------------
             st_UserID = st_UserID.Trim
@@ -75,7 +75,7 @@ Partial Public Class UserSelect
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Search.Click
         '[Action取得]----------------------------------------------------------------------
-        If Common.GetAction(Request) = SEARCH_ACTION Then
+        If Common.GetHttpAction(Request) = SEARCH_ACTION Then
             SearchUserList()
         End If
     End Sub

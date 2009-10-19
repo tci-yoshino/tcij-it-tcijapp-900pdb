@@ -46,12 +46,6 @@ function clearSelect(formname) {
 
 -->
 </script>
-    <style type="text/css">
-        .style1
-        {
-            height: 25px;
-        }
-    </style>
 </head>
 <body>
     <!-- Main Content Area -->
@@ -70,12 +64,12 @@ function clearSelect(formname) {
                         <td><asp:DropDownList ID="LocationName" runat="server"></asp:DropDownList></td>
                     </tr>
                     <tr>
-                        <th>AD_DisplayName : </th>
+                        <th>AD Display Name : </th>
                         <td><asp:TextBox ID="UserName" runat="server" Width="21em" MaxLength="20"></asp:TextBox></td>
                     </tr>
                     <tr>
-                        <th class="style1">AD_DeptName : </th>
-                        <td class="style1"><asp:TextBox ID="DeptName" runat="server" Width="13em" 
+                        <th>AD Dept Name : </th>
+                        <td><asp:TextBox ID="DeptName" runat="server" Width="13em" 
                                 MaxLength="20"></asp:TextBox></td>
                     </tr>   
                 </table>
@@ -93,9 +87,9 @@ function clearSelect(formname) {
                     <table ID="itemPlaceholderContainer" runat="server">
                         <tr runat="server">
                             <th runat="server" style="width:10%">Location</th>
-                            <th runat="server" style="width:20%">AD_AccountName</th>
-                            <th runat="server" style="width:35%">AD_DisplayName</th>
-                            <th runat="server" style="width:35%">AD_DeptName</th>
+                            <th runat="server" style="width:20%">AD Account Name</th>
+                            <th runat="server" style="width:35%">AD Display Name</th>
+                            <th runat="server" style="width:35%">AD Dept Name</th>
                         </tr>
                         <tr ID="itemPlaceholder" runat="server">
                         </tr>

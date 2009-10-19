@@ -328,6 +328,12 @@ Public Class Common
     End Function
 
     ''' <summary>
+    ''' Privilege_Levelの取得
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Shared ReadOnly PRIVILEGE_LEVEL() As String = {"P", "A"}
+
+    ''' <summary>
     ''' 文字列を短縮する。一覧で製品名を表示する場合などに使用。
     ''' </summary>
     ''' <param name="str">文字列</param>
@@ -427,6 +433,20 @@ Public Class Common
 
         Return CInt(str)
 
+    End Function
+
+    ''' <summary>
+    ''' Boolean型をInt型に変換する
+    ''' </summary>
+    ''' <param name="value"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function ConvertBoolToInt(ByVal value As Boolean) As Integer
+        If value = True Then
+            Return 1
+        Else
+            Return 0
+        End If
     End Function
 
     ''' <summary>
@@ -586,9 +606,9 @@ Public Class Common
     ''' <param name="Request">呼出し元のページのHttpRequestオブジェクト</param>
     ''' <returns>取得したactionパラメータを返します。見つからない場合は空白を返します。</returns>
     ''' <remarks></remarks>
-    Public Shared Function GetAction(ByVal Request As HttpRequest) As String
+    Public Shared Function GetHttpAction(ByVal Request As HttpRequest) As String
 
-        Return GetQuery(Request, "Action")
+        Return GetHttpQuery(Request, "Action")
 
     End Function
 
@@ -599,7 +619,7 @@ Public Class Common
     ''' <param name="Key">クエリーキー文字列</param>
     ''' <returns>取得したパラメータを返します。見つからない場合は空白を返します。</returns>
     ''' <remarks></remarks>
-    Public Shared Function GetQuery(ByVal Request As HttpRequest, ByVal Key As String) As String
+    Public Shared Function GetHttpQuery(ByVal Request As HttpRequest, ByVal Key As String) As String
 
         Dim st_Query As String = String.Empty
 

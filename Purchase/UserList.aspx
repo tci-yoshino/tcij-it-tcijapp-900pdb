@@ -14,9 +14,11 @@
 
     <!-- Main Content Area -->
     <div id="content">
-        <div class="tabs"><a href="./UserSetting.aspx">New User</a>&nbsp;&nbsp;<asp:LinkButton ID="Download" runat="server" PostBackUrl="UserList.aspx?Action=Download">Download</asp:LinkButton></div>
+        <div class="tabs"><a href="./UserSetting.aspx">New User</a>&nbsp;&nbsp;</div>
 
         <h3>User</h3>
+
+        <p><asp:LinkButton ID="Download" runat="server" PostBackUrl="UserList.aspx?Action=Download">Download</asp:LinkButton></p>
 
         <div class="list">
             <p class="attention"></p>
@@ -27,11 +29,10 @@
                         <tr runat="server" style="">
                             <th runat="server" style="width:8%">Location</th>
                             <th runat="server" style="width:20%">Account</th>
-                            <th runat="server" style="width:20%">Surname</th>
-                            <th runat="server" style="width:20%">GivenName</th>
-                            <th runat="server" style="width:10%">Role Code</th>
-                            <th runat="server" style="width:10%">Privilege Level</th>
-                            <th runat="server" style="width:8%">isAdmin</th>
+                            <th runat="server" style="width:25%">Surname</th>
+                            <th runat="server" style="width:25%">Given Name</th>
+                            <th runat="server" style="width:10%">Role</th>
+                            <th runat="server" style="width:8%">is Admin</th>
                             <th style="width:4%"></th>
                         </tr>
                         <tr ID="itemPlaceholder" runat="server">
@@ -48,7 +49,6 @@
                         <td class = "<%# Eval("isDisabled_CSS") %>"><asp:Label ID="SurnameLabel" runat="server" Text='<%# Eval("Surname") %>' /></td>
                         <td class = "<%# Eval("isDisabled_CSS") %>"><asp:Label ID="GivenNameLabel" runat="server" Text='<%# Eval("GivenName") %>' /></td>
                         <td class = "<%# Eval("isDisabled_CSS") %>"><asp:Label ID="RoleCodeLabel" runat="server" Text='<%# Eval("RoleCode") %>' /></td>
-                        <td class = "<%# Eval("isDisabled_CSS") %>"><asp:Label ID="PrivilegeLevelLabel" runat="server" Text='<%# Eval("PrivilegeLevel") %>' /></td>
                         <td class = "<%# Eval("isDisabled_CSS") %>"><asp:Label ID="isAdminLabel" runat="server" Text='<%# Eval("isAdmin") %>' /></td>
                         <td class = "<%# Eval("isDisabled_CSS") %>"><asp:HyperLink ID="Edit" runat="server" NavigateUrl='<%# Eval("Url") %>'>Edit</asp:HyperLink></td>
                     </tr>

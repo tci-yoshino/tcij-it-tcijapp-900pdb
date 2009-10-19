@@ -61,7 +61,7 @@ Partial Public Class UserList
 
     Protected Sub Download_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Download.Click
         '[Action確認]-------------------------------------------------------------------------------------
-        If Common.GetAction(Request) = DOWNLOAD_ACTION Then
+        If Common.GetHttpAction(Request) = DOWNLOAD_ACTION Then
             '[ダウンロード実行]---------------------------------------------------------------------------
             LoadExcelForm()
             Response.ContentType = Common.EXCEL_CONTENTTYPE
@@ -119,9 +119,11 @@ Partial Public Class UserList
             DBCommand.CommandText = sql
             DBConn.Open()
             Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
+            Dim i_FieldCount As Integer = DBReader.FieldCount - 1
+
             '[見出行の作成]--------------------------------------------------------------------------------
             Response.Write(str_ExcelLine.StartRowLine & vbCrLf)
-            For i As Integer = 0 To DBReader.FieldCount - 1
+            For i As Integer = 0 To i_FieldCount
                 Response.Write(str_ExcelLine.DataLine.Replace("@DataValue", DBReader.GetName(i)) & vbCrLf)
             Next
             Response.Write(str_ExcelLine.EndRowLine & vbCrLf)
@@ -129,7 +131,7 @@ Partial Public Class UserList
             '[データ行の作成]------------------------------------------------------------------------------
             Do Until DBReader.Read = False
                 Response.Write(str_ExcelLine.StartRowLine & vbCrLf)
-                For i As Integer = 0 To DBReader.FieldCount - 1
+                For i As Integer = 0 To i_FieldCount
                     Dim st_TempData As String = DBReader(i).ToString.Replace("<", "&lt;")
                     st_TempData = st_TempData.Replace(">", "&gt;")
                     Response.Write(str_ExcelLine.DataLine.Replace("@DataValue", st_TempData) & vbCrLf)

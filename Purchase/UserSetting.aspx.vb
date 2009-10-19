@@ -9,6 +9,7 @@ Partial Public Class UserSetting
 
     Const SAVE_ACTION As String = "Save"
     Const EDIT_ACTION As String = "Edit"
+    Const ALREADY_EXIST As String = "Your requested User ID already exist.<br />(Please check again to avoid duplication.)"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         '[Msgのクリア]---------------------------------------------------------------------
@@ -31,15 +32,16 @@ Partial Public Class UserSetting
 
             '[Privilege Label 設定]------------------------------------------------------------
             PrivilegeLevel.Items.Clear()
-            PrivilegeLevel.Items.Add("P")
-            PrivilegeLevel.Items.Add("A")
+            For i As Integer = 0 To Common.PRIVILEGE_LEVEL.Length - 1
+                PrivilegeLevel.Items.Add(Common.PRIVILEGE_LEVEL(i))
+            Next
 
             '[Actionの記憶]--------------------------------------------------------------------
-            Mode.Value = Common.GetAction(Request)
+            Mode.Value = Common.GetHttpAction(Request)
 
             '[Action=Edit時、選択データ表示]---------------------------------------------------
-            If Common.GetAction(Request) = EDIT_ACTION Then
-                UserID.Text = Common.GetQuery(Request, "UserID")
+            If Common.GetHttpAction(Request) = EDIT_ACTION Then
+                UserID.Text = Common.GetHttpQuery(Request, "UserID")
                 Search.Visible = False
 
                 Dim st_SQL As String = String.Empty
@@ -47,7 +49,7 @@ Partial Public Class UserSetting
                 st_SQL &= " UserID, "
                 st_SQL &= " LocationName, "
                 st_SQL &= " AccountName, "
-                st_SQL &= """Name"", "
+                st_SQL &= "[Name], "
                 st_SQL &= " RoleCode, "
                 st_SQL &= " PrivilegeLevel, "
                 st_SQL &= "isAdmin, "
@@ -89,7 +91,7 @@ Partial Public Class UserSetting
 
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
         '[Actionのチェック]----------------------------------------------------------------
-        If Common.GetAction(Request) <> SAVE_ACTION Then
+        If Common.GetHttpAction(Request) <> SAVE_ACTION Then
             Msg.Text = Common.ERR_INVALID_PARAMETER
             Exit Sub
         End If
@@ -120,8 +122,8 @@ Partial Public Class UserSetting
             st_SQL &= "UPDATE PurchasingUser SET "
             st_SQL &= "RoleCode='" & RoleCode.Text & "', "
             st_SQL &= "PrivilegeLevel='" & PrivilegeLevel.Text & "', "
-            st_SQL &= "isAdmin=" & ConvertBoolToSQLString(isAdmin.Checked) & ", "
-            st_SQL &= "isDisAbled=" & ConvertBoolToSQLString(isDisabled.Checked) & ", "
+            st_SQL &= "isAdmin=" & Common.ConvertBoolToInt(isAdmin.Checked) & ", "
+            st_SQL &= "isDisAbled=" & Common.ConvertBoolToInt(isDisabled.Checked) & ", "
             st_SQL &= "UpdatedBy=" & Session("UserID").ToString & ", "
             st_SQL &= "UpdateDate=GetDate() "
             st_SQL &= "WHERE UserID='" & UserID.Text & "'"
@@ -129,7 +131,7 @@ Partial Public Class UserSetting
         ElseIf Mode.Value = String.Empty Then
             '[Action=Nothing処理]----------------------------------------------------------
             If Common.ExistenceConfirmation("PurchasingUser", "UserID", UserID.Text) = True Then   '[入力UserIDのPurchasingUser存在有無]
-                Msg.Text = "Your requested User ID already exist.<br />(Please check again to avoid duplication.)"
+                Msg.Text = ALREADY_EXIST
                 Exit Sub
             End If
             st_SQL &= "INSERT INTO PurchasingUser "
@@ -146,8 +148,8 @@ Partial Public Class UserSetting
             st_SQL &= "(" & Common.SafeSqlLiteral(UserID.Text) & ",'"
             st_SQL &= RoleCode.Text & "','"
             st_SQL &= PrivilegeLevel.Text & "',"
-            st_SQL &= ConvertBoolToSQLString(isAdmin.Checked) & ","
-            st_SQL &= ConvertBoolToSQLString(isDisabled.Checked) & ","
+            st_SQL &= Common.ConvertBoolToInt(isAdmin.Checked) & ","
+            st_SQL &= Common.ConvertBoolToInt(isDisabled.Checked) & ","
             st_SQL &= Session("UserID").ToString & ","
             st_SQL &= "GetDate(),"
             st_SQL &= Session("UserID").ToString & ","
@@ -166,18 +168,6 @@ Partial Public Class UserSetting
         End Using
 
         '[呼出元のフォームに戻る]----------------------------------------------------------
-        If Msg.Text.ToString = String.Empty Then
-            Response.Redirect("UserList.aspx")
-        End If
+        Response.Redirect("UserList.aspx")
     End Sub
-
-    Private Function ConvertBoolToSQLString(ByVal value As Boolean) As String
-        '[isAdmin,isDisAbledの値True,Falseをそれぞれ1,0にする]-----------------------------
-        If value = True Then
-            Return "1"
-        Else
-            Return "0"
-        End If
-    End Function
-
 End Class

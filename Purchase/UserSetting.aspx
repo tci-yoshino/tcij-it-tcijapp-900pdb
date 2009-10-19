@@ -19,7 +19,7 @@
 			<p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 				<table>
 					<tr>
-						<th>User ID : <span class="required">*</span> : </th>
+						<th>User ID<span class="required">*</span> : </th>
 						<td>
 						    <asp:TextBox ID="UserID" runat="server" Width="7em" MaxLength="5" 
                                 ReadOnly="true" CssClass="readonly" TabIndex="1"></asp:TextBox>
@@ -43,7 +43,7 @@
                                 ReadOnly="True" CssClass="readonly" TabIndex="2"></asp:TextBox></td>
 					</tr>
 					<tr>
-						<th>Role Code : </th>
+						<th>Role : </th>
 						<td><asp:DropDownList ID="RoleCode" runat="server"></asp:DropDownList></td>
 					</tr>
 					<tr>
