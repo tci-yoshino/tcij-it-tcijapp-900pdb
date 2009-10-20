@@ -5,12 +5,25 @@
  xmlns:x='urn:schemas-microsoft-com:office:excel'
  xmlns:ss='urn:schemas-microsoft-com:office:spreadsheet'
  xmlns:html='http://www.w3.org/TR/REC-html40'>
+  <Styles>
+    <Style ss:ID="header">
+      <Font x:Family="Swiss" ss:Color="#FFFFFF" ss:Bold="1"/>
+      <Interior ss:Color="#000080" ss:Pattern="Solid"/>
+    </Style>
+
+    <Style ss:ID="disable">
+      <Interior ss:Color="#C0C0C0" ss:Pattern="Solid"/>
+    </Style>]
+
+    <Style ss:ID="normal">
+    </Style>
+  </Styles>
   <ExcelWorkbook xmlns='urn:schemas-microsoft-com:office:excel'>
   </ExcelWorkbook>
   <Worksheet ss:Name='@SheetName'>
     <Table>
       <Row>
-        <Cell><Data ss:Type='String'>@DataValue</Data></Cell>
+        <Cell ss:StyleID="@Style"><Data ss:Type="String">@DataValue</Data></Cell>
       </Row>
     </Table>
   </Worksheet>
