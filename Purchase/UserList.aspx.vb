@@ -47,7 +47,6 @@ Partial Public Class UserList
             st_SQL &= " isAdmin, "
             st_SQL &= " isDisabled, "
             st_SQL &= " 'UserSetting.aspx?Action=Edit&UserID=' + Cast(UserID AS varchar) AS URL "
-            'st_SQL &= " CASE isDisabled WHEN 1 THEN 'disable' ELSE '' END AS isDisabled_CSS "
             st_SQL &= "FROM "
             st_SQL &= " v_UserAll "
             st_SQL &= "ORDER BY "
@@ -124,18 +123,36 @@ Partial Public Class UserList
             '[見出行の作成]--------------------------------------------------------------------------------
             Response.Write(str_ExcelLine.StartRowLine & vbCrLf)
             For i As Integer = 0 To i_FieldCount
-                Response.Write(str_ExcelLine.DataLine.Replace("@DataValue", DBReader.GetName(i)) & vbCrLf)
+                Dim st_TempCell As String = str_ExcelLine.DataLine
+                st_TempCell = st_TempCell.Replace("@Style", "header")
+                Response.Write(st_TempCell.Replace("@DataValue", DBReader.GetName(i)) & vbCrLf)
             Next
             Response.Write(str_ExcelLine.EndRowLine & vbCrLf)
 
             '[データ行の作成]------------------------------------------------------------------------------
+            Dim b_Disable As Boolean = False
             Do Until DBReader.Read = False
                 Response.Write(str_ExcelLine.StartRowLine & vbCrLf)
+
+                If DBReader("備考").ToString() Like "*無効ユーザ*" Then
+                    b_Disable = True
+                Else
+                    b_Disable = False
+                End If
+
                 For i As Integer = 0 To i_FieldCount
                     Dim st_TempData As String = DBReader(i).ToString.Replace("<", "&lt;")
                     st_TempData = st_TempData.Replace(">", "&gt;")
-                    Response.Write(str_ExcelLine.DataLine.Replace("@DataValue", st_TempData) & vbCrLf)
+                    Dim st_TempCell As String = str_ExcelLine.DataLine
+                    st_TempCell = st_TempCell.Replace("@DataValue", st_TempData)
+                    If b_Disable = True Then
+                        st_TempCell = st_TempCell.Replace("@Style", "disable")
+                    Else
+                        st_TempCell = st_TempCell.Replace("@Style", "normal")
+                    End If
+                    Response.Write(st_TempCell & vbCrLf)
                 Next
+
                 Response.Write(str_ExcelLine.EndRowLine & vbCrLf)
             Loop
             DBReader.Close()
