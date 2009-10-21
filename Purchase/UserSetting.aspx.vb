@@ -44,6 +44,12 @@ Partial Public Class UserSetting
                 UserID.Text = Common.GetHttpQuery(Request, "UserID")
                 Search.Visible = False
 
+                '[UserID数値以外エラー]--------------------------------------------------------
+                If Common.IsInteger(UserID.Text) = False Or UserID.Text.Length = 0 Then
+                    Msg.Text = Common.ERR_INVALID_PARAMETER
+                    Exit Sub
+                End If
+
                 Dim st_SQL As String = String.Empty
                 st_SQL &= "SELECT "
                 st_SQL &= " UserID, "
@@ -93,6 +99,12 @@ Partial Public Class UserSetting
         '[Actionのチェック]----------------------------------------------------------------
         If Common.GetHttpAction(Request) <> SAVE_ACTION Then
             Msg.Text = Common.ERR_INVALID_PARAMETER
+            Exit Sub
+        End If
+
+        '[UserIDの入力チェック]------------------------------------------------------------
+        If UserID.Text.Length = 0 Then
+            Msg.Text = "User ID " & Common.ERR_REQUIRED_FIELD
             Exit Sub
         End If
 

@@ -16,18 +16,6 @@ Partial Public Class UserSelect
         Msg.Text = String.Empty
 
         If IsPostBack = False Then
-            '[パラメータ取得]--------------------------------------------------------------
-            st_UserID = Common.GetHttpQuery(Request, "UserID")
-
-            '[パラメータトリム]------------------------------------------------------------
-            st_UserID = st_UserID.Trim
-
-            '[URL デコード]----------------------------------------------------------------
-            st_UserID = HttpUtility.UrlDecode(st_UserID)
-
-            '[全角を半角に変換]------------------------------------------------------------
-            st_UserID = StrConv(st_UserID, VbStrConv.Narrow)
-
             '[LocationCode 設定]-----------------------------------------------------------
             Using DBConn As New SqlConnection(Common.DB_CONNECT_STRING)
                 Dim DBCommand As SqlCommand = DBConn.CreateCommand()
@@ -41,6 +29,33 @@ Partial Public Class UserSelect
                 Loop
                 DBReader.Close()
             End Using
+
+            '[パラメータ取得]--------------------------------------------------------------
+            st_UserID = Common.GetHttpQuery(Request, "UserID")
+
+            '[UserIDが無い場合]-----------------------------------------------------------
+            If st_UserID Is Nothing Then
+                Msg.Text = Common.ERR_INVALID_PARAMETER
+                Exit Sub
+            End If
+
+            '[パラメータトリム]------------------------------------------------------------
+            st_UserID = st_UserID.Trim
+
+            '[URL デコード]----------------------------------------------------------------
+            st_UserID = HttpUtility.UrlDecode(st_UserID)
+
+            '[全角を半角に変換]------------------------------------------------------------
+            st_UserID = StrConv(st_UserID, VbStrConv.Narrow)
+
+            '[st_UserID数値以外中止]-------------------------------------------------------
+            If Common.IsInteger(st_UserID) = False Then
+                Msg.Text = Common.ERR_INVALID_PARAMETER
+                Exit Sub
+            End If
+
+            '[先行ゼロサプレス]------------------------------------------------------------
+            st_UserID = CStr(CInt(st_UserID))
 
             '[テキストボックス等のデータ表示]----------------------------------------------
             If st_UserID <> String.Empty Then
@@ -69,18 +84,19 @@ Partial Public Class UserSelect
             End If
 
             '[検索データ表示]--------------------------------------------------------------
-            SearchUserList()
+            SearchUserList(st_UserID)     'UserSetting.aspxからのuserIDを利用してデータ選択
         End If
     End Sub
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Search.Click
         '[Action取得]----------------------------------------------------------------------
+        Dim st_UserID As String = String.Empty
         If Common.GetHttpAction(Request) = SEARCH_ACTION Then
-            SearchUserList()
+            SearchUserList(st_UserID)
         End If
     End Sub
 
-    Protected Sub SearchUserList()
+    Protected Sub SearchUserList(ByVal UserID As String)
         SrcUser.SelectParameters.Clear()
         If LocationName.Text = String.Empty And DeptName.Text = String.Empty And UserName.Text = String.Empty Then
             Exit Sub
@@ -97,13 +113,18 @@ Partial Public Class UserSelect
         st_SQL &= " s_User AS SU "
         st_SQL &= " INNER JOIN s_Location AS SL ON SU.LocationCode = SL.LocationCode "
         st_SQL &= "WHERE "
-        st_SQL &= " AD_AccountName<>'' "
-        If LocationName.Text <> String.Empty Then
-            st_SQL &= "AND SL.Name='" & LocationName.Text & "' "
+
+        If UserID.Length > 0 Then
+            st_SQL &= "UserID=" & UserID
+        Else
+            st_SQL &= " AD_AccountName<>'' "
+            If LocationName.Text <> String.Empty Then
+                st_SQL &= "AND SL.Name='" & LocationName.Text & "' "
+            End If
+            st_SQL &= "AND AD_DeptName LIKE '%" & Common.SafeSqlLikeClauseLiteral(DeptName.Text) & "%' AND AD_DisplayName LIKE '%" & Common.SafeSqlLikeClauseLiteral(UserName.Text) & "%'"
+            st_SQL &= "ORDER BY "
+            st_SQL &= " LocationName, AD_DeptName "
         End If
-        st_SQL &= "AND AD_DeptName LIKE '%" & DeptName.Text & "%' AND AD_DisplayName LIKE '%" & UserName.Text & "%'"
-        st_SQL &= "ORDER BY "
-        st_SQL &= " LocationName, AD_DeptName "
         SrcUser.SelectCommand = st_SQL.ToString
     End Sub
 End Class
