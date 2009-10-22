@@ -48,14 +48,15 @@ Partial Public Class UserSelect
             '[全角を半角に変換]------------------------------------------------------------
             st_UserID = StrConv(st_UserID, VbStrConv.Narrow)
 
-            '[st_UserID数値以外中止]-------------------------------------------------------
-            If Common.IsInteger(st_UserID) = False Then
-                Msg.Text = Common.ERR_INVALID_PARAMETER
-                Exit Sub
+            '[st_UserID数値orString.Empty以外中止]-----------------------------------------
+            If st_UserID <> String.Empty Then
+                If Common.IsInteger(st_UserID) = False Then
+                    Exit Sub
+                Else
+                    '[先行ゼロサプレス]----------------------------------------------------
+                    st_UserID = CStr(CInt(st_UserID))
+                End If
             End If
-
-            '[先行ゼロサプレス]------------------------------------------------------------
-            st_UserID = CStr(CInt(st_UserID))
 
             '[テキストボックス等のデータ表示]----------------------------------------------
             If st_UserID <> String.Empty Then
