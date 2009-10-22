@@ -1,9 +1,0 @@
-C:\Purchase_SVNWork\Purchase\bin\Purchase.dll
-C:\Purchase_SVNWork\Purchase\bin\Purchase.pdb
-C:\Purchase_SVNWork\Purchase\bin\Purchase.xml
-C:\Purchase_SVNWork\Purchase\obj\Debug\ResolveAssemblyReference.cache
-C:\Purchase_SVNWork\Purchase\obj\Debug\Purchase.Resources.resources
-C:\Purchase_SVNWork\Purchase\obj\Debug\Purchase.vbproj.GenerateResource.Cache
-C:\Purchase_SVNWork\Purchase\obj\Debug\Purchase.dll
-C:\Purchase_SVNWork\Purchase\obj\Debug\Purchase.xml
-C:\Purchase_SVNWork\Purchase\obj\Debug\Purchase.pdb
