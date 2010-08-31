@@ -409,6 +409,7 @@
         sb_SQL.Append("    LEFT OUTER JOIN v_POReminder AS PR ON PR.PONumber = P.PONumber AND PR.RcptUserID = @UserID ")
         sb_SQL.Append("WHERE ")
         sb_SQL.Append("  (POUserID = @UserID OR SOUserID = @UserID) ")
+        sb_SQL.Append("OPTION (RECOMPILE) ")
         Return sb_SQL.ToString()
     End Function
 
