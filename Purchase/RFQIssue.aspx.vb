@@ -17,7 +17,7 @@ Partial Public Class RFQIssue
     Private Const ERR_REQUIRED_QUOLOCATION As String = "Quo-Location" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_PURPOSE As String = "Purpose" & ERR_REQUIRED_FIELD
     Private Const ERR_REQUIRED_ENQQUANTITY As String = "Please enter an item."
-    'Private Const ERR_ISCASNUMBER As String = "You can not enquire with CAS Number. Please convert it into either ""New Product Registry Number"" or ""TCI Product Number""."
+    Private Const ERR_ISCASNUMBER As String = "You can not enquire with CAS Number. Please convert it into either ""New Product Registry Number"" or ""TCI Product Number""."
     'エラーメッセージ(文字数制限オーバー)
     Private Const ERR_COMMENT_OVER As String = "Comment" & ERR_OVER_3000
     Protected Parameter As Boolean = True
@@ -329,10 +329,9 @@ Partial Public Class RFQIssue
         If ProductNumber.Text = "" Then
             Msg.Text = ERR_REQUIRED_PRODUCTNUMBER
             Return False
-            'CAS番号でもRFQが登録可能にするためコメントにした（2011-05-31 toshiteru）
-            'ElseIf TCICommon.Func.IsCASNumber(ProductNumber.Text) = True Then
-            '    Msg.Text = ERR_ISCASNUMBER
-            '    Return False
+        ElseIf TCICommon.Func.IsCASNumber(ProductNumber.Text) = False Then 'True ⇒ False [正しいCAS番号は登録できるようにした(2011-05-31 toshiteru)]
+            Msg.Text = ERR_ISCASNUMBER
+            Return False
         End If
         If SupplierCode.Text = "" Then
             Msg.Text = ERR_REQUIRED_SUPPLIERCODE
