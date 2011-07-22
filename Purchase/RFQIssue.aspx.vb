@@ -231,6 +231,8 @@ Partial Public Class RFQIssue
         Dim st_ProductID As String = ""
         Dim st_SupplierCode As String = ""
         Dim DBReader As SqlDataReader
+        Dim sb_Sql As New StringBuilder
+
         If Request.QueryString("ProductID") <> "" Or Request.Form("ProductID") <> "" Then
             st_ProductID = IIf(Request.QueryString("ProductID") <> "", Request.QueryString("ProductID"), Request.Form("ProductID"))
             If IsNumeric(st_ProductID) Then
@@ -257,8 +259,23 @@ Partial Public Class RFQIssue
         If Request.QueryString("SupplierCode") <> "" Or Request.Form("SupplierCode") <> "" Then
             st_SupplierCode = IIf(Request.QueryString("SupplierCode") <> "", Request.QueryString("SupplierCode"), Request.Form("SupplierCode"))
             If IsNumeric(st_SupplierCode) Then
-                DBCommand.CommandText = "SELECT SupplierCode, R3SupplierCode, ISNULL(Name3, '') + ' ' + ISNULL(Name4, '') AS SupplierName, CountryCode FROM Supplier WHERE SupplierCode = @i_SupplierCode"
-                DBCommand.Parameters.Add("i_SupplierCode", SqlDbType.Int).Value = Integer.Parse(st_SupplierCode)
+                sb_Sql.AppendLine("SELECT")
+                sb_Sql.AppendLine("  S.SupplierCode,")
+                sb_Sql.AppendLine("  S.R3SupplierCode,")
+                sb_Sql.AppendLine("  ISNULL(S.Name3, '') + ' ' + ISNULL(S.Name4, '') AS SupplierName,")
+                sb_Sql.AppendLine("  S.CountryCode,")
+                sb_Sql.AppendLine("  I.QuoLocationCode AS DefaultQuoLocationCode")
+                sb_Sql.AppendLine("")
+                sb_Sql.AppendLine("FROM")
+                sb_Sql.AppendLine("  Supplier AS S")
+                sb_Sql.AppendLine("  LEFT OUTER JOIN IrregularRFQLocation AS I")
+                sb_Sql.AppendLine("    ON I.SupplierCode = S.SupplierCode AND I.EnqLocationCode = @EnqLocationCode")
+                sb_Sql.AppendLine("WHERE")
+                sb_Sql.AppendLine("  S.SupplierCode = @SupplierCode")
+
+                DBCommand.CommandText = sb_Sql.ToString
+                DBCommand.Parameters.Add("EnqLocationCode", SqlDbType.VarChar).Value = Session("LocationCode").ToString
+                DBCommand.Parameters.Add("SupplierCode", SqlDbType.Int).Value = Integer.Parse(st_SupplierCode)
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
                 If DBReader.HasRows = True Then
@@ -266,7 +283,7 @@ Partial Public Class RFQIssue
                         SupplierCode.Text = DBReader("SupplierCode").ToString
                         R3SupplierCode.Text = DBReader("R3SupplierCode").ToString
                         SupplierName.Text = DBReader("SupplierName").ToString
-                        Call SetCountryName(DBReader("CountryCode").ToString)
+                        Call SetCountryName(DBReader("CountryCode").ToString, DBReader("DefaultQuoLocationCode").ToString)
                     End While
                     SupplierCode.ReadOnly = True
                     SupplierCode.CssClass = "readonly"
@@ -455,7 +472,7 @@ Partial Public Class RFQIssue
         End If
         Return True
     End Function
-    Private Sub SetCountryName(ByVal Code As String)
+    Private Sub SetCountryName(ByVal CountryCode As String, ByVal DefaultQuoLocationCode As String)
         Dim st_CountryName As String = String.Empty
         Dim st_DefaultQuoLocationName As String = String.Empty
         'SupplierCountryName取得
@@ -466,13 +483,13 @@ Partial Public Class RFQIssue
             DBSQLCommand As SqlCommand = DBConnection.CreateCommand()
                 DBConnection.Open()
                 DBSQLCommand.CommandText = st_SQLCommand
-                DBSQLCommand.Parameters.AddWithValue("st_CountryCode", Code)
+                DBSQLCommand.Parameters.AddWithValue("st_CountryCode", CountryCode)
                 Dim DBSQLDataReader As SqlDataReader
                 DBSQLDataReader = DBSQLCommand.ExecuteReader()
                 If DBSQLDataReader.HasRows = True Then
                     While DBSQLDataReader.Read
                         SupplierCountry.Text = DBSQLDataReader("CountryName").ToString
-                        QuoLocation.SelectedValue = IIf(DBSQLDataReader("DefaultQuoLocationCode").ToString = "", Session("LocationCode").ToString, DBSQLDataReader("DefaultQuoLocationCode").ToString)
+                        QuoLocation.SelectedValue = IIf(DefaultQuoLocationCode = "", DBSQLDataReader("DefaultQuoLocationCode").ToString, DefaultQuoLocationCode)
                     End While
                 End If
             End Using
