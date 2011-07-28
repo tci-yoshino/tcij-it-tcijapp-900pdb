@@ -217,10 +217,9 @@ Partial Public Class RFQIssue
     End Function
 
     Protected Sub QuoLocation_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles QuoLocation.SelectedIndexChanged
-        'QuoUser ドロップダウンリストの初期化
-        QuoUser.Items.Clear()
-        QuoUser.Items.Add(String.Empty)
-        '1行目に空行を追加する。
+
+        SetControl_QuoUser()
+
     End Sub
     Private Sub SetPostBackUrl()
         'ボタンクリック時にPostBackするActionを追記する。
@@ -259,22 +258,7 @@ Partial Public Class RFQIssue
         If Request.QueryString("SupplierCode") <> "" Or Request.Form("SupplierCode") <> "" Then
             st_SupplierCode = IIf(Request.QueryString("SupplierCode") <> "", Request.QueryString("SupplierCode"), Request.Form("SupplierCode"))
             If IsNumeric(st_SupplierCode) Then
-                sb_Sql.AppendLine("SELECT")
-                sb_Sql.AppendLine("  S.SupplierCode,")
-                sb_Sql.AppendLine("  S.R3SupplierCode,")
-                sb_Sql.AppendLine("  ISNULL(S.Name3, '') + ' ' + ISNULL(S.Name4, '') AS SupplierName,")
-                sb_Sql.AppendLine("  S.CountryCode,")
-                sb_Sql.AppendLine("  I.QuoLocationCode AS DefaultQuoLocationCode")
-                sb_Sql.AppendLine("")
-                sb_Sql.AppendLine("FROM")
-                sb_Sql.AppendLine("  Supplier AS S")
-                sb_Sql.AppendLine("  LEFT OUTER JOIN IrregularRFQLocation AS I")
-                sb_Sql.AppendLine("    ON I.SupplierCode = S.SupplierCode AND I.EnqLocationCode = @EnqLocationCode")
-                sb_Sql.AppendLine("WHERE")
-                sb_Sql.AppendLine("  S.SupplierCode = @SupplierCode")
-
-                DBCommand.CommandText = sb_Sql.ToString
-                DBCommand.Parameters.Add("EnqLocationCode", SqlDbType.VarChar).Value = Session("LocationCode").ToString
+                DBCommand.CommandText = CreateSql_SelectQuoLocation()
                 DBCommand.Parameters.Add("SupplierCode", SqlDbType.Int).Value = Integer.Parse(st_SupplierCode)
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
@@ -283,7 +267,13 @@ Partial Public Class RFQIssue
                         SupplierCode.Text = DBReader("SupplierCode").ToString
                         R3SupplierCode.Text = DBReader("R3SupplierCode").ToString
                         SupplierName.Text = DBReader("SupplierName").ToString
-                        Call SetCountryName(DBReader("CountryCode").ToString, DBReader("DefaultQuoLocationCode").ToString)
+                        SupplierCountry.Text = DBReader("CountryName").ToString
+
+                        If DBReader("QuoLocationName").ToString = DIRECT Then
+                            QuoLocation.SelectedValue = Session("LocationCode").ToString
+                        Else
+                            QuoLocation.SelectedValue = DBReader("QuoLocationCode").ToString
+                        End If
                     End While
                     SupplierCode.ReadOnly = True
                     SupplierCode.CssClass = "readonly"
@@ -472,29 +462,119 @@ Partial Public Class RFQIssue
         End If
         Return True
     End Function
-    Private Sub SetCountryName(ByVal CountryCode As String, ByVal DefaultQuoLocationCode As String)
-        Dim st_CountryName As String = String.Empty
-        Dim st_DefaultQuoLocationName As String = String.Empty
-        'SupplierCountryName取得
-        Dim st_SQLCommand As String = String.Empty
-        st_SQLCommand = "SELECT CountryName, DefaultQuoLocationCode FROM v_Country WHERE CountryCode = @st_CountryCode"
-        Try
-            Using DBConnection As New SqlClient.SqlConnection(DB_CONNECT_STRING), _
-            DBSQLCommand As SqlCommand = DBConnection.CreateCommand()
-                DBConnection.Open()
-                DBSQLCommand.CommandText = st_SQLCommand
-                DBSQLCommand.Parameters.AddWithValue("st_CountryCode", CountryCode)
-                Dim DBSQLDataReader As SqlDataReader
-                DBSQLDataReader = DBSQLCommand.ExecuteReader()
-                If DBSQLDataReader.HasRows = True Then
-                    While DBSQLDataReader.Read
-                        SupplierCountry.Text = DBSQLDataReader("CountryName").ToString
-                        QuoLocation.SelectedValue = IIf(DefaultQuoLocationCode = "", DBSQLDataReader("DefaultQuoLocationCode").ToString, DefaultQuoLocationCode)
-                    End While
+
+    'CreateSql_SelectQuoLocation() に処理を統一したためコメントアウト
+    '
+    'Private Sub SetCountryName(ByVal CountryCode As String, ByVal DefaultQuoLocationCode As String)
+    '    Dim st_CountryName As String = String.Empty
+    '    Dim st_DefaultQuoLocationName As String = String.Empty
+    '    'SupplierCountryName取得
+    '    Dim st_SQLCommand As String = String.Empty
+    '    st_SQLCommand = "SELECT CountryName, DefaultQuoLocationCode FROM v_Country WHERE CountryCode = @st_CountryCode"
+    '    Try
+    '        Using DBConnection As New SqlClient.SqlConnection(DB_CONNECT_STRING), _
+    '        DBSQLCommand As SqlCommand = DBConnection.CreateCommand()
+    '            DBConnection.Open()
+    '            DBSQLCommand.CommandText = st_SQLCommand
+    '            DBSQLCommand.Parameters.AddWithValue("st_CountryCode", CountryCode)
+    '            Dim DBSQLDataReader As SqlDataReader
+    '            DBSQLDataReader = DBSQLCommand.ExecuteReader()
+    '            If DBSQLDataReader.HasRows = True Then
+    '                While DBSQLDataReader.Read
+    '                    SupplierCountry.Text = DBSQLDataReader("CountryName").ToString
+    '                    QuoLocation.SelectedValue = IIf(DefaultQuoLocationCode = "", DBSQLDataReader("DefaultQuoLocationCode").ToString, DefaultQuoLocationCode)
+    '                End While
+    '            End If
+    '        End Using
+    '    Catch ex As Exception
+    '        Throw
+    '    End Try
+    'End Sub
+
+    ''' <summary>
+    ''' EnqLocation プルダウンリストが変更されたときに発生するイベントです。
+    ''' </summary>
+    ''' <param name="sender">ASP.NET の既定値</param>
+    ''' <param name="e">ASP.NET の既定値</param>
+    ''' <remarks></remarks>
+    Private Sub EnqLocation_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles EnqLocation.SelectedIndexChanged
+        Dim DBReader As SqlDataReader
+
+        'Supplier Code が数字でない場合は処理を中断する
+        If Regex.IsMatch(SupplierCode.Text, "^[0-9]+$") = False Then Exit Sub
+
+        DBCommand.CommandText = CreateSql_SelectQuoLocation()
+        DBCommand.Parameters.Add("SupplierCode", SqlDbType.Int).Value = CInt(SupplierCode.Text)
+        DBReader = DBCommand.ExecuteReader
+        DBCommand.Dispose()
+        If DBReader.HasRows = True Then
+            While DBReader.Read
+                'Direct の場合は Quo-Location に Enq-Location を設定する
+                If DBReader("QuoLocationName").ToString = DIRECT Then
+                    QuoLocation.SelectedValue = EnqLocation.SelectedValue
+                Else
+                    QuoLocation.SelectedValue = DBReader("QuoLocationCode").ToString
                 End If
-            End Using
-        Catch ex As Exception
-            Throw
-        End Try
+            End While
+        End If
+        DBReader.Close()
+
+        'Quo-User を強制的にリセットする
+        SetControl_QuoUser()
+
+        Exit Sub
+
     End Sub
+
+    ''' <summary>
+    ''' QuoLocation を取得するクエリを生成します。
+    ''' </summary>
+    ''' <returns>SQL 文字列</returns>
+    ''' <remarks></remarks>
+    Private Function CreateSql_SelectQuoLocation() As String
+        Dim sb_Sql As New StringBuilder
+
+        sb_Sql.AppendLine("WITH IrregularQuoLocation AS (")
+        sb_Sql.AppendLine("  SELECT")
+        sb_Sql.AppendLine("    I.SupplierCode,")
+        sb_Sql.AppendLine("    I.QuoLocationCode AS QuoLocationCode,")
+        sb_Sql.AppendLine("    ISNULL(L.[Name], '" & DIRECT & "') AS QuoLocationName")
+        sb_Sql.AppendLine("  FROM")
+        sb_Sql.AppendLine("    IrregularRFQLocation AS I")
+        sb_Sql.AppendLine("      LEFT OUTER JOIN s_Location AS L ON L.LocationCode = I.QuoLocationCode")
+        sb_Sql.AppendLine(")")
+        sb_Sql.AppendLine("SELECT")
+        sb_Sql.AppendLine("  S.SupplierCode,")
+        sb_Sql.AppendLine("  S.R3SupplierCode,")
+        sb_Sql.AppendLine("  LTRIM(RTRIM(ISNULL(S.Name3, '') + ' ' + ISNULL(S.Name4, ''))) AS SupplierName,")
+        sb_Sql.AppendLine("  S.CountryCode,")
+        sb_Sql.AppendLine("  C.CountryName,")
+        sb_Sql.AppendLine("  CASE WHEN I.QuoLocationName IS NULL THEN C.DefaultQuoLocationCode ELSE I.QuoLocationCode END AS QuoLocationCode,")
+        sb_Sql.AppendLine("  ISNULL(I.QuoLocationName, C.DefaultQuoLocationName) AS QuoLocationName")
+        sb_Sql.AppendLine("FROM")
+        sb_Sql.AppendLine("  Supplier AS S")
+        sb_Sql.AppendLine("    LEFT OUTER JOIN IrregularQuoLocation AS I ON I.SupplierCode = S.SupplierCode,")
+        sb_Sql.AppendLine("  v_Country AS C")
+        sb_Sql.AppendLine("WHERE")
+        sb_Sql.AppendLine("  S.CountryCode = C.CountryCode")
+        sb_Sql.AppendLine("  AND S.SupplierCode = @SupplierCode")
+
+        Return sb_Sql.ToString
+
+    End Function
+
+    ''' <summary>
+    ''' QuoUser コントロールを設定します。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub SetControl_QuoUser()
+
+        QuoUser.Items.Clear()
+        QuoUser.Items.Add(String.Empty)
+        SDS_RFQIssue_Que_U.SelectCommand = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 ORDER BY Name"
+        SDS_RFQIssue_Que_U.SelectParameters.Clear()
+        SDS_RFQIssue_Que_U.SelectParameters.Add("LocationCode", QuoLocation.SelectedValue.ToString)
+
+    End Sub
+
 End Class
