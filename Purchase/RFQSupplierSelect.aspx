@@ -26,7 +26,11 @@
         opener.document.getElementById('SupplierName').value=name
         opener.document.getElementById('SupplierCountry').value=countryCode
         if(opener.document.getElementById('QuoLocation')){
-          opener.document.getElementById('QuoLocation').value = location
+          if(location == ''){
+            opener.document.getElementById('QuoLocation').value = opener.document.getElementById('EnqLocation').value
+          }else{
+            opener.document.getElementById('QuoLocation').value = location
+          }
         }
       }
       //window.close();

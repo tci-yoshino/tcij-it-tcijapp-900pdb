@@ -1,4 +1,6 @@
-﻿Partial Public Class RFQSupplierSelect
+﻿Imports Purchase.Common
+
+Partial Public Class RFQSupplierSelect
     Inherits CommonPage
 
     Protected st_Code As String = String.Empty
@@ -127,25 +129,30 @@
             Return ""
         End If
 
-        sb_Sql.Append("SELECT ")
-        sb_Sql.Append("  S.SupplierCode, ")
-        sb_Sql.Append("  S.R3SupplierCode, ")
-        sb_Sql.Append("  S.CountryCode, ")
-        sb_Sql.Append("  LTRIM(RTRIM(ISNULL(S.Name3, '') + ' ' + ISNULL(S.Name4, ''))) AS [Name], ")
-        sb_Sql.Append("  C.CountryName AS CountryName, ")
-        sb_Sql.Append("  ISNULL(ISNULL(L.LocationCode, C.DefaultQuoLocationCode),'" & st_Location & "') AS QuoLocationCode, ")
-        sb_Sql.Append("  ISNULL(L.[Name], C.DefaultQuoLocationName) AS QuoLocationName ")
-        sb_Sql.Append("FROM ")
-        sb_Sql.Append("  Supplier AS S ")
-        sb_Sql.Append("  LEFT OUTER JOIN IrregularRFQLocation AS IR ")
-        sb_Sql.Append("    ON S.SupplierCode = IR.SupplierCode AND IR.EnqLocationCode = @Location ")
-        sb_Sql.Append("  LEFT OUTER JOIN s_Location AS L ")
-        sb_Sql.Append("    ON IR.QuoLocationCode = L.LocationCode, ")
-        sb_Sql.Append("  v_Country AS C ")
-        sb_Sql.Append("WHERE ")
-        sb_Sql.Append("  S.CountryCode = C.CountryCode ")
-        sb_Sql.Append(st_where)
-
+        sb_Sql.AppendLine("WITH IrregularQuoLocation AS (")
+        sb_Sql.AppendLine("  SELECT")
+        sb_Sql.AppendLine("    I.SupplierCode,")
+        sb_Sql.AppendLine("    I.QuoLocationCode AS QuoLocationCode,")
+        sb_Sql.AppendLine("    ISNULL(L.[Name], '" & DIRECT & "') AS QuoLocationName")
+        sb_Sql.AppendLine("  FROM")
+        sb_Sql.AppendLine("    IrregularRFQLocation AS I")
+        sb_Sql.AppendLine("      LEFT OUTER JOIN s_Location AS L ON L.LocationCode = I.QuoLocationCode")
+        sb_Sql.AppendLine(")")
+        sb_Sql.AppendLine("SELECT")
+        sb_Sql.AppendLine("  S.SupplierCode,")
+        sb_Sql.AppendLine("  S.R3SupplierCode,")
+        sb_Sql.AppendLine("  S.CountryCode,")
+        sb_Sql.AppendLine("  LTRIM(RTRIM(ISNULL(S.Name3, '') + ' ' + ISNULL(S.Name4, ''))) AS [Name],")
+        sb_Sql.AppendLine("  C.CountryName AS CountryName,")
+        sb_Sql.AppendLine("  CASE WHEN I.QuoLocationName IS NULL THEN C.DefaultQuoLocationCode ELSE I.QuoLocationCode END AS QuoLocationCode,")
+        sb_Sql.AppendLine("  ISNULL(I.QuoLocationName, C.DefaultQuoLocationName) AS QuoLocationName")
+        sb_Sql.AppendLine("FROM")
+        sb_Sql.AppendLine("  Supplier AS S")
+        sb_Sql.AppendLine("    LEFT OUTER JOIN IrregularQuoLocation AS I ON I.SupplierCode = S.SupplierCode,")
+        sb_Sql.AppendLine("  v_Country AS C")
+        sb_Sql.AppendLine("WHERE")
+        sb_Sql.AppendLine("  S.CountryCode = C.CountryCode")
+        sb_Sql.AppendLine(st_where)
 
         Return sb_Sql.ToString
     End Function
