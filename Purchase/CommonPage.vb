@@ -102,7 +102,7 @@ Public Class CommonPage
 
         sb_Sql.Append("SELECT ")
         sb_Sql.Append("  PU.UserID, ")
-        sb_Sql.Append("  U.AD_GivenName + ' ' + U.AD_Surname AS UserName, ")
+        sb_Sql.Append("  U.AD_DisplayName AS UserName, ")
         sb_Sql.Append("  U.LocationCode, ")
         sb_Sql.Append("  L.Name AS LocationName, ")
         sb_Sql.Append("  PU.RoleCode, ")
