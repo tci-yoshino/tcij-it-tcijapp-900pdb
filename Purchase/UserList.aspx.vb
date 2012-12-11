@@ -64,7 +64,7 @@ Partial Public Class UserList
             '[ダウンロード実行]---------------------------------------------------------------------------
             LoadExcelForm()
             Response.ContentType = Common.EXCEL_CONTENTTYPE
-            Response.AddHeader("Content-Disposition", "attachment; filename=" & """PurchasingUser_" & Now.ToString("yyyyMMdd") & ".xls""")
+            Response.AddHeader("Content-Disposition", "attachment; filename=" & """PurchasingUser_" & Now.ToString("yyyyMMdd") & ".xml""")
             Response.Write(str_ExcelLine.HeaderLine)
             CreateXML(CreateSQL(), "Purchase DB 全ユーザ一覧")
             Response.Write(str_ExcelLine.EndWorkBookLine)
