@@ -19,13 +19,13 @@
 
     <appSettings>
         <add key="Debug" value="false"/>
-        <add key="TempDir" value="d:\temp\purchase\"/>
+        <add key="TempDir" value="D:\temp\purchase\"/>
     </appSettings>
 
     <connectionStrings>
         <clear />
-        <add name="DatabaseConnect" connectionString="Data Source=tdb1; Initial Catalog=Purchase; Persist Security Info=False; User ID=Purchase; Password=n061t@kun;" providerName="System.Data.SqlClient"/>
-        <add name="TCICommonDatabaseConnect" connectionString="Data Source=tdb1;Initial Catalog=TciUser;User ID=TCICommon;Password=cmn" providerName="System.Data.SqlClient"/>
+        <add name="DatabaseConnect" connectionString="Data Source=TDB1; Initial Catalog=Purchase; Persist Security Info=False; User ID=Purchase; Password=n061t@kun;" providerName="System.Data.SqlClient"/>
+        <add name="TCICommonDatabaseConnect" connectionString="Data Source=TDB1;Initial Catalog=TcixUser;User ID=TCICommon;Password=cmn" providerName="System.Data.SqlClient"/>
     </connectionStrings>
   
     <system.web>
@@ -172,10 +172,10 @@
           <assemblyIdentity name="System.Web.Extensions.Design" publicKeyToken="31bf3856ad364e35"/>
           <bindingRedirect oldVersion="1.0.0.0-1.1.0.0" newVersion="3.5.0.0"/>
         </dependentAssembly>
-          <dependentAssembly>
-              <assemblyIdentity name="TCICommon" publicKeyToken="c71b3ee9c62069a9"/>
-              <bindingRedirect oldVersion="1.2.0.0" newVersion="2.0.0.0"/>
-          </dependentAssembly>
+        <dependentAssembly>
+          <assemblyIdentity name="TCICommon" publicKeyToken="c71b3ee9c62069a9"/>
+          <bindingRedirect oldVersion="1.2.0.0" newVersion="2.0.0.0"/>
+        </dependentAssembly>
       </assemblyBinding>
     </runtime>
 
