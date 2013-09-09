@@ -72,7 +72,7 @@
         ' パラメータチェック
         If Not String.IsNullOrEmpty(st_ProductNumber) Then
             If (Not TCICommon.Func.IsProductNumber(st_ProductNumber)) And _
-               (Not TCICommon.Func.IsNewProductNumber(st_ProductNumber)) And _
+               (Not Common.IsNewProductNumber(st_ProductNumber)) And _
                (Not TCICommon.Func.IsCASNumber(st_ProductNumber)) Then
                 st_ProductNumber = String.Empty
                 ProductList.DataBind()

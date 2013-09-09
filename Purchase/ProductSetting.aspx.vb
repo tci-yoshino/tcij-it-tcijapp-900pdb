@@ -115,7 +115,7 @@ Partial Public Class ProductSetting
         NumberType = ""
         If TCICommon.Func.IsCASNumber(ProductNumber.Text.ToString) = True Then NumberType = "CAS"
         If TCICommon.Func.IsProductNumber(ProductNumber.Text.ToString) = True Then NumberType = "TCI"
-        If TCICommon.Func.IsNewProductNumber(ProductNumber.Text.ToString) = True Then NumberType = "NEW"
+        If Common.IsNewProductNumber(ProductNumber.Text.ToString) = True Then NumberType = "NEW"
         If NumberType = "" Then
             Msg.Text = "Product Number" + ERR_INCORRECT_FORMAT   '"Product Number Typeが決定できません。"
             Exit Sub

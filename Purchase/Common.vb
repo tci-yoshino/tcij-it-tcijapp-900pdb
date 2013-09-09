@@ -633,5 +633,20 @@ Public Class Common
 
     End Function
 
+    ''' <summary>
+    ''' 新製品登録番号のフォーマットチェック
+    ''' </summary>
+    ''' <param name="st_NewProductNumber">新製品登録番号</param>
+    ''' <returns>True = 新製品登録番号のフォーマットに一致する, False = 一致しない</returns>
+    ''' <remarks></remarks>
+    Public Shared Function IsNewProductNumber(ByVal st_NewProductNumber As String) As Boolean
+
+        '正規表現にて新製品登録番号のフォーマットと比較する。(新製品登録番号はアルファベット1～2桁+数字9桁) 
+        If Regex.IsMatch(st_NewProductNumber, "^[A-Z]{1,2}[0-9]{9}$") Then
+            Return True
+        End If
+        Return False
+
+    End Function
 
 End Class
