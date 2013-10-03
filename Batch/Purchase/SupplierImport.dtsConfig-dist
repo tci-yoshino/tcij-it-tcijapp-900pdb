@@ -20,10 +20,10 @@
 
 <!-- Error Mail Settings -->
 <Configuration ConfiguredType="Property" Path="\Package.Connections[SMTP].Properties[SmtpServer]" ValueType="String">
-  <ConfiguredValue>tex1.tci.tokyokasei</ConfiguredValue>
+  <ConfiguredValue>excas.tcix.local</ConfiguredValue>
 </Configuration>
 <Configuration ConfiguredType="Property" Path="\Package.Variables[User::Mail_To].Properties[Value]" ValueType="String">
-  <ConfiguredValue>app@tokyokasei.co.jp</ConfiguredValue>
+  <ConfiguredValue>app@TCIchemicals.com</ConfiguredValue>
 </Configuration>
 
 <!-- Directory Settings -->
