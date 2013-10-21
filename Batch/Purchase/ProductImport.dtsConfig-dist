@@ -28,7 +28,7 @@
 
 <!-- Directory and File Settings -->
 <Configuration ConfiguredType="Property" Path="\Package.Variables[User::Dir_File].Properties[Value]" ValueType="String">
-  <ConfiguredValue>\\tdb1\if$\Purchase\</ConfiguredValue>
+  <ConfiguredValue>D:\IF\Purchase\</ConfiguredValue>
 </Configuration>
 <Configuration ConfiguredType="Property" Path="\Package.Variables[User::File_New_Product].Properties[Value]" ValueType="String">
   <ConfiguredValue>NewProduct.txt</ConfiguredValue>
