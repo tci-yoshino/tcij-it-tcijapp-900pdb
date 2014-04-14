@@ -430,6 +430,11 @@ tr.attention td {
     background-color: #eee;
 }
 
+.placedright {
+	text-align: right;
+	float: right;
+}
+
 /* Footer Rules */
 #footer {
     margin-top: 5em;
