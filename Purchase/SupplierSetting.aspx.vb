@@ -100,6 +100,10 @@ Partial Public Class SupplierSetting
             Msg.Text = "Website" + ERR_INCORRECT_FORMAT
             Exit Sub
         End If
+        If Not Regex.IsMatch(SupplierInfo.Text, URL_REGEX) Then
+            Msg.Text = "SupplierInfo" + ERR_INCORRECT_FORMAT
+            Exit Sub
+        End If
 
         '[入力項目の項目長Check]-------------------------------------------------------------
         If GetByteCount_SJIS(PostalCode.Text) > 32 Then
@@ -184,6 +188,8 @@ Partial Public Class SupplierSetting
                     If R3Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null, " Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(R3Comment.Text) & "',"
                     st_SQLSTR = st_SQLSTR & "Note="
                     If Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null, " Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(Comment.Text) & "',"
+                    st_SQLSTR = st_SQLSTR & "Info="
+                    If SupplierInfo.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null, " Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(SupplierInfo.Text) & "',"
                     st_SQLSTR = st_SQLSTR & "UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "' "
                     st_SQLSTR = st_SQLSTR & "WHERE SupplierCode='" & SafeSqlLiteral(Code.Text) & "'"
                     DBCommand.CommandText = st_SQLSTR
@@ -216,6 +222,7 @@ Partial Public Class SupplierSetting
                 If R3Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(R3Comment.Text) & "',"
                 If Website.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(Website.Text) & "',"
                 If Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(Comment.Text) & "',"
+                If SupplierInfo.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(SupplierInfo.Text) & "',"
                 st_SQLSTR = st_SQLSTR & "null,0,'" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "'); "
                 st_SQLSTR = st_SQLSTR & "SELECT SupplierCode FROM Supplier WHERE SupplierCode = SCOPE_IDENTITY()"  '←[新規登録されたSupplierCodeの取得の為]
                 DBCommand.CommandText = st_SQLSTR
@@ -268,7 +275,7 @@ Partial Public Class SupplierSetting
     Public Sub DataDisplay1()
         If IsInteger(Code.Text) Then
             If Code.Text Like "*+*" = False Then
-                DBCommand.CommandText = "SELECT SupplierCode, R3SupplierCode, Name1, Name2, Name3, Name4, SearchTerm1, SearchTerm2, Address1, Address2, Address3, PostalCode, CountryCode, RegionCode, Telephone, Fax, Email, Comment, Website, Note, UpdateDate " & _
+                DBCommand.CommandText = "SELECT SupplierCode, Info, R3SupplierCode, Name1, Name2, Name3, Name4, SearchTerm1, SearchTerm2, Address1, Address2, Address3, PostalCode, CountryCode, RegionCode, Telephone, Fax, Email, Comment, Website, Note, Info, UpdateDate " & _
                                                            "FROM dbo.Supplier WHERE SupplierCode = " & Code.Text.ToString
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
@@ -290,6 +297,7 @@ Partial Public Class SupplierSetting
                     If Not TypeOf DBReader("Website") Is DBNull Then Website.Text = DBReader("Website")
                     If Not TypeOf DBReader("Comment") Is DBNull Then R3Comment.Text = DBReader("Comment")
                     If Not TypeOf DBReader("Note") Is DBNull Then Comment.Text = DBReader("Note")
+                    If Not TypeOf DBReader("Info") Is DBNull Then SupplierInfo.Text = DBReader("Info")
                     Country.SelectedValue = DBReader("CountryCode")
                     UpdateDate.Value = GetUpdateDate("Supplier", "SupplierCode", Code.Text.ToString) '[同時更新チェック用]
                     DBReader.Close()

@@ -34,6 +34,10 @@
 						<td><asp:TextBox ID="R3SupplierCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox></td>
 					</tr>
 					<tr>
+						<th>Supplier Information : </th>
+						<td><asp:TextBox ID="SupplierInfo" runat="server" Width="21em" MaxLength="255"></asp:TextBox></td>
+					</tr>
+					<tr>
 						<th><span class="r3">TCI-J Supplier Name</span> : </th>
 						<td>
                             <asp:TextBox ID="SupplierName1" runat="server"  Width="21em" MaxLength="255"></asp:TextBox>
@@ -102,7 +106,7 @@
 					</tr>
 					<tr>
 						<th>Website : </th>
-						<td>http:// <asp:TextBox ID="Website" runat="server"  Width="21em" MaxLength="255"></asp:TextBox></td>
+						<td><asp:TextBox ID="Website" runat="server"  Width="21em" MaxLength="255"></asp:TextBox></td>
 					</tr>
 					<tr>
 						<th><span class="r3">R/3 Comments</span> : </th>
