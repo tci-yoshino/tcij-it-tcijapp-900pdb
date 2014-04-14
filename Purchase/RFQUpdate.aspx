@@ -37,6 +37,7 @@
 						    <asp:ImageButton ID="SupplierSelect" runat="server" 
                                 ImageUrl="./Image/Search.gif" CssClass="magnify" 
                                 OnClientClick="return SupplierSelect_onclick()" />
+                            <asp:LinkButton runat="server" ID="SupplierInfo" Text="Supplier Information" OnClientClick="return SupplierInfo_onclick()"/>
 						</td>
 					</tr>
 					<tr>
@@ -60,6 +61,7 @@
 						    <asp:TextBox ID="MakerCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
 						    <asp:ImageButton ID="MakerSelect" runat="server" ImageUrl="./Image/Search.gif" 
                                 CssClass="magnify" OnClientClick="return MakerSelect_onclick()" />
+                            <asp:LinkButton runat="server" ID="MakerInfo" Text="Supplier Information" OnClientClick="return MakerInfo_onclick()"/>
 						</td>
 					</tr>
 					<tr>
@@ -442,6 +444,7 @@
                     <asp:HiddenField ID="EnqLocationCode" runat="server" />
                     <asp:HiddenField ID="QuoLocationCode" runat="server" />
                     <asp:HiddenField ID="Hi_RFQStatusCode" runat="server" />
+                    <asp:HiddenField ID="PopupSupplierCode" runat="server" />
                 </div>
 				<% End If%>                
             </div>
@@ -474,6 +477,24 @@
             }
             else {
                 popup('./SupplierSetting.aspx?Action=Edit&Code=');
+            }
+        }
+
+        function SupplierInfo_onclick() {
+            if (document.getElementById('SupplierCode')) {
+                document.getElementById('PopupSupplierCode').value = document.getElementById('SupplierCode').value;
+                return true;
+            } else {
+                return false;
+            }
+            
+        }
+        function MakerInfo_onclick() {
+            if (document.getElementById('MakerCode')) {
+                document.getElementById('PopupSupplierCode').value = document.getElementById('MakerCode').value;
+                return true;
+            } else {
+                return false;
             }
         }
         </script>

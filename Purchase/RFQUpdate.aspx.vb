@@ -302,6 +302,44 @@ Partial Public Class RFQUpdate
         RunMsg.Text = MSG_DATA_UPDATED
     End Sub
 
+    Protected Sub SupplierInfo_Click(ByVal sender As Object, ByVal e As EventArgs) Handles SupplierInfo.Click
+        OpenSupplierInfo("Supplier Code")
+    End Sub
+    Protected Sub MakerInfo_Click(ByVal sender As Object, ByVal e As EventArgs) Handles MakerInfo.Click
+        OpenSupplierInfo("Maker Code")
+    End Sub
+
+    Protected Sub OpenSupplierInfo(ByVal Target As String)
+        Msg.Text = ""
+
+        Dim st_SupplierCode As String = PopupSupplierCode.Value
+        Dim st_SupplierInfo As String = String.Empty
+        Dim DS As DataSet = New DataSet
+        Dim i_SupplierCode As Integer = 0
+
+        Dim b_ParseToInt As Boolean = Int32.TryParse(st_SupplierCode, i_SupplierCode)
+
+        ' リンク押下時に設定されている Supplier または Maker の Info を取得し、表示する
+        If Not String.IsNullOrEmpty(st_SupplierCode) AndAlso b_ParseToInt Then
+            'Info 取得
+            DBCommand = New SqlCommand("SELECT Info FROM Supplier WHERE SupplierCode = @SupplierCode", DBConn)
+            DBCommand.Parameters.Add("SupplierCode", SqlDbType.Int).Value = i_SupplierCode
+            DBAdapter = New SqlDataAdapter
+            DBAdapter.SelectCommand = DBCommand
+            DBAdapter.Fill(DS, "SupplierInfo")
+            If DS.Tables("SupplierInfo").Rows.Count > 0 Then
+                st_SupplierInfo = DS.Tables("SupplierInfo").Rows(0)("Info").ToString
+                If Not String.IsNullOrEmpty(st_SupplierInfo) Then
+                    ScriptManager.RegisterStartupScript(Me, Me.GetType, "WindowOpen", "window.open('" & st_SupplierInfo & "');", True)
+                    Exit Sub
+                End If
+            End If
+        End If
+
+        Msg.Text = Target & ERR_DOES_NOT_EXIST
+
+    End Sub
+
     Private Function FormDataSet() As Boolean
         Dim i_TryParse As Integer = 0
         Dim i As Integer = 0
