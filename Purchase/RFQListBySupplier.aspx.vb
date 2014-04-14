@@ -26,7 +26,7 @@
             Dim st_query As String = _
                   "SELECT SupplierCode, LTRIM(RTRIM(ISNULL(Name3, '') + ' ' + ISNULL(Name4, ''))) AS Name, " _
                 & "       Address1, Address2, Address3, PostalCode, Telephone, Fax, Email, " _
-                & "       Website, v_Country.CountryName " _
+                & "       Website, Info, v_Country.CountryName " _
                 & "FROM Supplier,v_Country " _
                 & "WHERE SupplierCode = @SupplierCode " _
                 & "  AND Supplier.CountryCode = v_Country.CountryCode"
@@ -56,7 +56,11 @@
                 Email.Text = reader("Email").ToString()
                 EmailLink.NavigateUrl = "mailto:" & reader("Email").ToString()
                 Website.Text = reader("Website").ToString()
-                WebsiteLink.NavigateUrl = "http://" & reader("Website").ToString()
+                WebsiteLink.NavigateUrl = reader("Website").ToString()
+                SupplierInfoLink.NavigateUrl = reader("Info").ToString()
+                If Not String.IsNullOrEmpty(SupplierInfoLink.NavigateUrl) Then
+                    SupplierInfo.Text = "Supplier Information"
+                End If
                 CountryName.Text = reader("CountryName").ToString()
 
             Else
@@ -74,7 +78,7 @@
                   "SELECT " _
                 & "  RH.RFQNumber, RH.QuotedDate, RH.StatusChangeDate, RH.Status, " _
                 & "  RH.ProductNumber,RH.ProductName, RH.SupplierName, " _
-                & "  RH.Purpose, RH.MakerName, " _
+                & "  RH.Purpose, RH.MakerName, RH.MakerInfo, " _
                 & "  RH.SupplierItemName, RH.ShippingHandlingFee, RH.ShippingHandlingCurrencyCode, " _
                 & "  RH.EnqUserName, RH.EnqLocationName, RH.QuoUserName, RH.QuoLocationName, RH.Comment, " _
                 & "  C.[Name] AS MakerCountryName, CS.[Name] AS SupplierCountryName " _

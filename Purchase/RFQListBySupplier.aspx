@@ -38,6 +38,7 @@
                 <strong class="indent">Fax : </strong><asp:Label ID="Fax" runat="server" Text=""></asp:Label>
                 <strong class="indent">E-mail : </strong><asp:HyperLink ID="EmailLink" runat="server" NavigateUrl=""><asp:Label ID="Email" runat="server" Text=""></asp:Label></asp:HyperLink>
                 <strong class="indent">Website : </strong><asp:HyperLink ID="WebsiteLink" runat="server" NavigateUrl="" Target="_blank"><asp:Label ID="Website" runat="server" Text=""></asp:Label></asp:HyperLink>
+                <strong class="indent">ECM : </strong><asp:HyperLink ID="SupplierInfoLink" runat="server" NavigateUrl="" Target="_blank"><asp:Label ID="SupplierInfo" runat="server" Text=""></asp:Label></asp:HyperLink>
             </p>
         </div>
 
@@ -129,7 +130,10 @@
                         </tr>
                         <tr>
                             <th>Maker Name / Country</th>
-                            <td colspan="3"><asp:Label ID="MakerName" runat="server" Text='<%#Eval("MakerName")%>'></asp:Label><span class="indent">(<asp:Label ID="MakerCountry" runat="server" Text='<%#Eval("MakerCountryName")%>'></asp:Label>)</span></td>
+                            <td colspan="3">
+                                <asp:Label ID="MakerName" runat="server" Text='<%#Eval("MakerName")%>'></asp:Label><span class="indent">(<asp:Label ID="MakerCountry" runat="server" Text='<%#Eval("MakerCountryName")%>'></asp:Label>)</span>
+                                <span class="placedright"><asp:HyperLink ID="MakerInfoLink" runat="server" NavigateUrl='<%#Eval("MakerInfo")%>' Target="_blank"><asp:Label ID="MakerInfo" runat="server" Text='<%#If(IsDBNull(Eval("MakerInfo")), "", "Supplier Information")%>'></asp:Label></asp:HyperLink></span>
+                            </td>
                             <th>Supplier Item Name</th>
                             <td><asp:Label ID="SupplierItemName" runat="server" Text='<%#Eval("SupplierItemName")%>'></asp:Label></td>
                         </tr>
