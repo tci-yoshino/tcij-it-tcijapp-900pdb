@@ -303,40 +303,25 @@ Partial Public Class RFQUpdate
     End Sub
 
     Protected Sub SupplierInfo_Click(ByVal sender As Object, ByVal e As EventArgs) Handles SupplierInfo.Click
-        OpenSupplierInfo("Supplier Code")
+        Dim st_SupplierCode As String = SupplierCode.Text
+        OpenSupplierInfo("Supplier Code", st_SupplierCode)
     End Sub
     Protected Sub MakerInfo_Click(ByVal sender As Object, ByVal e As EventArgs) Handles MakerInfo.Click
-        OpenSupplierInfo("Maker Code")
+        Dim st_SupplierCode As String = MakerCode.Text
+        OpenSupplierInfo("Maker Code", st_SupplierCode)
     End Sub
 
-    Protected Sub OpenSupplierInfo(ByVal Target As String)
+    Protected Sub OpenSupplierInfo(ByVal Target As String, ByVal st_SupplierCode As String)
         Msg.Text = ""
 
-        Dim st_SupplierCode As String = PopupSupplierCode.Value
         Dim st_SupplierInfo As String = String.Empty
-        Dim DS As DataSet = New DataSet
-        Dim i_SupplierCode As Integer = 0
+        st_SupplierInfo = Common.GetSupplierInfo(st_SupplierCode)
 
-        Dim b_ParseToInt As Boolean = Int32.TryParse(st_SupplierCode, i_SupplierCode)
-
-        ' リンク押下時に設定されている Supplier または Maker の Info を取得し、表示する
-        If Not String.IsNullOrEmpty(st_SupplierCode) AndAlso b_ParseToInt Then
-            'Info 取得
-            DBCommand = New SqlCommand("SELECT Info FROM Supplier WHERE SupplierCode = @SupplierCode", DBConn)
-            DBCommand.Parameters.Add("SupplierCode", SqlDbType.Int).Value = i_SupplierCode
-            DBAdapter = New SqlDataAdapter
-            DBAdapter.SelectCommand = DBCommand
-            DBAdapter.Fill(DS, "SupplierInfo")
-            If DS.Tables("SupplierInfo").Rows.Count > 0 Then
-                st_SupplierInfo = DS.Tables("SupplierInfo").Rows(0)("Info").ToString
-                If Not String.IsNullOrEmpty(st_SupplierInfo) Then
-                    ScriptManager.RegisterStartupScript(Me, Me.GetType, "WindowOpen", "window.open('" & st_SupplierInfo & "');", True)
-                    Exit Sub
-                End If
-            End If
+        If String.IsNullOrEmpty(st_SupplierInfo) Then
+            Msg.Text = Target & ERR_DOES_NOT_EXIST
+        Else
+            ScriptManager.RegisterStartupScript(Me, Me.GetType, "WindowOpen", "window.open('" & st_SupplierInfo & "');", True)
         End If
-
-        Msg.Text = Target & ERR_DOES_NOT_EXIST
 
     End Sub
 

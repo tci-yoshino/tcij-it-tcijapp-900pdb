@@ -649,4 +649,42 @@ Public Class Common
 
     End Function
 
+    ''' <summary>
+    ''' サプライヤ情報取得
+    ''' </summary>
+    ''' <param name="st_SupplierCode">サプライヤコード</param>
+    ''' <returns>取得した Info を返却します。取得できなかった場合、String.Empty を返却します。</returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetSupplierInfo(ByVal st_SupplierCode As String) As String
+
+        Dim DBConn As New System.Data.SqlClient.SqlConnection(DB_CONNECT_STRING)
+        Dim st_SupplierInfo As String = String.Empty
+        Dim st_Return As String = String.Empty
+        Dim DS As DataSet = New DataSet
+        Dim i_SupplierCode As Integer = 0
+
+        Dim b_ParseToInt As Boolean = Int32.TryParse(st_SupplierCode, i_SupplierCode)
+
+        ' リンク押下時に設定されている Supplier または Maker の Info を取得し、表示する
+        If Not String.IsNullOrEmpty(st_SupplierCode) AndAlso b_ParseToInt Then
+            'Info 取得
+            Using DBCommand As New SqlCommand("SELECT Info FROM Supplier WHERE SupplierCode = @SupplierCode", DBConn)
+                DBCommand.Parameters.Add("SupplierCode", SqlDbType.Int).Value = i_SupplierCode
+                Using DBAdapter = New SqlDataAdapter
+                    DBAdapter.SelectCommand = DBCommand
+                    DBAdapter.Fill(DS, "SupplierInfo")
+                    If DS.Tables("SupplierInfo").Rows.Count > 0 Then
+                        st_SupplierInfo = DS.Tables("SupplierInfo").Rows(0)("Info").ToString
+                    End If
+                    DS.Dispose()
+                End Using
+            End Using
+        End If
+
+        DBConn.Close()
+
+        Return st_SupplierInfo
+
+    End Function
+
 End Class
