@@ -302,15 +302,29 @@ Partial Public Class RFQUpdate
         RunMsg.Text = MSG_DATA_UPDATED
     End Sub
 
+    ''' <summary>
+    ''' Supplier Infomation リンク（Supplier）クリック時処理。
+    ''' </summary>
     Protected Sub SupplierInfo_Click(ByVal sender As Object, ByVal e As EventArgs) Handles SupplierInfo.Click
         Dim st_SupplierCode As String = SupplierCode.Text
         OpenSupplierInfo("Supplier Code", st_SupplierCode)
     End Sub
+
+    ''' <summary>
+    ''' Supplier Infomation リンク（Maker）クリック時処理。
+    ''' </summary>
     Protected Sub MakerInfo_Click(ByVal sender As Object, ByVal e As EventArgs) Handles MakerInfo.Click
         Dim st_SupplierCode As String = MakerCode.Text
         OpenSupplierInfo("Maker Code", st_SupplierCode)
     End Sub
 
+
+    ''' <summary>
+    ''' Supplier Infomation リンクオープン処理。
+    ''' </summary>
+    ''' <param name="Target">Supplier / Maker のいずれか</param>
+    ''' <param name="st_SupplierCode">画面から取得した対象サプライヤのコード</param>
+    ''' <remarks></remarks>
     Protected Sub OpenSupplierInfo(ByVal Target As String, ByVal st_SupplierCode As String)
         Msg.Text = ""
 
