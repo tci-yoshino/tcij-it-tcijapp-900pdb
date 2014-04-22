@@ -101,7 +101,7 @@ Partial Public Class SupplierSetting
             Exit Sub
         End If
         If Not Regex.IsMatch(SupplierInfo.Text, URL_REGEX) Then
-            Msg.Text = "SupplierInfo" + ERR_INCORRECT_FORMAT
+            Msg.Text = "Supplier Infomation" + ERR_INCORRECT_FORMAT
             Exit Sub
         End If
 
