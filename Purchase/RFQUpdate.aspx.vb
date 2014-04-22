@@ -307,7 +307,7 @@ Partial Public Class RFQUpdate
     ''' </summary>
     Protected Sub SupplierInfo_Click(ByVal sender As Object, ByVal e As EventArgs) Handles SupplierInfo.Click
         Dim st_SupplierCode As String = SupplierCode.Text
-        OpenSupplierInfo("Supplier Code", st_SupplierCode)
+        OpenSupplierInfo(st_SupplierCode)
     End Sub
 
     ''' <summary>
@@ -315,24 +315,23 @@ Partial Public Class RFQUpdate
     ''' </summary>
     Protected Sub MakerInfo_Click(ByVal sender As Object, ByVal e As EventArgs) Handles MakerInfo.Click
         Dim st_SupplierCode As String = MakerCode.Text
-        OpenSupplierInfo("Maker Code", st_SupplierCode)
+        OpenSupplierInfo(st_SupplierCode)
     End Sub
 
 
     ''' <summary>
     ''' Supplier Infomation リンクオープン処理。
     ''' </summary>
-    ''' <param name="Target">Supplier / Maker のいずれか</param>
     ''' <param name="st_SupplierCode">画面から取得した対象サプライヤのコード</param>
     ''' <remarks></remarks>
-    Protected Sub OpenSupplierInfo(ByVal Target As String, ByVal st_SupplierCode As String)
+    Protected Sub OpenSupplierInfo(ByVal st_SupplierCode As String)
         Msg.Text = ""
 
         Dim st_SupplierInfo As String = String.Empty
         st_SupplierInfo = Common.GetSupplierInfo(st_SupplierCode)
 
         If String.IsNullOrEmpty(st_SupplierInfo) Then
-            Msg.Text = Target & ERR_DOES_NOT_EXIST
+            Msg.Text = "Supplier Information" & ERR_DOES_NOT_EXIST
         Else
             ScriptManager.RegisterStartupScript(Me, Me.GetType, "WindowOpen", "window.open('" & st_SupplierInfo & "');", True)
         End If
