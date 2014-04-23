@@ -59,7 +59,7 @@ Partial Public Class ProductSetting
 
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
         Dim NumberType As String = ""
-        Dim st_SqlStr As String = ""
+        Dim sb_SQL As StringBuilder = New StringBuilder()
         Msg.Text = String.Empty
         RunMsg.Text = String.Empty
 
@@ -139,6 +139,21 @@ Partial Public Class ProductSetting
         End If
 
         '[Save処理]--------------------------------------------------------------------
+        Dim st_ProductID As String = ProductID.Value
+        Dim st_ProductNumber As String = SafeSqlLiteral(ProductNumber.Text)
+        Dim st_ProductName As String = SafeSqlLiteral(ProductName.Text)
+        Dim st_QuoName As String = SafeSqlLiteral(QuoName.Text)
+        Dim st_JapaneseName As String = String.Empty
+        Dim st_ChineseName As String = String.Empty
+        Dim st_CASNumber As String = SafeSqlLiteral(CASNumber.Text)
+        Dim st_MolecularFormula As String = SafeSqlLiteral(MolecularFormula.Text)
+        Dim st_Status As String = String.Empty
+        Dim st_ProposalDept As String = String.Empty
+        Dim st_ProcumentDept As String = String.Empty
+        Dim st_PD As String = String.Empty
+        Dim st_Reference As String = SafeSqlLiteral(Reference.Text)
+        Dim st_Comment As String = SafeSqlLiteral(Comment.Text)
+
         Dim MemoMode As String = Mode.Value
         If Mode.Value = "Edit" Then
             '[ProductのUpdateDateチェック]-----------------------------------------------------------
@@ -158,24 +173,33 @@ Partial Public Class ProductSetting
             DBReader.Close()
 
             '[Product更新処理]---------------------------------------------------------------
-            st_SqlStr = "UPDATE dbo.Product SET ProductNumber="
-            If ProductNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & SafeSqlLiteral(ProductNumber.Text) & "',"
-            st_SqlStr = st_SqlStr + "NumberType='" + NumberType + "',"
-            st_SqlStr = st_SqlStr & "Name="
-            If ProductName.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & SafeSqlLiteral(ProductName.Text) & "',"
-            st_SqlStr = st_SqlStr & "QuoName="
-            If QuoName.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & SafeSqlLiteral(QuoName.Text) & "',"
-            st_SqlStr = st_SqlStr & "CASNumber="
-            If CASNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & SafeSqlLiteral(CASNumber.Text) & "',"
-            st_SqlStr = st_SqlStr & "MolecularFormula="
-            If MolecularFormula.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & SafeSqlLiteral(MolecularFormula.Text) & "',"
-            st_SqlStr = st_SqlStr & "Reference="
-            If Reference.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & SafeSqlLiteral(Reference.Text) & "',"
-            st_SqlStr = st_SqlStr & "Comment="
-            If Comment.Text.ToString = "" Then st_SqlStr = st_SqlStr & "null," Else st_SqlStr = st_SqlStr & "'" & SafeSqlLiteral(Comment.Text) & "',"
-            st_SqlStr = st_SqlStr & "UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "' "
-            st_SqlStr = st_SqlStr & "WHERE ProductID = '" & ProductID.Value & "'"
-            DBCommand.CommandText = st_SqlStr
+            sb_SQL.Append("UPDATE dbo.Product ")
+            sb_SQL.Append("SET ")
+            sb_SQL.Append(" ProductNumber = @ProductNumber,")
+            sb_SQL.Append(" NumberType = @NumberType,")
+            sb_SQL.Append(" Name = @Name,")
+            sb_SQL.Append(" QuoName = @QuoName,")
+            sb_SQL.Append(" CASNumber = @CASNumber,")
+            sb_SQL.Append(" MolecularFormula = @MolecularFormula,")
+            sb_SQL.Append(" Reference = @Reference,")
+            sb_SQL.Append(" Comment = @Comment,")
+            sb_SQL.Append(" UpdatedBy = @UpdatedBy,")
+            sb_SQL.Append(" UpdateDate = GETDATE() ")
+            sb_SQL.Append("WHERE ")
+            sb_SQL.Append(" ProductID = @ProductID")
+
+            DBCommand.CommandText = sb_SQL.ToString()
+            DBCommand.Parameters.AddWithValue("ProductNumber", ConvertEmptyStringToNull(st_ProductNumber))
+            DBCommand.Parameters.AddWithValue("NumberType", ConvertEmptyStringToNull(NumberType))
+            DBCommand.Parameters.AddWithValue("Name", ConvertEmptyStringToNull(st_ProductName))
+            DBCommand.Parameters.AddWithValue("QuoName", ConvertEmptyStringToNull(st_QuoName))
+            DBCommand.Parameters.AddWithValue("CASNumber", ConvertEmptyStringToNull(st_CASNumber))
+            DBCommand.Parameters.AddWithValue("MolecularFormula", ConvertEmptyStringToNull(st_MolecularFormula))
+            DBCommand.Parameters.AddWithValue("Reference", ConvertEmptyStringToNull(st_Reference))
+            DBCommand.Parameters.AddWithValue("Comment", ConvertEmptyStringToNull(st_Comment))
+            DBCommand.Parameters.AddWithValue("UpdatedBy", ConvertStringToInt(Session("UserID")))
+            DBCommand.Parameters.AddWithValue("ProductID", ConvertStringToInt(st_ProductID))
+
             DBCommand.ExecuteNonQuery()
             RunMsg.Text = MSG_DATA_UPDATED   '"データを更新しました。"
 
@@ -193,20 +217,72 @@ Partial Public Class ProductSetting
             DBReader.Close()
 
             '[Product登録処理]-----------------------------------------------------------------------
-            st_SqlStr = "INSERT INTO Product (ProductNumber,NumberType,Name,QuoName,JapaneseName,ChineseName,CASNumber,MolecularFormula,Status,ProposalDept,ProcumentDept,PD,Reference,Comment,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ("
-            If ProductNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + SafeSqlLiteral(ProductNumber.Text) + "',"
-            st_SqlStr = st_SqlStr + "'" + NumberType + "',"
-            If ProductName.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + SafeSqlLiteral(ProductName.Text) + "',"
-            If QuoName.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + SafeSqlLiteral(QuoName.Text) + "',"
-            st_SqlStr = st_SqlStr + "null,null,"
-            If CASNumber.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + SafeSqlLiteral(CASNumber.Text) + "',"
-            If MolecularFormula.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + SafeSqlLiteral(MolecularFormula.Text) + "',"
-            st_SqlStr = st_SqlStr + "null,null,null,null,"
-            If Reference.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + SafeSqlLiteral(Reference.Text) + "',"
-            If Comment.Text.ToString = "" Then st_SqlStr = st_SqlStr + "null," Else st_SqlStr = st_SqlStr + "'" + SafeSqlLiteral(Comment.Text) + "',"
-            st_SqlStr = st_SqlStr + Session("UserID") + ",'" + Now() + "'," + Session("UserID") + ",'" + Now() + "'); "
-            st_SqlStr = st_SqlStr & "SELECT ProductID FROM Product WHERE ProductID = SCOPE_IDENTITY()"  '←[新規登録されたProductIDの取得の為]
-            DBCommand.CommandText = st_SqlStr
+            sb_SQL.Append("INSERT INTO Product ")
+            sb_SQL.Append("(")
+            sb_SQL.Append(" ProductNumber,")
+            sb_SQL.Append(" NumberType,")
+            sb_SQL.Append(" Name,")
+            sb_SQL.Append(" QuoName,")
+            sb_SQL.Append(" JapaneseName,")
+            sb_SQL.Append(" ChineseName,")
+            sb_SQL.Append(" CASNumber,")
+            sb_SQL.Append(" MolecularFormula,")
+            sb_SQL.Append(" Status,")
+            sb_SQL.Append(" ProposalDept,")
+            sb_SQL.Append(" ProcumentDept,")
+            sb_SQL.Append(" PD,")
+            sb_SQL.Append(" Reference,")
+            sb_SQL.Append(" Comment,")
+            sb_SQL.Append(" CreatedBy,")
+            sb_SQL.Append(" CreateDate,")
+            sb_SQL.Append(" UpdatedBy,")
+            sb_SQL.Append(" UpdateDate")
+            sb_SQL.Append(") ")
+            sb_SQL.Append("VALUES ")
+            sb_SQL.Append("(")
+            sb_SQL.Append(" @ProductNumber,")
+            sb_SQL.Append(" @NumberType,")
+            sb_SQL.Append(" @Name,")
+            sb_SQL.Append(" @QuoName,")
+            sb_SQL.Append(" @JapaneseName,")
+            sb_SQL.Append(" @ChineseName,")
+            sb_SQL.Append(" @CASNumber,")
+            sb_SQL.Append(" @MolecularFormula,")
+            sb_SQL.Append(" @Status,")
+            sb_SQL.Append(" @ProposalDept,")
+            sb_SQL.Append(" @ProcumentDept,")
+            sb_SQL.Append(" @PD,")
+            sb_SQL.Append(" @Reference,")
+            sb_SQL.Append(" @Comment,")
+            sb_SQL.Append(" @CreatedBy,")
+            sb_SQL.Append(" GETDATE(),")
+            sb_SQL.Append(" @UpdatedBy,")
+            sb_SQL.Append(" GETDATE()")
+            sb_SQL.Append(");")
+            sb_SQL.Append("SELECT")
+            sb_SQL.Append(" ProductID ")
+            sb_SQL.Append("FROM Product ")
+            sb_SQL.Append("WHERE ")
+            sb_SQL.Append(" ProductID = SCOPE_IDENTITY()")
+
+            DBCommand.CommandText = sb_SQL.ToString()
+            DBCommand.Parameters.AddWithValue("ProductNumber", ConvertEmptyStringToNull(st_ProductNumber))
+            DBCommand.Parameters.AddWithValue("NumberType", ConvertEmptyStringToNull(NumberType))
+            DBCommand.Parameters.AddWithValue("Name", ConvertEmptyStringToNull(st_ProductName))
+            DBCommand.Parameters.AddWithValue("QuoName", ConvertEmptyStringToNull(st_QuoName))
+            DBCommand.Parameters.AddWithValue("JapaneseName", ConvertEmptyStringToNull(st_JapaneseName))
+            DBCommand.Parameters.AddWithValue("ChineseName", ConvertEmptyStringToNull(st_ChineseName))
+            DBCommand.Parameters.AddWithValue("CASNumber", ConvertEmptyStringToNull(st_CASNumber))
+            DBCommand.Parameters.AddWithValue("MolecularFormula", ConvertEmptyStringToNull(st_MolecularFormula))
+            DBCommand.Parameters.AddWithValue("Status", ConvertEmptyStringToNull(st_Status))
+            DBCommand.Parameters.AddWithValue("ProposalDept", ConvertEmptyStringToNull(st_ProposalDept))
+            DBCommand.Parameters.AddWithValue("ProcumentDept", ConvertEmptyStringToNull(st_ProcumentDept))
+            DBCommand.Parameters.AddWithValue("PD", ConvertEmptyStringToNull(st_PD))
+            DBCommand.Parameters.AddWithValue("Reference", ConvertEmptyStringToNull(st_Reference))
+            DBCommand.Parameters.AddWithValue("Comment", ConvertEmptyStringToNull(st_Comment))
+            DBCommand.Parameters.AddWithValue("CreatedBy", ConvertStringToInt(Session("UserID")))
+            DBCommand.Parameters.AddWithValue("UpdatedBy", ConvertStringToInt(Session("UserID")))
+
             DBReader = DBCommand.ExecuteReader()
             DBCommand.Dispose()
             If DBReader.Read = True Then
