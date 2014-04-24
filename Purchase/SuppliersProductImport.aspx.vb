@@ -571,7 +571,7 @@ Partial Public Class SuppliersProductImport
             Try
                 st_CAS = CType(vrow.FindControl("CASNumber"), TextBox).Text
                 st_ItemNo = vrow.Cells(COL_POS_ITEM_NUMBER).Text()
-                st_ItemName = vrow.Cells(COL_POS_ITEM_NAME).Text()
+                st_ItemName = CType(vrow.FindControl("SupplierItemName"), Label).Text
                 st_Note = vrow.Cells(COL_POS_NOTE).Text()
                 If st_ItemNo = "&nbsp;" Then st_ItemNo = String.Empty
                 If st_ItemName = "&nbsp;" Then st_ItemName = String.Empty

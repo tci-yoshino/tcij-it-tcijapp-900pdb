@@ -68,8 +68,11 @@
                         </asp:TemplateField>
                         <asp:BoundField HeaderText="Supplier Item Number" 
                             DataField="Supplier Item Number" />
-                        <asp:BoundField HeaderText="Supplier Item Name" 
-                            DataField="Supplier Item Name" />
+                        <asp:TemplateField HeaderText="Supplier Item Name">
+                            <ItemTemplate>
+                                <asp:Label ID="SupplierItemName" runat="server" Text='<%# Eval("Supplier Item Name") %>'></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
                         <asp:BoundField HeaderText="Note" DataField="Note" />
 
                         <asp:TemplateField HeaderText="TCI Product Number">
