@@ -243,6 +243,23 @@ Public Class Common
     Private Const LOCATION_JP As String = "JP"
 
     ''' <summary>
+    ''' プライオリティ
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const PRIORITY_A As String = "A"
+    Public Const PRIORITY_B As String = "B"
+    Public Const PRIORITY_AB As String = "AB"
+    Public Const PRIORITY_ALL As String = "ALL"
+
+    ''' <summary>
+    ''' プライオリティ利用タイプ
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const PRIORITY_FOR_SEARCH As String = "PriorityForSearch"
+    Public Const PRIORITY_FOR_EDIT As String = "PriorityForEdit"
+
+
+    ''' <summary>
     ''' ローカル時間を取得する。
     ''' </summary>
     ''' <param name="LocationCode">拠点コード</param>
@@ -686,5 +703,24 @@ Public Class Common
         Return st_SupplierInfo
 
     End Function
+    ''' <summary>
+    ''' プライオリティドロップダウンリスト設定
+    ''' </summary>
+    ''' <param name="Combo">ドロップダウンリスト</param>
+    ''' <param name="Type">利用タイプ</param>
+    ''' <remarks></remarks>
+    Public Shared Sub SetPriorityDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal Type As String)
+
+        If (Type = PRIORITY_FOR_SEARCH) Then
+            Combo.Items.Add(PRIORITY_A)
+            Combo.Items.Add(PRIORITY_B)
+            Combo.Items.Add(PRIORITY_AB)
+            Combo.Items.Add(PRIORITY_ALL)
+        Else
+            Combo.Items.Add(PRIORITY_A)
+            Combo.Items.Add(PRIORITY_B)
+            Combo.Items.Insert(0, New ListItem())
+        End If
+    End Sub
 
 End Class
