@@ -140,19 +140,19 @@ Partial Public Class ProductSetting
 
         '[Save処理]--------------------------------------------------------------------
         Dim st_ProductID As String = ProductID.Value
-        Dim st_ProductNumber As String = SafeSqlLiteral(ProductNumber.Text)
-        Dim st_ProductName As String = SafeSqlLiteral(ProductName.Text)
-        Dim st_QuoName As String = SafeSqlLiteral(QuoName.Text)
+        Dim st_ProductNumber As String = ProductNumber.Text
+        Dim st_ProductName As String = ProductName.Text
+        Dim st_QuoName As String = QuoName.Text
         Dim st_JapaneseName As String = String.Empty
         Dim st_ChineseName As String = String.Empty
-        Dim st_CASNumber As String = SafeSqlLiteral(CASNumber.Text)
-        Dim st_MolecularFormula As String = SafeSqlLiteral(MolecularFormula.Text)
+        Dim st_CASNumber As String = CASNumber.Text
+        Dim st_MolecularFormula As String = MolecularFormula.Text
         Dim st_Status As String = String.Empty
         Dim st_ProposalDept As String = String.Empty
         Dim st_ProcumentDept As String = String.Empty
         Dim st_PD As String = String.Empty
-        Dim st_Reference As String = SafeSqlLiteral(Reference.Text)
-        Dim st_Comment As String = SafeSqlLiteral(Comment.Text)
+        Dim st_Reference As String = Reference.Text
+        Dim st_Comment As String = Comment.Text
 
         Dim MemoMode As String = Mode.Value
         If Mode.Value = "Edit" Then
