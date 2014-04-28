@@ -81,10 +81,12 @@ Partial Public Class RFQIssue
             DBCommand.CommandText = "INSERT INTO RFQHeader " _
                                   & "(EnqLocationCode, EnqUserID, QuoLocationCode, QuoUserID, " _
                                   & "ProductID, SupplierCode, MakerCode, PurposeCode, RequiredPurity, " _
-                                  & "RequiredQMMethod, RequiredSpecification, Comment, RFQStatusCode, CreatedBy, UpdatedBy)" _
+                                  & "RequiredQMMethod, RequiredSpecification, Comment, RFQStatusCode, Priority, " _
+                                  & "CreatedBy, UpdatedBy)" _
                                   & "VALUES(@EnqLocationCode, @EnqUserID, @QuoLocationCode, @QuoUserID, " _
                                   & "@ProductID, @SupplierCode, @MakerCode, @PurposeCode, @RequiredPurity, " _
-                                  & "@RequiredQMMethod, @RequiredSpecification, @Comment, @RFQStatusCode, @CreatedBy, @UpdatedBy); " _
+                                  & "@RequiredQMMethod, @RequiredSpecification, @Comment, @RFQStatusCode, @Priority, " _
+                                  & "@CreatedBy, @UpdatedBy); " _
                                   & " SELECT RFQNumber FROM RFQHeader WHERE (RFQNumber = SCOPE_IDENTITY())"
 
             DBCommand.Parameters.Add("@EnqLocationCode", SqlDbType.VarChar).Value = EnqLocation.SelectedValue
@@ -100,6 +102,7 @@ Partial Public Class RFQIssue
             DBCommand.Parameters.Add("@RequiredSpecification", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(RequiredSpecification.Text)
             DBCommand.Parameters.Add("@Comment", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(Comment.Text)
             DBCommand.Parameters.Add("@RFQStatusCode", SqlDbType.VarChar).Value = IIf(Integer.TryParse(QuoUser.SelectedValue, i) = True, "A", "N")
+            DBCommand.Parameters.Add("@Priority", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(Priority.SelectedValue)
             DBCommand.Parameters.Add("@CreatedBy", SqlDbType.Int).Value = Integer.Parse(Session("UserID"))
             DBCommand.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = Integer.Parse(Session("UserID"))
             DBReader = DBCommand.ExecuteReader()
@@ -298,6 +301,12 @@ Partial Public Class RFQIssue
         QuoLocation.DataBind()
         QuoUser.Items.Clear()
         QuoUser.Items.Add(String.Empty)
+
+        SetPriorityDropDownList(Priority, PRIORITY_FOR_EDIT)
+        Priority.SelectedValue = ""
+        LabelPriority.Text = ""
+        Priority.Visible = True
+        LabelPriority.Visible = False
     End Sub
     Private Sub SetReadOnlyItems()
         'ReadOnly項目の再設定

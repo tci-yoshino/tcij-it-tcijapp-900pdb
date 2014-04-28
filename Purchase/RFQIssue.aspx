@@ -148,6 +148,13 @@
                             </asp:SqlDataSource>
 						</td>
 					</tr>
+                    <tr>
+                        <th>Priority : </th>
+                        <td>
+                            <asp:DropDownList ID="Priority" runat="server"></asp:DropDownList>
+                            <asp:Label ID="LabelPriority" runat="server"></asp:Label>
+                        </td>
+                    </tr>
 					<tr>
 						<th>Required Purity : </th><td><asp:TextBox ID="RequiredPurity" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
 					</tr>
