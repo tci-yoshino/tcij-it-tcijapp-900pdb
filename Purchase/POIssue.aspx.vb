@@ -195,6 +195,16 @@ Partial Public Class POIssue
         SetControl_SrcSupplier(ds.Tables("RFQLine").Rows(0)("SupplierCode").ToString, ds.Tables("RFQLine").Rows(0)("QuoLocationCode").ToString)
         SetControl_SrcPurpose()
 
+        SetControl_Priority(st_ParPONumber)
+        '親POがある場合はPriorityは編集不可。
+        If Not String.IsNullOrEmpty(st_ParPONumber) Then
+            Priority.Visible = False
+            LabelPriority.Visible = True
+        Else
+            Priority.Visible = True
+            LabelPriority.Visible = False
+        End If
+
         Return True
 
     End Function
@@ -323,6 +333,53 @@ Partial Public Class POIssue
 
     End Sub
 
+    Private Sub SetControl_Priority(ByVal ParPONumber As String)
+
+        SetPriorityDropDownList(Priority, PRIORITY_FOR_EDIT)
+        Priority.SelectedValue = ""
+        LabelPriority.Text = ""
+
+        If String.IsNullOrEmpty(ParPONumber) Then
+            Exit Sub
+        End If
+
+        '親POのPriorityを取得する
+        Dim sqlConn As SqlConnection = Nothing
+        Dim sb_Sql As StringBuilder = New StringBuilder
+
+        sb_Sql.Append("SELECT ")
+        sb_Sql.Append(" ISNULL(Priority,'') ")
+        sb_Sql.Append("FROM ")
+        sb_Sql.Append(" PO ")
+        sb_Sql.Append("WHERE ")
+        sb_Sql.Append(" PONumber = @PONumber ")
+
+        Try
+            sqlConn = New SqlConnection(DB_CONNECT_STRING)
+            Dim sqlCmd As New SqlCommand(sb_Sql.ToString(), sqlConn)
+            sqlCmd.Parameters.AddWithValue("PONumber", ParPONumber)
+            sqlConn.Open()
+
+            Dim obj_Return As Object = sqlCmd.ExecuteScalar()
+
+            If obj_Return Is Nothing Then
+                Exit Sub
+            End If
+
+            Priority.SelectedValue = obj_Return.ToString()
+            LabelPriority.Text = obj_Return.ToString()
+
+        Finally
+
+            If Not (sqlConn Is Nothing) Then
+                sqlConn.Close()
+                sqlConn.Dispose()
+            End If
+
+        End Try
+
+    End Sub
+
     Private Function ValidateField() As Boolean
 
         ' PO Date (必須)
@@ -438,6 +495,7 @@ Partial Public Class POIssue
         sqlCmd.Parameters.AddWithValue("@DueDate", GetDatabaseTime(st_LoginLocationCode, DueDate.Text))
         sqlCmd.Parameters.AddWithValue("@RFQLineNumber", ConvertStringToInt(RFQLineNumber.Value))
         sqlCmd.Parameters.AddWithValue("@ParPONumber", ConvertStringToInt(ParPONumber.Value))
+        sqlCmd.Parameters.AddWithValue("@Priority", ConvertEmptyStringToNull(Priority.SelectedValue))
         sqlCmd.Parameters.AddWithValue("@CreatedBy", CInt(Session("UserID")))
         sqlCmd.Parameters.AddWithValue("@UpdatedBy", CInt(Session("UserID")))
 
@@ -531,6 +589,7 @@ Partial Public Class POIssue
         sb_Sql.Append("  DueDate, ")
         sb_Sql.Append("  RFQLineNumber, ")
         sb_Sql.Append("  ParPONumber, ")
+        sb_Sql.Append("  Priority, ")
         sb_Sql.Append("  CreatedBy, ")
         sb_Sql.Append("  UpdatedBy ")
         sb_Sql.Append(") VALUES ( ")
@@ -561,6 +620,7 @@ Partial Public Class POIssue
         sb_Sql.Append("  @DueDate, ")
         sb_Sql.Append("  @RFQLineNumber, ")
         sb_Sql.Append("  @ParPONumber, ")
+        sb_Sql.Append("  @Priority, ")
         sb_Sql.Append("  @CreatedBy, ")
         sb_Sql.Append("  @UpdatedBy ")
         sb_Sql.Append("); ")

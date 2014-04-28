@@ -26,6 +26,13 @@
                         <th>RFQ Reference Number : </th>
                         <td><asp:Label ID="RFQNumber" runat="server" Text=""></asp:Label></td>
                     </tr>
+                    <tr>
+                        <th>Priority : </th>
+                        <td>
+                            <asp:DropDownList ID="Priority" runat="server"></asp:DropDownList>
+                            <asp:Label ID="LabelPriority" runat="server"></asp:Label>
+                        </td>
+                    </tr>
     <% If Not String.IsNullOrEmpty(st_ParPONumber) Then%>
                     <tr>
                         <th>Par-PO Number : </th>
