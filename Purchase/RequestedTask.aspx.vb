@@ -1,7 +1,18 @@
-﻿Public Partial Class RequestedTask
+﻿Imports Purchase.Common
+
+Partial Public Class RequestedTask
     Inherits CommonPage
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        If Not IsPostBack Then
+            SetPriorityDropDownList(Priority, PRIORITY_FOR_SEARCH)
+            Priority.SelectedValue = PRIORITY_ALL
+
+            SrcRFQ.SelectCommand = CreateRHQHeaderSelectSQL()
+        End If
+    End Sub
+
+    Protected Sub Switch_Click()
         SrcRFQ.SelectCommand = CreateRHQHeaderSelectSQL()
     End Sub
 
@@ -16,6 +27,8 @@
         'SQL文字列の作成
         sb_SQL.Append("SELECT ")
         sb_SQL.Append("  RH.RFQNumber, ")
+        sb_SQL.Append("  CASE WHEN RH.Priority IS NULL THEN 1 ELSE 0  END AS Priority_Sort, ")
+        sb_SQL.Append("  ISNULL(RH.Priority, '') AS Priority, ")
         sb_SQL.Append("  RH.StatusChangeDate, ")
         sb_SQL.Append("  RH.Status, ")
         sb_SQL.Append("  RH.ProductNumber, ")
@@ -32,8 +45,16 @@
         sb_SQL.Append("WHERE ")
         sb_SQL.Append("  EnqUserID = '" & Session("UserID") & "' ")
         sb_SQL.Append("  AND NOT (RH.StatusCode = 'C' AND RR.RFQHistoryNumber IS NULL) ")
+        Select Case Priority.SelectedValue
+            Case PRIORITY_A
+                sb_SQL.Append("  AND RH.Priority = 'A' ")
+            Case PRIORITY_B
+                sb_SQL.Append("  AND RH.Priority = 'B' ")
+            Case PRIORITY_AB
+                sb_SQL.Append("  AND RH.Priority IN('A','B') ")
+        End Select
         sb_SQL.Append("ORDER BY ")
-        sb_SQL.Append("  StatusSortOrder, StatusChangeDate ")
+        sb_SQL.Append("  Priority_Sort, Priority, StatusSortOrder, StatusChangeDate ")
 
         Return sb_SQL.ToString()
 

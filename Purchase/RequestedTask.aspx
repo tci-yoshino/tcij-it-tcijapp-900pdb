@@ -17,6 +17,19 @@
 
     <!-- Main Content Area -->
     <div id="content">
+        <form ID="SwitchForm" runat="server">
+        <div class="main switch">
+            <table style="margin-bottom:0">
+                <tr>
+                    <th>Priority : </th>
+                    <td>
+                        <asp:DropDownList ID="Priority" runat="server">
+                        </asp:DropDownList>
+                    </td>
+                    <td><asp:Button ID="Switch" runat="server" Text="Switch" OnClick="Switch_Click" PostBackUrl="RequestedTask.aspx?Action=Switch" /></td>
+                </tr>
+            </table>
+        </div>
         <h3>RFQ</h3>
 
         <div class="list">
@@ -35,6 +48,7 @@
                         <th class="subhead" colspan="2">
                             RFQ Reference Number : <asp:HyperLink ID="RFQUpdate" runat="server" NavigateUrl='<%# "./RFQUpdate.aspx?RFQNumber=" & Eval("RFQNumber")%>'><asp:label id="RFQNumber" runat="server" Text='<%# Eval("RFQNumber")%>'></asp:label></asp:HyperLink>
                             <span class="indent"><em><asp:label id="RFQCorrespondence" runat="server" Text='<%# Eval("RFQCorrespondence")%>'></asp:label></em></span>
+                            <span class="placedright"><em><asp:label id="Priority_Title_RFQ" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>'></asp:label><asp:label id="Priority_RFQ" runat="server" Text='<%# Eval("Priority") %>'></asp:label></em></span>
                         </th>
                         <th class="subhead" colspan="4">
                             <asp:label id="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:label><span class="indent"><asp:label id="RFQStatus" runat="server" Text='<%# Eval("Status")%>'></asp:label></span>
@@ -57,6 +71,7 @@
                 </ItemTemplate>
             </asp:ListView>
         </div>
+        </form>
     </div><!-- Main Content Area END -->
     <asp:SqlDataSource ID="SrcRFQ" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
 
