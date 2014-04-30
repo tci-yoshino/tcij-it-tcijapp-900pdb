@@ -1,4 +1,6 @@
-﻿Public Partial Class MyTask
+﻿Imports Purchase.Common
+
+Partial Public Class MyTask
     Inherits CommonPage
 
     Protected st_Action As String = String.Empty ' aspx 側で読むため、Protected にする
@@ -74,6 +76,11 @@
         End If
 
         If Not IsPostBack Then
+            SetPriorityDropDownList(RFQPriority, PRIORITY_FOR_SEARCH)
+            RFQPriority.SelectedValue = PRIORITY_ALL
+            SetPriorityDropDownList(POPriority, PRIORITY_FOR_SEARCH)
+            POPriority.SelectedValue = PRIORITY_ALL
+
             ShowList()
         End If
 
@@ -120,15 +127,15 @@
         Dim dt_PO As New DataTable
         dt_PO = GetPOList(dt_PO, st_UserID)
 
-        Dim dv_POOverDue As DataView = New DataView(dt_PO, "TaskType = 'OverDue'", "DueDate", DataViewRowState.CurrentRows)
+        Dim dv_POOverDue As DataView = New DataView(dt_PO, "TaskType = 'OverDue'", "Priority_Sort,Priority,DueDate", DataViewRowState.CurrentRows)
         POList_Overdue.DataSource = dv_POOverDue
         POList_Overdue.DataBind()
 
-        Dim dv_POPPI As DataView = New DataView(dt_PO, "TaskType = 'PPI'", "", DataViewRowState.CurrentRows)
+        Dim dv_POPPI As DataView = New DataView(dt_PO, "TaskType = 'PPI'", "Priority_Sort,Priority", DataViewRowState.CurrentRows)
         POList_PPI.DataSource = dv_POPPI
         POList_PPI.DataBind()
 
-        Dim dv_POReminder As DataView = New DataView(dt_PO, "TaskType = 'Reminder'", "StatusSortOrder", DataViewRowState.CurrentRows)
+        Dim dv_POReminder As DataView = New DataView(dt_PO, "TaskType = 'Reminder'", "Priority_Sort,Priority,StatusSortOrder", DataViewRowState.CurrentRows)
         POList_Par.DataSource = dv_POReminder
         POList_Par.DataBind()
     End Sub
@@ -310,6 +317,8 @@
         Dim sb_SQL As New Text.StringBuilder
         sb_SQL.Append("SELECT ")
         sb_SQL.Append("  RH.RFQNumber, ")
+        sb_SQL.Append("  CASE WHEN RH.Priority IS NULL THEN 1 ELSE 0  END AS Priority_Sort, ")
+        sb_SQL.Append("  ISNULL(RH.Priority, '') AS Priority, ")
         sb_SQL.Append("  RH.StatusSortOrder, ")
         sb_SQL.Append("  RH.StatusChangeDate, ")
         sb_SQL.Append("  RH.Status, ")
@@ -331,9 +340,19 @@
         sb_SQL.Append("  RH.QuoUserID = @UserID ")
         sb_SQL.Append("  AND RH.EnqUserID != @UserID ")
         sb_SQL.Append("  AND RH.StatusCode NOT IN('Q','C') ")
+        Select Case RFQPriority.SelectedValue
+            Case PRIORITY_A
+                sb_SQL.Append("  AND RH.Priority = 'A' ")
+            Case PRIORITY_B
+                sb_SQL.Append("  AND RH.Priority = 'B' ")
+            Case PRIORITY_AB
+                sb_SQL.Append("  AND RH.Priority IN('A','B') ")
+        End Select
         sb_SQL.Append("UNION ALL ")
         sb_SQL.Append("SELECT ")
         sb_SQL.Append("  RH.RFQNumber, ")
+        sb_SQL.Append("  CASE WHEN RH.Priority IS NULL THEN 1 ELSE 0  END AS Priority_Sort, ")
+        sb_SQL.Append("  ISNULL(RH.Priority, '') AS Priority, ")
         sb_SQL.Append("  RH.StatusSortOrder, ")
         sb_SQL.Append("  RH.StatusChangeDate, ")
         sb_SQL.Append("  RH.Status, ")
@@ -356,7 +375,17 @@
         sb_SQL.Append("  AND RH.EnqUserID != @UserID ")
         sb_SQL.Append("  AND RH.StatusCode IN('Q','C') ")
         sb_SQL.Append("  AND RR.RFQHistoryNumber IS NOT NULL ")
+        Select Case RFQPriority.SelectedValue
+            Case PRIORITY_A
+                sb_SQL.Append("  AND RH.Priority = 'A' ")
+            Case PRIORITY_B
+                sb_SQL.Append("  AND RH.Priority = 'B' ")
+            Case PRIORITY_AB
+                sb_SQL.Append("  AND RH.Priority IN('A','B') ")
+        End Select
         sb_SQL.Append("ORDER BY ")
+        sb_SQL.Append("  Priority_Sort, ")
+        sb_SQL.Append("  Priority, ")
         sb_SQL.Append("  RH.StatusSortOrder, RH.StatusChangeDate ASC ")
         sb_SQL.Append("OPTION (RECOMPILE) ")
         Return sb_SQL.ToString()
@@ -366,6 +395,8 @@
         Dim sb_SQL As New Text.StringBuilder
         sb_SQL.Append("SELECT ")
         sb_SQL.Append("  P.PONumber, ")
+        sb_SQL.Append("  CASE WHEN P.Priority IS NULL THEN 1 ELSE 0  END AS Priority_Sort, ")
+        sb_SQL.Append("  ISNULL(P.Priority, '') AS Priority, ")
         sb_SQL.Append("  P.StatusSortOrder, ")
         sb_SQL.Append("  P.StatusChangeDate, ")
         sb_SQL.Append("  P.StatusCode, ")
@@ -409,6 +440,14 @@
         sb_SQL.Append("    LEFT OUTER JOIN v_POReminder AS PR ON PR.PONumber = P.PONumber AND PR.RcptUserID = @UserID ")
         sb_SQL.Append("WHERE ")
         sb_SQL.Append("  (POUserID = @UserID OR SOUserID = @UserID) ")
+        Select Case POPriority.SelectedValue
+            Case PRIORITY_A
+                sb_SQL.Append("  AND P.Priority = 'A' ")
+            Case PRIORITY_B
+                sb_SQL.Append("  AND P.Priority = 'B' ")
+            Case PRIORITY_AB
+                sb_SQL.Append("  AND P.Priority IN('A','B') ")
+        End Select
         sb_SQL.Append("OPTION (RECOMPILE) ")
         Return sb_SQL.ToString()
     End Function
@@ -417,6 +456,8 @@
         Dim sb_SQL As New Text.StringBuilder
         sb_SQL.Append("SELECT ")
         sb_SQL.Append("  P.PONumber, ")
+        sb_SQL.Append("  CASE WHEN P.Priority IS NULL THEN 1 ELSE 0  END AS Priority_Sort, ")
+        sb_SQL.Append("  ISNULL(P.Priority, '') AS Priority, ")
         sb_SQL.Append("  P.ProductNumber, ")
         sb_SQL.Append("  P.ProductName, ")
         sb_SQL.Append("  P.PODate, ")
@@ -435,7 +476,17 @@
         sb_SQL.Append("  v_PO AS P ")
         sb_SQL.Append("WHERE ")
         sb_SQL.Append("  P.ParPONumber = @PONumber ")
+        Select Case POPriority.SelectedValue
+            Case PRIORITY_A
+                sb_SQL.Append("  AND P.Priority = 'A' ")
+            Case PRIORITY_B
+                sb_SQL.Append("  AND P.Priority = 'B' ")
+            Case PRIORITY_AB
+                sb_SQL.Append("  AND P.Priority IN('A','B') ")
+        End Select
         sb_SQL.Append("ORDER BY ")
+        sb_SQL.Append("  Priority_Sort, ")
+        sb_SQL.Append("  Priority, ")
         sb_SQL.Append("  P.StatusSortOrder ASC ")
         Return sb_SQL.ToString()
     End Function

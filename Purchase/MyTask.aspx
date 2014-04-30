@@ -36,6 +36,16 @@ window.onload = function() {
                             <asp:DropDownList ID="UserID" runat="server">
                             </asp:DropDownList>
                         </td>
+                        <th>RFQ Priority : </th>
+                        <td>
+                            <asp:DropDownList ID="RFQPriority" runat="server">
+                            </asp:DropDownList>
+                        </td>
+                        <th>PO Priority : </th>
+                        <td>
+                            <asp:DropDownList ID="POPriority" runat="server">
+                            </asp:DropDownList>
+                        </td>
                         <td><asp:Button ID="Switch" runat="server" Text="Switch" OnClick="Switch_Click" PostBackUrl="MyTask.aspx?Action=Switch" /></td>
                     </tr>
                 </table>
@@ -65,6 +75,7 @@ window.onload = function() {
                         <th class="subhead" colspan="2">
                             RFQ Reference Number : <asp:HyperLink ID="RFQUpdate" runat="server" NavigateUrl='<%# "./RFQUpdate.aspx?RFQNumber=" & Eval("RFQNumber") %>'><asp:label id="RFQNumber" runat="server" Text='<%# Eval("RFQNumber") %>'></asp:label></asp:HyperLink>
                             <span class="indent"><em><asp:label id="RFQCorrespondence" runat="server" Text='<%# Eval("RFQCorrespondence") %>'></asp:label></em></span>
+                            <span class="placedright"><em><asp:label id="Priority_Title_RFQ" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>'></asp:label><asp:label id="Priority_RFQ" runat="server" Text='<%# Eval("Priority") %>'></asp:label></em></span>
                         </th>
                         <th class="subhead" colspan="3">
                             <asp:label id="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:label><span class="indent"><asp:label id="RFQStatus" runat="server" Text='<%# Eval("Status") %>'></asp:label></span>
@@ -107,7 +118,10 @@ window.onload = function() {
                 <ItemTemplate>
                     <table>
                         <tr>
-                            <th class="subhead" colspan="2">PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber") %>'><asp:label id="PONumber" runat="server" Text='<%# Eval("PONumber") %>'></asp:label></asp:HyperLink><span class="indent"><asp:label id="Overdue" runat="server" Text="Overdue"></asp:label></span><span class="indent"><em><asp:label id="POCorrespondence" runat="server" Text='<%# Eval("POCorrespondence") %>'></asp:label></em></span></th>
+                            <th class="subhead" colspan="2">
+                                PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber") %>'><asp:label id="PONumber" runat="server" Text='<%# Eval("PONumber") %>'></asp:label></asp:HyperLink><span class="indent"><asp:label id="Overdue" runat="server" Text="Overdue"></asp:label></span><span class="indent"><em><asp:label id="POCorrespondence" runat="server" Text='<%# Eval("POCorrespondence") %>'></asp:label></em></span>
+                                <span class="placedright"><em><asp:label id="Priority_Title_PO" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>'></asp:label><asp:label id="Priority_PO" runat="server" Text='<%# Eval("Priority") %>'></asp:label></em></span>
+                            </th>
                             <th class="subhead" colspan="4"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%# Eval("StatusCode") %>'></asp:label></span></th>
                         </tr>
                         <tr>
@@ -145,7 +159,10 @@ window.onload = function() {
                 <ItemTemplate>
                     <table>
                         <tr>
-                            <th class="subhead" colspan="2">PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber") %>'><asp:label id="PONumber" runat="server" Text='<%# Eval("PONumber") %>'></asp:label></asp:HyperLink><span class="indent"><asp:label id="PPI" runat="server" Text="Par-PO Issued"></asp:label></span><span class="indent"><em><asp:label id="POCorrespondence" runat="server" Text='<%# Eval("POCorrespondence") %>'></asp:label></em></span></th>
+                            <th class="subhead" colspan="2">
+                                PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber") %>'><asp:label id="PONumber" runat="server" Text='<%# Eval("PONumber") %>'></asp:label></asp:HyperLink><span class="indent"><asp:label id="PPI" runat="server" Text="Par-PO Issued"></asp:label></span><span class="indent"><em><asp:label id="POCorrespondence" runat="server" Text='<%# Eval("POCorrespondence") %>'></asp:label></em></span>
+                                <span class="placedright"><em><asp:label id="Priority_Title_PO" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>'></asp:label><asp:label id="Priority_PO" runat="server" Text='<%# Eval("Priority") %>'></asp:label></em></span>
+                            </th>
                             <th class="subhead" colspan="3"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%# Eval("StatusCode") %>'></asp:label></span></th>
                             <th class="subhead" style="text-align:right">
                                 <asp:Button ID="POCancelAssign" runat="server" Text="Cancel Assignment" />
@@ -186,7 +203,10 @@ window.onload = function() {
                 <ItemTemplate>
                     <table>
                         <tr>
-                            <th class="subhead" colspan="2">PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber") %>'><asp:label id="PONumber" runat="server" Text='<%# Eval("PONumber") %>'></asp:label></asp:HyperLink><span class="indent"><em><asp:label id="POCorrespondence" runat="server" Text='<%# Eval("POCorrespondence") %>'></asp:label></em></span></th>
+                            <th class="subhead" colspan="2">
+                                PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber") %>'><asp:label id="PONumber" runat="server" Text='<%# Eval("PONumber") %>'></asp:label></asp:HyperLink><span class="indent"><em><asp:label id="POCorrespondence" runat="server" Text='<%# Eval("POCorrespondence") %>'></asp:label></em></span>
+                                <span class="placedright"><em><asp:label id="Priority_Title_PO" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>'></asp:label><asp:label id="Priority_PO" runat="server" Text='<%# Eval("Priority") %>'></asp:label></em></span>
+                            </th>
                             <th class="subhead" colspan="4"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%# Eval("StatusCode") %>'></asp:label></span></th>
                         </tr>
                         <tr>
@@ -222,7 +242,10 @@ window.onload = function() {
                         <ItemTemplate>
                             <table class="child">
                                 <tr>
-                                    <th class="subhead" colspan="2">Chi-PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber") %>'><asp:label id="PONumber" runat="server" Text='<%# Eval("PONumber") %>'></asp:label></asp:HyperLink></th>
+                                    <th class="subhead" colspan="2">
+                                    Chi-PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber") %>'><asp:label id="PONumber" runat="server" Text='<%# Eval("PONumber") %>'></asp:label></asp:HyperLink>
+                                    <span class="placedright"><em><asp:label id="Priority_Title_ChiPO" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>'></asp:label><asp:label id="Priority_ChiPO" runat="server" Text='<%# Eval("Priority") %>'></asp:label></em></span>
+                                    </th>
                                     <th class="subhead" colspan="4"></th>
                                 </tr>
                                 <tr>
