@@ -274,6 +274,38 @@ Partial Public Class POIssue
 
     End Function
 
+    Private Function GetParPriority(ByVal ParPONumber As String) As String
+
+        If String.IsNullOrEmpty(ParPONumber) Then
+            Return String.Empty
+        End If
+
+        Dim sqlConn As SqlConnection = Nothing
+
+        Try
+            sqlConn = New SqlConnection(DB_CONNECT_STRING)
+            Dim sqlCmd As New SqlCommand(GetSQL_SelectPriority(), sqlConn)
+            sqlCmd.Parameters.AddWithValue("PONumber", ParPONumber)
+            sqlConn.Open()
+
+            Dim obj_Return As Object = sqlCmd.ExecuteScalar()
+
+            If obj_Return Is Nothing Then
+                Return String.Empty
+            End If
+
+            Return obj_Return.ToString()
+
+        Finally
+
+            If Not (sqlConn Is Nothing) Then
+                sqlConn.Close()
+                sqlConn.Dispose()
+            End If
+
+        End Try
+
+    End Function
 
     Private Sub SetControl_SrcUser()
 
@@ -334,50 +366,12 @@ Partial Public Class POIssue
     End Sub
 
     Private Sub SetControl_Priority(ByVal ParPONumber As String)
+        '親POのPriorityを取得する
+        Dim st_ParPriority As String = GetParPriority(ParPONumber)
 
         SetPriorityDropDownList(Priority, PRIORITY_FOR_EDIT)
-        Priority.SelectedValue = ""
-        LabelPriority.Text = ""
-
-        If String.IsNullOrEmpty(ParPONumber) Then
-            Exit Sub
-        End If
-
-        '親POのPriorityを取得する
-        Dim sqlConn As SqlConnection = Nothing
-        Dim sb_Sql As StringBuilder = New StringBuilder
-
-        sb_Sql.Append("SELECT ")
-        sb_Sql.Append(" ISNULL(Priority,'') ")
-        sb_Sql.Append("FROM ")
-        sb_Sql.Append(" PO ")
-        sb_Sql.Append("WHERE ")
-        sb_Sql.Append(" PONumber = @PONumber ")
-
-        Try
-            sqlConn = New SqlConnection(DB_CONNECT_STRING)
-            Dim sqlCmd As New SqlCommand(sb_Sql.ToString(), sqlConn)
-            sqlCmd.Parameters.AddWithValue("PONumber", ParPONumber)
-            sqlConn.Open()
-
-            Dim obj_Return As Object = sqlCmd.ExecuteScalar()
-
-            If obj_Return Is Nothing Then
-                Exit Sub
-            End If
-
-            Priority.SelectedValue = obj_Return.ToString()
-            LabelPriority.Text = obj_Return.ToString()
-
-        Finally
-
-            If Not (sqlConn Is Nothing) Then
-                sqlConn.Close()
-                sqlConn.Dispose()
-            End If
-
-        End Try
-
+        Priority.SelectedValue = st_ParPriority
+        LabelPriority.Text = st_ParPriority
     End Sub
 
     Private Function ValidateField() As Boolean
@@ -452,6 +446,14 @@ Partial Public Class POIssue
     Private Function InsertPO() As Integer
         Dim st_SOLocationCode As String = String.Empty
         Dim obj_PONumber As Object = DBNull.Value
+        Dim st_Priority As String = Priority.SelectedValue
+
+        '親POがある場合は最新のPriority値を取得する
+        If Priority.Visible = False Then
+            st_Priority = GetParPriority(st_ParPONumber)
+            Priority.SelectedValue = st_Priority
+            LabelPriority.Text = st_Priority
+        End If
 
         Dim sqlConn As New SqlConnection(DB_CONNECT_STRING)
         Dim sqlReader As SqlDataReader
@@ -495,7 +497,7 @@ Partial Public Class POIssue
         sqlCmd.Parameters.AddWithValue("@DueDate", GetDatabaseTime(st_LoginLocationCode, DueDate.Text))
         sqlCmd.Parameters.AddWithValue("@RFQLineNumber", ConvertStringToInt(RFQLineNumber.Value))
         sqlCmd.Parameters.AddWithValue("@ParPONumber", ConvertStringToInt(ParPONumber.Value))
-        sqlCmd.Parameters.AddWithValue("@Priority", ConvertEmptyStringToNull(Priority.SelectedValue))
+        sqlCmd.Parameters.AddWithValue("@Priority", ConvertEmptyStringToNull(st_Priority))
         sqlCmd.Parameters.AddWithValue("@CreatedBy", CInt(Session("UserID")))
         sqlCmd.Parameters.AddWithValue("@UpdatedBy", CInt(Session("UserID")))
 
@@ -658,4 +660,17 @@ Partial Public Class POIssue
 
     End Function
 
+    Private Function GetSQL_SelectPriority() As String
+        Dim sb_Sql As StringBuilder = New StringBuilder
+
+        sb_Sql.Append("SELECT ")
+        sb_Sql.Append(" ISNULL(Priority,'') ")
+        sb_Sql.Append("FROM ")
+        sb_Sql.Append(" PO ")
+        sb_Sql.Append("WHERE ")
+        sb_Sql.Append(" PONumber = @PONumber ")
+
+        Return sb_Sql.ToString()
+
+    End Function
 End Class
