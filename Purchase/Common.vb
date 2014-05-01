@@ -723,4 +723,52 @@ Public Class Common
         End If
     End Sub
 
+    ''' <summary>
+    ''' プライオリティ取得
+    ''' </summary>
+    ''' <param name="st_ParPONumber">親 PONumber</param>
+    ''' <return>Priority</return>
+    ''' <remarks></remarks>
+    Public Shared Function GetParPOPriority(ByVal st_ParPONumber As String) As String
+
+        If String.IsNullOrEmpty(st_ParPONumber) Then
+            Return String.Empty
+        End If
+
+        Dim sqlConn As SqlConnection = Nothing
+
+        Dim sb_Sql As StringBuilder = New StringBuilder
+
+        sb_Sql.Append("SELECT ")
+        sb_Sql.Append(" ISNULL(Priority,'') ")
+        sb_Sql.Append("FROM ")
+        sb_Sql.Append(" v_PO ")
+        sb_Sql.Append("WHERE ")
+        sb_Sql.Append(" PONumber = @PONumber ")
+
+        Try
+            sqlConn = New SqlConnection(DB_CONNECT_STRING)
+
+            Dim sqlCmd As New SqlCommand(sb_Sql.ToString(), sqlConn)
+            sqlCmd.Parameters.AddWithValue("PONumber", st_ParPONumber)
+            sqlConn.Open()
+
+            Dim obj_Return As Object = sqlCmd.ExecuteScalar()
+
+            If obj_Return Is Nothing Then
+                Return String.Empty
+            End If
+
+            Return obj_Return.ToString()
+
+        Finally
+
+            If Not (sqlConn Is Nothing) Then
+                sqlConn.Close()
+                sqlConn.Dispose()
+            End If
+
+        End Try
+
+    End Function
 End Class
