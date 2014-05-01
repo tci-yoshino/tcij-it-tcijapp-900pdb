@@ -21,7 +21,7 @@
         <div class="main switch">
             <table style="margin-bottom:0">
                 <tr>
-                    <th>Priority : </th>
+                    <th>RFQ Priority : </th>
                     <td>
                         <asp:DropDownList ID="Priority" runat="server">
                         </asp:DropDownList>

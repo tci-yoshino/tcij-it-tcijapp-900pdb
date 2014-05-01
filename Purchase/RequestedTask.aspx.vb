@@ -27,7 +27,7 @@ Partial Public Class RequestedTask
         'SQL文字列の作成
         sb_SQL.Append("SELECT ")
         sb_SQL.Append("  RH.RFQNumber, ")
-        sb_SQL.Append("  CASE WHEN RH.Priority IS NULL THEN 1 ELSE 0  END AS Priority_Sort, ")
+        sb_SQL.Append("  CASE WHEN RH.Priority IS NULL THEN 1 ELSE 0  END AS PrioritySort, ")
         sb_SQL.Append("  ISNULL(RH.Priority, '') AS Priority, ")
         sb_SQL.Append("  RH.StatusChangeDate, ")
         sb_SQL.Append("  RH.Status, ")
@@ -54,7 +54,7 @@ Partial Public Class RequestedTask
                 sb_SQL.Append("  AND RH.Priority IN('A','B') ")
         End Select
         sb_SQL.Append("ORDER BY ")
-        sb_SQL.Append("  Priority_Sort, Priority, StatusSortOrder, StatusChangeDate ")
+        sb_SQL.Append("  PrioritySort, Priority, StatusSortOrder, StatusChangeDate ")
 
         Return sb_SQL.ToString()
 
