@@ -304,9 +304,7 @@ Partial Public Class RFQIssue
 
         SetPriorityDropDownList(Priority, PRIORITY_FOR_EDIT)
         Priority.SelectedValue = ""
-        LabelPriority.Text = ""
         Priority.Visible = True
-        LabelPriority.Visible = False
     End Sub
     Private Sub SetReadOnlyItems()
         'ReadOnly項目の再設定
