@@ -241,6 +241,24 @@ Partial Public Class RFQUpdate
     Protected WithEvents Purpose As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
+    '''Priority コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Priority As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''LabelPriority コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents LabelPriority As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
     '''RequiredPurity コントロール。
     '''</summary>
     '''<remarks>

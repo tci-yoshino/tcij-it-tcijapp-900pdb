@@ -71,6 +71,8 @@ Partial Public Class RFQUpdate
                 Parameter = False
                 Exit Sub
             End If
+            'プライオリティのプルダウンを設定する
+            SetPriorityDropDownList(Priority, PRIORITY_FOR_EDIT)
             Call SetPostBackUrl()
             If FormDataSet() = False Then
                 Msg.Text = ERR_INVALID_PARAMETER
@@ -144,8 +146,9 @@ Partial Public Class RFQUpdate
         If CheckLocation() = False Then
             Exit Sub
         End If
+
         '他セッションでの更新チェック
-        If isLatestData("RFQHeader", "RFQNumber", st_RFQNumber, UpdateDate.Value) = False Then
+        If IsLatestData("RFQHeader", "RFQNumber", st_RFQNumber, UpdateDate.Value) = False Then
             Msg.Text = ERR_UPDATED_BY_ANOTHER_USER
             Exit Sub
         End If
@@ -173,11 +176,19 @@ Partial Public Class RFQUpdate
                     st_QuotedDate = ", QuotedDate = '" & st_QuoDate & "'"
                 End If
             End If
+
+            'プルダウンが編集可能な場合はプルダウンから値を取得する
+            Dim st_Priority As String = String.Empty
+            If (Priority.Enabled) Then
+                st_Priority = Priority.Text
+            Else
+                st_Priority = LabelPriority.Text
+            End If
             DBCommand.CommandText = "Update RFQHeader SET EnqUserID = @EnqUserID, QuoUserID = @QuoUserID, SupplierCode = @SupplierCode, MakerCode = @MakerCode," _
             & "SpecSheet = @SpecSheet, Specification = @Specification, SupplierContactPerson = @SupplierContactPerson," _
             & "SupplierItemName = @SupplierItemName, ShippingHandlingFee = @ShippingHandlingFee," _
             & "ShippingHandlingCurrencyCode = @ShippingHandlingCurrencyCode, PaymentTermCode = @PaymentTermCode," _
-            & "Comment = @Comment, UpdatedBy = @UpdatedBy, UpdateDate = GETDATE()" & RFQStatusCode & st_QuotedDate _
+            & "Comment = @Comment, Priority = @Priority , UpdatedBy = @UpdatedBy, UpdateDate = GETDATE()" & RFQStatusCode & st_QuotedDate _
             & " Where RFQNumber = @RFQNumber "
             DBCommand.Parameters.Add("@EnqUserID", SqlDbType.Int).Value = ConvertStringToInt(EnqUser.SelectedValue)
             DBCommand.Parameters.Add("@QuoUserID", SqlDbType.Int).Value = ConvertStringToInt(QuoUser.SelectedValue)
@@ -191,6 +202,7 @@ Partial Public Class RFQUpdate
             DBCommand.Parameters.Add("@ShippingHandlingCurrencyCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(ShippingHandlingCurrency.Text)
             DBCommand.Parameters.Add("@PaymentTermCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(PaymentTerm.SelectedValue)
             DBCommand.Parameters.Add("@Comment", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(Comment.Text)
+            DBCommand.Parameters.Add("@Priority", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(st_Priority)
             DBCommand.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = Integer.Parse(Session("UserID"))
             DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
             DBCommand.ExecuteNonQuery()
@@ -352,7 +364,7 @@ Partial Public Class RFQUpdate
 & "MakerName, MakerCountryCode, SupplierContactPerson, PaymentTermCode, RequiredPurity, " _
 & "RequiredQMMethod, RequiredSpecification, SpecSheet, Specification, Purpose, SupplierItemName, " _
 & "ShippingHandlingFee, ShippingHandlingCurrencyCode, Comment, QuotedDate, StatusCode, " _
-& "UpdateDate, Status, StatusChangeDate, EnqLocationCode, QuoLocationCode" _
+& "UpdateDate, Status, StatusChangeDate, EnqLocationCode, QuoLocationCode, Priority" _
 & " From v_RFQHeader Where RFQNumber = @i_RFQNumber", DBConn)
             DBCommand.Parameters.Add("i_RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
             DBAdapter = New SqlDataAdapter
@@ -387,6 +399,8 @@ Partial Public Class RFQUpdate
             ShippingHandlingFee.Text = SetNullORDecimal(DS.Tables("RFQHeader").Rows(0)("ShippingHandlingFee").ToString)
             'Right
             Purpose.Text = DS.Tables("RFQHeader").Rows(0)("Purpose").ToString
+            Priority.SelectedValue = DS.Tables("RFQHeader").Rows(0)("Priority").ToString
+            LabelPriority.Text = DS.Tables("RFQHeader").Rows(0)("Priority").ToString
             RequiredPurity.Text = DS.Tables("RFQHeader").Rows(0)("RequiredPurity").ToString
             RequiredQMMethod.Text = DS.Tables("RFQHeader").Rows(0)("RequiredQMMethod").ToString
             RequiredSpecification.Text = DS.Tables("RFQHeader").Rows(0)("RequiredSpecification").ToString
@@ -477,6 +491,25 @@ Partial Public Class RFQUpdate
             End If
             DS.Clear()
         End If
+
+        'ログインユーザ＝RFQUser の場合、Priority 編集可
+        Dim st_ENQUser As String = String.Empty
+        st_ENQUser = EnqUser.SelectedValue
+        If String.IsNullOrEmpty(st_ENQUser) Then
+            '画面初期表示時のみ SelectedValue で値が取得できないため、直接データ参照する
+            st_ENQUser = ViewState(OLD_ENQUSER_ID)
+        End If
+
+        If (Session("UserID").ToString = st_ENQUser) Then
+            Priority.Enabled = True
+            Priority.Visible = True
+            LabelPriority.Visible = False
+        Else
+            Priority.Enabled = False
+            Priority.Visible = False
+            LabelPriority.Visible = True
+        End If
+
         Return True
     End Function
 
