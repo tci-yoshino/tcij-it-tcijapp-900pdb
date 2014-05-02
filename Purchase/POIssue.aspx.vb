@@ -274,39 +274,6 @@ Partial Public Class POIssue
 
     End Function
 
-    Private Function GetParPriority(ByVal ParPONumber As String) As String
-
-        If String.IsNullOrEmpty(ParPONumber) Then
-            Return String.Empty
-        End If
-
-        Dim sqlConn As SqlConnection = Nothing
-
-        Try
-            sqlConn = New SqlConnection(DB_CONNECT_STRING)
-            Dim sqlCmd As New SqlCommand(GetSQL_SelectPriority(), sqlConn)
-            sqlCmd.Parameters.AddWithValue("PONumber", ParPONumber)
-            sqlConn.Open()
-
-            Dim obj_Return As Object = sqlCmd.ExecuteScalar()
-
-            If obj_Return Is Nothing Then
-                Return String.Empty
-            End If
-
-            Return obj_Return.ToString()
-
-        Finally
-
-            If Not (sqlConn Is Nothing) Then
-                sqlConn.Close()
-                sqlConn.Dispose()
-            End If
-
-        End Try
-
-    End Function
-
     Private Sub SetControl_SrcUser()
 
         SrcUser.SelectCommand = "SELECT UserID, Name FROM v_User WHERE LocationCode = @LocationCode ORDER BY Name"
@@ -367,7 +334,7 @@ Partial Public Class POIssue
 
     Private Sub SetControl_Priority(ByVal ParPONumber As String)
         '親POのPriorityを取得する
-        Dim st_ParPriority As String = GetParPriority(ParPONumber)
+        Dim st_ParPriority As String = GetParPOPriority(ParPONumber)
 
         SetPriorityDropDownList(Priority, PRIORITY_FOR_EDIT)
         Priority.SelectedValue = st_ParPriority
@@ -450,7 +417,7 @@ Partial Public Class POIssue
 
         '親POがある場合は最新のPriority値を取得する
         If Priority.Visible = False Then
-            st_Priority = GetParPriority(st_ParPONumber)
+            st_Priority = GetParPOPriority(st_ParPONumber)
             Priority.SelectedValue = st_Priority
             LabelPriority.Text = st_Priority
         End If
@@ -660,17 +627,4 @@ Partial Public Class POIssue
 
     End Function
 
-    Private Function GetSQL_SelectPriority() As String
-        Dim sb_Sql As StringBuilder = New StringBuilder
-
-        sb_Sql.Append("SELECT ")
-        sb_Sql.Append(" ISNULL(Priority,'') ")
-        sb_Sql.Append("FROM ")
-        sb_Sql.Append(" PO ")
-        sb_Sql.Append("WHERE ")
-        sb_Sql.Append(" PONumber = @PONumber ")
-
-        Return sb_Sql.ToString()
-
-    End Function
 End Class
