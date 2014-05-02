@@ -116,7 +116,7 @@
                         </tr>
                         <tr>
                             <th>Supplier Name / Country</th>
-                            <td colspan="3">
+                            <td colspan="3" style="white-space: nowrap;">
                                 <asp:Label ID="SupplierName" runat="server" Text='<%#Eval("SupplierName")%>'></asp:Label><span class="indent">(<asp:Label ID="SupplierCountry" runat="server" Text='<%#Eval("SupplierCountryName")%>'></asp:Label>)</span>
                                 <span class="placedright"><asp:HyperLink ID="SupplierInfoLink" runat="server" NavigateUrl='<%#Eval("SupplierInfo")%>' Target="_blank"><asp:Label ID="SupplierInfo" runat="server" Text='<%#If(IsDBNull(Eval("SupplierInfo")), "", "Supplier Information")%>'></asp:Label></asp:HyperLink></span>
                             </td>
@@ -125,7 +125,7 @@
                         </tr>
                         <tr>
                             <th>Maker Name / Country</th>
-                            <td colspan="3">
+                            <td colspan="3" style="white-space: nowrap;">
                                 <asp:Label ID="MakerName" runat="server" Text='<%#Eval("MakerName")%>'></asp:Label><span class="indent">(<asp:Label ID="MakerCountry" runat="server" Text='<%#Eval("MakerCountryName")%>'></asp:Label>)</span>
                                 <span class="placedright"><asp:HyperLink ID="MakerInfoLink" runat="server" NavigateUrl='<%#Eval("MakerInfo")%>' Target="_blank"><asp:Label ID="MakerInfo" runat="server" Text='<%#If(IsDBNull(Eval("MakerInfo")), "", "Supplier Information")%>'></asp:Label></asp:HyperLink></span>
                             </td>
