@@ -32,6 +32,14 @@
                             <td><asp:Label ID="ParPONumber" runat="server" Text=""></asp:Label></td>
                         </tr>
                         <% End If%> 
+                        
+                        <tr>
+                            <th>Priority : </th>
+                            <td>
+                                <asp:DropDownList ID="Priority" runat="server"></asp:DropDownList>
+                                <asp:Label ID="LabelPriority" runat="server"></asp:Label>
+                            </td>
+                        </tr>
                                                 
                         <tr>
                             <th>R/3 PO Number : </th>
@@ -184,7 +192,7 @@
                         <p class="message"><asp:Label ID="RunMsg" runat="server"></asp:Label></p>
                         <asp:Button ID="Update" runat="server" Text="Update" />
                         <span class="indent"></span>
-                        <asp:Button ID="Cancell" runat="server" Text="Cancell" />
+                        <asp:Button ID="Cancell" runat="server" Text="Cancel" />
                     </div>
                 </div>
 

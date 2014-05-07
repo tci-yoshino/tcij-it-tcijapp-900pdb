@@ -111,6 +111,7 @@ Partial Public Class POUpdate
         Public RFQNumber As Integer?
         Public RFQLineNumber As Integer?
         Public ParPONumber As Integer?
+        Public Priority As String
         Public StatusCode As String     'ReadOnly
         Public Status As String     'ReadOnly
         Public StatusChangeDate As DateTime?     'ReadOnly
@@ -166,6 +167,9 @@ Partial Public Class POUpdate
             End If
             b_FormVisible = True
             ClearForm()
+
+            'プライオリティのプルダウンを設定する
+            SetPriorityDropDownList(Priority, PRIORITY_FOR_EDIT)
 
             ViewPOInformationToForm(CInt(st_PONumber))
         End If
@@ -331,6 +335,16 @@ Partial Public Class POUpdate
         RFQNumber.Text = POInformation.RFQNumber.ToString()
         R3PONumber.Text = POInformation.R3PONumber
         ParPONumber.Text = NullableIntToString(POInformation.ParPONumber)
+        If String.IsNullOrEmpty(ParPONumber.Text) Then
+            '表示データが親の場合
+            Priority.SelectedValue = POInformation.Priority.ToString()
+            LabelPriority.Text = POInformation.Priority.ToString()
+        Else
+            '表示データが子の場合、親の Priority を取得しセットする
+            Dim st_Priority As String = GetParPOPriority(ParPONumber.Text)
+            Priority.SelectedValue = st_Priority
+            LabelPriority.Text = st_Priority
+        End If
         R3POLineNumber.Text = POInformation.R3POLineNumber
         PODate.Text = GetLocalTime(POInformation.PODate)
         POUser.SelectedValue = POInformation.POUserID.ToString
@@ -393,6 +407,24 @@ Partial Public Class POUpdate
             b_ChiPOIssueVisible = False
         End If
 
+        'ログインユーザ　＝ POUser　かつ　親 PONumber がない場合、Priority 編集可
+        Dim st_POUser As String = String.Empty
+        st_POUser = POUser.SelectedValue
+        If String.IsNullOrEmpty(st_POUser) Then
+            '画面初期表示時のみ SelectedValue で値が取得できないため、直接データ参照する
+            st_POUser = POInformation.POUserID.ToString
+        End If
+
+        If ((String.IsNullOrEmpty(POInformation.ParPONumber.ToString)) AndAlso (i_OperatingUserID = Integer.Parse(st_POUser))) Then
+            Priority.Enabled = True
+            Priority.Visible = True
+            LabelPriority.Visible = False
+        Else
+            Priority.Enabled = False
+            Priority.Visible = False
+            LabelPriority.Visible = True
+        End If
+
         ' PO-User プルダウンの設定
         SetControl_SrcUser(POInformation.POLocationCode, CInt(POInformation.POUserID))
 
@@ -429,6 +461,16 @@ Partial Public Class POUpdate
         Dim DstPOInformation As POInformationType = SrcPOInformation
 
         'フォーム左段
+
+        Dim st_Priority As String = String.Empty
+        If (Priority.Visible) Then
+            'プルダウンが編集可能な場合はプルダウンから値を取得する
+            st_Priority = Priority.SelectedValue
+        Else
+            st_Priority = LabelPriority.Text
+        End If
+
+        DstPOInformation.Priority = StrToNullableString(st_Priority)
         DstPOInformation.R3PONumber = StrToNullableString(R3PONumber.Text.Trim())
         DstPOInformation.R3POLineNumber = StrToNullableString(R3POLineNumber.Text.Trim())
         DstPOInformation.POUserID = CInt(POUser.SelectedValue)
@@ -764,6 +806,7 @@ Partial Public Class POUpdate
                 PoInformation.RFQNumber = DBObjToNullableInt(dr("RFQNumber"))
                 PoInformation.RFQLineNumber = DBObjToNullableInt(dr("RFQLineNumber"))
                 PoInformation.ParPONumber = DBObjToNullableInt(dr("ParPONumber"))
+                PoInformation.Priority = dr("Priority").ToString()
                 PoInformation.StatusCode = dr("StatusCode").ToString()
                 PoInformation.Status = dr("Status").ToString()
                 PoInformation.StatusChangeDate = DBObjToNullableDateTime(dr("StatusChangeDate"))
@@ -850,6 +893,7 @@ Partial Public Class POUpdate
         sb_SQL.Append("	RFQNumber, ")
         sb_SQL.Append("	RFQLineNumber, ")
         sb_SQL.Append("	ParPONumber, ")
+        sb_SQL.Append("	Priority, ")
         sb_SQL.Append("	StatusCode, ")
         sb_SQL.Append("	Status, ")
         sb_SQL.Append("	StatusChangeDate, ")
@@ -925,6 +969,10 @@ Partial Public Class POUpdate
             cmd.Parameters.AddWithValue("CancellationDate", NullableVariableToDBObject(DstPOInformation.CancellationDate))
             cmd.Parameters.AddWithValue("RFQLineNumber", NullableVariableToDBObject(DstPOInformation.RFQLineNumber))
             cmd.Parameters.AddWithValue("ParPONumber", NullableVariableToDBObject(DstPOInformation.ParPONumber))
+            'Priority.visible = True （ログインユーザ＝POUser かつ 親 PO が存在しない）の場合のみ、Priority を更新する
+            If Priority.Visible Then
+                cmd.Parameters.AddWithValue("Priority", NullableVariableToDBObject(DstPOInformation.Priority))
+            End If
             cmd.Parameters.AddWithValue("CreatedBy", NullableVariableToDBObject(DstPOInformation.CreatedBy))
             cmd.Parameters.AddWithValue("CreateDate", NullableVariableToDBObject(DstPOInformation.CreateDate))
             cmd.Parameters.AddWithValue("UpdatedBy", i_OperatingUserID)
@@ -1005,6 +1053,10 @@ Partial Public Class POUpdate
         sb_SQL.Append("	CancellationDate = @CancellationDate, ")
         sb_SQL.Append("	RFQLineNumber = @RFQLineNumber, ")
         sb_SQL.Append("	ParPONumber = @ParPONumber, ")
+        'Priority.visible = True （ログインユーザ＝POUser かつ 親 PO が存在しない）の場合のみ、Priority を更新する
+        If Priority.Visible Then
+            sb_SQL.Append("	Priority = @Priority, ")
+        End If
         sb_SQL.Append("	UpdatedBy = @UpdatedBy, ")
         sb_SQL.Append("	UpdateDate = GETDATE() ")
         sb_SQL.Append("WHERE ")
