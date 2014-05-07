@@ -75,7 +75,7 @@ window.onload = function() {
                         <th class="subhead" colspan="2">
                             RFQ Reference Number : <asp:HyperLink ID="RFQUpdate" runat="server" NavigateUrl='<%# "./RFQUpdate.aspx?RFQNumber=" & Eval("RFQNumber") %>'><asp:label id="RFQNumber" runat="server" Text='<%# Eval("RFQNumber") %>'></asp:label></asp:HyperLink>
                             <span class="indent"><em><asp:label id="RFQCorrespondence" runat="server" Text='<%# Eval("RFQCorrespondence") %>'></asp:label></em></span>
-                            <span class="placedright"><em><asp:label id="Priority_Title_RFQ" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>'></asp:label><asp:label id="Priority_RFQ" runat="server" Text='<%# Eval("Priority") %>'></asp:label></em></span>
+                            <span class="placedright" style="width:100px"><em><asp:label id="Priority_Title_RFQ" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>'></asp:label><asp:label id="Priority_RFQ" runat="server" Text='<%# Eval("Priority") %>'></asp:label></em></span>
                         </th>
                         <th class="subhead" colspan="3">
                             <asp:label id="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:label><span class="indent"><asp:label id="RFQStatus" runat="server" Text='<%# Eval("Status") %>'></asp:label></span>
