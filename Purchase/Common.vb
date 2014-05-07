@@ -255,8 +255,8 @@ Public Class Common
     ''' プライオリティ利用タイプ
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const PRIORITY_FOR_SEARCH As String = "PriorityForSearch"
-    Public Const PRIORITY_FOR_EDIT As String = "PriorityForEdit"
+    Public Const PRIORITY_FOR_SEARCH As String = "Search"
+    Public Const PRIORITY_FOR_EDIT As String = "Edit"
 
 
     ''' <summary>
@@ -740,7 +740,7 @@ Public Class Common
         Dim sb_Sql As StringBuilder = New StringBuilder
 
         sb_Sql.Append("SELECT ")
-        sb_Sql.Append(" ISNULL(Priority,'') ")
+        sb_Sql.Append(" Priority ")
         sb_Sql.Append("FROM ")
         sb_Sql.Append(" v_PO ")
         sb_Sql.Append("WHERE ")
