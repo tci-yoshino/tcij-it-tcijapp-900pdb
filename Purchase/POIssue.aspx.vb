@@ -415,13 +415,6 @@ Partial Public Class POIssue
         Dim obj_PONumber As Object = DBNull.Value
         Dim st_Priority As String = Priority.SelectedValue
 
-        '親POがある場合は最新のPriority値を取得する
-        If Priority.Visible = False Then
-            st_Priority = GetParPOPriority(st_ParPONumber)
-            Priority.SelectedValue = st_Priority
-            LabelPriority.Text = st_Priority
-        End If
-
         Dim sqlConn As New SqlConnection(DB_CONNECT_STRING)
         Dim sqlReader As SqlDataReader
         Dim sqlCmd As SqlCommand
@@ -464,7 +457,9 @@ Partial Public Class POIssue
         sqlCmd.Parameters.AddWithValue("@DueDate", GetDatabaseTime(st_LoginLocationCode, DueDate.Text))
         sqlCmd.Parameters.AddWithValue("@RFQLineNumber", ConvertStringToInt(RFQLineNumber.Value))
         sqlCmd.Parameters.AddWithValue("@ParPONumber", ConvertStringToInt(ParPONumber.Value))
-        sqlCmd.Parameters.AddWithValue("@Priority", ConvertEmptyStringToNull(st_Priority))
+        If Priority.Visible = True Then
+            sqlCmd.Parameters.AddWithValue("@Priority", ConvertEmptyStringToNull(st_Priority))
+        End If
         sqlCmd.Parameters.AddWithValue("@CreatedBy", CInt(Session("UserID")))
         sqlCmd.Parameters.AddWithValue("@UpdatedBy", CInt(Session("UserID")))
 
@@ -558,7 +553,9 @@ Partial Public Class POIssue
         sb_Sql.Append("  DueDate, ")
         sb_Sql.Append("  RFQLineNumber, ")
         sb_Sql.Append("  ParPONumber, ")
-        sb_Sql.Append("  Priority, ")
+        If Priority.Visible = True Then
+            sb_Sql.Append("  Priority, ")
+        End If
         sb_Sql.Append("  CreatedBy, ")
         sb_Sql.Append("  UpdatedBy ")
         sb_Sql.Append(") VALUES ( ")
@@ -589,7 +586,9 @@ Partial Public Class POIssue
         sb_Sql.Append("  @DueDate, ")
         sb_Sql.Append("  @RFQLineNumber, ")
         sb_Sql.Append("  @ParPONumber, ")
-        sb_Sql.Append("  @Priority, ")
+        If Priority.Visible = True Then
+            sb_Sql.Append("  @Priority, ")
+        End If
         sb_Sql.Append("  @CreatedBy, ")
         sb_Sql.Append("  @UpdatedBy ")
         sb_Sql.Append("); ")
