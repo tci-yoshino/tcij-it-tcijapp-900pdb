@@ -179,7 +179,7 @@ Partial Public Class RFQUpdate
 
             'プルダウンが編集可能な場合はプルダウンから値を取得する
             Dim st_Priority As String = String.Empty
-            If (Priority.Enabled) Then
+            If (Priority.Visible) Then
                 st_Priority = Priority.Text
             Else
                 st_Priority = LabelPriority.Text
