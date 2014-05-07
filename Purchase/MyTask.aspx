@@ -247,8 +247,6 @@ window.onload = function() {
                             <table class="child">
                                 <tr>
                                     <th class="subhead" colspan="2">
-                                        <!-- １段下に改行されて表示される現象の対策のため「Chi-PO Number」の前に記述する -->
-                                        <span class="placedright"><em><asp:label id="Priority_Title_ChiPO" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>'></asp:label><asp:label id="Priority_ChiPO" runat="server" Text='<%# Eval("Priority") %>'></asp:label></em></span>
                                         Chi-PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber") %>'><asp:label id="PONumber" runat="server" Text='<%# Eval("PONumber") %>'></asp:label></asp:HyperLink>
                                     </th>
                                     <th class="subhead" colspan="4"></th>

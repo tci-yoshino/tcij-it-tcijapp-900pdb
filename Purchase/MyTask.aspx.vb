@@ -456,8 +456,6 @@ Partial Public Class MyTask
         Dim sb_SQL As New Text.StringBuilder
         sb_SQL.Append("SELECT ")
         sb_SQL.Append("  P.PONumber, ")
-        sb_SQL.Append("  CASE WHEN P.Priority IS NULL THEN 1 ELSE 0  END AS PrioritySort, ")
-        sb_SQL.Append("  ISNULL(P.Priority, '') AS Priority, ")
         sb_SQL.Append("  P.ProductNumber, ")
         sb_SQL.Append("  P.ProductName, ")
         sb_SQL.Append("  P.PODate, ")
@@ -477,8 +475,6 @@ Partial Public Class MyTask
         sb_SQL.Append("WHERE ")
         sb_SQL.Append("  P.ParPONumber = @PONumber ")
         sb_SQL.Append("ORDER BY ")
-        sb_SQL.Append("  PrioritySort, ")
-        sb_SQL.Append("  Priority, ")
         sb_SQL.Append("  P.StatusSortOrder ASC ")
         Return sb_SQL.ToString()
     End Function
