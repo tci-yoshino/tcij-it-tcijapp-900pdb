@@ -130,9 +130,10 @@
                         </tr>
                         <tr>
                             <th>Maker Name / Country</th>
-                            <td colspan="3" style="white-space: nowrap;">
-                                <asp:Label ID="MakerName" runat="server" Text='<%#Eval("MakerName")%>'></asp:Label><span class="indent">(<asp:Label ID="MakerCountry" runat="server" Text='<%#Eval("MakerCountryName")%>'></asp:Label>)</span>
+                            <td colspan="3">
+                                <!-- placedright（float: right;）は一番頭に入れる -->
                                 <span class="placedright"><asp:HyperLink ID="MakerInfoLink" runat="server" NavigateUrl='<%#Eval("MakerInfo")%>' Target="_blank"><asp:Label ID="MakerInfo" runat="server" Text='<%#If(IsDBNull(Eval("MakerInfo")), "", "Supplier Information")%>'></asp:Label></asp:HyperLink></span>
+                                <asp:Label ID="MakerName" runat="server" Text='<%#Eval("MakerName")%>'></asp:Label><span class="indent">(<asp:Label ID="MakerCountry" runat="server" Text='<%#Eval("MakerCountryName")%>'></asp:Label>)</span>
                             </td>
                             <th>Supplier Item Name</th>
                             <td><asp:Label ID="SupplierItemName" runat="server" Text='<%#Eval("SupplierItemName")%>'></asp:Label></td>
