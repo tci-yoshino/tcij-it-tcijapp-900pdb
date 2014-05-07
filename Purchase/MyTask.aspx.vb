@@ -476,14 +476,6 @@ Partial Public Class MyTask
         sb_SQL.Append("  v_PO AS P ")
         sb_SQL.Append("WHERE ")
         sb_SQL.Append("  P.ParPONumber = @PONumber ")
-        Select Case POPriority.SelectedValue
-            Case PRIORITY_A
-                sb_SQL.Append("  AND P.Priority = 'A' ")
-            Case PRIORITY_B
-                sb_SQL.Append("  AND P.Priority = 'B' ")
-            Case PRIORITY_AB
-                sb_SQL.Append("  AND P.Priority IN('A','B') ")
-        End Select
         sb_SQL.Append("ORDER BY ")
         sb_SQL.Append("  PrioritySort, ")
         sb_SQL.Append("  Priority, ")
