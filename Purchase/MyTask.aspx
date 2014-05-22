@@ -74,7 +74,7 @@ window.onload = function() {
                     <tr>
                         <th class="subhead" colspan="2">
                             <!-- １段下に改行されて表示される現象の対策のため「RFQ Reference Number」の前に記述する -->
-                            <span class="placedright"><em><asp:label id="Priority_Title_RFQ" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>'></asp:label><asp:label id="Priority_RFQ" runat="server" Text='<%# Eval("Priority") %>'></asp:label></em></span>
+                            <span class="placedright"><asp:label id="Priority_Title_RFQ" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>' CssClass='<%#IIF(Eval("Priority")="B", "priorityB", "priorityA") %>'></asp:label><asp:label id="Priority_RFQ" runat="server" Text='<%# Eval("Priority") %>' CssClass='<%#IIF(Eval("Priority")="B", "priorityB", "priorityA") %>'></asp:label></span>
                             RFQ Reference Number : <asp:HyperLink ID="RFQUpdate" runat="server" NavigateUrl='<%# "./RFQUpdate.aspx?RFQNumber=" & Eval("RFQNumber") %>'><asp:label id="RFQNumber" runat="server" Text='<%# Eval("RFQNumber") %>'></asp:label></asp:HyperLink>
                             <span class="indent"><em><asp:label id="RFQCorrespondence" runat="server" Text='<%# Eval("RFQCorrespondence") %>'></asp:label></em></span>
                         </th>
@@ -121,7 +121,7 @@ window.onload = function() {
                         <tr>
                             <th class="subhead" colspan="2">
                                 <!-- １段下に改行されて表示される現象の対策のため「PO Number」の前に記述する -->
-                                <span class="placedright"><em><asp:label id="Priority_Title_PO" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>'></asp:label><asp:label id="Priority_PO" runat="server" Text='<%# Eval("Priority") %>'></asp:label></em></span>
+                                <span class="placedright"><asp:label id="Priority_Title_PO" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>' CssClass='<%#IIF(Eval("Priority")="B", "priorityB", "priorityA") %>'></asp:label><asp:label id="Priority_PO" runat="server" Text='<%# Eval("Priority") %>' CssClass='<%#IIF(Eval("Priority")="B", "priorityB", "priorityA") %>'></asp:label></span>
                                 PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber") %>'><asp:label id="PONumber" runat="server" Text='<%# Eval("PONumber") %>'></asp:label></asp:HyperLink><span class="indent"><asp:label id="Overdue" runat="server" Text="Overdue"></asp:label></span><span class="indent"><em><asp:label id="POCorrespondence" runat="server" Text='<%# Eval("POCorrespondence") %>'></asp:label></em></span>
                             </th>
                             <th class="subhead" colspan="4"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%# Eval("StatusCode") %>'></asp:label></span></th>
@@ -163,7 +163,7 @@ window.onload = function() {
                         <tr>
                             <th class="subhead" colspan="2">
                                 <!-- １段下に改行されて表示される現象の対策のため「PO Number」の前に記述する -->
-                                <span class="placedright"><em><asp:label id="Priority_Title_PO" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>'></asp:label><asp:label id="Priority_PO" runat="server" Text='<%# Eval("Priority") %>'></asp:label></em></span>
+                                <span class="placedright"><asp:label id="Priority_Title_PO" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>' CssClass='<%#IIF(Eval("Priority")="B", "priorityB", "priorityA") %>'></asp:label><asp:label id="Priority_PO" runat="server" Text='<%# Eval("Priority") %>' CssClass='<%#IIF(Eval("Priority")="B", "priorityB", "priorityA") %>'></asp:label></span>
                                 PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber") %>'><asp:label id="PONumber" runat="server" Text='<%# Eval("PONumber") %>'></asp:label></asp:HyperLink><span class="indent"><asp:label id="PPI" runat="server" Text="Par-PO Issued"></asp:label></span><span class="indent"><em><asp:label id="POCorrespondence" runat="server" Text='<%# Eval("POCorrespondence") %>'></asp:label></em></span>
                             </th>
                             <th class="subhead" colspan="3"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%# Eval("StatusCode") %>'></asp:label></span></th>
@@ -208,7 +208,7 @@ window.onload = function() {
                         <tr>
                             <th class="subhead" colspan="2">
                                 <!-- １段下に改行されて表示される現象の対策のため「PO Number」の前に記述する -->
-                                <span class="placedright"><em><asp:label id="Priority_Title_PO" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>'></asp:label><asp:label id="Priority_PO" runat="server" Text='<%# Eval("Priority") %>'></asp:label></em></span>
+                                <span class="placedright"><asp:label id="Priority_Title_PO" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>' CssClass='<%#IIF(Eval("Priority")="B", "priorityB", "priorityA") %>'></asp:label><asp:label id="Priority_PO" runat="server" Text='<%# Eval("Priority") %>' CssClass='<%#IIF(Eval("Priority")="B", "priorityB", "priorityA") %>'></asp:label></span>
                                 PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber") %>'><asp:label id="PONumber" runat="server" Text='<%# Eval("PONumber") %>'></asp:label></asp:HyperLink><span class="indent"><em><asp:label id="POCorrespondence" runat="server" Text='<%# Eval("POCorrespondence") %>'></asp:label></em></span>
                             </th>
                             <th class="subhead" colspan="4"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%# Eval("StatusCode") %>'></asp:label></span></th>
