@@ -435,6 +435,16 @@ tr.attention td {
 	float: right;
 }
 
+.priorityA {
+    color: #d70035;
+    font-weight: bold;
+}
+
+.priorityB {
+    color: #0037ce;
+    font-weight: bold;
+}
+
 /* Footer Rules */
 #footer {
     margin-top: 5em;
