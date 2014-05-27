@@ -20,6 +20,7 @@
     <appSettings>
         <add key="Debug" value="false"/>
         <add key="TempDir" value="D:\temp\purchase\"/>
+        <add key="aspnet:MaxHttpCollectionKeys" value="2000" />
     </appSettings>
 
     <connectionStrings>
