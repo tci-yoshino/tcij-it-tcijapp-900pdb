@@ -63,48 +63,44 @@
                     <Columns>
                         <asp:TemplateField HeaderText="CAS Number">
                             <ItemTemplate>
-                                <asp:TextBox ID="CASNumber" runat="server" Text='<%# Eval("CAS Number") %>'></asp:TextBox>                                
+                                <asp:TextBox ID="CASNumber" runat="server" Text='<%# Eval("CASNumber") %>'></asp:TextBox>                                
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:BoundField HeaderText="Supplier Item Number" 
-                            DataField="Supplier Item Number" />
+                            DataField="SupplierItemNumber" />
                         <asp:TemplateField HeaderText="Supplier Item Name">
                             <ItemTemplate>
-                                <asp:Label ID="SupplierItemName" runat="server" Text='<%# Eval("Supplier Item Name") %>'></asp:Label>
+                                <asp:Label ID="SupplierItemName" runat="server" Text='<%# Eval("SupplierItemName") %>'></asp:Label>
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:BoundField HeaderText="Note" DataField="Note" />
 
                         <asp:TemplateField HeaderText="TCI Product Number">
                             <ItemTemplate>
-                                <%#Eval("TCI Product Number")%>
                             </ItemTemplate>
                         </asp:TemplateField>
 
                         <asp:TemplateField HeaderText="EHS Status">
                             <ItemTemplate>
-                                <%#Eval("EHS Status")%>
                             </ItemTemplate>
                         </asp:TemplateField>
 
                         <asp:TemplateField HeaderText="Proposal Dept">
                             <ItemTemplate>
-                                <%#Eval("Proposal Dept")%>
                             </ItemTemplate>
                         </asp:TemplateField>
-             
+
                         <asp:TemplateField HeaderText="Proc.Dept / Manu.Dept">
                             <ItemTemplate>
-                                <%#Eval("Proc_Dept")%>
                             </ItemTemplate>
                         </asp:TemplateField>
-                                                           
+
                         <asp:TemplateField HeaderText="AD">
                             <ItemTemplate>
                                 <%#Eval("AD")%>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        
+
                         <asp:TemplateField HeaderText="AF">
                             <ItemTemplate>
                                 <%#Eval("AF")%>
@@ -116,13 +112,12 @@
                                 <%#Eval("WA")%>
                             </ItemTemplate>
                         </asp:TemplateField>
+
                         <asp:TemplateField HeaderText="KA">
                             <ItemTemplate>
                                 <%#Eval("KA")%>
                             </ItemTemplate>
                         </asp:TemplateField>
-
-
                     </Columns>
                 </asp:GridView>
                 

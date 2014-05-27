@@ -26,6 +26,10 @@ Partial Public Class SuppliersProductImport
     Const COL_POS_ITEM_NUMBER As Integer = 1
     Const COL_POS_ITEM_NAME As Integer = 2
     Const COL_POS_NOTE As Integer = 3
+    Const COL_POS_TCI_PRODUCT_NUMBER As Integer = 4
+    Const COL_POS_EHS_STATUS As Integer = 5
+    Const COL_POS_PROPOSAL_DEPT As Integer = 6
+    Const COL_POS_PROCUMENT_DEPT As Integer = 7
 
     Public Shared tb_Excel As DataTable
 
@@ -37,6 +41,9 @@ Partial Public Class SuppliersProductImport
 
     'タイムアウト設定秒数です。
     Const TIME_OUT_SECOUND As Integer = 300
+
+    '一時テーブル名称
+    Private Const TEMP_PREVIEW As String = "#temp_SupplierProductData"
 
     ''' <summary>
     ''' 他社プロダクト構造体です。
@@ -61,7 +68,28 @@ Partial Public Class SuppliersProductImport
         End Sub
     End Structure
 
+    ''' <summary>
+    ''' 製品情報構造体です。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Structure ProductDataType
+        Dim ProductNumber As String
+        Dim Status As String
+        Dim ProposalDept As String
+        Dim ProcumentDept As String
 
+        ''' <summary>
+        ''' 製品情報構造体の初期化コンストラクタです。
+        ''' </summary>
+        ''' <param name="Value">初期化する値</param>
+        ''' <remarks></remarks>
+        Public Sub New(ByVal Value As String)
+            ProductNumber = Value
+            Status = Value
+            ProposalDept = Value
+            ProcumentDept = Value
+        End Sub
+    End Structure
 
     ''' <summary>
     ''' このページのロードイベントです。
@@ -145,14 +173,10 @@ Partial Public Class SuppliersProductImport
 
         'サーバ上のファイルを削除
         IO.File.Delete(st_ExcelFileName)
-        
+
         If SupplierProductList.Rows.Count > 0 Then
             ReCheck.Visible = True
             Import.Visible = True
-            If SetCASErrorColorToSupplierProductList() > 0 Then
-                Msg.Text = "CAS Number" + ERR_INCORRECT_FORMAT
-                Exit Sub
-            End If
         End If
 
     End Sub
@@ -163,34 +187,36 @@ Partial Public Class SuppliersProductImport
     ''' <param name="ExcelFileName">指定されたExcelファイルのサーバ内パス</param>
     ''' <remarks></remarks>
     Private Sub ViewSupplierProductList(ByVal ExcelFileName As String)
+        Dim Conn As New SqlConnection(DB_CONNECT_STRING)
 
-        'Excelからデータをテーブルに取り込み
-        tb_Excel = GetSuppliersProductTableFromExcel(ExcelFileName)
+        Conn.Open()
+        Try
+            '一時テーブル作成
+            CreateTempTable(Conn)
 
-        If tb_Excel Is Nothing Then
-            SupplierProductList.DataSource = Nothing
+            'Excelからデータを一時テーブルに取り込み
+            If GetSuppliersProductTableFromExcel(Conn, ExcelFileName) = False Then
+                SupplierProductList.DataSource = Nothing
+                SupplierProductList.DataBind()
+                Exit Try
+            End If
+
+            '他社扱い情報をテーブルに設定
+            tb_Excel = SetSupplierProductListDataToTable(Conn)
+
+            'チェック項目を画像ファイルに置き換え
+            SetCheckImageHtmlToTable(tb_Excel)
+
+            'テーブルデータを画面に表示
+            SupplierProductList.DataSource = tb_Excel
             SupplierProductList.DataBind()
-            Exit Sub
-        End If
 
-        '他社扱い情報をテーブルに設定
-        SetCompetitorInformationToTable(tb_Excel)
-
-        '製品情報データをテーブルに設定
-        SetProductInformationToTable(tb_Excel)
-
-        'チェック項目を画像ファイルに置き換え
-        SetCheckImageHtmlToTable(tb_Excel)
-
-        'テーブルデータを画面に表示
-        SupplierProductList.DataSource = tb_Excel
-        SupplierProductList.DataBind()
-
-        'CASNumberエラー行をカラー表示
-        SetCASErrorColorToSupplierProductList()
-
-        Session("EXCEL_DATA_TABLE") = tb_Excel
-        ''TODO ?? ProductNumber重複チェック
+            Session("EXCEL_DATA_TABLE") = tb_Excel
+        Finally
+            Conn.Close()
+            Conn.Dispose()
+            Conn = Nothing
+        End Try
     End Sub
 
     ''' <summary>
@@ -225,29 +251,6 @@ Partial Public Class SuppliersProductImport
     End Function
 
     ''' <summary>
-    ''' SupplierProductListのCASNumberエラー行をカラー表示し、エラー数を返します。
-    ''' </summary>
-    '''<returns>エラー行数</returns>
-    ''' <remarks></remarks>
-    Private Function SetCASErrorColorToSupplierProductList() As Integer
-
-        Dim i_ErrCount As Integer = 0
-        For Each row As GridViewRow In SupplierProductList.Rows
-            Dim CasTxt As TextBox = CType(row.FindControl("CASNumber"), TextBox)
-            Dim st_CAS = CType(row.FindControl("CASNumber"), TextBox).Text
-
-            If Not IsCASNumber(st_CAS) Then
-                row.CssClass = "attention"
-                i_ErrCount += 1
-            Else
-                row.CssClass = ""
-            End If
-        Next
-        Return i_ErrCount
-
-    End Function
-
-    ''' <summary>
     ''' テーブル内のチェック項目をHTMLのイメージタグへ置き換えます。
     ''' </summary>
     ''' <param name="Table">対象となるサプライヤプロダクトDataTable</param>
@@ -263,54 +266,85 @@ Partial Public Class SuppliersProductImport
 
     End Sub
 
+    Private Sub SupplierProductList_DataBound(ByVal sender As Object, ByVal e As System.EventArgs) Handles SupplierProductList.DataBound
+        Dim i_ErrCount As Integer = 0
+
+        For Each row As GridViewRow In SupplierProductList.Rows
+
+            '製品情報データを取得
+            Dim productData As ProductDataType = GetProductInformation(CType(row.FindControl("CASNumber"), TextBox).Text)
+            row.Cells(COL_POS_TCI_PRODUCT_NUMBER).Text = productData.ProductNumber
+            row.Cells(COL_POS_EHS_STATUS).Text = productData.Status
+            row.Cells(COL_POS_PROPOSAL_DEPT).Text = productData.ProposalDept
+            row.Cells(COL_POS_PROCUMENT_DEPT).Text = productData.ProcumentDept
+
+            'CASNumberエラー行をカラー表示
+            Dim CasTxt As TextBox = CType(row.FindControl("CASNumber"), TextBox)
+            Dim st_CAS = CType(row.FindControl("CASNumber"), TextBox).Text
+            If Not IsCASNumber(st_CAS) Then
+                row.CssClass = "attention"
+                i_ErrCount += 1
+            Else
+                row.CssClass = ""
+            End If
+        Next
+
+        If i_ErrCount > 0 Then
+            'CASNumberエラー
+            Msg.Text = "CAS Number" + ERR_INCORRECT_FORMAT
+        End If
+    End Sub
+
     ''' <summary>
-    ''' 製品基本情報をテーブルに設定します。
+    ''' 製品情報を構造体に取得します。
     ''' </summary>
-    ''' <param name="Table">対象となるサプライヤプロダクトDataTable</param>
+    ''' <param name="CASNumber"></param>
+    ''' <returns></returns>
     ''' <remarks></remarks>
-    Private Sub SetProductInformationToTable(ByRef Table As DataTable)
+    Private Function GetProductInformation(ByVal CASNumber As String) As ProductDataType
 
         Dim conn As SqlConnection = Nothing
+        Dim productData As New ProductDataType(String.Empty)
         Dim i_DataCount As Integer
         Dim st_Separator As String
 
         Try
             conn = New SqlConnection(DB_CONNECT_STRING)
             Dim cmd As SqlCommand = conn.CreateCommand()
-            cmd.CommandText = "SELECT ProductNumber,Status,ProposalDept,ProcumentDept FROM Product WHERE CASNumber = @CASNumber"
+
+            Dim sb_SQL As New System.Text.StringBuilder()
+            sb_SQL.AppendLine("SELECT ")
+            sb_SQL.AppendLine("     p.ProductNumber ")
+            sb_SQL.AppendLine("    ,ISNULL((SELECT e.ENai FROM dbo.s_EhsPhrase e WHERE e.PhID = p.[Status]), '-') AS [Status] ")
+            sb_SQL.AppendLine("    ,ISNULL((SELECT e.ENai FROM dbo.s_EhsPhrase e WHERE e.PhID = p.ProposalDept), '-') AS ProposalDept ")
+            sb_SQL.AppendLine("    ,ISNULL((SELECT e.ENai FROM dbo.s_EhsPhrase e WHERE e.PhID = p.ProcumentDept), '-') AS ProcumentDept ")
+            sb_SQL.AppendLine("FROM Product p ")
+            sb_SQL.AppendLine("WHERE p.CASNumber = @CASNumber ")
+
+            cmd.CommandText = sb_SQL.ToString
             conn.Open()
 
-            For Each row As DataRow In Table.Rows
-                cmd.Parameters.Clear()
-                cmd.Parameters.AddWithValue("CASNumber", row("CAS Number"))
+            cmd.Parameters.Clear()
+            cmd.Parameters.AddWithValue("CASNumber", CASNumber)
 
-                Dim dr As SqlDataReader = cmd.ExecuteReader()
+            Dim dr As SqlDataReader = cmd.ExecuteReader()
 
-                row("TCI Product Number") = String.Empty
-                row("EHS Status") = String.Empty
-                row("Proposal Dept") = String.Empty
-                row("Proc_Dept") = String.Empty
+            i_DataCount = 0
+            While dr.Read()
+                st_Separator = String.Empty
+                If i_DataCount > 0 Then
+                    st_Separator = "<br/>"
+                End If
 
-                i_DataCount = 0
-                While dr.Read()
-                    st_Separator = String.Empty
-                    If i_DataCount > 0 Then
-                        st_Separator = "<br/>"
-                    End If
-
-                    Dim st_ProductNumber = dr("ProductNumber").ToString()
-                    Dim st_Status = GetEhsPhraseNameByPhID(dr("Status").ToString())
-                    Dim st_ProposalDept = GetEhsPhraseNameByPhID(dr("ProposalDept").ToString())
-                    Dim st_ProcumentDept = GetEhsPhraseNameByPhID(dr("ProcumentDept").ToString())
-
-                    row("TCI Product Number") &= st_Separator & st_ProductNumber
-                    row("EHS Status") &= st_Separator & st_Status
-                    row("Proposal Dept") &= st_Separator & st_ProposalDept
-                    row("Proc_Dept") &= st_Separator & st_ProcumentDept
+                With productData
+                    .ProductNumber &= st_Separator & dr("ProductNumber").ToString()
+                    .Status &= st_Separator & dr("Status").ToString()
+                    .ProposalDept &= st_Separator & dr("ProposalDept").ToString()
+                    .ProcumentDept &= st_Separator & dr("ProcumentDept").ToString()
                     i_DataCount += 1
-                End While
-                dr.Close()
-            Next
+                End With
+            End While
+            dr.Close()
 
         Catch ex As Exception
             Throw
@@ -319,16 +353,19 @@ Partial Public Class SuppliersProductImport
                 conn.Close()
             End If
         End Try
-    End Sub
+
+        Return productData
+
+    End Function
 
     ''' <summary>
-    ''' Excelからサプライヤー製品データのDataTableを生成します。
+    ''' Excelからサプライヤー製品データを取得し一時テーブルに登録します。
     ''' </summary>
     ''' <param name="ExcelFileName">対象となるExcelテーブル</param>
-    ''' <returns>生成したDataTableオブジェクト</returns>
     ''' <remarks></remarks>
-    Public Function GetSuppliersProductTableFromExcel(ByVal ExcelFileName As String) As DataTable
+    Public Function GetSuppliersProductTableFromExcel(ByVal Conn As SqlConnection, ByVal ExcelFileName As String) As Boolean
 
+        Dim b_Return As Boolean = False
         Dim dsExcel As New DataSet
         Dim tbExcel As New DataTable
 
@@ -346,186 +383,115 @@ Partial Public Class SuppliersProductImport
             End Using
         Catch ex As Exception
             Msg.Text = MSG_NOT_SHEET1     'ExcelにSheet1がありません
-            Return Nothing
+            Return False
         End Try
 
         tbExcel = dsExcel.Tables("SuppliersProductExcel")
 
-        '実験実装　カラム名のコード内設定
+        'カラム名のコード内設定
         If tbExcel.Columns.Count < 4 Then
             Msg.Text = MSG_FEW_COLUMN     'Excelの列が足りません
-            Return Nothing
+            Return False
         End If
 
-        For i As Integer = 0 To tbExcel.Columns.Count - 1
-            tbExcel.Columns(i).ColumnName = "Colume" & i.ToString
-        Next
-
-        tbExcel.Columns(0).ColumnName = "CAS Number"
-        tbExcel.Columns(1).ColumnName = "Supplier Item Number"
-        tbExcel.Columns(2).ColumnName = "Supplier Item Name"
-        tbExcel.Columns(3).ColumnName = "Note"
-
-        'Excelにないデータフィールドをテーブルに追加
-        tbExcel.Columns.Add("TCI Product Number", TYPE_OF_STRING)
-        tbExcel.Columns.Add("EHS Status", TYPE_OF_STRING)
-        tbExcel.Columns.Add("Proposal Dept", TYPE_OF_STRING)
-        tbExcel.Columns.Add("Proc_Dept", TYPE_OF_STRING)
-        tbExcel.Columns.Add("AD", TYPE_OF_STRING)
-        tbExcel.Columns.Add("AF", TYPE_OF_STRING)
-        tbExcel.Columns.Add("WA", TYPE_OF_STRING)
-        tbExcel.Columns.Add("KA", TYPE_OF_STRING)
-
-        Dim st_CASNUmber As String
+        Dim st_CASNumber As String
         Dim st_SupplierItemNumber As String
         Dim st_SupplierItemName As String
         Dim st_Note As String
+        Dim i_RowCount As Integer = 0
 
-        '空行削除
-        Dim i_RowIndex As Integer = 0
-        While i_RowIndex <= tbExcel.Rows.Count - 1
-            st_CASNUmber = tbExcel.Rows(i_RowIndex).Item("CAS Number").ToString.Trim()
-            st_SupplierItemNumber = tbExcel.Rows(i_RowIndex).Item("Supplier Item Number").ToString.Trim()
-            st_SupplierItemName = tbExcel.Rows(i_RowIndex).Item("Supplier Item Name").ToString.Trim()
-            st_Note = tbExcel.Rows(i_RowIndex).Item("Note").ToString.Trim()
+        Try
+            Dim dr As DataTableReader = tbExcel.CreateDataReader()
+            While dr.Read()
+                st_CASNumber = dr(0).ToString.Trim()
+                st_SupplierItemNumber = dr(1).ToString.Trim()
+                st_SupplierItemName = dr(2).ToString.Trim()
+                st_Note = dr(3).ToString.Trim()
 
-            If st_CASNUmber = String.Empty And st_SupplierItemNumber = String.Empty And _
-             st_SupplierItemName = String.Empty And st_Note = String.Empty Then
-                tbExcel.Rows.RemoveAt(i_RowIndex)
-            Else
-                i_RowIndex += 1
-            End If
-        End While
+                If st_CASNumber <> String.Empty _
+                    OrElse st_SupplierItemNumber <> String.Empty _
+                    OrElse st_SupplierItemName <> String.Empty _
+                    OrElse st_Note <> String.Empty Then
 
-        'Excel行数チェック
-        If tbExcel.Rows.Count > 1000 Then
-            Msg.Text = MSG_OVER_LINES       'Excel_Dateを1000行以下にして下さい
-            Return Nothing
-        End If
+                    'データ長エラーチェック
+                    If st_SupplierItemNumber.Length > 128 Then
+                        Msg.Text = "Supplier Item Number" + Common.ERR_OVER_128   'Supplier Item Numberの文字数がオーバー
+                        Exit Try
+                    End If
 
-        'データ長エラーチェック
-        For j As Integer = 0 To tbExcel.Rows.Count - 1
+                    If st_SupplierItemName.Length > 1000 Then
+                        Msg.Text = ERR_OVER_1000    'Supplier Item Nameの文字数がオーバー
+                        Exit Try
+                    End If
 
-            tbExcel.Rows(j).Item("CAS Number") = tbExcel.Rows(j).Item("CAS Number").ToString().Trim()
+                    If st_Note.Length > INT_3000 Then
+                        Msg.Text = "Note" + ERR_OVER_3000
+                        Exit Try
+                    End If
 
-            st_SupplierItemNumber = tbExcel.Rows(j).Item("Supplier Item Number").ToString()
-            If st_SupplierItemNumber.Length > 128 Then
-                Msg.Text = "Supplier Item Number" + Common.ERR_OVER_128   'Supplier Item Numberの文字数がオーバー
-                Return Nothing
-            End If
+                    '一時テーブルにデータ登録
+                    InsertTempTable(Conn, i_RowCount + 1, _
+                                    st_CASNumber, st_SupplierItemNumber, st_SupplierItemName, st_Note)
 
-            st_SupplierItemName = tbExcel.Rows(j).Item("Supplier Item Name").ToString()
-            If st_SupplierItemName.Length > 1000 Then
-                Msg.Text = ERR_OVER_1000    'Supplier Item Nameの文字数がオーバー
-                Return Nothing
-            End If
+                    i_RowCount += 1
 
-            st_Note = tbExcel.Rows(j).Item("Note").ToString()
-            If st_Note.Length > INT_3000 Then
-                Msg.Text = "Note" + ERR_OVER_3000
-                Return Nothing
-            End If
-        Next j
+                    'Excel行数チェック
+                    If i_RowCount > 1000 Then
+                        Msg.Text = MSG_OVER_LINES       'Excel_Dateを1000行以下にして下さい
+                        Exit Try
+                    End If
+                End If
+            End While
 
-        Return tbExcel
+            b_Return = True
+
+        Catch ex As Exception
+            Throw
+        End Try
+
+        Return b_Return
 
     End Function
 
     ''' <summary>
-    ''' PhIDからEhsPhraseの英名を取得します。
+    ''' データテーブルへ仕入先製品データと他社扱い情報を設定します。
     ''' </summary>
-    ''' <param name="PhID">PhID</param>
-    ''' <returns>EhsPhraseの英名</returns>
+    ''' <param name="Conn"></param>
+    ''' <returns></returns>
     ''' <remarks></remarks>
-    Private Function GetEhsPhraseNameByPhID(ByVal PhID As String) As String
-        Dim st_EhsPhraseName As String = String.Empty
-        Dim conn As SqlConnection = Nothing
-        Try
-            conn = New SqlConnection(DB_CONNECT_STRING)
-            Dim cmd As SqlCommand = conn.CreateCommand()
+    Private Function SetSupplierProductListDataToTable(ByVal Conn As SqlConnection) As DataTable
 
-            cmd.CommandText = "SELECT ENai FROM dbo.s_EhsPhrase WHERE PhID = @PhID"
-            cmd.Parameters.AddWithValue("PhID", PhID)
+        Dim sb_SQL As New System.Text.StringBuilder()
 
-            conn.Open()
-            Dim dr As SqlDataReader = cmd.ExecuteReader()
-            If dr.Read = True Then
-                st_EhsPhraseName = dr("ENai").ToString()
-            Else
-                st_EhsPhraseName = "-"
-            End If
-            Return st_EhsPhraseName
-        Catch ex As Exception
-            Throw
-        Finally
-            If Not conn Is Nothing Then
-                conn.Close()
-            End If
-        End Try
-    End Function
+        sb_SQL.AppendLine("SELECT ")
+        sb_SQL.AppendLine("     T1.CASNumber")
+        sb_SQL.AppendLine("    ,T1.SupplierItemNumber")
+        sb_SQL.AppendLine("    ,T1.SupplierItemName")
+        sb_SQL.AppendLine("    ,T1.Note")
+        sb_SQL.AppendLine("    ,MAX(CASE WHEN T1.CASNumber IS NULL OR T2.ALDRICH IS NULL THEN '0' ELSE CONVERT(VARCHAR, T2.ALDRICH) END) AS AD")
+        sb_SQL.AppendLine("    ,MAX(CASE WHEN T1.CASNumber IS NULL OR T2.ALFA IS NULL THEN '0' ELSE CONVERT(VARCHAR, T2.ALFA) END) AS AF")
+        sb_SQL.AppendLine("    ,MAX(CASE WHEN T1.CASNumber IS NULL OR T2.WAKO IS NULL THEN '0' ELSE CONVERT(VARCHAR, T2.WAKO) END) AS WA")
+        sb_SQL.AppendLine("    ,MAX(CASE WHEN T1.CASNumber IS NULL OR T2.KANTO IS NULL THEN '0' ELSE CONVERT(VARCHAR, T2.KANTO) END) AS KA")
+        sb_SQL.AppendLine("    ,T1.RowNo")
+        sb_SQL.AppendLine("FROM " & TEMP_PREVIEW & " T1 ")
+        sb_SQL.AppendLine("LEFT OUTER JOIN v_CompetitorProduct T2 ")
+        sb_SQL.AppendLine("    ON T1.CASNumber = T2.CASNumber")
+        sb_SQL.AppendLine("GROUP BY")
+        sb_SQL.AppendLine("     T1.RowNo")
+        sb_SQL.AppendLine("    ,T1.CASNumber")
+        sb_SQL.AppendLine("    ,T1.SupplierItemNumber")
+        sb_SQL.AppendLine("    ,T1.SupplierItemName")
+        sb_SQL.AppendLine("    ,T1.Note")
+        sb_SQL.AppendLine("ORDER BY")
+        sb_SQL.AppendLine("     T1.RowNo")
 
-    ''' <summary>
-    ''' データテーブルへ他社扱い情報を設定します。
-    ''' </summary>
-    ''' <param name="Table">対象となるサプライヤプロダクトDataTable</param>
-    ''' <remarks></remarks>
-    Private Sub SetCompetitorInformationToTable(ByRef Table As DataTable)
+        Dim ds As New DataSet
+        Using da As New SqlDataAdapter(sb_SQL.ToString(), Conn)
+            da.Fill(ds)
+        End Using
 
-        Dim st_CASNumber As String = String.Empty
-        Dim competitorProduct As CompetitorProductType
-        Dim COMPETITOR_PRODUCT_VALUE_0 As String = "0"
+        Return ds.Tables(0)
 
-        For Each row As DataRow In Table.Rows
-            st_CASNumber = row("CAS Number")
-            If st_CASNumber.Trim = "" Then
-                row("AD") = COMPETITOR_PRODUCT_VALUE_0
-                row("AF") = COMPETITOR_PRODUCT_VALUE_0
-                row("WA") = COMPETITOR_PRODUCT_VALUE_0
-                row("KA") = COMPETITOR_PRODUCT_VALUE_0
-            Else
-                competitorProduct = GetCompetitorProductByCASNumber(st_CASNumber)
-                row("AD") = competitorProduct.ALDRICH
-                row("AF") = competitorProduct.ALFA
-                row("WA") = competitorProduct.WAKO
-                row("KA") = competitorProduct.KANTO
-            End If
-        Next
-
-    End Sub
-
-    ''' <summary>
-    ''' CasNumberから他社扱いの有無を取得します。
-    ''' </summary>
-    ''' <param name="CASNumber">対象となる製品のCasNumber</param>
-    ''' <returns>取得した他社プロダクト構造体</returns>
-    ''' <remarks></remarks>
-    Private Function GetCompetitorProductByCASNumber(ByVal CASNumber As String) As CompetitorProductType
-        Dim competitorProduct As New CompetitorProductType(String.Empty)
-        Dim conn As SqlConnection = Nothing
-        Try
-            conn = New SqlConnection(DB_CONNECT_STRING)
-            Dim cmd As SqlCommand = conn.CreateCommand()
-
-            cmd.CommandText = "SELECT ALDRICH, ALFA, WAKO, KANTO FROM v_CompetitorProduct WHERE CASNumber = @CASNumber"
-            cmd.Parameters.AddWithValue("CASNumber", CASNumber)
-
-            conn.Open()
-            Dim dr As SqlDataReader = cmd.ExecuteReader()
-            If dr.Read() Then
-                competitorProduct.ALDRICH = dr("ALDRICH").ToString()
-                competitorProduct.ALFA = dr("ALFA").ToString()
-                competitorProduct.WAKO = dr("WAKO").ToString()
-                competitorProduct.KANTO = dr("KANTO").ToString()
-            End If
-
-            Return competitorProduct
-        Catch ex As Exception
-            Throw
-        Finally
-            If Not conn Is Nothing Then
-                conn.Close()
-            End If
-        End Try
     End Function
 
     ''' <summary>
@@ -925,6 +891,88 @@ Partial Public Class SuppliersProductImport
         Return sb_SQL.ToString()
     End Function
 
+    ''' <summary>
+    ''' 一時テーブルを作成します。
+    ''' </summary>
+    ''' <param name="Conn"></param>
+    ''' <remarks></remarks>
+    Private Sub CreateTempTable(ByVal Conn As SqlConnection)
+
+        Dim sb_SQL As New System.Text.StringBuilder()
+
+        sb_SQL.AppendLine("IF EXISTS (SELECT * FROM tempdb..sysobjects WHERE id=OBJECT_ID(N'tempdb.." & TEMP_PREVIEW & "') AND type=N'U')")
+        sb_SQL.AppendLine("    DROP TABLE " & TEMP_PREVIEW)
+        sb_SQL.AppendLine("CREATE TABLE " & TEMP_PREVIEW & " (")
+        sb_SQL.AppendLine("     RowNo              INT             NULL")
+        sb_SQL.AppendLine("    ,CASNumber          VARCHAR(255)    NULL")
+        sb_SQL.AppendLine("    ,SupplierItemNumber NVARCHAR(128)   NULL")
+        sb_SQL.AppendLine("    ,SupplierItemName   NVARCHAR(1000)  NULL")
+        sb_SQL.AppendLine("    ,Note               NVARCHAR(3000)  NULL")
+        sb_SQL.AppendLine(")")
+
+        Using cmd As SqlCommand = Conn.CreateCommand()
+            cmd.CommandText = sb_SQL.ToString()
+            cmd.ExecuteNonQuery()
+        End Using
+
+    End Sub
+
+    ''' <summary>
+    ''' 一時テーブル挿入SQL文字列を生成します。
+    ''' </summary>
+    ''' <returns>生成した文字列</returns>
+    ''' <remarks></remarks>
+    Private Function CreateSQLForInsertTempTable() As String
+        Dim sb_SQL As StringBuilder = New StringBuilder()
+
+        sb_SQL.AppendLine("INSERT INTO " & TEMP_PREVIEW)
+        sb_SQL.AppendLine("(")
+        sb_SQL.AppendLine(" RowNo,")
+        sb_SQL.AppendLine(" CASNumber,")
+        sb_SQL.AppendLine(" SupplierItemNumber,")
+        sb_SQL.AppendLine(" SupplierItemName,")
+        sb_SQL.AppendLine(" Note")
+        sb_SQL.AppendLine(")")
+        sb_SQL.AppendLine("VALUES")
+        sb_SQL.AppendLine("(")
+        sb_SQL.AppendLine(" @RowNo,")
+        sb_SQL.AppendLine(" @CASNumber,")
+        sb_SQL.AppendLine(" @SupplierItemNumber,")
+        sb_SQL.AppendLine(" @SupplierItemName,")
+        sb_SQL.AppendLine(" @Note")
+        sb_SQL.AppendLine(")")
+
+        Return sb_SQL.ToString()
+    End Function
+
+    ''' <summary>
+    ''' 一時テーブルへデータを挿入します。
+    ''' </summary>
+    ''' <param name="Conn">SqlConnnectionオブジェクト</param>
+    ''' <param name="RowNo"></param>
+    ''' <param name="CASNumber"></param>
+    ''' <param name="SupplierItemNumber"></param>
+    ''' <param name="SupplierItemName"></param>
+    ''' <param name="Note"></param>
+    ''' <remarks></remarks>
+    Private Sub InsertTempTable(ByVal Conn As SqlConnection, ByVal RowNo As Integer, ByVal CASNumber As String, _
+                                ByVal SupplierItemNumber As String, ByVal SupplierItemName As String, ByVal Note As String)
+        Dim cmd As SqlCommand = Conn.CreateCommand()
+
+        cmd.CommandText = CreateSQLForInsertTempTable()
+        cmd.Parameters.AddWithValue("RowNo", RowNo)
+        cmd.Parameters.AddWithValue("CASNumber", ConvertEmptyStringToNull(CASNumber))
+        cmd.Parameters.AddWithValue("SupplierItemNumber", ConvertEmptyStringToNull(SupplierItemNumber))
+        cmd.Parameters.AddWithValue("SupplierItemName", ConvertEmptyStringToNull(SupplierItemName))
+        cmd.Parameters.AddWithValue("Note", ConvertEmptyStringToNull(Note))
+
+        If Conn.State <> ConnectionState.Open Then
+            Conn.Open()
+        End If
+        cmd.ExecuteNonQuery()
+
+    End Sub
+
     Protected Sub ReCheck_Click(ByVal sender As Object, ByVal e As EventArgs) Handles ReCheck.Click
         Msg.Text = String.Empty
 
@@ -936,26 +984,80 @@ Partial Public Class SuppliersProductImport
         tb_Excel = CType(Session("EXCEL_DATA_TABLE"), DataTable)
 
         For j As Integer = 0 To tb_Excel.Rows.Count - 1
-            tb_Excel.Rows(j).Item("CAS Number") = CType(SupplierProductList.Rows(j).FindControl("CASNumber"), TextBox).Text
+            tb_Excel.Rows(j).Item("CASNumber") = CType(SupplierProductList.Rows(j).FindControl("CASNumber"), TextBox).Text
         Next
 
-        '他社扱い情報をテーブルに設定
-        SetCompetitorInformationToTable(tb_Excel)
+        Dim Conn As New SqlConnection(DB_CONNECT_STRING)
+        Conn.Open()
+        Try
+            '一時テーブル作成
+            CreateTempTable(Conn)
 
-        '製品情報データをテーブルに設定
-        SetProductInformationToTable(tb_Excel)
+            'データテーブルから一時テーブルに取り込み
+            If GetSuppliersProductTableFromTable(Conn, tb_Excel) = False Then
+                SupplierProductList.DataSource = Nothing
+                SupplierProductList.DataBind()
+                Exit Try
+            End If
 
-        'チェック項目を画像ファイルに置き換え
-        SetCheckImageHtmlToTable(tb_Excel)
+            '他社扱い情報をテーブルに設定
+            tb_Excel = SetSupplierProductListDataToTable(Conn)
 
-        'テーブルデータを画面に表示
-        SupplierProductList.DataSource = tb_Excel
-        SupplierProductList.DataBind()
+            'チェック項目を画像ファイルに置き換え
+            SetCheckImageHtmlToTable(tb_Excel)
 
-        'CASNumberエラー行をカラー表示
-        If SetCASErrorColorToSupplierProductList() > 0 Then
-            Msg.Text = "CAS Number" + ERR_INCORRECT_FORMAT
-        End If
+            'テーブルデータを画面に表示
+            SupplierProductList.DataSource = tb_Excel
+            SupplierProductList.DataBind()
+
+            Session("EXCEL_DATA_TABLE") = tb_Excel
+
+        Finally
+            Conn.Close()
+            Conn.Dispose()
+            Conn = Nothing
+        End Try
+
     End Sub
+
+    ''' <summary>
+    ''' DataTableのサプライヤー製品データを一時テーブルに登録します。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Function GetSuppliersProductTableFromTable(ByVal Conn As SqlConnection, ByVal Table As DataTable) As Boolean
+
+        Dim b_Return As Boolean = False
+
+        Dim st_CASNumber As String
+        Dim st_SupplierItemNumber As String
+        Dim st_SupplierItemName As String
+        Dim st_Note As String
+        Dim i_RowCount As Integer = 0
+
+        Try
+            Dim dr As DataTableReader = Table.CreateDataReader()
+            While dr.Read()
+                st_CASNumber = dr(0).ToString.Trim()
+                st_SupplierItemNumber = dr(1).ToString.Trim()
+                st_SupplierItemName = dr(2).ToString.Trim()
+                st_Note = dr(3).ToString.Trim()
+
+                '一時テーブルにデータ登録
+                InsertTempTable(Conn, i_RowCount + 1, _
+                                st_CASNumber, st_SupplierItemNumber, st_SupplierItemName, st_Note)
+
+                i_RowCount += 1
+
+            End While
+
+            b_Return = True
+
+        Catch ex As Exception
+            Throw
+        End Try
+
+        Return b_Return
+
+    End Function
 
 End Class
