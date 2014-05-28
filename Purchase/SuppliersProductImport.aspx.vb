@@ -420,7 +420,7 @@ Partial Public Class SuppliersProductImport
                     End If
 
                     If st_SupplierItemName.Length > 1000 Then
-                        Msg.Text = ERR_OVER_1000    'Supplier Item Nameの文字数がオーバー
+                        Msg.Text = "Supplier Item Name" + ERR_OVER_1000    'Supplier Item Nameの文字数がオーバー
                         Exit Try
                     End If
 
