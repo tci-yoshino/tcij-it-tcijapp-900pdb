@@ -8,6 +8,26 @@
     <link rel="stylesheet" href="./CSS/Style.css" type="text/css" media="screen,print" />
     <script type="text/javascript" src="./JS/Common.js"></script>
     <script type="text/javascript" src="./JS/Colorful.js"></script>
+    <script type="text/javascript">
+        //-----------------------------
+        // マウスカーソルのStyleを変更
+        //-----------------------------
+        function ChangeCursorStyle() {
+            var curStyle = 'wait';
+            var obj;
+            document.getElementById("ExcelImportForm").style.cursor = curStyle;
+            document.getElementById("File").style.cursor = curStyle;
+            document.getElementById("Preview").style.cursor = curStyle;
+            obj = document.getElementById("ReCheck")
+            if (obj) {
+                document.getElementById("ReCheck").style.cursor = curStyle;
+            }
+            obj = document.getElementById("Import")
+            if (obj) {
+                document.getElementById("Import").style.cursor = curStyle;
+            }
+        }
+    </script>
 </head>
 <body>
 
@@ -34,7 +54,8 @@
                         <th>File : </th>
                         <td><asp:FileUpload ID="File" runat="server" /> 
                             <asp:Button ID="Preview" runat="server" Text="Preview" 
-                                UseSubmitBehavior="false" /></td>
+                                UseSubmitBehavior="false" OnClientClick="ChangeCursorStyle()" />
+                        </td>
                     </tr>
                 </table>
 
@@ -122,10 +143,10 @@
                 </asp:GridView>
                 
                 <div class="btns">
-                    <asp:Button ID="ReCheck" runat="server" Text="ReCheck" UseSubmitBehavior="false" />
+                    <asp:Button ID="ReCheck" runat="server" Text="ReCheck" UseSubmitBehavior="false" OnClientClick="ChangeCursorStyle()" />
                     <span class="indent"></span>
                     <asp:Button ID="Import" runat="server" Text="Import" 
-                        UseSubmitBehavior="false" />
+                        UseSubmitBehavior="false" OnClientClick="ChangeCursorStyle()" />
                 </div>
             </div>
     </div><!-- Main Content Area END -->
@@ -136,7 +157,6 @@ WHERE                   (ProductID &lt; 100)"></asp:SqlDataSource>
     
                 <asp:HiddenField ID="ImportFileName" runat="server" />
                 <input type="hidden" id ="Action" runat="server" value="" />
-    
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
         </form>
