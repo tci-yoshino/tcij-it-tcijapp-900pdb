@@ -12,8 +12,7 @@
         //-----------------------------
         // マウスカーソルのStyleを変更
         //-----------------------------
-        function ChangeCursorStyle() {
-            var curStyle = 'wait';
+        function ChangeCursorStyle(curStyle) {
             var obj;
             document.getElementById("ExcelImportForm").style.cursor = curStyle;
             document.getElementById("File").style.cursor = curStyle;
@@ -29,7 +28,7 @@
         }
     </script>
 </head>
-<body>
+<body onload="ChangeCursorStyle('default')">
 
         <form id="ExcelImportForm" runat="server">
     <!-- Main Content Area -->
@@ -54,7 +53,7 @@
                         <th>File : </th>
                         <td><asp:FileUpload ID="File" runat="server" /> 
                             <asp:Button ID="Preview" runat="server" Text="Preview" 
-                                UseSubmitBehavior="false" OnClientClick="ChangeCursorStyle()" />
+                                UseSubmitBehavior="false" OnClientClick="ChangeCursorStyle('wait')" />
                         </td>
                     </tr>
                 </table>
@@ -143,10 +142,10 @@
                 </asp:GridView>
                 
                 <div class="btns">
-                    <asp:Button ID="ReCheck" runat="server" Text="ReCheck" UseSubmitBehavior="false" OnClientClick="ChangeCursorStyle()" />
+                    <asp:Button ID="ReCheck" runat="server" Text="ReCheck" UseSubmitBehavior="false" OnClientClick="ChangeCursorStyle('wait')" />
                     <span class="indent"></span>
                     <asp:Button ID="Import" runat="server" Text="Import" 
-                        UseSubmitBehavior="false" OnClientClick="ChangeCursorStyle()" />
+                        UseSubmitBehavior="false" OnClientClick="ChangeCursorStyle('wait')" />
                 </div>
             </div>
     </div><!-- Main Content Area END -->
