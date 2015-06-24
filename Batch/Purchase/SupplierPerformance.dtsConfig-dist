@@ -11,6 +11,11 @@
 		<ConfiguredValue>600</ConfiguredValue>
 	</Configuration>
 
+	<!-- テンプレートファイルパス（ファイル名まで指定） -->
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::TemplateFilePath].Properties[Value]" ValueType="String">
+		<ConfiguredValue>C:\tcijapp\Purchase\Batch\template\RFQ Analysis all data.xlsx</ConfiguredValue>
+	</Configuration>
+
 	<!-- 出力ファイルパス（ファイル名まで指定） -->
 	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputFilePath].Properties[Value]" ValueType="String">
 		<ConfiguredValue>\\TFL3\GlobalProject\Supplier_Evaluation\Data\RFQ Analysis all data.xlsx</ConfiguredValue>
