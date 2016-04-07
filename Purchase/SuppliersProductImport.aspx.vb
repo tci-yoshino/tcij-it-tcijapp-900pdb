@@ -31,6 +31,26 @@ Partial Public Class SuppliersProductImport
     Const COL_POS_PROPOSAL_DEPT As Integer = 6
     Const COL_POS_PROCUMENT_DEPT As Integer = 7
 
+    ''' <summary> Export時のファイル名 </summary>
+    Const EXCEL_FILE_NAME As String = "SuppliersProduct_"
+    
+    ''' <summary> シート名 </summary>
+    Protected Const EXCEL_SHEET_NAME As String = "Download"
+    ''' <summary> Excel 項目名 </summary>
+    Protected Const COL_CASNUMBER As String = "CASNumber"
+    Protected Const COL_ITEM_NUMBER As String = "Supplier Item Number"
+    Protected Const COL_ITEM_NAME As String = "Supplier Item Name"
+    Protected Const COL_NOTE As String = "Note"
+    Protected Const COL_TCI_PRODUCT_NUMBER As String = "TCI Product Number"
+    Protected Const COL_EHS_STATUS As String = "EHS Status"
+    Protected Const COL_PROPOSAL_DEPT As String = "Proposal Dept"
+    Protected Const COL_PROC_MANU As String = "Proc.Dept/Manu.Dept"
+    Protected Const COL_AD As String = "AD"
+    Protected Const COL_AF As String = "AF"
+    Protected Const COL_WA As String = "WA"
+    Protected Const COL_KA As String = "KA"
+
+
     Public Shared tb_Excel As DataTable
 
     'Stringの型タイプ定数です。
@@ -115,10 +135,12 @@ Partial Public Class SuppliersProductImport
             End If
             ReCheck.Visible = False
             Import.Visible = False
+            Export.Visible = False
         End If
         Preview.PostBackUrl = "SuppliersProductImport.aspx?Action=Preview&Supplier=" & SupplierCode.Text
         ReCheck.PostBackUrl = "SuppliersProductImport.aspx?Action=ReCheck&Supplier=" & SupplierCode.Text
         Import.PostBackUrl = "SuppliersProductImport.aspx?Action=Import&Supplier=" & SupplierCode.Text
+        Export.PostBackUrl = "SuppliersProductImport.aspx?Action=Export&Supplier=" & SupplierCode.Text
     End Sub
 
     ''' <summary>
@@ -132,6 +154,7 @@ Partial Public Class SuppliersProductImport
         Msg.Text = String.Empty
         ReCheck.Visible = False
         Import.Visible = False
+        Export.Visible = False
         SupplierProductList.DataSource = Nothing
         SupplierProductList.DataBind()
 
@@ -177,6 +200,7 @@ Partial Public Class SuppliersProductImport
         If SupplierProductList.Rows.Count > 0 Then
             ReCheck.Visible = True
             Import.Visible = True
+            Export.Visible = True
         End If
 
     End Sub
@@ -983,40 +1007,17 @@ Partial Public Class SuppliersProductImport
 
         tb_Excel = CType(Session("EXCEL_DATA_TABLE"), DataTable)
 
-        For j As Integer = 0 To tb_Excel.Rows.Count - 1
-            tb_Excel.Rows(j).Item("CASNumber") = CType(SupplierProductList.Rows(j).FindControl("CASNumber"), TextBox).Text
-        Next
+        '一覧データ取得
+        tb_Excel = GetSupplierProductListData()
 
-        Dim Conn As New SqlConnection(DB_CONNECT_STRING)
-        Conn.Open()
-        Try
-            '一時テーブル作成
-            CreateTempTable(Conn)
+        'チェック項目を画像ファイルに置き換え
+        SetCheckImageHtmlToTable(tb_Excel)
 
-            'データテーブルから一時テーブルに取り込み
-            If GetSuppliersProductTableFromTable(Conn, tb_Excel) = False Then
-                SupplierProductList.DataSource = Nothing
-                SupplierProductList.DataBind()
-                Exit Try
-            End If
+        'テーブルデータを画面に表示
+        SupplierProductList.DataSource = tb_Excel
+        SupplierProductList.DataBind()
 
-            '他社扱い情報をテーブルに設定
-            tb_Excel = SetSupplierProductListDataToTable(Conn)
-
-            'チェック項目を画像ファイルに置き換え
-            SetCheckImageHtmlToTable(tb_Excel)
-
-            'テーブルデータを画面に表示
-            SupplierProductList.DataSource = tb_Excel
-            SupplierProductList.DataBind()
-
-            Session("EXCEL_DATA_TABLE") = tb_Excel
-
-        Finally
-            Conn.Close()
-            Conn.Dispose()
-            Conn = Nothing
-        End Try
+        Session("EXCEL_DATA_TABLE") = tb_Excel
 
     End Sub
 
@@ -1059,5 +1060,207 @@ Partial Public Class SuppliersProductImport
         Return b_Return
 
     End Function
+
+
+    ''' <summary>
+    ''' エクスポートボタンのクリックイベントです。
+    ''' </summary>
+    ''' <param name="sender">ASP.NETの規定値</param>
+    ''' <param name="e">ASP.NETの規定値</param>
+    ''' <remarks></remarks>
+    Protected Sub Export_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Export.Click
+
+        If Request.QueryString("Action") <> "Export" Then
+            Msg.Text = ERR_INVALID_PARAMETER
+            Exit Sub
+        End If
+
+        tb_Excel = CType(Session("EXCEL_DATA_TABLE"), DataTable)
+
+        '----------------------------------------
+        ' ダウンロード用 Excel ファイル作成
+        '----------------------------------------
+        Dim st_TempPath As String = CreateExcelFile()
+
+        'ダウンロード用 Excel ファイル名作成
+        Dim st_FileName As String = EXCEL_FILE_NAME & SupplierCode.Text & ".xlsx"
+        If Request.Browser.Browser.ToUpper().IndexOf("IE") >= 0 Then
+            'IE の場合のみ、全角の文字化け防止にエンコードする
+            st_FileName = HttpUtility.UrlEncode(st_FileName)
+        End If
+
+        '----------------------------------------
+        ' Excel ファイルをクライアントに返す
+        '----------------------------------------
+        Response.ContentEncoding = System.Text.Encoding.Unicode
+        ' Excel 2007 からファイルフォーマットが「Office Open XML」形式に変更
+        Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        Response.AppendHeader("Content-Disposition", "attachment; filename=" & st_FileName)
+        Response.WriteFile(st_TempPath)
+        Response.Flush()
+
+        'テンポラリファイル削除
+        IO.File.Delete(st_TempPath)
+
+        Response.End()
+        Session("EXCEL_DATA_TABLE") = tb_Excel
+
+    End Sub
+
+
+    ''' <summary>
+    ''' ダウンロード用 Excel ファイル作成
+    ''' </summary>
+    ''' <returns>ダウンロード用テンポラリファイル名パス</returns>
+    ''' <remarks></remarks>
+    Private Function CreateExcelFile() As String
+
+        'テンポラリ Excel ファイルの物理ファイル名パスを作成
+        Dim st_TempFileName As String = String.Format("Temp_{0}.xlsx", System.Guid.NewGuid().ToString("N"))
+        Dim st_TempPath As String = System.IO.Path.Combine(ConfigurationManager.AppSettings("TempDir"), st_TempFileName)
+
+        'Excel ブック作成用 SQL 作成
+        Dim i_ColCnt As Integer = 0
+        Dim sb_Book As New StringBuilder
+        sb_Book.AppendLine("CREATE TABLE [{0}] (")
+        sb_Book.AppendLine(String.Format(" [{0}] char(255),", COL_CASNUMBER)) : i_ColCnt += 1
+        sb_Book.AppendLine(String.Format(" [{0}] char(128),", COL_ITEM_NUMBER)) : i_ColCnt += 1
+        sb_Book.AppendLine(String.Format(" [{0}] char(255),", COL_ITEM_NAME)) : i_ColCnt += 1
+        sb_Book.AppendLine(String.Format(" [{0}] char(255),", COL_NOTE)) : i_ColCnt += 1
+        sb_Book.AppendLine(String.Format(" [{0}] char(32),", COL_TCI_PRODUCT_NUMBER)) : i_ColCnt += 1
+        sb_Book.AppendLine(String.Format(" [{0}] char(255),", COL_EHS_STATUS)) : i_ColCnt += 1
+        sb_Book.AppendLine(String.Format(" [{0}] char(255),", COL_PROPOSAL_DEPT)) : i_ColCnt += 1
+        sb_Book.AppendLine(String.Format(" [{0}] char(255),", COL_PROC_MANU)) : i_ColCnt += 1
+        sb_Book.AppendLine(String.Format(" [{0}] char(1),", COL_AD)) : i_ColCnt += 1
+        sb_Book.AppendLine(String.Format(" [{0}] char(1),", COL_AF)) : i_ColCnt += 1
+        sb_Book.AppendLine(String.Format(" [{0}] char(1),", COL_WA)) : i_ColCnt += 1
+        sb_Book.AppendLine(String.Format(" [{0}] char(1)", COL_KA)) : i_ColCnt += 1
+        sb_Book.AppendLine(")")
+
+        '出力用 SQL 作成
+        Dim sb_Excel As New StringBuilder
+        sb_Excel.AppendLine("INSERT INTO [{0}] VALUES (")
+        For i As Integer = 1 To i_ColCnt
+            sb_Excel.Append(IIf(i = 1, "?", ",?"))
+        Next
+        sb_Excel.AppendLine(")")
+
+        '----------------------------------------
+        ' データ取得
+        '----------------------------------------
+        GetSupplierProductListData()
+
+        '----------------------------------------
+        ' Excel OLEDB接続
+        '----------------------------------------
+        Using connExcel As New OleDb.OleDbConnection(CreateExcelConnectionString(st_TempPath, False))
+            connExcel.Open()
+
+            'Excel ブック作成
+            Dim st_SheetNames As String
+            st_SheetNames = EXCEL_SHEET_NAME
+            Using commExcel As New OleDb.OleDbCommand("", connExcel)
+                commExcel.CommandText = String.Format(sb_Book.ToString(), st_SheetNames)
+                commExcel.ExecuteNonQuery()
+            End Using
+
+            Dim i_Sheet As Integer = 0
+            Dim i_Row As Integer = 0
+
+            Using commExcel As New OleDb.OleDbCommand("", connExcel)
+                'パラメータ作成
+                Dim i_Col As Integer = 0
+                For i_Col = 1 To i_ColCnt
+                    commExcel.Parameters.AddWithValue(String.Format("F{0}", i_Col), "")
+                Next
+
+                For Each row As DataRow In tb_Excel.Rows
+                    i_Row += 1
+                    If i_Row = 1 Then
+                        commExcel.CommandText = String.Format(sb_Excel.ToString(), st_SheetNames)
+                    End If
+
+                    'パラメータに値セット
+                    i_Col = 1 : commExcel.Parameters(String.Format("F{0}", i_Col)).Value = row("CASNumber")
+                    i_Col += 1 : commExcel.Parameters(String.Format("F{0}", i_Col)).Value = row("SupplierItemNumber")
+                    i_Col += 1 : commExcel.Parameters(String.Format("F{0}", i_Col)).Value = row("SupplierItemName")
+                    i_Col += 1 : commExcel.Parameters(String.Format("F{0}", i_Col)).Value = row("Note")
+                    Dim productData As ProductDataType = GetProductInformation(row("CASNumber"))
+                    i_Col += 1 : commExcel.Parameters(String.Format("F{0}", i_Col)).Value = productData.ProductNumber
+                    i_Col += 1 : commExcel.Parameters(String.Format("F{0}", i_Col)).Value = productData.Status
+                    i_Col += 1 : commExcel.Parameters(String.Format("F{0}", i_Col)).Value = productData.ProposalDept
+                    i_Col += 1 : commExcel.Parameters(String.Format("F{0}", i_Col)).Value = productData.ProcumentDept
+                    i_Col += 1 : commExcel.Parameters(String.Format("F{0}", i_Col)).Value = IIf(row(4) = "0", "", row(4))
+                    i_Col += 1 : commExcel.Parameters(String.Format("F{0}", i_Col)).Value = IIf(row(5) = "0", "", row(5))
+                    i_Col += 1 : commExcel.Parameters(String.Format("F{0}", i_Col)).Value = IIf(row(6) = "0", "", row(6))
+                    i_Col += 1 : commExcel.Parameters(String.Format("F{0}", i_Col)).Value = IIf(row(7) = "0", "", row(7))
+                    commExcel.ExecuteNonQuery()
+                Next
+
+            End Using
+        End Using
+
+        Return st_TempPath
+    End Function
+
+    ''' <summary>
+    ''' 一覧データ取得処理です。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Function GetSupplierProductListData() As DataTable
+
+        '画面のCASNumber取得
+        For j As Integer = 0 To tb_Excel.Rows.Count - 1
+            tb_Excel.Rows(j).Item("CASNumber") = CType(SupplierProductList.Rows(j).FindControl("CASNumber"), TextBox).Text
+        Next
+
+        Dim Conn As New SqlConnection(DB_CONNECT_STRING)
+        Conn.Open()
+        Try
+            '一時テーブル作成
+            CreateTempTable(Conn)
+
+            'データテーブルから一時テーブルに取り込み
+            If GetSuppliersProductTableFromTable(Conn, tb_Excel) = False Then
+                SupplierProductList.DataSource = Nothing
+                SupplierProductList.DataBind()
+                Exit Try
+            End If
+
+            '他社扱い情報をテーブルに設定
+            tb_Excel = SetSupplierProductListDataToTable(Conn)
+
+        Finally
+            Conn.Close()
+            Conn.Dispose()
+            Conn = Nothing
+        End Try
+
+        Return tb_Excel
+
+    End Function
+
+    ''' <summary>
+    ''' Excel OLEDB接続文字列の生成
+    ''' </summary>
+    ''' <param name="ExcelFileName">Excel ファイル名パス</param>
+    ''' <param name="IsReadOnly">True=インポート , False=エクスポート</param>
+    ''' <returns>接続文字列</returns>
+    ''' <remarks></remarks>
+    Public Shared Function CreateExcelConnectionString(ByVal ExcelFileName As String, ByVal IsReadOnly As Boolean) As String
+
+        ' Excel OLEDB接続文字列の生成
+        ' Excel 2007 からファイルフォーマットが「Office Open XML」形式に変更
+        Dim conStrExcel As New OleDb.OleDbConnectionStringBuilder()
+        conStrExcel.Provider = "Microsoft.ACE.OLEDB.12.0"
+        conStrExcel.DataSource = ExcelFileName
+        'HDR=NO  : YES=先頭行がヘッダー行, NO=ヘッダー行なし（エクスポート時はこの設定は無視される）
+        '           ※全列を文字列としてインポートさせる為、先頭行はヘッダだがデータ行として読み込む
+        'IMEX=1  : 0=Export mode, 1=Import mode (データ行を常にテキストとして読み取る), 2=Linked mode
+        conStrExcel("Extended Properties") = "Excel 12.0 Xml;HDR=NO;IMEX=" & IIf(IsReadOnly, "1", "0").ToString()
+
+        Return conStrExcel.ConnectionString
+    End Function
+
 
 End Class

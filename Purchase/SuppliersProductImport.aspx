@@ -24,7 +24,7 @@
             obj = document.getElementById("Import")
             if (obj) {
                 document.getElementById("Import").style.cursor = curStyle;
-            }
+            }          
         }
     </script>
 </head>
@@ -146,6 +146,9 @@
                     <span class="indent"></span>
                     <asp:Button ID="Import" runat="server" Text="Import" 
                         UseSubmitBehavior="false" OnClientClick="ChangeCursorStyle('wait')" />
+                    <span class="indent"></span>
+                    <asp:Button ID="Export" runat="server" Text="Export" 
+                        UseSubmitBehavior="false"  />
                 </div>
             </div>
     </div><!-- Main Content Area END -->
