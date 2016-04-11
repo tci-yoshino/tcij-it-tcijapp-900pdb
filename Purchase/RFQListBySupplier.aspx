@@ -51,6 +51,7 @@
                 </tr>
             </table> 
         </div>
+        <BR>
         <hr />
 
         <div class="list">
