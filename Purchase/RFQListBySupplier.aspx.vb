@@ -26,7 +26,7 @@
             Dim st_query As String = _
                   "SELECT SupplierCode, LTRIM(RTRIM(ISNULL(Name3, '') + ' ' + ISNULL(Name4, ''))) AS Name, " _
                 & "       Address1, Address2, Address3, PostalCode, Telephone, Fax, Email, " _
-                & "       Website, Info, v_Country.CountryName " _
+                & "       Website, Info, v_Country.CountryName,Note " _
                 & "FROM Supplier,v_Country " _
                 & "WHERE SupplierCode = @SupplierCode " _
                 & "  AND Supplier.CountryCode = v_Country.CountryCode"
@@ -62,7 +62,7 @@
                     SupplierInfo.Text = "Supplier Information"
                 End If
                 CountryName.Text = reader("CountryName").ToString()
-
+                Comment.Text = Replace(reader("Note").ToString(), vbCrLf, "<br />")
             Else
                 Exit Sub
             End If

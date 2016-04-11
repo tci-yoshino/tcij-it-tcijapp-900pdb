@@ -22,6 +22,7 @@ Partial Public Class SupplierSetting
         If IsPostBack = False Then
             '[StAction設定]---------------------------------------------------------------
             Mode.Value = Request.QueryString("Action")
+            Para_Comment.Value = Request.QueryString("Comment")
 
             '[Country設定]----------------------------------------------------------------
             DBCommand.CommandText = "SELECT CountryCode,CountryName FROM v_Country ORDER BY CountryName"
@@ -53,6 +54,11 @@ Partial Public Class SupplierSetting
             Else
                 SuppliersProduct.Visible = False
             End If
+        End If
+
+        If Para_Comment.Value = "1" Then
+            Comment.Rows = 35
+            Comment.Focus()
         End If
 
         If Code.Text <> "" Then
@@ -305,7 +311,7 @@ Partial Public Class SupplierSetting
                     UpdateDate.Value = ""
                     DBReader.Close()
                 End If
-            End If
+        End If
         End If
     End Sub
 

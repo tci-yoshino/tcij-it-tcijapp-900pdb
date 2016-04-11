@@ -16,6 +16,7 @@
 		<div class="tabs">
 			<asp:HiddenField ID="UpdateDate" runat="server" />
 			<asp:HiddenField ID="Mode" runat="server" />
+			<asp:HiddenField ID="Para_Comment" runat="server" />
 			<asp:HyperLink ID="SuppliersProduct" runat="server">Suppliers Product</asp:HyperLink>
 		</div>
 
@@ -127,7 +128,7 @@
 				</table>
                 <asp:HiddenField ID="Action" runat="server" value="Save" />
                 
-                <span class="r3" style="font-weight:bold; font-style:italic">Items in blue letters are automatically revised based on R/3.</span>
+                <span class="r3" style="font-weight:bold; font-style:italic">Items in blue letters are automatically revised based on ERP.</span>
 				
 				<div class="btns">
 				    <p class="message"><asp:Label ID="RunMsg" runat="server"></asp:Label></p>

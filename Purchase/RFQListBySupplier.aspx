@@ -40,8 +40,17 @@
                 <strong class="indent">Website : </strong><asp:HyperLink ID="WebsiteLink" runat="server" NavigateUrl="" Target="_blank"><asp:Label ID="Website" runat="server" Text=""></asp:Label></asp:HyperLink>
                 <strong class="indent">ECM : </strong><asp:HyperLink ID="SupplierInfoLink" runat="server" NavigateUrl="" Target="_blank"><asp:Label ID="SupplierInfo" runat="server" Text=""></asp:Label></asp:HyperLink>
             </p>
+            <table align="left">
+                <tr>
+                    <td><a href="#" onclick="popup('./SupplierSetting.aspx?Comment=1&Action=Edit&Code=<%Response.Write(st_SupplierCode)%>')"><strong>Comment : </strong></a></td>
+                </tr>
+            </table>
+            <table >
+                <tr>
+                    <td><asp:Label ID="Comment" runat="server" Text=""></asp:Label></td>
+                </tr>
+            </table> 
         </div>
-
         <hr />
 
         <div class="list">
