@@ -27,8 +27,29 @@ Partial Public Class ProductSearch
         End If
 
         '[ProductListにデータ設定]-----------------------------------------------------
+        Dim sqlStr As StringBuilder = New StringBuilder
+        sqlStr.AppendLine("SELECT")
+        sqlStr.AppendLine("  P.ProductNumber,")
+        sqlStr.AppendLine("  CASE WHEN NOT P.QuoName IS NULL THEN P.QuoName ELSE P.Name END AS ProductName,")
+        sqlStr.AppendLine("  './ProductSetting.aspx?Action=Edit&ProductID=' + RTRIM(LTRIM(Str(P.ProductID))) AS Url")
+        sqlStr.AppendLine("FROM")
+        sqlStr.AppendLine("  Product AS P")
+        sqlStr.AppendLine("WHERE")
+        sqlStr.AppendLine("  (P.ProductNumber = '" + SafeSqlLiteral(ProductNumber.Text) + "' OR P.CASNumber = '" + SafeSqlLiteral(ProductNumber.Text) + "')")
+        '権限ロールに従い極秘品を除外する
+        If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+            sqlStr.AppendLine("  AND NOT EXISTS (")
+            sqlStr.AppendLine("    SELECT 1")
+            sqlStr.AppendLine("    FROM")
+            sqlStr.AppendLine("      v_CONFIDENTIAL AS C")
+            sqlStr.AppendLine("    WHERE")
+            sqlStr.AppendLine("      C.isCONFIDENTIAL = 1")
+            sqlStr.AppendLine("      AND C.ProductID = P.ProductID")
+            sqlStr.AppendLine("  )")
+        End If
+
         ProductList.Visible = True
-        SrcProduct.SelectCommand = "SELECT ProductNumber, CASE WHEN NOT Product.QuoName IS NULL THEN Product.QuoName ELSE Product.Name END AS ProductName, './ProductSetting.aspx?Action=Edit&ProductID=' + Rtrim(Ltrim(Str(ProductID))) AS Url FROM dbo.Product WHERE (ProductNumber = '" + SafeSqlLiteral(ProductNumber.Text) + "') OR (CASNumber = '" + SafeSqlLiteral(ProductNumber.Text) + "')"
+        SrcProduct.SelectCommand = sqlStr.ToString
         If ProductNumber.Text = "" Then
             UnDsp_ProductList()
         End If

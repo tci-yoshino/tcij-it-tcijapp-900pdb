@@ -1,4 +1,6 @@
-﻿Public Partial Class ProductListBySupplier
+﻿Imports Purchase.Common
+
+Partial Public Class ProductListBySupplier
     Inherits CommonPage
 
     Dim DBConn As New System.Data.SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
@@ -37,9 +39,30 @@
                 End If
             End If
             DBReader.Close()
-            SrcSupplierProduct.SelectCommand = "SELECT Product.ProductID,Product.ProductNumber, CASE WHEN NOT Product.QuoName IS NULL THEN Product.QuoName ELSE Product.Name END AS ProductName, Supplier_Product.SupplierItemNumber, Supplier_Product.Note, Supplier_Product.UpdateDate, './SuppliersProductSetting.aspx?Action=Edit&Supplier=" + SupplierCode.Text.ToString + "&Product='+rtrim(ltrim(str(Product.ProductID))) AS Url " & _
-                                               "FROM Supplier_Product LEFT OUTER JOIN Product ON Supplier_Product.ProductID = Product.ProductID " & _
-                                               "WHERE (Supplier_Product.SupplierCode = '" & SupplierCode.Text.ToString & "')"
+
+            Dim strSql As StringBuilder = New StringBuilder
+            strSql.AppendLine("SELECT")
+            strSql.AppendLine("  P.ProductID,")
+            strSql.AppendLine("  P.ProductNumber,")
+            strSql.AppendLine("  CASE WHEN NOT P.QuoName IS NULL THEN P.QuoName ELSE P.Name END AS ProductName,")
+            strSql.AppendLine("  SP.SupplierItemNumber,")
+            strSql.AppendLine("  SP.Note,")
+            strSql.AppendLine("  SP.UpdateDate,")
+            strSql.AppendLine("  './SuppliersProductSetting.aspx?Action=Edit&Supplier=" + SupplierCode.Text.ToString + "&Product='+RTRIM(LTRIM(STR(P.ProductID))) AS Url,")
+            strSql.AppendLine("  ISNULL(C.isCONFIDENTIAL, 0) AS isCONFIDENTIAL")
+            strSql.AppendLine("FROM")
+            strSql.AppendLine("  Supplier_Product AS SP")
+            strSql.AppendLine("    LEFT OUTER JOIN Product AS P ON SP.ProductID = P.ProductID")
+            strSql.AppendLine("    LEFT OUTER JOIN v_CONFIDENTIAL AS C ON C.ProductID = SP.ProductID")
+            strSql.AppendLine("WHERE")
+            strSql.AppendLine("  SP.SupplierCode = '" & SupplierCode.Text.ToString & "'")
+
+            '権限ロールに従い極秘品を除外する
+            If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+                strSql.AppendLine("  AND C.isCONFIDENTIAL = 0")
+            End If
+
+            SrcSupplierProduct.SelectCommand = strSql.ToString
             SupplierProductList.DataBind()
         End If
     End Sub

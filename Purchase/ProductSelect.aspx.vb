@@ -1,4 +1,6 @@
-﻿Public Partial Class ProductSelect
+﻿Imports Purchase.Common
+
+Partial Public Class ProductSelect
     Inherits CommonPage
 
     Private st_ProductNumber As String = String.Empty
@@ -94,17 +96,17 @@
         If Not String.IsNullOrEmpty(st_ProductNumber) Then
             SrcProduct.SelectParameters.Add("ProductNumber", st_ProductNumber)
             st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
-            st_where = st_where & " ProductNumber = @ProductNumber "
+            st_where = st_where & " P.ProductNumber = @ProductNumber "
         End If
         If Not String.IsNullOrEmpty(st_CASNumber) Then
             SrcProduct.SelectParameters.Add("CASNumber", st_CASNumber)
             st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
-            st_where = st_where & " CASNumber = @CASNumber "
+            st_where = st_where & " P.CASNumber = @CASNumber "
         End If
         If Not String.IsNullOrEmpty(st_ProductName) Then
             SrcProduct.SelectParameters.Add("ProductName", Common.SafeSqlLikeClauseLiteral(st_ProductName))
             st_where = IIf(st_where.Length > 1, st_where & " AND ", "")
-            st_where = st_where & " (Name LIKE N'%' + @ProductName +'%' OR QuoName LIKE N'%' + @ProductName +'%') "
+            st_where = st_where & " (P.Name LIKE N'%' + @ProductName +'%' OR P.QuoName LIKE N'%' + @ProductName +'%') "
         End If
 
         ' Where 句が生成できなかった場合は検索処理を行わずに処理を終了する
@@ -114,9 +116,22 @@
         End If
 
         SrcProduct.SelectCommand = _
-              " SELECT [ProductID], [ProductNumber], ISNULL([QuoName],[Name]) AS [ProductName], [CASNumber]" _
-            & " FROM [Product] " _
+              " SELECT P.[ProductID], P.[ProductNumber], ISNULL(P.[QuoName],P.[Name]) AS [ProductName], P.[CASNumber]" _
+            & " FROM [Product] AS P " _
             & " WHERE " & st_where
+
+        '権限ロールに従い極秘品を除外する
+        If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+            SrcProduct.SelectCommand = SrcProduct.SelectCommand _
+            & "  AND NOT EXISTS ( " _
+            & "    SELECT 1 " _
+            & "    FROM " _
+            & "      v_CONFIDENTIAL AS SC " _
+            & "    WHERE " _
+            & "      SC.isCONFIDENTIAL = 1 " _
+            & "      AND SC.ProductID = P.ProductID " _
+            & "  ) "
+        End If
 
     End Sub
 End Class
