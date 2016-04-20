@@ -56,7 +56,7 @@
 					<tr>
 						<th>Product Number <span class="required">*</span> : </th>
 						<td>
-						    <asp:TextBox ID="ProductNumber" runat="server" Width="7em" MaxLength="12"></asp:TextBox> 
+						    <asp:TextBox ID="ProductNumber" runat="server" AutoPostBack="true" Width="7em" MaxLength="12"></asp:TextBox> 
                             <asp:ImageButton ID="ProductSelect" runat="server" 
                                 ImageUrl="./Image/Search.gif" CssClass="magnify"  
                                 OnClientClick="return ProductSelect_onclick()" />

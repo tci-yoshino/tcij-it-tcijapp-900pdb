@@ -295,9 +295,11 @@ Partial Public Class RFQIssue
         'ドロップダウン初期設定
         EnqLocation.SelectedValue = Session("LocationCode").ToString
         EnqLocation.DataBind()
+        SetControl_EnqUser()
         If Session("Purchase.isAdmin") = False Then
             EnqUser.SelectedValue = Session("UserID").ToString
         End If
+
         QuoLocation.DataBind()
         QuoUser.Items.Clear()
         QuoUser.Items.Add(String.Empty)
@@ -571,6 +573,26 @@ Partial Public Class RFQIssue
     End Function
 
     ''' <summary>
+    ''' EnqUser コントロールを設定します。
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub SetControl_EnqUser()
+
+        EnqUser.Items.Clear()
+        EnqUser.Items.Add(String.Empty)
+
+        If IsConfidentialItem(ProductNumber.Text) Then
+            SDS_RFQIssue_Enq_U.SelectCommand = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 AND RoleCode = 'WRITE' ORDER BY Name"
+        Else
+            SDS_RFQIssue_Enq_U.SelectCommand = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 ORDER BY Name"
+        End If
+
+        SDS_RFQIssue_Enq_U.SelectParameters.Clear()
+        SDS_RFQIssue_Enq_U.SelectParameters.Add("LocationCode", EnqLocation.SelectedValue.ToString)
+
+    End Sub
+
+    ''' <summary>
     ''' QuoUser コントロールを設定します。
     ''' </summary>
     ''' <remarks></remarks>
@@ -578,10 +600,26 @@ Partial Public Class RFQIssue
 
         QuoUser.Items.Clear()
         QuoUser.Items.Add(String.Empty)
-        SDS_RFQIssue_Que_U.SelectCommand = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 ORDER BY Name"
+
+        If IsConfidentialItem(ProductNumber.Text) Then
+            SDS_RFQIssue_Que_U.SelectCommand = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 AND RoleCode = 'WRITE' ORDER BY Name"
+        Else
+            SDS_RFQIssue_Que_U.SelectCommand = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 ORDER BY Name"
+        End If
+
         SDS_RFQIssue_Que_U.SelectParameters.Clear()
         SDS_RFQIssue_Que_U.SelectParameters.Add("LocationCode", QuoLocation.SelectedValue.ToString)
 
     End Sub
 
+    ''' <summary>
+    ''' ProductNumber 変更時イベント
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub ProductNumber_TextChanged(ByVal sender As Object, ByVal e As EventArgs) Handles ProductNumber.TextChanged
+
+        SetControl_EnqUser()
+        SetControl_QuoUser()
+
+    End Sub
 End Class
