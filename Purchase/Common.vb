@@ -258,6 +258,25 @@ Public Class Common
     Public Const PRIORITY_FOR_SEARCH As String = "Search"
     Public Const PRIORITY_FOR_EDIT As String = "Edit"
 
+    ''' <summary>
+    ''' 極秘表記
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const CONFIDENTIAL As String = "CONFIDENTIAL"
+
+    ''' <summary>
+    ''' 権限ロール
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const ROLE_READ_P As String = "READ_P"
+    Public Const ROLE_WRITE_P As String = "WRITE_P"
+    Public Const ROLE_WRITE As String = "WRITE"
+
+    ''' <summary>
+    ''' セッション情報
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const SESSION_ROLE_CODE As String = "Purchase.RoleCode"
 
     ''' <summary>
     ''' ローカル時間を取得する。
@@ -771,4 +790,49 @@ Public Class Common
         End Try
 
     End Function
+
+    ''' <summary>
+    ''' 指定された製品が極秘品か否かを判定する
+    ''' </summary>
+    ''' <param name="key">ProductID または ProductNumber</param>
+    ''' <return>True: 極秘対象, False: 極秘対象外</return>
+    ''' <remarks></remarks>
+    Public Shared Function IsConfidentialItem(ByVal key As String) As Boolean
+
+        If String.IsNullOrEmpty(key) Then
+            Return False
+        End If
+
+        Dim productID As Integer = 0
+        Dim returnValue As Boolean
+
+        Dim sqlStr As StringBuilder = New StringBuilder
+        sqlStr.AppendLine("SELECT")
+        sqlStr.AppendLine("  1")
+        sqlStr.AppendLine("FROM")
+        sqlStr.AppendLine("  v_CONFIDENTIAL")
+        sqlStr.AppendLine("WHERE")
+        If Integer.TryParse(key, productID) Then '数値に変換できる場合は ProductID と判断
+            sqlStr.AppendLine("  ProductID = @Keyword")
+        Else
+            sqlStr.AppendLine("  ProductNumber = @Keyword")
+        End If
+        sqlStr.AppendLine("  AND isCONFIDENTIAL = 1")
+
+        Using sqlConn As SqlConnection = New SqlConnection(DB_CONNECT_STRING)
+            Using sqlCmd As SqlCommand = New SqlCommand(sqlStr.ToString, sqlConn)
+                sqlCmd.Parameters.AddWithValue("Keyword", key)
+                sqlConn.Open()
+
+                Using sqlReader As SqlDataReader = sqlCmd.ExecuteReader
+                    returnValue = sqlReader.Read
+                    sqlReader.Close()
+                End Using
+            End Using
+        End Using
+
+        Return returnValue
+
+    End Function
+
 End Class
