@@ -445,6 +445,12 @@ tr.attention td {
     font-weight: bold;
 }
 
+.confidential {
+    color: #1e90ff;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
 /* Footer Rules */
 #footer {
     margin-top: 5em;
