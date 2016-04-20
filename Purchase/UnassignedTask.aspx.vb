@@ -1,8 +1,11 @@
-﻿Partial Public Class UnassignedTask
+﻿Imports Purchase.Common
+
+Partial Public Class UnassignedTask
     Inherits CommonPage
 
     Private Const ASSIGN_ACTION As String = "Assign"
     Private ds_User As New DataSet
+    Private ds_UserConfidential As New DataSet
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -12,7 +15,8 @@
 
         SrcRFQ.SelectCommand = CreateRHQHeaderSelectSQL(st_Login_Location)
         SrcPO.SelectCommand = CreatePOSelectSQL(st_Login_Location)
-        ds_User = GetAssginUser(ds_User, st_Login_Location)
+        ds_User = GetUser(st_Login_Location, False)
+        ds_UserConfidential = GetUser(st_Login_Location, True)
 
     End Sub
 
@@ -38,7 +42,7 @@
         End If
 
         ' Update Chack
-        If Not Common.isLatestData("RFQHeader", "RFQNumber", st_RFQNumber, st_UpdateDate) Then
+        If Not Common.IsLatestData("RFQHeader", "RFQNumber", st_RFQNumber, st_UpdateDate) Then
             Msg.Text = Common.ERR_UPDATED_BY_ANOTHER_USER
             RFQList.DataBind()
             Exit Sub
@@ -78,7 +82,7 @@
         End If
 
         ' Update Chack
-        If Not Common.isLatestData("PO", "PONumber", st_PONumber, st_UpdateDate) Then
+        If Not Common.IsLatestData("PO", "PONumber", st_PONumber, st_UpdateDate) Then
             Msg.Text = Common.ERR_UPDATED_BY_ANOTHER_USER
             POList.DataBind()
             Exit Sub
@@ -105,23 +109,38 @@
     End Sub
 
     ' ユーザ選択プルダウン用のユーザリストを取得する
-    Private Function GetAssginUser(ByVal ds As DataSet, ByVal st_LocationCode As String) As DataSet
-        Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
+    Private Function GetUser(ByVal LocationCode As String, ByVal IsConfidential As Boolean) As DataSet
 
-            Dim st_query As String = CreateUserSelectSQL(st_LocationCode)
-            Dim command As New SqlClient.SqlCommand(st_query, connection)
+        Dim ds As DataSet = New DataSet
 
-            command.Parameters.AddWithValue("LocationCode", st_LocationCode)
-            connection.Open()
-            command.CommandText = st_query
-            Dim adapter As New SqlClient.SqlDataAdapter()
+        Dim sqlStr As StringBuilder = New StringBuilder
+        sqlStr.AppendLine("SELECT")
+        sqlStr.AppendLine("  UserID,")
+        sqlStr.AppendLine("  Name")
+        sqlStr.AppendLine("FROM ")
+        sqlStr.AppendLine("  v_User")
+        sqlStr.AppendLine("WHERE ")
+        sqlStr.AppendLine("  isDisabled = 0")
+        sqlStr.AppendLine("  AND LocationCode = @LocationCode")
+        If IsConfidential Then
+            sqlStr.AppendLine("  AND RoleCode = 'WRITE'")
+        End If
+        sqlStr.AppendLine("ORDER BY")
+        sqlStr.AppendLine("  Name")
 
-            ' データベースからデータを取得
-            adapter.SelectCommand = command
-            adapter.Fill(ds)
+        Using sqlConn As New SqlClient.SqlConnection(DB_CONNECT_STRING)
+            Using sqlCmd As SqlClient.SqlCommand = New SqlClient.SqlCommand(sqlStr.ToString, sqlConn)
+                sqlCmd.Parameters.AddWithValue("LocationCode", LocationCode)
+                sqlConn.Open()
 
-            Return ds
+                Dim sqlAdapter As New SqlClient.SqlDataAdapter
+                sqlAdapter.SelectCommand = sqlCmd
+                sqlAdapter.Fill(ds)
+            End Using
         End Using
+
+        Return ds
+
     End Function
 
     ' ユーザ選択プルダウンにユーザリストをセットする
@@ -129,10 +148,18 @@
         Dim st_UserType As String = CType(CType(e.Item, ListViewItem).BindingContainer, System.Web.UI.Control).ID
 
         If st_UserType = "RFQList" Then
-            CType(e.Item.FindControl("QuoUser"), DropDownList).DataSource = ds_User
+            If IsConfidentialItem(DirectCast(e.Item.FindControl("ProductID"), HiddenField).Value) Then
+                CType(e.Item.FindControl("QuoUser"), DropDownList).DataSource = ds_UserConfidential
+            Else
+                CType(e.Item.FindControl("QuoUser"), DropDownList).DataSource = ds_User
+            End If
             CType(e.Item.FindControl("QuoUser"), DropDownList).DataBind()
         Else
-            CType(e.Item.FindControl("SOUser"), DropDownList).DataSource = ds_User
+            If IsConfidentialItem(DirectCast(e.Item.FindControl("ProductID"), HiddenField).Value) Then
+                CType(e.Item.FindControl("SOUser"), DropDownList).DataSource = ds_UserConfidential
+            Else
+                CType(e.Item.FindControl("SOUser"), DropDownList).DataSource = ds_User
+            End If
             CType(e.Item.FindControl("SOUser"), DropDownList).DataBind()
         End If
     End Sub
@@ -146,6 +173,7 @@
         sb_SQL.Append("  RH.RFQNumber, ")
         sb_SQL.Append("  RH.StatusChangeDate, ")
         sb_SQL.Append("  RH.Status, ")
+        sb_SQL.Append("  RH.ProductID, ")
         sb_SQL.Append("  RH.ProductNumber, ")
         sb_SQL.Append("  RH.ProductName, ")
         sb_SQL.Append("  RH.Purpose, ")
@@ -153,13 +181,18 @@
         sb_SQL.Append("  RH.EnqLocationName, ")
         sb_SQL.Append("  RH.SupplierName, ")
         sb_SQL.Append("  RH.MakerName, ")
-        sb_SQL.Append("  CONVERT(VARCHAR, RH.UpdateDate, 120) AS UpdateDate ")
+        sb_SQL.Append("  CONVERT(VARCHAR, RH.UpdateDate, 120) AS UpdateDate, ")
+        sb_SQL.Append("  RH.isCONFIDENTIAL ")
         sb_SQL.Append("FROM ")
         sb_SQL.Append("  v_RFQHeader AS RH ")
         sb_SQL.Append("WHERE ")
         sb_SQL.Append("  RH.QuoLocationCode = '" & st_LocationCode & "' ")
         sb_SQL.Append("  AND RH.StatusCode = 'N' ")
         sb_SQL.Append("  AND RH.QuoUserID IS NULL ")
+        '権限ロールに従い極秘品を除外する
+        If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+            sb_SQL.Append("  AND RH.isCONFIDENTIAL = 0 ")
+        End If
         sb_SQL.Append("ORDER BY ")
         sb_SQL.Append("  RH.RFQNumber ASC ")
 
@@ -178,6 +211,7 @@
         sb_SQL.Append("  VP.POLocationName, ")
         sb_SQL.Append("  VP.POUserID, ")
         sb_SQL.Append("  VP.POUserName, ")
+        sb_SQL.Append("  VP.ProductID, ")
         sb_SQL.Append("  VP.ProductNumber, ")
         sb_SQL.Append("  VP.ProductName, ")
         sb_SQL.Append("  VP.SupplierCode, ")
@@ -187,33 +221,20 @@
         sb_SQL.Append("  VP.ParPONumber, ")
         sb_SQL.Append("  VP.StatusCode, ")
         sb_SQL.Append("  VP.StatusChangeDate, ")
-        sb_SQL.Append("  CONVERT(VARCHAR, VP.UpdateDate, 120) AS UpdateDate ")
+        sb_SQL.Append("  CONVERT(VARCHAR, VP.UpdateDate, 120) AS UpdateDate, ")
+        sb_SQL.Append("  VP.isCONFIDENTIAL ")
         sb_SQL.Append("FROM ")
         sb_SQL.Append("  v_PO AS VP ")
         sb_SQL.Append("WHERE ")
         sb_SQL.Append("  VP.SOLocationCode = '" & st_LocationCode & "' ")
         sb_SQL.Append("  AND VP.StatusCode = 'PPI' ")
         sb_SQL.Append("  AND VP.SOUserID IS NULL ")
+        '権限ロールに従い極秘品を除外する
+        If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+            sb_SQL.Append("  AND VP.isCONFIDENTIAL = 0 ")
+        End If
         sb_SQL.Append("ORDER BY ")
         sb_SQL.Append("  VP.PONumber ASC ")
-
-        Return sb_SQL.ToString()
-    End Function
-
-    Private Function CreateUserSelectSQL(ByVal st_LocationCode As String) As String
-        Dim sb_SQL As New Text.StringBuilder
-
-        'SQL文字列の作成
-        sb_SQL.Append("SELECT ")
-        sb_SQL.Append("  UserID, ")
-        sb_SQL.Append("  Name ")
-        sb_SQL.Append("FROM ")
-        sb_SQL.Append("  v_User ")
-        sb_SQL.Append("WHERE ")
-        sb_SQL.Append("  isDisabled = '0' ")
-        sb_SQL.Append("  AND LocationCode = '" & st_LocationCode & "' ")
-        sb_SQL.Append("ORDER BY ")
-        sb_SQL.Append("  Name ASC ")
 
         Return sb_SQL.ToString()
     End Function
