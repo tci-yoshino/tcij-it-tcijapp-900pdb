@@ -331,6 +331,13 @@ Partial Public Class POUpdate
             Exit Sub
         End If
 
+        '権限ロールに従い極秘品はエラーとする
+        If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+            If IsConfidentialItem(POInformation.ProductNumber) Then
+                Response.Redirect("AuthError.html")
+            End If
+        End If
+
         'フォーム左段
         RFQNumber.Text = POInformation.RFQNumber.ToString()
         R3PONumber.Text = POInformation.R3PONumber

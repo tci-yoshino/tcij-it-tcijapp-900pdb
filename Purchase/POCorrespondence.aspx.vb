@@ -29,6 +29,22 @@ Partial Public Class POCorrespondence
             '[DefaultでPOUser.Checked設定]-------------------------------------------------------------
             POUser.Checked = True
 
+            '権限ロールに従い極秘品はエラーとする
+            If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+                Using sqlConn As SqlConnection = New SqlConnection(DB_CONNECT_STRING)
+                    Using sqlCmd As SqlCommand = sqlConn.CreateCommand()
+
+                        sqlCmd.CommandText = "SELECT 1 FROM v_PO WHERE isCONFIDENTIAL = 1 AND PONumber = @PONumber"
+                        sqlCmd.Parameters.AddWithValue("PONumber", hd_PONumber.Value)
+                        sqlConn.Open()
+                        Dim dr As SqlDataReader = sqlCmd.ExecuteReader
+                        If dr.Read = True Then
+                            Response.Redirect("AuthError.html")
+                        End If
+                    End Using
+                End Using
+            End If
+
             '[CorresTitle設定]--------------------------------------------------------------------------
             Try
                 conn = New SqlConnection(DB_CONNECT_STRING)

@@ -374,6 +374,14 @@ Partial Public Class RFQUpdate
                 'RFQNumber 不正
                 Return False
             End If
+
+            '権限ロールに従い極秘品はエラーとする
+            If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+                If IsConfidentialItem(DS.Tables("RFQHeader").Rows(0)("ProductNumber").ToString) Then
+                    Response.Redirect("AuthError.html")
+                End If
+            End If
+
             'Hidden
             QuotedDate.Value = DS.Tables("RFQHeader").Rows(0)("QuotedDate").ToString
             UpdateDate.Value = GetUpdateDate("v_RFQHeader", "RFQNumber", st_RFQNumber)
