@@ -16,6 +16,7 @@
     <div id="content">
         <div class="tabs"><a href="#" onclick="return SupplierSetting_onclick()">Supplier Setting</a> | <a href="#" onclick="return Correspondence_onclick()">RFQ Correspondence / History</a></div>
         <h3>Quotation Reply</h3>
+        <span style="float:right"><asp:Label ID="Confidential" runat="server" Text='' CssClass="confidential"></asp:Label></span>
 
             <div class="main">
                 <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>

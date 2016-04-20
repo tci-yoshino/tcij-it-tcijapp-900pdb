@@ -364,7 +364,7 @@ Partial Public Class RFQUpdate
 & "MakerName, MakerCountryCode, SupplierContactPerson, PaymentTermCode, RequiredPurity, " _
 & "RequiredQMMethod, RequiredSpecification, SpecSheet, Specification, Purpose, SupplierItemName, " _
 & "ShippingHandlingFee, ShippingHandlingCurrencyCode, Comment, QuotedDate, StatusCode, " _
-& "UpdateDate, Status, StatusChangeDate, EnqLocationCode, QuoLocationCode, Priority" _
+& "UpdateDate, Status, StatusChangeDate, EnqLocationCode, QuoLocationCode, Priority, isCONFIDENTIAL " _
 & " From v_RFQHeader Where RFQNumber = @i_RFQNumber", DBConn)
             DBCommand.Parameters.Add("i_RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
             DBAdapter = New SqlDataAdapter
@@ -381,6 +381,7 @@ Partial Public Class RFQUpdate
             QuoLocationCode.Value = DS.Tables("RFQHeader").Rows(0)("QuoLocationCode").ToString
             Hi_RFQStatusCode.Value = DS.Tables("RFQHeader").Rows(0)("StatusCode").ToString
             'Left
+            Confidential.Text = IIf(CBool(DS.Tables("RFQHeader").Rows(0)("isCONFIDENTIAL")), Common.CONFIDENTIAL, String.Empty)
             RFQNumber.Text = st_RFQNumber
             CurrentRFQStatus.Text = DS.Tables("RFQHeader").Rows(0)("Status").ToString
             ProductNumber.Text = DS.Tables("RFQHeader").Rows(0)("ProductNumber").ToString
@@ -411,9 +412,16 @@ Partial Public Class RFQUpdate
             End If
             Specification.Text = DS.Tables("RFQHeader").Rows(0)("Specification").ToString
 
-            SDS_RFQUpdate_EnqUser.SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0) " _
-                                             & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1}) ORDER BY [Name]" _
-                                             , EnqLocationCode.Value, DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString)
+            If CBool(DS.Tables("RFQHeader").Rows(0)("isCONFIDENTIAL")) Then
+                SDS_RFQUpdate_EnqUser.SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE') " _
+                                                 & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1} AND RoleCode = 'WRITE') ORDER BY [Name]" _
+                                                 , EnqLocationCode.Value, DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString)
+            Else
+                SDS_RFQUpdate_EnqUser.SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0) " _
+                                                 & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1}) ORDER BY [Name]" _
+                                                 , EnqLocationCode.Value, DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString)
+            End If
+
             EnqUser.SelectedValue = DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString
             ViewState(OLD_ENQUSER_ID) = DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString
             EnqLocation.Text = DS.Tables("RFQHeader").Rows(0)("EnqLocationName").ToString
@@ -424,12 +432,23 @@ Partial Public Class RFQUpdate
                 QuoLocation.Text = DS.Tables("RFQHeader").Rows(0)("QuoLocationName").ToString
             End If
             If DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString.Trim = String.Empty Then
-                st_SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0) ORDER BY [Name]" _
-                                             , QuoLocationCode.Value)
+                If CBool(DS.Tables("RFQHeader").Rows(0)("isCONFIDENTIAL")) Then
+                    st_SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE') ORDER BY [Name]" _
+                                                 , QuoLocationCode.Value)
+                Else
+                    st_SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0) ORDER BY [Name]" _
+                                                 , QuoLocationCode.Value)
+                End If
             Else
-                st_SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0) " _
-                                             & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1}) ORDER BY [Name]" _
-                                             , QuoLocationCode.Value, DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString)
+                If CBool(DS.Tables("RFQHeader").Rows(0)("isCONFIDENTIAL")) Then
+                    st_SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE') " _
+                                                 & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1} AND RoleCode = 'WRITE') ORDER BY [Name]" _
+                                                 , QuoLocationCode.Value, DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString)
+                Else
+                    st_SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0) " _
+                                                 & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1}) ORDER BY [Name]" _
+                                                 , QuoLocationCode.Value, DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString)
+                End If
             End If
             SDS_RFQUpdate_QuoUser.SelectCommand = st_SelectCommand
             SDS_RFQUpdate_QuoUser.DataBind()
