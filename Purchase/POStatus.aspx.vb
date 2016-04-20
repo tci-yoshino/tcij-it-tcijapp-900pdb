@@ -184,6 +184,12 @@ Partial Public Class POStatus
             DBCommand = DBConn.CreateCommand()
             DBConn.Open()
             st_WHR = "WHERE " & Left(st_WHR, st_WHR.Length - 4)   'st_WHRの最後の'AND 'を取り除く
+
+            '権限ロールに従い極秘品を除外する
+            If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+                st_WHR = st_WHR & " AND isCONFIDENTIAL = 0 "
+            End If
+
             DBCommand.CommandText = getCountPOSQL() & st_WHR & " OPTION(FORCE ORDER)"
             Dim i_RFQCount As Integer = CInt(DBCommand.ExecuteScalar())
             DBConn.Close()
@@ -243,7 +249,8 @@ Partial Public Class POStatus
         st_SQL.Append("	CurrencyCode, ")
         st_SQL.Append("	UnitPrice, ")
         st_SQL.Append("	PerQuantity, ")
-        st_SQL.Append("	PerUnitCode ")
+        st_SQL.Append("	PerUnitCode, ")
+        st_SQL.Append("	isCONFIDENTIAL ")
         st_SQL.Append("FROM ")
         st_SQL.Append(" v_PO ")
         Return st_SQL.ToString()

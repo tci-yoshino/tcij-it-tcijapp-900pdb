@@ -332,7 +332,8 @@ Partial Public Class MyTask
         sb_SQL.Append("  RH.EnqLocationName, ")
         sb_SQL.Append("  RH.SupplierName, ")
         sb_SQL.Append("  RH.MakerName, ")
-        sb_SQL.Append("  RR.RFQCorres AS RFQCorrespondence ")
+        sb_SQL.Append("  RR.RFQCorres AS RFQCorrespondence, ")
+        sb_SQL.Append("  RH.isCONFIDENTIAL ")
         sb_SQL.Append("FROM ")
         sb_SQL.Append("  v_RFQHeader AS RH ")
         sb_SQL.Append("    LEFT OUTER JOIN v_RFQReminder AS RR ON RH.RFQNumber = RR.RFQNumber AND @UserID = RR.RcptUserID ")
@@ -348,6 +349,10 @@ Partial Public Class MyTask
             Case PRIORITY_AB
                 sb_SQL.Append("  AND RH.Priority IN('A','B') ")
         End Select
+        '権限ロールに従い極秘品を除外する
+        If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+            sb_SQL.Append("  AND RH.isCONFIDENTIAL = 0 ")
+        End If
         sb_SQL.Append("UNION ALL ")
         sb_SQL.Append("SELECT ")
         sb_SQL.Append("  RH.RFQNumber, ")
@@ -366,7 +371,8 @@ Partial Public Class MyTask
         sb_SQL.Append("  RH.EnqLocationName, ")
         sb_SQL.Append("  RH.SupplierName, ")
         sb_SQL.Append("  RH.MakerName, ")
-        sb_SQL.Append("  RR.RFQCorres AS RFQCorrespondence ")
+        sb_SQL.Append("  RR.RFQCorres AS RFQCorrespondence, ")
+        sb_SQL.Append("  RH.isCONFIDENTIAL ")
         sb_SQL.Append("FROM ")
         sb_SQL.Append("  v_RFQHeader AS RH ")
         sb_SQL.Append("    LEFT OUTER JOIN v_RFQReminder AS RR ON RH.RFQNumber = RR.RFQNumber AND @UserID = RR.RcptUserID ")
@@ -383,6 +389,10 @@ Partial Public Class MyTask
             Case PRIORITY_AB
                 sb_SQL.Append("  AND RH.Priority IN('A','B') ")
         End Select
+        '権限ロールに従い極秘品を除外する
+        If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+            sb_SQL.Append("  AND RH.isCONFIDENTIAL = 0 ")
+        End If
         sb_SQL.Append("ORDER BY ")
         sb_SQL.Append("  PrioritySort, ")
         sb_SQL.Append("  Priority, ")
@@ -434,12 +444,13 @@ Partial Public Class MyTask
         sb_SQL.Append("      AND PR.POHistoryNumber IS NOT NULL ")
         sb_SQL.Append("    THEN ")
         sb_SQL.Append("      'Reminder' ")
-        sb_SQL.Append("    END AS TaskType ")
+        sb_SQL.Append("    END AS TaskType, ")
+        sb_SQL.Append("  P.isCONFIDENTIAL ")
         sb_SQL.Append("FROM ")
         sb_SQL.Append("  v_PO AS P ")
         sb_SQL.Append("    LEFT OUTER JOIN v_POReminder AS PR ON PR.PONumber = P.PONumber AND PR.RcptUserID = @UserID ")
         sb_SQL.Append("WHERE ")
-        sb_SQL.Append("  (POUserID = @UserID OR SOUserID = @UserID) ")
+        sb_SQL.Append("  (P.POUserID = @UserID OR P.SOUserID = @UserID) ")
         Select Case POPriority.SelectedValue
             Case PRIORITY_A
                 sb_SQL.Append("  AND P.Priority = 'A' ")
@@ -448,6 +459,10 @@ Partial Public Class MyTask
             Case PRIORITY_AB
                 sb_SQL.Append("  AND P.Priority IN('A','B') ")
         End Select
+        '権限ロールに従い極秘品を除外する
+        If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+            sb_SQL.AppendLine("  AND P.isCONFIDENTIAL = 0 ")
+        End If
         sb_SQL.Append("OPTION (RECOMPILE) ")
         Return sb_SQL.ToString()
     End Function

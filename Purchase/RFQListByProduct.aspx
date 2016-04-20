@@ -32,6 +32,7 @@
                 <strong>Product Name : </strong><asp:Label ID="ProductName" runat="server" Text=''></asp:Label>
                 <strong class="indent">CAS Number : </strong><asp:Label ID="CASNumber" runat="server" Text=''></asp:Label>
                 <strong class="indent">Molecular Formula : </strong><asp:Label ID="MolecularFormula" runat="server" Text=''></asp:Label>
+                <span class="indent"><asp:Label ID="Confidential" runat="server" Text='' CssClass="confidential"></asp:Label></span>
             </p>
         </div>
 

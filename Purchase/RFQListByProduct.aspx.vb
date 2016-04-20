@@ -69,6 +69,7 @@ Partial Public Class RFQListByProduct
                 ProductName.Text = reader("Name").ToString()
                 CASNumber.Text = reader("CASNumber").ToString()
                 MolecularFormula.Text = reader("MolecularFormula").ToString()
+                Confidential.Text = IIf(CBool(reader("isConfidential")), Common.CONFIDENTIAL, String.Empty).ToString
             End If
             reader.Close()
         End Using
@@ -120,15 +121,18 @@ Partial Public Class RFQListByProduct
 
         'SQL文字列の作成
         sb_SQL.Append("SELECT ")
-        sb_SQL.Append("	ProductNumber, ")
-        sb_SQL.Append("	QuoName, ")
-        sb_SQL.Append("	Name, ")
-        sb_SQL.Append("	CASNumber, ")
-        sb_SQL.Append("	MolecularFormula ")
+        sb_SQL.Append("	P.ProductNumber, ")
+        sb_SQL.Append("	P.QuoName, ")
+        sb_SQL.Append("	P.Name, ")
+        sb_SQL.Append("	P.CASNumber, ")
+        sb_SQL.Append("	P.MolecularFormula, ")
+        sb_SQL.Append(" C.isCONFIDENTIAL ")
         sb_SQL.Append("FROM ")
-        sb_SQL.Append("	Product ")
+        sb_SQL.Append("	Product AS P, ")
+        sb_SQL.Append(" v_CONFIDENTIAL AS C ")
         sb_SQL.Append("WHERE ")
-        sb_SQL.Append("	ProductID = @ProductID ")
+        sb_SQL.Append("	P.ProductID = @ProductID ")
+        sb_SQL.Append(" AND C.ProductID = P.ProductID ")
 
         Return sb_SQL.ToString()
 

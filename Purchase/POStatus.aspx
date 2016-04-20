@@ -83,7 +83,11 @@
                         <table class="alternative">
                             <tr>
                                 <th class="subhead" colspan="2">PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%#"./POUpdate.aspx?PONumber=" & Eval("PONumber")%>'><asp:label id="PONumber" runat="server" Text='<%#Eval("PONumber")%>'></asp:label></asp:HyperLink><span class="indent"></span></th>
-                                <th class="subhead" colspan="4"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"),Eval("StatusChangeDate"), True, False)%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%#Eval("Status")%>'></asp:label></span></th>
+                                <th class="subhead" colspan="4">
+                                    <asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"),Eval("StatusChangeDate"), True, False)%>'></asp:label>
+                                    <span class="indent"><asp:label id="POStatus" runat="server" Text='<%#Eval("Status")%>'></asp:label></span>
+                                    <span class="indent"><asp:Label ID="POConfidential" runat="server" Text='<%#IIF(Eval("isCONFIDENTIAL")=True,Purchase.Common.CONFIDENTIAL,"") %>' CssClass="confidential"></asp:Label></span>
+                                </th>
                             </tr>
                             <tr>
                                 <th style="width:17%">Product Number / Name</th>
@@ -175,7 +179,11 @@
                         <table>
                             <tr>
                                 <th class="subhead" colspan="2">PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%#"./POUpdate.aspx?PONumber=" & Eval("PONumber")%>'><asp:label id="PONumber" runat="server" Text='<%#Eval("PONumber")%>'></asp:label></asp:HyperLink><span class="indent"></span></th>
-                                <th class="subhead" colspan="4"><asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"),Eval("StatusChangeDate"), True, False)%>'></asp:label><span class="indent"><asp:label id="POStatus" runat="server" Text='<%#Eval("Status")%>'></asp:label></span></th>
+                                <th class="subhead" colspan="4">
+                                    <asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"),Eval("StatusChangeDate"), True, False)%>'></asp:label>
+                                    <span class="indent"><asp:label id="POStatus" runat="server" Text='<%#Eval("Status")%>'></asp:label></span>
+                                    <span class="indent"><asp:Label ID="POConfidential" runat="server" Text='<%#IIF(Eval("isCONFIDENTIAL")=True,Purchase.Common.CONFIDENTIAL,"") %>' CssClass="confidential"></asp:Label></span>
+                                </th>
                             </tr>
                             <tr>
                                 <th style="width:17%">Product Number / Name</th>

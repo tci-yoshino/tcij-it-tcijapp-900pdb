@@ -1,6 +1,6 @@
 ﻿Option Explicit On
 Option Infer Off
-Option Strict On
+'Option Strict On
 
 Imports System.Text
 Imports Purchase.Common
@@ -141,12 +141,13 @@ Partial Public Class JFYISearch
         sb_SQL.Append("	RH.QuoUserName, ")
         sb_SQL.Append("	RH.QuoLocationName, ")
         sb_SQL.Append("	RH.Comment, ")
-        sb_SQL.Append("	C.[Name] AS MakerCountryName, ")
-        sb_SQL.Append("	CS.[Name] AS SupplierCountryName ")
+        sb_SQL.Append("	MC.[Name] AS MakerCountryName, ")
+        sb_SQL.Append("	SC.[Name] AS SupplierCountryName, ")
+        sb_SQL.Append(" RH.isCONFIDENTIAL ")
         sb_SQL.Append("FROM ")
         sb_SQL.Append("	v_RFQHeader AS RH INNER JOIN ")
-        sb_SQL.Append("	s_Country AS CS ON CS.CountryCode = RH.SupplierCountryCode LEFT OUTER JOIN ")
-        sb_SQL.Append("	s_Country AS C ON C.CountryCode = RH.MakerCountryCode ")
+        sb_SQL.Append("	s_Country AS SC ON SC.CountryCode = RH.SupplierCountryCode LEFT OUTER JOIN ")
+        sb_SQL.Append("	s_Country AS MC ON MC.CountryCode = RH.MakerCountryCode ")
         sb_SQL.Append("WHERE ")
         sb_SQL.Append("	RH.PurposeCode = @PurposeCode ")
 
@@ -156,6 +157,11 @@ Partial Public Class JFYISearch
         Else
             sb_SQL.Append("	AND RH.QuotedDate >= @QuotedDateFrom ")
             sb_SQL.Append("	AND RH.QuotedDate < DATEADD(d, 1, @QuotedDateFrom) ")
+        End If
+
+        '権限ロールに従い極秘品を除外する
+        If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+            sb_SQL.Append("  AND RH.isCONFIDENTIAL = 0 ")
         End If
 
         sb_SQL.Append("ORDER BY ")

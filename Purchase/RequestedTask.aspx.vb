@@ -38,7 +38,8 @@ Partial Public Class RequestedTask
         sb_SQL.Append("  RH.QuoLocationName, ")
         sb_SQL.Append("  RH.SupplierName, ")
         sb_SQL.Append("  RH.MakerName, ")
-        sb_SQL.Append("  RR.RFQCorres AS RFQCorrespondence ")
+        sb_SQL.Append("  RR.RFQCorres AS RFQCorrespondence, ")
+        sb_SQL.Append("  RH.isCONFIDENTIAL ")
         sb_SQL.Append("FROM ")
         sb_SQL.Append("  v_RFQHeader AS RH LEFT ")
         sb_SQL.Append("    OUTER JOIN v_RFQReminder AS RR ON RH.RFQNumber = RR.RFQNumber AND RR.RcptUserID = '" & Session("UserID") & "' ")
@@ -53,6 +54,10 @@ Partial Public Class RequestedTask
             Case PRIORITY_AB
                 sb_SQL.Append("  AND RH.Priority IN('A','B') ")
         End Select
+        '権限ロールに従い極秘品を除外する
+        If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+            sb_SQL.Append("  AND RH.isCONFIDENTIAL = 0 ")
+        End If
         sb_SQL.Append("ORDER BY ")
         sb_SQL.Append("  PrioritySort, Priority, StatusSortOrder, StatusChangeDate ")
 

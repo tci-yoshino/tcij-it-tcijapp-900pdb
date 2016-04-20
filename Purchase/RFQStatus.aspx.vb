@@ -280,6 +280,12 @@ Partial Public Class RFQStatus
             DBCommand = DBConn.CreateCommand()
             DBConn.Open()
             st_WHR = "WHERE " & Left(st_WHR, st_WHR.Length - 4)   'st_WHRの最後の'AND 'を取り除く
+
+            '権限ロールに従い極秘品を除外する
+            If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+                st_WHR = st_WHR & " AND isCONFIDENTIAL = 0 "
+            End If
+
             DBCommand.CommandText = getCountRFQHeaderSQL() & st_WHR & " OPTION(FORCE ORDER)"
             Dim i_RFQCount As Integer = CInt(DBCommand.ExecuteScalar())
             DBConn.Close()
@@ -340,7 +346,8 @@ Partial Public Class RFQStatus
         st_SQL.Append("	QuotedDate, ")
         st_SQL.Append("	v_RFQheader.Status, ")
         st_SQL.Append("	StatusChangeDate, ")
-        st_SQL.Append("	CASNumber ")
+        st_SQL.Append("	CASNumber, ")
+        st_SQL.Append(" isCONFIDENTIAL ")
         st_SQL.Append("FROM ")
         st_SQL.Append(" v_RFQheader INNER JOIN ")
         st_SQL.Append(" s_Country AS sc1 ON sc1.CountryCode = v_RFQheader.SupplierCountryCode LEFT OUTER JOIN ")

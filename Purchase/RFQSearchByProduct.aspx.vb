@@ -134,16 +134,27 @@ Partial Public Class RFQSearchByProduct
         'SQL文字列の作成
         sb_SQL.Append("SELECT ")
         sb_SQL.Append("	 DISTINCT ")
-        sb_SQL.Append("	 ProductID, ")
-        sb_SQL.Append("	 ProductNumber, ")
-        sb_SQL.Append("	 [Name] As ProductName ")
+        sb_SQL.Append("	 P.ProductID, ")
+        sb_SQL.Append("	 P.ProductNumber, ")
+        sb_SQL.Append("	 P.[Name] As ProductName ")
         sb_SQL.Append("FROM ")
-        sb_SQL.Append("	 Product ")
+        sb_SQL.Append("	 Product AS P ")
         sb_SQL.Append("WHERE ")
-        sb_SQL.Append("	 ProductNumber = @SearchParam OR ")
-        sb_SQL.Append("	 CASNumber = @SearchParam ")
+        sb_SQL.Append("	 (P.ProductNumber = @SearchParam OR ")
+        sb_SQL.Append("	 P.CASNumber = @SearchParam) ")
+        '権限ロールに従い極秘品を除外する
+        If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+            sb_SQL.AppendLine("  AND NOT EXISTS (")
+            sb_SQL.AppendLine("    SELECT 1")
+            sb_SQL.AppendLine("    FROM")
+            sb_SQL.AppendLine("      v_CONFIDENTIAL AS C")
+            sb_SQL.AppendLine("    WHERE")
+            sb_SQL.AppendLine("      C.isCONFIDENTIAL = 1")
+            sb_SQL.AppendLine("      AND C.ProductID = P.ProductID")
+            sb_SQL.AppendLine("  )")
+        End If
         sb_SQL.Append("ORDER BY ")
-        sb_SQL.Append("  ProductName ")
+        sb_SQL.Append("  P.[Name] ")
 
         Return sb_SQL.ToString()
 

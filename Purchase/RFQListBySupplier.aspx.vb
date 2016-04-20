@@ -1,4 +1,6 @@
-﻿Public Partial Class RFQListBySupplier
+﻿Imports Purchase.Common
+
+Partial Public Class RFQListBySupplier
     Inherits CommonPage
     Protected st_SupplierCode As String = String.Empty ' aspx 側で読むため、Protected にする
     Protected i_DataNum As Integer = 0 ' 0 の場合は Supplier Data が無いと判断し、 Data not found. を表示する。
@@ -72,24 +74,31 @@
         ' RFQHeader 取得
         If i_DataNum = 1 Then
 
+            Dim sqlStr As StringBuilder = New StringBuilder
+            sqlStr.AppendLine("SELECT")
+            sqlStr.AppendLine("  RH.RFQNumber, RH.QuotedDate, RH.StatusChangeDate, RH.Status,")
+            sqlStr.AppendLine("  RH.ProductNumber,RH.ProductName, RH.SupplierName,")
+            sqlStr.AppendLine("  RH.Purpose, RH.MakerName, RH.MakerInfo,")
+            sqlStr.AppendLine("  RH.SupplierItemName, RH.ShippingHandlingFee, RH.ShippingHandlingCurrencyCode,")
+            sqlStr.AppendLine("  RH.EnqUserName, RH.EnqLocationName, RH.QuoUserName, RH.QuoLocationName, RH.Comment,")
+            sqlStr.AppendLine("  MC.[Name] AS MakerCountryName, SC.[Name] AS SupplierCountryName,")
+            sqlStr.AppendLine("  RH.isCONFIDENTIAL")
+            sqlStr.AppendLine("FROM")
+            sqlStr.AppendLine("  v_RFQHeader AS RH INNER JOIN ")
+            sqlStr.AppendLine("  s_Country AS SC ON SC.CountryCode = RH.SupplierCountryCode LEFT OUTER JOIN ")
+            sqlStr.AppendLine("  s_Country AS MC ON MC.CountryCode = RH.MakerCountryCode ")
+            sqlStr.AppendLine("WHERE")
+            sqlStr.AppendLine("  (RH.SupplierCode = @SupplierCode OR RH.MakerCode = @SupplierCode)")
+            '権限ロールに従い極秘品を除外する
+            If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+                sqlStr.Append("  AND RH.isCONFIDENTIAL = 0 ")
+            End If
+            sqlStr.AppendLine("ORDER BY")
+            sqlStr.AppendLine("  RH.StatusSortOrder ASC, RH.QuotedDate DESC, RH.StatusChangeDate DESC, RH.RFQNumber ASC")
+
             SrcRFQHeader.SelectParameters.Clear()
             SrcRFQHeader.SelectParameters.Add("SupplierCode", st_SupplierCode)
-            SrcRFQHeader.SelectCommand = _
-                  "SELECT " _
-                & "  RH.RFQNumber, RH.QuotedDate, RH.StatusChangeDate, RH.Status, " _
-                & "  RH.ProductNumber,RH.ProductName, RH.SupplierName, " _
-                & "  RH.Purpose, RH.MakerName, RH.MakerInfo, " _
-                & "  RH.SupplierItemName, RH.ShippingHandlingFee, RH.ShippingHandlingCurrencyCode, " _
-                & "  RH.EnqUserName, RH.EnqLocationName, RH.QuoUserName, RH.QuoLocationName, RH.Comment, " _
-                & "  C.[Name] AS MakerCountryName, CS.[Name] AS SupplierCountryName " _
-                & "FROM " _
-                & "  v_RFQHeader AS RH INNER JOIN " _
-                & "  s_Country AS CS ON CS.CountryCode = RH.SupplierCountryCode LEFT OUTER JOIN " _
-                & "  s_Country AS C ON C.CountryCode = RH.MakerCountryCode " _
-                & "WHERE " _
-                & "  (RH.SupplierCode = @SupplierCode OR RH.MakerCode = @SupplierCode) " _
-                & "ORDER BY " _
-                & "  StatusSortOrder ASC, QuotedDate DESC, StatusChangeDate DESC, RFQNumber ASC "
+            SrcRFQHeader.SelectCommand = sqlStr.ToString
         End If
 
     End Sub
