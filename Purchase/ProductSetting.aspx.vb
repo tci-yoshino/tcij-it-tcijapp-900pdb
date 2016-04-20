@@ -18,6 +18,14 @@ Partial Public Class ProductSetting
             ProductID.Value = Request.QueryString("ProductID")
 
             If Mode.Value = "Edit" Then
+
+                '権限ロールに従い極秘品はエラーとする
+                If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+                    If IsConfidentialItem(ProductID.Value) Then
+                        Response.Redirect("AuthError.html")
+                    End If
+                End If
+
                 DBCommand.CommandText = "SELECT Product.ProductNumber, Product.Name, Product.QuoName, Product.CASNumber, Product.MolecularFormula, Product.Reference, Product.Comment, Product.UpdateDate, s_EhsPhrase.ENai AS Status, s_EhsPhrase_1.ENai AS ProposalDept, s_EhsPhrase_2.ENai AS ProcumentDept, s_EhsPhrase_3.ENai AS PD " & _
                                         "FROM Product LEFT OUTER JOIN " & _
                                         "s_EhsPhrase AS s_EhsPhrase_3 ON Product.PD = s_EhsPhrase_3.PhID LEFT OUTER JOIN " & _
@@ -93,6 +101,14 @@ Partial Public Class ProductSetting
                 Exit Sub
             End If
             DBReader.Close()
+        Else
+            '権限ロールに従い極秘品はエラーとする
+            If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+                If IsConfidentialItem(ProductNumber.Text) Then
+                    Msg.Text = ERR_CONFIDENTIAL_PRODUCT
+                    Exit Sub
+                End If
+            End If
         End If
 
         '[入力項目のLengthCheck]-------------------------------------------------------
@@ -307,4 +323,5 @@ Partial Public Class ProductSetting
     Private Sub Page_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload
         DBConn.Close()
     End Sub
+
 End Class

@@ -148,6 +148,15 @@ Partial Public Class SuppliersProductSetting
             If Not TypeOf DBReader("QuoName") Is DBNull Then ProductName.Text = DBReader("QuoName")
             '[ProductID取得]----------------------------------------------------------------
             st_ProductID = DBReader("ProductID")
+
+            '権限ロールに従い極秘品はエラーとする
+            If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+                If IsConfidentialItem(st_ProductID) Then
+                    Msg.Text = ERR_CONFIDENTIAL_PRODUCT
+                    Exit Sub
+                End If
+            End If
+
         Else
             DBReader.Close()
             Msg.Text = "Product Number" + ERR_DOES_NOT_EXIST   '"Product Number はマスタに存在しません。"

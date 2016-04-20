@@ -346,6 +346,15 @@ Partial Public Class RFQIssue
             Msg.Text = ERR_REQUIRED_PRODUCTNUMBER
             Return False
 
+        Else
+            '権限ロールに従い極秘品はエラーとする
+            If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+                If IsConfidentialItem(ProductNumber.Text) Then
+                    Msg.Text = ERR_CONFIDENTIAL_PRODUCT
+                    Return False
+                End If
+            End If
+
             'CAS からも RFQ が登録できるようにコメントアウトした。
             'ProductNumber が正しいかのチェックは CheckInsertColumn でされる。
             'ElseIf TCICommon.Func.IsCASNumber(ProductNumber.Text) = True Then 

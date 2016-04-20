@@ -240,6 +240,12 @@ Public Class Common
     ''' <remarks></remarks>
     Public Const ERR_UNTREATED_CORRESPONDENCE As String = "There are any untreated correspondences."
 
+    ''' <summary>
+    ''' エラーメッセージ
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const ERR_CONFIDENTIAL_PRODUCT As String = "You don't have the authorization to specify this product number."
+
     Private Const LOCATION_JP As String = "JP"
 
     ''' <summary>
