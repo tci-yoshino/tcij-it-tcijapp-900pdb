@@ -389,7 +389,7 @@ Partial Public Class RFQUpdate
             QuoLocationCode.Value = DS.Tables("RFQHeader").Rows(0)("QuoLocationCode").ToString
             Hi_RFQStatusCode.Value = DS.Tables("RFQHeader").Rows(0)("StatusCode").ToString
             'Left
-            Confidential.Text = IIf(CBool(DS.Tables("RFQHeader").Rows(0)("isCONFIDENTIAL")), Common.CONFIDENTIAL, String.Empty)
+            Confidential.Text = IIf(CBool(DS.Tables("RFQHeader").Rows(0)("isCONFIDENTIAL")), Common.CONFIDENTIAL, String.Empty).ToString
             RFQNumber.Text = st_RFQNumber
             CurrentRFQStatus.Text = DS.Tables("RFQHeader").Rows(0)("Status").ToString
             ProductNumber.Text = DS.Tables("RFQHeader").Rows(0)("ProductNumber").ToString
@@ -422,7 +422,7 @@ Partial Public Class RFQUpdate
 
             If CBool(DS.Tables("RFQHeader").Rows(0)("isCONFIDENTIAL")) Then
                 SDS_RFQUpdate_EnqUser.SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE') " _
-                                                 & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1} AND RoleCode = 'WRITE') ORDER BY [Name]" _
+                                                 & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1}) ORDER BY [Name]" _
                                                  , EnqLocationCode.Value, DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString)
             Else
                 SDS_RFQUpdate_EnqUser.SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0) " _
@@ -450,7 +450,7 @@ Partial Public Class RFQUpdate
             Else
                 If CBool(DS.Tables("RFQHeader").Rows(0)("isCONFIDENTIAL")) Then
                     st_SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE') " _
-                                                 & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1} AND RoleCode = 'WRITE') ORDER BY [Name]" _
+                                                 & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1}) ORDER BY [Name]" _
                                                  , QuoLocationCode.Value, DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString)
                 Else
                     st_SelectCommand = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0) " _
