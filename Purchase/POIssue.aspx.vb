@@ -136,6 +136,13 @@ Partial Public Class POIssue
         '    Return False
         'End If
 
+        '権限ロールに従い極秘品はエラーとする
+        If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+            If IsConfidentialItem(ds.Tables("RFQLine").Rows(0)("RFQNumber").ToString) Then
+                Response.Redirect("AuthError.html")
+            End If
+        End If
+
         If IsDBNull(ds.Tables("RFQLine").Rows(0)("EnqQuantity")) _
             Or IsDBNull(ds.Tables("RFQLine").Rows(0)("EnqPiece")) _
             Or IsDBNull(ds.Tables("RFQLine").Rows(0)("UnitPrice")) _
@@ -163,6 +170,7 @@ Partial Public Class POIssue
         POLocationName.Text = Session("LocationName").ToString
         ProductNumber.Text = ds.Tables("RFQLine").Rows(0)("ProductNumber").ToString
         ProductName.Text = CutShort(ds.Tables("RFQLine").Rows(0)("ProductName").ToString)
+        Confidential.Text = IIf(CBool(ds.Tables("RFQLine").Rows(0)("isCONFIDENTIAL")), Common.CONFIDENTIAL, String.Empty).ToString
         de_OrderQuantity = CDec(ds.Tables("RFQLine").Rows(0)("EnqQuantity")) * CInt(ds.Tables("RFQLine").Rows(0)("EnqPiece"))
         OrderQuantity.Text = de_OrderQuantity.ToString("G29")
         OrderUnit.SelectedValue = ds.Tables("RFQLine").Rows(0)("EnqUnitCode").ToString
@@ -190,7 +198,7 @@ Partial Public Class POIssue
         IncotermsCode.Value = ds.Tables("RFQLine").Rows(0)("IncotermsCode").ToString
 
         ' SqlDataSource
-        SetControl_SrcUser()
+        SetControl_SrcUser(CBool(ds.Tables("RFQLine").Rows(0)("isCONFIDENTIAL")))
         SetControl_SrcUnit()
         SetControl_SrcSupplier(ds.Tables("RFQLine").Rows(0)("SupplierCode").ToString, ds.Tables("RFQLine").Rows(0)("QuoLocationCode").ToString)
         SetControl_SrcPurpose()
@@ -274,9 +282,14 @@ Partial Public Class POIssue
 
     End Function
 
-    Private Sub SetControl_SrcUser()
+    Private Sub SetControl_SrcUser(ByVal IsConfidential As Boolean)
 
-        SrcUser.SelectCommand = "SELECT UserID, Name FROM v_User WHERE LocationCode = @LocationCode ORDER BY Name"
+        If IsConfidential Then
+            SrcUser.SelectCommand = "SELECT UserID, Name FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 AND RoleCode = 'WRITE' ORDER BY Name"
+        Else
+            SrcUser.SelectCommand = "SELECT UserID, Name FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 ORDER BY Name"
+        End If
+
         SrcUser.SelectParameters.Clear()
         SrcUser.SelectParameters.Add("LocationCode", st_LoginLocationCode)
 
@@ -506,7 +519,8 @@ Partial Public Class POIssue
         sb_Sql.Append("  IncotermsCode, ")
         sb_Sql.Append("  DeliveryTerm, ")
         sb_Sql.Append("  PurposeCode, ")
-        sb_Sql.Append("  SupplierItemNumber ")
+        sb_Sql.Append("  SupplierItemNumber, ")
+        sb_Sql.Append("  isCONFIDENTIAL ")
         sb_Sql.Append("FROM ")
         sb_Sql.Append("  v_RFQLine ")
         sb_Sql.Append("WHERE ")

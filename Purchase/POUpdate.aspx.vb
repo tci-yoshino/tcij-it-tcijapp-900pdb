@@ -70,6 +70,7 @@ Partial Public Class POUpdate
         Public ProductID As Integer?
         Public ProductNumber As String   'ReadOnly
         Public ProductName As String   'ReadOnly
+        Public Confidential As String   'ReadOnly
         Public SupplierCode As Integer?
         Public SupplierName As String   'ReadOnly
         Public R3SupplierCode As String   'ReadOnly
@@ -270,6 +271,7 @@ Partial Public Class POUpdate
     ''' <remarks></remarks>
     Private Sub ClearForm()
         'フォーム左段
+        Confidential.Text = String.Empty
         RFQNumber.Text = String.Empty
         R3PONumber.Text = String.Empty
         ParPONumber.Text = String.Empty
@@ -339,6 +341,7 @@ Partial Public Class POUpdate
         End If
 
         'フォーム左段
+        Confidential.Text = POInformation.Confidential
         RFQNumber.Text = POInformation.RFQNumber.ToString()
         R3PONumber.Text = POInformation.R3PONumber
         ParPONumber.Text = NullableIntToString(POInformation.ParPONumber)
@@ -772,6 +775,7 @@ Partial Public Class POUpdate
                 PoInformation.ProductID = DBObjToNullableInt(dr("ProductID"))
                 PoInformation.ProductNumber = dr("ProductNumber").ToString()
                 PoInformation.ProductName = dr("ProductName").ToString()
+                PoInformation.Confidential = IIf(CBool(dr("isCONFIDENTIAL")), Common.CONFIDENTIAL, String.Empty).ToString
                 PoInformation.SupplierCode = DBObjToNullableInt(dr("SupplierCode"))
                 PoInformation.SupplierName = dr("SupplierName").ToString()
                 PoInformation.R3SupplierCode = dr("R3SupplierCode").ToString()
@@ -908,7 +912,8 @@ Partial Public Class POUpdate
         sb_SQL.Append("	CreatedBy, ")
         sb_SQL.Append("	CreateDate, ")
         sb_SQL.Append("	UpdatedBy, ")
-        sb_SQL.Append("	UpdateDate ")
+        sb_SQL.Append("	UpdateDate, ")
+        sb_SQL.Append(" isCONFIDENTIAL ")
         sb_SQL.Append("FROM ")
         sb_SQL.Append("	v_PO ")
         sb_SQL.Append("WHERE ")

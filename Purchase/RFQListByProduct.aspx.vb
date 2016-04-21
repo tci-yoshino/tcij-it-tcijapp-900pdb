@@ -69,7 +69,6 @@ Partial Public Class RFQListByProduct
                 ProductName.Text = reader("Name").ToString()
                 CASNumber.Text = reader("CASNumber").ToString()
                 MolecularFormula.Text = reader("MolecularFormula").ToString()
-                Confidential.Text = IIf(CBool(reader("isConfidential")), Common.CONFIDENTIAL, String.Empty).ToString
             End If
             reader.Close()
         End Using
@@ -125,14 +124,11 @@ Partial Public Class RFQListByProduct
         sb_SQL.Append("	P.QuoName, ")
         sb_SQL.Append("	P.Name, ")
         sb_SQL.Append("	P.CASNumber, ")
-        sb_SQL.Append("	P.MolecularFormula, ")
-        sb_SQL.Append(" C.isCONFIDENTIAL ")
+        sb_SQL.Append("	P.MolecularFormula ")
         sb_SQL.Append("FROM ")
-        sb_SQL.Append("	Product AS P, ")
-        sb_SQL.Append(" v_CONFIDENTIAL AS C ")
+        sb_SQL.Append("	Product AS P ")
         sb_SQL.Append("WHERE ")
         sb_SQL.Append("	P.ProductID = @ProductID ")
-        sb_SQL.Append(" AND C.ProductID = P.ProductID ")
 
         Return sb_SQL.ToString()
 
@@ -171,7 +167,8 @@ Partial Public Class RFQListByProduct
         sb_SQL.Append("	rfh.EnqLocationName, ")
         sb_SQL.Append("	rfh.QuoUserName, ")
         sb_SQL.Append("	rfh.QuoLocationName, ")
-        sb_SQL.Append("	rfh.Comment ")
+        sb_SQL.Append("	rfh.Comment, ")
+        sb_SQL.Append("	rfh.isCONFIDENTIAL ")
         sb_SQL.Append("FROM ")
         sb_SQL.Append("	v_RFQHeader rfh ")
         sb_SQL.Append("LEFT JOIN ")

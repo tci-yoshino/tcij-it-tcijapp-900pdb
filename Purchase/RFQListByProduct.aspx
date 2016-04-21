@@ -32,7 +32,6 @@
                 <strong>Product Name : </strong><asp:Label ID="ProductName" runat="server" Text=''></asp:Label>
                 <strong class="indent">CAS Number : </strong><asp:Label ID="CASNumber" runat="server" Text=''></asp:Label>
                 <strong class="indent">Molecular Formula : </strong><asp:Label ID="MolecularFormula" runat="server" Text=''></asp:Label>
-                <span class="indent"><asp:Label ID="Confidential" runat="server" Text='' CssClass="confidential"></asp:Label></span>
             </p>
         </div>
 
@@ -109,7 +108,11 @@
                             <th class="subhead" colspan="2">RFQ Reference Number : 
                             <asp:HyperLink ID="RFQNumber" runat="server" NavigateUrl='<%#Eval("RFQNumber","./RFQUpdate.aspx?RFQNumber={0}")%>' Text='<%#Eval("RFQNumber")%>' /></th>
                             <th class="subhead" colspan="2">Quoted Date : <asp:Label ID="QuotedDate" runat="server" Text=''><%#If(IsDBNull(Eval("QuotedDate")), "", Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("QuotedDate"), False, False))%></asp:Label></th>
-                            <th class="subhead" colspan="2"><asp:Label ID="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:Label><span class="indent"><asp:Label ID="RFQStatus" runat="server" Text='<%#Eval("Status")%>'></asp:Label></span></th>
+                            <th class="subhead" colspan="2">
+                                <asp:Label ID="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:Label>
+                                <span class="indent"><asp:Label ID="RFQStatus" runat="server" Text='<%#Eval("Status")%>'></asp:Label></span>
+                                <span class="indent"><asp:Label ID="RFQConfidential" runat="server" Text='<%#IIF(Eval("isCONFIDENTIAL")=True,Purchase.Common.CONFIDENTIAL,"") %>' CssClass="confidential"></asp:Label></span>
+                            </th>
                         </tr>
                         <tr>
                             <th>Product Number / Name</th>

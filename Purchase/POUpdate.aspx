@@ -15,6 +15,8 @@
         <form id="POForm" runat="server">
             <div class="tabs"><a href = "#" id = "POCorrespondence" onclick="popup('./POCorrespondence.aspx?PONumber=<%Response.Write(st_ParPONumber)%>')">PO Correspondence / History</a></div>
             <h3>PO Update</h3>
+            <span style="float:right"><asp:Label ID="Confidential" runat="server" Text='' CssClass="confidential"></asp:Label></span>
+            
             <div class="main">
                 <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 

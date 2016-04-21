@@ -79,15 +79,6 @@ Partial Public Class RFQListByProduct
     Protected WithEvents MolecularFormula As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
-    '''Confidential コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents Confidential As Global.System.Web.UI.WebControls.Label
-
-    '''<summary>
     '''RFQHeaderList コントロール。
     '''</summary>
     '''<remarks>

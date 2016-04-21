@@ -15,6 +15,7 @@
         <div class="tabs"></div>
 
         <h3>PO Issue</h3>
+        <span style="float:right"><asp:Label ID="Confidential" runat="server" Text='' CssClass="confidential"></asp:Label></span>
 
         <form id="POForm" runat="server">
             <div class="main">
