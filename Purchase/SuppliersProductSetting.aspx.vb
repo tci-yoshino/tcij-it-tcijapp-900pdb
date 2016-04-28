@@ -143,9 +143,6 @@ Partial Public Class SuppliersProductSetting
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
         If DBReader.Read = True Then
-            ProductNumber.Text = DBReader("ProductNumber")
-            If Not TypeOf DBReader("Name") Is DBNull Then ProductName.Text = DBReader("Name")
-            If Not TypeOf DBReader("QuoName") Is DBNull Then ProductName.Text = DBReader("QuoName")
             '[ProductID取得]----------------------------------------------------------------
             st_ProductID = DBReader("ProductID")
 
@@ -156,6 +153,10 @@ Partial Public Class SuppliersProductSetting
                     Exit Sub
                 End If
             End If
+
+            ProductNumber.Text = DBReader("ProductNumber")
+            If Not TypeOf DBReader("Name") Is DBNull Then ProductName.Text = DBReader("Name")
+            If Not TypeOf DBReader("QuoName") Is DBNull Then ProductName.Text = DBReader("QuoName")
 
         Else
             DBReader.Close()
