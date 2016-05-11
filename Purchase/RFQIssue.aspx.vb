@@ -518,6 +518,8 @@ Partial Public Class RFQIssue
     Private Sub EnqLocation_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles EnqLocation.SelectedIndexChanged
         Dim DBReader As SqlDataReader
 
+        SetControl_EnqUser()
+
         'Supplier Code が数字でない場合は処理を中断する
         If Regex.IsMatch(SupplierCode.Text, "^[0-9]+$") = False Then Exit Sub
 
