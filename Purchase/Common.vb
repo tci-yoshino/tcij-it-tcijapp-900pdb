@@ -841,4 +841,38 @@ Public Class Common
 
     End Function
 
+    Public Shared Function GetRole(ByVal userID As String) As String
+
+        If String.IsNullOrEmpty(userID) Then
+            Return String.Empty
+        End If
+
+        Dim returnValue As String = String.Empty
+
+        Dim sqlStr As StringBuilder = New StringBuilder
+        sqlStr.AppendLine("SELECT")
+        sqlStr.AppendLine("  RoleCode")
+        sqlStr.AppendLine("FROM")
+        sqlStr.AppendLine("  PurchasingUser")
+        sqlStr.AppendLine("WHERE")
+        sqlStr.AppendLine("  UserID = @UserID")
+
+        Using sqlConn As SqlConnection = New SqlConnection(DB_CONNECT_STRING)
+            Using sqlCmd As SqlCommand = New SqlCommand(sqlStr.ToString, sqlConn)
+                sqlCmd.Parameters.AddWithValue("UserID", userID)
+                sqlConn.Open()
+
+                Using sqlReader As SqlDataReader = sqlCmd.ExecuteReader
+                    If sqlReader.Read = True Then
+                        returnValue = sqlReader("RoleCode").ToString
+                    End If
+                    sqlReader.Close()
+                End Using
+            End Using
+        End Using
+
+        Return returnValue
+
+    End Function
+
 End Class
