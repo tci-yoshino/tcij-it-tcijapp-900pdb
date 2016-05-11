@@ -19,8 +19,9 @@ window.onload = function() {
 }
     function returnValues(code, name){
       if(opener){
-        opener.document.getElementById('ProductNumber').value=code
-        opener.document.getElementById('ProductName').value=name
+        opener.document.getElementById('ProductNumber').value = code
+        opener.document.getElementById('ProductName').value = name
+        opener.document.getElementById('ProductNumber').onchange()
       }
       window.close();
     }
