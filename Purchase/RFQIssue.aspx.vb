@@ -629,8 +629,15 @@ Partial Public Class RFQIssue
     ''' <remarks></remarks>
     Protected Sub ProductNumber_TextChanged(ByVal sender As Object, ByVal e As EventArgs) Handles ProductNumber.TextChanged
 
-        SetControl_EnqUser()
-        SetControl_QuoUser()
+        If IsConfidentialItem(ProductNumber.Text) Then
+            If GetRole(EnqUser.SelectedValue) = ROLE_WRITE_P Then
+                SetControl_EnqUser()
+            End If
+
+            If GetRole(QuoUser.SelectedValue) = ROLE_WRITE_P Then
+                SetControl_QuoUser()
+            End If
+        End If
 
     End Sub
 End Class
