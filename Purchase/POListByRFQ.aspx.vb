@@ -58,7 +58,8 @@ Partial Public Class POListByRFQ
             & "WHERE " _
             & "  RFQLineNumber = @RFQLineNumber " _
             & "ORDER BY " _
-            & "  StatusSortOrder ASC "
+            & "  StatusSortOrder ASC " _
+            & "  PONumber ASC "
 
     End Sub
 
