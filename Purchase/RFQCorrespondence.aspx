@@ -17,12 +17,14 @@
         <div class="tabs"></div>
 
         <h3>RFQ Correspondence</h3>
+        <th><asp:Label ID="ProductNumber" runat="server" />　　<asp:Label ID="ProductName" runat="server" /></th>
 
         <div class="main">
             <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 
                 <table>
                     <tr>
+                        
                         <th>Addressee <span class="required">*</span> : </th>
                         <td>
                             <asp:RadioButton ID="EnqUser" GroupName="Addressee" runat="server" /><span class="indent"><asp:Label ID="EnqLocation" runat="server" Text=""></asp:Label></span>

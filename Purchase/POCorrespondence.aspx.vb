@@ -60,6 +60,25 @@ Partial Public Class POCorrespondence
                 If Not conn Is Nothing Then conn.Close()
             End Try
 
+            '[ProductNumber.Textの設定]-----------------------------------------------------------------------
+            Try
+                conn = New SqlConnection(DB_CONNECT_STRING)
+                Dim cmd As SqlCommand = conn.CreateCommand()
+                cmd.CommandText = "SELECT ProductNumber,ProductName FROM v_PO WHERE PONumber = @RFQNumber"
+                cmd.Parameters.AddWithValue("RFQNumber", hd_PONumber.Value)
+                conn.Open()
+                Dim dr As SqlDataReader = cmd.ExecuteReader
+                ProductNumber.Text = ""
+                ProductName.Text = ""
+                If dr.Read = True Then
+                    If Not TypeOf dr("ProductNumber") Is DBNull Then ProductNumber.Text = dr("ProductNumber")
+                    If Not TypeOf dr("ProductName") Is DBNull Then ProductName.Text = dr("ProductName")
+                End If
+            Finally
+                If Not conn Is Nothing Then conn.Close()
+            End Try
+
+
             '[POUser.Textの設定]-----------------------------------------------------------------------
             Try
                 conn = New SqlConnection(DB_CONNECT_STRING)

@@ -234,6 +234,7 @@ Partial Public Class POStatus
         Dim st_SQL As New Text.StringBuilder
         st_SQL.Append("SELECT ")
         st_SQL.Append("	PONumber, ")
+        st_SQL.Append(" ISNULL(Priority, '') AS Priority, ")
         st_SQL.Append("	StatusChangeDate, ")
         st_SQL.Append("	Status, ")
         st_SQL.Append("	ProductNumber, ")

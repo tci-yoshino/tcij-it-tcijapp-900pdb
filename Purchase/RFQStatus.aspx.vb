@@ -328,6 +328,7 @@ Partial Public Class RFQStatus
         Dim st_SQL As New Text.StringBuilder
         st_SQL.Append("SELECT ")
         st_SQL.Append("	RFQNumber, ")
+        st_SQL.Append("  ISNULL(Priority, '') AS Priority, ")
         st_SQL.Append("	EnqLocationName, ")
         st_SQL.Append("	EnqUserName, ")
         st_SQL.Append("	QuoLocationName, ")

@@ -82,7 +82,8 @@
                 <AlternatingItemTemplate>
                         <table class="alternative">
                             <tr>
-                                <th class="subhead" colspan="2">PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%#"./POUpdate.aspx?PONumber=" & Eval("PONumber")%>'><asp:label id="PONumber" runat="server" Text='<%#Eval("PONumber")%>'></asp:label></asp:HyperLink><span class="indent"></span></th>
+                                <th class="subhead" colspan="2">PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%#"./POUpdate.aspx?PONumber=" & Eval("PONumber")%>'><asp:label id="PONumber" runat="server" Text='<%#Eval("PONumber")%>'></asp:label></asp:HyperLink><span class="indent"></span>
+                                <span class="placedright"><asp:label id="Priority" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>' CssClass='<%#IIF(Eval("Priority")="B", "priorityB", "priorityA") %>'></asp:label><asp:label id="Priority_RFQ" runat="server" Text='<%# Eval("Priority") %>' CssClass='<%#IIF(Eval("Priority")="B", "priorityB", "priorityA") %>'></asp:label></span></th>
                                 <th class="subhead" colspan="4">
                                     <asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"),Eval("StatusChangeDate"), True, False)%>'></asp:label>
                                     <span class="indent"><asp:label id="POStatus" runat="server" Text='<%#Eval("Status")%>'></asp:label></span>
@@ -178,7 +179,8 @@
                     <ItemTemplate>
                         <table>
                             <tr>
-                                <th class="subhead" colspan="2">PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%#"./POUpdate.aspx?PONumber=" & Eval("PONumber")%>'><asp:label id="PONumber" runat="server" Text='<%#Eval("PONumber")%>'></asp:label></asp:HyperLink><span class="indent"></span></th>
+                                <th class="subhead" colspan="2">PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%#"./POUpdate.aspx?PONumber=" & Eval("PONumber")%>'><asp:label id="PONumber" runat="server" Text='<%#Eval("PONumber")%>'></asp:label></asp:HyperLink><span class="indent"></span>
+                                <span class="placedright"><asp:label id="Priority" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>' CssClass='<%#IIF(Eval("Priority")="B", "priorityB", "priorityA") %>'></asp:label><asp:label id="Priority_RFQ" runat="server" Text='<%# Eval("Priority") %>' CssClass='<%#IIF(Eval("Priority")="B", "priorityB", "priorityA") %>'></asp:label></span></th>
                                 <th class="subhead" colspan="4">
                                     <asp:label id="POStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"),Eval("StatusChangeDate"), True, False)%>'></asp:label>
                                     <span class="indent"><asp:label id="POStatus" runat="server" Text='<%#Eval("Status")%>'></asp:label></span>

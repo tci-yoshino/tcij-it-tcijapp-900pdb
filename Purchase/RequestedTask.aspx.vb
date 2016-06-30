@@ -29,6 +29,7 @@ Partial Public Class RequestedTask
         sb_SQL.Append("  RH.RFQNumber, ")
         sb_SQL.Append("  CASE WHEN RH.Priority IS NULL THEN 1 ELSE 0  END AS PrioritySort, ")
         sb_SQL.Append("  ISNULL(RH.Priority, '') AS Priority, ")
+        sb_SQL.Append("  RH.CreateDate, ")
         sb_SQL.Append("  RH.StatusChangeDate, ")
         sb_SQL.Append("  RH.Status, ")
         sb_SQL.Append("  RH.ProductNumber, ")

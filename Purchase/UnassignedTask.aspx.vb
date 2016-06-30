@@ -171,6 +171,7 @@ Partial Public Class UnassignedTask
         'SQL文字列の作成
         sb_SQL.Append("SELECT")
         sb_SQL.Append("  RH.RFQNumber, ")
+        sb_SQL.Append("  ISNULL(RH.Priority, '') AS Priority, ")
         sb_SQL.Append("  RH.StatusChangeDate, ")
         sb_SQL.Append("  RH.Status, ")
         sb_SQL.Append("  RH.ProductID, ")
@@ -206,6 +207,7 @@ Partial Public Class UnassignedTask
         'SQL文字列の作成
         sb_SQL.Append("SELECT ")
         sb_SQL.Append("  VP.PONumber, ")
+        sb_SQL.Append("  ISNULL(VP.Priority, '') AS Priority, ")
         sb_SQL.Append("  VP.PODate, ")
         sb_SQL.Append("  VP.POLocationCode, ")
         sb_SQL.Append("  VP.POLocationName, ")

@@ -14,7 +14,7 @@ Partial Public Class RFQListByProduct
 
     Protected st_ProductID As String
     Protected i_DataNum As Integer = 0 ' 0 の場合は Supplier Data が無いと判断し、 Data not found. を表示する。
-
+    Protected st_Priority As String
     ''' <summary>
     ''' このページのロードイベントです。
     ''' </summary>
@@ -100,6 +100,7 @@ Partial Public Class RFQListByProduct
         Dim lv As ListView = CType(CType(e, ListViewItemEventArgs).Item.FindControl("RFQLineList"), ListView)
         Dim src As SqlDataSource = CType(CType(e, ListViewItemEventArgs).Item.FindControl("SrcRFQLine"), SqlDataSource)
         Dim link As HyperLink = CType(CType(e, System.Web.UI.WebControls.ListViewItemEventArgs).Item.FindControl("RFQNumber"), HyperLink)
+        st_Priority = CType(CType(e, System.Web.UI.WebControls.ListViewItemEventArgs).Item.FindControl("Priority"), Label).Text
 
         src.SelectParameters.Clear()
         src.SelectParameters.Add("RFQNumber", link.Text)
@@ -148,6 +149,7 @@ Partial Public Class RFQListByProduct
         sb_SQL.Append("	rfh.StatusChangeDate, ")
         sb_SQL.Append("	rfh.Status, ")
         sb_SQL.Append("	rfh.RFQNumber, ")
+        sb_SQL.Append("	ISNULL(rfh.Priority, '') AS Priority, ")
         sb_SQL.Append("	rfh.QuotedDate, ")
         sb_SQL.Append("	rfh.ProductNumber, ")
         sb_SQL.Append("	rfh.ProductName, ")

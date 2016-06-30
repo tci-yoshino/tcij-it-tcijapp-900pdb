@@ -4,6 +4,7 @@ Partial Public Class RFQListBySupplier
     Inherits CommonPage
     Protected st_SupplierCode As String = String.Empty ' aspx 側で読むため、Protected にする
     Protected i_DataNum As Integer = 0 ' 0 の場合は Supplier Data が無いと判断し、 Data not found. を表示する。
+    Protected st_Priority As String = String.Empty ' aspx 側で読むため、Protected にする
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -76,7 +77,7 @@ Partial Public Class RFQListBySupplier
 
             Dim sqlStr As StringBuilder = New StringBuilder
             sqlStr.AppendLine("SELECT")
-            sqlStr.AppendLine("  RH.RFQNumber, RH.QuotedDate, RH.StatusChangeDate, RH.Status,")
+            sqlStr.AppendLine("  RH.RFQNumber, ISNULL(RH.Priority, '') AS Priority, RH.QuotedDate, RH.StatusChangeDate, RH.Status,")
             sqlStr.AppendLine("  RH.ProductNumber,RH.ProductName, RH.SupplierName,")
             sqlStr.AppendLine("  RH.Purpose, RH.MakerName, RH.MakerInfo,")
             sqlStr.AppendLine("  RH.SupplierItemName, RH.ShippingHandlingFee, RH.ShippingHandlingCurrencyCode,")
@@ -108,6 +109,7 @@ Partial Public Class RFQListBySupplier
         Dim lv As ListView = CType(e.Item.FindControl("RFQLineList"), ListView)
         Dim src As SqlDataSource = CType(e.Item.FindControl("SrcRFQLine"), SqlDataSource)
         Dim label As Label = CType(e.Item.FindControl("RFQNumber"), Label)
+        st_Priority = CType(e.Item.FindControl("Priority"), Label).Text
 
         src.SelectParameters.Clear()
         src.SelectParameters.Add("RFQNumber", label.Text)

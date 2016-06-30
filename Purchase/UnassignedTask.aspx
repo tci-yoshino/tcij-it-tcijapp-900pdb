@@ -35,6 +35,7 @@
                 <ItemTemplate>
                     <tr>
                         <th class="subhead" colspan="2">
+                        <span class="placedright"><asp:label id="RFQPriority" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>' CssClass='<%#IIF(Eval("Priority")="B", "priorityB", "priorityA") %>'></asp:label><asp:label id="Priority_RFQ" runat="server" Text='<%# Eval("Priority") %>' CssClass='<%#IIF(Eval("Priority")="B", "priorityB", "priorityA") %>'></asp:label></span>
                             RFQ Reference Number : <asp:HyperLink ID="RFQUpdate" runat="server" NavigateUrl='<%# "./RFQUpdate.aspx?RFQNumber=" & Eval("RFQNumber")%>'><asp:Label ID="RFQNumber" runat="server" Text='<%#Eval("RFQNumber")%>'></asp:Label></asp:HyperLink>
                         </th>
                         <th class="subhead" colspan="2">
@@ -91,6 +92,7 @@
                 <ItemTemplate>
                     <tr>
                         <th class="subhead" colspan="2">
+                         <span class="placedright"><asp:label id="RFQPriority" runat="server" Text="Priority : " Visible='<%#IIF(Eval("Priority")="", False,True) %>' CssClass='<%#IIF(Eval("Priority")="B", "priorityB", "priorityA") %>'></asp:label><asp:label id="Priority_RFQ" runat="server" Text='<%# Eval("Priority") %>' CssClass='<%#IIF(Eval("Priority")="B", "priorityB", "priorityA") %>'></asp:label></span>
                             PO Number : <asp:HyperLink ID="POUpdate" runat="server" NavigateUrl='<%# "./POUpdate.aspx?PONumber=" & Eval("PONumber")%>'><asp:Label ID="PONumber" runat="server" Text='<%#Eval("PONumber")%>'></asp:Label></asp:HyperLink>
                         </th>
                         <th class="subhead">

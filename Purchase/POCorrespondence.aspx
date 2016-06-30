@@ -17,7 +17,7 @@
         <div class="tabs"></div>
 
         <h3>PO Correspondence</h3>
-
+        <th><asp:Label ID="ProductNumber" runat="server" />　　<asp:Label ID="ProductName" runat="server" /></th>
         <div class="main">
             <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 
