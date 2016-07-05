@@ -259,6 +259,8 @@ Partial Public Class SupplierSetting
                 If R3SupplierCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(R3SupplierCode.Text) & "',"
                 For i = 2 To 10
                     If CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text.ToString) & "',"
+                Next
+                For i = 2 To 10
                     If CType(Page.FindControl("SupplierLocationCode" + i.ToString), DropDownList).Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(CType(Page.FindControl("SupplierLocationCode" + i.ToString), DropDownList).Text.ToString) & "',"
                 Next
                 If SupplierName1.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(SupplierName1.Text) & "',"
