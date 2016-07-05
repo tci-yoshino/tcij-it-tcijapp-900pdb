@@ -31,9 +31,98 @@
 						<td><asp:Label ID="Code" runat="server" Text=""></asp:Label></td>
 					</tr>
 					<tr>
-						<th><span class="r3">TCI-J Supplier Code</span> : </th>
-						<td><asp:TextBox ID="R3SupplierCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox></td>
+						<th><span class="r3">SAP Supplier Code1</span> : </th>
+						<td><asp:TextBox ID="R3SupplierCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox><span class="indent"></span>TCI-J only</td>
 					</tr>
+					
+                    <tr>
+						<th><span class="r3">SAP Supplier Code2</span> : </th>
+    						<td><asp:TextBox ID="R3SupplierCode2" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
+    						    <span class="indent"></span>
+    						    <asp:DropDownList ID="SupplierLocationCode2" runat="server" AutoPostBack="True">
+                                <asp:ListItem></asp:ListItem>
+                                </asp:DropDownList>
+    						</td> 
+					</tr>
+					<tr>
+						<th><span class="r3">SAP Supplier Code3</span> : </th>
+    					<td><asp:TextBox ID="R3SupplierCode3" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
+    					    <span class="indent"></span>
+    					    <asp:DropDownList ID="SupplierLocationCode3" runat="server" AutoPostBack="True">
+                            <asp:ListItem></asp:ListItem>
+                            </asp:DropDownList>
+    					</td> 
+					</tr>	
+					<tr>
+						<th><span class="r3">SAP Supplier Code4</span> : </th>
+    					<td><asp:TextBox ID="R3SupplierCode4" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
+    					    <span class="indent"></span>
+    					    <asp:DropDownList ID="SupplierLocationCode4" runat="server" AutoPostBack="True">
+                            <asp:ListItem></asp:ListItem>
+                            </asp:DropDownList>
+    					</td> 
+					</tr>
+					
+					<tr>
+						<th><span class="r3">SAP Supplier Code5</span> : </th>
+    					<td><asp:TextBox ID="R3SupplierCode5" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
+    					    <span class="indent"></span>
+    					    <asp:DropDownList ID="SupplierLocationCode5" runat="server" AutoPostBack="True">
+                            <asp:ListItem></asp:ListItem>
+                            </asp:DropDownList>
+    					</td> 
+					</tr>
+					
+					<tr>
+						<th><span class="r3">SAP Supplier Code6</span> : </th>
+    					<td><asp:TextBox ID="R3SupplierCode6" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
+    					    <span class="indent"></span>
+    					    <asp:DropDownList ID="SupplierLocationCode6" runat="server" AutoPostBack="True">
+                            <asp:ListItem></asp:ListItem>
+                            </asp:DropDownList>
+    					</td> 
+					</tr>
+					
+					<tr>
+						<th><span class="r3">SAP Supplier Code7</span> : </th>
+    					<td><asp:TextBox ID="R3SupplierCode7" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
+    					    <span class="indent"></span>
+    					    <asp:DropDownList ID="SupplierLocationCode7" runat="server" AutoPostBack="True">
+                            <asp:ListItem></asp:ListItem>
+                            </asp:DropDownList>
+    					</td> 
+					</tr>
+					
+					<tr>
+						<th><span class="r3">SAP Supplier Code8</span> : </th>
+    					<td><asp:TextBox ID="R3SupplierCode8" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
+    					    <span class="indent"></span>
+    					    <asp:DropDownList ID="SupplierLocationCode8" runat="server" AutoPostBack="True">
+                            <asp:ListItem></asp:ListItem>
+                            </asp:DropDownList>
+    					</td> 
+					</tr>
+												
+					<tr>
+						<th><span class="r3">SAP Supplier Code9</span> : </th>
+    					<td><asp:TextBox ID="R3SupplierCode9" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
+    					    <span class="indent"></span>
+    					    <asp:DropDownList ID="SupplierLocationCode9" runat="server" AutoPostBack="True">
+                            <asp:ListItem></asp:ListItem>
+                            </asp:DropDownList>
+    					</td> 
+					</tr>
+					
+					<tr>
+						<th><span class="r3">SAP Supplier Code10</span> : </th>
+    					<td><asp:TextBox ID="R3SupplierCode10" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
+    					    <span class="indent"></span>
+    					    <asp:DropDownList ID="SupplierLocationCode10" runat="server" AutoPostBack="True">
+                            <asp:ListItem></asp:ListItem>
+                            </asp:DropDownList>
+    					</td> 
+					</tr>				                    
+        
 					<tr>
 						<th>Supplier Information : </th>
 						<td><asp:TextBox ID="SupplierInfo" runat="server" Width="21em" MaxLength="255"></asp:TextBox></td>

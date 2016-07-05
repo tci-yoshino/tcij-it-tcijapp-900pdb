@@ -88,6 +88,168 @@ Partial Public Class SupplierSetting
     Protected WithEvents R3SupplierCode As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
+    '''R3SupplierCode2 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents R3SupplierCode2 As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''SupplierLocationCode2 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SupplierLocationCode2 As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''R3SupplierCode3 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents R3SupplierCode3 As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''SupplierLocationCode3 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SupplierLocationCode3 As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''R3SupplierCode4 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents R3SupplierCode4 As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''SupplierLocationCode4 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SupplierLocationCode4 As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''R3SupplierCode5 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents R3SupplierCode5 As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''SupplierLocationCode5 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SupplierLocationCode5 As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''R3SupplierCode6 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents R3SupplierCode6 As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''SupplierLocationCode6 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SupplierLocationCode6 As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''R3SupplierCode7 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents R3SupplierCode7 As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''SupplierLocationCode7 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SupplierLocationCode7 As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''R3SupplierCode8 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents R3SupplierCode8 As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''SupplierLocationCode8 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SupplierLocationCode8 As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''R3SupplierCode9 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents R3SupplierCode9 As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''SupplierLocationCode9 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SupplierLocationCode9 As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''R3SupplierCode10 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents R3SupplierCode10 As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''SupplierLocationCode10 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SupplierLocationCode10 As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
     '''SupplierInfo コントロール。
     '''</summary>
     '''<remarks>

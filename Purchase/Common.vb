@@ -246,6 +246,13 @@ Public Class Common
     ''' <remarks></remarks>
     Public Const ERR_CONFIDENTIAL_PRODUCT As String = "You don't have the authorization to specify this product number."
 
+    ''' <summary>
+    ''' エラーメッセージ 「○○は重複しています」
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const ERR_DUPLICATE_CODE As String = " is duplicated."
+
+
     Private Const LOCATION_JP As String = "JP"
 
     ''' <summary>
