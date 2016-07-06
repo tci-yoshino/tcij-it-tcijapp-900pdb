@@ -4,7 +4,6 @@ Partial Public Class RFQListBySupplier
     Inherits CommonPage
     Protected st_SupplierCode As String = String.Empty ' aspx 側で読むため、Protected にする
     Protected i_DataNum As Integer = 0 ' 0 の場合は Supplier Data が無いと判断し、 Data not found. を表示する。
-    Protected st_Priority As String = String.Empty ' aspx 側で読むため、Protected にする
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -109,7 +108,6 @@ Partial Public Class RFQListBySupplier
         Dim lv As ListView = CType(e.Item.FindControl("RFQLineList"), ListView)
         Dim src As SqlDataSource = CType(e.Item.FindControl("SrcRFQLine"), SqlDataSource)
         Dim label As Label = CType(e.Item.FindControl("RFQNumber"), Label)
-        st_Priority = CType(e.Item.FindControl("Priority"), Label).Text
 
         src.SelectParameters.Clear()
         src.SelectParameters.Add("RFQNumber", label.Text)
@@ -117,7 +115,7 @@ Partial Public Class RFQListBySupplier
               "SELECT distinct RL.RFQLineNumber, RL.EnqQuantity, RL.EnqUnitCode, RL.EnqPiece, " _
             & "       RL.CurrencyCode, RL.UnitPrice, RL.QuoPer, RL.QuoUnitCode, " _
             & "       RL.LeadTime, RL.Packing, RL.Purity, RL.QMMethod, RL.NoOfferReason, " _
-            & "       PO.RFQLineNumber AS PO " _
+            & "       PO.RFQLineNumber AS PO, ISNULL(PO.Priority,'') AS Priority " _
             & "FROM v_RFQLine AS RL LEFT OUTER JOIN " _
             & "     PO ON PO.RFQLineNumber = RL.RFQLineNumber " _
             & "WHERE RL.RFQNumber = @RFQNumber"

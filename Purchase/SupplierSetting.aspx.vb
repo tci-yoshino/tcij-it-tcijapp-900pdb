@@ -149,13 +149,17 @@ Partial Public Class SupplierSetting
                     Exit Sub
                 End If
                 'SupplierCodeの重複チェック
+                If CType(Page.FindControl("R3SupplierCode"), TextBox).Text <> "" _
+                        AndAlso CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text = CType(Page.FindControl("R3SupplierCode"), TextBox).Text Then
+                    Msg.Text = "SAP Supplier Code" + i.ToString + ERR_DUPLICATE_CODE
+                    Exit Sub
+                End If
                 Dim j As Integer
                 For j = 2 To 10
-                    If i <> j And CType(Page.FindControl("R3SupplierCode" + j.ToString), TextBox).Text <> "" Then
-                        If CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text = CType(Page.FindControl("R3SupplierCode" + j.ToString), TextBox).Text Then
-                            Msg.Text = "SAP Supplier Code" + i.ToString + ERR_DUPLICATE_CODE
-                            Exit Sub
-                        End If
+                    If i <> j AndAlso CType(Page.FindControl("R3SupplierCode" + j.ToString), TextBox).Text <> "" _
+                              AndAlso CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text = CType(Page.FindControl("R3SupplierCode" + j.ToString), TextBox).Text Then
+                        Msg.Text = "SAP Supplier Code" + i.ToString + ERR_DUPLICATE_CODE
+                        Exit Sub
                     End If
                 Next
             Else
