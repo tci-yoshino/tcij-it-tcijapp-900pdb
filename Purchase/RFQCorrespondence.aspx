@@ -17,7 +17,8 @@
         <div class="tabs"></div>
 
         <h3>RFQ Correspondence</h3>
-        <th><asp:Label ID="ProductNumber" runat="server" />　　<asp:Label ID="ProductName" runat="server" /></th>
+        
+        <h4><asp:Label ID="ProductNumber" runat="server" /><span class="indent"><asp:Label ID="ProductName" runat="server" /></span></h4>
 
         <div class="main">
             <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
