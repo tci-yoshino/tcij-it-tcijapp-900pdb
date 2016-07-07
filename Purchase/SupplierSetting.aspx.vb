@@ -158,7 +158,7 @@ Partial Public Class SupplierSetting
                 For j = 2 To 10
                     If i <> j AndAlso CType(Page.FindControl("R3SupplierCode" + j.ToString), TextBox).Text <> "" _
                               AndAlso CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text = CType(Page.FindControl("R3SupplierCode" + j.ToString), TextBox).Text Then
-                        Msg.Text = "SAP Supplier Code" + i.ToString + ERR_DUPLICATE_CODE
+                        Msg.Text = "SAP Supplier Code" + j.ToString + ERR_DUPLICATE_CODE
                         Exit Sub
                     End If
                 Next
