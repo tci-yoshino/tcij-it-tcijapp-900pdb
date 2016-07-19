@@ -115,9 +115,13 @@ Partial Public Class RFQListBySupplier
               "SELECT distinct RL.RFQLineNumber, RL.EnqQuantity, RL.EnqUnitCode, RL.EnqPiece, " _
             & "       RL.CurrencyCode, RL.UnitPrice, RL.QuoPer, RL.QuoUnitCode, " _
             & "       RL.LeadTime, RL.Packing, RL.Purity, RL.QMMethod, RL.NoOfferReason, " _
-            & "       PO.RFQLineNumber AS PO, ISNULL(PO.Priority,'') AS Priority " _
+            & "       PO.RFQLineNumber AS PO, CASE WHEN PO.Priority='C' THEN '' ELSE PO.Priority END AS Priority " _
             & "FROM v_RFQLine AS RL LEFT OUTER JOIN " _
-            & "     PO ON PO.RFQLineNumber = RL.RFQLineNumber " _
+            & " (SELECT RFQLineNumber " _
+            & " ,MIN(CASE WHEN PO.QMStartingDate IS NOT NULL OR PO.QMFinishDate IS NOT NULL THEN 'C'" _
+            & "     ELSE ISNULL(PO.Priority, 'C') END) AS Priority " _
+            & " FROM PO GROUP BY RFQLineNumber )" _
+            & " PO ON PO.RFQLineNumber = RL.RFQLineNumber " _
             & "WHERE RL.RFQNumber = @RFQNumber"
         lv.DataSourceID = src.ID
         lv.DataBind()

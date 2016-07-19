@@ -52,8 +52,9 @@
                             <span class="indent"><em><asp:label id="RFQCorrespondence" runat="server" Text='<%# Eval("RFQCorrespondence")%>'></asp:label></em></span>
                         </th>
                         <th class="subhead" colspan="4">
-                            <asp:label id="RFQCreateDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("CreateDate"), True, False) & "　Create"%>'></asp:label>
-                            <span class="indent"><asp:label id="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:label></span>
+                            <asp:label id="RFQCreateDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("CreateDate"), True, False) %>'></asp:label>
+                            <span class="indent"><asp:label id="Label1" runat="server" Text='Create'></asp:label></span>
+                            <span style="margin-left:2.5em"><asp:label id="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:label></span>
                             <span class="indent"><asp:label id="RFQStatus" runat="server" Text='<%# Eval("Status")%>'></asp:label></span>
                             <span class="indent"><asp:Label ID="RFQConfidential" runat="server" Text='<%#IIF(Eval("isCONFIDENTIAL")=True,Purchase.Common.CONFIDENTIAL,"") %>' CssClass="confidential"></asp:Label></span>
                         </th>

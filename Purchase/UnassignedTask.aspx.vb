@@ -172,6 +172,7 @@ Partial Public Class UnassignedTask
         sb_SQL.Append("SELECT")
         sb_SQL.Append("  RH.RFQNumber, ")
         sb_SQL.Append("  ISNULL(RH.Priority, '') AS Priority, ")
+        sb_SQL.Append("  CASE WHEN RH.Priority IS NULL THEN 1 ELSE 0  END AS PrioritySort,")
         sb_SQL.Append("  RH.StatusChangeDate, ")
         sb_SQL.Append("  RH.Status, ")
         sb_SQL.Append("  RH.ProductID, ")
@@ -195,6 +196,8 @@ Partial Public Class UnassignedTask
             sb_SQL.Append("  AND RH.isCONFIDENTIAL = 0 ")
         End If
         sb_SQL.Append("ORDER BY ")
+        sb_SQL.Append("  PrioritySort, ")
+        sb_SQL.Append("  Priority, ")
         sb_SQL.Append("  RH.RFQNumber ASC ")
 
         Return sb_SQL.ToString()
@@ -208,6 +211,7 @@ Partial Public Class UnassignedTask
         sb_SQL.Append("SELECT ")
         sb_SQL.Append("  VP.PONumber, ")
         sb_SQL.Append("  ISNULL(VP.Priority, '') AS Priority, ")
+        sb_SQL.Append("  CASE WHEN VP.Priority IS NULL THEN 1 ELSE 0  END AS PrioritySort,")
         sb_SQL.Append("  VP.PODate, ")
         sb_SQL.Append("  VP.POLocationCode, ")
         sb_SQL.Append("  VP.POLocationName, ")
@@ -236,6 +240,8 @@ Partial Public Class UnassignedTask
             sb_SQL.Append("  AND VP.isCONFIDENTIAL = 0 ")
         End If
         sb_SQL.Append("ORDER BY ")
+        sb_SQL.Append("  PrioritySort, ")
+        sb_SQL.Append("  Priority, ")
         sb_SQL.Append("  VP.PONumber ASC ")
 
         Return sb_SQL.ToString()

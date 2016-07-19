@@ -140,25 +140,37 @@ Partial Public Class SupplierSetting
         End If
 
         '[SupplierCode、SupplierLocationの入力Check]-------------------------------------------------------------
+        'SupplierCode1の数値チェック
+        If Not IsInteger(R3SupplierCode.Text) Then
+            Msg.Text = "SAP Supplier Code 1" + ERR_INVALID_NUMBER
+            Exit Sub
+        End If
+
         Dim i As Integer
         For i = 2 To 10
             If CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text <> "" Then
+                '数値チェック
+                If Not IsInteger(CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text) Then
+                    Msg.Text = "SAP Supplier Code " + i.ToString + ERR_INVALID_NUMBER
+                    Exit Sub
+                End If
+
                 'SupplierLocationCodeの入力チェック
                 If CType(Page.FindControl("SupplierLocationCode" + i.ToString), DropDownList).Text = "" Then
-                    Msg.Text = "SAP Supplier Location Code" + i.ToString + ERR_REQUIRED_FIELD
+                    Msg.Text = "SAP Supplier Location Code " + i.ToString + ERR_REQUIRED_FIELD
                     Exit Sub
                 End If
                 'SupplierCodeの重複チェック
                 If CType(Page.FindControl("R3SupplierCode"), TextBox).Text <> "" _
-                        AndAlso CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text = CType(Page.FindControl("R3SupplierCode"), TextBox).Text Then
-                    Msg.Text = "SAP Supplier Code" + i.ToString + ERR_DUPLICATE_CODE
+                        AndAlso CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text.Trim("0") = CType(Page.FindControl("R3SupplierCode"), TextBox).Text.Trim("0") Then
+                    Msg.Text = "SAP Supplier Code " + i.ToString + ERR_DUPLICATE_CODE
                     Exit Sub
                 End If
                 Dim j As Integer
                 For j = 2 To 10
                     If i <> j AndAlso CType(Page.FindControl("R3SupplierCode" + j.ToString), TextBox).Text <> "" _
-                              AndAlso CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text = CType(Page.FindControl("R3SupplierCode" + j.ToString), TextBox).Text Then
-                        Msg.Text = "SAP Supplier Code" + j.ToString + ERR_DUPLICATE_CODE
+                              AndAlso CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text.Trim("0") = CType(Page.FindControl("R3SupplierCode" + j.ToString), TextBox).Text.Trim("0") Then
+                        Msg.Text = "SAP Supplier Code " + j.ToString + ERR_DUPLICATE_CODE
                         Exit Sub
                     End If
                 Next
@@ -198,10 +210,10 @@ Partial Public Class SupplierSetting
                     DBReader.Close()
                     '[Supplierの更新処理]------------------------------------------------
                     st_SQLSTR = "UPDATE [Supplier] SET R3SupplierCode="
-                    If R3SupplierCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(R3SupplierCode.Text) & "',"
+                    If R3SupplierCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(R3SupplierCode.Text.PadLeft(10, "0"c)) & "',"
                     For i = 2 To 10
                         st_SQLSTR = st_SQLSTR & "R3SupplierCode" & i.ToString & "="
-                        If CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text.ToString) & "',"
+                        If CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text.ToString.PadLeft(10, "0"c)) & "',"
                         st_SQLSTR = st_SQLSTR & "SupplierLocationCode" & i.ToString & "="
                         If CType(Page.FindControl("SupplierLocationCode" + i.ToString), DropDownList).Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(CType(Page.FindControl("SupplierLocationCode" + i.ToString), DropDownList).Text.ToString) & "',"
                     Next
