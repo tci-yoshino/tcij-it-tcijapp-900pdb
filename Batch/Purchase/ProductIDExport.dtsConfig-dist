@@ -6,11 +6,6 @@
 		<ConfiguredValue>Data Source=TDB1; Initial Catalog=Purchase; User ID=Purchase; Password=n061t@kun;</ConfiguredValue>
 	</Configuration>
 
-	<!-- コマンドタイムアウト（秒）※0 は無限となります -->
-	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::CommandTimeout].Properties[Value]" ValueType="Int32">
-		<ConfiguredValue>600</ConfiguredValue>
-	</Configuration>
-
 	<!-- 出力ファイルパス（ファイル名まで指定） -->
 	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputFilePath].Properties[Value]" ValueType="String">
 		<ConfiguredValue>\\TFL4\file\部署\調達部\受信\情シス提供データ(調達)\ProductID.txt</ConfiguredValue>
