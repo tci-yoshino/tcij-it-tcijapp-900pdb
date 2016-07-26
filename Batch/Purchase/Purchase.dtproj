@@ -47,5 +47,10 @@
       <FullPath>CompanyPerformance.dtsx</FullPath>
       <References />
     </DtsPackage>
+    <DtsPackage FormatVersion="3">
+      <Name>ProductIDExport.dtsx</Name>
+      <FullPath>ProductIDExport.dtsx</FullPath>
+      <References />
+    </DtsPackage>
   </DTSPackages>
 </Project>
