@@ -141,11 +141,10 @@ Partial Public Class SupplierSetting
 
         '[SupplierCode、SupplierLocationの入力Check]-------------------------------------------------------------
         'SupplierCode1の数値チェック
-        If Not IsInteger(R3SupplierCode.Text) Then
+        If R3SupplierCode.Text <> "" AndAlso Not IsInteger(R3SupplierCode.Text) Then
             Msg.Text = "SAP Supplier Code 1" + ERR_INVALID_NUMBER
             Exit Sub
         End If
-
         Dim i As Integer
         For i = 2 To 10
             If CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text <> "" Then
