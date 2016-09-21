@@ -182,7 +182,7 @@
 
 				<table>
 					<tr>
-						<th><span class="r3">E-mail</span> : </th>
+						<th>E-mail : </th>
 						<td><asp:TextBox ID="Email" runat="server"  Width="21em" MaxLength="255"></asp:TextBox></td>
 					</tr>
 					<tr>
