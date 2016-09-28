@@ -149,7 +149,9 @@ Partial Public Class SupplierSetting
         For i = 2 To 10
             If CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text <> "" Then
                 '数値チェック
-                If Not IsInteger(CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text) Then
+                If Not IsInteger(CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text) _
+                    AndAlso CType(Page.FindControl("SupplierLocationCode" + i.ToString), DropDownList).Text <> LOCATION_IN Then
+
                     Msg.Text = "SAP Supplier Code " + i.ToString + ERR_INVALID_NUMBER
                     Exit Sub
                 End If

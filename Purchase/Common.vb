@@ -252,8 +252,8 @@ Public Class Common
     ''' <remarks></remarks>
     Public Const ERR_DUPLICATE_CODE As String = " is duplicated."
 
-
-    Private Const LOCATION_JP As String = "JP"
+    Public Const LOCATION_JP As String = "JP"
+    Public Const LOCATION_IN As String = "IN"
 
     ''' <summary>
     ''' プライオリティ
