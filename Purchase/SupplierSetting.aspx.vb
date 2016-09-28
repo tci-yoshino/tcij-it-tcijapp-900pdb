@@ -214,7 +214,16 @@ Partial Public Class SupplierSetting
                     If R3SupplierCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(R3SupplierCode.Text.PadLeft(10, "0"c)) & "',"
                     For i = 2 To 10
                         st_SQLSTR = st_SQLSTR & "R3SupplierCode" & i.ToString & "="
-                        If CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text.ToString.PadLeft(10, "0"c)) & "',"
+                        If CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text.ToString = "" Then
+                            st_SQLSTR = st_SQLSTR & "null,"
+                        Else
+                            If CType(Page.FindControl("SupplierLocationCode" + i.ToString), DropDownList).Text.ToString = LOCATION_IN Then
+                                st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text.ToString) & "',"
+                            Else
+                                st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text.ToString.PadLeft(10, "0"c)) & "',"
+                            End If
+                        End If
+
                         st_SQLSTR = st_SQLSTR & "SupplierLocationCode" & i.ToString & "="
                         If CType(Page.FindControl("SupplierLocationCode" + i.ToString), DropDownList).Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(CType(Page.FindControl("SupplierLocationCode" + i.ToString), DropDownList).Text.ToString) & "',"
                     Next
@@ -273,9 +282,17 @@ Partial Public Class SupplierSetting
                             & "SupplierLocationCode2,SupplierLocationCode3,SupplierLocationCode4,SupplierLocationCode5,SupplierLocationCode6," _
                             & "SupplierLocationCode7,SupplierLocationCode8,SupplierLocationCode9,SupplierLocationCode10," _
                             & "Name1,Name2,Name3,Name4,SearchTerm1,SearchTerm2,Address1,Address2,Address3,PostalCode,CountryCode,RegionCode,Telephone,Fax,Email,Comment,Website,Note,Info,LocationCode,isDisabled,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ("
-                If R3SupplierCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(R3SupplierCode.Text) & "',"
+                If R3SupplierCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(R3SupplierCode.Text.PadLeft(10, "0"c)) & "',"
                 For i = 2 To 10
-                    If CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text.ToString) & "',"
+                    If CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text.ToString = "" Then
+                        st_SQLSTR = st_SQLSTR & "null,"
+                    Else
+                        If CType(Page.FindControl("SupplierLocationCode" + i.ToString), DropDownList).Text.ToString = LOCATION_IN Then
+                            st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text.ToString) & "',"
+                        Else
+                            st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text.ToString.PadLeft(10, "0"c)) & "',"
+                        End If
+                    End If
                 Next
                 For i = 2 To 10
                     If CType(Page.FindControl("SupplierLocationCode" + i.ToString), DropDownList).Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(CType(Page.FindControl("SupplierLocationCode" + i.ToString), DropDownList).Text.ToString) & "',"
