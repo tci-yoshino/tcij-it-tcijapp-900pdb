@@ -160,13 +160,31 @@ Partial Public Class POUpdate
     Protected WithEvents ProductName As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
+    '''LabelOrderQuantity コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents LabelOrderQuantity As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
+    '''LabelOrderUnit コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents LabelOrderUnit As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
     '''OrderQuantity コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents OrderQuantity As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents OrderQuantity As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
     '''OrderUnit コントロール。
@@ -175,7 +193,16 @@ Partial Public Class POUpdate
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents OrderUnit As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents OrderUnit As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''SrcUnit コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SrcUnit As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
     '''DeliveryDate コントロール。
@@ -241,6 +268,24 @@ Partial Public Class POUpdate
     Protected WithEvents R3SupplierName As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
+    '''Supplier コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Supplier As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''SrcSupplier コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SrcSupplier As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
     '''R3MakerCode コントロール。
     '''</summary>
     '''<remarks>
@@ -293,6 +338,24 @@ Partial Public Class POUpdate
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Purpose As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
+    '''ListPurpose コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents ListPurpose As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''SrcPurpose コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SrcPurpose As Global.System.Web.UI.WebControls.SqlDataSource
 
     '''<summary>
     '''RawMaterialFor コントロール。

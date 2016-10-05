@@ -250,6 +250,24 @@ Partial Public Class RFQUpdate
     Protected WithEvents Purpose As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
+    '''ListPurpose コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents ListPurpose As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''SrcPurpose コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SrcPurpose As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
     '''Priority コントロール。
     '''</summary>
     '''<remarks>

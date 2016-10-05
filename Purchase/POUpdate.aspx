@@ -68,7 +68,13 @@
                         </tr>
                         <tr>
                             <th>Order Quantity  : </th>
-                            <td><asp:Label ID="OrderQuantity" runat="server" Text=""></asp:Label> <asp:Label ID="OrderUnit" runat="server" Text=""></asp:Label> </td>
+                            <td>
+                            <asp:Label ID="LabelOrderQuantity" runat="server" Text=""></asp:Label> <asp:Label ID="LabelOrderUnit" runat="server" Text=""></asp:Label>
+                            <asp:TextBox ID="OrderQuantity" runat="server" Width="5em" MaxLength="11" CssClass="number"></asp:TextBox>
+                            <asp:DropDownList ID="OrderUnit" runat="server" DataSourceID="SrcUnit" DataTextField="UnitCode" DataValueField="UnitCode">
+                            </asp:DropDownList>
+                            <asp:SqlDataSource ID="SrcUnit" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+                            </td>
                         </tr>
                         <tr>
                             <th>Delivery Date : </th>
@@ -84,7 +90,11 @@
                         </tr>
                         <tr>
                             <th>TCI-J Supplier Name : </th>
-                            <td><asp:Label ID="R3SupplierName" runat="server" Text=""></asp:Label></td>
+                            <td><asp:Label ID="R3SupplierName" runat="server" Text=""></asp:Label>
+                            <asp:DropDownList ID="Supplier" runat="server" DataSourceID="SrcSupplier" DataTextField="Name" DataValueField="SupplierCode">
+                            </asp:DropDownList>
+                            <asp:SqlDataSource ID="SrcSupplier" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+                        </td>
                         </tr>
                         <tr>
                             <th>TCI-J Maker Code : </th>
@@ -108,7 +118,11 @@
                         </tr>
                         <tr>
                             <th>Purpose : </th>
-                            <td><asp:Label ID="Purpose" runat="server" Text=""></asp:Label></td>
+                            <td><asp:Label ID="Purpose" runat="server" Text=""></asp:Label>
+                            <asp:DropDownList ID="ListPurpose" runat="server" DataSourceID="SrcPurpose" DataTextField="Text" DataValueField="PurposeCode" AppendDataBoundItems="true">
+                            <asp:ListItem></asp:ListItem>
+                            </asp:DropDownList>
+                            <asp:SqlDataSource ID="SrcPurpose" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource></td>
                         </tr>
                         <tr>
                             <th>Raw Material for : </th>

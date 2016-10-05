@@ -111,7 +111,14 @@
 
                 <table>
                     <tr>
-                        <th>Purpose : </th><td><asp:Label ID="Purpose" runat="server" Text=""></asp:Label></td>
+                        <th>Purpose : </th>
+                        <td><asp:Label ID="Purpose" runat="server" Text=""></asp:Label>
+                            <asp:DropDownList ID="ListPurpose" runat="server" DataSourceID="SrcPurpose" DataTextField="Text" DataValueField="PurposeCode" AppendDataBoundItems="true">
+                            <asp:ListItem></asp:ListItem>
+                            </asp:DropDownList>
+                            <asp:SqlDataSource ID="SrcPurpose" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
+                        </td>
+                        
                     </tr>
                     <tr>
                       <th>Priority : </th>
