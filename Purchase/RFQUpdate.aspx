@@ -459,6 +459,7 @@
                     <asp:HiddenField ID="EnqLocationCode" runat="server" />
                     <asp:HiddenField ID="QuoLocationCode" runat="server" />
                     <asp:HiddenField ID="Hi_RFQStatusCode" runat="server" />
+                    <asp:HiddenField ID="PurposeCode" runat="server" />
                 </div>
 				<% End If%>                
             </div>

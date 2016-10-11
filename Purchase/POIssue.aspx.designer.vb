@@ -286,6 +286,15 @@ Partial Public Class POIssue
     Protected WithEvents DeliveryTerm As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
+    '''LabelPurpose コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents LabelPurpose As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
     '''Purpose コントロール。
     '''</summary>
     '''<remarks>
@@ -428,4 +437,13 @@ Partial Public Class POIssue
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''ParPO_PurposeCode コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents ParPO_PurposeCode As Global.System.Web.UI.WebControls.HiddenField
 End Class

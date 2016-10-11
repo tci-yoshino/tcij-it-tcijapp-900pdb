@@ -331,22 +331,22 @@ Partial Public Class POUpdate
     Protected WithEvents DeliveryTerm As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
+    '''LabelPurpose コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents LabelPurpose As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
     '''Purpose コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents Purpose As Global.System.Web.UI.WebControls.Label
-
-    '''<summary>
-    '''ListPurpose コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents ListPurpose As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents Purpose As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
     '''SrcPurpose コントロール。
@@ -518,6 +518,51 @@ Partial Public Class POUpdate
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents UpdateDate As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''LabelSupplierCode コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents LabelSupplierCode As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''HPurposeCode コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents HPurposeCode As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''SOLocationCode コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SOLocationCode As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''SOUserID コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SOUserID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''ParPurposeCode コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents ParPurposeCode As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
     '''RunMsg コントロール。

@@ -118,8 +118,8 @@
                         </tr>
                         <tr>
                             <th>Purpose : </th>
-                            <td><asp:Label ID="Purpose" runat="server" Text=""></asp:Label>
-                            <asp:DropDownList ID="ListPurpose" runat="server" DataSourceID="SrcPurpose" DataTextField="Text" DataValueField="PurposeCode" AppendDataBoundItems="true">
+                            <td><asp:Label ID="LabelPurpose" runat="server" Text="" ></asp:Label>
+                            <asp:DropDownList ID="Purpose" runat="server" DataSourceID="SrcPurpose" DataTextField="Text" DataValueField="PurposeCode" AppendDataBoundItems="true">
                             <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                             <asp:SqlDataSource ID="SrcPurpose" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource></td>
@@ -203,7 +203,11 @@
                         </tr>
                     </table>
 				    <asp:HiddenField ID="UpdateDate" runat="server" />
-
+                    <asp:HiddenField ID="LabelSupplierCode" runat="server" />
+                    <asp:HiddenField ID="HPurposeCode" runat="server" />
+                    <asp:HiddenField ID="SOLocationCode" runat="server" />
+                    <asp:HiddenField ID="SOUserID" runat="server" />
+                    <asp:HiddenField ID="ParPurposeCode" runat="server" />
                     <div class="btns">
                         <p class="message"><asp:Label ID="RunMsg" runat="server"></asp:Label></p>
                         <asp:Button ID="Update" runat="server" Text="Update" />

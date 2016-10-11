@@ -112,7 +112,7 @@
                     </tr>
                     <tr>
                         <th>Purpose : </th>
-                        <td>
+                        <td><asp:Label ID="LabelPurpose" runat="server" Text="" ></asp:Label>
                             <asp:DropDownList ID="Purpose" runat="server" DataSourceID="SrcPurpose" DataTextField="Text" DataValueField="PurposeCode" AppendDataBoundItems="true">
                                 <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
@@ -156,6 +156,8 @@
                 <asp:HiddenField ID="PaymentTermCode" runat="server" />
                 <asp:HiddenField ID="IncotermsCode" runat="server" />
                 <asp:HiddenField ID="Action" runat="server" Value="Issue" />
+                <asp:HiddenField ID="ParPO_PurposeCode" runat="server" />
+                
 <% End If%>
             </div>
         </form>

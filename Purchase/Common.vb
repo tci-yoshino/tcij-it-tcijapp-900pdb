@@ -286,6 +286,16 @@ Public Class Common
     Public Const ROLE_WRITE As String = "WRITE"
 
     ''' <summary>
+    ''' ステータス
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const STATUS_CLOSED As String = "C"
+    Public Const STATUS_PAR_QM_FINISHED As String = "PQF"
+    Public Const STATUS_PAR_PO_CANCELLED As String = "PPC"
+    Public Const STATUS_CHI_PO_CANCELLED As String = "CPC"
+
+
+    ''' <summary>
     ''' セッション情報
     ''' </summary>
     ''' <remarks></remarks>
@@ -881,5 +891,73 @@ Public Class Common
         Return returnValue
 
     End Function
+
+
+    ''' <summary>
+    ''' PurposeのプルダウンにPurposeCodeを設定する
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Shared Sub SetPurposeDropDownList(ByVal SrcPurpose As System.Web.UI.WebControls.SqlDataSource)
+
+        SrcPurpose.SelectCommand = "SELECT PurposeCode, Text FROM Purpose ORDER BY SortOrder"
+
+    End Sub
+
+
+    ''' <summary>
+    ''' OrderUnitのプルダウンにUnitCodeを設定する 
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Shared Sub SetUnitDropDownList(ByVal SrcUnit As System.Web.UI.WebControls.SqlDataSource)
+
+        SrcUnit.SelectCommand = "SELECT UnitCode FROM PurchasingUnit ORDER BY UnitCode"
+
+    End Sub
+
+
+    ''' <summary>
+    ''' SupplierNameのプルダウンに仕入先情報を設定します。
+    ''' </summary>
+    ''' <param name="SupplierCode">対象となるSupplierCode</param>
+    ''' <param name="LocationCode">対象となるLocationCode</param>
+    ''' <remarks></remarks>
+    Public Shared Sub SetSupplierDropDownList(ByVal SrcSupplier As System.Web.UI.WebControls.SqlDataSource, _
+                                                 ByVal SupplierCode As String, ByVal LocationCode As String, ByVal SessionLocationCode As String)
+        Dim sb_Sql As StringBuilder = New StringBuilder
+
+        ' 検索結果の並び順を固定させるために UNION を使用しています
+        sb_Sql.Append("SELECT ")
+        sb_Sql.Append("  SupplierCode, ")
+        sb_Sql.Append("  LTRIM(RTRIM(ISNULL(Name1, '') + ' ' + ISNULL(Name2, ''))) AS Name, ")
+        sb_Sql.Append("  1 AS SortOrder ")
+        sb_Sql.Append("FROM ")
+        sb_Sql.Append("  Supplier ")
+        sb_Sql.Append("WHERE ")
+        sb_Sql.Append("  LocationCode = @LocationCode ")
+        sb_Sql.Append("UNION ")
+        sb_Sql.Append("SELECT ")
+        sb_Sql.Append("  SupplierCode, ")
+        sb_Sql.Append("  LTRIM(RTRIM(ISNULL(Name1, '') + ' ' + ISNULL(Name2, ''))) AS Name, ")
+        sb_Sql.Append("  2 AS SortOrder ")
+        sb_Sql.Append("FROM ")
+        sb_Sql.Append("  Supplier ")
+        sb_Sql.Append("WHERE ")
+        sb_Sql.Append("  SupplierCode = @SupplierCode ")
+        sb_Sql.Append("ORDER BY ")
+        sb_Sql.Append("  SortOrder ")
+
+        SrcSupplier.SelectCommand = sb_Sql.ToString
+        SrcSupplier.SelectParameters.Clear()
+        SrcSupplier.SelectParameters.Add("SupplierCode", SupplierCode)
+
+        If (LocationCode = SessionLocationCode) Or (LocationCode = String.Empty) Then
+            ' Direct 発注の場合に自拠点をリストアップしないための措置です
+            SrcSupplier.SelectParameters.Add("LocationCode", "#%@$\")
+        Else
+            SrcSupplier.SelectParameters.Add("LocationCode", LocationCode)
+        End If
+
+
+    End Sub
 
 End Class

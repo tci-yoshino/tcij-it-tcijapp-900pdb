@@ -73,8 +73,7 @@ Partial Public Class RFQUpdate
             End If
             'プライオリティのプルダウンを設定する
             SetPriorityDropDownList(Priority, PRIORITY_FOR_EDIT)
-            'Purposeのプルダウンを設定
-            SetControl_SrcPurpose()
+
             Call SetPostBackUrl()
             If FormDataSet() = False Then
                 Msg.Text = ERR_INVALID_PARAMETER
@@ -85,6 +84,7 @@ Partial Public Class RFQUpdate
         Else
             Call SetReadOnlyItems()
         End If
+
     End Sub
 
     Private Sub Page_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload
@@ -187,11 +187,11 @@ Partial Public Class RFQUpdate
                 st_Priority = LabelPriority.Text
             End If
 
-            Dim st_Purpose As String = String.Empty
+            Dim st_PurposeCode As String = String.Empty
             If (ListPurpose.Visible) Then
-                st_Purpose = ListPurpose.SelectedValue
+                st_PurposeCode = ListPurpose.SelectedValue
             Else
-                st_Purpose = Purpose.Text
+                st_PurposeCode = PurposeCode.Value
             End If
 
             DBCommand.CommandText = "Update RFQHeader SET EnqUserID = @EnqUserID, QuoUserID = @QuoUserID, SupplierCode = @SupplierCode, MakerCode = @MakerCode," _
@@ -213,7 +213,7 @@ Partial Public Class RFQUpdate
             DBCommand.Parameters.Add("@PaymentTermCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(PaymentTerm.SelectedValue)
             DBCommand.Parameters.Add("@Comment", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(Comment.Text)
             DBCommand.Parameters.Add("@Priority", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(st_Priority)
-            DBCommand.Parameters.Add("@PurposeCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(st_Purpose)
+            DBCommand.Parameters.Add("@PurposeCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(st_PurposeCode)
             DBCommand.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = Integer.Parse(Session("UserID"))
             DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
             DBCommand.ExecuteNonQuery()
@@ -393,12 +393,17 @@ Partial Public Class RFQUpdate
                 End If
             End If
 
+            ''Purposeのプルダウンを設定
+            ListPurpose.Items.Clear()
+            SetPurposeDropDownList(SrcPurpose)
+
             'Hidden
             QuotedDate.Value = DS.Tables("RFQHeader").Rows(0)("QuotedDate").ToString
             UpdateDate.Value = GetUpdateDate("v_RFQHeader", "RFQNumber", st_RFQNumber)
             EnqLocationCode.Value = DS.Tables("RFQHeader").Rows(0)("EnqLocationCode").ToString
             QuoLocationCode.Value = DS.Tables("RFQHeader").Rows(0)("QuoLocationCode").ToString
             Hi_RFQStatusCode.Value = DS.Tables("RFQHeader").Rows(0)("StatusCode").ToString
+
             'Left
             Confidential.Text = IIf(CBool(DS.Tables("RFQHeader").Rows(0)("isCONFIDENTIAL")), Common.CONFIDENTIAL, String.Empty).ToString
             RFQNumber.Text = st_RFQNumber
@@ -419,6 +424,7 @@ Partial Public Class RFQUpdate
             ShippingHandlingFee.Text = SetNullORDecimal(DS.Tables("RFQHeader").Rows(0)("ShippingHandlingFee").ToString)
             'Right
             Purpose.Text = DS.Tables("RFQHeader").Rows(0)("Purpose").ToString
+            PurposeCode.Value = DS.Tables("RFQHeader").Rows(0)("PurposeCode").ToString
             ListPurpose.SelectedValue = DS.Tables("RFQHeader").Rows(0)("PurposeCode").ToString
             Priority.SelectedValue = DS.Tables("RFQHeader").Rows(0)("Priority").ToString
             LabelPriority.Text = DS.Tables("RFQHeader").Rows(0)("Priority").ToString
@@ -547,20 +553,18 @@ Partial Public Class RFQUpdate
             Priority.Enabled = False
             Priority.Visible = False
             LabelPriority.Visible = True
-
         End If
 
-        If CurrentRFQStatus.Text = "Closed" Then
-            ListPurpose.Enabled = False
+        If Hi_RFQStatusCode.Value = STATUS_CLOSED Then
             ListPurpose.Visible = False
             Purpose.Visible = True
         Else
-            ListPurpose.Enabled = True
             ListPurpose.Visible = True
             Purpose.Visible = False
         End If
 
         Return True
+
     End Function
 
     Private Function ItemCheck() As Boolean
@@ -846,11 +850,5 @@ Partial Public Class RFQUpdate
             NoOfferReason(i).DataValueField = "NoOfferReasonCode"
             NoOfferReason(i).DataBind()
         Next
-    End Sub
-
-    Private Sub SetControl_SrcPurpose()
-
-        SrcPurpose.SelectCommand = "SELECT PurposeCode, Text FROM Purpose ORDER BY SortOrder"
-
     End Sub
 End Class

@@ -173,8 +173,8 @@ Partial Public Class POUpdate
             SetPriorityDropDownList(Priority, PRIORITY_FOR_EDIT)
 
             'プルダウンを設定する
-            SetControl_SrcPurpose()
-            SetControl_SrcUnit()
+            'SetPurposeDropDownList(SrcPurpose)
+            SetUnitDropDownList(SrcUnit)
 
             ViewPOInformationToForm(CInt(st_PONumber))
         End If
@@ -301,7 +301,7 @@ Partial Public Class POUpdate
         PaymentTerm.Text = String.Empty
         Incoterms.Text = String.Empty
         DeliveryTerm.Text = String.Empty
-        Purpose.Text = String.Empty
+        LabelPurpose.Text = String.Empty
         RawMaterialFor.Text = String.Empty
         RequestedBy.Text = String.Empty
         SupplierItemNumber.Text = String.Empty
@@ -361,6 +361,11 @@ Partial Public Class POUpdate
             Priority.SelectedValue = st_Priority
             LabelPriority.Text = st_Priority
         End If
+
+        'プルダウンを設定する
+        Purpose.Items.Clear()
+        SetPurposeDropDownList(SrcPurpose)
+
         R3POLineNumber.Text = POInformation.R3POLineNumber
         PODate.Text = GetLocalTime(POInformation.PODate)
         POUser.SelectedValue = POInformation.POUserID.ToString
@@ -371,7 +376,7 @@ Partial Public Class POUpdate
 
         OrderQuantity.Text = NullableDecimalToString(POInformation.OrderQuantity, FORMAT_DECIMAL)
         LabelOrderQuantity.Text = OrderQuantity.Text
-        OrderUnit.SelectedValue = POInformation.OrderUnitCode
+        OrderUnit.SelectedValue = POInformation.OrderUnitCode.ToString
         LabelOrderUnit.Text = POInformation.OrderUnitCode
         'OrderPiece.Text = NullableDecimalToString(POInformation.UnitPrice, FORMAT_DECIMAL)
         DeliveryDate.Text = GetLocalTime(POInformation.DeliveryDate)
@@ -386,7 +391,10 @@ Partial Public Class POUpdate
         PaymentTerm.Text = POInformation.PaymentTermText
         Incoterms.Text = POInformation.IncotermsCode
         DeliveryTerm.Text = POInformation.DeliveryTerm
-        Purpose.Text = POInformation.PurposeText
+        LabelPurpose.Text = POInformation.PurposeText
+        Purpose.SelectedValue = POInformation.PurposeCode.ToString()
+        LabelPurpose.Text = POInformation.PurposeText.ToString()
+        'PurposeCode.Value = POInformation.PurposeCode
         RawMaterialFor.Text = POInformation.RawMaterialFor
         RequestedBy.Text = POInformation.RequestedBy
         SupplierItemNumber.Text = POInformation.SupplierItemNumber
@@ -406,6 +414,8 @@ Partial Public Class POUpdate
         CancellationDate.Text = GetLocalTime(POInformation.CancellationDate)
 
         UpdateDate.Value = GetUpdateDate(TABLE_NAME_PO, PK_NAME_PO, POInformation.PONumber.ToString())
+        SOLocationCode.Value = POInformation.SOLocationCode.ToString
+        SOUserID.Value = POInformation.SOUserID.ToString()
 
         'Par-PO Number と Chi-PO Request Quantity は、ParPONumber が設定されている (すなわち子 PO の) 場合のみ画面に表示する。
         b_ChildVisible = Not (POInformation.ParPONumber Is Nothing)
@@ -447,51 +457,39 @@ Partial Public Class POUpdate
 
         ' SupplierName プルダウンの設定
         Dim SupplierCode As String = String.Empty
-        Dim QUOLocationCode As String = String.Empty
+        Dim QuoLocationCode As String = String.Empty
         GetQuoLocationCode(POInformation.RFQLineNumber, QUOLocationCode, SupplierCode)
-        SetControl_SrcSupplier(SupplierCode.ToString, QUOLocationCode.ToString)
-        Supplier.SelectedValue = POInformation.SupplierCode.ToString
+        SetSupplierDropDownList(SrcSupplier, SupplierCode.ToString, QuoLocationCode.ToString, Session(SESSION_KEY_LOCATION).ToString)
 
-        'OrderQuantity、OrderUnit、Purpose、SupplierNameの設定
-        'あらかじめプルダウン不可視、ラベル可視に設定
-        OrderQuantity.Enabled = False
+        If QuoLocationCode.ToString <> Session(SESSION_KEY_LOCATION).ToString Then Supplier.SelectedValue = POInformation.SupplierCode.ToString
+        LabelSupplierCode.Value = POInformation.SupplierCode.ToString
+
+        'OrderQuantity、OrderUnit、Purpose、SupplierName表示
         OrderQuantity.Visible = False
         LabelOrderQuantity.Visible = True
-        OrderUnit.Enabled = False
         OrderUnit.Visible = False
         LabelOrderUnit.Visible = True
-        ListPurpose.Enabled = False
-        ListPurpose.Visible = False
-        Purpose.Visible = True
-        Supplier.Enabled = False
+        Purpose.Visible = False
+        LabelPurpose.Visible = True
         Supplier.Visible = False
         R3SupplierName.Visible = True
 
-        If POInformation.Status <> "Par-QM Finished" AndAlso _
-             POInformation.Status <> "Par-PO Cancelled" AndAlso POInformation.Status <> "Chi-PO Cancelled" Then
-
-            'OrderQuantity、OrderUnit設定
+        If POInformation.Status <> STATUS_PAR_QM_FINISHED AndAlso _
+             POInformation.Status <> STATUS_PAR_PO_CANCELLED AndAlso POInformation.Status <> STATUS_CHI_PO_CANCELLED Then
             OrderQuantity.Visible = True
-            OrderQuantity.Enabled = True
             OrderUnit.Visible = True
-            OrderUnit.Enabled = True
             LabelOrderQuantity.Visible = False
             LabelOrderUnit.Visible = False
-
             If String.IsNullOrEmpty(ParPONumber.Text) Then
                 '表示データが親の場合
 
-                'Purposeプルダウン不可視、ラベル可視に設定
-                ListPurpose.SelectedValue = POInformation.PurposeCode.ToString()
-                Purpose.Text = POInformation.PurposeText.ToString()
-                ListPurpose.Enabled = True
-                ListPurpose.Visible = True
-                Purpose.Visible = False
+                'Purposeプルダウン可視、ラベル不可視に設定
+                Purpose.Visible = True
+                LabelPurpose.Visible = False
 
                 'SupplierNameプルダウン不可視、ラベル可視に設定
                 If Not ExistenceConfirmation("V_PO", "ParPONumber", POInformation.PONumber.ToString) Then
                     '表示データが親PO、かつ子POのデータなしの場合、プルダウン可視、ラベル不可視に設定
-                    Supplier.Enabled = True
                     Supplier.Visible = True
                     R3SupplierName.Visible = False
                 End If
@@ -499,19 +497,21 @@ Partial Public Class POUpdate
                 '表示データが子の場合
 
                 '親のPurposeを取得して表示　編集不可
-                Dim st_Purpose As String = GetParPOPurpose(ParPONumber.Text)
-                ListPurpose.SelectedValue = st_Purpose
-                Purpose.Text = st_Purpose
+                Dim st_PurposeText As String = String.Empty
+                Dim st_PurposeCode As String = String.Empty
+                Call GetParPOPurpose(ParPONumber.Text, st_PurposeCode, st_PurposeText)
+                ParPurposeCode.Value = st_PurposeCode
+                LabelPurpose.Text = st_PurposeText
 
-                'SupplierNameプルダウン可視、ラベル不可視に設定
-                Supplier.Enabled = True
-                Supplier.Visible = True
-                R3SupplierName.Visible = False
+                'SupplierName編集不可
+                Supplier.Visible = False
+                R3SupplierName.Visible = True
 
             End If
         End If
 
     End Sub
+
 
     ''' <summary>
     ''' フォーム上のデータをPOテーブルに保存します。（Cancel）
@@ -553,15 +553,39 @@ Partial Public Class POUpdate
             st_Priority = LabelPriority.Text
         End If
 
+        Dim st_PurposeCode As String = String.Empty
+        If (Purpose.Visible) Then
+            'プルダウンが編集可能な場合はプルダウンから値を取得する
+            st_PurposeCode = Purpose.SelectedValue
+        Else
+            st_PurposeCode = ParPurposeCode.Value
+        End If
+
+        Dim st_OrderUnitCode As String = String.Empty
+        If (OrderUnit.Visible) Then
+            'プルダウンが編集可能な場合はプルダウンから値を取得する
+            st_OrderUnitCode = OrderUnit.SelectedValue
+        Else
+            st_OrderUnitCode = LabelOrderUnit.Text
+        End If
+
+        Dim st_SupplierCode As String = String.Empty
+        If (Supplier.Visible) Then
+            'プルダウンが編集可能な場合はプルダウンから値を取得する
+            st_SupplierCode = Supplier.SelectedValue
+        Else
+            st_SupplierCode = LabelSupplierCode.Value
+        End If
+
         DstPOInformation.Priority = StrToNullableString(st_Priority)
         DstPOInformation.R3PONumber = StrToNullableString(R3PONumber.Text.Trim())
         DstPOInformation.R3POLineNumber = StrToNullableString(R3POLineNumber.Text.Trim())
         DstPOInformation.POUserID = CInt(POUser.SelectedValue)
         DstPOInformation.DeliveryDate = GetDatabaseTime(DeliveryDate.Text.Trim())
-        DstPOInformation.PurposeCode = ListPurpose.SelectedValue
-        DstPOInformation.OrderQuantity = CType(StrToNullableString(OrderQuantity.Text.Trim()), Decimal?)
-        DstPOInformation.OrderUnitCode = OrderUnit.SelectedValue
-        DstPOInformation.SupplierCode = CType(Supplier.SelectedValue, Integer?)
+        DstPOInformation.PurposeCode = StrToNullableString(st_PurposeCode)
+        DstPOInformation.OrderQuantity = CDec(OrderQuantity.Text)
+        DstPOInformation.OrderUnitCode = StrToNullableString(st_OrderUnitCode)
+        DstPOInformation.SupplierCode = CInt(st_SupplierCode)
 
         'フォーム右段
         DstPOInformation.DueDate = GetDatabaseTime(DueDate.Text.Trim())
@@ -704,6 +728,17 @@ Partial Public Class POUpdate
         If IsLatestData(TABLE_NAME_PO, PK_NAME_PO, i_PONumber.ToString(), UpdateDate.Value) = False Then
             Msg.Text = ERR_UPDATED_BY_ANOTHER_USER
             Return False
+        End If
+
+        OrderQuantity.Text = OrderQuantity.Text.Trim
+        If OrderQuantity.Text = String.Empty Then
+            Msg.Text = "Order Quantity" & ERR_REQUIRED_FIELD
+            Return False
+        Else
+            If Not Regex.IsMatch(OrderQuantity.Text, DECIMAL_7_3_REGEX) Then
+                Msg.Text = "Order Quantity" & ERR_INVALID_NUMBER
+                Return False
+            End If
         End If
 
         Return True
@@ -1008,23 +1043,32 @@ Partial Public Class POUpdate
     Private Sub UpdatePOInfomation(ByRef SrcPOInformation As POInformationType, ByRef DstPOInformation As POInformationType)
         Dim st_Sql As String = String.Empty
         Dim conn As SqlConnection = Nothing
+        Dim st_SOLocationCode As String = String.Empty
+        Dim st_SOUserID As String = String.Empty
+        Dim st_SupplierCode As String = String.Empty
 
         conn = New SqlConnection(DB_CONNECT_STRING)
         conn.Open()
 
-
-        ' 現法に発注する場合は SOLocationCode を設定します
-        ' (Supplier.LocationCode が設定されていたら、その仕入先は現法と判断)
-        Dim sqlCmd As SqlCommand = conn.CreateCommand()
-        Dim sqlAdapter As New SqlDataAdapter
-        Dim st_SOLocationCode As String = String.Empty
-        Dim ds As New DataSet
-        sqlCmd = New SqlCommand(CreateSql_SelectSupplier(), conn)
-        sqlAdapter.SelectCommand = sqlCmd
-        sqlCmd.Parameters.Add("@SupplierCode", SqlDbType.VarChar).Value = Supplier.SelectedValue
-        sqlAdapter.Fill(ds, "Supplier")
-        st_SOLocationCode = ds.Tables("Supplier").Rows(0)("LocationCode").ToString
-
+        If Supplier.Visible Then
+            'SupplierCodeからLocationCodeを取得する
+            st_SupplierCode = Supplier.SelectedValue
+            Dim sqlCmd As SqlCommand = conn.CreateCommand()
+            Dim sqlAdapter As New SqlDataAdapter
+            Dim ds As New DataSet
+            sqlCmd = New SqlCommand(CreateSql_SelectSupplier(), conn)
+            sqlAdapter.SelectCommand = sqlCmd
+            sqlCmd.Parameters.Add("@SupplierCode", SqlDbType.VarChar).Value = st_SupplierCode
+            sqlAdapter.Fill(ds, "Supplier")
+            st_SOLocationCode = ds.Tables("Supplier").Rows(0)("LocationCode").ToString
+            If st_SOLocationCode.Trim = String.Empty Then
+                st_SOUserID = String.Empty
+            End If
+        Else
+            st_SupplierCode = LabelSupplierCode.Value
+            st_SOLocationCode = SOLocationCode.Value
+            st_SOUserID = SOUserID.Value
+        End If
 
         Dim trans As SqlTransaction = conn.BeginTransaction
         Try
@@ -1039,7 +1083,7 @@ Partial Public Class POUpdate
             cmd.Parameters.AddWithValue("POLocationCode", NullableVariableToDBObject(DstPOInformation.POLocationCode))
             cmd.Parameters.AddWithValue("POUserID", NullableVariableToDBObject(DstPOInformation.POUserID))
             cmd.Parameters.AddWithValue("SOLocationCode", NullableVariableToDBObject(st_SOLocationCode))
-            cmd.Parameters.AddWithValue("SOUserID", NullableVariableToDBObject(DstPOInformation.SOUserID))
+            cmd.Parameters.AddWithValue("SOUserID", NullableVariableToDBObject(st_SOUserID))
             cmd.Parameters.AddWithValue("ProductID", NullableVariableToDBObject(DstPOInformation.ProductID))
             cmd.Parameters.AddWithValue("SupplierCode", NullableVariableToDBObject(DstPOInformation.SupplierCode))
             cmd.Parameters.AddWithValue("MakerCode", NullableVariableToDBObject(DstPOInformation.MakerCode))
@@ -1091,6 +1135,16 @@ Partial Public Class POUpdate
                 cmd.Parameters.AddWithValue("SOUserID", NullableVariableToDBObject(DstPOInformation.POUserID))
                 cmd.Parameters.AddWithValue("UpdatedBy", i_OperatingUserID)
                 cmd.Parameters.AddWithValue("PONumber", NullableVariableToDBObject(DstPOInformation.ParPONumber))
+                cmd.ExecuteNonQuery()
+            End If
+
+            If DstPOInformation.ParPONumber Is Nothing Then
+                '親POの場合、子POのPurposeCodeを同じ値に更新する
+                cmd.Parameters.Clear()
+                cmd.CommandText = "UPDATE PO SET PurposeCode = @PurposeCode, UpdatedBy = @UpdatedBy, UpdateDate = GETDATE() WHERE ParPONumber = @PONumber"
+                cmd.Parameters.AddWithValue("PurposeCode", NullableVariableToDBObject(DstPOInformation.PurposeCode))
+                cmd.Parameters.AddWithValue("UpdatedBy", i_OperatingUserID)
+                cmd.Parameters.AddWithValue("PONumber", NullableVariableToDBObject(DstPOInformation.PONumber))
                 cmd.ExecuteNonQuery()
             End If
 
@@ -1390,27 +1444,6 @@ Partial Public Class POUpdate
 
 
     ''' <summary>
-    ''' PurposeのプルダウンにPurposeCodeを設定する
-    ''' </summary>
-    ''' <remarks></remarks>
-    Private Sub SetControl_SrcPurpose()
-
-        SrcPurpose.SelectCommand = "SELECT PurposeCode, Text FROM Purpose ORDER BY SortOrder"
-
-    End Sub
-
-
-    ''' <summary>
-    ''' OrderUnitのプルダウンにUnitCodeを設定する
-    ''' </summary>
-    ''' <remarks></remarks>
-    Private Sub SetControl_SrcUnit()
-
-        SrcUnit.SelectCommand = "SELECT UnitCode FROM PurchasingUnit ORDER BY UnitCode"
-
-    End Sub
-
-    ''' <summary>
     ''' SupplierのLocationCodeを取得する
     ''' </summary>
     ''' <remarks></remarks>
@@ -1426,11 +1459,11 @@ Partial Public Class POUpdate
     ''' <param name="st_ParPONumber">親 PONumber</param>
     ''' <return>Priority</return>
     ''' <remarks></remarks>
-    Private Function GetParPOPurpose(ByVal st_ParPONumber As String) As String
+    Private Sub GetParPOPurpose(ByVal st_ParPONumber As String, ByRef st_PurposeCode As String, ByRef st_PurposeText As String)
 
-        If String.IsNullOrEmpty(st_ParPONumber) Then
-            Return String.Empty
-        End If
+        'If String.IsNullOrEmpty(st_ParPONumber) Then
+        '    Return String.Empty
+        'End If
 
         Dim sqlConn As SqlConnection = Nothing
 
@@ -1438,6 +1471,7 @@ Partial Public Class POUpdate
 
         sb_Sql.Append("SELECT ")
         sb_Sql.Append(" PurposeCode ")
+        sb_Sql.Append(", PurposeText ")
         sb_Sql.Append("FROM ")
         sb_Sql.Append(" v_PO ")
         sb_Sql.Append("WHERE ")
@@ -1450,13 +1484,18 @@ Partial Public Class POUpdate
             sqlCmd.Parameters.AddWithValue("PONumber", st_ParPONumber)
             sqlConn.Open()
 
-            Dim obj_Return As Object = sqlCmd.ExecuteScalar()
-
-            If obj_Return Is Nothing Then
-                Return String.Empty
+            'Dim obj_Return As Object = sqlCmd.ExecuteScalar()
+            Dim dr As SqlDataReader = sqlCmd.ExecuteReader()
+            If dr.Read() Then
+                st_PurposeCode = DBObjToString(dr("PurposeCode"))
+                st_PurposeText = DBObjToString(dr("PurposeText"))
             End If
 
-            Return obj_Return.ToString()
+            ''If obj_Return Is Nothing Then
+            ''    Return String.Empty
+            ''End If
+
+            ''Return obj_Return.ToString()
 
         Finally
 
@@ -1467,58 +1506,15 @@ Partial Public Class POUpdate
 
         End Try
 
-    End Function
-
-
-    ''' <summary>
-    ''' SupplierNameのプルダウンに仕入先情報を設定します。
-    ''' </summary>
-    ''' <param name="SupplierCode">対象となるSupplierCode</param>
-    ''' <param name="LocationCode">対象となるLocationCode</param>
-    ''' <remarks></remarks>
-    Private Sub SetControl_SrcSupplier(ByVal SupplierCode As String, ByVal LocationCode As String)
-        Dim sb_Sql As StringBuilder = New StringBuilder
-
-        ' 検索結果の並び順を固定させるために UNION を使用しています
-        sb_Sql.Append("SELECT ")
-        sb_Sql.Append("  SupplierCode, ")
-        sb_Sql.Append("  LTRIM(RTRIM(ISNULL(Name1, '') + ' ' + ISNULL(Name2, ''))) AS Name, ")
-        sb_Sql.Append("  1 AS SortOrder ")
-        sb_Sql.Append("FROM ")
-        sb_Sql.Append("  Supplier ")
-        sb_Sql.Append("WHERE ")
-        sb_Sql.Append("  LocationCode = @LocationCode ")
-        sb_Sql.Append("UNION ")
-        sb_Sql.Append("SELECT ")
-        sb_Sql.Append("  SupplierCode, ")
-        sb_Sql.Append("  LTRIM(RTRIM(ISNULL(Name1, '') + ' ' + ISNULL(Name2, ''))) AS Name, ")
-        sb_Sql.Append("  2 AS SortOrder ")
-        sb_Sql.Append("FROM ")
-        sb_Sql.Append("  Supplier ")
-        sb_Sql.Append("WHERE ")
-        sb_Sql.Append("  SupplierCode = @SupplierCode ")
-        sb_Sql.Append("ORDER BY ")
-        sb_Sql.Append("  SortOrder ")
-
-        SrcSupplier.SelectCommand = sb_Sql.ToString
-        SrcSupplier.SelectParameters.Clear()
-        SrcSupplier.SelectParameters.Add("SupplierCode", SupplierCode)
-
-        If (LocationCode = Session(SESSION_KEY_LOCATION).ToString()) Or (LocationCode = String.Empty) Then
-            ' Direct 発注の場合に自拠点をリストアップしないための措置です
-            SrcSupplier.SelectParameters.Add("LocationCode", "#%@$\")
-        Else
-            SrcSupplier.SelectParameters.Add("LocationCode", LocationCode)
-        End If
-
-
     End Sub
+
 
     ''' <summary>
     ''' v_RFQLineからQuoLocationCodeを取得します。
     ''' </summary>
     ''' <param name="RFQLineNumber">対象となるRFQLineNumber</param>
-    ''' <returns>QuoLocationCodeを返します。存在しないときは空文字列を返します。</returns>
+    ''' <param name="QUOLocationCode">取得したQUOLocationCode</param>
+    ''' <param name="SupplierCode">取得したSupplierCode</param>
     ''' <remarks></remarks>
     Private Sub GetQuoLocationCode(ByVal RFQLineNumber As Integer?, ByRef QUOLocationCode As String, ByRef SupplierCode As String)
 

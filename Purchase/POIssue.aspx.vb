@@ -199,9 +199,10 @@ Partial Public Class POIssue
 
         ' SqlDataSource
         SetControl_SrcUser(CBool(ds.Tables("RFQLine").Rows(0)("isCONFIDENTIAL")))
-        SetControl_SrcUnit()
-        SetControl_SrcSupplier(ds.Tables("RFQLine").Rows(0)("SupplierCode").ToString, ds.Tables("RFQLine").Rows(0)("QuoLocationCode").ToString)
-        SetControl_SrcPurpose()
+        SetUnitDropDownList(SrcUnit)
+        SetSupplierDropDownList(SrcSupplier, ds.Tables("RFQLine").Rows(0)("SupplierCode").ToString, _
+                               ds.Tables("RFQLine").Rows(0)("QuoLocationCode").ToString, Session("LocationCode").ToString)
+        SetPurposeDropDownList(SrcPurpose)
 
         SetControl_Priority(st_ParPONumber)
         '親POがある場合はPriorityは編集不可。
@@ -211,6 +212,22 @@ Partial Public Class POIssue
         Else
             Priority.Visible = True
             LabelPriority.Visible = False
+        End If
+
+        'Purposeの表示
+        If String.IsNullOrEmpty(st_ParPONumber) Then
+            '親POの場合
+            LabelPurpose.Visible = False
+            Purpose.Visible = True
+        Else
+            '子POの場合
+            Dim ParPOPurposeCode As String = String.Empty
+            Dim ParPOPurposeText As String = String.Empty
+            GetParPO_Purpose(st_ParPONumber, ParPOPurposeCode, ParPOPurposeText)
+            ParPO_PurposeCode.Value = ParPOPurposeCode
+            LabelPurpose.Text = ParPOPurposeText
+            LabelPurpose.Visible = True
+            Purpose.Visible = False
         End If
 
         Return True
@@ -295,56 +312,7 @@ Partial Public Class POIssue
 
     End Sub
 
-    Private Sub SetControl_SrcUnit()
-
-        SrcUnit.SelectCommand = "SELECT UnitCode FROM PurchasingUnit ORDER BY UnitCode"
-
-    End Sub
-
-    Private Sub SetControl_SrcSupplier(ByVal SupplierCode As String, ByVal LocationCode As String)
-        Dim sb_Sql As StringBuilder = New StringBuilder
-
-        ' 検索結果の並び順を固定させるために UNION を使用しています
-        sb_Sql.Append("SELECT ")
-        sb_Sql.Append("  SupplierCode, ")
-        sb_Sql.Append("  LTRIM(RTRIM(ISNULL(Name1, '') + ' ' + ISNULL(Name2, ''))) AS Name, ")
-        sb_Sql.Append("  1 AS SortOrder ")
-        sb_Sql.Append("FROM ")
-        sb_Sql.Append("  Supplier ")
-        sb_Sql.Append("WHERE ")
-        sb_Sql.Append("  LocationCode = @LocationCode ")
-        sb_Sql.Append("UNION ")
-        sb_Sql.Append("SELECT ")
-        sb_Sql.Append("  SupplierCode, ")
-        sb_Sql.Append("  LTRIM(RTRIM(ISNULL(Name1, '') + ' ' + ISNULL(Name2, ''))) AS Name, ")
-        sb_Sql.Append("  2 AS SortOrder ")
-        sb_Sql.Append("FROM ")
-        sb_Sql.Append("  Supplier ")
-        sb_Sql.Append("WHERE ")
-        sb_Sql.Append("  SupplierCode = @SupplierCode ")
-        sb_Sql.Append("ORDER BY ")
-        sb_Sql.Append("  SortOrder ")
-
-        SrcSupplier.SelectCommand = sb_Sql.ToString
-        SrcSupplier.SelectParameters.Clear()
-        SrcSupplier.SelectParameters.Add("SupplierCode", SupplierCode)
-
-        If (LocationCode = st_LoginLocationCode) Or (LocationCode = String.Empty) Then
-            ' Direct 発注の場合に自拠点をリストアップしないための措置です
-            SrcSupplier.SelectParameters.Add("LocationCode", "#%@$\")
-        Else
-            SrcSupplier.SelectParameters.Add("LocationCode", LocationCode)
-        End If
-
-
-    End Sub
-
-    Private Sub SetControl_SrcPurpose()
-
-        SrcPurpose.SelectCommand = "SELECT PurposeCode, Text FROM Purpose ORDER BY SortOrder"
-
-    End Sub
-
+  
     Private Sub SetControl_Priority(ByVal ParPONumber As String)
         '親POのPriorityを取得する
         Dim st_ParPriority As String = GetParPOPriority(ParPONumber)
@@ -462,7 +430,11 @@ Partial Public Class POIssue
         sqlCmd.Parameters.AddWithValue("@PaymentTermCode", ConvertEmptyStringToNull(PaymentTermCode.Value))
         sqlCmd.Parameters.AddWithValue("@IncotermsCode", ConvertEmptyStringToNull(IncotermsCode.Value))
         sqlCmd.Parameters.AddWithValue("@DeliveryTerm", ConvertEmptyStringToNull(DeliveryTerm.Text))
-        sqlCmd.Parameters.AddWithValue("@PurposeCode", ConvertEmptyStringToNull(Purpose.SelectedValue))
+        If String.IsNullOrEmpty(st_ParPONumber) Then
+            sqlCmd.Parameters.AddWithValue("@PurposeCode", ConvertEmptyStringToNull(Purpose.SelectedValue))
+        Else
+            sqlCmd.Parameters.AddWithValue("@PurposeCode", ConvertEmptyStringToNull(ParPO_PurposeCode.Value))
+        End If
         sqlCmd.Parameters.AddWithValue("@RawMaterialFor", ConvertEmptyStringToNull(RawMaterialFor.Text))
         sqlCmd.Parameters.AddWithValue("@RequestedBy", ConvertEmptyStringToNull(RequestedBy.Text))
         sqlCmd.Parameters.AddWithValue("@SupplierItemNumber", ConvertEmptyStringToNull(SupplierItemNumber.Text))
@@ -477,6 +449,7 @@ Partial Public Class POIssue
         sqlCmd.Parameters.AddWithValue("@UpdatedBy", CInt(Session("UserID")))
 
         sqlConn.Open()
+
         sqlReader = sqlCmd.ExecuteReader
         While sqlReader.Read
             obj_PONumber = sqlReader("PONumber")
@@ -492,6 +465,7 @@ Partial Public Class POIssue
 
     End Function
 
+    
     Private Function CreateSql_SelectRFQLine() As String
         Dim sb_Sql As StringBuilder = New StringBuilder
 
@@ -639,5 +613,42 @@ Partial Public Class POIssue
         Return sb_Sql.ToString()
 
     End Function
+
+    ''' <summary>
+    ''' 親POのPurposeCode,PurposeTextを取得します。
+    ''' </summary>
+    ''' <param name="ParPONumber">親のPONumber</param>
+    ''' <returns>PurposeCode、PurposeTextを返します。存在しないときは空文字列を返します。</returns>
+    ''' <remarks></remarks>
+    Private Sub GetParPO_Purpose(ByVal ParPONumber As String, ByRef PurposeCode As String, ByRef PurposeText As String)
+
+        If ParPONumber Is Nothing Then
+            Exit Sub
+        End If
+
+        Dim conn As SqlConnection = Nothing
+        Try
+            conn = New SqlConnection(DB_CONNECT_STRING)
+            Dim cmd As SqlCommand = New SqlCommand("SELECT PurposeCode,PurposeText FROM V_PO WHERE PONumber = @ParPONumber", conn)
+            cmd.Parameters.AddWithValue("ParPONumber", ParPONumber)
+
+            conn.Open()
+            Dim dr As SqlDataReader = cmd.ExecuteReader()
+            If dr.Read() Then
+                If dr("PurposeCode").ToString <> String.Empty Then
+                    PurposeCode = dr("PurposeCode").ToString
+                    PurposeText = dr("PurposeText").ToString
+                End If
+            End If
+
+
+        Finally
+            If Not conn Is Nothing Then
+                conn.Close()
+            End If
+
+        End Try
+
+    End Sub
 
 End Class
