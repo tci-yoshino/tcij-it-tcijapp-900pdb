@@ -529,15 +529,6 @@ Partial Public Class POUpdate
     Protected WithEvents LabelSupplierCode As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
-    '''HPurposeCode コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents HPurposeCode As Global.System.Web.UI.WebControls.HiddenField
-
-    '''<summary>
     '''SOLocationCode コントロール。
     '''</summary>
     '''<remarks>
@@ -554,6 +545,15 @@ Partial Public Class POUpdate
     '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents SOUserID As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''HidPurposeCode コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents HidPurposeCode As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
     '''ParPurposeCode コントロール。

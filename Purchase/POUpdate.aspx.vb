@@ -173,33 +173,40 @@ Partial Public Class POUpdate
             SetPriorityDropDownList(Priority, PRIORITY_FOR_EDIT)
 
             'プルダウンを設定する
-            'SetPurposeDropDownList(SrcPurpose)
             SetUnitDropDownList(SrcUnit)
+            SetPurposeDropDownList(SrcPurpose)
 
             ViewPOInformationToForm(CInt(st_PONumber))
-        End If
-
-        '親発注番号の取得
-        'PO Correspondence / History リンクパラメータは 親発注番号(ParPONumber) 優先
-        '親発注番号(ParPONumber) がない場合は、自身の 発注番号(PONumber) 
-        Dim POInformation As POInformationType = SelectPOInformation(Integer.Parse(st_PONumber))
-        If POInformation.ParPONumber Is Nothing Then
-            st_ParPONumber = POInformation.PONumber.ToString()
         Else
-            st_ParPONumber = POInformation.ParPONumber.ToString()
+            If Purpose.Visible Then
+                'プルダウンを設定する
+                SetPurposeDropDownList(SrcPurpose)
+            End If
         End If
 
 
 
-        ChiPOIssue.NavigateUrl = String.Format("./RFQSelect.aspx?ParPONumber={0}", st_PONumber)
+            '親発注番号の取得
+            'PO Correspondence / History リンクパラメータは 親発注番号(ParPONumber) 優先
+            '親発注番号(ParPONumber) がない場合は、自身の 発注番号(PONumber) 
+            Dim POInformation As POInformationType = SelectPOInformation(Integer.Parse(st_PONumber))
+            If POInformation.ParPONumber Is Nothing Then
+                st_ParPONumber = POInformation.PONumber.ToString()
+            Else
+                st_ParPONumber = POInformation.ParPONumber.ToString()
+            End If
 
-        Update.PostBackUrl = String.Format("POUpdate.aspx?{0}={1}&{2}={3}", _
-                                            QUERY_KEY_ACTION, ACTION_VALUE_UPDATE, _
-                                            QUERY_KEY_PO_NUMBER, st_PONumber)
 
-        Cancell.PostBackUrl = String.Format("POUpdate.aspx?{0}={1}&{2}={3}", _
-                                            QUERY_KEY_ACTION, ACTION_VALUE_CANCEL, _
-                                            QUERY_KEY_PO_NUMBER, st_PONumber)
+
+            ChiPOIssue.NavigateUrl = String.Format("./RFQSelect.aspx?ParPONumber={0}", st_PONumber)
+
+            Update.PostBackUrl = String.Format("POUpdate.aspx?{0}={1}&{2}={3}", _
+                                                QUERY_KEY_ACTION, ACTION_VALUE_UPDATE, _
+                                                QUERY_KEY_PO_NUMBER, st_PONumber)
+
+            Cancell.PostBackUrl = String.Format("POUpdate.aspx?{0}={1}&{2}={3}", _
+                                                QUERY_KEY_ACTION, ACTION_VALUE_CANCEL, _
+                                                QUERY_KEY_PO_NUMBER, st_PONumber)
 
     End Sub
 
@@ -362,9 +369,6 @@ Partial Public Class POUpdate
             LabelPriority.Text = st_Priority
         End If
 
-        'プルダウンを設定する
-        Purpose.Items.Clear()
-        SetPurposeDropDownList(SrcPurpose)
 
         R3POLineNumber.Text = POInformation.R3POLineNumber
         PODate.Text = GetLocalTime(POInformation.PODate)
@@ -392,9 +396,9 @@ Partial Public Class POUpdate
         Incoterms.Text = POInformation.IncotermsCode
         DeliveryTerm.Text = POInformation.DeliveryTerm
         LabelPurpose.Text = POInformation.PurposeText
-        Purpose.SelectedValue = POInformation.PurposeCode.ToString()
+        If Purpose.Visible = True Then Purpose.SelectedValue = POInformation.PurposeCode.ToString()
         LabelPurpose.Text = POInformation.PurposeText.ToString()
-        'PurposeCode.Value = POInformation.PurposeCode
+        HidPurposeCode.Value = POInformation.PurposeCode
         RawMaterialFor.Text = POInformation.RawMaterialFor
         RequestedBy.Text = POInformation.RequestedBy
         SupplierItemNumber.Text = POInformation.SupplierItemNumber
@@ -474,8 +478,8 @@ Partial Public Class POUpdate
         Supplier.Visible = False
         R3SupplierName.Visible = True
 
-        If POInformation.Status <> STATUS_PAR_QM_FINISHED AndAlso _
-             POInformation.Status <> STATUS_PAR_PO_CANCELLED AndAlso POInformation.Status <> STATUS_CHI_PO_CANCELLED Then
+        If POInformation.StatusCode <> STATUS_PAR_QM_FINISHED AndAlso _
+             POInformation.StatusCode <> STATUS_PAR_PO_CANCELLED AndAlso POInformation.StatusCode <> STATUS_CHI_PO_CANCELLED Then
             OrderQuantity.Visible = True
             OrderUnit.Visible = True
             LabelOrderQuantity.Visible = False
@@ -557,6 +561,8 @@ Partial Public Class POUpdate
         If (Purpose.Visible) Then
             'プルダウンが編集可能な場合はプルダウンから値を取得する
             st_PurposeCode = Purpose.SelectedValue
+        ElseIf String.IsNullOrEmpty(ParPONumber.Text) Then
+            st_PurposeCode = HidPurposeCode.Value
         Else
             st_PurposeCode = ParPurposeCode.Value
         End If

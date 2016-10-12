@@ -204,9 +204,9 @@
                     </table>
 				    <asp:HiddenField ID="UpdateDate" runat="server" />
                     <asp:HiddenField ID="LabelSupplierCode" runat="server" />
-                    <asp:HiddenField ID="HPurposeCode" runat="server" />
                     <asp:HiddenField ID="SOLocationCode" runat="server" />
                     <asp:HiddenField ID="SOUserID" runat="server" />
+                    <asp:HiddenField ID="HidPurposeCode" runat="server" />
                     <asp:HiddenField ID="ParPurposeCode" runat="server" />
                     <div class="btns">
                         <p class="message"><asp:Label ID="RunMsg" runat="server"></asp:Label></p>
