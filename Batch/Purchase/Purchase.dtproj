@@ -52,5 +52,10 @@
       <FullPath>ProductIDExport.dtsx</FullPath>
       <References />
     </DtsPackage>
+    <DtsPackage FormatVersion="3">
+      <Name>SupplierExport.dtsx</Name>
+      <FullPath>SupplierExport.dtsx</FullPath>
+      <References />
+    </DtsPackage>
   </DTSPackages>
 </Project>
