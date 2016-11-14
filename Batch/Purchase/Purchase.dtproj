@@ -57,5 +57,10 @@
       <FullPath>SupplierExport.dtsx</FullPath>
       <References />
     </DtsPackage>
+    <DtsPackage FormatVersion="3">
+      <Name>PriorityExport.dtsx</Name>
+      <FullPath>PriorityExport.dtsx</FullPath>
+      <References />
+    </DtsPackage>
   </DTSPackages>
 </Project>
