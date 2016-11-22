@@ -618,7 +618,6 @@ Partial Public Class POIssue
     ''' 親POのPurposeCode,PurposeTextを取得します。
     ''' </summary>
     ''' <param name="ParPONumber">親のPONumber</param>
-    ''' <returns>PurposeCode、PurposeTextを返します。存在しないときは空文字列を返します。</returns>
     ''' <remarks></remarks>
     Private Sub GetParPO_Purpose(ByVal ParPONumber As String, ByRef PurposeCode As String, ByRef PurposeText As String)
 
