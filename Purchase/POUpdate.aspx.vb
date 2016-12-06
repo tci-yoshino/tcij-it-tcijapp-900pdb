@@ -618,6 +618,13 @@ Partial Public Class POUpdate
     ''' <remarks></remarks>
     Private Function ValidateForUpdate() As Boolean
 
+        R3PONumber.Text = R3PONumber.Text.Trim
+        R3POLineNumber.Text = R3POLineNumber.Text.Trim
+        If R3PONumber.Text <> String.Empty AndAlso R3POLineNumber.Text = String.Empty Then
+            Msg.Text = "R/3 PO Line Number" & ERR_REQUIRED_FIELD
+            Return False
+        End If
+
         If GetByteCount_SJIS(R3PONumber.Text) > MAX_LENGTH_R3_PO_NUMBER Then
             Msg.Text = String.Format(ERR_LENGTH_OVER, "R/3 PO Number", MAX_LENGTH_R3_PO_NUMBER)
             Return False

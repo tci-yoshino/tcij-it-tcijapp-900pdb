@@ -324,6 +324,14 @@ Partial Public Class POIssue
 
     Private Function ValidateField() As Boolean
 
+        ' R/3 PO Line Number
+        R3PONumber.Text = R3PONumber.Text.Trim
+        R3POLineNumber.Text = R3POLineNumber.Text.Trim
+        If R3PONumber.Text <> String.Empty AndAlso R3POLineNumber.Text = String.Empty Then
+            Msg.Text = "R/3 PO Line Number" & ERR_REQUIRED_FIELD
+            Return False
+        End If
+
         ' PO Date (必須)
         PODate.Text = PODate.Text.Trim
         If PODate.Text = String.Empty Then
