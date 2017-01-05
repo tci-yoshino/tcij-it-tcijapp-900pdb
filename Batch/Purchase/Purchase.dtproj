@@ -62,5 +62,10 @@
       <FullPath>PriorityExport.dtsx</FullPath>
       <References />
     </DtsPackage>
+    <DtsPackage FormatVersion="3">
+      <Name>GoodsReceiptImport.dtsx</Name>
+      <FullPath>GoodsReceiptImport.dtsx</FullPath>
+      <References />
+    </DtsPackage>
   </DTSPackages>
 </Project>

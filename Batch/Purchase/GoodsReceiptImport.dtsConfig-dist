@@ -1,0 +1,16 @@
+<?xml version="1.0"?><DTSConfiguration>
+	<DTSConfigurationHeading>
+		<DTSConfigurationFileInfo GeneratedBy="TCIX\Masumi.Koyama" GeneratedFromPackageName="GoodsReceiptImport" GeneratedFromPackageID="{137AB24F-FEC5-42D8-80F9-33592F96E055}" GeneratedDate="2016/12/22 10:04:20"/>
+	</DTSConfigurationHeading>
+
+	<!-- デバッグフラグ -->
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::DebugFlag].Properties[Value]" ValueType="Boolean">
+		<ConfiguredValue>0</ConfiguredValue>
+	</Configuration>
+
+	<!-- ログファイルパス -->
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::LogFilePath].Properties[Value]" ValueType="String">
+		<ConfiguredValue>C:\tcijapp\Purchase\Batch\Log\GoodsReceiptImport_{0}.log</ConfiguredValue>
+	</Configuration>
+
+</DTSConfiguration>
