@@ -5,7 +5,7 @@
 
 	<!-- 出力ファイルパス（ファイル名まで指定） -->
 	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputFilePath].Properties[Value]" ValueType="String">
-		<ConfiguredValue>\\TFL4\file\部署\調達部\受信\情シス提供データ(調達)\PDB_Priority.xlsx</ConfiguredValue>
+		<ConfiguredValue>\\TFL3\GlobalProject\Supply_Chain_Management_Group\0500 IT data\PDB Data\PDB_Priority.xlsx</ConfiguredValue>
 	</Configuration>
 
 </DTSConfiguration>
