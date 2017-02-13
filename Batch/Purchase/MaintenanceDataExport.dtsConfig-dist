@@ -1,0 +1,31 @@
+<?xml version="1.0"?><DTSConfiguration>
+	<DTSConfigurationHeading>
+		<DTSConfigurationFileInfo GeneratedBy="TCIX\Masumi.Koyama" GeneratedFromPackageName="MaintenanceDataExport" GeneratedFromPackageID="{E868F385-29AA-4FC5-9C05-12AB2C6F4BEE}" GeneratedDate="2017/02/13 11:52:17"/>
+	</DTSConfigurationHeading>
+
+	<!-- コマンドタイムアウト(秒) -->
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::CommandTimeout].Properties[Value]" ValueType="Int32">
+		<ConfiguredValue>600</ConfiguredValue>
+	</Configuration>
+
+	<!-- 出力ディレクトリ 1 -->
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputDir1].Properties[Value]" ValueType="String">
+		<ConfiguredValue>\\TFL4\file\部署\調達部\受信\情シス提供データ(調達)</ConfiguredValue>
+	</Configuration>
+
+	<!-- 出力ディレクトリ 2 -->
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputDir2].Properties[Value]" ValueType="String">
+		<ConfiguredValue>\\TFL3\GlobalProject\Supply_Chain_Management_Group\0500 IT data\PDB Data</ConfiguredValue>
+	</Configuration>
+
+	<!-- 出力ファイル名 -->
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputFileName].Properties[Value]" ValueType="String">
+		<ConfiguredValue>PDB_MaintenanceData.xlsx</ConfiguredValue>
+	</Configuration>
+
+	<!-- テンポラリディレクトリ -->
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::TempDir].Properties[Value]" ValueType="String">
+		<ConfiguredValue>C:\tcijapp\Purchase\Batch\Temp</ConfiguredValue>
+	</Configuration>
+
+</DTSConfiguration>

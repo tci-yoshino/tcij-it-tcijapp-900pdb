@@ -67,5 +67,10 @@
       <FullPath>GoodsReceiptImport.dtsx</FullPath>
       <References />
     </DtsPackage>
+    <DtsPackage FormatVersion="3">
+      <Name>MaintenanceDataExport.dtsx</Name>
+      <FullPath>MaintenanceDataExport.dtsx</FullPath>
+      <References />
+    </DtsPackage>
   </DTSPackages>
 </Project>
