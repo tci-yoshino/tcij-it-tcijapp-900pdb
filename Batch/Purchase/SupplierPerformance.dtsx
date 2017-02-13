@@ -10,8 +10,8 @@
 <DTS:Property DTS:Name="PackagePriorityClass">0</DTS:Property>
 <DTS:Property DTS:Name="VersionMajor">1</DTS:Property>
 <DTS:Property DTS:Name="VersionMinor">0</DTS:Property>
-<DTS:Property DTS:Name="VersionBuild">65</DTS:Property>
-<DTS:Property DTS:Name="VersionGUID">{867BCB54-9F29-426D-B5E9-3EF77697594C}</DTS:Property>
+<DTS:Property DTS:Name="VersionBuild">69</DTS:Property>
+<DTS:Property DTS:Name="VersionGUID">{990AC3D0-0305-4C8F-92B1-8CA27BF62823}</DTS:Property>
 <DTS:Property DTS:Name="EnableConfig">-1</DTS:Property>
 <DTS:Property DTS:Name="CheckpointFileName"></DTS:Property>
 <DTS:Property DTS:Name="SaveCheckpoints">0</DTS:Property>
@@ -25,12 +25,12 @@
 <DTS:Property DTS:Name="CreationName">SMTP</DTS:Property><DTS:ObjectData><SmtpConnectionManager ConnectionString="SmtpServer=excas.tcix.local;UseWindowsAuthentication=True;EnableSsl=False;"/></DTS:ObjectData></DTS:ConnectionManager>
 <DTS:ConnectionManager>
 <DTS:Property DTS:Name="DelayValidation">0</DTS:Property>
-<DTS:Property DTS:Name="ObjectName">ファイル接続マネージャー</DTS:Property>
+<DTS:Property DTS:Name="ObjectName">SupplierPerformance.log</DTS:Property>
 <DTS:Property DTS:Name="DTSID">{69219EEC-2FA4-45FC-AC2A-6EC591D1CB77}</DTS:Property>
 <DTS:Property DTS:Name="Description"></DTS:Property>
-<DTS:Property DTS:Name="CreationName">FILE</DTS:Property><DTS:ObjectData><DTS:ConnectionManager>
+<DTS:Property DTS:Name="CreationName">FILE</DTS:Property><DTS:PropertyExpression DTS:Name="ConnectionString">@[User::LogDir] + "SupplierPerformance.log"</DTS:PropertyExpression><DTS:ObjectData><DTS:ConnectionManager>
 <DTS:Property DTS:Name="FileUsageType">1</DTS:Property>
-<DTS:Property DTS:Name="ConnectionString">C:\tcijapp\Purchase\Batch\log\SupplierPerformance.log</DTS:Property></DTS:ConnectionManager></DTS:ObjectData></DTS:ConnectionManager>
+<DTS:Property DTS:Name="ConnectionString">C:\tcijapp\Purchase\Batch\Log\SupplierPerformance.log</DTS:Property></DTS:ConnectionManager></DTS:ObjectData></DTS:ConnectionManager>
 <DTS:Configuration>
 <DTS:Property DTS:Name="ConfigurationType">1</DTS:Property>
 <DTS:Property DTS:Name="ConfigurationString">C:\tcijapp\Purchase\Batch\Purchase\SupplierPerformance.dtsConfig</DTS:Property>
@@ -39,8 +39,16 @@
 <DTS:Property DTS:Name="DTSID">{D5230F8D-1EC8-41C6-90F7-A1284BB14096}</DTS:Property>
 <DTS:Property DTS:Name="Description"></DTS:Property>
 <DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:Configuration>
+<DTS:Configuration>
+<DTS:Property DTS:Name="ConfigurationType">1</DTS:Property>
+<DTS:Property DTS:Name="ConfigurationString">C:\tcijapp\Purchase\Batch\Purchase\Purchase.dtsConfig</DTS:Property>
+<DTS:Property DTS:Name="ConfigurationVariable"></DTS:Property>
+<DTS:Property DTS:Name="ObjectName">構成 2</DTS:Property>
+<DTS:Property DTS:Name="DTSID">{C41B50F8-28C1-41AD-80EB-202FA179CB88}</DTS:Property>
+<DTS:Property DTS:Name="Description"></DTS:Property>
+<DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:Configuration>
 <DTS:LogProvider>
-<DTS:Property DTS:Name="ConfigString">ファイル接続マネージャー</DTS:Property>
+<DTS:Property DTS:Name="ConfigString">SupplierPerformance.log</DTS:Property>
 <DTS:Property DTS:Name="DelayValidation">0</DTS:Property>
 <DTS:Property DTS:Name="ObjectName">テキスト ファイルの SSIS ログ プロバイダー</DTS:Property>
 <DTS:Property DTS:Name="DTSID">{FC937C02-92D7-4C11-A6D1-8A76848F9C1D}</DTS:Property>
@@ -89,6 +97,17 @@
 <DTS:Property DTS:Name="IncludeInDebugDump">2345</DTS:Property><DTS:VariableValue DTS:DataType="8"></DTS:VariableValue>
 <DTS:Property DTS:Name="ObjectName">ErrorMessage</DTS:Property>
 <DTS:Property DTS:Name="DTSID">{4D653EDF-0CA3-41A5-88EB-661EF562CD9B}</DTS:Property>
+<DTS:Property DTS:Name="Description"></DTS:Property>
+<DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:Variable>
+<DTS:Variable>
+<DTS:Property DTS:Name="Expression"></DTS:Property>
+<DTS:Property DTS:Name="EvaluateAsExpression">0</DTS:Property>
+<DTS:Property DTS:Name="Namespace">User</DTS:Property>
+<DTS:Property DTS:Name="ReadOnly">0</DTS:Property>
+<DTS:Property DTS:Name="RaiseChangedEvent">0</DTS:Property>
+<DTS:Property DTS:Name="IncludeInDebugDump">2345</DTS:Property><DTS:VariableValue DTS:DataType="8">C:\tcijapp\Purchase\Batch\Log\</DTS:VariableValue>
+<DTS:Property DTS:Name="ObjectName">LogDir</DTS:Property>
+<DTS:Property DTS:Name="DTSID">{F552666D-AE2D-4997-96F1-7D5D583B790A}</DTS:Property>
 <DTS:Property DTS:Name="Description"></DTS:Property>
 <DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:Variable>
 <DTS:Variable>
@@ -192,45 +211,164 @@
 <DTS:Property DTS:Name="DTSID">{9E9F55E2-52D5-4100-BE27-C893F58FC0C1}</DTS:Property>
 <DTS:Property DTS:Name="Description">スクリプト タスク</DTS:Property>
 <DTS:Property DTS:Name="CreationName">Microsoft.SqlServer.Dts.Tasks.ScriptTask.ScriptTask, Microsoft.SqlServer.ScriptTask, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91</DTS:Property>
-<DTS:Property DTS:Name="DisableEventHandlers">0</DTS:Property><DTS:ObjectData><ScriptProject Name="ST_cbd20828325540598128df137d9f4b55" VSTAMajorVersion="2" VSTAMinorVersion="1" Language="VisualBasic" EntryPoint="Main" ReadOnlyVariables="User::ConnectionString, User::CommandTimeout" ReadWriteVariables="User::ErrorMessage"><ProjectItem Name="\my project\settings.designer.vb">
-<![CDATA['------------------------------------------------------------------------------
-' <autogenerated>
-'     This code was generated by a tool.
-'
-'     Changes to this file may cause incorrect behavior and will be lost if
-'     the code is regenerated.
-' </autogenerated>
-'------------------------------------------------------------------------------
+<DTS:Property DTS:Name="DisableEventHandlers">0</DTS:Property><DTS:ObjectData><ScriptProject Name="ST_cbd20828325540598128df137d9f4b55" VSTAMajorVersion="2" VSTAMinorVersion="1" Language="VisualBasic" EntryPoint="Main" ReadOnlyVariables="User::ConnectionString, User::CommandTimeout" ReadWriteVariables="User::ErrorMessage"><ProjectItem Name="\st_cbd20828325540598128df137d9f4b55.vbproj">
+<![CDATA[<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- This section defines project-level properties.
 
-Option Strict Off
-Option Explicit On
+       Configuration - Specifies whether the default configuration is Release or Debug.
+       Platform - Specifies what CPU the output of this project can run on.
+       OutputType - Must be "Library" for VSTA.
+       NoStandardLibraries - Set to "false" for VSTA.
+       RootNamespace - In C#, this specifies the namespace given to new files.
+                       In Visual Basic, all objects are wrapped in this namespace at runtime.
+       AssemblyName - Name of the output assembly.
+  -->
+  <PropertyGroup>
+    <ProjectTypeGuids>{A860303F-1F3F-4691-B57E-529FC101A107};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>ST_cbd20828325540598128df137d9f4b55.vbproj</RootNamespace>
+    <AssemblyName>ST_cbd20828325540598128df137d9f4b55.vbproj</AssemblyName>
+    <StartupObject>
+    </StartupObject>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>Off</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+    <ProjectGuid>{6FFB2389-2BFA-4FDA-B36A-C31034136C4C}</ProjectGuid>
+  </PropertyGroup>
+  <!-- This section defines properties that are set when the "Debug" configuration is
+       selected.
 
+       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
+       Optimize - If true, optimize the build output. If false, do not optimize.
+       OutputPath - Output path of the project relative to the project file.
+       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
+       DefineConstants - Constants defined for the preprocessor.
+       Warning Level - Warning level for the compiler.
+  -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DefineConstants>
+    </DefineConstants>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
+  </PropertyGroup>
+  <!-- This section defines properties that are set when the "Release" configuration is
+       selected.
 
+       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
+       Optimize - If true, optimize the build output. If false, do not optimize.
+       OutputPath - Output path of the project relative to the project file.
+       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
+       DefineConstants - Constants defined for the preprocessor.
+       Warning Level - Warning level for the compiler.
+  -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants>
+    </DefineConstants>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
+  </PropertyGroup>
+  <!-- This section enables pre- and post-build steps. However,
+       it is recommended that MSBuild tasks be used instead of these properties.
+  -->
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- This sections specifies references for the project. -->
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.AddIn, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.SqlServer.ManagedDTS, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+    <Reference Include="Microsoft.SqlServer.ScriptTask, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+  </ItemGroup>
+  <!-- Visual Basic supports Importing namespaces (equivalent to using statements in C#).-->
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+  </ItemGroup>
+  <!-- This section defines the user source files that are part of the
+       project.
 
-Partial Friend NotInheritable Class MySettings
-    Inherits System.Configuration.ApplicationSettingsBase
-
-    Private Shared m_Value As MySettings
-
-    Private Shared m_SyncObject As Object = New Object
-
-    <System.Diagnostics.DebuggerNonUserCode()> _
-    Public Shared ReadOnly Property Value() As MySettings
-        Get
-            If (MySettings.m_Value Is Nothing) Then
-                System.Threading.Monitor.Enter(MySettings.m_SyncObject)
-                If (MySettings.m_Value Is Nothing) Then
-                    Try
-                        MySettings.m_Value = New MySettings
-                    Finally
-                        System.Threading.Monitor.Exit(MySettings.m_SyncObject)
-                    End Try
-                End If
-            End If
-            Return MySettings.m_Value
-        End Get
-    End Property
-End Class]]></ProjectItem><ProjectItem Name="\my project\settings.settings">
+       Compile - Specifies a source file to compile.
+       EmbeddedResource - Specifies a .resx file for embedded resources.
+       None - Specifies a file that is not to be passed to the compiler (for instance,
+              a text file or XML file).
+       AppDesigner - Specifies the directory where the application properties files can
+                     be found.
+  -->
+  <ItemGroup>
+    <AppDesigner Include="My Project\" />
+    <Compile Include="My Project\AssemblyInfo.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ScriptMain.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <!-- Include the default configuration information and metadata files for the add-in.
+         These files are copied to the build output directory when the project is
+         built, and the path to the configuration file is passed to add-in on the command
+         line when debugging.
+    -->
+  </ItemGroup>
+  <!-- Include the build rules for a VB project.-->
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <!-- This section defines VSTA properties that describe the host-changable project properties. -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A860303F-1F3F-4691-B57E-529FC101A107}">
+        <ProjectProperties HostName="VSTAHostName" HostPackage="{C1B21C64-9E6F-4923-A89D-9F958503C1CE}" ApplicationType="usd" Language="vb" TemplatesPath="" DebugInfoExeName="#HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\9.0\InstallDir#\devenv.exe" />
+        <Host Name="SSIS_ScriptTask" />
+        <ProjectClient>
+          <HostIdentifier>SSIS_ScriptTask</HostIdentifier>
+        </ProjectClient>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>]]></ProjectItem><ProjectItem Name="\my project\settings.settings">
 <![CDATA[<?xml version='1.0' encoding='iso-8859-1'?>
 <SettingsFile xmlns="uri:settings" CurrentProfile="(Default)" GeneratedClassNamespace="$safeprojectname" GeneratedClassName="MySettings">
   <Profiles>
@@ -1073,164 +1211,45 @@ End Class]]></ProjectItem><ProjectItem Name="\my project\resources.resx">
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-</root>]]></ProjectItem><ProjectItem Name="\st_cbd20828325540598128df137d9f4b55.vbproj">
-<![CDATA[<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!-- This section defines project-level properties.
+</root>]]></ProjectItem><ProjectItem Name="\my project\settings.designer.vb">
+<![CDATA['------------------------------------------------------------------------------
+' <autogenerated>
+'     This code was generated by a tool.
+'
+'     Changes to this file may cause incorrect behavior and will be lost if
+'     the code is regenerated.
+' </autogenerated>
+'------------------------------------------------------------------------------
 
-       Configuration - Specifies whether the default configuration is Release or Debug.
-       Platform - Specifies what CPU the output of this project can run on.
-       OutputType - Must be "Library" for VSTA.
-       NoStandardLibraries - Set to "false" for VSTA.
-       RootNamespace - In C#, this specifies the namespace given to new files.
-                       In Visual Basic, all objects are wrapped in this namespace at runtime.
-       AssemblyName - Name of the output assembly.
-  -->
-  <PropertyGroup>
-    <ProjectTypeGuids>{A860303F-1F3F-4691-B57E-529FC101A107};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Library</OutputType>
-    <RootNamespace>ST_cbd20828325540598128df137d9f4b55.vbproj</RootNamespace>
-    <AssemblyName>ST_cbd20828325540598128df137d9f4b55.vbproj</AssemblyName>
-    <StartupObject>
-    </StartupObject>
-    <OptionExplicit>On</OptionExplicit>
-    <OptionCompare>Binary</OptionCompare>
-    <OptionStrict>Off</OptionStrict>
-    <OptionInfer>On</OptionInfer>
-    <ProjectGuid>{6FFB2389-2BFA-4FDA-B36A-C31034136C4C}</ProjectGuid>
-  </PropertyGroup>
-  <!-- This section defines properties that are set when the "Debug" configuration is
-       selected.
+Option Strict Off
+Option Explicit On
 
-       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
-       Optimize - If true, optimize the build output. If false, do not optimize.
-       OutputPath - Output path of the project relative to the project file.
-       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
-       DefineConstants - Constants defined for the preprocessor.
-       Warning Level - Warning level for the compiler.
-  -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DefineConstants>
-    </DefineConstants>
-    <DefineDebug>true</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
-  </PropertyGroup>
-  <!-- This section defines properties that are set when the "Release" configuration is
-       selected.
 
-       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
-       Optimize - If true, optimize the build output. If false, do not optimize.
-       OutputPath - Output path of the project relative to the project file.
-       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
-       DefineConstants - Constants defined for the preprocessor.
-       Warning Level - Warning level for the compiler.
-  -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DefineConstants>
-    </DefineConstants>
-    <DefineDebug>false</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <DebugSymbols>false</DebugSymbols>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <NoWarn>42016,42017,42018,42019,42032</NoWarn>
-  </PropertyGroup>
-  <!-- This section enables pre- and post-build steps. However,
-       it is recommended that MSBuild tasks be used instead of these properties.
-  -->
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <!-- This sections specifies references for the project. -->
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.AddIn, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.SqlServer.ManagedDTS, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
-    <Reference Include="Microsoft.SqlServer.ScriptTask, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
-  </ItemGroup>
-  <!-- Visual Basic supports Importing namespaces (equivalent to using statements in C#).-->
-  <ItemGroup>
-    <Import Include="Microsoft.VisualBasic" />
-    <Import Include="System" />
-    <Import Include="System.Collections" />
-    <Import Include="System.Data" />
-    <Import Include="System.Diagnostics" />
-    <Import Include="System.Windows.Forms" />
-  </ItemGroup>
-  <!-- This section defines the user source files that are part of the
-       project.
 
-       Compile - Specifies a source file to compile.
-       EmbeddedResource - Specifies a .resx file for embedded resources.
-       None - Specifies a file that is not to be passed to the compiler (for instance,
-              a text file or XML file).
-       AppDesigner - Specifies the directory where the application properties files can
-                     be found.
-  -->
-  <ItemGroup>
-    <AppDesigner Include="My Project\" />
-    <Compile Include="My Project\AssemblyInfo.vb">
-      <SubType>Code</SubType>
-    </Compile>
-    <EmbeddedResource Include="My Project\Resources.resx">
-      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
-      <CustomToolNamespace>My.Resources</CustomToolNamespace>
-    </EmbeddedResource>
-    <Compile Include="My Project\Resources.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <None Include="My Project\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
-    </None>
-    <Compile Include="My Project\Settings.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ScriptMain.vb">
-      <SubType>Code</SubType>
-    </Compile>
-    <!-- Include the default configuration information and metadata files for the add-in.
-         These files are copied to the build output directory when the project is
-         built, and the path to the configuration file is passed to add-in on the command
-         line when debugging.
-    -->
-  </ItemGroup>
-  <!-- Include the build rules for a VB project.-->
-  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
-  <!-- This section defines VSTA properties that describe the host-changable project properties. -->
-  <ProjectExtensions>
-    <VisualStudio>
-      <FlavorProperties GUID="{A860303F-1F3F-4691-B57E-529FC101A107}">
-        <ProjectProperties HostName="VSTAHostName" HostPackage="{C1B21C64-9E6F-4923-A89D-9F958503C1CE}" ApplicationType="usd" Language="vb" TemplatesPath="" DebugInfoExeName="#HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\VisualStudio\9.0\InstallDir#\devenv.exe" />
-        <Host Name="SSIS_ScriptTask" />
-        <ProjectClient>
-          <HostIdentifier>SSIS_ScriptTask</HostIdentifier>
-        </ProjectClient>
-      </FlavorProperties>
-    </VisualStudio>
-  </ProjectExtensions>
-</Project>]]></ProjectItem><ProjectItem Name="\my project\assemblyinfo.vb">
+Partial Friend NotInheritable Class MySettings
+    Inherits System.Configuration.ApplicationSettingsBase
+
+    Private Shared m_Value As MySettings
+
+    Private Shared m_SyncObject As Object = New Object
+
+    <System.Diagnostics.DebuggerNonUserCode()> _
+    Public Shared ReadOnly Property Value() As MySettings
+        Get
+            If (MySettings.m_Value Is Nothing) Then
+                System.Threading.Monitor.Enter(MySettings.m_SyncObject)
+                If (MySettings.m_Value Is Nothing) Then
+                    Try
+                        MySettings.m_Value = New MySettings
+                    Finally
+                        System.Threading.Monitor.Exit(MySettings.m_SyncObject)
+                    End Try
+                End If
+            End If
+            Return MySettings.m_Value
+        End Get
+    End Property
+End Class]]></ProjectItem><ProjectItem Name="\my project\assemblyinfo.vb">
 <![CDATA[Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
@@ -1268,7 +1287,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyVersion("1.0.0.0")> 
 <Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem><BinaryItem Name="\bin\st_cbd20828325540598128df137d9f4b55.vbproj.dll">TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAgAAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1v
-ZGUuDQ0KJAAAAAAAAABQRQAATAEDADrISFgAAAAAAAAAAOAAAiELAQgAAFoAAAAMAAAAAAAA/ncA
+ZGUuDQ0KJAAAAAAAAABQRQAATAEDAH0JoVgAAAAAAAAAAOAAAiELAQgAAFoAAAAMAAAAAAAA/ncA
 AAAgAAAAgAAAAABAAAAgAAAAAgAABAAAAAAAAAAEAAAAAAAAAADAAAAAAgAAAAAAAAIAQIUAABAA
 ABAAAAAAEAAAEAAAAAAAABAAAAAAAAAAAAAAALB3AABLAAAAAIAAABAJAAAAAAAAAAAAAAAAAAAA
 AAAAAKAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -1422,13 +1441,13 @@ cgddAjkAcAFiAkkAcAETANEAmAd+AtEAngd+AtkAcAETAFEAcAETAOEAxwfZAFEA3weIAukAMAiN
 AvEARwiSAvkA8wOYAgEBXAicAgkBcgihAukAgginAgkBkQgXABEBcAFQAREB3ggTABEB4wiyAhkB
 8QhQARkBAQmnAhkBFAloACEBMAkTACkBcAETACkBUgnBAikBhwJxACkBUgnUAjEBaQnaAlkAeQne
 AlkAjAlxAFkAmAlxAPkAGgfjAjkBcAFSAkEBcAFQAUkBcAGnAlEBcAETAFkBcAFQAWEBcAFQAWkB
-cAFQAXEBcAFQAXkBcAFQAYEBcAFQAYkBcAFQAZEBcAFQAQgANADpAAgAOADuACkAgwBVAS4AOwJX
-Ai4ASwKkAy4AIwJXAi4AAwIoAy4A8wGHAy4AQwJXAi4AMwKkAy4AKwKNAy4ACwIxAy4AEwJQAy4A
-GwJdAy4A6wBXAkAAKwDuAEAAEwD5AEMAEwD5AEMAGwAIAUkAgwCHAWMAEwD5AGMAGwAIAWkAgwBm
-AYAAKwDuAIMAcwDuAIMAGwAIAYMAewDuAIkAgwBzAaAAKwDuAKMAwwDQAaMAEwD5AMAAKwDuAMMA
-EwD5AMMA6wBXAskAEwB1AuAAKwDuAOkAEwB1AgABKwDuAAABEwD5AAkBGwHuACABEwD5ACABKwDu
+cAFQAXEBcAFQAXkBcAFQAYEBcAFQAYkBcAFQAZEBcAFQAQgANADpAAgAOADuACkAgwBVAS4AKwKN
+Ay4AQwJXAi4AIwJXAi4ASwKkAy4A6wBXAi4AMwKkAy4AOwJXAi4A8wGHAy4AAwIoAy4ACwIxAy4A
+EwJQAy4AGwJdA0AAKwDuAEAAEwD5AEMAEwD5AEMAGwAIAUkAgwBzAWMAGwAIAWMAEwD5AGkAgwBm
+AYAAKwDuAIMAewDuAIMAGwAIAYMAcwDuAIkAgwCHAaAAKwDuAKMAEwD5AKMAwwDQAcAAKwDuAMMA
+6wBXAsMAEwD5AMkAEwB1AuAAKwDuAOkAEwB1AgABKwDuAAABEwD5AAkBGwHuACABEwD5ACABKwDu
 ACMB8wFXAiMB+wHuAkABKwDuAEABEwD5AGABEwD5AGABKwDuAIABKwDuAKABKwDuAMABKwDuAMAB
-EwD5AOABKwDuAAACKwDuAAACEwD5ADwBQQFGAUsBoAGkAa8BtAHDAcMBSwJpAnACgwKsArgCyALI
+EwD5AOABKwDuAAACEwD5AAACKwDuADwBQQFGAUsBoAGkAa8BtAHDAcMBSwJpAnACgwKsArgCyALI
 AsgCyALIAsgCyALIAsgC6AIEAAEABgAFAAcABgAIAAgAAACUAU8AAABNAlQAAAD8AVkAAABZAl4A
 AAAVA5gAAAAyA7UAAACpA7oAAACjA8sAAgAEAAMAAgAFAAUAAgAGAAcAAgAHAAkAAgAPAAsAAgAS
 AA0AAgATAA8AAQAUAA8AAgAXABEAdQB1AIgAIAEnAS4BNQEyAjkCBIAAAAEAAAAAAAAAAAAAAAAA
@@ -1651,14 +1670,14 @@ QwByAGUAYQB0AGUARABhAHQAZQAsACAAUABSAC4AQwBuAHQAKQAAOSAAIAAgACAAVQBQAEQAQQBU
 AEUAIABTAEUAVAAgAFMAUAAuAFAAUgA9ACAAUABSAC4AQwBuAHQAAFlSAEYAUQAgAEEAbgBhAGwA
 eQBzAGkAcwAgAGEAbABsACAAZABhAHQAYQAgAG4w+lGbUmswSjBEMGYwtzC5MMYw4DCoMOkw/DBM
 MHp2H3VXMH4wVzBfMAIwAQufW0yI0TC5MBr/AROoMOkw/DDhMMMwuzD8MLgwGv8BGUUAcgByAG8A
-cgBNAGUAcwBzAGEAZwBlAAAAANw+UKwm/v9PvZwqHZiT5gEACLd6XFYZNOCJCLA/X38R1Qo6AyAA
+cgBNAGUAcwBzAGEAZwBlAAAAAE8+tFS/e/pOqo0BV6tCuUwACLd6XFYZNOCJCLA/X38R1Qo6AyAA
 AQMAAAEEAAASDAcGFRIYARIMBAAAEggHBhUSGAESCAQAABIRBwYVEhgBEhEEAAASFAcGFRIYARIU
 BAgAEgwECAASCAQIABIRBAgAEhQEIAECHAMgAAgEIAASFQMgAA4CHgAHEAEBHgAeAAcwAQEBEB4A
 AhMABCAAEwAHBhUSGQETAAQoABMAAwYSHQMGEiEEAAASHQQAABIhBQABARIhBAgAEh0ECAASIQMG
 EiACBhwEAAASIAQIABIgCImEXc2AgMyRAgYOAgYIBSABARItAwYRKAQAAAAABAEAAAAFIAEBETkI
 AQABAAAAAAAFIAIBDg4XAQAKTXlUZW1wbGF0ZQc4LjAuMC4wAAAGFRIYARIMBhUSGAESCAYVEhgB
 EhEGFRIYARIUBAcBEgwEBwESCAQHARIRBAcBEhQEIAEBDhABAAtNeS5Db21wdXRlcgAADAEAB015
-LlVzZXIAABMBAA5NeS5XZWJTZXJ2aWNlcwAAEwEADk15LkFwcGxpY2F0aW9uAAAEAAEcHAMHAQID
+LlVzZXIAABMBAA5NeS5BcHBsaWNhdGlvbgAAEwEADk15LldlYlNlcnZpY2VzAAAEAAEcHAMHAQID
 BwEIBgABEhURVQQHARIVAwcBDgUQAQAeAAQKAR4ABAcBHgAHIAQBDg4ODmEBADRTeXN0ZW0uV2Vi
 LlNlcnZpY2VzLlByb3RvY29scy5Tb2FwSHR0cENsaWVudFByb3RvY29sEkNyZWF0ZV9fSW5zdGFu
 Y2VfXxNEaXNwb3NlX19JbnN0YW5jZV9fAAAABhUSGAETAAYVEhkBEwAECgETAAUgAQETAAYHAhMA
@@ -1905,6 +1924,161 @@ Partial Public Class ScriptMain
 		Dts.TaskResult = ScriptResults.Success
 	End Sub
 
+End Class]]></ProjectItem><ProjectItem Name="\my project\resources.resx">
+<![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+</root>]]></ProjectItem><ProjectItem Name="\my project\settings.designer.vb">
+<![CDATA['------------------------------------------------------------------------------
+' <autogenerated>
+'     This code was generated by a tool.
+'
+'     Changes to this file may cause incorrect behavior and will be lost if
+'     the code is regenerated.
+' </autogenerated>
+'------------------------------------------------------------------------------
+
+Option Strict Off
+Option Explicit On
+
+
+
+Partial Friend NotInheritable Class MySettings
+    Inherits System.Configuration.ApplicationSettingsBase
+
+    Private Shared m_Value As MySettings
+
+    Private Shared m_SyncObject As Object = New Object
+
+    <System.Diagnostics.DebuggerNonUserCode()> _
+    Public Shared ReadOnly Property Value() As MySettings
+        Get
+            If (MySettings.m_Value Is Nothing) Then
+                System.Threading.Monitor.Enter(MySettings.m_SyncObject)
+                If (MySettings.m_Value Is Nothing) Then
+                    Try
+                        MySettings.m_Value = New MySettings
+                    Finally
+                        System.Threading.Monitor.Exit(MySettings.m_SyncObject)
+                    End Try
+                End If
+            End If
+            Return MySettings.m_Value
+        End Get
+    End Property
 End Class]]></ProjectItem><ProjectItem Name="\st_a6cdc6d2450c4d64b1d121862b4b2551.vbproj">
 <![CDATA[<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- This section defines project-level properties.
@@ -2062,162 +2236,7 @@ End Class]]></ProjectItem><ProjectItem Name="\st_a6cdc6d2450c4d64b1d121862b4b255
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-</Project>]]></ProjectItem><ProjectItem Name="\my project\settings.designer.vb">
-<![CDATA['------------------------------------------------------------------------------
-' <autogenerated>
-'     This code was generated by a tool.
-'
-'     Changes to this file may cause incorrect behavior and will be lost if
-'     the code is regenerated.
-' </autogenerated>
-'------------------------------------------------------------------------------
-
-Option Strict Off
-Option Explicit On
-
-
-
-Partial Friend NotInheritable Class MySettings
-    Inherits System.Configuration.ApplicationSettingsBase
-
-    Private Shared m_Value As MySettings
-
-    Private Shared m_SyncObject As Object = New Object
-
-    <System.Diagnostics.DebuggerNonUserCode()> _
-    Public Shared ReadOnly Property Value() As MySettings
-        Get
-            If (MySettings.m_Value Is Nothing) Then
-                System.Threading.Monitor.Enter(MySettings.m_SyncObject)
-                If (MySettings.m_Value Is Nothing) Then
-                    Try
-                        MySettings.m_Value = New MySettings
-                    Finally
-                        System.Threading.Monitor.Exit(MySettings.m_SyncObject)
-                    End Try
-                End If
-            End If
-            Return MySettings.m_Value
-        End Get
-    End Property
-End Class]]></ProjectItem><ProjectItem Name="\my project\resources.resx">
-<![CDATA[<?xml version="1.0" encoding="utf-8"?>
-<root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-</root>]]></ProjectItem><BinaryItem Name="\bin\st_a6cdc6d2450c4d64b1d121862b4b2551.vbproj.dll">TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+</Project>]]></ProjectItem><BinaryItem Name="\bin\st_a6cdc6d2450c4d64b1d121862b4b2551.vbproj.dll">TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAgAAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1v
 ZGUuDQ0KJAAAAAAAAABQRQAATAEDAHtidFcAAAAAAAAAAOAAAiELAQgAABoAAAAMAAAAAAAADjgA
 AAAgAAAAQAAAAABAAAAgAAAAAgAABAAAAAAAAAAEAAAAAAAAAACAAAAAAgAAAAAAAAIAQIUAABAA
@@ -2420,191 +2439,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</BinaryItem></ScriptProject
 <DTS:Property DTS:Name="DTSID">{503B42B0-574E-4F3A-BEA0-8F9FE6ED6665}</DTS:Property>
 <DTS:Property DTS:Name="Description">スクリプト タスク</DTS:Property>
 <DTS:Property DTS:Name="CreationName">Microsoft.SqlServer.Dts.Tasks.ScriptTask.ScriptTask, Microsoft.SqlServer.ScriptTask, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91</DTS:Property>
-<DTS:Property DTS:Name="DisableEventHandlers">0</DTS:Property><DTS:ObjectData><ScriptProject Name="ST_a2784740098a45c89c672d61dfb86d3d" VSTAMajorVersion="2" VSTAMinorVersion="1" Language="VisualBasic" EntryPoint="Main" ReadOnlyVariables="User::ConnectionString, User::CommandTimeout, User::TemplateFilePath, User::OutputFilePath" ReadWriteVariables="User::ErrorMessage"><ProjectItem Name="\scriptmain.vb">
-<![CDATA[' Microsoft SQL Server Integration Services Script Task
-' Write scripts using Microsoft Visual Basic 2008.
-' The ScriptMain is the entry point class of the script.
-
-Imports System
-Imports System.Data
-Imports System.Collections.Generic
-Imports System.IO
-Imports System.Reflection
-Imports System.Text
-Imports Microsoft.SqlServer.Dts.Runtime
-
-<System.AddIn.AddIn("ScriptMain", Version:="1.0", Publisher:="", Description:="")> _
-<System.CLSCompliantAttribute(False)> _
-Partial Public Class ScriptMain
-	Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
-
-	Enum ScriptResults
-		Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
-		Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
-	End Enum
-	
-    Dim connectionString As String = String.Empty
-    Dim commandTimeout As Integer = 0
-    Dim templateFilePath As String = String.Empty
-    Dim outputFilePath As String = String.Empty
-
-    ''' <summary>
-    ''' メイン処理を行います。
-    ''' </summary>
-	Public Sub Main()
-
-        connectionString = Dts.Variables("ConnectionString").Value.ToString
-        commandTimeout = CInt(Dts.Variables("CommandTimeout").Value.ToString)
-        templateFilePath = Dts.Variables("TemplateFilePath").Value.ToString
-        outputFilePath = Dts.Variables("OutputFilePath").Value.ToString
-
-        Dim sqlStr As New StringBuilder
-        Dim sqlList As List(Of String) = New List(Of String)
-        Dim sheetList As List(Of String) = New List(Of String)
-
-        Try
-            'ファイルが既に存在する場合は削除する
-            If File.Exists(outputFilePath) Then
-                File.Delete(outputFilePath)
-            End If
-
-            sqlStr = New StringBuilder
-            sqlStr.AppendLine("WITH Y1 AS (")
-            sqlStr.AppendLine("    SELECT")
-            sqlStr.AppendLine("        S.SupplierCode,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y1.QN, 0)) AS QN_Y1,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y1.QS, 0)) AS QS_Y1,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y1.PP, 0)) AS PP_Y1,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y1.PPN, 0)) AS PPN_Y1,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y1.PPS, 0)) AS PPS_Y1,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y1.PPC, 0)) AS PPC_Y1,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y1.PP2475, 0)) AS PP2475_Y1,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y1.PPC, 0)) - SUM(ISNULL(Y1.PP2475, 0)) AS RC_Y1,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y1.PA, 0)) AS PA_Y1,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y1.PR, 0)) AS PR_Y1")
-            sqlStr.AppendLine("    FROM")
-            sqlStr.AppendLine("        Supplier AS S")
-            sqlStr.AppendLine("            LEFT OUTER JOIN TmpSupplierPerformance AS Y1 ON Y1.SupplierCode = S.SupplierCode AND Y1.CreateDate BETWEEN DATEADD(YEAR, -1, CONVERT(date, GETDATE())) AND DATEADD(DAY, -1, CONVERT(date, GETDATE()))")
-            sqlStr.AppendLine("    GROUP BY")
-            sqlStr.AppendLine("        S.SupplierCode")
-            sqlStr.AppendLine("),")
-            sqlStr.AppendLine("Y5 AS (")
-            sqlStr.AppendLine("    SELECT")
-            sqlStr.AppendLine("        S.SupplierCode,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y5.QN, 0)) AS QN_Y5,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y5.QS, 0)) AS QS_Y5,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y5.PP, 0)) AS PP_Y5,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y5.PPN, 0)) AS PPN_Y5,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y5.PPS, 0)) AS PPS_Y5,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y5.PPC, 0)) AS PPC_Y5,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y5.PP2475, 0)) AS PP2475_Y5,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y5.PPC, 0)) - SUM(ISNULL(Y5.PP2475, 0)) AS RC_Y5,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y5.PA, 0)) AS PA_Y5,")
-            sqlStr.AppendLine("        SUM(ISNULL(Y5.PR, 0)) AS PR_Y5")
-            sqlStr.AppendLine("    FROM")
-            sqlStr.AppendLine("        Supplier AS S")
-            sqlStr.AppendLine("            LEFT OUTER JOIN TmpSupplierPerformance AS Y5 ON Y5.SupplierCode = S.SupplierCode AND Y5.CreateDate BETWEEN DATEADD(YEAR, -5, CONVERT(date, GETDATE())) AND DATEADD(DAY, -1, CONVERT(date, GETDATE()))")
-            sqlStr.AppendLine("    GROUP BY")
-            sqlStr.AppendLine("        S.SupplierCode")
-            sqlStr.AppendLine(")")
-            sqlStr.AppendLine("SELECT")
-            sqlStr.AppendLine("    S.SupplierCode AS [Suplier Code],")
-            sqlStr.AppendLine("    S.R3SupplierCode AS [TCI-J Supplier Code],")
-            sqlStr.AppendLine("    LTRIM(RTRIM(ISNULL(S.Name3, '') + ' ' + ISNULL(S.Name4, ''))) AS [Supplier Name],")
-            sqlStr.AppendLine("    C.Name AS [Country],")
-            sqlStr.AppendLine("    CASE WHEN PA_Y5 + PA_Y5 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND(PA_Y5 / (PA_Y5 + PR_Y5), 2)) END AS [Pass rate (%) - Quality],")
-            sqlStr.AppendLine("    CASE WHEN QN_Y5 + QS_Y5 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND((PPN_Y5 + PPS_Y5) / (QN_Y5 + QS_Y5), 2)) END AS [Buying rate (%) - Competitiveness],")
-            sqlStr.AppendLine("    CASE WHEN QS_Y5 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND(PPS_Y5 / QS_Y5, 2)) END AS [Buying rate (%) (for Stock, for Raw Material)],")
-            sqlStr.AppendLine("    CASE WHEN QN_Y5 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND(PPN_Y5 / QN_Y5, 2)) END AS [Buying rate (%) (for New)],")
-            sqlStr.AppendLine("    CASE WHEN PP_Y5 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND(RC_Y5 / PP_Y5, 2)) END AS [Cancel rate (%) - Cancel],")
-            sqlStr.AppendLine("    CONVERT(int, QN_Y5 + QS_Y5) AS [RFQ],")
-            sqlStr.AppendLine("    CONVERT(int, PPN_Y5 + PPS_Y5) AS [Par-PO],")
-            sqlStr.AppendLine("    CASE WHEN PA_Y1 + PA_Y1 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND(PA_Y1 / (PA_Y1 + PR_Y1), 2)) END AS [Pass rate (%) - Quality (current)],")
-            sqlStr.AppendLine("    CASE WHEN QN_Y1 + QS_Y1 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND((PPN_Y1 + PPS_Y1) / (QN_Y1 + QS_Y1), 2)) END AS [Buying rate (%) - Competitiveness (current)],")
-            sqlStr.AppendLine("    CASE WHEN QS_Y1 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND(PPS_Y1 / QS_Y1, 2)) END AS [Buying rate (%) (for Stock, for Raw Material) (current)],")
-            sqlStr.AppendLine("    CASE WHEN QN_Y1 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND(PPN_Y1 / QN_Y1, 2)) END AS [Buying rate (%) (for New) (current)],")
-            sqlStr.AppendLine("    CASE WHEN PP_Y1 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND(RC_Y1 / PP_Y1, 2)) END AS [Cancel rate (%) - Cancel (current)],")
-            sqlStr.AppendLine("    CONVERT(int, QN_Y1 + QS_Y1) AS [RFQ (current)],")
-            sqlStr.AppendLine("    CONVERT(int, PPN_Y1 + PPS_Y1) AS [Par-PO (current)],")
-            sqlStr.AppendLine("    PPC_Y5 AS [PO Cancel],")
-            sqlStr.AppendLine("    PP2475_Y5 AS [2475 PO],")
-            sqlStr.AppendLine("    PPC_Y1 AS [PO Cancel (current)],")
-            sqlStr.AppendLine("    PP2475_Y1 AS [2475 PO (current)]")
-            sqlStr.AppendLine("FROM")
-            sqlStr.AppendLine("    Y1,")
-            sqlStr.AppendLine("    Y5,")
-            sqlStr.AppendLine("    s_Country AS C,")
-            sqlStr.AppendLine("    Supplier AS S")
-            sqlStr.AppendLine("WHERE")
-            sqlStr.AppendLine("    S.CountryCode = C.CountryCode")
-            sqlStr.AppendLine("    AND S.SupplierCode = Y5.SupplierCode")
-            sqlStr.AppendLine("    AND Y5.SupplierCode = Y1.SupplierCode")
-            sqlStr.AppendLine("ORDER BY")
-            sqlStr.AppendLine("    S.SupplierCode")
-
-            sqlList.Add(sqlStr.ToString)
-            sheetList.Add("Sheet1")
-
-            'テンプレートファイルを出力先に上書きコピーする
-            File.Copy(templateFilePath, outputFilePath, True)
-
-            Dim domain As AppDomain = AppDomain.CreateDomain("MyDomain")
-            Dim obj = domain.CreateInstanceAndUnwrap("TCIOpenXML", "TCIOpenXML.TCIOpenXML")
-
-            Dim info As MethodInfo = obj.GetType().GetMethod("CreateOpenXML", _
-                                                                New Type() {GetType(String), _
-                                                                            GetType(List(Of String)), _
-                                                                            GetType(String), _
-                                                                            GetType(List(Of String)), _
-                                                                            GetType(Boolean), _
-                                                                            GetType(Integer)})
-
-            info.Invoke(obj, New Object() {connectionString, _
-                                           sqlList, _
-                                           outputFilePath, _
-                                           sheetList, _
-                                           True, _
-                                           commandTimeout})
-
-        Catch ex As Exception
-            Dts.TaskResult = ScriptResults.Failure
-            SetErrorMessage(ex)
-
-            Throw ex
-
-        End Try
-
-        Dts.TaskResult = ScriptResults.Success
-
-	End Sub
-
-    ''' <summary>
-    ''' ユーザ変数にエラーメッセージを設定します。
-    ''' </summary>
-    Private Sub SetErrorMessage(ByVal ex As Exception)
-
-        Dim msgStr As New StringBuilder
-
-        msgStr.AppendLine("Company Performance データの出力において、システムエラーが発生しました。")
-        msgStr.AppendLine()
-        msgStr.AppendLine("実行パス：")
-        msgStr.AppendLine(System.Environment.CommandLine)
-        msgStr.AppendLine()
-        msgStr.AppendLine("エラーメッセージ：")
-
-        If ex.InnerException Is Nothing Then
-            msgStr.AppendLine(ex.Message)
-            msgStr.AppendLine(ex.StackTrace)
-        Else
-            msgStr.AppendLine(ex.InnerException.Message)
-            msgStr.AppendLine(ex.InnerException.StackTrace)
-        End If
-
-        Dts.Variables("ErrorMessage").Value = msgStr.ToString
-
-    End Sub
-
-End Class]]></ProjectItem><ProjectItem Name="\st_a2784740098a45c89c672d61dfb86d3d.vbproj">
+<DTS:Property DTS:Name="DisableEventHandlers">0</DTS:Property><DTS:ObjectData><ScriptProject Name="ST_a2784740098a45c89c672d61dfb86d3d" VSTAMajorVersion="2" VSTAMinorVersion="1" Language="VisualBasic" EntryPoint="Main" ReadOnlyVariables="User::ConnectionString, User::CommandTimeout, User::TemplateFilePath, User::OutputFilePath" ReadWriteVariables="User::ErrorMessage"><ProjectItem Name="\st_a2784740098a45c89c672d61dfb86d3d.vbproj">
 <![CDATA[<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- This section defines project-level properties.
 
@@ -2829,7 +2664,191 @@ Namespace My.Resources
             End Set
         End Property
     End Class
-End Namespace]]></ProjectItem><ProjectItem Name="\my project\resources.resx">
+End Namespace]]></ProjectItem><ProjectItem Name="\scriptmain.vb">
+<![CDATA[' Microsoft SQL Server Integration Services Script Task
+' Write scripts using Microsoft Visual Basic 2008.
+' The ScriptMain is the entry point class of the script.
+
+Imports System
+Imports System.Data
+Imports System.Collections.Generic
+Imports System.IO
+Imports System.Reflection
+Imports System.Text
+Imports Microsoft.SqlServer.Dts.Runtime
+
+<System.AddIn.AddIn("ScriptMain", Version:="1.0", Publisher:="", Description:="")> _
+<System.CLSCompliantAttribute(False)> _
+Partial Public Class ScriptMain
+	Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
+
+	Enum ScriptResults
+		Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
+		Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
+	End Enum
+	
+    Dim connectionString As String = String.Empty
+    Dim commandTimeout As Integer = 0
+    Dim templateFilePath As String = String.Empty
+    Dim outputFilePath As String = String.Empty
+
+    ''' <summary>
+    ''' メイン処理を行います。
+    ''' </summary>
+	Public Sub Main()
+
+        connectionString = Dts.Variables("ConnectionString").Value.ToString
+        commandTimeout = CInt(Dts.Variables("CommandTimeout").Value.ToString)
+        templateFilePath = Dts.Variables("TemplateFilePath").Value.ToString
+        outputFilePath = Dts.Variables("OutputFilePath").Value.ToString
+
+        Dim sqlStr As New StringBuilder
+        Dim sqlList As List(Of String) = New List(Of String)
+        Dim sheetList As List(Of String) = New List(Of String)
+
+        Try
+            'ファイルが既に存在する場合は削除する
+            If File.Exists(outputFilePath) Then
+                File.Delete(outputFilePath)
+            End If
+
+            sqlStr = New StringBuilder
+            sqlStr.AppendLine("WITH Y1 AS (")
+            sqlStr.AppendLine("    SELECT")
+            sqlStr.AppendLine("        S.SupplierCode,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y1.QN, 0)) AS QN_Y1,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y1.QS, 0)) AS QS_Y1,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y1.PP, 0)) AS PP_Y1,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y1.PPN, 0)) AS PPN_Y1,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y1.PPS, 0)) AS PPS_Y1,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y1.PPC, 0)) AS PPC_Y1,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y1.PP2475, 0)) AS PP2475_Y1,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y1.PPC, 0)) - SUM(ISNULL(Y1.PP2475, 0)) AS RC_Y1,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y1.PA, 0)) AS PA_Y1,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y1.PR, 0)) AS PR_Y1")
+            sqlStr.AppendLine("    FROM")
+            sqlStr.AppendLine("        Supplier AS S")
+            sqlStr.AppendLine("            LEFT OUTER JOIN TmpSupplierPerformance AS Y1 ON Y1.SupplierCode = S.SupplierCode AND Y1.CreateDate BETWEEN DATEADD(YEAR, -1, CONVERT(date, GETDATE())) AND DATEADD(DAY, -1, CONVERT(date, GETDATE()))")
+            sqlStr.AppendLine("    GROUP BY")
+            sqlStr.AppendLine("        S.SupplierCode")
+            sqlStr.AppendLine("),")
+            sqlStr.AppendLine("Y5 AS (")
+            sqlStr.AppendLine("    SELECT")
+            sqlStr.AppendLine("        S.SupplierCode,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y5.QN, 0)) AS QN_Y5,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y5.QS, 0)) AS QS_Y5,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y5.PP, 0)) AS PP_Y5,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y5.PPN, 0)) AS PPN_Y5,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y5.PPS, 0)) AS PPS_Y5,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y5.PPC, 0)) AS PPC_Y5,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y5.PP2475, 0)) AS PP2475_Y5,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y5.PPC, 0)) - SUM(ISNULL(Y5.PP2475, 0)) AS RC_Y5,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y5.PA, 0)) AS PA_Y5,")
+            sqlStr.AppendLine("        SUM(ISNULL(Y5.PR, 0)) AS PR_Y5")
+            sqlStr.AppendLine("    FROM")
+            sqlStr.AppendLine("        Supplier AS S")
+            sqlStr.AppendLine("            LEFT OUTER JOIN TmpSupplierPerformance AS Y5 ON Y5.SupplierCode = S.SupplierCode AND Y5.CreateDate BETWEEN DATEADD(YEAR, -5, CONVERT(date, GETDATE())) AND DATEADD(DAY, -1, CONVERT(date, GETDATE()))")
+            sqlStr.AppendLine("    GROUP BY")
+            sqlStr.AppendLine("        S.SupplierCode")
+            sqlStr.AppendLine(")")
+            sqlStr.AppendLine("SELECT")
+            sqlStr.AppendLine("    S.SupplierCode AS [Suplier Code],")
+            sqlStr.AppendLine("    S.R3SupplierCode AS [TCI-J Supplier Code],")
+            sqlStr.AppendLine("    LTRIM(RTRIM(ISNULL(S.Name3, '') + ' ' + ISNULL(S.Name4, ''))) AS [Supplier Name],")
+            sqlStr.AppendLine("    C.Name AS [Country],")
+            sqlStr.AppendLine("    CASE WHEN PA_Y5 + PA_Y5 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND(PA_Y5 / (PA_Y5 + PR_Y5), 2)) END AS [Pass rate (%) - Quality],")
+            sqlStr.AppendLine("    CASE WHEN QN_Y5 + QS_Y5 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND((PPN_Y5 + PPS_Y5) / (QN_Y5 + QS_Y5), 2)) END AS [Buying rate (%) - Competitiveness],")
+            sqlStr.AppendLine("    CASE WHEN QS_Y5 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND(PPS_Y5 / QS_Y5, 2)) END AS [Buying rate (%) (for Stock, for Raw Material)],")
+            sqlStr.AppendLine("    CASE WHEN QN_Y5 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND(PPN_Y5 / QN_Y5, 2)) END AS [Buying rate (%) (for New)],")
+            sqlStr.AppendLine("    CASE WHEN PP_Y5 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND(RC_Y5 / PP_Y5, 2)) END AS [Cancel rate (%) - Cancel],")
+            sqlStr.AppendLine("    CONVERT(int, QN_Y5 + QS_Y5) AS [RFQ],")
+            sqlStr.AppendLine("    CONVERT(int, PPN_Y5 + PPS_Y5) AS [Par-PO],")
+            sqlStr.AppendLine("    CASE WHEN PA_Y1 + PA_Y1 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND(PA_Y1 / (PA_Y1 + PR_Y1), 2)) END AS [Pass rate (%) - Quality (current)],")
+            sqlStr.AppendLine("    CASE WHEN QN_Y1 + QS_Y1 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND((PPN_Y1 + PPS_Y1) / (QN_Y1 + QS_Y1), 2)) END AS [Buying rate (%) - Competitiveness (current)],")
+            sqlStr.AppendLine("    CASE WHEN QS_Y1 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND(PPS_Y1 / QS_Y1, 2)) END AS [Buying rate (%) (for Stock, for Raw Material) (current)],")
+            sqlStr.AppendLine("    CASE WHEN QN_Y1 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND(PPN_Y1 / QN_Y1, 2)) END AS [Buying rate (%) (for New) (current)],")
+            sqlStr.AppendLine("    CASE WHEN PP_Y1 = 0 THEN 0 ELSE CONVERT(decimal(18,2), ROUND(RC_Y1 / PP_Y1, 2)) END AS [Cancel rate (%) - Cancel (current)],")
+            sqlStr.AppendLine("    CONVERT(int, QN_Y1 + QS_Y1) AS [RFQ (current)],")
+            sqlStr.AppendLine("    CONVERT(int, PPN_Y1 + PPS_Y1) AS [Par-PO (current)],")
+            sqlStr.AppendLine("    PPC_Y5 AS [PO Cancel],")
+            sqlStr.AppendLine("    PP2475_Y5 AS [2475 PO],")
+            sqlStr.AppendLine("    PPC_Y1 AS [PO Cancel (current)],")
+            sqlStr.AppendLine("    PP2475_Y1 AS [2475 PO (current)]")
+            sqlStr.AppendLine("FROM")
+            sqlStr.AppendLine("    Y1,")
+            sqlStr.AppendLine("    Y5,")
+            sqlStr.AppendLine("    s_Country AS C,")
+            sqlStr.AppendLine("    Supplier AS S")
+            sqlStr.AppendLine("WHERE")
+            sqlStr.AppendLine("    S.CountryCode = C.CountryCode")
+            sqlStr.AppendLine("    AND S.SupplierCode = Y5.SupplierCode")
+            sqlStr.AppendLine("    AND Y5.SupplierCode = Y1.SupplierCode")
+            sqlStr.AppendLine("ORDER BY")
+            sqlStr.AppendLine("    S.SupplierCode")
+
+            sqlList.Add(sqlStr.ToString)
+            sheetList.Add("Sheet1")
+
+            'テンプレートファイルを出力先に上書きコピーする
+            File.Copy(templateFilePath, outputFilePath, True)
+
+            Dim domain As AppDomain = AppDomain.CreateDomain("MyDomain")
+            Dim obj = domain.CreateInstanceAndUnwrap("TCIOpenXML", "TCIOpenXML.TCIOpenXML")
+
+            Dim info As MethodInfo = obj.GetType().GetMethod("CreateOpenXML", _
+                                                                New Type() {GetType(String), _
+                                                                            GetType(List(Of String)), _
+                                                                            GetType(String), _
+                                                                            GetType(List(Of String)), _
+                                                                            GetType(Boolean), _
+                                                                            GetType(Integer)})
+
+            info.Invoke(obj, New Object() {connectionString, _
+                                           sqlList, _
+                                           outputFilePath, _
+                                           sheetList, _
+                                           True, _
+                                           commandTimeout})
+
+        Catch ex As Exception
+            Dts.TaskResult = ScriptResults.Failure
+            SetErrorMessage(ex)
+
+            Throw ex
+
+        End Try
+
+        Dts.TaskResult = ScriptResults.Success
+
+	End Sub
+
+    ''' <summary>
+    ''' ユーザ変数にエラーメッセージを設定します。
+    ''' </summary>
+    Private Sub SetErrorMessage(ByVal ex As Exception)
+
+        Dim msgStr As New StringBuilder
+
+        msgStr.AppendLine("Company Performance データの出力において、システムエラーが発生しました。")
+        msgStr.AppendLine()
+        msgStr.AppendLine("実行パス：")
+        msgStr.AppendLine(System.Environment.CommandLine)
+        msgStr.AppendLine()
+        msgStr.AppendLine("エラーメッセージ：")
+
+        If ex.InnerException Is Nothing Then
+            msgStr.AppendLine(ex.Message)
+            msgStr.AppendLine(ex.StackTrace)
+        Else
+            msgStr.AppendLine(ex.InnerException.Message)
+            msgStr.AppendLine(ex.InnerException.StackTrace)
+        End If
+
+        Dts.Variables("ErrorMessage").Value = msgStr.ToString
+
+    End Sub
+
+End Class]]></ProjectItem><ProjectItem Name="\my project\resources.resx">
 <![CDATA[<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
@@ -3445,26 +3464,26 @@ AAAAAAAAAAAAAAAAAAAAAAA=</BinaryItem></ScriptProject></DTS:ObjectData></DTS:Exec
 <DTS:Property DTS:Name="PackageVariableValue" DTS:DataType="8">&lt;PrecedenceConstraint xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:EvalOp&gt;Constraint&lt;/dwd:EvalOp&gt;&lt;/PrecedenceConstraint&gt;</DTS:Property>
 <DTS:Property DTS:Name="Namespace">dts-designer-1.0</DTS:Property>
 <DTS:Property DTS:Name="ObjectName">{14DD0A9F-E13B-443A-AFAB-B56E1FFE2FEC}</DTS:Property>
-<DTS:Property DTS:Name="DTSID">{A3D58A68-B42E-4B79-A0AA-724ECDC955CB}</DTS:Property>
+<DTS:Property DTS:Name="DTSID">{058926C4-9ED2-4E26-9EE3-9278B8C4C94E}</DTS:Property>
 <DTS:Property DTS:Name="Description"></DTS:Property>
 <DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:PackageVariable>
 <DTS:PackageVariable>
 <DTS:Property DTS:Name="PackageVariableValue" DTS:DataType="8">&lt;PrecedenceConstraint xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:EvalOp&gt;Constraint&lt;/dwd:EvalOp&gt;&lt;/PrecedenceConstraint&gt;</DTS:Property>
 <DTS:Property DTS:Name="Namespace">dts-designer-1.0</DTS:Property>
 <DTS:Property DTS:Name="ObjectName">{D27811C5-4832-4195-83AB-40D26155ADE9}</DTS:Property>
-<DTS:Property DTS:Name="DTSID">{5F038AC8-E1D7-4A66-B36A-3BD94FB1D44D}</DTS:Property>
+<DTS:Property DTS:Name="DTSID">{4B9FBAEB-4B91-42C6-8B88-AE83C8A1E60B}</DTS:Property>
 <DTS:Property DTS:Name="Description"></DTS:Property>
 <DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:PackageVariable>
 <DTS:PackageVariable>
 <DTS:Property DTS:Name="PackageVariableValue" DTS:DataType="8">&lt;PrecedenceConstraint xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:EvalOp&gt;Constraint&lt;/dwd:EvalOp&gt;&lt;/PrecedenceConstraint&gt;</DTS:Property>
 <DTS:Property DTS:Name="Namespace">dts-designer-1.0</DTS:Property>
 <DTS:Property DTS:Name="ObjectName">{D29D1B7A-6E2D-4CC2-93F3-13FF0C138D80}</DTS:Property>
-<DTS:Property DTS:Name="DTSID">{B971E2B2-ADDE-41E0-B76A-ABDC7658F015}</DTS:Property>
+<DTS:Property DTS:Name="DTSID">{F0FC0E46-C6C9-47FF-A883-773048504EEF}</DTS:Property>
 <DTS:Property DTS:Name="Description"></DTS:Property>
 <DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:PackageVariable>
 <DTS:PackageVariable>
-<DTS:Property DTS:Name="PackageVariableValue" DTS:DataType="8">&lt;Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:DtsControlFlowDiagram&gt;&lt;dwd:BoundingLeft&gt;1000&lt;/dwd:BoundingLeft&gt;&lt;dwd:BoundingTop&gt;1000&lt;/dwd:BoundingTop&gt;&lt;dwd:Layout&gt;&lt;dds&gt;
-  &lt;diagram fontclsid="{0BE35203-8F91-11CE-9DE3-00AA004BB851}" mouseiconclsid="{0BE35204-8F91-11CE-9DE3-00AA004BB851}" defaultlayout="Microsoft.DataWarehouse.Layout.GraphLayout100" defaultlineroute="Microsoft.DataWarehouse.Layout.GraphLayout100" version="7" nextobject="19" scale="100" pagebreakanchorx="0" pagebreakanchory="0" pagebreaksizex="0" pagebreaksizey="0" scrollleft="0" scrolltop="0" gridx="150" gridy="150" marginx="1000" marginy="1000" zoom="100" x="29792" y="17595" backcolor="15334399" defaultpersistence="2" PrintPageNumbersMode="3" PrintMarginTop="0" PrintMarginBottom="635" PrintMarginLeft="0" PrintMarginRight="0" marqueeselectionmode="1" mousepointer="0" snaptogrid="0" autotypeannotation="1" showscrollbars="0" viewpagebreaks="0" donotforceconnectorsbehindshapes="1" backpictureclsid="{00000000-0000-0000-0000-000000000000}"&gt;
+<DTS:Property DTS:Name="PackageVariableValue" DTS:DataType="8">&lt;Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:DtsControlFlowDiagram&gt;&lt;dwd:Layout&gt;&lt;dds&gt;
+  &lt;diagram fontclsid="{0BE35203-8F91-11CE-9DE3-00AA004BB851}" mouseiconclsid="{0BE35204-8F91-11CE-9DE3-00AA004BB851}" defaultlayout="Microsoft.DataWarehouse.Layout.GraphLayout100" defaultlineroute="Microsoft.DataWarehouse.Layout.GraphLayout100" version="7" nextobject="19" scale="100" pagebreakanchorx="0" pagebreakanchory="0" pagebreaksizex="0" pagebreaksizey="0" scrollleft="0" scrolltop="0" gridx="150" gridy="150" marginx="1000" marginy="1000" zoom="100" x="21325" y="14367" backcolor="15334399" defaultpersistence="2" PrintPageNumbersMode="3" PrintMarginTop="0" PrintMarginBottom="635" PrintMarginLeft="0" PrintMarginRight="0" marqueeselectionmode="1" mousepointer="0" snaptogrid="0" autotypeannotation="1" showscrollbars="0" viewpagebreaks="0" donotforceconnectorsbehindshapes="1" backpictureclsid="{00000000-0000-0000-0000-000000000000}"&gt;
     &lt;font&gt;
       &lt;ddsxmlobjectstreamwrapper binary="010100009001905f01000c4d5320554920476f74686963" /&gt;
     &lt;/font&gt;
@@ -3604,12 +3623,12 @@ AAAAAAAAAAAAAAAAAAAAAAA=</BinaryItem></ScriptProject></DTS:ObjectData></DTS:Exec
 &lt;/dds&gt;&lt;/dwd:Layout&gt;&lt;/dwd:DtsControlFlowDiagram&gt;&lt;/Package&gt;</DTS:Property>
 <DTS:Property DTS:Name="Namespace">dts-designer-1.0</DTS:Property>
 <DTS:Property DTS:Name="ObjectName">{D4C3B75A-B13C-42EE-B6A6-48312244AE4D}</DTS:Property>
-<DTS:Property DTS:Name="DTSID">{27927589-C8A3-4DEF-B091-4DA5D2B7881F}</DTS:Property>
+<DTS:Property DTS:Name="DTSID">{9F853052-3C8E-4E0D-9EAC-BA12DBD14588}</DTS:Property>
 <DTS:Property DTS:Name="Description"></DTS:Property>
 <DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:PackageVariable>
 <DTS:PackageVariable>
-<DTS:Property DTS:Name="PackageVariableValue" DTS:DataType="8">&lt;Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:DtsControlFlowDiagram&gt;&lt;dwd:BoundingLeft&gt;1000&lt;/dwd:BoundingLeft&gt;&lt;dwd:BoundingTop&gt;1000&lt;/dwd:BoundingTop&gt;&lt;dwd:Layout&gt;&lt;dds&gt;
-  &lt;diagram fontclsid="{0BE35203-8F91-11CE-9DE3-00AA004BB851}" mouseiconclsid="{0BE35204-8F91-11CE-9DE3-00AA004BB851}" defaultlayout="Microsoft.DataWarehouse.Layout.GraphLayout100" defaultlineroute="Microsoft.DataWarehouse.Layout.GraphLayout100" version="7" nextobject="19" scale="100" pagebreakanchorx="0" pagebreakanchory="0" pagebreaksizex="0" pagebreaksizey="0" scrollleft="0" scrolltop="0" gridx="150" gridy="150" marginx="1000" marginy="1000" zoom="100" x="29792" y="17595" backcolor="15334399" defaultpersistence="2" PrintPageNumbersMode="3" PrintMarginTop="0" PrintMarginBottom="635" PrintMarginLeft="0" PrintMarginRight="0" marqueeselectionmode="1" mousepointer="0" snaptogrid="0" autotypeannotation="1" showscrollbars="0" viewpagebreaks="0" donotforceconnectorsbehindshapes="1" backpictureclsid="{00000000-0000-0000-0000-000000000000}"&gt;
+<DTS:Property DTS:Name="PackageVariableValue" DTS:DataType="8">&lt;Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:DtsControlFlowDiagram&gt;&lt;dwd:Layout&gt;&lt;dds&gt;
+  &lt;diagram fontclsid="{0BE35203-8F91-11CE-9DE3-00AA004BB851}" mouseiconclsid="{0BE35204-8F91-11CE-9DE3-00AA004BB851}" defaultlayout="Microsoft.DataWarehouse.Layout.GraphLayout100" defaultlineroute="Microsoft.DataWarehouse.Layout.GraphLayout100" version="7" nextobject="19" scale="100" pagebreakanchorx="0" pagebreakanchory="0" pagebreaksizex="0" pagebreaksizey="0" scrollleft="0" scrolltop="0" gridx="150" gridy="150" marginx="1000" marginy="1000" zoom="100" x="21325" y="14367" backcolor="15334399" defaultpersistence="2" PrintPageNumbersMode="3" PrintMarginTop="0" PrintMarginBottom="635" PrintMarginLeft="0" PrintMarginRight="0" marqueeselectionmode="1" mousepointer="0" snaptogrid="0" autotypeannotation="1" showscrollbars="0" viewpagebreaks="0" donotforceconnectorsbehindshapes="1" backpictureclsid="{00000000-0000-0000-0000-000000000000}"&gt;
     &lt;font&gt;
       &lt;ddsxmlobjectstreamwrapper binary="010100009001905f01000c4d5320554920476f74686963" /&gt;
     &lt;/font&gt;
@@ -3749,6 +3768,6 @@ AAAAAAAAAAAAAAAAAAAAAAA=</BinaryItem></ScriptProject></DTS:ObjectData></DTS:Exec
 &lt;/dds&gt;&lt;/dwd:Layout&gt;&lt;/dwd:DtsControlFlowDiagram&gt;&lt;/Package&gt;</DTS:Property>
 <DTS:Property DTS:Name="Namespace">dts-designer-1.0</DTS:Property>
 <DTS:Property DTS:Name="ObjectName">package-diagram</DTS:Property>
-<DTS:Property DTS:Name="DTSID">{3EDE8886-19B1-45F2-A589-4B287FAAFD3C}</DTS:Property>
+<DTS:Property DTS:Name="DTSID">{F13787A3-BCDA-4E46-970D-A401C4C1B677}</DTS:Property>
 <DTS:Property DTS:Name="Description"></DTS:Property>
 <DTS:Property DTS:Name="CreationName"></DTS:Property></DTS:PackageVariable></DTS:Executable>

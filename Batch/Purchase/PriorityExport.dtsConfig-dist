@@ -3,6 +3,11 @@
 		<DTSConfigurationFileInfo GeneratedBy="TCIX\Masumi.Koyama" GeneratedFromPackageName="CompanyPerformance" GeneratedFromPackageID="{9CF92A00-CCF7-4C32-AE79-E2810F31C76C}" GeneratedDate="2016/05/16 18:35:59"/>
 	</DTSConfigurationHeading>
 
+	<!-- コマンドタイムアウト（秒）※0 は無限となります -->
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::CommandTimeout].Properties[Value]" ValueType="Int32">
+		<ConfiguredValue>600</ConfiguredValue>
+	</Configuration>
+
 	<!-- 出力ファイルパス（ファイル名まで指定） -->
 	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputFilePath].Properties[Value]" ValueType="String">
 		<ConfiguredValue>\\TFL3\GlobalProject\Supply_Chain_Management_Group\0500 IT data\PDB Data\PDB_Priority.xlsx</ConfiguredValue>
