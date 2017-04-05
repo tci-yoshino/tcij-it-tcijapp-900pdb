@@ -449,6 +449,7 @@
     <None Include="PO.doc" />
     <None Include="RFQ.doc" />
     <None Include="Sample.xls" />
+    <None Include="Supplier list %28supplier evaluation in 2016%29.xlsm" />
     <None Include="Web.config-dist" />
   </ItemGroup>
   <ItemGroup>
