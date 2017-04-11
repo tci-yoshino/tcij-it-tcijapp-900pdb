@@ -1,9 +1,9 @@
-<?xml version="1.0"?><DTSConfiguration>
+﻿<?xml version="1.0"?><DTSConfiguration>
 <DTSConfigurationHeading><DTSConfigurationFileInfo GeneratedBy="TCIX\Masumi.Koyama" GeneratedFromPackageName="SupplierPerformance" GeneratedFromPackageID="{D4C3B75A-B13C-42EE-B6A6-48312244AE4D}" GeneratedDate="2015/06/15 9:56:53"/></DTSConfigurationHeading>
 
 	<!-- データベース接続文字列 -->
 	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::ConnectionString].Properties[Value]" ValueType="String">
-		<ConfiguredValue>Data Source=TDB1; Initial Catalog=Purchase; User ID=Purchase; Password=n061t@kun;</ConfiguredValue>
+		<ConfiguredValue>Data Source="(local)"; Initial Catalog=Purchase; User ID=Purchase; Password=n061t@kun;</ConfiguredValue>
 	</Configuration>
 
 	<!-- エラーメール送信先 -->

@@ -10,12 +10,12 @@
 
 	<!-- 出力ディレクトリ 1 -->
 	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputDir1].Properties[Value]" ValueType="String">
-		<ConfiguredValue>\\TFL4\file\部署\調達部\受信\情シス提供データ(調達)</ConfiguredValue>
+		<ConfiguredValue>\\TFL5\file\部署\調達部\受信\情シス提供データ(調達)</ConfiguredValue>
 	</Configuration>
 
 	<!-- 出力ディレクトリ 2 -->
 	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputDir2].Properties[Value]" ValueType="String">
-		<ConfiguredValue>\\TFL3\GlobalProject\Supply_Chain_Management_Group\0500 IT data\PDB Data</ConfiguredValue>
+		<ConfiguredValue>\\TFL5\GlobalProject\Supply_Chain_Management_Group\0500 IT data\PDB Data</ConfiguredValue>
 	</Configuration>
 
 	<!-- 出力ファイル名 -->

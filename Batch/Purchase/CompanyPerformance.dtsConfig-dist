@@ -10,7 +10,7 @@
 
 	<!-- 出力ファイルパス（ファイル名まで指定） -->
 	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputFilePath].Properties[Value]" ValueType="String">
-		<ConfiguredValue>\\TFL3\GlobalProject\Supply_Chain_Management_Group\0500 IT data\PDB Data\PDB_data_{0}.xlsx</ConfiguredValue>
+		<ConfiguredValue>\\TFL5\GlobalProject\Supply_Chain_Management_Group\0500 IT data\PDB Data\PDB_data_{0}.xlsx</ConfiguredValue>
 	</Configuration>
 
 </DTSConfiguration>

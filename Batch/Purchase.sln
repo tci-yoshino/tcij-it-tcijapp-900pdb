@@ -1,7 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{D183A3D8-5FD8-494B-B014-37F57B35E655}") = "Purchase", "Purchase\Purchase.dtproj", "{346D482F-25B8-4812-BCE3-B827EFAC6304}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Purchase", "Purchase\Purchase.dtproj", "{346D482F-25B8-4812-BCE3-B827EFAC6304}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

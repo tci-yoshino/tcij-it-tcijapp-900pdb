@@ -418,7 +418,7 @@ Partial Public Class SuppliersProductImport
 
         'Excel OLEDB接続文字列の生成
         Dim conStrExcel As New OleDb.OleDbConnectionStringBuilder()
-        conStrExcel.Provider = "Microsoft.JET.OLEDB.4.0"
+        conStrExcel.Provider = "Microsoft.ACE.OLEDB.12.0"
         conStrExcel.DataSource = ExcelFileName
         conStrExcel("Extended Properties") = "Excel 8.0;HDR=YES;IMEX=1"
 

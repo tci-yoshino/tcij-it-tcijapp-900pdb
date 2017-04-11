@@ -6,7 +6,7 @@
 
 <!-- DB Settings -->
 <Configuration ConfiguredType="Property" Path="\Package.Connections[ADO.Purchase].Properties[ServerName]" ValueType="String">
-  <ConfiguredValue>TDB1</ConfiguredValue>
+  <ConfiguredValue>"(local)"</ConfiguredValue>
 </Configuration>
 <Configuration ConfiguredType="Property" Path="\Package.Connections[ADO.Purchase].Properties[UserName]" ValueType="String">
   <ConfiguredValue>Purchase</ConfiguredValue>
