@@ -94,4 +94,11 @@
       </dependentAssembly>
     </assemblyBinding>
   </runtime>
+    <system.webServer>
+        <defaultDocument>
+            <files>
+                <add value="Default.html" />
+            </files>
+        </defaultDocument>
+    </system.webServer>
 </configuration>
