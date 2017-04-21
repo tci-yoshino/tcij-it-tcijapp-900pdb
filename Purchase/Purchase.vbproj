@@ -456,6 +456,7 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="PO.doc" />
+    <Content Include="Ranking data %28August 1th, 2016%29.xlsm" />
     <None Include="RFQ.doc" />
     <None Include="Sample.xls" />
     <Content Include="Supplier list %28supplier evaluation in 2016%29.xlsm" />
