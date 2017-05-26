@@ -13,7 +13,7 @@
 
 	<!-- 出力ファイルパス（ファイル名まで指定） -->
 	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputFilePath].Properties[Value]" ValueType="String">
-		<ConfiguredValue>\\TFL5\GlobalProject\Supplier_Evaluation\Data\RFQ Analysis all data.xlsx</ConfiguredValue>
+		<ConfiguredValue>\\TFL5\GlobalProject\Supplier_Evaluation\Data\RFQ Analysis all data (New).xlsx</ConfiguredValue>
 	</Configuration>
 
 </DTSConfiguration>
