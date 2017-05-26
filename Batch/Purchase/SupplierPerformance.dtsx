@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
   DTS:refId="Package"
   DTS:CreationDate="6/12/2015 2:02:33 PM"
@@ -12,8 +12,8 @@
   DTS:LocaleID="1041"
   DTS:ObjectName="SupplierPerformance"
   DTS:PackageType="5"
-  DTS:VersionBuild="69"
-  DTS:VersionGUID="{DF34DE47-10B4-4E2A-807E-FF9E2281198B}">
+  DTS:VersionBuild="70"
+  DTS:VersionGUID="{0F56730B-3A1A-4638-8471-045CEC601796}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -84,7 +84,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="ConnectionString">
       <DTS:VariableValue
-        DTS:DataType="8">Data Source=TDB1; Initial Catalog=Purchase; User ID=Purchase; Password=n061t@kun;</DTS:VariableValue>
+        DTS:DataType="8">Data Source=TDB2QAS; Initial Catalog=Purchase; User ID=Purchase; Password=n061t@kun;</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -112,7 +112,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="MailTo">
       <DTS:VariableValue
-        DTS:DataType="8">devteam_app@tcichemicals.com</DTS:VariableValue>
+        DTS:DataType="8">masumi.koyama@tcichemicals.com</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -121,7 +121,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="OutputFilePath">
       <DTS:VariableValue
-        DTS:DataType="8">\\TFL3\GlobalProject\Supplier_Evaluation\Data\RFQ Analysis all data.xlsx</DTS:VariableValue>
+        DTS:DataType="8">\\TFL5\file\部署\情報システム部\専用\0201 データ抽出\99 テスト\RFQ Analysis all data.xlsx</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -236,125 +236,6 @@
   </Profiles>
   <Settings />
 </SettingsFile>]]></ProjectItem>
-              <ProjectItem
-                Name="\my project\resources.resx"
-                Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
-<root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-</root>]]></ProjectItem>
               <ProjectItem
                 Name="\my project\assemblyinfo.vb"
                 Encoding="UTF8"><![CDATA[Imports System
@@ -859,43 +740,280 @@ Partial Public Class ScriptMain
 
 End Class]]></ProjectItem>
               <ProjectItem
-                Name="My Project\AssemblyInfo.vb"
-                Encoding="UTF8"><![CDATA[Imports System
-Imports System.Reflection
-Imports System.Runtime.InteropServices
+                Name="st_a2784740098a45c89c672d61dfb86d3d.vbproj"
+                Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="utf-16"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- This section defines project-level properties.
 
-' General Information about an assembly is controlled through the following 
-' set of attributes. Change these attribute values to modify the information
-' associated with an assembly.
+       Configuration - Specifies whether the default configuration is Release or Debug.
+       Platform - Specifies what CPU the output of this project can run on.
+       OutputType - Must be "Library" for VSTA.
+       NoStandardLibraries - Set to "false" for VSTA.
+       RootNamespace - In C#, this specifies the namespace given to new files.
+                       In Visual Basic, all objects are wrapped in this namespace at runtime.
+       AssemblyName - Name of the output assembly.
+  -->
+  <PropertyGroup>
+    <ProjectTypeGuids>{30D016F9-3734-4E33-A861-5E7D899E18F3};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>ST_a2784740098a45c89c672d61dfb86d3d.vbproj</RootNamespace>
+    <AssemblyName>ST_a2784740098a45c89c672d61dfb86d3d.vbproj</AssemblyName>
+    <StartupObject></StartupObject>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>Off</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+    <ProjectGuid>{4DCA1405-E28C-4E54-A6C5-B281F92CD20B}</ProjectGuid>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile></TargetFrameworkProfile>
+  </PropertyGroup>
+  <!-- This section defines properties that are set when the "Debug" configuration is
+       selected.
 
-' Review the values of the assembly attributes
+       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
+       Optimize - If true, optimize the build output. If false, do not optimize.
+       OutputPath - Output path of the project relative to the project file.
+       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
+       DefineConstants - Constants defined for the preprocessor.
+       Warning Level - Warning level for the compiler.
+  -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DefineConstants></DefineConstants>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
+  </PropertyGroup>
+  <!-- This section defines properties that are set when the "Release" configuration is
+       selected.
 
-<Assembly: AssemblyTitle("ST_a2784740098a45c89c672d61dfb86d3d.vbproj")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("ST_a2784740098a45c89c672d61dfb86d3d.vbproj")> 
-<Assembly: AssemblyCopyright("Copyright @  2016")> 
-<Assembly: AssemblyTrademark("")> 
-<Assembly: CLSCompliant(True)> 
+       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
+       Optimize - If true, optimize the build output. If false, do not optimize.
+       OutputPath - Output path of the project relative to the project file.
+       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
+       DefineConstants - Constants defined for the preprocessor.
+       Warning Level - Warning level for the compiler.
+  -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants></DefineConstants>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
+  </PropertyGroup>
+  <!-- This section enables pre- and post-build steps. However,
+       it is recommended that MSBuild tasks be used instead of these properties.
+  -->
+  <PropertyGroup>
+    <PreBuildEvent></PreBuildEvent>
+    <PostBuildEvent></PostBuildEvent>
+  </PropertyGroup>
+  <!-- This sections specifies references for the project. -->
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.SqlServer.ManagedDTS, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
+    <Reference Include="Microsoft.SqlServer.ScriptTask, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
+  </ItemGroup>
+  <!-- Visual Basic supports Importing namespaces (equivalent to using statements in C#).-->
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+  </ItemGroup>
+  <!-- This section defines the user source files that are part of the
+       project.
 
-<Assembly: ComVisible(False)> 
+       Compile - Specifies a source file to compile.
+       EmbeddedResource - Specifies a .resx file for embedded resources.
+       None - Specifies a file that is not to be passed to the compiler (for instance,
+              a text file or XML file).
+       AppDesigner - Specifies the directory where the application properties files can
+                     be found.
+  -->
+  <ItemGroup>
+    <AppDesigner Include="My Project\" />
+    <Compile Include="My Project\AssemblyInfo.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ScriptMain.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <!-- Include the default configuration information and metadata files for the add-in.
+         These files are copied to the build output directory when the project is
+         built, and the path to the configuration file is passed to add-in on the command
+         line when debugging.
+    -->
+  </ItemGroup>
+  <!-- Include the build rules for a VB project.-->
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <!-- This section defines VSTA properties that describe the host-changable project properties. -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{30D016F9-3734-4E33-A861-5E7D899E18F3}">
+        <ProjectProperties HostName="VSTAHostName" HostPackage="{B3A685AA-7EAF-4BC6-9940-57959FA5AC07}" ApplicationType="usd" Language="vb" TemplatesPath="" DebugInfoExeName="" />
+        <Host Name="SSIS_ScriptTask" />
+        <ProjectClient>
+          <HostIdentifier>SSIS_ST130</HostIdentifier>
+        </ProjectClient>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>]]></ProjectItem>
+              <ProjectItem
+                Name="\my project\resources.resx"
+                Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
 
-'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("2f12205d-8a1e-466d-b1ee-60e43d8c3d52")> 
-
-' Version information for an assembly consists of the following four values:
-'
-'      Major Version
-'      Minor Version 
-'      Build Number
-'      Revision
-'
-' You can specify all the values or you can default the Build and Revision Numbers 
-' by using the '*' as shown below:
-' <Assembly: AssemblyVersion("1.0.*")>
-
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+</root>]]></ProjectItem>
               <ProjectItem
                 Name="\my project\settings.designer.vb"
                 Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
@@ -1251,6 +1369,44 @@ End Class]]></ProjectItem>
   </resheader>
 </root>]]></ProjectItem>
               <ProjectItem
+                Name="My Project\AssemblyInfo.vb"
+                Encoding="UTF8"><![CDATA[Imports System
+Imports System.Reflection
+Imports System.Runtime.InteropServices
+
+' General Information about an assembly is controlled through the following 
+' set of attributes. Change these attribute values to modify the information
+' associated with an assembly.
+
+' Review the values of the assembly attributes
+
+<Assembly: AssemblyTitle("ST_a2784740098a45c89c672d61dfb86d3d.vbproj")> 
+<Assembly: AssemblyDescription("")> 
+<Assembly: AssemblyCompany("")> 
+<Assembly: AssemblyProduct("ST_a2784740098a45c89c672d61dfb86d3d.vbproj")> 
+<Assembly: AssemblyCopyright("Copyright @  2016")> 
+<Assembly: AssemblyTrademark("")> 
+<Assembly: CLSCompliant(True)> 
+
+<Assembly: ComVisible(False)> 
+
+'The following GUID is for the ID of the typelib if this project is exposed to COM
+<Assembly: Guid("2f12205d-8a1e-466d-b1ee-60e43d8c3d52")> 
+
+' Version information for an assembly consists of the following four values:
+'
+'      Major Version
+'      Minor Version 
+'      Build Number
+'      Revision
+'
+' You can specify all the values or you can default the Build and Revision Numbers 
+' by using the '*' as shown below:
+' <Assembly: AssemblyVersion("1.0.*")>
+
+<Assembly: AssemblyVersion("1.0.0.0")> 
+<Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
+              <ProjectItem
                 Name="\my project\resources.designer.vb"
                 Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
 ' <autogenerated>
@@ -1313,162 +1469,6 @@ Namespace My.Resources
         End Property
     End Class
 End Namespace]]></ProjectItem>
-              <ProjectItem
-                Name="st_a2784740098a45c89c672d61dfb86d3d.vbproj"
-                Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="utf-16"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!-- This section defines project-level properties.
-
-       Configuration - Specifies whether the default configuration is Release or Debug.
-       Platform - Specifies what CPU the output of this project can run on.
-       OutputType - Must be "Library" for VSTA.
-       NoStandardLibraries - Set to "false" for VSTA.
-       RootNamespace - In C#, this specifies the namespace given to new files.
-                       In Visual Basic, all objects are wrapped in this namespace at runtime.
-       AssemblyName - Name of the output assembly.
-  -->
-  <PropertyGroup>
-    <ProjectTypeGuids>{30D016F9-3734-4E33-A861-5E7D899E18F3};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Library</OutputType>
-    <RootNamespace>ST_a2784740098a45c89c672d61dfb86d3d.vbproj</RootNamespace>
-    <AssemblyName>ST_a2784740098a45c89c672d61dfb86d3d.vbproj</AssemblyName>
-    <StartupObject></StartupObject>
-    <OptionExplicit>On</OptionExplicit>
-    <OptionCompare>Binary</OptionCompare>
-    <OptionStrict>Off</OptionStrict>
-    <OptionInfer>On</OptionInfer>
-    <ProjectGuid>{4DCA1405-E28C-4E54-A6C5-B281F92CD20B}</ProjectGuid>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
-  </PropertyGroup>
-  <!-- This section defines properties that are set when the "Debug" configuration is
-       selected.
-
-       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
-       Optimize - If true, optimize the build output. If false, do not optimize.
-       OutputPath - Output path of the project relative to the project file.
-       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
-       DefineConstants - Constants defined for the preprocessor.
-       Warning Level - Warning level for the compiler.
-  -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DefineConstants></DefineConstants>
-    <DefineDebug>true</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
-  </PropertyGroup>
-  <!-- This section defines properties that are set when the "Release" configuration is
-       selected.
-
-       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
-       Optimize - If true, optimize the build output. If false, do not optimize.
-       OutputPath - Output path of the project relative to the project file.
-       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
-       DefineConstants - Constants defined for the preprocessor.
-       Warning Level - Warning level for the compiler.
-  -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DefineConstants></DefineConstants>
-    <DefineDebug>false</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <DebugSymbols>false</DebugSymbols>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
-  </PropertyGroup>
-  <!-- This section enables pre- and post-build steps. However,
-       it is recommended that MSBuild tasks be used instead of these properties.
-  -->
-  <PropertyGroup>
-    <PreBuildEvent></PreBuildEvent>
-    <PostBuildEvent></PostBuildEvent>
-  </PropertyGroup>
-  <!-- This sections specifies references for the project. -->
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.SqlServer.ManagedDTS, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
-    <Reference Include="Microsoft.SqlServer.ScriptTask, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
-  </ItemGroup>
-  <!-- Visual Basic supports Importing namespaces (equivalent to using statements in C#).-->
-  <ItemGroup>
-    <Import Include="Microsoft.VisualBasic" />
-    <Import Include="System" />
-    <Import Include="System.Collections" />
-    <Import Include="System.Data" />
-    <Import Include="System.Diagnostics" />
-    <Import Include="System.Windows.Forms" />
-  </ItemGroup>
-  <!-- This section defines the user source files that are part of the
-       project.
-
-       Compile - Specifies a source file to compile.
-       EmbeddedResource - Specifies a .resx file for embedded resources.
-       None - Specifies a file that is not to be passed to the compiler (for instance,
-              a text file or XML file).
-       AppDesigner - Specifies the directory where the application properties files can
-                     be found.
-  -->
-  <ItemGroup>
-    <AppDesigner Include="My Project\" />
-    <Compile Include="My Project\AssemblyInfo.vb">
-      <SubType>Code</SubType>
-    </Compile>
-    <EmbeddedResource Include="My Project\Resources.resx">
-      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
-      <CustomToolNamespace>My.Resources</CustomToolNamespace>
-    </EmbeddedResource>
-    <Compile Include="My Project\Resources.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <None Include="My Project\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
-    </None>
-    <Compile Include="My Project\Settings.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ScriptMain.vb">
-      <SubType>Code</SubType>
-    </Compile>
-    <!-- Include the default configuration information and metadata files for the add-in.
-         These files are copied to the build output directory when the project is
-         built, and the path to the configuration file is passed to add-in on the command
-         line when debugging.
-    -->
-  </ItemGroup>
-  <!-- Include the build rules for a VB project.-->
-  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
-  <!-- This section defines VSTA properties that describe the host-changable project properties. -->
-  <ProjectExtensions>
-    <VisualStudio>
-      <FlavorProperties GUID="{30D016F9-3734-4E33-A861-5E7D899E18F3}">
-        <ProjectProperties HostName="VSTAHostName" HostPackage="{B3A685AA-7EAF-4BC6-9940-57959FA5AC07}" ApplicationType="usd" Language="vb" TemplatesPath="" DebugInfoExeName="" />
-        <Host Name="SSIS_ScriptTask" />
-        <ProjectClient>
-          <HostIdentifier>SSIS_ST130</HostIdentifier>
-        </ProjectClient>
-      </FlavorProperties>
-    </VisualStudio>
-  </ProjectExtensions>
-</Project>]]></ProjectItem>
               <BinaryItem
                 Name="ST_a2784740098a45c89c672d61dfb86d3d.vbproj.dll">TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAgAAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1v
@@ -1996,6 +1996,52 @@ Namespace My.Resources
     End Class
 End Namespace]]></ProjectItem>
               <ProjectItem
+                Name="ScriptMain.vb"
+                Encoding="UTF8"><![CDATA[' Microsoft SQL Server Integration Services Script Task
+' Write scripts using Microsoft Visual Basic 2008.
+' The ScriptMain is the entry point class of the script.
+
+Imports System
+Imports System.Data
+Imports System.Math
+Imports Microsoft.SqlServer.Dts.Runtime
+
+<Microsoft.SqlServer.Dts.Tasks.ScriptTask.SSISScriptTaskEntryPointAttribute> _
+<System.CLSCompliantAttribute(False)> _
+Partial Public Class ScriptMain
+	Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
+
+	Enum ScriptResults
+		Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
+		Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
+	End Enum
+	
+
+	' The execution engine calls this method when the task executes.
+	' To access the object model, use the Dts property. Connections, variables, events,
+	' and logging features are available as members of the Dts property as shown in the following examples.
+	'
+	' To reference a variable, call Dts.Variables("MyCaseSensitiveVariableName").Value
+	' To post a log entry, call Dts.Log("This is my log text", 999, Nothing)
+	' To fire an event, call Dts.Events.FireInformation(99, "test", "hit the help message", "", 0, True)
+	'
+	' To use the connections collection use something like the following:
+	' ConnectionManager cm = Dts.Connections.Add("OLEDB")
+	' cm.ConnectionString = "Data Source=localhost;Initial Catalog=AdventureWorks;Provider=SQLNCLI10;Integrated Security=SSPI;Auto Translate=False;"
+	'
+	' Before returning from this method, set the value of Dts.TaskResult to indicate success or failure.
+	' 
+	' To open Help, press F1.
+
+	Public Sub Main()
+		'
+        ' �����������܂��I
+		'
+		Dts.TaskResult = ScriptResults.Success
+	End Sub
+
+End Class]]></ProjectItem>
+              <ProjectItem
                 Name="\my project\resources.resx"
                 Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
 <root>
@@ -2114,246 +2160,6 @@ End Namespace]]></ProjectItem>
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
 </root>]]></ProjectItem>
-              <ProjectItem
-                Name="ScriptMain.vb"
-                Encoding="UTF8"><![CDATA[' Microsoft SQL Server Integration Services Script Task
-' Write scripts using Microsoft Visual Basic 2008.
-' The ScriptMain is the entry point class of the script.
-
-Imports System
-Imports System.Data
-Imports System.Math
-Imports Microsoft.SqlServer.Dts.Runtime
-
-<Microsoft.SqlServer.Dts.Tasks.ScriptTask.SSISScriptTaskEntryPointAttribute> _
-<System.CLSCompliantAttribute(False)> _
-Partial Public Class ScriptMain
-	Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
-
-	Enum ScriptResults
-		Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
-		Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
-	End Enum
-	
-
-	' The execution engine calls this method when the task executes.
-	' To access the object model, use the Dts property. Connections, variables, events,
-	' and logging features are available as members of the Dts property as shown in the following examples.
-	'
-	' To reference a variable, call Dts.Variables("MyCaseSensitiveVariableName").Value
-	' To post a log entry, call Dts.Log("This is my log text", 999, Nothing)
-	' To fire an event, call Dts.Events.FireInformation(99, "test", "hit the help message", "", 0, True)
-	'
-	' To use the connections collection use something like the following:
-	' ConnectionManager cm = Dts.Connections.Add("OLEDB")
-	' cm.ConnectionString = "Data Source=localhost;Initial Catalog=AdventureWorks;Provider=SQLNCLI10;Integrated Security=SSPI;Auto Translate=False;"
-	'
-	' Before returning from this method, set the value of Dts.TaskResult to indicate success or failure.
-	' 
-	' To open Help, press F1.
-
-	Public Sub Main()
-		'
-        ' �����������܂��I
-		'
-		Dts.TaskResult = ScriptResults.Success
-	End Sub
-
-End Class]]></ProjectItem>
-              <ProjectItem
-                Name="\st_a6cdc6d2450c4d64b1d121862b4b2551.vbproj"
-                Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="utf-16"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!-- This section defines project-level properties.
-
-       Configuration - Specifies whether the default configuration is Release or Debug.
-       Platform - Specifies what CPU the output of this project can run on.
-       OutputType - Must be "Library" for VSTA.
-       NoStandardLibraries - Set to "false" for VSTA.
-       RootNamespace - In C#, this specifies the namespace given to new files.
-                       In Visual Basic, all objects are wrapped in this namespace at runtime.
-       AssemblyName - Name of the output assembly.
-  -->
-  <PropertyGroup>
-    <ProjectTypeGuids>{30D016F9-3734-4E33-A861-5E7D899E18F3};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Library</OutputType>
-    <RootNamespace>ST_a6cdc6d2450c4d64b1d121862b4b2551.vbproj</RootNamespace>
-    <AssemblyName>ST_a6cdc6d2450c4d64b1d121862b4b2551.vbproj</AssemblyName>
-    <StartupObject></StartupObject>
-    <OptionExplicit>On</OptionExplicit>
-    <OptionCompare>Binary</OptionCompare>
-    <OptionStrict>Off</OptionStrict>
-    <OptionInfer>On</OptionInfer>
-    <ProjectGuid>{EA0B67F8-C287-4283-B7EA-5A11FC2D28AB}</ProjectGuid>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
-  </PropertyGroup>
-  <!-- This section defines properties that are set when the "Debug" configuration is
-       selected.
-
-       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
-       Optimize - If true, optimize the build output. If false, do not optimize.
-       OutputPath - Output path of the project relative to the project file.
-       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
-       DefineConstants - Constants defined for the preprocessor.
-       Warning Level - Warning level for the compiler.
-  -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DefineConstants></DefineConstants>
-    <DefineDebug>true</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
-  </PropertyGroup>
-  <!-- This section defines properties that are set when the "Release" configuration is
-       selected.
-
-       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
-       Optimize - If true, optimize the build output. If false, do not optimize.
-       OutputPath - Output path of the project relative to the project file.
-       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
-       DefineConstants - Constants defined for the preprocessor.
-       Warning Level - Warning level for the compiler.
-  -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DefineConstants></DefineConstants>
-    <DefineDebug>false</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <DebugSymbols>false</DebugSymbols>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
-  </PropertyGroup>
-  <!-- This section enables pre- and post-build steps. However,
-       it is recommended that MSBuild tasks be used instead of these properties.
-  -->
-  <PropertyGroup>
-    <PreBuildEvent></PreBuildEvent>
-    <PostBuildEvent></PostBuildEvent>
-  </PropertyGroup>
-  <!-- This sections specifies references for the project. -->
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.SqlServer.ManagedDTS, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
-    <Reference Include="Microsoft.SqlServer.ScriptTask, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
-  </ItemGroup>
-  <!-- Visual Basic supports Importing namespaces (equivalent to using statements in C#).-->
-  <ItemGroup>
-    <Import Include="Microsoft.VisualBasic" />
-    <Import Include="System" />
-    <Import Include="System.Collections" />
-    <Import Include="System.Data" />
-    <Import Include="System.Diagnostics" />
-    <Import Include="System.Windows.Forms" />
-  </ItemGroup>
-  <!-- This section defines the user source files that are part of the
-       project.
-
-       Compile - Specifies a source file to compile.
-       EmbeddedResource - Specifies a .resx file for embedded resources.
-       None - Specifies a file that is not to be passed to the compiler (for instance,
-              a text file or XML file).
-       AppDesigner - Specifies the directory where the application properties files can
-                     be found.
-  -->
-  <ItemGroup>
-    <AppDesigner Include="My Project\" />
-    <Compile Include="My Project\AssemblyInfo.vb">
-      <SubType>Code</SubType>
-    </Compile>
-    <EmbeddedResource Include="My Project\Resources.resx">
-      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
-      <CustomToolNamespace>My.Resources</CustomToolNamespace>
-    </EmbeddedResource>
-    <Compile Include="My Project\Resources.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <None Include="My Project\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
-    </None>
-    <Compile Include="My Project\Settings.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ScriptMain.vb">
-      <SubType>Code</SubType>
-    </Compile>
-    <!-- Include the default configuration information and metadata files for the add-in.
-         These files are copied to the build output directory when the project is
-         built, and the path to the configuration file is passed to add-in on the command
-         line when debugging.
-    -->
-  </ItemGroup>
-  <!-- Include the build rules for a VB project.-->
-  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
-  <!-- This section defines VSTA properties that describe the host-changable project properties. -->
-  <ProjectExtensions>
-    <VisualStudio>
-      <FlavorProperties GUID="{30D016F9-3734-4E33-A861-5E7D899E18F3}">
-        <ProjectProperties HostName="VSTAHostName" HostPackage="{B3A685AA-7EAF-4BC6-9940-57959FA5AC07}" ApplicationType="usd" Language="vb" TemplatesPath="" DebugInfoExeName="" />
-        <Host Name="SSIS_ScriptTask" />
-        <ProjectClient>
-          <HostIdentifier>SSIS_ST130</HostIdentifier>
-        </ProjectClient>
-      </FlavorProperties>
-    </VisualStudio>
-  </ProjectExtensions>
-</Project>]]></ProjectItem>
-              <ProjectItem
-                Name="My Project\AssemblyInfo.vb"
-                Encoding="UTF8"><![CDATA[Imports System
-Imports System.Reflection
-Imports System.Runtime.InteropServices
-
-' General Information about an assembly is controlled through the following 
-' set of attributes. Change these attribute values to modify the information
-' associated with an assembly.
-
-' Review the values of the assembly attributes
-
-<Assembly: AssemblyTitle("ST_a6cdc6d2450c4d64b1d121862b4b2551.vbproj")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("ST_a6cdc6d2450c4d64b1d121862b4b2551.vbproj")> 
-<Assembly: AssemblyCopyright("Copyright @  2016")> 
-<Assembly: AssemblyTrademark("")> 
-<Assembly: CLSCompliant(True)> 
-
-<Assembly: ComVisible(False)> 
-
-'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("d92ee29a-f4ab-4492-af10-ce4d7e9f707f")> 
-
-' Version information for an assembly consists of the following four values:
-'
-'      Major Version
-'      Minor Version 
-'      Build Number
-'      Revision
-'
-' You can specify all the values or you can default the Build and Revision Numbers 
-' by using the '*' as shown below:
-' <Assembly: AssemblyVersion("1.0.*")>
-
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
               <ProjectItem
                 Name="st_a6cdc6d2450c4d64b1d121862b4b2551.vbproj"
                 Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="utf-16"?>
@@ -2560,51 +2366,161 @@ End Class]]></ProjectItem>
   <Settings />
 </SettingsFile>]]></ProjectItem>
               <ProjectItem
-                Name="\scriptmain.vb"
-                Encoding="UTF8"><![CDATA[' Microsoft SQL Server Integration Services Script Task
-' Write scripts using Microsoft Visual Basic 2008.
-' The ScriptMain is the entry point class of the script.
+                Name="\st_a6cdc6d2450c4d64b1d121862b4b2551.vbproj"
+                Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="utf-16"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- This section defines project-level properties.
 
-Imports System
-Imports System.Data
-Imports System.Math
-Imports Microsoft.SqlServer.Dts.Runtime
+       Configuration - Specifies whether the default configuration is Release or Debug.
+       Platform - Specifies what CPU the output of this project can run on.
+       OutputType - Must be "Library" for VSTA.
+       NoStandardLibraries - Set to "false" for VSTA.
+       RootNamespace - In C#, this specifies the namespace given to new files.
+                       In Visual Basic, all objects are wrapped in this namespace at runtime.
+       AssemblyName - Name of the output assembly.
+  -->
+  <PropertyGroup>
+    <ProjectTypeGuids>{30D016F9-3734-4E33-A861-5E7D899E18F3};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>ST_a6cdc6d2450c4d64b1d121862b4b2551.vbproj</RootNamespace>
+    <AssemblyName>ST_a6cdc6d2450c4d64b1d121862b4b2551.vbproj</AssemblyName>
+    <StartupObject></StartupObject>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>Off</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+    <ProjectGuid>{EA0B67F8-C287-4283-B7EA-5A11FC2D28AB}</ProjectGuid>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile></TargetFrameworkProfile>
+  </PropertyGroup>
+  <!-- This section defines properties that are set when the "Debug" configuration is
+       selected.
 
-<Microsoft.SqlServer.Dts.Tasks.ScriptTask.SSISScriptTaskEntryPointAttribute> _
-<System.CLSCompliantAttribute(False)> _
-Partial Public Class ScriptMain
-	Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
+       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
+       Optimize - If true, optimize the build output. If false, do not optimize.
+       OutputPath - Output path of the project relative to the project file.
+       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
+       DefineConstants - Constants defined for the preprocessor.
+       Warning Level - Warning level for the compiler.
+  -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DefineConstants></DefineConstants>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
+  </PropertyGroup>
+  <!-- This section defines properties that are set when the "Release" configuration is
+       selected.
 
-	Enum ScriptResults
-		Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
-		Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
-	End Enum
-	
+       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
+       Optimize - If true, optimize the build output. If false, do not optimize.
+       OutputPath - Output path of the project relative to the project file.
+       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
+       DefineConstants - Constants defined for the preprocessor.
+       Warning Level - Warning level for the compiler.
+  -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants></DefineConstants>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
+  </PropertyGroup>
+  <!-- This section enables pre- and post-build steps. However,
+       it is recommended that MSBuild tasks be used instead of these properties.
+  -->
+  <PropertyGroup>
+    <PreBuildEvent></PreBuildEvent>
+    <PostBuildEvent></PostBuildEvent>
+  </PropertyGroup>
+  <!-- This sections specifies references for the project. -->
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.SqlServer.ManagedDTS, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
+    <Reference Include="Microsoft.SqlServer.ScriptTask, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
+  </ItemGroup>
+  <!-- Visual Basic supports Importing namespaces (equivalent to using statements in C#).-->
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+  </ItemGroup>
+  <!-- This section defines the user source files that are part of the
+       project.
 
-	' The execution engine calls this method when the task executes.
-	' To access the object model, use the Dts property. Connections, variables, events,
-	' and logging features are available as members of the Dts property as shown in the following examples.
-	'
-	' To reference a variable, call Dts.Variables("MyCaseSensitiveVariableName").Value
-	' To post a log entry, call Dts.Log("This is my log text", 999, Nothing)
-	' To fire an event, call Dts.Events.FireInformation(99, "test", "hit the help message", "", 0, True)
-	'
-	' To use the connections collection use something like the following:
-	' ConnectionManager cm = Dts.Connections.Add("OLEDB")
-	' cm.ConnectionString = "Data Source=localhost;Initial Catalog=AdventureWorks;Provider=SQLNCLI10;Integrated Security=SSPI;Auto Translate=False;"
-	'
-	' Before returning from this method, set the value of Dts.TaskResult to indicate success or failure.
-	' 
-	' To open Help, press F1.
-
-	Public Sub Main()
-		'
-        ' �����������܂��I
-		'
-		Dts.TaskResult = ScriptResults.Success
-	End Sub
-
-End Class]]></ProjectItem>
+       Compile - Specifies a source file to compile.
+       EmbeddedResource - Specifies a .resx file for embedded resources.
+       None - Specifies a file that is not to be passed to the compiler (for instance,
+              a text file or XML file).
+       AppDesigner - Specifies the directory where the application properties files can
+                     be found.
+  -->
+  <ItemGroup>
+    <AppDesigner Include="My Project\" />
+    <Compile Include="My Project\AssemblyInfo.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ScriptMain.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <!-- Include the default configuration information and metadata files for the add-in.
+         These files are copied to the build output directory when the project is
+         built, and the path to the configuration file is passed to add-in on the command
+         line when debugging.
+    -->
+  </ItemGroup>
+  <!-- Include the build rules for a VB project.-->
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <!-- This section defines VSTA properties that describe the host-changable project properties. -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{30D016F9-3734-4E33-A861-5E7D899E18F3}">
+        <ProjectProperties HostName="VSTAHostName" HostPackage="{B3A685AA-7EAF-4BC6-9940-57959FA5AC07}" ApplicationType="usd" Language="vb" TemplatesPath="" DebugInfoExeName="" />
+        <Host Name="SSIS_ScriptTask" />
+        <ProjectClient>
+          <HostIdentifier>SSIS_ST130</HostIdentifier>
+        </ProjectClient>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>]]></ProjectItem>
               <ProjectItem
                 Name="My Project\Resources.resx"
                 Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
@@ -2724,6 +2640,90 @@ End Class]]></ProjectItem>
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
 </root>]]></ProjectItem>
+              <ProjectItem
+                Name="\scriptmain.vb"
+                Encoding="UTF8"><![CDATA[' Microsoft SQL Server Integration Services Script Task
+' Write scripts using Microsoft Visual Basic 2008.
+' The ScriptMain is the entry point class of the script.
+
+Imports System
+Imports System.Data
+Imports System.Math
+Imports Microsoft.SqlServer.Dts.Runtime
+
+<Microsoft.SqlServer.Dts.Tasks.ScriptTask.SSISScriptTaskEntryPointAttribute> _
+<System.CLSCompliantAttribute(False)> _
+Partial Public Class ScriptMain
+	Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
+
+	Enum ScriptResults
+		Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
+		Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
+	End Enum
+	
+
+	' The execution engine calls this method when the task executes.
+	' To access the object model, use the Dts property. Connections, variables, events,
+	' and logging features are available as members of the Dts property as shown in the following examples.
+	'
+	' To reference a variable, call Dts.Variables("MyCaseSensitiveVariableName").Value
+	' To post a log entry, call Dts.Log("This is my log text", 999, Nothing)
+	' To fire an event, call Dts.Events.FireInformation(99, "test", "hit the help message", "", 0, True)
+	'
+	' To use the connections collection use something like the following:
+	' ConnectionManager cm = Dts.Connections.Add("OLEDB")
+	' cm.ConnectionString = "Data Source=localhost;Initial Catalog=AdventureWorks;Provider=SQLNCLI10;Integrated Security=SSPI;Auto Translate=False;"
+	'
+	' Before returning from this method, set the value of Dts.TaskResult to indicate success or failure.
+	' 
+	' To open Help, press F1.
+
+	Public Sub Main()
+		'
+        ' �����������܂��I
+		'
+		Dts.TaskResult = ScriptResults.Success
+	End Sub
+
+End Class]]></ProjectItem>
+              <ProjectItem
+                Name="My Project\AssemblyInfo.vb"
+                Encoding="UTF8"><![CDATA[Imports System
+Imports System.Reflection
+Imports System.Runtime.InteropServices
+
+' General Information about an assembly is controlled through the following 
+' set of attributes. Change these attribute values to modify the information
+' associated with an assembly.
+
+' Review the values of the assembly attributes
+
+<Assembly: AssemblyTitle("ST_a6cdc6d2450c4d64b1d121862b4b2551.vbproj")> 
+<Assembly: AssemblyDescription("")> 
+<Assembly: AssemblyCompany("")> 
+<Assembly: AssemblyProduct("ST_a6cdc6d2450c4d64b1d121862b4b2551.vbproj")> 
+<Assembly: AssemblyCopyright("Copyright @  2016")> 
+<Assembly: AssemblyTrademark("")> 
+<Assembly: CLSCompliant(True)> 
+
+<Assembly: ComVisible(False)> 
+
+'The following GUID is for the ID of the typelib if this project is exposed to COM
+<Assembly: Guid("d92ee29a-f4ab-4492-af10-ce4d7e9f707f")> 
+
+' Version information for an assembly consists of the following four values:
+'
+'      Major Version
+'      Minor Version 
+'      Build Number
+'      Revision
+'
+' You can specify all the values or you can default the Build and Revision Numbers 
+' by using the '*' as shown below:
+' <Assembly: AssemblyVersion("1.0.*")>
+
+<Assembly: AssemblyVersion("1.0.0.0")> 
+<Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
               <ProjectItem
                 Name="\my project\resources.designer.vb"
                 Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
@@ -2965,451 +2965,6 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</BinaryItem>
               ReadOnlyVariables="User::ConnectionString, User::CommandTimeout"
               ReadWriteVariables="User::ErrorMessage">
               <ProjectItem
-                Name="\my project\settings.settings"
-                Encoding="UTF8"><![CDATA[<?xml version='1.0' encoding='iso-8859-1'?>
-<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)" GeneratedClassNamespace="$safeprojectname" GeneratedClassName="MySettings">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
-</SettingsFile>]]></ProjectItem>
-              <ProjectItem
-                Name="\my project\assemblyinfo.vb"
-                Encoding="UTF8"><![CDATA[Imports System
-Imports System.Reflection
-Imports System.Runtime.InteropServices
-
-' General Information about an assembly is controlled through the following 
-' set of attributes. Change these attribute values to modify the information
-' associated with an assembly.
-
-' Review the values of the assembly attributes
-
-<Assembly: AssemblyTitle("ST_cbd20828325540598128df137d9f4b55.vbproj")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("ST_cbd20828325540598128df137d9f4b55.vbproj")> 
-<Assembly: AssemblyCopyright("Copyright @  2015")> 
-<Assembly: AssemblyTrademark("")> 
-<Assembly: CLSCompliant(True)> 
-
-<Assembly: ComVisible(False)> 
-
-'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("874dac69-8008-4a4f-8f3c-99e25815a1cb")> 
-
-' Version information for an assembly consists of the following four values:
-'
-'      Major Version
-'      Minor Version 
-'      Build Number
-'      Revision
-'
-' You can specify all the values or you can default the Build and Revision Numbers 
-' by using the '*' as shown below:
-' <Assembly: AssemblyVersion("1.0.*")>
-
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
-              <ProjectItem
-                Name="Project"
-                Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="UTF-16" standalone="yes"?>
-<c:Project xmlns:c="http://schemas.microsoft.com/codeprojectml/2010/08/main" xmlns:msb="http://schemas.microsoft.com/developer/msbuild/2003" runtimeVersion="4.0" schemaVersion="1.0">
-	<msb:PropertyGroup>
-		<msb:Language>msBuild</msb:Language>
-		<msb:CodeName>st_cbd20828325540598128df137d9f4b55</msb:CodeName>
-		<msb:DisplayName>st_cbd20828325540598128df137d9f4b55</msb:DisplayName>
-		<msb:ProjectId>{7B5AC28F-8371-40E1-86F3-8DF2B0C7572B}</msb:ProjectId>
-	</msb:PropertyGroup>
-	<msb:ItemGroup>
-		<msb:Project Include="st_cbd20828325540598128df137d9f4b55.vbproj"/>
-		<msb:File Include="My Project\AssemblyInfo.vb"/>
-		<msb:File Include="My Project\Resources.resx"/>
-		<msb:File Include="ScriptMain.vb"/>
-		<msb:File Include="My Project\Resources.Designer.vb"/>
-		<msb:File Include="My Project\Settings.settings"/>
-		<msb:File Include="My Project\Settings.Designer.vb"/>
-	</msb:ItemGroup>
-</c:Project>]]></ProjectItem>
-              <ProjectItem
-                Name="\st_cbd20828325540598128df137d9f4b55.vbproj"
-                Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="utf-16"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!-- This section defines project-level properties.
-
-       Configuration - Specifies whether the default configuration is Release or Debug.
-       Platform - Specifies what CPU the output of this project can run on.
-       OutputType - Must be "Library" for VSTA.
-       NoStandardLibraries - Set to "false" for VSTA.
-       RootNamespace - In C#, this specifies the namespace given to new files.
-                       In Visual Basic, all objects are wrapped in this namespace at runtime.
-       AssemblyName - Name of the output assembly.
-  -->
-  <PropertyGroup>
-    <ProjectTypeGuids>{30D016F9-3734-4E33-A861-5E7D899E18F3};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Library</OutputType>
-    <RootNamespace>ST_cbd20828325540598128df137d9f4b55.vbproj</RootNamespace>
-    <AssemblyName>ST_cbd20828325540598128df137d9f4b55.vbproj</AssemblyName>
-    <StartupObject></StartupObject>
-    <OptionExplicit>On</OptionExplicit>
-    <OptionCompare>Binary</OptionCompare>
-    <OptionStrict>Off</OptionStrict>
-    <OptionInfer>On</OptionInfer>
-    <ProjectGuid>{6FFB2389-2BFA-4FDA-B36A-C31034136C4C}</ProjectGuid>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
-  </PropertyGroup>
-  <!-- This section defines properties that are set when the "Debug" configuration is
-       selected.
-
-       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
-       Optimize - If true, optimize the build output. If false, do not optimize.
-       OutputPath - Output path of the project relative to the project file.
-       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
-       DefineConstants - Constants defined for the preprocessor.
-       Warning Level - Warning level for the compiler.
-  -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DefineConstants></DefineConstants>
-    <DefineDebug>true</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
-  </PropertyGroup>
-  <!-- This section defines properties that are set when the "Release" configuration is
-       selected.
-
-       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
-       Optimize - If true, optimize the build output. If false, do not optimize.
-       OutputPath - Output path of the project relative to the project file.
-       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
-       DefineConstants - Constants defined for the preprocessor.
-       Warning Level - Warning level for the compiler.
-  -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DefineConstants></DefineConstants>
-    <DefineDebug>false</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <DebugSymbols>false</DebugSymbols>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
-  </PropertyGroup>
-  <!-- This section enables pre- and post-build steps. However,
-       it is recommended that MSBuild tasks be used instead of these properties.
-  -->
-  <PropertyGroup>
-    <PreBuildEvent></PreBuildEvent>
-    <PostBuildEvent></PostBuildEvent>
-  </PropertyGroup>
-  <!-- This sections specifies references for the project. -->
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.SqlServer.ManagedDTS, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
-    <Reference Include="Microsoft.SqlServer.ScriptTask, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
-  </ItemGroup>
-  <!-- Visual Basic supports Importing namespaces (equivalent to using statements in C#).-->
-  <ItemGroup>
-    <Import Include="Microsoft.VisualBasic" />
-    <Import Include="System" />
-    <Import Include="System.Collections" />
-    <Import Include="System.Data" />
-    <Import Include="System.Diagnostics" />
-    <Import Include="System.Windows.Forms" />
-  </ItemGroup>
-  <!-- This section defines the user source files that are part of the
-       project.
-
-       Compile - Specifies a source file to compile.
-       EmbeddedResource - Specifies a .resx file for embedded resources.
-       None - Specifies a file that is not to be passed to the compiler (for instance,
-              a text file or XML file).
-       AppDesigner - Specifies the directory where the application properties files can
-                     be found.
-  -->
-  <ItemGroup>
-    <AppDesigner Include="My Project\" />
-    <Compile Include="My Project\AssemblyInfo.vb">
-      <SubType>Code</SubType>
-    </Compile>
-    <EmbeddedResource Include="My Project\Resources.resx">
-      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
-      <CustomToolNamespace>My.Resources</CustomToolNamespace>
-    </EmbeddedResource>
-    <Compile Include="My Project\Resources.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <None Include="My Project\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
-    </None>
-    <Compile Include="My Project\Settings.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ScriptMain.vb">
-      <SubType>Code</SubType>
-    </Compile>
-    <!-- Include the default configuration information and metadata files for the add-in.
-         These files are copied to the build output directory when the project is
-         built, and the path to the configuration file is passed to add-in on the command
-         line when debugging.
-    -->
-  </ItemGroup>
-  <!-- Include the build rules for a VB project.-->
-  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
-  <!-- This section defines VSTA properties that describe the host-changable project properties. -->
-  <ProjectExtensions>
-    <VisualStudio>
-      <FlavorProperties GUID="{30D016F9-3734-4E33-A861-5E7D899E18F3}">
-        <ProjectProperties HostName="VSTAHostName" HostPackage="{B3A685AA-7EAF-4BC6-9940-57959FA5AC07}" ApplicationType="usd" Language="vb" TemplatesPath="" DebugInfoExeName="" />
-        <Host Name="SSIS_ScriptTask" />
-        <ProjectClient>
-          <HostIdentifier>SSIS_ST130</HostIdentifier>
-        </ProjectClient>
-      </FlavorProperties>
-    </VisualStudio>
-  </ProjectExtensions>
-</Project>]]></ProjectItem>
-              <ProjectItem
-                Name="My Project\Settings.Designer.vb"
-                Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
-' <autogenerated>
-'     This code was generated by a tool.
-'
-'     Changes to this file may cause incorrect behavior and will be lost if
-'     the code is regenerated.
-' </autogenerated>
-'------------------------------------------------------------------------------
-
-Option Strict Off
-Option Explicit On
-
-
-
-Partial Friend NotInheritable Class MySettings
-    Inherits System.Configuration.ApplicationSettingsBase
-
-    Private Shared m_Value As MySettings
-
-    Private Shared m_SyncObject As Object = New Object
-
-    <System.Diagnostics.DebuggerNonUserCode()> _
-    Public Shared ReadOnly Property Value() As MySettings
-        Get
-            If (MySettings.m_Value Is Nothing) Then
-                System.Threading.Monitor.Enter(MySettings.m_SyncObject)
-                If (MySettings.m_Value Is Nothing) Then
-                    Try
-                        MySettings.m_Value = New MySettings
-                    Finally
-                        System.Threading.Monitor.Exit(MySettings.m_SyncObject)
-                    End Try
-                End If
-            End If
-            Return MySettings.m_Value
-        End Get
-    End Property
-End Class]]></ProjectItem>
-              <ProjectItem
-                Name="My Project\Resources.Designer.vb"
-                Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
-' <autogenerated>
-'     This code was generated by a tool.
-'
-'     Changes to this file may cause incorrect behavior and will be lost if
-'     the code is regenerated.
-' </autogenerated>
-'------------------------------------------------------------------------------
-
-Option Strict Off
-Option Explicit On
-
-
-Namespace My.Resources
-    
-    '''<summary>
-    '''   A strongly-typed resource class, for looking up localized strings, etc.
-    '''</summary>
-    'This class was auto-generated by the Strongly Typed Resource Builder
-    'class via a tool like ResGen or Visual Studio.NET.
-    'To add or remove a member, edit your .ResX file then rerun ResGen
-    'with the /str option, or rebuild your VS project.
-    Class MyResources
-        
-        Private Shared _resMgr As System.Resources.ResourceManager
-        
-        Private Shared _resCulture As System.Globalization.CultureInfo
-        
-        Friend Sub New()
-            MyBase.New
-        End Sub
-        
-        '''<summary>
-        '''   Returns the cached ResourceManager instance used by this class.
-        '''</summary>
-        <System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)>  _
-        Public Shared ReadOnly Property ResourceManager() As System.Resources.ResourceManager
-            Get
-                If (_resMgr Is Nothing) Then
-                    Dim temp As System.Resources.ResourceManager = New System.Resources.ResourceManager("My.Resources.MyResources", GetType(MyResources).Assembly)
-                    _resMgr = temp
-                End If
-                Return _resMgr
-            End Get
-        End Property
-        
-        '''<summary>
-        '''   Overrides the current thread's CurrentUICulture property for all
-        '''   resource lookups using this strongly typed resource class.
-        '''</summary>
-        <System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)>  _
-        Public Shared Property Culture() As System.Globalization.CultureInfo
-            Get
-                Return _resCulture
-            End Get
-            Set
-                _resCulture = value
-            End Set
-        End Property
-    End Class
-End Namespace]]></ProjectItem>
-              <ProjectItem
-                Name="\my project\resources.resx"
-                Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
-<root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-</root>]]></ProjectItem>
-              <ProjectItem
                 Name="ScriptMain.vb"
                 Encoding="UTF8"><![CDATA[' Microsoft SQL Server Integration Services Script Task
 ' Write scripts using Microsoft Visual Basic 2008.
@@ -3537,7 +3092,7 @@ Partial Public Class ScriptMain
         sqlStr.AppendLine("    UNION")
         sqlStr.AppendLine("    SELECT")
         sqlStr.AppendLine("        H.RFQNumber,")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
+        sqlStr.AppendLine("        CONVERT(date, P.CreateDate) AS CreateDate,")
         sqlStr.AppendLine("        S.SupplierCode,")
         sqlStr.AppendLine("        P.PONumber AS PONumber")
         sqlStr.AppendLine("    FROM")
@@ -3554,7 +3109,7 @@ Partial Public Class ScriptMain
         sqlStr.AppendLine("    UNION")
         sqlStr.AppendLine("    SELECT")
         sqlStr.AppendLine("        H.RFQNumber,")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
+        sqlStr.AppendLine("        CONVERT(date, P.CreateDate) AS CreateDate,")
         sqlStr.AppendLine("        S.SupplierCode,")
         sqlStr.AppendLine("        P.PONumber")
         sqlStr.AppendLine("    FROM")
@@ -3631,7 +3186,7 @@ Partial Public Class ScriptMain
         sqlStr.AppendLine("    UNION")
         sqlStr.AppendLine("    SELECT")
         sqlStr.AppendLine("        H.RFQNumber,")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
+        sqlStr.AppendLine("        CONVERT(date, P.CreateDate) AS CreateDate,")
         sqlStr.AppendLine("        S.SupplierCode,")
         sqlStr.AppendLine("        P.PONumber AS PONumber")
         sqlStr.AppendLine("    FROM")
@@ -3649,7 +3204,7 @@ Partial Public Class ScriptMain
         sqlStr.AppendLine("    UNION")
         sqlStr.AppendLine("    SELECT")
         sqlStr.AppendLine("        H.RFQNumber,")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
+        sqlStr.AppendLine("        CONVERT(date, P.CreateDate) AS CreateDate,")
         sqlStr.AppendLine("        S.SupplierCode,")
         sqlStr.AppendLine("        P.PONumber")
         sqlStr.AppendLine("    FROM")
@@ -3706,7 +3261,7 @@ Partial Public Class ScriptMain
         Dim sqlStr As New StringBuilder
         sqlStr.AppendLine("WITH ParPO AS (")
         sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
+        sqlStr.AppendLine("        CONVERT(date, P.CreateDate) AS CreateDate,")
         sqlStr.AppendLine("        S.SupplierCode,")
         sqlStr.AppendLine("        COUNT(*) AS Cnt")
         sqlStr.AppendLine("    FROM")
@@ -3753,7 +3308,7 @@ Partial Public Class ScriptMain
         Dim sqlStr As New StringBuilder
         sqlStr.AppendLine("WITH ParPO_forNew AS (")
         sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
+        sqlStr.AppendLine("        CONVERT(date, P.CreateDate) AS CreateDate,")
         sqlStr.AppendLine("        S.SupplierCode,")
         sqlStr.AppendLine("        COUNT(*) AS Cnt")
         sqlStr.AppendLine("    FROM")
@@ -3802,7 +3357,7 @@ Partial Public Class ScriptMain
         Dim sqlStr As New StringBuilder
         sqlStr.AppendLine("WITH ParPO_forStock AS (")
         sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
+        sqlStr.AppendLine("        CONVERT(date, P.CreateDate) AS CreateDate,")
         sqlStr.AppendLine("        S.SupplierCode,")
         sqlStr.AppendLine("        COUNT(*) AS Cnt")
         sqlStr.AppendLine("    FROM")
@@ -3851,7 +3406,7 @@ Partial Public Class ScriptMain
         Dim sqlStr As New StringBuilder
         sqlStr.AppendLine("WITH ParPO_Cancel AS (")
         sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
+        sqlStr.AppendLine("        CONVERT(date, P.CreateDate) AS CreateDate,")
         sqlStr.AppendLine("        S.SupplierCode,")
         sqlStr.AppendLine("        COUNT(*) AS Cnt")
         sqlStr.AppendLine("    FROM")
@@ -3901,7 +3456,7 @@ Partial Public Class ScriptMain
         Dim sqlStr As New StringBuilder
         sqlStr.AppendLine("WITH ParPO_2475 AS (")
         sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
+        sqlStr.AppendLine("        CONVERT(date, P.CreateDate) AS CreateDate,")
         sqlStr.AppendLine("        S.SupplierCode,")
         sqlStr.AppendLine("        COUNT(*) AS Cnt")
         sqlStr.AppendLine("    FROM")
@@ -3952,7 +3507,7 @@ Partial Public Class ScriptMain
         Dim sqlStr As New StringBuilder
         sqlStr.AppendLine("WITH PO_Approved AS (")
         sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
+        sqlStr.AppendLine("        CONVERT(date, P.CreateDate) AS CreateDate,")
         sqlStr.AppendLine("        S.SupplierCode,")
         sqlStr.AppendLine("        COUNT(*) AS Cnt")
         sqlStr.AppendLine("    FROM")
@@ -4001,7 +3556,7 @@ Partial Public Class ScriptMain
         Dim sqlStr As New StringBuilder
         sqlStr.AppendLine("WITH PO_Rejected AS (")
         sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
+        sqlStr.AppendLine("        CONVERT(date, P.CreateDate) AS CreateDate,")
         sqlStr.AppendLine("        S.SupplierCode,")
         sqlStr.AppendLine("        COUNT(*) AS Cnt")
         sqlStr.AppendLine("    FROM")
@@ -4069,44 +3624,6 @@ Partial Public Class ScriptMain
     End Sub
 
 End Class]]></ProjectItem>
-              <ProjectItem
-                Name="My Project\AssemblyInfo.vb"
-                Encoding="UTF8"><![CDATA[Imports System
-Imports System.Reflection
-Imports System.Runtime.InteropServices
-
-' General Information about an assembly is controlled through the following 
-' set of attributes. Change these attribute values to modify the information
-' associated with an assembly.
-
-' Review the values of the assembly attributes
-
-<Assembly: AssemblyTitle("ST_cbd20828325540598128df137d9f4b55.vbproj")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("ST_cbd20828325540598128df137d9f4b55.vbproj")> 
-<Assembly: AssemblyCopyright("Copyright @  2015")> 
-<Assembly: AssemblyTrademark("")> 
-<Assembly: CLSCompliant(True)> 
-
-<Assembly: ComVisible(False)> 
-
-'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("874dac69-8008-4a4f-8f3c-99e25815a1cb")> 
-
-' Version information for an assembly consists of the following four values:
-'
-'      Major Version
-'      Minor Version 
-'      Build Number
-'      Revision
-'
-' You can specify all the values or you can default the Build and Revision Numbers 
-' by using the '*' as shown below:
-' <Assembly: AssemblyVersion("1.0.*")>
-
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
               <ProjectItem
                 Name="st_cbd20828325540598128df137d9f4b55.vbproj"
                 Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="utf-16"?>
@@ -4264,7 +3781,54 @@ Imports System.Runtime.InteropServices
   </ProjectExtensions>
 </Project>]]></ProjectItem>
               <ProjectItem
-                Name="\my project\settings.designer.vb"
+                Name="My Project\Settings.settings"
+                Encoding="UTF8"><![CDATA[<?xml version='1.0' encoding='iso-8859-1'?>
+<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)" GeneratedClassNamespace="$safeprojectname" GeneratedClassName="MySettings">
+  <Profiles>
+    <Profile Name="(Default)" />
+  </Profiles>
+  <Settings />
+</SettingsFile>]]></ProjectItem>
+              <ProjectItem
+                Name="My Project\AssemblyInfo.vb"
+                Encoding="UTF8"><![CDATA[Imports System
+Imports System.Reflection
+Imports System.Runtime.InteropServices
+
+' General Information about an assembly is controlled through the following 
+' set of attributes. Change these attribute values to modify the information
+' associated with an assembly.
+
+' Review the values of the assembly attributes
+
+<Assembly: AssemblyTitle("ST_cbd20828325540598128df137d9f4b55.vbproj")> 
+<Assembly: AssemblyDescription("")> 
+<Assembly: AssemblyCompany("")> 
+<Assembly: AssemblyProduct("ST_cbd20828325540598128df137d9f4b55.vbproj")> 
+<Assembly: AssemblyCopyright("Copyright @  2015")> 
+<Assembly: AssemblyTrademark("")> 
+<Assembly: CLSCompliant(True)> 
+
+<Assembly: ComVisible(False)> 
+
+'The following GUID is for the ID of the typelib if this project is exposed to COM
+<Assembly: Guid("874dac69-8008-4a4f-8f3c-99e25815a1cb")> 
+
+' Version information for an assembly consists of the following four values:
+'
+'      Major Version
+'      Minor Version 
+'      Build Number
+'      Revision
+'
+' You can specify all the values or you can default the Build and Revision Numbers 
+' by using the '*' as shown below:
+' <Assembly: AssemblyVersion("1.0.*")>
+
+<Assembly: AssemblyVersion("1.0.0.0")> 
+<Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
+              <ProjectItem
+                Name="My Project\Settings.Designer.vb"
                 Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
 ' <autogenerated>
 '     This code was generated by a tool.
@@ -4304,674 +3868,25 @@ Partial Friend NotInheritable Class MySettings
     End Property
 End Class]]></ProjectItem>
               <ProjectItem
-                Name="My Project\Settings.settings"
-                Encoding="UTF8"><![CDATA[<?xml version='1.0' encoding='iso-8859-1'?>
-<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)" GeneratedClassNamespace="$safeprojectname" GeneratedClassName="MySettings">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
-</SettingsFile>]]></ProjectItem>
-              <ProjectItem
-                Name="\scriptmain.vb"
-                Encoding="UTF8"><![CDATA[' Microsoft SQL Server Integration Services Script Task
-' Write scripts using Microsoft Visual Basic 2008.
-' The ScriptMain is the entry point class of the script.
-
-Imports System
-Imports System.Collections.Generic
-Imports System.Data.SqlClient
-Imports System.IO
-Imports System.Reflection
-Imports System.Text
-Imports System.Text.RegularExpressions
-Imports Microsoft.SqlServer.Dts.Runtime
-
-<Microsoft.SqlServer.Dts.Tasks.ScriptTask.SSISScriptTaskEntryPointAttribute> _
-<System.CLSCompliantAttribute(False)> _
-Partial Public Class ScriptMain
-	Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
-
-	Enum ScriptResults
-		Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
-		Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
-	End Enum
-
-    Dim connectionString As String = String.Empty
-    Dim commandTimeout As Integer = 0
-
-    ''' <summary>
-    ''' メイン処理を行います。
-    ''' </summary>
-    Public Sub Main()
-
-        connectionString = Dts.Variables("ConnectionString").Value.ToString
-        commandTimeout = CInt(Dts.Variables("CommandTimeout").Value.ToString)
-
-        Dim msg As String = String.Empty
-
-        Try
-            'テンポラリテーブル (TmpSupplierPerformance) クリア
-            TruncateTmpTable()
-
-            'RFQ (Purpose: for New) データ格納
-            MergeRFQForNew()
-
-            'RFQ (Purpose: for Stock or for Raw Material) データ格納
-            MergeRFQForStock()
-
-            'PO 全データ格納
-            MergeParPO()
-
-            'PO (Purpose: for New) データ格納
-            MergeParPOForNew()
-
-            'PO (Purpose: for Stock or for Raw Material) データ格納
-            MergeParPOForStock()
-
-            'PO キャンセルデータ格納
-            MergePOCancel()
-
-            'PO (TCI-S 製造部) データ格納
-            MergeParPO2475()
-
-            'PO 合格データ格納
-            MergePOApproved()
-
-            'PO 不合格データ格納
-            MergePORejected()
-
-        Catch ex As Exception
-            Dts.TaskResult = ScriptResults.Failure
-            SetErrorMessage(ex)
-
-            Throw ex
-
-        End Try
-
-        Dts.TaskResult = ScriptResults.Success
-
-    End Sub
-
-    ''' <summary>
-    ''' テンポラリテーブル (TmpSupplierPerformance) をクリアします。
-    ''' </summary>
-    Private Sub TruncateTmpTable()
-
-        Using sqlConn As SqlConnection = New SqlConnection(connectionString)
-
-            sqlConn.Open()
-
-            Using sqlCmd As SqlCommand = sqlConn.CreateCommand
-                sqlCmd.CommandText = "TRUNCATE TABLE TmpSupplierPerformance"
-                sqlCmd.CommandTimeout = commandTimeout
-                sqlCmd.ExecuteNonQuery()
-            End Using
-
-        End Using
-
-    End Sub
-
-    ''' <summary>
-    ''' RFQ (Purpose: for New) データをテンポラリテーブルに格納します。
-    ''' </summary>
-    Private Sub MergeRFQForNew()
-
-        Dim sqlStr As New StringBuilder
-        sqlStr.AppendLine("WITH BaseQuery AS (")
-        sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        H.RFQNumber,")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
-        sqlStr.AppendLine("        S.SupplierCode,")
-        sqlStr.AppendLine("        NULL AS PONumber")
-        sqlStr.AppendLine("    FROM")
-        sqlStr.AppendLine("        Supplier AS S,")
-        sqlStr.AppendLine("        v_RFQCurrentStatus AS CS,")
-        sqlStr.AppendLine("        RFQHeader AS H")
-        sqlStr.AppendLine("    WHERE")
-        sqlStr.AppendLine("        H.PurposeCode = 'N'")
-        sqlStr.AppendLine("        AND H.RFQNumber = CS.RFQNumber")
-        sqlStr.AppendLine("        AND (CS.StatusCode = 'Q'")
-        sqlStr.AppendLine("            OR (CS.StatusCode = 'C' AND EXISTS (SELECT 1 FROM RFQHistory AS C WHERE C.RFQNumber = H.RFQNumber AND C.RFQStatusCode = 'Q')))")
-        sqlStr.AppendLine("        AND (H.SupplierCode = S.SupplierCode OR (H.MakerCode = S.SupplierCode AND H.SupplierCode <> 2475))")
-        sqlStr.AppendLine("        AND NOT EXISTS (")
-        sqlStr.AppendLine("            SELECT 1 FROM RFQLine AS L, v_RealPO AS P WHERE P.RFQLineNumber = L.RFQLineNumber AND L.RFQNumber = H.RFQNumber")
-        sqlStr.AppendLine("        )")
-        sqlStr.AppendLine("    UNION")
-        sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        H.RFQNumber,")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
-        sqlStr.AppendLine("        S.SupplierCode,")
-        sqlStr.AppendLine("        P.PONumber AS PONumber")
-        sqlStr.AppendLine("    FROM")
-        sqlStr.AppendLine("        Supplier AS S,")
-        sqlStr.AppendLine("        v_RealPO AS P,")
-        sqlStr.AppendLine("        RFQLine AS L,")
-        sqlStr.AppendLine("        RFQHeader AS H")
-        sqlStr.AppendLine("    WHERE")
-        sqlStr.AppendLine("        H.PurposeCode = 'N'")
-        sqlStr.AppendLine("        AND H.RFQNumber = L.RFQNumber")
-        sqlStr.AppendLine("        AND L.RFQLineNumber = P.RFQLineNumber")
-        sqlStr.AppendLine("        AND P.ParPONumber IS NULL")
-        sqlStr.AppendLine("        AND (H.SupplierCode = S.SupplierCode OR (H.MakerCode = S.SupplierCode AND H.SupplierCode <> 2475))")
-        sqlStr.AppendLine("    UNION")
-        sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        H.RFQNumber,")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
-        sqlStr.AppendLine("        S.SupplierCode,")
-        sqlStr.AppendLine("        P.PONumber")
-        sqlStr.AppendLine("    FROM")
-        sqlStr.AppendLine("        Supplier AS S,")
-        sqlStr.AppendLine("        v_RealPO AS P,")
-        sqlStr.AppendLine("        RFQLine AS L,")
-        sqlStr.AppendLine("        RFQHeader AS H")
-        sqlStr.AppendLine("    WHERE")
-        sqlStr.AppendLine("        H.PurposeCode <> 'N'")
-        sqlStr.AppendLine("        AND H.RFQNumber = L.RFQNumber")
-        sqlStr.AppendLine("        AND L.RFQLineNumber = P.RFQLineNumber")
-        sqlStr.AppendLine("        AND P.ParPONumber IS NULL")
-        sqlStr.AppendLine("        AND P.PurposeCode = 'N'")
-        sqlStr.AppendLine("        AND (H.SupplierCode = S.SupplierCode OR (H.MakerCode = S.SupplierCode AND H.SupplierCode <> 2475))")
-        sqlStr.AppendLine("),")
-        sqlStr.AppendLine("RFQ_forNew AS (")
-        sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        CreateDate,")
-        sqlStr.AppendLine("        SupplierCode,")
-        sqlStr.AppendLine("        COUNT(*) AS Cnt")
-        sqlStr.AppendLine("    FROM")
-        sqlStr.AppendLine("        BaseQuery")
-        sqlStr.AppendLine("    GROUP BY")
-        sqlStr.AppendLine("        CreateDate,")
-        sqlStr.AppendLine("        SupplierCode")
-        sqlStr.AppendLine(")")
-        sqlStr.AppendLine("MERGE TmpSupplierPerformance SP")
-        sqlStr.AppendLine("    USING RFQ_forNew AS QN ON (SP.SupplierCode = QN.SupplierCode AND SP.CreateDate = QN.CreateDate)")
-        sqlStr.AppendLine("WHEN NOT MATCHED THEN")
-        sqlStr.AppendLine("    INSERT (SupplierCode, CreateDate, QN) VALUES (QN.SupplierCode, QN.CreateDate, QN.Cnt)")
-        sqlStr.AppendLine("WHEN MATCHED THEN")
-        sqlStr.AppendLine("    UPDATE SET SP.QN = QN.Cnt")
-        sqlStr.AppendLine(";")
-
-        Using sqlConn As SqlConnection = New SqlConnection(connectionString)
-
-            sqlConn.Open()
-
-            Using sqlCmd As SqlCommand = sqlConn.CreateCommand
-                sqlCmd.CommandText = sqlStr.ToString
-                sqlCmd.CommandTimeout = commandTimeout
-                sqlCmd.ExecuteNonQuery()
-            End Using
-
-        End Using
-
-    End Sub
-
-    ''' <summary>
-    ''' RFQ (Purpose: for Stock or for Raw Material) データをテンポラリテーブルに格納します。
-    ''' </summary>
-    Private Sub MergeRFQForStock()
-
-        Dim sqlStr As New StringBuilder
-        sqlStr.AppendLine("WITH BaseQuery AS (")
-        sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        H.RFQNumber,")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
-        sqlStr.AppendLine("        S.SupplierCode,")
-        sqlStr.AppendLine("        NULL AS PONumber")
-        sqlStr.AppendLine("    FROM")
-        sqlStr.AppendLine("        Supplier AS S,")
-        sqlStr.AppendLine("        v_RFQCurrentStatus AS CS,")
-        sqlStr.AppendLine("        RFQHeader AS H")
-        sqlStr.AppendLine("    WHERE")
-        sqlStr.AppendLine("        (H.PurposeCode = 'S' OR H.PurposeCode = 'RM')")
-        sqlStr.AppendLine("        AND H.RFQNumber = CS.RFQNumber")
-        sqlStr.AppendLine("        AND (CS.StatusCode = 'Q'")
-        sqlStr.AppendLine("            OR (CS.StatusCode = 'C' AND EXISTS (SELECT 1 FROM RFQHistory AS C WHERE C.RFQNumber = H.RFQNumber AND C.RFQStatusCode = 'Q')))")
-        sqlStr.AppendLine("        AND (H.SupplierCode = S.SupplierCode OR (H.MakerCode = S.SupplierCode AND H.SupplierCode <> 2475))")
-        sqlStr.AppendLine("        AND NOT EXISTS (")
-        sqlStr.AppendLine("            SELECT 1 FROM RFQLine AS L, v_RealPO AS P WHERE P.RFQLineNumber = L.RFQLineNumber AND L.RFQNumber = H.RFQNumber")
-        sqlStr.AppendLine("        )")
-        sqlStr.AppendLine("    UNION")
-        sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        H.RFQNumber,")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
-        sqlStr.AppendLine("        S.SupplierCode,")
-        sqlStr.AppendLine("        P.PONumber AS PONumber")
-        sqlStr.AppendLine("    FROM")
-        sqlStr.AppendLine("        Supplier AS S,")
-        sqlStr.AppendLine("        v_RealPO AS P,")
-        sqlStr.AppendLine("        RFQLine AS L,")
-        sqlStr.AppendLine("        RFQHeader AS H")
-        sqlStr.AppendLine("    WHERE")
-        sqlStr.AppendLine("        (H.PurposeCode = 'S' OR H.PurposeCode = 'RM')")
-        sqlStr.AppendLine("        AND H.RFQNumber = L.RFQNumber")
-        sqlStr.AppendLine("        AND L.RFQLineNumber = P.RFQLineNumber")
-        sqlStr.AppendLine("        AND P.ParPONumber IS NULL")
-        sqlStr.AppendLine("        AND P.PurposeCode <> 'N'")
-        sqlStr.AppendLine("        AND (H.SupplierCode = S.SupplierCode OR (H.MakerCode = S.SupplierCode AND H.SupplierCode <> 2475))")
-        sqlStr.AppendLine("    UNION")
-        sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        H.RFQNumber,")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
-        sqlStr.AppendLine("        S.SupplierCode,")
-        sqlStr.AppendLine("        P.PONumber")
-        sqlStr.AppendLine("    FROM")
-        sqlStr.AppendLine("        Supplier AS S,")
-        sqlStr.AppendLine("        v_RealPO AS P,")
-        sqlStr.AppendLine("        RFQLine AS L,")
-        sqlStr.AppendLine("        RFQHeader AS H")
-        sqlStr.AppendLine("    WHERE")
-        sqlStr.AppendLine("        (H.PurposeCode <> 'N' AND H.PurposeCode <> 'S' AND H.PurposeCode <> 'RM')")
-        sqlStr.AppendLine("        AND H.RFQNumber = L.RFQNumber")
-        sqlStr.AppendLine("        AND L.RFQLineNumber = P.RFQLineNumber")
-        sqlStr.AppendLine("        AND P.ParPONumber IS NULL")
-        sqlStr.AppendLine("        AND (P.PurposeCode = 'S' OR P.PurposeCode = 'RM')")
-        sqlStr.AppendLine("        AND (H.SupplierCode = S.SupplierCode OR (H.MakerCode = S.SupplierCode AND H.SupplierCode <> 2475))")
-        sqlStr.AppendLine("),")
-        sqlStr.AppendLine("RFQ_forStock AS (")
-        sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        CreateDate,")
-        sqlStr.AppendLine("        SupplierCode,")
-        sqlStr.AppendLine("        COUNT(*) AS Cnt")
-        sqlStr.AppendLine("    FROM")
-        sqlStr.AppendLine("        BaseQuery")
-        sqlStr.AppendLine("    GROUP BY")
-        sqlStr.AppendLine("        CreateDate,")
-        sqlStr.AppendLine("        SupplierCode")
-        sqlStr.AppendLine(")")
-        sqlStr.AppendLine("MERGE TmpSupplierPerformance SP")
-        sqlStr.AppendLine("    USING RFQ_forStock AS QS ON (SP.SupplierCode = QS.SupplierCode AND SP.CreateDate = QS.CreateDate)")
-        sqlStr.AppendLine("WHEN NOT MATCHED THEN")
-        sqlStr.AppendLine("    INSERT (SupplierCode, CreateDate, QS) VALUES (QS.SupplierCode, QS.CreateDate, QS.Cnt)")
-        sqlStr.AppendLine("WHEN MATCHED THEN")
-        sqlStr.AppendLine("    UPDATE SET SP.QS = QS.Cnt")
-        sqlStr.AppendLine(";")
-
-        Using sqlConn As SqlConnection = New SqlConnection(connectionString)
-
-            sqlConn.Open()
-
-            Using sqlCmd As SqlCommand = sqlConn.CreateCommand
-                sqlCmd.CommandText = sqlStr.ToString
-                sqlCmd.CommandTimeout = commandTimeout
-                sqlCmd.ExecuteNonQuery()
-            End Using
-
-        End Using
-
-    End Sub
-
-    ''' <summary>
-    ''' PO 全データをテンポラリテーブルに格納します。
-    ''' </summary>
-    Private Sub MergeParPO()
-
-        Dim sqlStr As New StringBuilder
-        sqlStr.AppendLine("WITH ParPO AS (")
-        sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
-        sqlStr.AppendLine("        S.SupplierCode,")
-        sqlStr.AppendLine("        COUNT(*) AS Cnt")
-        sqlStr.AppendLine("    FROM")
-        sqlStr.AppendLine("        Supplier AS S,")
-        sqlStr.AppendLine("        RFQHeader AS H,")
-        sqlStr.AppendLine("        RFQLine AS L,")
-        sqlStr.AppendLine("        v_RealPO AS P")
-        sqlStr.AppendLine("    WHERE")
-        sqlStr.AppendLine("        P.ParPONumber IS NULL")
-        sqlStr.AppendLine("        AND P.RFQLineNumber = L.RFQLineNumber")
-        sqlStr.AppendLine("        AND L.RFQNumber = H.RFQNumber")
-        sqlStr.AppendLine("        AND (H.SupplierCode = S.SupplierCode OR (H.MakerCode = S.SupplierCode AND H.SupplierCode <> 2475))")
-        sqlStr.AppendLine("    GROUP BY")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate),")
-        sqlStr.AppendLine("        S.SupplierCode")
-        sqlStr.AppendLine(")")
-        sqlStr.AppendLine("MERGE TmpSupplierPerformance SP")
-        sqlStr.AppendLine("    USING ParPO AS PP ON (SP.SupplierCode = PP.SupplierCode AND SP.CreateDate = PP.CreateDate)")
-        sqlStr.AppendLine("WHEN NOT MATCHED THEN")
-        sqlStr.AppendLine("    INSERT (SupplierCode, CreateDate, PP) VALUES (PP.SupplierCode, PP.CreateDate, PP.Cnt)")
-        sqlStr.AppendLine("WHEN MATCHED THEN")
-        sqlStr.AppendLine("    UPDATE SET SP.PP = PP.Cnt")
-        sqlStr.AppendLine(";")
-
-        Using sqlConn As SqlConnection = New SqlConnection(connectionString)
-
-            sqlConn.Open()
-
-            Using sqlCmd As SqlCommand = sqlConn.CreateCommand
-                sqlCmd.CommandText = sqlStr.ToString
-                sqlCmd.CommandTimeout = commandTimeout
-                sqlCmd.ExecuteNonQuery()
-            End Using
-
-        End Using
-
-    End Sub
-
-    ''' <summary>
-    ''' PO (Purpose: for New) データをテンポラリテーブルに格納します。
-    ''' </summary>
-    Private Sub MergeParPOForNew()
-
-        Dim sqlStr As New StringBuilder
-        sqlStr.AppendLine("WITH ParPO_forNew AS (")
-        sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
-        sqlStr.AppendLine("        S.SupplierCode,")
-        sqlStr.AppendLine("        COUNT(*) AS Cnt")
-        sqlStr.AppendLine("    FROM")
-        sqlStr.AppendLine("        Supplier AS S,")
-        sqlStr.AppendLine("        RFQHeader AS H,")
-        sqlStr.AppendLine("        RFQLine AS L,")
-        sqlStr.AppendLine("        v_RealPO AS P")
-        sqlStr.AppendLine("    WHERE")
-        sqlStr.AppendLine("        P.ParPONumber IS NULL")
-        sqlStr.AppendLine("        AND (P.PurposeCode = 'N'")
-        sqlStr.AppendLine("            OR (P.PurposeCode IS NULL AND H.PurposeCode = 'N'))")
-        sqlStr.AppendLine("        AND P.RFQLineNumber = L.RFQLineNumber")
-        sqlStr.AppendLine("        AND L.RFQNumber = H.RFQNumber")
-        sqlStr.AppendLine("        AND (H.SupplierCode = S.SupplierCode OR (H.MakerCode = S.SupplierCode AND H.SupplierCode <> 2475))")
-        sqlStr.AppendLine("    GROUP BY")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate),")
-        sqlStr.AppendLine("        S.SupplierCode")
-        sqlStr.AppendLine(")")
-        sqlStr.AppendLine("MERGE TmpSupplierPerformance SP")
-        sqlStr.AppendLine("    USING ParPO_forNew AS PPN ON (SP.SupplierCode = PPN.SupplierCode AND SP.CreateDate = PPN.CreateDate)")
-        sqlStr.AppendLine("WHEN NOT MATCHED THEN")
-        sqlStr.AppendLine("    INSERT (SupplierCode, CreateDate, PPN) VALUES (PPN.SupplierCode, PPN.CreateDate, PPN.Cnt)")
-        sqlStr.AppendLine("WHEN MATCHED THEN")
-        sqlStr.AppendLine("    UPDATE SET SP.PPN = PPN.Cnt")
-        sqlStr.AppendLine(";")
-
-        Using sqlConn As SqlConnection = New SqlConnection(connectionString)
-
-            sqlConn.Open()
-
-            Using sqlCmd As SqlCommand = sqlConn.CreateCommand
-                sqlCmd.CommandText = sqlStr.ToString
-                sqlCmd.CommandTimeout = commandTimeout
-                sqlCmd.ExecuteNonQuery()
-            End Using
-
-        End Using
-
-    End Sub
-
-    ''' <summary>
-    ''' PO (Purpose: for Stock or for Raw Material) データをテンポラリテーブルに格納します。
-    ''' </summary>
-    Private Sub MergeParPOForStock()
-
-        Dim sqlStr As New StringBuilder
-        sqlStr.AppendLine("WITH ParPO_forStock AS (")
-        sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
-        sqlStr.AppendLine("        S.SupplierCode,")
-        sqlStr.AppendLine("        COUNT(*) AS Cnt")
-        sqlStr.AppendLine("    FROM")
-        sqlStr.AppendLine("        Supplier AS S,")
-        sqlStr.AppendLine("        RFQHeader AS H,")
-        sqlStr.AppendLine("        RFQLine AS L,")
-        sqlStr.AppendLine("        v_RealPO AS P")
-        sqlStr.AppendLine("    WHERE")
-        sqlStr.AppendLine("        P.ParPONumber IS NULL")
-        sqlStr.AppendLine("        AND ((P.PurposeCode = 'S' OR P.PurposeCode = 'RM')")
-        sqlStr.AppendLine("            OR (P.PurposeCode IS NULL AND (H.PurposeCode = 'S' OR H.PurposeCode = 'RM')))")
-        sqlStr.AppendLine("        AND P.RFQLineNumber = L.RFQLineNumber")
-        sqlStr.AppendLine("        AND L.RFQNumber = H.RFQNumber")
-        sqlStr.AppendLine("        AND (H.SupplierCode = S.SupplierCode OR (H.MakerCode = S.SupplierCode AND H.SupplierCode <> 2475))")
-        sqlStr.AppendLine("    GROUP BY")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate),")
-        sqlStr.AppendLine("        S.SupplierCode")
-        sqlStr.AppendLine(")")
-        sqlStr.AppendLine("MERGE TmpSupplierPerformance SP")
-        sqlStr.AppendLine("    USING ParPO_forStock AS PPS ON (SP.SupplierCode = PPS.SupplierCode AND SP.CreateDate = PPS.CreateDate)")
-        sqlStr.AppendLine("WHEN NOT MATCHED THEN")
-        sqlStr.AppendLine("    INSERT (SupplierCode, CreateDate, PPS) VALUES (PPS.SupplierCode, PPS.CreateDate, PPS.Cnt)")
-        sqlStr.AppendLine("WHEN MATCHED THEN")
-        sqlStr.AppendLine("    UPDATE SET SP.PPS = PPS.Cnt")
-        sqlStr.AppendLine(";")
-
-        Using sqlConn As SqlConnection = New SqlConnection(connectionString)
-
-            sqlConn.Open()
-
-            Using sqlCmd As SqlCommand = sqlConn.CreateCommand
-                sqlCmd.CommandText = sqlStr.ToString
-                sqlCmd.CommandTimeout = commandTimeout
-                sqlCmd.ExecuteNonQuery()
-            End Using
-
-        End Using
-
-    End Sub
-
-    ''' <summary>
-    ''' PO キャンセルデータをテンポラリテーブルに格納します。
-    ''' </summary>
-    Private Sub MergePOCancel()
-
-        Dim sqlStr As New StringBuilder
-        sqlStr.AppendLine("WITH ParPO_Cancel AS (")
-        sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
-        sqlStr.AppendLine("        S.SupplierCode,")
-        sqlStr.AppendLine("        COUNT(*) AS Cnt")
-        sqlStr.AppendLine("    FROM")
-        sqlStr.AppendLine("        Supplier AS S,")
-        sqlStr.AppendLine("        RFQHeader AS H,")
-        sqlStr.AppendLine("        RFQLine AS L,")
-        sqlStr.AppendLine("        v_POCurrentStatus AS CS,")
-        sqlStr.AppendLine("        v_RealPO AS P")
-        sqlStr.AppendLine("    WHERE")
-        sqlStr.AppendLine("        P.ParPONumber IS NULL")
-        sqlStr.AppendLine("        AND P.PONumber = CS.PONumber")
-        sqlStr.AppendLine("        AND (CS.StatusCode = 'PPC' OR CS.StatusCode = 'CPC')")
-        sqlStr.AppendLine("        AND P.RFQLineNumber = L.RFQLineNumber")
-        sqlStr.AppendLine("        AND L.RFQNumber = H.RFQNumber")
-        sqlStr.AppendLine("        AND (H.SupplierCode = S.SupplierCode OR (H.MakerCode = S.SupplierCode AND H.SupplierCode <> 2475))")
-        sqlStr.AppendLine("    GROUP BY")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate),")
-        sqlStr.AppendLine("        S.SupplierCode")
-        sqlStr.AppendLine(")")
-        sqlStr.AppendLine("MERGE TmpSupplierPerformance SP")
-        sqlStr.AppendLine("    USING ParPO_Cancel AS PPC ON (SP.SupplierCode = PPC.SupplierCode AND SP.CreateDate = PPC.CreateDate)")
-        sqlStr.AppendLine("WHEN NOT MATCHED THEN")
-        sqlStr.AppendLine("    INSERT (SupplierCode, CreateDate, PPC) VALUES (PPC.SupplierCode, PPC.CreateDate, PPC.Cnt)")
-        sqlStr.AppendLine("WHEN MATCHED THEN")
-        sqlStr.AppendLine("    UPDATE SET SP.PPC = PPC.Cnt")
-        sqlStr.AppendLine(";")
-
-        Using sqlConn As SqlConnection = New SqlConnection(connectionString)
-
-            sqlConn.Open()
-
-            Using sqlCmd As SqlCommand = sqlConn.CreateCommand
-                sqlCmd.CommandText = sqlStr.ToString
-                sqlCmd.CommandTimeout = commandTimeout
-                sqlCmd.ExecuteNonQuery()
-            End Using
-
-        End Using
-
-    End Sub
-
-    ''' <summary>
-    ''' PO (TCI-S 製造部) データをテンポラリテーブルに格納します。
-    ''' </summary>
-    Private Sub MergeParPO2475()
-
-        Dim sqlStr As New StringBuilder
-        sqlStr.AppendLine("WITH ParPO_2475 AS (")
-        sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
-        sqlStr.AppendLine("        S.SupplierCode,")
-        sqlStr.AppendLine("        COUNT(*) AS Cnt")
-        sqlStr.AppendLine("    FROM")
-        sqlStr.AppendLine("        Supplier AS S,")
-        sqlStr.AppendLine("        RFQHeader AS H,")
-        sqlStr.AppendLine("        RFQLine AS L,")
-        sqlStr.AppendLine("        v_POCurrentStatus AS CS,")
-        sqlStr.AppendLine("        v_RealPO AS P")
-        sqlStr.AppendLine("    WHERE")
-        sqlStr.AppendLine("        P.ParPONumber IS NULL")
-        sqlStr.AppendLine("        AND P.PONumber = CS.PONumber")
-        sqlStr.AppendLine("        AND CS.StatusCode <> 'PPC'")
-        sqlStr.AppendLine("        AND P.RFQLineNumber = L.RFQLineNumber")
-        sqlStr.AppendLine("        AND L.RFQNumber = H.RFQNumber")
-        sqlStr.AppendLine("        AND H.SupplierCode = 2475")
-        sqlStr.AppendLine("        AND H.MakerCode = S.SupplierCode")
-        sqlStr.AppendLine("    GROUP BY")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate),")
-        sqlStr.AppendLine("        S.SupplierCode")
-        sqlStr.AppendLine(")")
-        sqlStr.AppendLine("MERGE TmpSupplierPerformance SP")
-        sqlStr.AppendLine("    USING ParPO_2475 AS PP2475 ON (SP.SupplierCode = PP2475.SupplierCode AND SP.CreateDate = PP2475.CreateDate)")
-        sqlStr.AppendLine("WHEN NOT MATCHED THEN")
-        sqlStr.AppendLine("    INSERT (SupplierCode, CreateDate, PP2475) VALUES (PP2475.SupplierCode, PP2475.CreateDate, PP2475.Cnt)")
-        sqlStr.AppendLine("WHEN MATCHED THEN")
-        sqlStr.AppendLine("    UPDATE SET SP.PP2475 = PP2475.Cnt")
-        sqlStr.AppendLine(";")
-
-        Using sqlConn As SqlConnection = New SqlConnection(connectionString)
-
-            sqlConn.Open()
-
-            Using sqlCmd As SqlCommand = sqlConn.CreateCommand
-                sqlCmd.CommandText = sqlStr.ToString
-                sqlCmd.CommandTimeout = commandTimeout
-                sqlCmd.ExecuteNonQuery()
-            End Using
-
-        End Using
-
-    End Sub
-
-    ''' <summary>
-    ''' PO 合格データをテンポラリテーブルに格納します。
-    ''' </summary>
-    Private Sub MergePOApproved()
-
-        Dim sqlStr As New StringBuilder
-        sqlStr.AppendLine("WITH PO_Approved AS (")
-        sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
-        sqlStr.AppendLine("        S.SupplierCode,")
-        sqlStr.AppendLine("        COUNT(*) AS Cnt")
-        sqlStr.AppendLine("    FROM")
-        sqlStr.AppendLine("        Supplier AS S,")
-        sqlStr.AppendLine("        RFQHeader AS H,")
-        sqlStr.AppendLine("        RFQLine AS L,")
-        sqlStr.AppendLine("        v_RealQM AS QM,")
-        sqlStr.AppendLine("        v_RealPO AS P")
-        sqlStr.AppendLine("    WHERE")
-        sqlStr.AppendLine("        P.PONumber = QM.PONumber")
-        sqlStr.AppendLine("        AND QM.QMResult = 'A'")
-        sqlStr.AppendLine("        AND P.RFQLineNumber = L.RFQLineNumber")
-        sqlStr.AppendLine("        AND L.RFQNumber = H.RFQNumber")
-        sqlStr.AppendLine("        AND (H.SupplierCode = S.SupplierCode OR (H.MakerCode = S.SupplierCode AND H.SupplierCode <> 2475))")
-        sqlStr.AppendLine("    GROUP BY")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate),")
-        sqlStr.AppendLine("        S.SupplierCode")
-        sqlStr.AppendLine(")")
-        sqlStr.AppendLine("MERGE TmpSupplierPerformance SP")
-        sqlStr.AppendLine("    USING PO_Approved AS PA ON (SP.SupplierCode = PA.SupplierCode AND SP.CreateDate = PA.CreateDate)")
-        sqlStr.AppendLine("WHEN NOT MATCHED THEN")
-        sqlStr.AppendLine("    INSERT (SupplierCode, CreateDate, PA) VALUES (PA.SupplierCode, PA.CreateDate, PA.Cnt)")
-        sqlStr.AppendLine("WHEN MATCHED THEN")
-        sqlStr.AppendLine("    UPDATE SET SP.PA= PA.Cnt")
-        sqlStr.AppendLine(";")
-
-        Using sqlConn As SqlConnection = New SqlConnection(connectionString)
-
-            sqlConn.Open()
-
-            Using sqlCmd As SqlCommand = sqlConn.CreateCommand
-                sqlCmd.CommandText = sqlStr.ToString
-                sqlCmd.CommandTimeout = commandTimeout
-                sqlCmd.ExecuteNonQuery()
-            End Using
-
-        End Using
-
-    End Sub
-
-    ''' <summary>
-    ''' PO 不合格データをテンポラリテーブルに格納します。
-    ''' </summary>
-    Private Sub MergePORejected()
-
-        Dim sqlStr As New StringBuilder
-        sqlStr.AppendLine("WITH PO_Rejected AS (")
-        sqlStr.AppendLine("    SELECT")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate) AS CreateDate,")
-        sqlStr.AppendLine("        S.SupplierCode,")
-        sqlStr.AppendLine("        COUNT(*) AS Cnt")
-        sqlStr.AppendLine("    FROM")
-        sqlStr.AppendLine("        Supplier AS S,")
-        sqlStr.AppendLine("        RFQHeader AS H,")
-        sqlStr.AppendLine("        RFQLine AS L,")
-        sqlStr.AppendLine("        v_RealQM AS QM,")
-        sqlStr.AppendLine("        v_RealPO AS P")
-        sqlStr.AppendLine("    WHERE")
-        sqlStr.AppendLine("        P.PONumber = QM.PONumber")
-        sqlStr.AppendLine("        AND QM.QMResult = 'R'")
-        sqlStr.AppendLine("        AND P.RFQLineNumber = L.RFQLineNumber")
-        sqlStr.AppendLine("        AND L.RFQNumber = H.RFQNumber")
-        sqlStr.AppendLine("        AND (H.SupplierCode = S.SupplierCode OR (H.MakerCode = S.SupplierCode AND H.SupplierCode <> 2475))")
-        sqlStr.AppendLine("    GROUP BY")
-        sqlStr.AppendLine("        CONVERT(date, H.CreateDate),")
-        sqlStr.AppendLine("        S.SupplierCode")
-        sqlStr.AppendLine(")")
-        sqlStr.AppendLine("MERGE TmpSupplierPerformance SP")
-        sqlStr.AppendLine("    USING PO_Rejected AS PR ON (SP.SupplierCode = PR.SupplierCode AND SP.CreateDate = PR.CreateDate)")
-        sqlStr.AppendLine("WHEN NOT MATCHED THEN")
-        sqlStr.AppendLine("    INSERT (SupplierCode, CreateDate, PR) VALUES (PR.SupplierCode, PR.CreateDate, PR.Cnt)")
-        sqlStr.AppendLine("WHEN MATCHED THEN")
-        sqlStr.AppendLine("    UPDATE SET SP.PR= PR.Cnt")
-        sqlStr.AppendLine(";")
-
-        Using sqlConn As SqlConnection = New SqlConnection(connectionString)
-
-            sqlConn.Open()
-
-            Using sqlCmd As SqlCommand = sqlConn.CreateCommand
-                sqlCmd.CommandText = sqlStr.ToString
-                sqlCmd.CommandTimeout = commandTimeout
-                sqlCmd.ExecuteNonQuery()
-            End Using
-
-        End Using
-
-    End Sub
-
-    ''' <summary>
-    ''' ユーザ変数にエラーメッセージを設定します。
-    ''' </summary>
-    Private Sub SetErrorMessage(ByVal ex As Exception)
-
-        Dim sb_Msg As New StringBuilder
-
-        sb_Msg.AppendLine("RFQ Analysis all data の出力においてシステムエラーが発生しました。")
-        sb_Msg.AppendLine()
-        sb_Msg.AppendLine("実行パス：")
-        sb_Msg.AppendLine(System.Environment.CommandLine)
-        sb_Msg.AppendLine()
-        sb_Msg.AppendLine("エラーメッセージ：")
-
-        If ex.InnerException Is Nothing Then
-            sb_Msg.AppendLine(ex.Message)
-            sb_Msg.AppendLine(ex.StackTrace)
-        Else
-            sb_Msg.AppendLine(ex.InnerException.Message)
-            sb_Msg.AppendLine(ex.InnerException.StackTrace)
-        End If
-
-        Dts.Variables("ErrorMessage").Value = sb_Msg.ToString
-
-    End Sub
-
-End Class]]></ProjectItem>
+                Name="Project"
+                Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="UTF-16" standalone="yes"?>
+<c:Project xmlns:c="http://schemas.microsoft.com/codeprojectml/2010/08/main" xmlns:msb="http://schemas.microsoft.com/developer/msbuild/2003" runtimeVersion="4.0" schemaVersion="1.0">
+	<msb:PropertyGroup>
+		<msb:CodeName>st_cbd20828325540598128df137d9f4b55</msb:CodeName>
+		<msb:Language>msBuild</msb:Language>
+		<msb:DisplayName>st_cbd20828325540598128df137d9f4b55</msb:DisplayName>
+		<msb:ProjectId>{7B5AC28F-8371-40E1-86F3-8DF2B0C7572B}</msb:ProjectId>
+	</msb:PropertyGroup>
+	<msb:ItemGroup>
+		<msb:Project Include="st_cbd20828325540598128df137d9f4b55.vbproj"/>
+		<msb:File Include="My Project\AssemblyInfo.vb"/>
+		<msb:File Include="ScriptMain.vb"/>
+		<msb:File Include="My Project\Resources.resx"/>
+		<msb:File Include="My Project\Resources.Designer.vb"/>
+		<msb:File Include="My Project\Settings.settings"/>
+		<msb:File Include="My Project\Settings.Designer.vb"/>
+	</msb:ItemGroup>
+</c:Project>]]></ProjectItem>
               <ProjectItem
                 Name="My Project\Resources.resx"
                 Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
@@ -5092,7 +4007,7 @@ End Class]]></ProjectItem>
   </resheader>
 </root>]]></ProjectItem>
               <ProjectItem
-                Name="\my project\resources.designer.vb"
+                Name="My Project\Resources.Designer.vb"
                 Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
 ' <autogenerated>
 '     This code was generated by a tool.
@@ -5157,14 +4072,14 @@ End Namespace]]></ProjectItem>
               <BinaryItem
                 Name="ST_cbd20828325540598128df137d9f4b55.vbproj.dll">TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAgAAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1v
-ZGUuDQ0KJAAAAAAAAABQRQAATAEDAO1uoVgAAAAAAAAAAOAAIiALAVAAAFgAAAAIAAAAAAAA/nYA
+ZGUuDQ0KJAAAAAAAAABQRQAATAEDADDFJ1kAAAAAAAAAAOAAIiALAVAAAFgAAAAIAAAAAAAAYncA
 AAAgAAAAgAAAAAAAEAAgAAAAAgAABAAAAAAAAAAEAAAAAAAAAADAAAAAAgAAAAAAAAMAQIUAABAA
-ABAAAAAAEAAAEAAAAAAAABAAAAAAAAAAAAAAAKx2AABPAAAAAIAAAIgEAAAAAAAAAAAAAAAAAAAA
+ABAAAAAAEAAAEAAAAAAAABAAAAAAAAAAAAAAABB3AABPAAAAAIAAAIgEAAAAAAAAAAAAAAAAAAAA
 AAAAAKAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAIAAACAAAAAAAAAAAAAAACCAAAEgAAAAAAAAAAAAAAC50ZXh0AAAABFcAAAAgAAAAWAAAAAIA
+AAAAIAAACAAAAAAAAAAAAAAACCAAAEgAAAAAAAAAAAAAAC50ZXh0AAAAaFcAAAAgAAAAWAAAAAIA
 AAAAAAAAAAAAAAAAACAAAGAucnNyYwAAAIgEAAAAgAAAAAYAAABaAAAAAAAAAAAAAAAAAABAAABA
-LnJlbG9jAAAMAAAAAKAAAAACAAAAYAAAAAAAAAAAAAAAAAAAQAAAQgAAAAAAAAAAAAAAAAAAAADg
-dgAAAAAAAEgAAAACAAUA2DgAABw9AAABAAAAAAAAAPR1AAC4AAAAAAAAAAAAAAAAAAAAAAAAAAAA
+LnJlbG9jAAAMAAAAAKAAAAACAAAAYAAAAAAAAAAAAAAAAAAAQAAAQgAAAAAAAAAAAAAAAAAAAABE
+dwAAAAAAAEgAAAACAAUA2DgAAIA9AAABAAAAAAAAAFh2AAC4AAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4CKBgAAAoqHgIoGQAACiqmcxoAAAqAAQAABHMbAAAKgAIA
 AARzHAAACoADAAAEcx0AAAqABAAABCoufgEAAARvHgAACioufgIAAARvHwAACioufgMAAARvIAAA
 CioufgQAAARvIQAACioeAigiAAAKKq5+BQAABC0ecgEAAHDQBQAAAigjAAAKbyQAAApzJQAACoAF
@@ -5181,103 +4096,103 @@ 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
-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
+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
-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
+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
-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
+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
-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
+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
-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
-AAomBnJCDABwbzwAAAomAnsJAAAEczQAAAoLB281AAAKB282AAAKDAgGbz0AAApvNwAACggCewoA
+AAAAGzACAKUBAAADAAARczsAAAoKBnLdEwBwbzwAAAomBnLnAABwbzwAAAomBnK+BgBwbzwAAAom
+BnKNAQBwbzwAAAomBnLCCQBwbzwAAAomBnLvAQBwbzwAAAomBnIBAgBwbzwAAAomBnJ1EABwbzwA
+AAomBnKQBwBwbzwAAAomBnKlEABwbzwAAAomBnKhAgBwbzwAAAomBnLREABwbzwAAAomBnILFABw
+bzwAAAomBnJNFABwbzwAAAomBnINEQBwbzwAAAomBnJpEQBwbzwAAAomBnKUBABwbzwAAAomBnIW
+CgBwbzwAAAomBnK1EQBwbzwAAAomBnL/EQBwbzwAAAomBnJaCgBwbzwAAAomBnJeCgBwbzwAAAom
+BnLNFABwbzwAAAomBnJnCwBwbzwAAAomBnKgFQBwbzwAAAomBnJIDABwbzwAAAomBnJdFgBwbzwA
+AAomBnKoDABwbzwAAAomAnsJAAAEczQAAAoLB281AAAKB282AAAKDAgGbz0AAApvNwAACggCewoA
 AARvOAAACghvOQAACibeFAgsBghvOgAACtwHLAYHbzoAAArcKgAAAAEcAAACAG8BIZABCgAAAAAC
-AGIBOJoBCgAAAAAbMAIApQEAAAMAABFzOwAACgoGcjcWAHBvPAAACiYGcucAAHBvPAAACiYGcicB
-AHBvPAAACiYGco0BAHBvPAAACiYGclwJAHBvPAAACiYGcu8BAHBvPAAACiYGcgECAHBvPAAACiYG
-cg8QAHBvPAAACiYGcioHAHBvPAAACiYGcj8QAHBvPAAACiYGcqECAHBvPAAACiYGcmsQAHBvPAAA
-CiYGcmkWAHBvPAAACiYGct8WAHBvPAAACiYGcqcQAHBvPAAACiYGcgMRAHBvPAAACiYGcpQEAHBv
-PAAACiYGcrAJAHBvPAAACiYGck8RAHBvPAAACiYGcpkRAHBvPAAACiYGcvQJAHBvPAAACiYGcvgJ
-AHBvPAAACiYGcpQXAHBvPAAACiYGcgELAHBvPAAACiYGcmsYAHBvPAAACiYGcuILAHBvPAAACiYG
-cigZAHBvPAAACiYGckIMAHBvPAAACiYCewkAAARzNAAACgsHbzUAAAoHbzYAAAoMCAZvPQAACm83
+AGIBOJoBCgAAAAAbMAIApQEAAAMAABFzOwAACgoGcp0WAHBvPAAACiYGcucAAHBvPAAACiYGcr4G
+AHBvPAAACiYGco0BAHBvPAAACiYGcsIJAHBvPAAACiYGcu8BAHBvPAAACiYGcgECAHBvPAAACiYG
+cnUQAHBvPAAACiYGcpAHAHBvPAAACiYGcqUQAHBvPAAACiYGcqECAHBvPAAACiYGctEQAHBvPAAA
+CiYGcs8WAHBvPAAACiYGckUXAHBvPAAACiYGcg0RAHBvPAAACiYGcmkRAHBvPAAACiYGcpQEAHBv
+PAAACiYGchYKAHBvPAAACiYGcrURAHBvPAAACiYGcv8RAHBvPAAACiYGcloKAHBvPAAACiYGcl4K
+AHBvPAAACiYGcvoXAHBvPAAACiYGcmcLAHBvPAAACiYGctEYAHBvPAAACiYGckgMAHBvPAAACiYG
+co4ZAHBvPAAACiYGcqgMAHBvPAAACiYCewkAAARzNAAACgsHbzUAAAoHbzYAAAoMCAZvPQAACm83
 AAAKCAJ7CgAABG84AAAKCG85AAAKJt4UCCwGCG86AAAK3AcsBgdvOgAACtwqAAAAARwAAAIAbwEh
-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
+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
-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
+BnLSHABwbzwAAAomBnLnAABwbzwAAAomBnK+BgBwbzwAAAomBnKNAQBwbzwAAAomBnLCCQBwbzwA
+AAomBnLvAQBwbzwAAAomBnIBAgBwbzwAAAomBnJ1EABwbzwAAAomBnKQBwBwbzwAAAomBnL8GQBw
+bzwAAAomBnKlEABwbzwAAAomBnKhAgBwbzwAAAomBnLREABwbzwAAAomBnI+GgBwbzwAAAomBnL8
+HABwbzwAAAomBnINEQBwbzwAAAomBnJpEQBwbzwAAAomBnJCHQBwbzwAAAomBnKGHQBwbzwAAAom
+BnIWCgBwbzwAAAomBnK1EQBwbzwAAAomBnL/EQBwbzwAAAomBnJaCgBwbzwAAAomBnJeCgBwbzwA
+AAomBnLYHQBwbzwAAAomBnJnCwBwbzwAAAomBnK5HgBwbzwAAAomBnJIDABwbzwAAAomBnKOHwBw
+bzwAAAomBnKoDABwbzwAAAomAnsJAAAEczQAAAoLB281AAAKB282AAAKDAgGbz0AAApvNwAACggC
 ewoAAARvOAAACghvOQAACibeFAgsBghvOgAACtwHLAYHbzoAAArcKgAAAAEcAAACAIcBIagBCgAA
-AAACAHoBOLIBCgAAAAAbMAIApQEAAAMAABFzOwAACgoGcnQfAHBvPAAACiYGcucAAHBvPAAACiYG
-cicBAHBvPAAACiYGco0BAHBvPAAACiYGclwJAHBvPAAACiYGcu8BAHBvPAAACiYGcgECAHBvPAAA
-CiYGcg8QAHBvPAAACiYGcioHAHBvPAAACiYGcqAfAHBvPAAACiYGcj8QAHBvPAAACiYGcqECAHBv
-PAAACiYGctAfAHBvPAAACiYGchIgAHBvPAAACiYGcqcQAHBvPAAACiYGcgMRAHBvPAAACiYGcpQE
-AHBvPAAACiYGcrAJAHBvPAAACiYGck8RAHBvPAAACiYGcpkRAHBvPAAACiYGcvQJAHBvPAAACiYG
-cvgJAHBvPAAACiYGck4gAHBvPAAACiYGcgELAHBvPAAACiYGchkhAHBvPAAACiYGcuILAHBvPAAA
-CiYGcs4hAHBvPAAACiYGckIMAHBvPAAACiYCewkAAARzNAAACgsHbzUAAAoHbzYAAAoMCAZvPQAA
+AAACAHoBOLIBCgAAAAAbMAIApQEAAAMAABFzOwAACgoGctofAHBvPAAACiYGcucAAHBvPAAACiYG
+cr4GAHBvPAAACiYGco0BAHBvPAAACiYGcsIJAHBvPAAACiYGcu8BAHBvPAAACiYGcgECAHBvPAAA
+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
-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
+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
-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
+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
-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
+b0IAAApvPAAACiYCKCwAAApvLQAACnIKJQBwby4AAAoGbz0AAApvQwAACio2AgMoJgAACihEAAAK
 Kh4CKEUAAAoqLtAIAAACKCMAAAoqHgIoMAAACioAEzABABQAAAAFAAARAowFAAAbLQgoAQAAKwor
 AgIKBioiA/4VBQAAGyoAAAATMAIAKAAAAAYAABECe0cAAApvSAAACgoGjAgAABstEigCAAArCgJ7
 RwAACgZvSQAACgYqSgIoIgAACgJzSgAACn1HAAAKKgBCU0pCAQABAAAAAAAMAAAAdjQuMC4zMDMx
-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
+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
@@ -5398,165 +4313,165 @@ TQAgAFIARgBRAEwAaQBuAGUAIABBAFMAIABMACwAIAB2AF8AUgBlAGEAbABQAE8AIABBAFMAIABQ
 ACAAVwBIAEUAUgBFACAAUAAuAFIARgBRAEwAaQBuAGUATgB1AG0AYgBlAHIAIAA9ACAATAAuAFIA
 RgBRAEwAaQBuAGUATgB1AG0AYgBlAHIAIABBAE4ARAAgAEwALgBSAEYAUQBOAHUAbQBiAGUAcgAg
 AD0AIABIAC4AUgBGAFEATgB1AG0AYgBlAHIAABMgACAAIAAgACAAIAAgACAAKQAAEyAAIAAgACAA
-VQBOAEkATwBOAAA9IAAgACAAIAAgACAAIAAgAFAALgBQAE8ATgB1AG0AYgBlAHIAIABBAFMAIABQ
-AE8ATgB1AG0AYgBlAHIAAC0gACAAIAAgACAAIAAgACAAdgBfAFIAZQBhAGwAUABPACAAQQBTACAA
-UAAsAAArIAAgACAAIAAgACAAIAAgAFIARgBRAEwAaQBuAGUAIABBAFMAIABMACwAAEsgACAAIAAg
-ACAAIAAgACAAQQBOAEQAIABIAC4AUgBGAFEATgB1AG0AYgBlAHIAIAA9ACAATAAuAFIARgBRAE4A
-dQBtAGIAZQByAABbIAAgACAAIAAgACAAIAAgAEEATgBEACAATAAuAFIARgBRAEwAaQBuAGUATgB1
-AG0AYgBlAHIAIAA9ACAAUAAuAFIARgBRAEwAaQBuAGUATgB1AG0AYgBlAHIAAEMgACAAIAAgACAA
-IAAgACAAQQBOAEQAIABQAC4AUABhAHIAUABPAE4AdQBtAGIAZQByACAASQBTACAATgBVAEwATAAA
-JSAAIAAgACAAIAAgACAAIABQAC4AUABPAE4AdQBtAGIAZQByAAA5IAAgACAAIAAgACAAIAAgAEgA
-LgBQAHUAcgBwAG8AcwBlAEMAbwBkAGUAIAA8AD4AIAAnAE4AJwABPyAAIAAgACAAIAAgACAAIABB
-AE4ARAAgAFAALgBQAHUAcgBwAG8AcwBlAEMAbwBkAGUAIAA9ACAAJwBOACcAAQUpACwAAB9SAEYA
-UQBfAGYAbwByAE4AZQB3ACAAQQBTACAAKAAAJyAAIAAgACAAIAAgACAAIABDAHIAZQBhAHQAZQBE
-AGEAdABlACwAACsgACAAIAAgACAAIAAgACAAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUALAAALyAA
-IAAgACAAIAAgACAAIABDAE8AVQBOAFQAKAAqACkAIABBAFMAIABDAG4AdAAAIyAAIAAgACAAIAAg
-ACAAIABCAGEAcwBlAFEAdQBlAHIAeQAAGSAAIAAgACAARwBSAE8AVQBQACAAQgBZAAApIAAgACAA
-IAAgACAAIAAgAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlAAADKQAAP00ARQBSAEcARQAgAFQAbQBw
-AFMAdQBwAHAAbABpAGUAcgBQAGUAcgBmAG8AcgBtAGEAbgBjAGUAIABTAFAAAIDHIAAgACAAIABV
-AFMASQBOAEcAIABSAEYAUQBfAGYAbwByAE4AZQB3ACAAQQBTACAAUQBOACAATwBOACAAKABTAFAA
-LgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAgAD0AIABRAE4ALgBTAHUAcABwAGwAaQBlAHIAQwBv
-AGQAZQAgAEEATgBEACAAUwBQAC4AQwByAGUAYQB0AGUARABhAHQAZQAgAD0AIABRAE4ALgBDAHIA
-ZQBhAHQAZQBEAGEAdABlACkAACtXAEgARQBOACAATgBPAFQAIABNAEEAVABDAEgARQBEACAAVABI
-AEUATgAAgLMgACAAIAAgAEkATgBTAEUAUgBUACAAKABTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAs
-ACAAQwByAGUAYQB0AGUARABhAHQAZQAsACAAUQBOACkAIABWAEEATABVAEUAUwAgACgAUQBOAC4A
-UwB1AHAAcABsAGkAZQByAEMAbwBkAGUALAAgAFEATgAuAEMAcgBlAGEAdABlAEQAYQB0AGUALAAg
-AFEATgAuAEMAbgB0ACkAACNXAEgARQBOACAATQBBAFQAQwBIAEUARAAgAFQASABFAE4AADsgACAA
-IAAgAFUAUABEAEEAVABFACAAUwBFAFQAIABTAFAALgBRAE4AIAA9ACAAUQBOAC4AQwBuAHQAAAM7
-AABrIAAgACAAIAAgACAAIAAgACgASAAuAFAAdQByAHAAbwBzAGUAQwBvAGQAZQAgAD0AIAAnAFMA
-JwAgAE8AUgAgAEgALgBQAHUAcgBwAG8AcwBlAEMAbwBkAGUAIAA9ACAAJwBSAE0AJwApAAFBIAAg
-ACAAIAAgACAAIAAgAEEATgBEACAAUAAuAFAAdQByAHAAbwBzAGUAQwBvAGQAZQAgADwAPgAgACcA
-TgAnAAGAoyAAIAAgACAAIAAgACAAIAAoAEgALgBQAHUAcgBwAG8AcwBlAEMAbwBkAGUAIAA8AD4A
-IAAnAE4AJwAgAEEATgBEACAASAAuAFAAdQByAHAAbwBzAGUAQwBvAGQAZQAgADwAPgAgACcAUwAn
-ACAAQQBOAEQAIABIAC4AUAB1AHIAcABvAHMAZQBDAG8AZABlACAAPAA+ACAAJwBSAE0AJwApAAFz
-IAAgACAAIAAgACAAIAAgAEEATgBEACAAKABQAC4AUAB1AHIAcABvAHMAZQBDAG8AZABlACAAPQAg
-ACcAUwAnACAATwBSACAAUAAuAFAAdQByAHAAbwBzAGUAQwBvAGQAZQAgAD0AIAAnAFIATQAnACkA
-ASNSAEYAUQBfAGYAbwByAFMAdABvAGMAawAgAEEAUwAgACgAAIDLIAAgACAAIABVAFMASQBOAEcA
-IABSAEYAUQBfAGYAbwByAFMAdABvAGMAawAgAEEAUwAgAFEAUwAgAE8ATgAgACgAUwBQAC4AUwB1
-AHAAcABsAGkAZQByAEMAbwBkAGUAIAA9ACAAUQBTAC4AUwB1AHAAcABsAGkAZQByAEMAbwBkAGUA
-IABBAE4ARAAgAFMAUAAuAEMAcgBlAGEAdABlAEQAYQB0AGUAIAA9ACAAUQBTAC4AQwByAGUAYQB0
-AGUARABhAHQAZQApAACAsyAAIAAgACAASQBOAFMARQBSAFQAIAAoAFMAdQBwAHAAbABpAGUAcgBD
-AG8AZABlACwAIABDAHIAZQBhAHQAZQBEAGEAdABlACwAIABRAFMAKQAgAFYAQQBMAFUARQBTACAA
-KABRAFMALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAsACAAUQBTAC4AQwByAGUAYQB0AGUARABh
-AHQAZQAsACAAUQBTAC4AQwBuAHQAKQAAOyAAIAAgACAAVQBQAEQAQQBUAEUAIABTAEUAVAAgAFMA
-UAAuAFEAUwAgAD0AIABRAFMALgBDAG4AdAAAH1cASQBUAEgAIABQAGEAcgBQAE8AIABBAFMAIAAo
-AAAvIAAgACAAIAAgACAAIAAgAFIARgBRAEgAZQBhAGQAZQByACAAQQBTACAASAAsAAArIAAgACAA
-IAAgACAAIAAgAHYAXwBSAGUAYQBsAFAATwAgAEEAUwAgAFAAADsgACAAIAAgACAAIAAgACAAUAAu
-AFAAYQByAFAATwBOAHUAbQBiAGUAcgAgAEkAUwAgAE4AVQBMAEwAAFsgACAAIAAgACAAIAAgACAA
-QQBOAEQAIABQAC4AUgBGAFEATABpAG4AZQBOAHUAbQBiAGUAcgAgAD0AIABMAC4AUgBGAFEATABp
-AG4AZQBOAHUAbQBiAGUAcgAASyAAIAAgACAAIAAgACAAIABBAE4ARAAgAEwALgBSAEYAUQBOAHUA
-bQBiAGUAcgAgAD0AIABIAC4AUgBGAFEATgB1AG0AYgBlAHIAAEkgACAAIAAgACAAIAAgACAAQwBP
-AE4AVgBFAFIAVAAoAGQAYQB0AGUALAAgAEgALgBDAHIAZQBhAHQAZQBEAGEAdABlACkALAAALSAA
-IAAgACAAIAAgACAAIABTAC4AUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAAIC9IAAgACAAIABVAFMA
-SQBOAEcAIABQAGEAcgBQAE8AIABBAFMAIABQAFAAIABPAE4AIAAoAFMAUAAuAFMAdQBwAHAAbABp
-AGUAcgBDAG8AZABlACAAPQAgAFAAUAAuAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlACAAQQBOAEQA
-IABTAFAALgBDAHIAZQBhAHQAZQBEAGEAdABlACAAPQAgAFAAUAAuAEMAcgBlAGEAdABlAEQAYQB0
-AGUAKQAAgLMgACAAIAAgAEkATgBTAEUAUgBUACAAKABTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAs
-ACAAQwByAGUAYQB0AGUARABhAHQAZQAsACAAUABQACkAIABWAEEATABVAEUAUwAgACgAUABQAC4A
-UwB1AHAAcABsAGkAZQByAEMAbwBkAGUALAAgAFAAUAAuAEMAcgBlAGEAdABlAEQAYQB0AGUALAAg
-AFAAUAAuAEMAbgB0ACkAADsgACAAIAAgAFUAUABEAEEAVABFACAAUwBFAFQAIABTAFAALgBQAFAA
-IAA9ACAAUABQAC4AQwBuAHQAAC1XAEkAVABIACAAUABhAHIAUABPAF8AZgBvAHIATgBlAHcAIABB
-AFMAIAAoAABBIAAgACAAIAAgACAAIAAgAEEATgBEACAAKABQAC4AUAB1AHIAcABvAHMAZQBDAG8A
-ZABlACAAPQAgACcATgAnAAF/IAAgACAAIAAgACAAIAAgACAAIAAgACAATwBSACAAKABQAC4AUAB1
-AHIAcABvAHMAZQBDAG8AZABlACAASQBTACAATgBVAEwATAAgAEEATgBEACAASAAuAFAAdQByAHAA
-bwBzAGUAQwBvAGQAZQAgAD0AIAAnAE4AJwApACkAAYDRIAAgACAAIABVAFMASQBOAEcAIABQAGEA
-cgBQAE8AXwBmAG8AcgBOAGUAdwAgAEEAUwAgAFAAUABOACAATwBOACAAKABTAFAALgBTAHUAcABw
-AGwAaQBlAHIAQwBvAGQAZQAgAD0AIABQAFAATgAuAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlACAA
-QQBOAEQAIABTAFAALgBDAHIAZQBhAHQAZQBEAGEAdABlACAAPQAgAFAAUABOAC4AQwByAGUAYQB0
-AGUARABhAHQAZQApAACAuyAAIAAgACAASQBOAFMARQBSAFQAIAAoAFMAdQBwAHAAbABpAGUAcgBD
-AG8AZABlACwAIABDAHIAZQBhAHQAZQBEAGEAdABlACwAIABQAFAATgApACAAVgBBAEwAVQBFAFMA
-IAAoAFAAUABOAC4AUwB1AHAAcABsAGkAZQByAEMAbwBkAGUALAAgAFAAUABOAC4AQwByAGUAYQB0
-AGUARABhAHQAZQAsACAAUABQAE4ALgBDAG4AdAApAAA/IAAgACAAIABVAFAARABBAFQARQAgAFMA
-RQBUACAAUwBQAC4AUABQAE4AIAA9ACAAUABQAE4ALgBDAG4AdAAAMVcASQBUAEgAIABQAGEAcgBQ
-AE8AXwBmAG8AcgBTAHQAbwBjAGsAIABBAFMAIAAoAAB1IAAgACAAIAAgACAAIAAgAEEATgBEACAA
-KAAoAFAALgBQAHUAcgBwAG8AcwBlAEMAbwBkAGUAIAA9ACAAJwBTACcAIABPAFIAIABQAC4AUAB1
-AHIAcABvAHMAZQBDAG8AZABlACAAPQAgACcAUgBNACcAKQABgLMgACAAIAAgACAAIAAgACAAIAAg
-ACAAIABPAFIAIAAoAFAALgBQAHUAcgBwAG8AcwBlAEMAbwBkAGUAIABJAFMAIABOAFUATABMACAA
-QQBOAEQAIAAoAEgALgBQAHUAcgBwAG8AcwBlAEMAbwBkAGUAIAA9ACAAJwBTACcAIABPAFIAIABI
-AC4AUAB1AHIAcABvAHMAZQBDAG8AZABlACAAPQAgACcAUgBNACcAKQApACkAAYDVIAAgACAAIABV
-AFMASQBOAEcAIABQAGEAcgBQAE8AXwBmAG8AcgBTAHQAbwBjAGsAIABBAFMAIABQAFAAUwAgAE8A
-TgAgACgAUwBQAC4AUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAIAA9ACAAUABQAFMALgBTAHUAcABw
-AGwAaQBlAHIAQwBvAGQAZQAgAEEATgBEACAAUwBQAC4AQwByAGUAYQB0AGUARABhAHQAZQAgAD0A
-IABQAFAAUwAuAEMAcgBlAGEAdABlAEQAYQB0AGUAKQAAgLsgACAAIAAgAEkATgBTAEUAUgBUACAA
-KABTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAsACAAQwByAGUAYQB0AGUARABhAHQAZQAsACAAUABQ
-AFMAKQAgAFYAQQBMAFUARQBTACAAKABQAFAAUwAuAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlACwA
-IABQAFAAUwAuAEMAcgBlAGEAdABlAEQAYQB0AGUALAAgAFAAUABTAC4AQwBuAHQAKQAAPyAAIAAg
-ACAAVQBQAEQAQQBUAEUAIABTAEUAVAAgAFMAUAAuAFAAUABTACAAPQAgAFAAUABTAC4AQwBuAHQA
-AC1XAEkAVABIACAAUABhAHIAUABPAF8AQwBhAG4AYwBlAGwAIABBAFMAIAAoAABBIAAgACAAIAAg
-ACAAIAAgAHYAXwBQAE8AQwB1AHIAcgBlAG4AdABTAHQAYQB0AHUAcwAgAEEAUwAgAEMAUwAsAABJ
-IAAgACAAIAAgACAAIAAgAEEATgBEACAAUAAuAFAATwBOAHUAbQBiAGUAcgAgAD0AIABDAFMALgBQ
-AE8ATgB1AG0AYgBlAHIAAHkgACAAIAAgACAAIAAgACAAQQBOAEQAIAAoAEMAUwAuAFMAdABhAHQA
-dQBzAEMAbwBkAGUAIAA9ACAAJwBQAFAAQwAnACAATwBSACAAQwBTAC4AUwB0AGEAdAB1AHMAQwBv
-AGQAZQAgAD0AIAAnAEMAUABDACcAKQABgNEgACAAIAAgAFUAUwBJAE4ARwAgAFAAYQByAFAATwBf
-AEMAYQBuAGMAZQBsACAAQQBTACAAUABQAEMAIABPAE4AIAAoAFMAUAAuAFMAdQBwAHAAbABpAGUA
-cgBDAG8AZABlACAAPQAgAFAAUABDAC4AUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAIABBAE4ARAAg
-AFMAUAAuAEMAcgBlAGEAdABlAEQAYQB0AGUAIAA9ACAAUABQAEMALgBDAHIAZQBhAHQAZQBEAGEA
-dABlACkAAIC7IAAgACAAIABJAE4AUwBFAFIAVAAgACgAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUA
-LAAgAEMAcgBlAGEAdABlAEQAYQB0AGUALAAgAFAAUABDACkAIABWAEEATABVAEUAUwAgACgAUABQ
-AEMALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAsACAAUABQAEMALgBDAHIAZQBhAHQAZQBEAGEA
-dABlACwAIABQAFAAQwAuAEMAbgB0ACkAAD8gACAAIAAgAFUAUABEAEEAVABFACAAUwBFAFQAIABT
-AFAALgBQAFAAQwAgAD0AIABQAFAAQwAuAEMAbgB0AAApVwBJAFQASAAgAFAAYQByAFAATwBfADIA
-NAA3ADUAIABBAFMAIAAoAABFIAAgACAAIAAgACAAIAAgAEEATgBEACAAQwBTAC4AUwB0AGEAdAB1
-AHMAQwBvAGQAZQAgADwAPgAgACcAUABQAEMAJwABQyAAIAAgACAAIAAgACAAIABBAE4ARAAgAEgA
-LgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAgAD0AIAAyADQANwA1AABRIAAgACAAIAAgACAAIAAg
-AEEATgBEACAASAAuAE0AYQBrAGUAcgBDAG8AZABlACAAPQAgAFMALgBTAHUAcABwAGwAaQBlAHIA
-QwBvAGQAZQAAgN8gACAAIAAgAFUAUwBJAE4ARwAgAFAAYQByAFAATwBfADIANAA3ADUAIABBAFMA
-IABQAFAAMgA0ADcANQAgAE8ATgAgACgAUwBQAC4AUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAIAA9
-ACAAUABQADIANAA3ADUALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAgAEEATgBEACAAUwBQAC4A
-QwByAGUAYQB0AGUARABhAHQAZQAgAD0AIABQAFAAMgA0ADcANQAuAEMAcgBlAGEAdABlAEQAYQB0
-AGUAKQAAgNMgACAAIAAgAEkATgBTAEUAUgBUACAAKABTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAs
-ACAAQwByAGUAYQB0AGUARABhAHQAZQAsACAAUABQADIANAA3ADUAKQAgAFYAQQBMAFUARQBTACAA
-KABQAFAAMgA0ADcANQAuAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlACwAIABQAFAAMgA0ADcANQAu
-AEMAcgBlAGEAdABlAEQAYQB0AGUALAAgAFAAUAAyADQANwA1AC4AQwBuAHQAKQAASyAAIAAgACAA
-VQBQAEQAQQBUAEUAIABTAEUAVAAgAFMAUAAuAFAAUAAyADQANwA1ACAAPQAgAFAAUAAyADQANwA1
-AC4AQwBuAHQAACtXAEkAVABIACAAUABPAF8AQQBwAHAAcgBvAHYAZQBkACAAQQBTACAAKAAALyAA
-IAAgACAAIAAgACAAIAB2AF8AUgBlAGEAbABRAE0AIABBAFMAIABRAE0ALAAAQSAAIAAgACAAIAAg
-ACAAIABQAC4AUABPAE4AdQBtAGIAZQByACAAPQAgAFEATQAuAFAATwBOAHUAbQBiAGUAcgAAOyAA
-IAAgACAAIAAgACAAIABBAE4ARAAgAFEATQAuAFEATQBSAGUAcwB1AGwAdAAgAD0AIAAnAEEAJwAB
-gMkgACAAIAAgAFUAUwBJAE4ARwAgAFAATwBfAEEAcABwAHIAbwB2AGUAZAAgAEEAUwAgAFAAQQAg
-AE8ATgAgACgAUwBQAC4AUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAIAA9ACAAUABBAC4AUwB1AHAA
-cABsAGkAZQByAEMAbwBkAGUAIABBAE4ARAAgAFMAUAAuAEMAcgBlAGEAdABlAEQAYQB0AGUAIAA9
-ACAAUABBAC4AQwByAGUAYQB0AGUARABhAHQAZQApAACAsyAAIAAgACAASQBOAFMARQBSAFQAIAAo
-AFMAdQBwAHAAbABpAGUAcgBDAG8AZABlACwAIABDAHIAZQBhAHQAZQBEAGEAdABlACwAIABQAEEA
-KQAgAFYAQQBMAFUARQBTACAAKABQAEEALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAsACAAUABB
-AC4AQwByAGUAYQB0AGUARABhAHQAZQAsACAAUABBAC4AQwBuAHQAKQAAOSAAIAAgACAAVQBQAEQA
-QQBUAEUAIABTAEUAVAAgAFMAUAAuAFAAQQA9ACAAUABBAC4AQwBuAHQAACtXAEkAVABIACAAUABP
-AF8AUgBlAGoAZQBjAHQAZQBkACAAQQBTACAAKAAAOyAAIAAgACAAIAAgACAAIABBAE4ARAAgAFEA
-TQAuAFEATQBSAGUAcwB1AGwAdAAgAD0AIAAnAFIAJwABgMkgACAAIAAgAFUAUwBJAE4ARwAgAFAA
-TwBfAFIAZQBqAGUAYwB0AGUAZAAgAEEAUwAgAFAAUgAgAE8ATgAgACgAUwBQAC4AUwB1AHAAcABs
-AGkAZQByAEMAbwBkAGUAIAA9ACAAUABSAC4AUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAIABBAE4A
-RAAgAFMAUAAuAEMAcgBlAGEAdABlAEQAYQB0AGUAIAA9ACAAUABSAC4AQwByAGUAYQB0AGUARABh
-AHQAZQApAACAsyAAIAAgACAASQBOAFMARQBSAFQAIAAoAFMAdQBwAHAAbABpAGUAcgBDAG8AZABl
-ACwAIABDAHIAZQBhAHQAZQBEAGEAdABlACwAIABQAFIAKQAgAFYAQQBMAFUARQBTACAAKABQAFIA
-LgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAsACAAUABSAC4AQwByAGUAYQB0AGUARABhAHQAZQAs
-ACAAUABSAC4AQwBuAHQAKQAAOSAAIAAgACAAVQBQAEQAQQBUAEUAIABTAEUAVAAgAFMAUAAuAFAA
-UgA9ACAAUABSAC4AQwBuAHQAAFlSAEYAUQAgAEEAbgBhAGwAeQBzAGkAcwAgAGEAbABsACAAZABh
-AHQAYQAgAG4w+lGbUmswSjBEMGYwtzC5MMYw4DCoMOkw/DBMMHp2H3VXMH4wVzBfMAIwAQufW0yI
-0TC5MBr/AROoMOkw/DDhMMMwuzD8MLgwGv8BGUUAcgByAG8AcgBNAGUAcwBzAGEAZwBlAAAAADSY
-44ZrC1FCn0Jznr6sqs8ABCABAQgDIAABBSABARERBCABAQ4EIAEBAgUgAgEODgUgAQERRQcgBAEO
-Dg4OBhUSJAESDAYVEiQBEggGFRIkARJlBhUSJAESIAQgABMABwABEm0RgKUFIAASgKkHIAIBDhKA
-qQQAARwcBAABARwCBg4FBwESgJEFIAASgLkFIAASgL0GIAESgMEcAyAAHAMgAA4EAAEIDgYAAQES
-gJEIBwISgJUSgJkFIAASgJkDIAAICwcDEoCdEoCVEoCZBiABEoCdDgUHARKAnQUgABKAnQMAAA4F
-IAASgJEEIAEBHAQgAQIcBAcBHgACHgAFEAEAHgAECgEeAAQHARMABhUSJAETAAcGFRJxARMABhUS
-cQETAAITAAQKARMABSABARMACLd6XFYZNOCJCLA/X38R1Qo6CImEXc2AgMyRBAAAAAAEAQAAAAcG
-FRIkARIMBwYVEiQBEggHBhUSJAESZQcGFRIkARIgAwYSeQMGEn0DBhIYAgYcAgYIAwYRKAMAAAEE
-AAASDAQAABIIBAAAEmUEAAASIAQAABJ5BAAAEn0FAAEBEn0EAAASGAYgAQESgJEEIAASbQcQAQEe
-AB4ABzABAQEQHgAECAASDAQIABIIBAgAEmUECAASIAQIABJ5BAgAEn0ECAASGAQoABMACAEACAAA
-AAAAHgEAAQBUAhZXcmFwTm9uRXhjZXB0aW9uVGhyb3dzAQgBAAIAAAAAAC8BACpTVF9jYmQyMDgy
-ODMyNTU0MDU5ODEyOGRmMTM3ZDlmNGI1NS52YnByb2oAAAUBAAAAABYBABFDb3B5cmlnaHQgQCAg
-MjAxNQAABQEAAQAAKQEAJDg3NGRhYzY5LTgwMDgtNGE0Zi04ZjNjLTk5ZTI1ODE1YTFjYgAADAEA
-BzEuMC4wLjAAAEcBABouTkVURnJhbWV3b3JrLFZlcnNpb249djQuMAEAVA4URnJhbWV3b3JrRGlz
-cGxheU5hbWUQLk5FVCBGcmFtZXdvcmsgNAgBAAEAAAAAABgBAApNeVRlbXBsYXRlCDExLjAuMC4w
-AABhAQA0U3lzdGVtLldlYi5TZXJ2aWNlcy5Qcm90b2NvbHMuU29hcEh0dHBDbGllbnRQcm90b2Nv
-bBJDcmVhdGVfX0luc3RhbmNlX18TRGlzcG9zZV9fSW5zdGFuY2VfXwAAABABAAtNeS5Db21wdXRl
-cgAAEwEADk15LkFwcGxpY2F0aW9uAAAMAQAHTXkuVXNlcgAAEwEADk15LldlYlNlcnZpY2VzAAAA
-ALQAAADOyu++AQAAAJEAAABsU3lzdGVtLlJlc291cmNlcy5SZXNvdXJjZVJlYWRlciwgbXNjb3Js
-aWIsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdh
-NWM1NjE5MzRlMDg5I1N5c3RlbS5SZXNvdXJjZXMuUnVudGltZVJlc291cmNlU2V0AgAAAAAAAAAA
-AAAAUEFEUEFEULQAAADUdgAAAAAAAAAAAADudgAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4HYA
-AAAAAAAAAAAAAABfQ29yRGxsTWFpbgBtc2NvcmVlLmRsbAAAAAAA/yUAIAAQAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+VQBOAEkATwBOAABlIAAgACAAIAAgACAAIAAgAEMATwBOAFYARQBSAFQAKABkAGEAdABlACwAIABQ
+AC4AQwByAGUAYQB0AGUARABhAHQAZQApACAAQQBTACAAQwByAGUAYQB0AGUARABhAHQAZQAsAAA9
+IAAgACAAIAAgACAAIAAgAFAALgBQAE8ATgB1AG0AYgBlAHIAIABBAFMAIABQAE8ATgB1AG0AYgBl
+AHIAAC0gACAAIAAgACAAIAAgACAAdgBfAFIAZQBhAGwAUABPACAAQQBTACAAUAAsAAArIAAgACAA
+IAAgACAAIAAgAFIARgBRAEwAaQBuAGUAIABBAFMAIABMACwAAEsgACAAIAAgACAAIAAgACAAQQBO
+AEQAIABIAC4AUgBGAFEATgB1AG0AYgBlAHIAIAA9ACAATAAuAFIARgBRAE4AdQBtAGIAZQByAABb
+IAAgACAAIAAgACAAIAAgAEEATgBEACAATAAuAFIARgBRAEwAaQBuAGUATgB1AG0AYgBlAHIAIAA9
+ACAAUAAuAFIARgBRAEwAaQBuAGUATgB1AG0AYgBlAHIAAEMgACAAIAAgACAAIAAgACAAQQBOAEQA
+IABQAC4AUABhAHIAUABPAE4AdQBtAGIAZQByACAASQBTACAATgBVAEwATAAAJSAAIAAgACAAIAAg
+ACAAIABQAC4AUABPAE4AdQBtAGIAZQByAAA5IAAgACAAIAAgACAAIAAgAEgALgBQAHUAcgBwAG8A
+cwBlAEMAbwBkAGUAIAA8AD4AIAAnAE4AJwABPyAAIAAgACAAIAAgACAAIABBAE4ARAAgAFAALgBQ
+AHUAcgBwAG8AcwBlAEMAbwBkAGUAIAA9ACAAJwBOACcAAQUpACwAAB9SAEYAUQBfAGYAbwByAE4A
+ZQB3ACAAQQBTACAAKAAAJyAAIAAgACAAIAAgACAAIABDAHIAZQBhAHQAZQBEAGEAdABlACwAACsg
+ACAAIAAgACAAIAAgACAAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUALAAALyAAIAAgACAAIAAgACAA
+IABDAE8AVQBOAFQAKAAqACkAIABBAFMAIABDAG4AdAAAIyAAIAAgACAAIAAgACAAIABCAGEAcwBl
+AFEAdQBlAHIAeQAAGSAAIAAgACAARwBSAE8AVQBQACAAQgBZAAApIAAgACAAIAAgACAAIAAgAFMA
+dQBwAHAAbABpAGUAcgBDAG8AZABlAAADKQAAP00ARQBSAEcARQAgAFQAbQBwAFMAdQBwAHAAbABp
+AGUAcgBQAGUAcgBmAG8AcgBtAGEAbgBjAGUAIABTAFAAAIDHIAAgACAAIABVAFMASQBOAEcAIABS
+AEYAUQBfAGYAbwByAE4AZQB3ACAAQQBTACAAUQBOACAATwBOACAAKABTAFAALgBTAHUAcABwAGwA
+aQBlAHIAQwBvAGQAZQAgAD0AIABRAE4ALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAgAEEATgBE
+ACAAUwBQAC4AQwByAGUAYQB0AGUARABhAHQAZQAgAD0AIABRAE4ALgBDAHIAZQBhAHQAZQBEAGEA
+dABlACkAACtXAEgARQBOACAATgBPAFQAIABNAEEAVABDAEgARQBEACAAVABIAEUATgAAgLMgACAA
+IAAgAEkATgBTAEUAUgBUACAAKABTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAsACAAQwByAGUAYQB0
+AGUARABhAHQAZQAsACAAUQBOACkAIABWAEEATABVAEUAUwAgACgAUQBOAC4AUwB1AHAAcABsAGkA
+ZQByAEMAbwBkAGUALAAgAFEATgAuAEMAcgBlAGEAdABlAEQAYQB0AGUALAAgAFEATgAuAEMAbgB0
+ACkAACNXAEgARQBOACAATQBBAFQAQwBIAEUARAAgAFQASABFAE4AADsgACAAIAAgAFUAUABEAEEA
+VABFACAAUwBFAFQAIABTAFAALgBRAE4AIAA9ACAAUQBOAC4AQwBuAHQAAAM7AABrIAAgACAAIAAg
+ACAAIAAgACgASAAuAFAAdQByAHAAbwBzAGUAQwBvAGQAZQAgAD0AIAAnAFMAJwAgAE8AUgAgAEgA
+LgBQAHUAcgBwAG8AcwBlAEMAbwBkAGUAIAA9ACAAJwBSAE0AJwApAAFBIAAgACAAIAAgACAAIAAg
+AEEATgBEACAAUAAuAFAAdQByAHAAbwBzAGUAQwBvAGQAZQAgADwAPgAgACcATgAnAAGAoyAAIAAg
+ACAAIAAgACAAIAAoAEgALgBQAHUAcgBwAG8AcwBlAEMAbwBkAGUAIAA8AD4AIAAnAE4AJwAgAEEA
+TgBEACAASAAuAFAAdQByAHAAbwBzAGUAQwBvAGQAZQAgADwAPgAgACcAUwAnACAAQQBOAEQAIABI
+AC4AUAB1AHIAcABvAHMAZQBDAG8AZABlACAAPAA+ACAAJwBSAE0AJwApAAFzIAAgACAAIAAgACAA
+IAAgAEEATgBEACAAKABQAC4AUAB1AHIAcABvAHMAZQBDAG8AZABlACAAPQAgACcAUwAnACAATwBS
+ACAAUAAuAFAAdQByAHAAbwBzAGUAQwBvAGQAZQAgAD0AIAAnAFIATQAnACkAASNSAEYAUQBfAGYA
+bwByAFMAdABvAGMAawAgAEEAUwAgACgAAIDLIAAgACAAIABVAFMASQBOAEcAIABSAEYAUQBfAGYA
+bwByAFMAdABvAGMAawAgAEEAUwAgAFEAUwAgAE8ATgAgACgAUwBQAC4AUwB1AHAAcABsAGkAZQBy
+AEMAbwBkAGUAIAA9ACAAUQBTAC4AUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAIABBAE4ARAAgAFMA
+UAAuAEMAcgBlAGEAdABlAEQAYQB0AGUAIAA9ACAAUQBTAC4AQwByAGUAYQB0AGUARABhAHQAZQAp
+AACAsyAAIAAgACAASQBOAFMARQBSAFQAIAAoAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlACwAIABD
+AHIAZQBhAHQAZQBEAGEAdABlACwAIABRAFMAKQAgAFYAQQBMAFUARQBTACAAKABRAFMALgBTAHUA
+cABwAGwAaQBlAHIAQwBvAGQAZQAsACAAUQBTAC4AQwByAGUAYQB0AGUARABhAHQAZQAsACAAUQBT
+AC4AQwBuAHQAKQAAOyAAIAAgACAAVQBQAEQAQQBUAEUAIABTAEUAVAAgAFMAUAAuAFEAUwAgAD0A
+IABRAFMALgBDAG4AdAAAH1cASQBUAEgAIABQAGEAcgBQAE8AIABBAFMAIAAoAAAvIAAgACAAIAAg
+ACAAIAAgAFIARgBRAEgAZQBhAGQAZQByACAAQQBTACAASAAsAAArIAAgACAAIAAgACAAIAAgAHYA
+XwBSAGUAYQBsAFAATwAgAEEAUwAgAFAAADsgACAAIAAgACAAIAAgACAAUAAuAFAAYQByAFAATwBO
+AHUAbQBiAGUAcgAgAEkAUwAgAE4AVQBMAEwAAFsgACAAIAAgACAAIAAgACAAQQBOAEQAIABQAC4A
+UgBGAFEATABpAG4AZQBOAHUAbQBiAGUAcgAgAD0AIABMAC4AUgBGAFEATABpAG4AZQBOAHUAbQBi
+AGUAcgAASyAAIAAgACAAIAAgACAAIABBAE4ARAAgAEwALgBSAEYAUQBOAHUAbQBiAGUAcgAgAD0A
+IABIAC4AUgBGAFEATgB1AG0AYgBlAHIAAEkgACAAIAAgACAAIAAgACAAQwBPAE4AVgBFAFIAVAAo
+AGQAYQB0AGUALAAgAEgALgBDAHIAZQBhAHQAZQBEAGEAdABlACkALAAALSAAIAAgACAAIAAgACAA
+IABTAC4AUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAAIC9IAAgACAAIABVAFMASQBOAEcAIABQAGEA
+cgBQAE8AIABBAFMAIABQAFAAIABPAE4AIAAoAFMAUAAuAFMAdQBwAHAAbABpAGUAcgBDAG8AZABl
+ACAAPQAgAFAAUAAuAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlACAAQQBOAEQAIABTAFAALgBDAHIA
+ZQBhAHQAZQBEAGEAdABlACAAPQAgAFAAUAAuAEMAcgBlAGEAdABlAEQAYQB0AGUAKQAAgLMgACAA
+IAAgAEkATgBTAEUAUgBUACAAKABTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAsACAAQwByAGUAYQB0
+AGUARABhAHQAZQAsACAAUABQACkAIABWAEEATABVAEUAUwAgACgAUABQAC4AUwB1AHAAcABsAGkA
+ZQByAEMAbwBkAGUALAAgAFAAUAAuAEMAcgBlAGEAdABlAEQAYQB0AGUALAAgAFAAUAAuAEMAbgB0
+ACkAADsgACAAIAAgAFUAUABEAEEAVABFACAAUwBFAFQAIABTAFAALgBQAFAAIAA9ACAAUABQAC4A
+QwBuAHQAAC1XAEkAVABIACAAUABhAHIAUABPAF8AZgBvAHIATgBlAHcAIABBAFMAIAAoAABBIAAg
+ACAAIAAgACAAIAAgAEEATgBEACAAKABQAC4AUAB1AHIAcABvAHMAZQBDAG8AZABlACAAPQAgACcA
+TgAnAAF/IAAgACAAIAAgACAAIAAgACAAIAAgACAATwBSACAAKABQAC4AUAB1AHIAcABvAHMAZQBD
+AG8AZABlACAASQBTACAATgBVAEwATAAgAEEATgBEACAASAAuAFAAdQByAHAAbwBzAGUAQwBvAGQA
+ZQAgAD0AIAAnAE4AJwApACkAAYDRIAAgACAAIABVAFMASQBOAEcAIABQAGEAcgBQAE8AXwBmAG8A
+cgBOAGUAdwAgAEEAUwAgAFAAUABOACAATwBOACAAKABTAFAALgBTAHUAcABwAGwAaQBlAHIAQwBv
+AGQAZQAgAD0AIABQAFAATgAuAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlACAAQQBOAEQAIABTAFAA
+LgBDAHIAZQBhAHQAZQBEAGEAdABlACAAPQAgAFAAUABOAC4AQwByAGUAYQB0AGUARABhAHQAZQAp
+AACAuyAAIAAgACAASQBOAFMARQBSAFQAIAAoAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlACwAIABD
+AHIAZQBhAHQAZQBEAGEAdABlACwAIABQAFAATgApACAAVgBBAEwAVQBFAFMAIAAoAFAAUABOAC4A
+UwB1AHAAcABsAGkAZQByAEMAbwBkAGUALAAgAFAAUABOAC4AQwByAGUAYQB0AGUARABhAHQAZQAs
+ACAAUABQAE4ALgBDAG4AdAApAAA/IAAgACAAIABVAFAARABBAFQARQAgAFMARQBUACAAUwBQAC4A
+UABQAE4AIAA9ACAAUABQAE4ALgBDAG4AdAAAMVcASQBUAEgAIABQAGEAcgBQAE8AXwBmAG8AcgBT
+AHQAbwBjAGsAIABBAFMAIAAoAAB1IAAgACAAIAAgACAAIAAgAEEATgBEACAAKAAoAFAALgBQAHUA
+cgBwAG8AcwBlAEMAbwBkAGUAIAA9ACAAJwBTACcAIABPAFIAIABQAC4AUAB1AHIAcABvAHMAZQBD
+AG8AZABlACAAPQAgACcAUgBNACcAKQABgLMgACAAIAAgACAAIAAgACAAIAAgACAAIABPAFIAIAAo
+AFAALgBQAHUAcgBwAG8AcwBlAEMAbwBkAGUAIABJAFMAIABOAFUATABMACAAQQBOAEQAIAAoAEgA
+LgBQAHUAcgBwAG8AcwBlAEMAbwBkAGUAIAA9ACAAJwBTACcAIABPAFIAIABIAC4AUAB1AHIAcABv
+AHMAZQBDAG8AZABlACAAPQAgACcAUgBNACcAKQApACkAAYDVIAAgACAAIABVAFMASQBOAEcAIABQ
+AGEAcgBQAE8AXwBmAG8AcgBTAHQAbwBjAGsAIABBAFMAIABQAFAAUwAgAE8ATgAgACgAUwBQAC4A
+UwB1AHAAcABsAGkAZQByAEMAbwBkAGUAIAA9ACAAUABQAFMALgBTAHUAcABwAGwAaQBlAHIAQwBv
+AGQAZQAgAEEATgBEACAAUwBQAC4AQwByAGUAYQB0AGUARABhAHQAZQAgAD0AIABQAFAAUwAuAEMA
+cgBlAGEAdABlAEQAYQB0AGUAKQAAgLsgACAAIAAgAEkATgBTAEUAUgBUACAAKABTAHUAcABwAGwA
+aQBlAHIAQwBvAGQAZQAsACAAQwByAGUAYQB0AGUARABhAHQAZQAsACAAUABQAFMAKQAgAFYAQQBM
+AFUARQBTACAAKABQAFAAUwAuAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlACwAIABQAFAAUwAuAEMA
+cgBlAGEAdABlAEQAYQB0AGUALAAgAFAAUABTAC4AQwBuAHQAKQAAPyAAIAAgACAAVQBQAEQAQQBU
+AEUAIABTAEUAVAAgAFMAUAAuAFAAUABTACAAPQAgAFAAUABTAC4AQwBuAHQAAC1XAEkAVABIACAA
+UABhAHIAUABPAF8AQwBhAG4AYwBlAGwAIABBAFMAIAAoAABBIAAgACAAIAAgACAAIAAgAHYAXwBQ
+AE8AQwB1AHIAcgBlAG4AdABTAHQAYQB0AHUAcwAgAEEAUwAgAEMAUwAsAABJIAAgACAAIAAgACAA
+IAAgAEEATgBEACAAUAAuAFAATwBOAHUAbQBiAGUAcgAgAD0AIABDAFMALgBQAE8ATgB1AG0AYgBl
+AHIAAHkgACAAIAAgACAAIAAgACAAQQBOAEQAIAAoAEMAUwAuAFMAdABhAHQAdQBzAEMAbwBkAGUA
+IAA9ACAAJwBQAFAAQwAnACAATwBSACAAQwBTAC4AUwB0AGEAdAB1AHMAQwBvAGQAZQAgAD0AIAAn
+AEMAUABDACcAKQABgNEgACAAIAAgAFUAUwBJAE4ARwAgAFAAYQByAFAATwBfAEMAYQBuAGMAZQBs
+ACAAQQBTACAAUABQAEMAIABPAE4AIAAoAFMAUAAuAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlACAA
+PQAgAFAAUABDAC4AUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAIABBAE4ARAAgAFMAUAAuAEMAcgBl
+AGEAdABlAEQAYQB0AGUAIAA9ACAAUABQAEMALgBDAHIAZQBhAHQAZQBEAGEAdABlACkAAIC7IAAg
+ACAAIABJAE4AUwBFAFIAVAAgACgAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUALAAgAEMAcgBlAGEA
+dABlAEQAYQB0AGUALAAgAFAAUABDACkAIABWAEEATABVAEUAUwAgACgAUABQAEMALgBTAHUAcABw
+AGwAaQBlAHIAQwBvAGQAZQAsACAAUABQAEMALgBDAHIAZQBhAHQAZQBEAGEAdABlACwAIABQAFAA
+QwAuAEMAbgB0ACkAAD8gACAAIAAgAFUAUABEAEEAVABFACAAUwBFAFQAIABTAFAALgBQAFAAQwAg
+AD0AIABQAFAAQwAuAEMAbgB0AAApVwBJAFQASAAgAFAAYQByAFAATwBfADIANAA3ADUAIABBAFMA
+IAAoAABFIAAgACAAIAAgACAAIAAgAEEATgBEACAAQwBTAC4AUwB0AGEAdAB1AHMAQwBvAGQAZQAg
+ADwAPgAgACcAUABQAEMAJwABQyAAIAAgACAAIAAgACAAIABBAE4ARAAgAEgALgBTAHUAcABwAGwA
+aQBlAHIAQwBvAGQAZQAgAD0AIAAyADQANwA1AABRIAAgACAAIAAgACAAIAAgAEEATgBEACAASAAu
+AE0AYQBrAGUAcgBDAG8AZABlACAAPQAgAFMALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAAgN8g
+ACAAIAAgAFUAUwBJAE4ARwAgAFAAYQByAFAATwBfADIANAA3ADUAIABBAFMAIABQAFAAMgA0ADcA
+NQAgAE8ATgAgACgAUwBQAC4AUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAIAA9ACAAUABQADIANAA3
+ADUALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAgAEEATgBEACAAUwBQAC4AQwByAGUAYQB0AGUA
+RABhAHQAZQAgAD0AIABQAFAAMgA0ADcANQAuAEMAcgBlAGEAdABlAEQAYQB0AGUAKQAAgNMgACAA
+IAAgAEkATgBTAEUAUgBUACAAKABTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAsACAAQwByAGUAYQB0
+AGUARABhAHQAZQAsACAAUABQADIANAA3ADUAKQAgAFYAQQBMAFUARQBTACAAKABQAFAAMgA0ADcA
+NQAuAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlACwAIABQAFAAMgA0ADcANQAuAEMAcgBlAGEAdABl
+AEQAYQB0AGUALAAgAFAAUAAyADQANwA1AC4AQwBuAHQAKQAASyAAIAAgACAAVQBQAEQAQQBUAEUA
+IABTAEUAVAAgAFMAUAAuAFAAUAAyADQANwA1ACAAPQAgAFAAUAAyADQANwA1AC4AQwBuAHQAACtX
+AEkAVABIACAAUABPAF8AQQBwAHAAcgBvAHYAZQBkACAAQQBTACAAKAAALyAAIAAgACAAIAAgACAA
+IAB2AF8AUgBlAGEAbABRAE0AIABBAFMAIABRAE0ALAAAQSAAIAAgACAAIAAgACAAIABQAC4AUABP
+AE4AdQBtAGIAZQByACAAPQAgAFEATQAuAFAATwBOAHUAbQBiAGUAcgAAOyAAIAAgACAAIAAgACAA
+IABBAE4ARAAgAFEATQAuAFEATQBSAGUAcwB1AGwAdAAgAD0AIAAnAEEAJwABgMkgACAAIAAgAFUA
+UwBJAE4ARwAgAFAATwBfAEEAcABwAHIAbwB2AGUAZAAgAEEAUwAgAFAAQQAgAE8ATgAgACgAUwBQ
+AC4AUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAIAA9ACAAUABBAC4AUwB1AHAAcABsAGkAZQByAEMA
+bwBkAGUAIABBAE4ARAAgAFMAUAAuAEMAcgBlAGEAdABlAEQAYQB0AGUAIAA9ACAAUABBAC4AQwBy
+AGUAYQB0AGUARABhAHQAZQApAACAsyAAIAAgACAASQBOAFMARQBSAFQAIAAoAFMAdQBwAHAAbABp
+AGUAcgBDAG8AZABlACwAIABDAHIAZQBhAHQAZQBEAGEAdABlACwAIABQAEEAKQAgAFYAQQBMAFUA
+RQBTACAAKABQAEEALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAsACAAUABBAC4AQwByAGUAYQB0
+AGUARABhAHQAZQAsACAAUABBAC4AQwBuAHQAKQAAOSAAIAAgACAAVQBQAEQAQQBUAEUAIABTAEUA
+VAAgAFMAUAAuAFAAQQA9ACAAUABBAC4AQwBuAHQAACtXAEkAVABIACAAUABPAF8AUgBlAGoAZQBj
+AHQAZQBkACAAQQBTACAAKAAAOyAAIAAgACAAIAAgACAAIABBAE4ARAAgAFEATQAuAFEATQBSAGUA
+cwB1AGwAdAAgAD0AIAAnAFIAJwABgMkgACAAIAAgAFUAUwBJAE4ARwAgAFAATwBfAFIAZQBqAGUA
+YwB0AGUAZAAgAEEAUwAgAFAAUgAgAE8ATgAgACgAUwBQAC4AUwB1AHAAcABsAGkAZQByAEMAbwBk
+AGUAIAA9ACAAUABSAC4AUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAIABBAE4ARAAgAFMAUAAuAEMA
+cgBlAGEAdABlAEQAYQB0AGUAIAA9ACAAUABSAC4AQwByAGUAYQB0AGUARABhAHQAZQApAACAsyAA
+IAAgACAASQBOAFMARQBSAFQAIAAoAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlACwAIABDAHIAZQBh
+AHQAZQBEAGEAdABlACwAIABQAFIAKQAgAFYAQQBMAFUARQBTACAAKABQAFIALgBTAHUAcABwAGwA
+aQBlAHIAQwBvAGQAZQAsACAAUABSAC4AQwByAGUAYQB0AGUARABhAHQAZQAsACAAUABSAC4AQwBu
+AHQAKQAAOSAAIAAgACAAVQBQAEQAQQBUAEUAIABTAEUAVAAgAFMAUAAuAFAAUgA9ACAAUABSAC4A
+QwBuAHQAAFlSAEYAUQAgAEEAbgBhAGwAeQBzAGkAcwAgAGEAbABsACAAZABhAHQAYQAgAG4w+lGb
+UmswSjBEMGYwtzC5MMYw4DCoMOkw/DBMMHp2H3VXMH4wVzBfMAIwAQufW0yI0TC5MBr/AROoMOkw
+/DDhMMMwuzD8MLgwGv8BGUUAcgByAG8AcgBNAGUAcwBzAGEAZwBlAABqBmmkjf85RJg5k7+yWq2m
+AAQgAQEIAyAAAQUgAQEREQQgAQEOBCABAQIFIAIBDg4FIAEBEUUHIAQBDg4ODgYVEiQBEgwGFRIk
+ARIIBhUSJAESZQYVEiQBEiAEIAATAAcAARJtEYClBSAAEoCpByACAQ4SgKkEAAEcHAQAAQEcAgYO
+BQcBEoCRBSAAEoC5BSAAEoC9BiABEoDBHAMgABwDIAAOBAABCA4GAAEBEoCRCAcCEoCVEoCZBSAA
+EoCZAyAACAsHAxKAnRKAlRKAmQYgARKAnQ4FBwESgJ0FIAASgJ0DAAAOBSAAEoCRBCABARwEIAEC
+HAQHAR4AAh4ABRABAB4ABAoBHgAEBwETAAYVEiQBEwAHBhUScQETAAYVEnEBEwACEwAECgETAAUg
+AQETAAi3elxWGTTgiQiwP19/EdUKOgiJhF3NgIDMkQQAAAAABAEAAAAHBhUSJAESDAcGFRIkARII
+BwYVEiQBEmUHBhUSJAESIAMGEnkDBhJ9AwYSGAIGHAIGCAMGESgDAAABBAAAEgwEAAASCAQAABJl
+BAAAEiAEAAASeQQAABJ9BQABARJ9BAAAEhgGIAEBEoCRBCAAEm0HEAEBHgAeAAcwAQEBEB4ABAgA
+EgwECAASCAQIABJlBAgAEiAECAASeQQIABJ9BAgAEhgEKAATAAgBAAgAAAAAAB4BAAEAVAIWV3Jh
+cE5vbkV4Y2VwdGlvblRocm93cwEIAQACAAAAAAAvAQAqU1RfY2JkMjA4MjgzMjU1NDA1OTgxMjhk
+ZjEzN2Q5ZjRiNTUudmJwcm9qAAAFAQAAAAAWAQARQ29weXJpZ2h0IEAgIDIwMTUAAAUBAAEAACkB
+ACQ4NzRkYWM2OS04MDA4LTRhNGYtOGYzYy05OWUyNTgxNWExY2IAAAwBAAcxLjAuMC4wAABHAQAa
+Lk5FVEZyYW1ld29yayxWZXJzaW9uPXY0LjABAFQOFEZyYW1ld29ya0Rpc3BsYXlOYW1lEC5ORVQg
+RnJhbWV3b3JrIDQIAQABAAAAAAAYAQAKTXlUZW1wbGF0ZQgxMS4wLjAuMAAAYQEANFN5c3RlbS5X
+ZWIuU2VydmljZXMuUHJvdG9jb2xzLlNvYXBIdHRwQ2xpZW50UHJvdG9jb2wSQ3JlYXRlX19JbnN0
+YW5jZV9fE0Rpc3Bvc2VfX0luc3RhbmNlX18AAAAQAQALTXkuQ29tcHV0ZXIAABMBAA5NeS5BcHBs
+aWNhdGlvbgAADAEAB015LlVzZXIAABMBAA5NeS5XZWJTZXJ2aWNlcwAAAAC0AAAAzsrvvgEAAACR
+AAAAbFN5c3RlbS5SZXNvdXJjZXMuUmVzb3VyY2VSZWFkZXIsIG1zY29ybGliLCBWZXJzaW9uPTQu
+MC4wLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49Yjc3YTVjNTYxOTM0ZTA4OSNT
+eXN0ZW0uUmVzb3VyY2VzLlJ1bnRpbWVSZXNvdXJjZVNldAIAAAAAAAAAAAAAAFBBRFBBRFC0AAAA
+OHcAAAAAAAAAAAAAUncAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAER3AAAAAAAAAAAAAAAAX0Nv
+ckRsbE1haW4AbXNjb3JlZS5kbGwAAAAAAP8lACAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABABAAAAAYAACAAAAAAAAAAAAAAAAAAAABAAEAAAAw
@@ -5586,7 +4501,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAHAAAAwAAAAANwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAHAAAAwAAABkNwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -5638,7 +4553,7 @@ AAAAAAAAAAA=</BinaryItem>
         <SendMailTask:SendMailTaskData
           SendMailTask:SMTPServer="{3715EA69-093A-49DB-90CE-10DF00860FC8}"
           SendMailTask:From="devteam_app@tcichemicals.com"
-          SendMailTask:To="devteam_app@tcichemicals.com"
+          SendMailTask:To="masumi.koyama@tcichemicals.com"
           SendMailTask:Subject="[Purchase] RFQ Analysis all data 出力エラー"
           SendMailTask:Priority="High"
           SendMailTask:MessageSourceType="Variable"
@@ -5657,51 +4572,123 @@ AAAAAAAAAAA=</BinaryItem>
       DTS:To="Package\メール送信タスク"
       DTS:Value="1" />
   </DTS:PrecedenceConstraints>
-  <DTS:PackageVariables>
-    <DTS:PackageVariable
-      DTS:CreationName=""
-      DTS:DTSID="{058926C4-9ED2-4E26-9EE3-9278B8C4C94E}"
-      DTS:Namespace="dts-designer-1.0"
-      DTS:ObjectName="{14DD0A9F-E13B-443A-AFAB-B56E1FFE2FEC}">
-      <DTS:Property
-        DTS:DataType="8"
-        DTS:Name="PackageVariableValue">&lt;PrecedenceConstraint xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:EvalOp&gt;Constraint&lt;/dwd:EvalOp&gt;&lt;/PrecedenceConstraint&gt;</DTS:Property>
-    </DTS:PackageVariable>
-    <DTS:PackageVariable
-      DTS:CreationName=""
-      DTS:DTSID="{4B9FBAEB-4B91-42C6-8B88-AE83C8A1E60B}"
-      DTS:Namespace="dts-designer-1.0"
-      DTS:ObjectName="{D27811C5-4832-4195-83AB-40D26155ADE9}">
-      <DTS:Property
-        DTS:DataType="8"
-        DTS:Name="PackageVariableValue">&lt;PrecedenceConstraint xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:EvalOp&gt;Constraint&lt;/dwd:EvalOp&gt;&lt;/PrecedenceConstraint&gt;</DTS:Property>
-    </DTS:PackageVariable>
-    <DTS:PackageVariable
-      DTS:CreationName=""
-      DTS:DTSID="{F0FC0E46-C6C9-47FF-A883-773048504EEF}"
-      DTS:Namespace="dts-designer-1.0"
-      DTS:ObjectName="{D29D1B7A-6E2D-4CC2-93F3-13FF0C138D80}">
-      <DTS:Property
-        DTS:DataType="8"
-        DTS:Name="PackageVariableValue">&lt;PrecedenceConstraint xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:EvalOp&gt;Constraint&lt;/dwd:EvalOp&gt;&lt;/PrecedenceConstraint&gt;</DTS:Property>
-    </DTS:PackageVariable>
-    <DTS:PackageVariable
-      DTS:CreationName=""
-      DTS:DTSID="{9F853052-3C8E-4E0D-9EAC-BA12DBD14588}"
-      DTS:Namespace="dts-designer-1.0"
-      DTS:ObjectName="package-diagram">
-      <DTS:Property
-        DTS:DataType="8"
-        DTS:Name="PackageVariableValue">&lt;Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:DtsControlFlowDiagram&gt;&lt;dwd:Layout&gt;&lt;dds&gt;&lt;diagram fontclsid="{0BE35203-8F91-11CE-9DE3-00AA004BB851}" mouseiconclsid="{0BE35204-8F91-11CE-9DE3-00AA004BB851}" defaultlayout="Microsoft.DataWarehouse.Layout.GraphLayout110" defaultlineroute="Microsoft.DataWarehouse.Layout.GraphLayout110" version="7" nextobject="19" scale="100" pagebreakanchorx="0" pagebreakanchory="0" pagebreaksizex="0" pagebreaksizey="0" scrollleft="0" scrolltop="0" gridx="150" gridy="150" marginx="1000" marginy="1000" zoom="100" x="21325" y="14367" backcolor="15334399" defaultpersistence="2" PrintPageNumbersMode="3" PrintMarginTop="0" PrintMarginBottom="635" PrintMarginLeft="0" PrintMarginRight="0" marqueeselectionmode="1" mousepointer="0" snaptogrid="0" autotypeannotation="1" showscrollbars="0" viewpagebreaks="0" donotforceconnectorsbehindshapes="1" backpictureclsid="{00000000-0000-0000-0000-000000000000}"&gt;&lt;font&gt;&lt;ddsxmlobjectstreamwrapper binary="010100009001905f01000c4d5320554920476f74686963" /&gt;&lt;/font&gt;&lt;mouseicon&gt;&lt;ddsxmlobjectstreamwrapper binary="6c74000000000000" /&gt;&lt;/mouseicon&gt;&lt;/diagram&gt;&lt;layoutmanager&gt;&lt;ddsxmlobj /&gt;&lt;/layoutmanager&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="スクリプト タスク" left="1947" top="3164" logicalid="9" controlid="1" masterid="5" hint1="0" hint2="0" width="3598" height="1164" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="000800000e0e00008c040000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\シーケンス コンテナー\仕入先指標データ作成" vartype="8" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="メール送信タスク" left="12665" top="6948" logicalid="10" controlid="2" masterid="0" hint1="0" hint2="0" width="3598" height="1164" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="000800000e0e00008c040000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\メール送信タスク" vartype="8" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="スクリプト タスク" left="2587" top="8858" logicalid="11" controlid="3" masterid="5" hint1="0" hint2="0" width="3598" height="1164" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="000800000e0e00008c040000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\シーケンス コンテナー\エクセルファイル出力" vartype="8" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="スクリプト タスク" left="3223" top="5842" logicalid="12" controlid="4" masterid="5" hint1="0" hint2="0" width="3598" height="1164" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="000800000e0e00008c040000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\シーケンス コンテナー\仕入先ランクデータ作成" vartype="8" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsContainerObjectManagedBridge.2" tooltip="シーケンス コンテナー" left="1000" top="1000" logicalid="13" controlid="5" masterid="0" hint1="0" hint2="0" width="7091" height="11192" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="00080000b31b0000b82b0000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="Caption" value="シーケンス コンテナー" vartype="8" /&gt;&lt;property name="CaptionHeight" value="1164" vartype="3" /&gt;&lt;property name="Collapsed" value="0" vartype="11" /&gt;&lt;property name="CollapsedWidth" value="7091" vartype="3" /&gt;&lt;property name="LogicalObject" value="Package\シーケンス コンテナー" vartype="8" /&gt;&lt;property name="RealHeight" value="0" vartype="3" /&gt;&lt;property name="RealWidth" value="0" vartype="3" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="MSDDS.Polyline" left="7692" top="6197" logicalid="14" controlid="6" masterid="0" hint1="0" hint2="0" width="5273" height="1733" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobj&gt;&lt;polyline endtypedst="3" endtypesrc="1" usercolor="255" linestyle="0" linerender="2" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1" /&gt;&lt;/ddsxmlobj&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package.PrecedenceConstraints[制約]" vartype="8" /&gt;&lt;property name="Virtual" value="0" vartype="11" /&gt;&lt;property name="VisibleAP" value="0" vartype="3" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;connector lineroutestyle="Microsoft.DataWarehouse.Layout.GraphLayout110" sourceid="5" destid="2" sourceattachpoint="45" destattachpoint="14" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="2" relatedid="0" virtual="0"&gt;&lt;point x="8091" y="6596" /&gt;&lt;point x="10378" y="6596" /&gt;&lt;point x="10378" y="7530" /&gt;&lt;point x="12665" y="7530" /&gt;&lt;/connector&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="MSDDS.Polyline" left="3347" top="3929" logicalid="15" controlid="7" masterid="0" hint1="0" hint2="0" width="2075" height="2413" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobj&gt;&lt;polyline endtypedst="3" endtypesrc="1" usercolor="32768" linestyle="0" linerender="2" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1" /&gt;&lt;/ddsxmlobj&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\シーケンス コンテナー.PrecedenceConstraints[制約]" vartype="8" /&gt;&lt;property name="Virtual" value="0" vartype="11" /&gt;&lt;property name="VisibleAP" value="0" vartype="3" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;connector lineroutestyle="Microsoft.DataWarehouse.Layout.GraphLayout110" sourceid="1" destid="4" sourceattachpoint="7" destattachpoint="6" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="2" relatedid="0" virtual="0"&gt;&lt;point x="3746" y="4328" /&gt;&lt;point x="3746" y="5085" /&gt;&lt;point x="5022" y="5085" /&gt;&lt;point x="5022" y="5842" /&gt;&lt;/connector&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="MSDDS.Polyline" left="3987" top="6607" logicalid="16" controlid="8" masterid="0" hint1="0" hint2="0" width="1435" height="2751" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobj&gt;&lt;polyline endtypedst="3" endtypesrc="1" usercolor="32768" linestyle="0" linerender="2" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1" /&gt;&lt;/ddsxmlobj&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\シーケンス コンテナー.PrecedenceConstraints[制約 1]" vartype="8" /&gt;&lt;property name="Virtual" value="0" vartype="11" /&gt;&lt;property name="VisibleAP" value="0" vartype="3" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;connector lineroutestyle="Microsoft.DataWarehouse.Layout.GraphLayout110" sourceid="4" destid="3" sourceattachpoint="7" destattachpoint="6" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="2" relatedid="0" virtual="0"&gt;&lt;point x="5022" y="7006" /&gt;&lt;point x="5022" y="7932" /&gt;&lt;point x="4386" y="7932" /&gt;&lt;point x="4386" y="8858" /&gt;&lt;/connector&gt;&lt;/ddscontrol&gt;&lt;/dds&gt;&lt;/dwd:Layout&gt;&lt;/dwd:DtsControlFlowDiagram&gt;&lt;/Package&gt;</DTS:Property>
-    </DTS:PackageVariable>
-    <DTS:PackageVariable
-      DTS:CreationName=""
-      DTS:DTSID="{F13787A3-BCDA-4E46-970D-A401C4C1B677}"
-      DTS:Namespace="dts-designer-1.0"
-      DTS:ObjectName="package-diagram">
-      <DTS:Property
-        DTS:DataType="8"
-        DTS:Name="PackageVariableValue">&lt;Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:DtsControlFlowDiagram&gt;&lt;dwd:Layout&gt;&lt;dds&gt;&lt;diagram fontclsid="{0BE35203-8F91-11CE-9DE3-00AA004BB851}" mouseiconclsid="{0BE35204-8F91-11CE-9DE3-00AA004BB851}" defaultlayout="Microsoft.DataWarehouse.Layout.GraphLayout110" defaultlineroute="Microsoft.DataWarehouse.Layout.GraphLayout110" version="7" nextobject="19" scale="100" pagebreakanchorx="0" pagebreakanchory="0" pagebreaksizex="0" pagebreaksizey="0" scrollleft="0" scrolltop="0" gridx="150" gridy="150" marginx="1000" marginy="1000" zoom="100" x="21325" y="14367" backcolor="15334399" defaultpersistence="2" PrintPageNumbersMode="3" PrintMarginTop="0" PrintMarginBottom="635" PrintMarginLeft="0" PrintMarginRight="0" marqueeselectionmode="1" mousepointer="0" snaptogrid="0" autotypeannotation="1" showscrollbars="0" viewpagebreaks="0" donotforceconnectorsbehindshapes="1" backpictureclsid="{00000000-0000-0000-0000-000000000000}"&gt;&lt;font&gt;&lt;ddsxmlobjectstreamwrapper binary="010100009001905f01000c4d5320554920476f74686963" /&gt;&lt;/font&gt;&lt;mouseicon&gt;&lt;ddsxmlobjectstreamwrapper binary="6c74000000000000" /&gt;&lt;/mouseicon&gt;&lt;/diagram&gt;&lt;layoutmanager&gt;&lt;ddsxmlobj /&gt;&lt;/layoutmanager&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="スクリプト タスク" left="1947" top="3164" logicalid="9" controlid="1" masterid="5" hint1="0" hint2="0" width="3598" height="1164" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="000800000e0e00008c040000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\シーケンス コンテナー\仕入先指標データ作成" vartype="8" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="メール送信タスク" left="12665" top="6948" logicalid="10" controlid="2" masterid="0" hint1="0" hint2="0" width="3598" height="1164" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="000800000e0e00008c040000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\メール送信タスク" vartype="8" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="スクリプト タスク" left="2587" top="8858" logicalid="11" controlid="3" masterid="5" hint1="0" hint2="0" width="3598" height="1164" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="000800000e0e00008c040000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\シーケンス コンテナー\エクセルファイル出力" vartype="8" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="スクリプト タスク" left="3223" top="5842" logicalid="12" controlid="4" masterid="5" hint1="0" hint2="0" width="3598" height="1164" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="000800000e0e00008c040000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\シーケンス コンテナー\仕入先ランクデータ作成" vartype="8" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsContainerObjectManagedBridge.2" tooltip="シーケンス コンテナー" left="1000" top="1000" logicalid="13" controlid="5" masterid="0" hint1="0" hint2="0" width="7091" height="11192" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="00080000b31b0000b82b0000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="Caption" value="シーケンス コンテナー" vartype="8" /&gt;&lt;property name="CaptionHeight" value="1164" vartype="3" /&gt;&lt;property name="Collapsed" value="0" vartype="11" /&gt;&lt;property name="CollapsedWidth" value="7091" vartype="3" /&gt;&lt;property name="LogicalObject" value="Package\シーケンス コンテナー" vartype="8" /&gt;&lt;property name="RealHeight" value="0" vartype="3" /&gt;&lt;property name="RealWidth" value="0" vartype="3" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="MSDDS.Polyline" left="7692" top="6197" logicalid="14" controlid="6" masterid="0" hint1="0" hint2="0" width="5273" height="1733" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobj&gt;&lt;polyline endtypedst="3" endtypesrc="1" usercolor="255" linestyle="0" linerender="2" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1" /&gt;&lt;/ddsxmlobj&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package.PrecedenceConstraints[制約]" vartype="8" /&gt;&lt;property name="Virtual" value="0" vartype="11" /&gt;&lt;property name="VisibleAP" value="0" vartype="3" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;connector lineroutestyle="Microsoft.DataWarehouse.Layout.GraphLayout110" sourceid="5" destid="2" sourceattachpoint="45" destattachpoint="14" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="2" relatedid="0" virtual="0"&gt;&lt;point x="8091" y="6596" /&gt;&lt;point x="10378" y="6596" /&gt;&lt;point x="10378" y="7530" /&gt;&lt;point x="12665" y="7530" /&gt;&lt;/connector&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="MSDDS.Polyline" left="3347" top="3929" logicalid="15" controlid="7" masterid="0" hint1="0" hint2="0" width="2075" height="2413" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobj&gt;&lt;polyline endtypedst="3" endtypesrc="1" usercolor="32768" linestyle="0" linerender="2" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1" /&gt;&lt;/ddsxmlobj&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\シーケンス コンテナー.PrecedenceConstraints[制約]" vartype="8" /&gt;&lt;property name="Virtual" value="0" vartype="11" /&gt;&lt;property name="VisibleAP" value="0" vartype="3" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;connector lineroutestyle="Microsoft.DataWarehouse.Layout.GraphLayout110" sourceid="1" destid="4" sourceattachpoint="7" destattachpoint="6" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="2" relatedid="0" virtual="0"&gt;&lt;point x="3746" y="4328" /&gt;&lt;point x="3746" y="5085" /&gt;&lt;point x="5022" y="5085" /&gt;&lt;point x="5022" y="5842" /&gt;&lt;/connector&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="MSDDS.Polyline" left="3987" top="6607" logicalid="16" controlid="8" masterid="0" hint1="0" hint2="0" width="1435" height="2751" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobj&gt;&lt;polyline endtypedst="3" endtypesrc="1" usercolor="32768" linestyle="0" linerender="2" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1" /&gt;&lt;/ddsxmlobj&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\シーケンス コンテナー.PrecedenceConstraints[制約 1]" vartype="8" /&gt;&lt;property name="Virtual" value="0" vartype="11" /&gt;&lt;property name="VisibleAP" value="0" vartype="3" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;connector lineroutestyle="Microsoft.DataWarehouse.Layout.GraphLayout110" sourceid="4" destid="3" sourceattachpoint="7" destattachpoint="6" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="2" relatedid="0" virtual="0"&gt;&lt;point x="5022" y="7006" /&gt;&lt;point x="5022" y="7932" /&gt;&lt;point x="4386" y="7932" /&gt;&lt;point x="4386" y="8858" /&gt;&lt;/connector&gt;&lt;/ddscontrol&gt;&lt;/dds&gt;&lt;/dwd:Layout&gt;&lt;/dwd:DtsControlFlowDiagram&gt;&lt;/Package&gt;</DTS:Property>
-    </DTS:PackageVariable>
-  </DTS:PackageVariables>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--この CDATA セクションにはパッケージのレイアウト情報が含まれています。(x,y) 座標、幅、高さなどの情報が含まれます。-->
+<!--このセクションを手動で編集して間違った場合は、セクションを削除できます。-->
+<!--パッケージは正常に読み込むことができますが、以前のレイアウト情報は失われ、デザイン画面上の要素が自動的に再配置されます。-->
+<Objects
+  Version="8">
+  <!--次の各ノードには、実行時の動作に影響しないプロパティが含まれます。-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="136,44"
+          Id="Package\シーケンス コンテナー\エクセルファイル出力"
+          TopLeft="59.8867924528302,253.528301886792" />
+        <NodeLayout
+          Size="136,44"
+          Id="Package\シーケンス コンテナー\仕入先ランクデータ作成"
+          TopLeft="83.8867924528302,139.716981132075" />
+        <NodeLayout
+          Size="136,44"
+          Id="Package\シーケンス コンテナー\仕入先指標データ作成"
+          TopLeft="35.7358490566038,38.6603773584906" />
+        <EdgeLayout
+          Id="Package\シーケンス コンテナー.PrecedenceConstraints[制約]"
+          TopLeft="103.622641509434,82.5849056603774">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="48.1509433962264,57.1320754716981"
+              Start="0,0"
+              End="48.1509433962264,49.6320754716981">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,28.5660377358491" />
+                  <mssgle:LineSegment
+                    End="48.1509433962264,28.5660377358491" />
+                  <mssgle:LineSegment
+                    End="48.1509433962264,49.6320754716981" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\シーケンス コンテナー.PrecedenceConstraints[制約 1]"
+          TopLeft="151.77358490566,183.641509433962">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-24,69.8867924528302"
+              Start="0,0"
+              End="-24,62.3867924528302">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.9433962264151" />
+                  <mssgle:LineSegment
+                    End="-24,34.9433962264151" />
+                  <mssgle:LineSegment
+                    End="-24,62.3867924528302" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43.924528301886795"
+          IsExpanded="True"
+          PanelSize="268,378"
+          Size="268,422"
+          Id="Package\シーケンス コンテナー"
+          TopLeft="5.5,5.5" />
+        <NodeLayout
+          Size="136,44"
+          Id="Package\メール送信タスク"
+          TopLeft="445.688679245283,229.952830188679" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[制約]"
+          TopLeft="273.084905660377,216.669811320755">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="172.603773584906,35.2452830188679"
+              Start="0,0"
+              End="165.103773584906,35.2452830188679">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="86.3018867924528,0" />
+                  <mssgle:LineSegment
+                    End="86.3018867924528,35.2452830188679" />
+                  <mssgle:LineSegment
+                    End="165.103773584906,35.2452830188679" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="75.7193672612028,-21.0087890625,21.1650390625,11.0087890625"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+</Objects>]]></DTS:DesignTimeProperties>
 </DTS:Executable>
