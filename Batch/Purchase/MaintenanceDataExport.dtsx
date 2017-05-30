@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
   DTS:refId="Package"
   DTS:CreationDate="2/13/2017 11:42:24 AM"
@@ -12,8 +12,8 @@
   DTS:LocaleID="1041"
   DTS:ObjectName="MaintenanceDataExport"
   DTS:PackageType="5"
-  DTS:VersionBuild="18"
-  DTS:VersionGUID="{958094FE-7F9C-4B12-8406-B83DD7BFF605}">
+  DTS:VersionBuild="19"
+  DTS:VersionGUID="{2870B343-1640-4111-A758-E5FDD5F9B039}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -84,7 +84,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="ConnectionString">
       <DTS:VariableValue
-        DTS:DataType="8">Data Source=TDB1; Initial Catalog=Purchase; User ID=Purchase; Password=n061t@kun;</DTS:VariableValue>
+        DTS:DataType="8">Data Source="(local)"; Initial Catalog=Purchase; User ID=Purchase; Password=n061t@kun;</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -121,7 +121,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="OutputDir1">
       <DTS:VariableValue
-        DTS:DataType="8">\\TFL4\file\部署\調達部\受信\情シス提供データ(調達)</DTS:VariableValue>
+        DTS:DataType="8">\\TFL5\file\部署\調達部\受信\情シス提供データ(調達)</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -130,7 +130,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="OutputDir2">
       <DTS:VariableValue
-        DTS:DataType="8">\\TFL3\GlobalProject\Supply_Chain_Management_Group\0500 IT data\PDB Data</DTS:VariableValue>
+        DTS:DataType="8">\\TFL5\GlobalProject\Supply_Chain_Management_Group\0500 IT data\PDB Data</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -264,7 +264,162 @@
           ReadOnlyVariables="User::ConnectionString, User::CommandTimeout, User::OutputFileName, User::TempDir, User::OutputDir1, User::OutputDir2"
           ReadWriteVariables="User::ErrorMessage">
           <ProjectItem
-            Name="\my project\settings.settings"
+            Name="ScriptMain.vb"
+            Encoding="UTF8"><![CDATA[' Microsoft SQL Server Integration Services Script Task
+' Write scripts using Microsoft Visual Basic 2008.
+' The ScriptMain is the entry point class of the script.
+
+Imports System
+Imports System.Collections.Generic
+Imports System.Data.SqlClient
+Imports System.IO
+Imports System.Reflection
+Imports System.Text
+Imports System.Text.RegularExpressions
+Imports Microsoft.SqlServer.Dts.Runtime
+
+<Microsoft.SqlServer.Dts.Tasks.ScriptTask.SSISScriptTaskEntryPointAttribute> _
+<System.CLSCompliantAttribute(False)> _
+Partial Public Class ScriptMain
+	Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
+
+	Enum ScriptResults
+		Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
+		Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
+	End Enum
+	
+    Private connectionString As String = String.Empty
+    Private commandTimeout As Integer = 0
+    Private tempDir As String = String.Empty
+    Private outputFileName As String = String.Empty
+
+    ''' <summary>
+    ''' メイン処理を行います。
+    ''' </summary>
+	Public Sub Main()
+
+        Dts.TaskResult = ScriptResults.Success
+
+        connectionString = Dts.Variables("ConnectionString").Value.ToString
+        commandTimeout = CInt(Dts.Variables("CommandTimeout").Value)
+        tempDir = Dts.Variables("TempDir").Value.ToString
+        outputFileName = Dts.Variables("OutputFileName").Value.ToString
+
+        Dim sqlStr As New StringBuilder
+        Dim sqlList As New List(Of String)
+        Dim sheetList As New List(Of String)
+
+        Try
+            Dim tempFilePath As String = Path.Combine(tempDir, outputFileName)
+            If File.Exists(tempFilePath) Then
+                File.Delete(tempFilePath)
+            End If
+
+            sqlStr.AppendLine("SELECT")
+            sqlStr.AppendLine("    H.RFQNumber,")
+            sqlStr.AppendLine("    H.CreateDate,")
+            sqlStr.AppendLine("    H.SupplierCode,")
+            sqlStr.AppendLine("    H.MakerCode,")
+            sqlStr.AppendLine("    P.ProductNumber,")
+            sqlStr.AppendLine("    PP.RFQLineNumber AS [RFQLineNumber (Par-PO)],")
+            sqlStr.AppendLine("    PP.PONumber AS [PONumber (Par-PO)],")
+            sqlStr.AppendLine("    PP.CreateDate AS [CreateDate (Par-PO)],")
+            sqlStr.AppendLine("    PP.R3PONumber AS [R3PONumber (Par-PO)],")
+            sqlStr.AppendLine("    PP.R3POLineNumber AS [R3POLineNumber (Par-PO)],")
+            sqlStr.AppendLine("    PP.GoodsArrivedDate AS [GoodsArrivedDate (Par-PO)],")
+            sqlStr.AppendLine("    PP.LotNumber AS [LotNumber (Par-PO)],")
+            sqlStr.AppendLine("    PP.QMStartingDate AS [QMStartingDate (Par-PO)],")
+            sqlStr.AppendLine("    PP.QMFinishDate AS [QMFinishDate (Par-PO)],")
+            sqlStr.AppendLine("    PP.QMResult AS [QMResult (Par-PO)],")
+            sqlStr.AppendLine("    CP.RFQLineNumber AS [RFQLineNumber (Chi-PO)],")
+            sqlStr.AppendLine("    CP.PONumber AS [PONumber (Chi-PO)],")
+            sqlStr.AppendLine("    CP.CreateDate AS [CreateDate (Chi-PO)],")
+            sqlStr.AppendLine("    CP.R3PONumber AS [R3PONumber (Chi-PO)],")
+            sqlStr.AppendLine("    CP.R3POLineNumber AS [R3POLineNumber (Chi-PO)],")
+            sqlStr.AppendLine("    CP.GoodsArrivedDate AS [GoodsArrivedDate (Chi-PO)],")
+            sqlStr.AppendLine("    CP.LotNumber AS [LotNumber (Chi-PO)],")
+            sqlStr.AppendLine("    CP.QMStartingDate AS [QMStartingDate (Chi-PO)],")
+            sqlStr.AppendLine("    CP.QMFinishDate AS [QMFinishDate (Chi-PO)],")
+            sqlStr.AppendLine("    CP.QMResult AS [QMResult (Chi-PO)],")
+            sqlStr.AppendLine("    S.[Text] AS POStatus,")
+            sqlStr.AppendLine("    EU.AD_DisplayName AS [EnqUser],")
+            sqlStr.AppendLine("    QU.AD_DisplayName AS [QuoUser],")
+            sqlStr.AppendLine("    PU.AD_DisplayName AS [POUser (Par-PO)],")
+            sqlStr.AppendLine("    CU.AD_DisplayName AS [POUser (Chi-PO)],")
+            sqlStr.AppendLine("    H.PurposeCode AS [PurposeCode (RFQ)],")
+            sqlStr.AppendLine("    PP.PurposeCode AS [PurposeCode (PO)]")
+            sqlStr.AppendLine("FROM")
+            sqlStr.AppendLine("    Product AS P,")
+            sqlStr.AppendLine("    RFQHeader AS H")
+            sqlStr.AppendLine("        LEFT OUTER JOIN s_User AS EU ON EU.UserID = H.EnqUserID")
+            sqlStr.AppendLine("        LEFT OUTER JOIN s_User AS QU ON QU.UserID = H.QuoUserID,")
+            sqlStr.AppendLine("    RFQLine AS L,")
+            sqlStr.AppendLine("    v_POCurrentStatus AS S,")
+            sqlStr.AppendLine("    PO AS PP")
+            sqlStr.AppendLine("        LEFT OUTER JOIN s_User AS PU ON PU.UserID = PP.POUserID")
+            sqlStr.AppendLine("        LEFT OUTER JOIN PO AS CP ON CP.ParPONumber = PP.PONumber")
+            sqlStr.AppendLine("        LEFT OUTER JOIN s_User AS CU ON CU.UserID = CP.POUserID")
+            sqlStr.AppendLine("WHERE")
+            sqlStr.AppendLine("    PP.ParPONumber IS NULL")
+            sqlStr.AppendLine("    and PP.PONumber = S.PONumber")
+            sqlStr.AppendLine("    and PP.RFQLineNumber = L.RFQLineNumber")
+            sqlStr.AppendLine("    and L.RFQNumber = H.RFQNumber")
+            sqlStr.AppendLine("    and H.ProductID = P.ProductID")
+            sqlStr.AppendLine("ORDER BY")
+            sqlStr.AppendLine("    H.RFQNumber,")
+            sqlStr.AppendLine("    PP.PONumber")
+
+            sqlList.Add(sqlStr.ToString)
+            sheetList.Add("Sheet1")
+
+            Dim domain As AppDomain = AppDomain.CreateDomain("MyDomain")
+            Dim obj = domain.CreateInstanceAndUnwrap("TCIOpenXML", "TCIOpenXML.TCIOpenXML")
+
+            Dim info As MethodInfo = obj.GetType().GetMethod("CreateOpenXML", _
+                                                                New Type() {GetType(String), _
+                                                                            GetType(List(Of String)), _
+                                                                            GetType(String), _
+                                                                            GetType(List(Of String)), _
+                                                                            GetType(Boolean), _
+                                                                            GetType(Integer)})
+
+            info.Invoke(obj, New Object() {connectionString, _
+                                           sqlList, _
+                                           tempFilePath, _
+                                           sheetList, _
+                                           True, _
+                                           commandTimeout})
+
+            For i As Integer = 1 To 3
+                Dim outputDir As String = Dts.Variables("OutputDir" & i.ToString).Value.ToString
+                Dim outputFilePath As String = Path.Combine(outputDir, outputFileName)
+                File.Copy(tempFilePath, outputFilePath, True)
+            Next
+
+        Catch ex As Exception
+
+            Dim msgStr As New StringBuilder
+            msgStr.AppendLine("メンテナンスデータの出力において、システムエラーが発生しました。")
+            msgStr.AppendLine()
+            msgStr.AppendLine("実行パス：")
+            msgStr.AppendLine(System.Environment.CommandLine)
+            msgStr.AppendLine()
+            msgStr.AppendLine("エラーメッセージ：")
+            msgStr.AppendLine(ex.ToString)
+
+            Dts.Variables("ErrorMessage").Value = msgStr.ToString
+
+            Dts.TaskResult = ScriptResults.Failure
+
+            Throw ex
+
+        End Try
+
+	End Sub
+
+End Class]]></ProjectItem>
+          <ProjectItem
+            Name="My Project\Settings.settings"
             Encoding="UTF8"><![CDATA[<?xml version='1.0' encoding='iso-8859-1'?>
 <SettingsFile xmlns="uri:settings" CurrentProfile="(Default)" GeneratedClassNamespace="$safeprojectname" GeneratedClassName="MySettings">
   <Profiles>
@@ -273,7 +428,7 @@
   <Settings />
 </SettingsFile>]]></ProjectItem>
           <ProjectItem
-            Name="\my project\assemblyinfo.vb"
+            Name="My Project\AssemblyInfo.vb"
             Encoding="UTF8"><![CDATA[Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
@@ -311,20 +466,60 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyVersion("1.0.0.0")> 
 <Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
           <ProjectItem
+            Name="My Project\Settings.Designer.vb"
+            Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
+' <autogenerated>
+'     This code was generated by a tool.
+'
+'     Changes to this file may cause incorrect behavior and will be lost if
+'     the code is regenerated.
+' </autogenerated>
+'------------------------------------------------------------------------------
+
+Option Strict Off
+Option Explicit On
+
+
+
+Partial Friend NotInheritable Class MySettings
+    Inherits System.Configuration.ApplicationSettingsBase
+
+    Private Shared m_Value As MySettings
+
+    Private Shared m_SyncObject As Object = New Object
+
+    <System.Diagnostics.DebuggerNonUserCode()> _
+    Public Shared ReadOnly Property Value() As MySettings
+        Get
+            If (MySettings.m_Value Is Nothing) Then
+                System.Threading.Monitor.Enter(MySettings.m_SyncObject)
+                If (MySettings.m_Value Is Nothing) Then
+                    Try
+                        MySettings.m_Value = New MySettings
+                    Finally
+                        System.Threading.Monitor.Exit(MySettings.m_SyncObject)
+                    End Try
+                End If
+            End If
+            Return MySettings.m_Value
+        End Get
+    End Property
+End Class]]></ProjectItem>
+          <ProjectItem
             Name="Project"
             Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="UTF-16" standalone="yes"?>
 <c:Project xmlns:c="http://schemas.microsoft.com/codeprojectml/2010/08/main" xmlns:msb="http://schemas.microsoft.com/developer/msbuild/2003" runtimeVersion="4.0" schemaVersion="1.0">
 	<msb:PropertyGroup>
-		<msb:Language>msBuild</msb:Language>
 		<msb:CodeName>st_bee0544ae3ba4dc78c0882a230dc130b</msb:CodeName>
+		<msb:Language>msBuild</msb:Language>
 		<msb:DisplayName>st_bee0544ae3ba4dc78c0882a230dc130b</msb:DisplayName>
 		<msb:ProjectId>{5CC0B7F7-9BD5-4624-990D-E3E35984A2E0}</msb:ProjectId>
 	</msb:PropertyGroup>
 	<msb:ItemGroup>
 		<msb:Project Include="st_bee0544ae3ba4dc78c0882a230dc130b.vbproj"/>
 		<msb:File Include="My Project\AssemblyInfo.vb"/>
-		<msb:File Include="My Project\Resources.resx"/>
 		<msb:File Include="ScriptMain.vb"/>
+		<msb:File Include="My Project\Resources.resx"/>
 		<msb:File Include="My Project\Resources.Designer.vb"/>
 		<msb:File Include="My Project\Settings.settings"/>
 		<msb:File Include="My Project\Settings.Designer.vb"/>
@@ -487,743 +682,6 @@ Imports System.Runtime.InteropServices
   </ProjectExtensions>
 </Project>]]></ProjectItem>
           <ProjectItem
-            Name="My Project\Resources.Designer.vb"
-            Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
-' <autogenerated>
-'     This code was generated by a tool.
-'
-'     Changes to this file may cause incorrect behavior and will be lost if
-'     the code is regenerated.
-' </autogenerated>
-'------------------------------------------------------------------------------
-
-Option Strict Off
-Option Explicit On
-
-
-Namespace My.Resources
-    
-    '''<summary>
-    '''   A strongly-typed resource class, for looking up localized strings, etc.
-    '''</summary>
-    'This class was auto-generated by the Strongly Typed Resource Builder
-    'class via a tool like ResGen or Visual Studio.NET.
-    'To add or remove a member, edit your .ResX file then rerun ResGen
-    'with the /str option, or rebuild your VS project.
-    Class MyResources
-        
-        Private Shared _resMgr As System.Resources.ResourceManager
-        
-        Private Shared _resCulture As System.Globalization.CultureInfo
-        
-        Friend Sub New()
-            MyBase.New
-        End Sub
-        
-        '''<summary>
-        '''   Returns the cached ResourceManager instance used by this class.
-        '''</summary>
-        <System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)>  _
-        Public Shared ReadOnly Property ResourceManager() As System.Resources.ResourceManager
-            Get
-                If (_resMgr Is Nothing) Then
-                    Dim temp As System.Resources.ResourceManager = New System.Resources.ResourceManager("My.Resources.MyResources", GetType(MyResources).Assembly)
-                    _resMgr = temp
-                End If
-                Return _resMgr
-            End Get
-        End Property
-        
-        '''<summary>
-        '''   Overrides the current thread's CurrentUICulture property for all
-        '''   resource lookups using this strongly typed resource class.
-        '''</summary>
-        <System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)>  _
-        Public Shared Property Culture() As System.Globalization.CultureInfo
-            Get
-                Return _resCulture
-            End Get
-            Set
-                _resCulture = value
-            End Set
-        End Property
-    End Class
-End Namespace]]></ProjectItem>
-          <ProjectItem
-            Name="ScriptMain.vb"
-            Encoding="UTF8"><![CDATA[' Microsoft SQL Server Integration Services Script Task
-' Write scripts using Microsoft Visual Basic 2008.
-' The ScriptMain is the entry point class of the script.
-
-Imports System
-Imports System.Collections.Generic
-Imports System.Data.SqlClient
-Imports System.IO
-Imports System.Reflection
-Imports System.Text
-Imports System.Text.RegularExpressions
-Imports Microsoft.SqlServer.Dts.Runtime
-
-<Microsoft.SqlServer.Dts.Tasks.ScriptTask.SSISScriptTaskEntryPointAttribute> _
-<System.CLSCompliantAttribute(False)> _
-Partial Public Class ScriptMain
-	Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
-
-	Enum ScriptResults
-		Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
-		Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
-	End Enum
-	
-    Private connectionString As String = String.Empty
-    Private commandTimeout As Integer = 0
-    Private tempDir As String = String.Empty
-    Private outputFileName As String = String.Empty
-
-    ''' <summary>
-    ''' メイン処理を行います。
-    ''' </summary>
-	Public Sub Main()
-
-        Dts.TaskResult = ScriptResults.Success
-
-        connectionString = Dts.Variables("ConnectionString").Value.ToString
-        commandTimeout = CInt(Dts.Variables("CommandTimeout").Value)
-        tempDir = Dts.Variables("TempDir").Value.ToString
-        outputFileName = Dts.Variables("OutputFileName").Value.ToString
-
-        Dim sqlStr As New StringBuilder
-        Dim sqlList As New List(Of String)
-        Dim sheetList As New List(Of String)
-
-        Try
-            Dim tempFilePath As String = Path.Combine(tempDir, outputFileName)
-            If File.Exists(tempFilePath) Then
-                File.Delete(tempFilePath)
-            End If
-
-            sqlStr.AppendLine("SELECT")
-            sqlStr.AppendLine("    H.RFQNumber,")
-            sqlStr.AppendLine("    H.CreateDate,")
-            sqlStr.AppendLine("    H.SupplierCode,")
-            sqlStr.AppendLine("    H.MakerCode,")
-            sqlStr.AppendLine("    P.ProductNumber,")
-            sqlStr.AppendLine("    PP.RFQLineNumber AS [RFQLineNumber (Par-PO)],")
-            sqlStr.AppendLine("    PP.PONumber AS [PONumber (Par-PO)],")
-            sqlStr.AppendLine("    PP.CreateDate AS [CreateDate (Par-PO)],")
-            sqlStr.AppendLine("    PP.R3PONumber AS [R3PONumber (Par-PO)],")
-            sqlStr.AppendLine("    PP.R3POLineNumber AS [R3POLineNumber (Par-PO)],")
-            sqlStr.AppendLine("    PP.GoodsArrivedDate AS [GoodsArrivedDate (Par-PO)],")
-            sqlStr.AppendLine("    PP.LotNumber AS [LotNumber (Par-PO)],")
-            sqlStr.AppendLine("    PP.QMStartingDate AS [QMStartingDate (Par-PO)],")
-            sqlStr.AppendLine("    PP.QMFinishDate AS [QMFinishDate (Par-PO)],")
-            sqlStr.AppendLine("    PP.QMResult AS [QMResult (Par-PO)],")
-            sqlStr.AppendLine("    CP.RFQLineNumber AS [RFQLineNumber (Chi-PO)],")
-            sqlStr.AppendLine("    CP.PONumber AS [PONumber (Chi-PO)],")
-            sqlStr.AppendLine("    CP.CreateDate AS [CreateDate (Chi-PO)],")
-            sqlStr.AppendLine("    CP.R3PONumber AS [R3PONumber (Chi-PO)],")
-            sqlStr.AppendLine("    CP.R3POLineNumber AS [R3POLineNumber (Chi-PO)],")
-            sqlStr.AppendLine("    CP.GoodsArrivedDate AS [GoodsArrivedDate (Chi-PO)],")
-            sqlStr.AppendLine("    CP.LotNumber AS [LotNumber (Chi-PO)],")
-            sqlStr.AppendLine("    CP.QMStartingDate AS [QMStartingDate (Chi-PO)],")
-            sqlStr.AppendLine("    CP.QMFinishDate AS [QMFinishDate (Chi-PO)],")
-            sqlStr.AppendLine("    CP.QMResult AS [QMResult (Chi-PO)],")
-            sqlStr.AppendLine("    S.[Text] AS POStatus,")
-            sqlStr.AppendLine("    EU.AD_DisplayName AS [EnqUser],")
-            sqlStr.AppendLine("    QU.AD_DisplayName AS [QuoUser],")
-            sqlStr.AppendLine("    PU.AD_DisplayName AS [POUser (Par-PO)],")
-            sqlStr.AppendLine("    CU.AD_DisplayName AS [POUser (Chi-PO)],")
-            sqlStr.AppendLine("    H.PurposeCode AS [PurposeCode (RFQ)],")
-            sqlStr.AppendLine("    PP.PurposeCode AS [PurposeCode (PO)]")
-            sqlStr.AppendLine("FROM")
-            sqlStr.AppendLine("    Product AS P,")
-            sqlStr.AppendLine("    RFQHeader AS H")
-            sqlStr.AppendLine("        LEFT OUTER JOIN s_User AS EU ON EU.UserID = H.EnqUserID")
-            sqlStr.AppendLine("        LEFT OUTER JOIN s_User AS QU ON QU.UserID = H.QuoUserID,")
-            sqlStr.AppendLine("    RFQLine AS L,")
-            sqlStr.AppendLine("    v_POCurrentStatus AS S,")
-            sqlStr.AppendLine("    PO AS PP")
-            sqlStr.AppendLine("        LEFT OUTER JOIN s_User AS PU ON PU.UserID = PP.POUserID")
-            sqlStr.AppendLine("        LEFT OUTER JOIN PO AS CP ON CP.ParPONumber = PP.PONumber")
-            sqlStr.AppendLine("        LEFT OUTER JOIN s_User AS CU ON CU.UserID = CP.POUserID")
-            sqlStr.AppendLine("WHERE")
-            sqlStr.AppendLine("    PP.ParPONumber IS NULL")
-            sqlStr.AppendLine("    and PP.PONumber = S.PONumber")
-            sqlStr.AppendLine("    and PP.RFQLineNumber = L.RFQLineNumber")
-            sqlStr.AppendLine("    and L.RFQNumber = H.RFQNumber")
-            sqlStr.AppendLine("    and H.ProductID = P.ProductID")
-            sqlStr.AppendLine("ORDER BY")
-            sqlStr.AppendLine("    H.RFQNumber,")
-            sqlStr.AppendLine("    PP.PONumber")
-
-            sqlList.Add(sqlStr.ToString)
-            sheetList.Add("Sheet1")
-
-            Dim domain As AppDomain = AppDomain.CreateDomain("MyDomain")
-            Dim obj = domain.CreateInstanceAndUnwrap("TCIOpenXML", "TCIOpenXML.TCIOpenXML")
-
-            Dim info As MethodInfo = obj.GetType().GetMethod("CreateOpenXML", _
-                                                                New Type() {GetType(String), _
-                                                                            GetType(List(Of String)), _
-                                                                            GetType(String), _
-                                                                            GetType(List(Of String)), _
-                                                                            GetType(Boolean), _
-                                                                            GetType(Integer)})
-
-            info.Invoke(obj, New Object() {connectionString, _
-                                           sqlList, _
-                                           tempFilePath, _
-                                           sheetList, _
-                                           True, _
-                                           commandTimeout})
-
-            For i As Integer = 1 To 2
-                Dim outputDir As String = Dts.Variables("OutputDir" & i.ToString).Value.ToString
-                Dim outputFilePath As String = Path.Combine(outputDir, outputFileName)
-                File.Copy(tempFilePath, outputFilePath, True)
-            Next
-
-        Catch ex As Exception
-
-            Dim msgStr As New StringBuilder
-            msgStr.AppendLine("メンテナンスデータの出力において、システムエラーが発生しました。")
-            msgStr.AppendLine()
-            msgStr.AppendLine("実行パス：")
-            msgStr.AppendLine(System.Environment.CommandLine)
-            msgStr.AppendLine()
-            msgStr.AppendLine("エラーメッセージ：")
-            msgStr.AppendLine(ex.ToString)
-
-            Dts.Variables("ErrorMessage").Value = msgStr.ToString
-
-            Dts.TaskResult = ScriptResults.Failure
-
-            Throw ex
-
-        End Try
-
-	End Sub
-
-End Class]]></ProjectItem>
-          <ProjectItem
-            Name="\st_bee0544ae3ba4dc78c0882a230dc130b.vbproj"
-            Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="utf-16"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!-- This section defines project-level properties.
-
-       Configuration - Specifies whether the default configuration is Release or Debug.
-       Platform - Specifies what CPU the output of this project can run on.
-       OutputType - Must be "Library" for VSTA.
-       NoStandardLibraries - Set to "false" for VSTA.
-       RootNamespace - In C#, this specifies the namespace given to new files.
-                       In Visual Basic, all objects are wrapped in this namespace at runtime.
-       AssemblyName - Name of the output assembly.
-  -->
-  <PropertyGroup>
-    <ProjectTypeGuids>{30D016F9-3734-4E33-A861-5E7D899E18F3};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Library</OutputType>
-    <RootNamespace>ST_bee0544ae3ba4dc78c0882a230dc130b.vbproj</RootNamespace>
-    <AssemblyName>ST_bee0544ae3ba4dc78c0882a230dc130b.vbproj</AssemblyName>
-    <StartupObject></StartupObject>
-    <OptionExplicit>On</OptionExplicit>
-    <OptionCompare>Binary</OptionCompare>
-    <OptionStrict>Off</OptionStrict>
-    <OptionInfer>On</OptionInfer>
-    <ProjectGuid>{E3A545CA-129A-4611-A855-F8F3010F7A8A}</ProjectGuid>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
-  </PropertyGroup>
-  <!-- This section defines properties that are set when the "Debug" configuration is
-       selected.
-
-       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
-       Optimize - If true, optimize the build output. If false, do not optimize.
-       OutputPath - Output path of the project relative to the project file.
-       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
-       DefineConstants - Constants defined for the preprocessor.
-       Warning Level - Warning level for the compiler.
-  -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DefineConstants></DefineConstants>
-    <DefineDebug>true</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
-  </PropertyGroup>
-  <!-- This section defines properties that are set when the "Release" configuration is
-       selected.
-
-       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
-       Optimize - If true, optimize the build output. If false, do not optimize.
-       OutputPath - Output path of the project relative to the project file.
-       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
-       DefineConstants - Constants defined for the preprocessor.
-       Warning Level - Warning level for the compiler.
-  -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DefineConstants></DefineConstants>
-    <DefineDebug>false</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <DebugSymbols>false</DebugSymbols>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
-  </PropertyGroup>
-  <!-- This section enables pre- and post-build steps. However,
-       it is recommended that MSBuild tasks be used instead of these properties.
-  -->
-  <PropertyGroup>
-    <PreBuildEvent></PreBuildEvent>
-    <PostBuildEvent></PostBuildEvent>
-  </PropertyGroup>
-  <!-- This sections specifies references for the project. -->
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.SqlServer.ManagedDTS, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
-    <Reference Include="Microsoft.SqlServer.ScriptTask, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
-  </ItemGroup>
-  <!-- Visual Basic supports Importing namespaces (equivalent to using statements in C#).-->
-  <ItemGroup>
-    <Import Include="Microsoft.VisualBasic" />
-    <Import Include="System" />
-    <Import Include="System.Collections" />
-    <Import Include="System.Data" />
-    <Import Include="System.Diagnostics" />
-    <Import Include="System.Windows.Forms" />
-  </ItemGroup>
-  <!-- This section defines the user source files that are part of the
-       project.
-
-       Compile - Specifies a source file to compile.
-       EmbeddedResource - Specifies a .resx file for embedded resources.
-       None - Specifies a file that is not to be passed to the compiler (for instance,
-              a text file or XML file).
-       AppDesigner - Specifies the directory where the application properties files can
-                     be found.
-  -->
-  <ItemGroup>
-    <AppDesigner Include="My Project\" />
-    <Compile Include="My Project\AssemblyInfo.vb">
-      <SubType>Code</SubType>
-    </Compile>
-    <EmbeddedResource Include="My Project\Resources.resx">
-      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
-      <CustomToolNamespace>My.Resources</CustomToolNamespace>
-    </EmbeddedResource>
-    <Compile Include="My Project\Resources.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <None Include="My Project\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
-    </None>
-    <Compile Include="My Project\Settings.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ScriptMain.vb">
-      <SubType>Code</SubType>
-    </Compile>
-    <!-- Include the default configuration information and metadata files for the add-in.
-         These files are copied to the build output directory when the project is
-         built, and the path to the configuration file is passed to add-in on the command
-         line when debugging.
-    -->
-  </ItemGroup>
-  <!-- Include the build rules for a VB project.-->
-  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
-  <!-- This section defines VSTA properties that describe the host-changable project properties. -->
-  <ProjectExtensions>
-    <VisualStudio>
-      <FlavorProperties GUID="{30D016F9-3734-4E33-A861-5E7D899E18F3}">
-        <ProjectProperties HostName="VSTAHostName" HostPackage="{B3A685AA-7EAF-4BC6-9940-57959FA5AC07}" ApplicationType="usd" Language="vb" TemplatesPath="" DebugInfoExeName="" />
-        <Host Name="SSIS_ScriptTask" />
-        <ProjectClient>
-          <HostIdentifier>SSIS_ST130</HostIdentifier>
-        </ProjectClient>
-      </FlavorProperties>
-    </VisualStudio>
-  </ProjectExtensions>
-</Project>]]></ProjectItem>
-          <ProjectItem
-            Name="\my project\resources.resx"
-            Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
-<root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-</root>]]></ProjectItem>
-          <ProjectItem
-            Name="\my project\settings.designer.vb"
-            Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
-' <autogenerated>
-'     This code was generated by a tool.
-'
-'     Changes to this file may cause incorrect behavior and will be lost if
-'     the code is regenerated.
-' </autogenerated>
-'------------------------------------------------------------------------------
-
-Option Strict Off
-Option Explicit On
-
-
-
-Partial Friend NotInheritable Class MySettings
-    Inherits System.Configuration.ApplicationSettingsBase
-
-    Private Shared m_Value As MySettings
-
-    Private Shared m_SyncObject As Object = New Object
-
-    <System.Diagnostics.DebuggerNonUserCode()> _
-    Public Shared ReadOnly Property Value() As MySettings
-        Get
-            If (MySettings.m_Value Is Nothing) Then
-                System.Threading.Monitor.Enter(MySettings.m_SyncObject)
-                If (MySettings.m_Value Is Nothing) Then
-                    Try
-                        MySettings.m_Value = New MySettings
-                    Finally
-                        System.Threading.Monitor.Exit(MySettings.m_SyncObject)
-                    End Try
-                End If
-            End If
-            Return MySettings.m_Value
-        End Get
-    End Property
-End Class]]></ProjectItem>
-          <ProjectItem
-            Name="My Project\Settings.Designer.vb"
-            Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
-' <autogenerated>
-'     This code was generated by a tool.
-'
-'     Changes to this file may cause incorrect behavior and will be lost if
-'     the code is regenerated.
-' </autogenerated>
-'------------------------------------------------------------------------------
-
-Option Strict Off
-Option Explicit On
-
-
-
-Partial Friend NotInheritable Class MySettings
-    Inherits System.Configuration.ApplicationSettingsBase
-
-    Private Shared m_Value As MySettings
-
-    Private Shared m_SyncObject As Object = New Object
-
-    <System.Diagnostics.DebuggerNonUserCode()> _
-    Public Shared ReadOnly Property Value() As MySettings
-        Get
-            If (MySettings.m_Value Is Nothing) Then
-                System.Threading.Monitor.Enter(MySettings.m_SyncObject)
-                If (MySettings.m_Value Is Nothing) Then
-                    Try
-                        MySettings.m_Value = New MySettings
-                    Finally
-                        System.Threading.Monitor.Exit(MySettings.m_SyncObject)
-                    End Try
-                End If
-            End If
-            Return MySettings.m_Value
-        End Get
-    End Property
-End Class]]></ProjectItem>
-          <ProjectItem
-            Name="My Project\Settings.settings"
-            Encoding="UTF8"><![CDATA[<?xml version='1.0' encoding='iso-8859-1'?>
-<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)" GeneratedClassNamespace="$safeprojectname" GeneratedClassName="MySettings">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
-</SettingsFile>]]></ProjectItem>
-          <ProjectItem
-            Name="\scriptmain.vb"
-            Encoding="UTF8"><![CDATA[' Microsoft SQL Server Integration Services Script Task
-' Write scripts using Microsoft Visual Basic 2008.
-' The ScriptMain is the entry point class of the script.
-
-Imports System
-Imports System.Collections.Generic
-Imports System.Data.SqlClient
-Imports System.IO
-Imports System.Reflection
-Imports System.Text
-Imports System.Text.RegularExpressions
-Imports Microsoft.SqlServer.Dts.Runtime
-
-<Microsoft.SqlServer.Dts.Tasks.ScriptTask.SSISScriptTaskEntryPointAttribute> _
-<System.CLSCompliantAttribute(False)> _
-Partial Public Class ScriptMain
-	Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
-
-	Enum ScriptResults
-		Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
-		Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
-	End Enum
-	
-    Private connectionString As String = String.Empty
-    Private commandTimeout As Integer = 0
-    Private tempDir As String = String.Empty
-    Private outputFileName As String = String.Empty
-
-    ''' <summary>
-    ''' メイン処理を行います。
-    ''' </summary>
-	Public Sub Main()
-
-        Dts.TaskResult = ScriptResults.Success
-
-        connectionString = Dts.Variables("ConnectionString").Value.ToString
-        commandTimeout = CInt(Dts.Variables("CommandTimeout").Value)
-        tempDir = Dts.Variables("TempDir").Value.ToString
-        outputFileName = Dts.Variables("OutputFileName").Value.ToString
-
-        Dim sqlStr As New StringBuilder
-        Dim sqlList As New List(Of String)
-        Dim sheetList As New List(Of String)
-
-        Try
-            Dim tempFilePath As String = Path.Combine(tempDir, outputFileName)
-            If File.Exists(tempFilePath) Then
-                File.Delete(tempFilePath)
-            End If
-
-            sqlStr.AppendLine("SELECT")
-            sqlStr.AppendLine("    H.RFQNumber,")
-            sqlStr.AppendLine("    H.CreateDate,")
-            sqlStr.AppendLine("    H.SupplierCode,")
-            sqlStr.AppendLine("    H.MakerCode,")
-            sqlStr.AppendLine("    P.ProductNumber,")
-            sqlStr.AppendLine("    PP.RFQLineNumber AS [RFQLineNumber (Par-PO)],")
-            sqlStr.AppendLine("    PP.PONumber AS [PONumber (Par-PO)],")
-            sqlStr.AppendLine("    PP.CreateDate AS [CreateDate (Par-PO)],")
-            sqlStr.AppendLine("    PP.R3PONumber AS [R3PONumber (Par-PO)],")
-            sqlStr.AppendLine("    PP.R3POLineNumber AS [R3POLineNumber (Par-PO)],")
-            sqlStr.AppendLine("    PP.GoodsArrivedDate AS [GoodsArrivedDate (Par-PO)],")
-            sqlStr.AppendLine("    PP.LotNumber AS [LotNumber (Par-PO)],")
-            sqlStr.AppendLine("    PP.QMStartingDate AS [QMStartingDate (Par-PO)],")
-            sqlStr.AppendLine("    PP.QMFinishDate AS [QMFinishDate (Par-PO)],")
-            sqlStr.AppendLine("    PP.QMResult AS [QMResult (Par-PO)],")
-            sqlStr.AppendLine("    CP.RFQLineNumber AS [RFQLineNumber (Chi-PO)],")
-            sqlStr.AppendLine("    CP.PONumber AS [PONumber (Chi-PO)],")
-            sqlStr.AppendLine("    CP.CreateDate AS [CreateDate (Chi-PO)],")
-            sqlStr.AppendLine("    CP.R3PONumber AS [R3PONumber (Chi-PO)],")
-            sqlStr.AppendLine("    CP.R3POLineNumber AS [R3POLineNumber (Chi-PO)],")
-            sqlStr.AppendLine("    CP.GoodsArrivedDate AS [GoodsArrivedDate (Chi-PO)],")
-            sqlStr.AppendLine("    CP.LotNumber AS [LotNumber (Chi-PO)],")
-            sqlStr.AppendLine("    CP.QMStartingDate AS [QMStartingDate (Chi-PO)],")
-            sqlStr.AppendLine("    CP.QMFinishDate AS [QMFinishDate (Chi-PO)],")
-            sqlStr.AppendLine("    CP.QMResult AS [QMResult (Chi-PO)],")
-            sqlStr.AppendLine("    S.[Text] AS POStatus,")
-            sqlStr.AppendLine("    EU.AD_DisplayName AS [EnqUser],")
-            sqlStr.AppendLine("    QU.AD_DisplayName AS [QuoUser],")
-            sqlStr.AppendLine("    PU.AD_DisplayName AS [POUser (Par-PO)],")
-            sqlStr.AppendLine("    CU.AD_DisplayName AS [POUser (Chi-PO)],")
-            sqlStr.AppendLine("    H.PurposeCode AS [PurposeCode (RFQ)],")
-            sqlStr.AppendLine("    PP.PurposeCode AS [PurposeCode (PO)]")
-            sqlStr.AppendLine("FROM")
-            sqlStr.AppendLine("    Product AS P,")
-            sqlStr.AppendLine("    RFQHeader AS H")
-            sqlStr.AppendLine("        LEFT OUTER JOIN s_User AS EU ON EU.UserID = H.EnqUserID")
-            sqlStr.AppendLine("        LEFT OUTER JOIN s_User AS QU ON QU.UserID = H.QuoUserID,")
-            sqlStr.AppendLine("    RFQLine AS L,")
-            sqlStr.AppendLine("    v_POCurrentStatus AS S,")
-            sqlStr.AppendLine("    PO AS PP")
-            sqlStr.AppendLine("        LEFT OUTER JOIN s_User AS PU ON PU.UserID = PP.POUserID")
-            sqlStr.AppendLine("        LEFT OUTER JOIN PO AS CP ON CP.ParPONumber = PP.PONumber")
-            sqlStr.AppendLine("        LEFT OUTER JOIN s_User AS CU ON CU.UserID = CP.POUserID")
-            sqlStr.AppendLine("WHERE")
-            sqlStr.AppendLine("    PP.ParPONumber IS NULL")
-            sqlStr.AppendLine("    and PP.PONumber = S.PONumber")
-            sqlStr.AppendLine("    and PP.RFQLineNumber = L.RFQLineNumber")
-            sqlStr.AppendLine("    and L.RFQNumber = H.RFQNumber")
-            sqlStr.AppendLine("    and H.ProductID = P.ProductID")
-            sqlStr.AppendLine("ORDER BY")
-            sqlStr.AppendLine("    H.RFQNumber,")
-            sqlStr.AppendLine("    PP.PONumber")
-
-            sqlList.Add(sqlStr.ToString)
-            sheetList.Add("Sheet1")
-
-            Dim domain As AppDomain = AppDomain.CreateDomain("MyDomain")
-            Dim obj = domain.CreateInstanceAndUnwrap("TCIOpenXML", "TCIOpenXML.TCIOpenXML")
-
-            Dim info As MethodInfo = obj.GetType().GetMethod("CreateOpenXML", _
-                                                                New Type() {GetType(String), _
-                                                                            GetType(List(Of String)), _
-                                                                            GetType(String), _
-                                                                            GetType(List(Of String)), _
-                                                                            GetType(Boolean), _
-                                                                            GetType(Integer)})
-
-            info.Invoke(obj, New Object() {connectionString, _
-                                           sqlList, _
-                                           tempFilePath, _
-                                           sheetList, _
-                                           True, _
-                                           commandTimeout})
-
-            For i As Integer = 1 To 2
-                Dim outputDir As String = Dts.Variables("OutputDir" & i.ToString).Value.ToString
-                Dim outputFilePath As String = Path.Combine(outputDir, outputFileName)
-                File.Copy(tempFilePath, outputFilePath, True)
-            Next
-
-        Catch ex As Exception
-
-            Dim msgStr As New StringBuilder
-            msgStr.AppendLine("メンテナンスデータの出力において、システムエラーが発生しました。")
-            msgStr.AppendLine()
-            msgStr.AppendLine("実行パス：")
-            msgStr.AppendLine(System.Environment.CommandLine)
-            msgStr.AppendLine()
-            msgStr.AppendLine("エラーメッセージ：")
-            msgStr.AppendLine(ex.ToString)
-
-            Dts.Variables("ErrorMessage").Value = msgStr.ToString
-
-            Dts.TaskResult = ScriptResults.Failure
-
-            Throw ex
-
-        End Try
-
-	End Sub
-
-End Class]]></ProjectItem>
-          <ProjectItem
             Name="My Project\Resources.resx"
             Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
 <root>
@@ -1343,45 +801,7 @@ End Class]]></ProjectItem>
   </resheader>
 </root>]]></ProjectItem>
           <ProjectItem
-            Name="My Project\AssemblyInfo.vb"
-            Encoding="UTF8"><![CDATA[Imports System
-Imports System.Reflection
-Imports System.Runtime.InteropServices
-
-' General Information about an assembly is controlled through the following 
-' set of attributes. Change these attribute values to modify the information
-' associated with an assembly.
-
-' Review the values of the assembly attributes
-
-<Assembly: AssemblyTitle("ST_bee0544ae3ba4dc78c0882a230dc130b.vbproj")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("ST_bee0544ae3ba4dc78c0882a230dc130b.vbproj")> 
-<Assembly: AssemblyCopyright("Copyright @  2017")> 
-<Assembly: AssemblyTrademark("")> 
-<Assembly: CLSCompliant(True)> 
-
-<Assembly: ComVisible(False)> 
-
-'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("5b457121-5839-4b47-9731-698512f1ba0d")> 
-
-' Version information for an assembly consists of the following four values:
-'
-'      Major Version
-'      Minor Version 
-'      Build Number
-'      Revision
-'
-' You can specify all the values or you can default the Build and Revision Numbers 
-' by using the '*' as shown below:
-' <Assembly: AssemblyVersion("1.0.*")>
-
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
-          <ProjectItem
-            Name="\my project\resources.designer.vb"
+            Name="My Project\Resources.Designer.vb"
             Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
 ' <autogenerated>
 '     This code was generated by a tool.
@@ -1446,7 +866,7 @@ End Namespace]]></ProjectItem>
           <BinaryItem
             Name="ST_bee0544ae3ba4dc78c0882a230dc130b.vbproj.dll">TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAgAAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1v
-ZGUuDQ0KJAAAAAAAAABQRQAATAEDAPVuoVgAAAAAAAAAAOAAIiALAVAAADIAAAAIAAAAAAAAxlAA
+ZGUuDQ0KJAAAAAAAAABQRQAATAEDADY7LVkAAAAAAAAAAOAAIiALAVAAADIAAAAIAAAAAAAAxlAA
 AAAgAAAAYAAAAAAAEAAgAAAAAgAABAAAAAAAAAAEAAAAAAAAAACgAAAAAgAAAAAAAAMAQIUAABAA
 ABAAAAAAEAAAEAAAAAAAABAAAAAAAAAAAAAAAHRQAABPAAAAAGAAAIgEAAAAAAAAAAAAAAAAAAAA
 AAAAAIAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -1480,7 +900,7 @@ cq8AAHBvOAAACiYGcpcPAHBvOAAACiYHBm85AAAKbzoAAAoIcrcPAHBvOgAACnLFDwBwKDsAAApy
 ABsoIwAACqIlGNAsAAABKCMAAAqiJRnQBQAAGygjAAAKoiUa0DQAAAEoIwAACqIlG9A1AAABKCMA
 AAqibz4AAAoRBCgmAAAKHI0YAAABJRYCewkAAASiJRcHoiUYCaIlGQiiJRoXjDQAAAGiJRsCewoA
 AASMNQAAAaJvPwAACiYXEwUCKCwAAApvLgAACnI1EABwEgUoQAAACihBAAAKby8AAApvMAAACm8x
-AAAKAnsMAAAEKDUAAAoTBgkRBhcoQgAAChEFF9YTBREFGDG03ZIAAAAlKEMAAAoTB3MzAAAKEwgR
+AAAKAnsMAAAEKDUAAAoTBgkRBhcoQgAAChEFF9YTBREFGTG03ZIAAAAlKEMAAAoTB3MzAAAKEwgR
 CHJJEABwbzgAAAomEQhvRAAACiYRCHKLEABwbzgAAAomEQgoRQAACm84AAAKJhEIb0QAAAomEQhy
 lxAAcG84AAAKJhEIEQdvRgAACm84AAAKJgIoLAAACm8uAAAKcqsQAHBvLwAAChEIbzkAAApvRwAA
 CgIoLAAAChdvLQAAChEHeipBHAAAAAAAALIAAADLAwAAfQQAAJIAAAAmAAABNgIDKCYAAAooSAAA
@@ -1649,7 +1069,7 @@ AGUAdAAxAAARTQB5AEQAbwBtAGEAaQBuAAAVVABDAEkATwBwAGUAbgBYAE0ATAAAK1QAQwBJAE8A
 cABlAG4AWABNAEwALgBUAEMASQBPAHAAZQBuAFgATQBMAAAbQwByAGUAYQB0AGUATwBwAGUAbgBY
 AE0ATAAAE08AdQB0AHAAdQB0AEQAaQByAABB4TDzMMYwyjDzMLkwxzD8ML8wbjD6UZtSazBKMEQw
 ZjABMLcwuTDGMOAwqDDpMPwwTDB6dh91VzB+MFcwXzACMAELn1tMiNEwuTAa/wETqDDpMPww4TDD
-MLsw/DC4MBr/ARlFAHIAcgBvAHIATQBlAHMAcwBhAGcAZQAAAAAAJl12dnsjo0SdB6C/F1+vPwAE
+MLsw/DC4MBr/ARlFAHIAcgBvAHIATQBlAHMAcwBhAGcAZQAAAAAA13BGprlkJEOjfGIUD1MVYQAE
 IAEBCAMgAAEFIAEBEREEIAEBDgQgAQECBSACAQ4OBSABARFFByAEAQ4ODg4GFRIkARIMBhUSJAES
 CAYVEiQBEmUGFRIkARIgBCAAEwAHAAESbRGAoQUgABKApQcgAgEOEoClBAABHBwEAAEBHAIGDhsH
 CRKAkRUSgJUBDhUSgJUBDg4cCA4SgJkSgJEFIAASgLUFIAASgLkGIAESgL0cAyAAHAMgAA4EAAEI
@@ -1729,33 +1149,56 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</BinaryItem>
       DTS:To="Package\エラーメール送信"
       DTS:Value="1" />
   </DTS:PrecedenceConstraints>
-  <DTS:PackageVariables>
-    <DTS:PackageVariable
-      DTS:CreationName=""
-      DTS:DTSID="{E4DA96B8-A44F-473C-93F5-7CF4897FA694}"
-      DTS:Namespace="dts-designer-1.0"
-      DTS:ObjectName="{F08A6265-D2BC-415D-ABB6-0E02FE8914CC}">
-      <DTS:Property
-        DTS:DataType="8"
-        DTS:Name="PackageVariableValue">&lt;PrecedenceConstraint xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:EvalOp&gt;Constraint&lt;/dwd:EvalOp&gt;&lt;/PrecedenceConstraint&gt;</DTS:Property>
-    </DTS:PackageVariable>
-    <DTS:PackageVariable
-      DTS:CreationName=""
-      DTS:DTSID="{4A9F6BF9-BAB4-4BA0-8F2D-1F3E649178E4}"
-      DTS:Namespace="dts-designer-1.0"
-      DTS:ObjectName="package-diagram">
-      <DTS:Property
-        DTS:DataType="8"
-        DTS:Name="PackageVariableValue">&lt;Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:DtsControlFlowDiagram&gt;&lt;dwd:BoundingLeft&gt;900&lt;/dwd:BoundingLeft&gt;&lt;dwd:BoundingTop&gt;1000&lt;/dwd:BoundingTop&gt;&lt;dwd:Layout&gt;&lt;dds&gt;&lt;diagram fontclsid="{0BE35203-8F91-11CE-9DE3-00AA004BB851}" mouseiconclsid="{0BE35204-8F91-11CE-9DE3-00AA004BB851}" defaultlayout="Microsoft.DataWarehouse.Layout.GraphLayout110" defaultlineroute="Microsoft.DataWarehouse.Layout.GraphLayout110" version="7" nextobject="10" scale="100" pagebreakanchorx="0" pagebreakanchory="0" pagebreaksizex="0" pagebreaksizey="0" scrollleft="0" scrolltop="0" gridx="150" gridy="150" marginx="1000" marginy="1000" zoom="100" x="20876" y="14340" backcolor="15334399" defaultpersistence="2" PrintPageNumbersMode="3" PrintMarginTop="0" PrintMarginBottom="635" PrintMarginLeft="0" PrintMarginRight="0" marqueeselectionmode="1" mousepointer="0" snaptogrid="0" autotypeannotation="1" showscrollbars="0" viewpagebreaks="0" donotforceconnectorsbehindshapes="1" backpictureclsid="{00000000-0000-0000-0000-000000000000}"&gt;&lt;font&gt;&lt;ddsxmlobjectstreamwrapper binary="010100009001905f01000c4d5320554920476f74686963" /&gt;&lt;/font&gt;&lt;mouseicon&gt;&lt;ddsxmlobjectstreamwrapper binary="6c74000000000000" /&gt;&lt;/mouseicon&gt;&lt;/diagram&gt;&lt;layoutmanager&gt;&lt;ddsxmlobj /&gt;&lt;/layoutmanager&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="メール送信タスク" left="2540" top="4573" logicalid="4" controlid="1" masterid="0" hint1="0" hint2="0" width="3598" height="1164" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="000800000e0e00008c040000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\エラーメール送信" vartype="8" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="スクリプト タスク" left="900" top="1000" logicalid="5" controlid="2" masterid="0" hint1="0" hint2="0" width="3598" height="1164" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="000800000e0e00008c040000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\メンテナンスデータ出力" vartype="8" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="MSDDS.Polyline" left="2300" top="1765" logicalid="6" controlid="3" masterid="0" hint1="0" hint2="0" width="2439" height="3308" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobj&gt;&lt;polyline endtypedst="3" endtypesrc="1" usercolor="255" linestyle="0" linerender="2" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1" /&gt;&lt;/ddsxmlobj&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package.PrecedenceConstraints[制約]" vartype="8" /&gt;&lt;property name="Virtual" value="0" vartype="11" /&gt;&lt;property name="VisibleAP" value="0" vartype="3" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;connector lineroutestyle="Microsoft.DataWarehouse.Layout.GraphLayout110" sourceid="2" destid="1" sourceattachpoint="7" destattachpoint="6" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="2" relatedid="0" virtual="0"&gt;&lt;point x="2699" y="2164" /&gt;&lt;point x="2699" y="3368" /&gt;&lt;point x="4339" y="3368" /&gt;&lt;point x="4339" y="4573" /&gt;&lt;/connector&gt;&lt;/ddscontrol&gt;&lt;/dds&gt;&lt;/dwd:Layout&gt;&lt;/dwd:DtsControlFlowDiagram&gt;&lt;/Package&gt;</DTS:Property>
-    </DTS:PackageVariable>
-    <DTS:PackageVariable
-      DTS:CreationName=""
-      DTS:DTSID="{CC0AA72B-89D8-4E8E-8F7F-7BEEAB975343}"
-      DTS:Namespace="dts-designer-1.0"
-      DTS:ObjectName="package-diagram">
-      <DTS:Property
-        DTS:DataType="8"
-        DTS:Name="PackageVariableValue">&lt;Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:DtsControlFlowDiagram&gt;&lt;dwd:BoundingLeft&gt;900&lt;/dwd:BoundingLeft&gt;&lt;dwd:BoundingTop&gt;1000&lt;/dwd:BoundingTop&gt;&lt;dwd:Layout&gt;&lt;dds&gt;&lt;diagram fontclsid="{0BE35203-8F91-11CE-9DE3-00AA004BB851}" mouseiconclsid="{0BE35204-8F91-11CE-9DE3-00AA004BB851}" defaultlayout="Microsoft.DataWarehouse.Layout.GraphLayout110" defaultlineroute="Microsoft.DataWarehouse.Layout.GraphLayout110" version="7" nextobject="10" scale="100" pagebreakanchorx="0" pagebreakanchory="0" pagebreaksizex="0" pagebreaksizey="0" scrollleft="0" scrolltop="0" gridx="150" gridy="150" marginx="1000" marginy="1000" zoom="100" x="20876" y="14340" backcolor="15334399" defaultpersistence="2" PrintPageNumbersMode="3" PrintMarginTop="0" PrintMarginBottom="635" PrintMarginLeft="0" PrintMarginRight="0" marqueeselectionmode="1" mousepointer="0" snaptogrid="0" autotypeannotation="1" showscrollbars="0" viewpagebreaks="0" donotforceconnectorsbehindshapes="1" backpictureclsid="{00000000-0000-0000-0000-000000000000}"&gt;&lt;font&gt;&lt;ddsxmlobjectstreamwrapper binary="010100009001905f01000c4d5320554920476f74686963" /&gt;&lt;/font&gt;&lt;mouseicon&gt;&lt;ddsxmlobjectstreamwrapper binary="6c74000000000000" /&gt;&lt;/mouseicon&gt;&lt;/diagram&gt;&lt;layoutmanager&gt;&lt;ddsxmlobj /&gt;&lt;/layoutmanager&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="メール送信タスク" left="2540" top="4573" logicalid="4" controlid="1" masterid="0" hint1="0" hint2="0" width="3598" height="1164" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="000800000e0e00008c040000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\エラーメール送信" vartype="8" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="スクリプト タスク" left="900" top="1000" logicalid="5" controlid="2" masterid="0" hint1="0" hint2="0" width="3598" height="1164" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="000800000e0e00008c040000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\メンテナンスデータ出力" vartype="8" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="MSDDS.Polyline" left="2300" top="1765" logicalid="6" controlid="3" masterid="0" hint1="0" hint2="0" width="2439" height="3308" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobj&gt;&lt;polyline endtypedst="3" endtypesrc="1" usercolor="255" linestyle="0" linerender="2" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1" /&gt;&lt;/ddsxmlobj&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package.PrecedenceConstraints[制約]" vartype="8" /&gt;&lt;property name="Virtual" value="0" vartype="11" /&gt;&lt;property name="VisibleAP" value="0" vartype="3" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;connector lineroutestyle="Microsoft.DataWarehouse.Layout.GraphLayout110" sourceid="2" destid="1" sourceattachpoint="7" destattachpoint="6" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="2" relatedid="0" virtual="0"&gt;&lt;point x="2699" y="2164" /&gt;&lt;point x="2699" y="3368" /&gt;&lt;point x="4339" y="3368" /&gt;&lt;point x="4339" y="4573" /&gt;&lt;/connector&gt;&lt;/ddscontrol&gt;&lt;/dds&gt;&lt;/dwd:Layout&gt;&lt;/dwd:DtsControlFlowDiagram&gt;&lt;/Package&gt;</DTS:Property>
-    </DTS:PackageVariable>
-  </DTS:PackageVariables>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--この CDATA セクションにはパッケージのレイアウト情報が含まれています。(x,y) 座標、幅、高さなどの情報が含まれます。-->
+<!--このセクションを手動で編集して間違った場合は、セクションを削除できます。-->
+<!--パッケージは正常に読み込むことができますが、以前のレイアウト情報は失われ、デザイン画面上の要素が自動的に再配置されます。-->
+<Objects
+  Version="8">
+  <!--次の各ノードには、実行時の動作に影響しないプロパティが含まれます。-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="136,44"
+          Id="Package\エラーメール送信"
+          TopLeft="67.3867924528302,140.330188679245" />
+        <NodeLayout
+          Size="136,44"
+          Id="Package\メンテナンスデータ出力"
+          TopLeft="5.5,5.5" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[制約]"
+          TopLeft="73.3867924528302,49.4245283018868">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="61.8867924528302,90.9056603773585"
+              Start="0,0"
+              End="61.8867924528302,83.4056603773585">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,45.4339622641509" />
+                  <mssgle:LineSegment
+                    End="61.8867924528302,45.4339622641509" />
+                  <mssgle:LineSegment
+                    End="61.8867924528302,83.4056603773585" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="20.3608766951651,50.4339622641509,21.1650390625,11.0087890625"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+</Objects>]]></DTS:DesignTimeProperties>
 </DTS:Executable>

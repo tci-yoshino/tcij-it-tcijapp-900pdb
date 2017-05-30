@@ -18,6 +18,11 @@
 		<ConfiguredValue>\\TFL5\GlobalProject\Supply_Chain_Management_Group\0500 IT data\PDB Data</ConfiguredValue>
 	</Configuration>
 
+	<!-- 出力ディレクトリ 3 -->
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputDir3].Properties[Value]" ValueType="String">
+		<ConfiguredValue>\\TFL5\GlobalProject\Supplier_Evaluation\Data\Purchasing records (PDB)</ConfiguredValue>
+	</Configuration>
+
 	<!-- 出力ファイル名 -->
 	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputFileName].Properties[Value]" ValueType="String">
 		<ConfiguredValue>PDB_MaintenanceData.xlsx</ConfiguredValue>
