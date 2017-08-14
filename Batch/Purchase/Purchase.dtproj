@@ -58,6 +58,11 @@
           <FullPath>SupplierPerformance.dtsx</FullPath>
           <References />
         </DtsPackage>
+        <DtsPackage FormatVersion="8">
+          <Name>SupplierProductsExport.dtsx</Name>
+          <FullPath>SupplierProductsExport.dtsx</FullPath>
+          <References />
+        </DtsPackage>
       </DTSPackages>
     </Manifest>
   </DeploymentModelSpecificContent>

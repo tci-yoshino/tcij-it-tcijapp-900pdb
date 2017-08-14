@@ -1,0 +1,25 @@
+<?xml version="1.0"?><DTSConfiguration>
+<DTSConfigurationHeading><DTSConfigurationFileInfo GeneratedBy="TCIX\Keiko.Watanabe" GeneratedFromPackageName="SupplierProductsExport" GeneratedFromPackageID="{93DE5C30-8E0F-42A1-9AC0-C1792C401436}" GeneratedDate="2017/08/03 11:43:42"/></DTSConfigurationHeading>
+
+	<!-- OutputFilePath -->
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputFile].Properties[Value]" ValueType="String">
+		<ConfiguredValue>\\TFL5\GlobalProject\Supplier_Evaluation\Data\Purchasing records (PDB)\PDB supplier products.xlsx</ConfiguredValue>
+	</Configuration>
+
+	<!-- MailFrom -->
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::MailFrom].Properties[Value]" ValueType="String">
+		<ConfiguredValue>devteam_app@tcichemicals.com</ConfiguredValue>
+	</Configuration>
+
+	<!-- MaxRows -->
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::MaxRows].Properties[Value]" ValueType="Int32">
+		<ConfiguredValue>1048576</ConfiguredValue>
+	</Configuration>
+
+	<!-- CommandTimeOut -->
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::CommandTimeOut].Properties[Value]" ValueType="Int32">
+		<ConfiguredValue>600</ConfiguredValue>
+	</Configuration>
+
+
+</DTSConfiguration>
