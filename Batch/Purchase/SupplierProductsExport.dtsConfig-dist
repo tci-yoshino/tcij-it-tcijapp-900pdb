@@ -12,8 +12,13 @@
 	</Configuration>
 
 	<!-- MaxRows -->
+	<!-- Excel 2010 の 1シート最大行数 1048576 は出力不可 -->
+	<!-- https://social.msdn.microsoft.com/Forums/en-US/7ff2b580-beac-4363-827c-d05d17dc7a71/systemioisolatedstorageisolatedstorageexception-on-dispose?forum=oxmlsdk -->
+	<!-- https://connect.microsoft.com/SQLServer/feedback/details/764356/subscription-fails-due-to-error-system-io-isolatedstorage-isolatedstorageexception-unable-to-determine-the-identity-of-domain -->
+	<!-- 350000 件 OK : Excel 1シートのサイズ 11MB -->
+	<!-- 300000 件 OK : Excel 1シートのサイズ  9MB, ファイルサイズ（2シート合計） 14MB-->
 	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::MaxRows].Properties[Value]" ValueType="Int32">
-		<ConfiguredValue>1048576</ConfiguredValue>
+		<ConfiguredValue>300000</ConfiguredValue>
 	</Configuration>
 
 	<!-- CommandTimeOut -->
