@@ -446,6 +446,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Handling rules.pdf" />
+    <Content Include="Evaluated suppliers %282017%29.xlsm" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -456,10 +457,9 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="PO.doc" />
-    <Content Include="Ranking data %28August 1st, 2016%29.xlsm" />
+    <Content Include="Ranking data %28October 1st, 2017%29.xlsm" />
     <None Include="RFQ.doc" />
     <None Include="Sample.xls" />
-    <Content Include="Supplier list %28supplier evaluation in 2016%29.xlsm" />
     <None Include="Web.config-dist" />
   </ItemGroup>
   <ItemGroup>
