@@ -194,12 +194,13 @@ Partial Public Class RFQUpdate
                 st_PurposeCode = PurposeCode.Value
             End If
 
-            DBCommand.CommandText = "Update RFQHeader SET EnqUserID = @EnqUserID, QuoUserID = @QuoUserID, SupplierCode = @SupplierCode, MakerCode = @MakerCode," _
+            DBCommand.CommandText = "Update RFQHeader SET EnqLocationCode = @EnqLocationCode, EnqUserID = @EnqUserID, QuoUserID = @QuoUserID, SupplierCode = @SupplierCode, MakerCode = @MakerCode," _
             & "SpecSheet = @SpecSheet, Specification = @Specification, SupplierContactPerson = @SupplierContactPerson," _
             & "SupplierItemName = @SupplierItemName, ShippingHandlingFee = @ShippingHandlingFee," _
             & "ShippingHandlingCurrencyCode = @ShippingHandlingCurrencyCode, PaymentTermCode = @PaymentTermCode," _
             & "Comment = @Comment, Priority = @Priority , PurposeCode = @PurposeCode , UpdatedBy = @UpdatedBy, UpdateDate = GETDATE()" & RFQStatusCode & st_QuotedDate _
             & " Where RFQNumber = @RFQNumber "
+            DBCommand.Parameters.Add("@EnqLocationCode", SqlDbType.VarChar).Value = EnqLocation.SelectedValue
             DBCommand.Parameters.Add("@EnqUserID", SqlDbType.Int).Value = ConvertStringToInt(EnqUser.SelectedValue)
             DBCommand.Parameters.Add("@QuoUserID", SqlDbType.Int).Value = ConvertStringToInt(QuoUser.SelectedValue)
             DBCommand.Parameters.Add("@SupplierCode", SqlDbType.Int).Value = Integer.Parse(SupplierCode.Text)
@@ -450,7 +451,9 @@ Partial Public Class RFQUpdate
 
             EnqUser.SelectedValue = DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString
             ViewState(OLD_ENQUSER_ID) = DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString
-            EnqLocation.Text = DS.Tables("RFQHeader").Rows(0)("EnqLocationName").ToString
+            ' EnqLocationの設定
+            SDS_RFQUpdate_EnqLocation.SelectCommand = String.Format("SELECT LocationCode, Name FROM s_Location ORDER BY Name")
+            EnqLocation.SelectedValue = DS.Tables("RFQHeader").Rows(0)("EnqLocationCode").ToString
 
             If DS.Tables("RFQHeader").Rows(0)("QuoLocationName").ToString = String.Empty Then
                 QuoLocation.Text = EnqLocation.Text
@@ -503,6 +506,7 @@ Partial Public Class RFQUpdate
             DBAdapter.Fill(DS, "RFQLine")
             DBCommand.Dispose()
 
+            Dim RFQLineNumberList As List(Of String) = New List(Of String)
             If DS.Tables("RFQLine").Rows.Count = 0 Then
             Else
                 Dim i_Cnt As Integer = 0
@@ -532,8 +536,30 @@ Partial Public Class RFQUpdate
                     POIssue(j).Visible = True
                     POIssue(j).NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
                     LineNumber(j).Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
+                    RFQLineNumberList.Add(DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString)
                 Next
             End If
+
+            ' EnqLocationの活性制御
+            If RFQLineNumberList.Count > 0 Then
+                Dim RFQLineNumberWhere As StringBuilder = New StringBuilder()
+                For Each RFQLineNumber In RFQLineNumberList
+                    RFQLineNumberWhere.Append(" " & RFQLineNumber & ",")
+                Next
+                DBCommand = New SqlCommand("Select " _
+        & " Count(PONumber) as PoCount " _
+        & " From PO Where CancellationDate is Null " _
+        & " AND RFQLineNumber In (" & RFQLineNumberWhere.ToString().TrimEnd(",") & ") ", DBConn)
+                DBAdapter = New SqlDataAdapter
+                DBAdapter.SelectCommand = DBCommand
+                DBAdapter.Fill(DS, "PO")
+                Dim PoCount As Integer = Integer.Parse(DS.Tables("PO").Rows(0)("PoCount"))
+                If PoCount > 0 Then
+                    'Poのキャンセル以外のデータが存在する場合、EnqLocation編集不可
+                    EnqLocation.Enabled = False
+                End If
+            End If
+
             DS.Clear()
         End If
 
@@ -851,4 +877,21 @@ Partial Public Class RFQUpdate
             NoOfferReason(i).DataBind()
         Next
     End Sub
+
+    Protected Sub EnqLocation_SelectedIndexChanged(sender As Object, e As EventArgs) Handles EnqLocation.SelectedIndexChanged
+        '[EnqUserIDの値設定]--------------------------------------------------------------------
+        Msg.Text = String.Empty
+        DBCommand = DBConn.CreateCommand()
+        DBCommand.CommandText = "SELECT Name AS EnqUserName, EnqUserID FROM RFQHeader, v_UserAll WHERE RFQHeader.EnqUserID = v_UserAll.UserID And EnqLocationCode = '" & EnqLocation.SelectedValue & "' Group BY EnqUserID, Name ORDER BY Name"
+        Dim DBReader As System.Data.SqlClient.SqlDataReader
+        DBReader = DBCommand.ExecuteReader()
+        DBCommand.Dispose()
+        EnqUser.Items.Clear()
+        Do Until DBReader.Read = False
+            EnqUser.Items.Add(New ListItem(DBReader("EnqUserName").ToString, DBReader("EnqUserID").ToString))
+        Loop
+        DBReader.Close()
+
+    End Sub
+
 End Class

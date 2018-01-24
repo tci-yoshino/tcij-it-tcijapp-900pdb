@@ -153,7 +153,11 @@
                                 DataValueField="UserID">
                             </asp:DropDownList>
                             <asp:SqlDataSource ID="SDS_RFQUpdate_EnqUser" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
-                            (<asp:Label ID="EnqLocation" runat="server" Text=""></asp:Label>)
+                           <asp:DropDownList ID="EnqLocation" runat="server" AutoPostBack="True"
+                                DataSourceID="SDS_RFQUpdate_EnqLocation" DataTextField="Name" 
+                                DataValueField="LocationCode">
+                            </asp:DropDownList>
+                            <asp:SqlDataSource ID="SDS_RFQUpdate_EnqLocation" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
                         </td>
                     </tr>
                     <tr>
