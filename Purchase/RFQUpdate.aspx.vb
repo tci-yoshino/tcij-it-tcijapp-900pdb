@@ -194,13 +194,20 @@ Partial Public Class RFQUpdate
                 st_PurposeCode = PurposeCode.Value
             End If
 
+            Dim st_EnqLocationCode As String = String.Empty
+            If EnqLocation.CssClass = "readonly" Then
+                st_EnqLocationCode = EnqLocationCode.Value
+            Else
+                st_EnqLocationCode = EnqLocation.SelectedValue
+            End If
+
             DBCommand.CommandText = "Update RFQHeader SET EnqLocationCode = @EnqLocationCode, EnqUserID = @EnqUserID, QuoUserID = @QuoUserID, SupplierCode = @SupplierCode, MakerCode = @MakerCode," _
             & "SpecSheet = @SpecSheet, Specification = @Specification, SupplierContactPerson = @SupplierContactPerson," _
             & "SupplierItemName = @SupplierItemName, ShippingHandlingFee = @ShippingHandlingFee," _
             & "ShippingHandlingCurrencyCode = @ShippingHandlingCurrencyCode, PaymentTermCode = @PaymentTermCode," _
             & "Comment = @Comment, Priority = @Priority , PurposeCode = @PurposeCode , UpdatedBy = @UpdatedBy, UpdateDate = GETDATE()" & RFQStatusCode & st_QuotedDate _
             & " Where RFQNumber = @RFQNumber "
-            DBCommand.Parameters.Add("@EnqLocationCode", SqlDbType.VarChar).Value = EnqLocation.SelectedValue
+            DBCommand.Parameters.Add("@EnqLocationCode", SqlDbType.VarChar).Value = st_EnqLocationCode
             DBCommand.Parameters.Add("@EnqUserID", SqlDbType.Int).Value = ConvertStringToInt(EnqUser.SelectedValue)
             DBCommand.Parameters.Add("@QuoUserID", SqlDbType.Int).Value = ConvertStringToInt(QuoUser.SelectedValue)
             DBCommand.Parameters.Add("@SupplierCode", SqlDbType.Int).Value = Integer.Parse(SupplierCode.Text)
@@ -556,7 +563,8 @@ Partial Public Class RFQUpdate
                 Dim PoCount As Integer = Integer.Parse(DS.Tables("PO").Rows(0)("PoCount"))
                 If PoCount > 0 Then
                     'Poのキャンセル以外のデータが存在する場合、EnqLocation編集不可
-                    EnqLocation.Enabled = False
+                    EnqLocation.CssClass = "readonly"
+                    EnqLocation.AutoPostBack = False
                 End If
             End If
 
@@ -880,17 +888,30 @@ Partial Public Class RFQUpdate
 
     Protected Sub EnqLocation_SelectedIndexChanged(sender As Object, e As EventArgs) Handles EnqLocation.SelectedIndexChanged
         '[EnqUserIDの値設定]--------------------------------------------------------------------
-        Msg.Text = String.Empty
-        DBCommand = DBConn.CreateCommand()
-        DBCommand.CommandText = "SELECT Name AS EnqUserName, EnqUserID FROM RFQHeader, v_UserAll WHERE RFQHeader.EnqUserID = v_UserAll.UserID And EnqLocationCode = '" & EnqLocation.SelectedValue & "' Group BY EnqUserID, Name ORDER BY Name"
-        Dim DBReader As System.Data.SqlClient.SqlDataReader
-        DBReader = DBCommand.ExecuteReader()
-        DBCommand.Dispose()
-        EnqUser.Items.Clear()
-        Do Until DBReader.Read = False
-            EnqUser.Items.Add(New ListItem(DBReader("EnqUserName").ToString, DBReader("EnqUserID").ToString))
-        Loop
-        DBReader.Close()
+        If EnqLocation.CssClass = "readonly" Then
+            ' 処理を中断して変更不可とする。
+            EnqLocation.SelectedValue = EnqLocationCode.Value
+        Else
+            Msg.Text = String.Empty
+            DBCommand = DBConn.CreateCommand()
+            If String.IsNullOrEmpty(Confidential.Text) Then
+                DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0) " _
+                                             & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1}) ORDER BY [Name]" _
+                                             , EnqLocation.SelectedValue, EnqUser.SelectedValue)
+            Else
+                DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE') " _
+                                                 & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1}) ORDER BY [Name]" _
+                                                 , EnqLocation.SelectedValue, EnqUser.SelectedValue)
+            End If
+            Dim DBReader As System.Data.SqlClient.SqlDataReader
+            DBReader = DBCommand.ExecuteReader()
+            DBCommand.Dispose()
+            EnqUser.Items.Clear()
+            Do Until DBReader.Read = False
+                EnqUser.Items.Add(New ListItem(DBReader("Name").ToString, DBReader("UserID").ToString))
+            Loop
+            DBReader.Close()
+        End If
 
     End Sub
 
