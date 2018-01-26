@@ -896,12 +896,10 @@ Partial Public Class RFQUpdate
             DBCommand = DBConn.CreateCommand()
             If String.IsNullOrEmpty(Confidential.Text) Then
                 DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0) " _
-                                             & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1}) ORDER BY [Name]" _
-                                             , EnqLocation.SelectedValue, EnqUser.SelectedValue)
+                                             , EnqLocation.SelectedValue)
             Else
                 DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE') " _
-                                                 & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1}) ORDER BY [Name]" _
-                                                 , EnqLocation.SelectedValue, EnqUser.SelectedValue)
+                                                 , EnqLocation.SelectedValue)
             End If
             Dim DBReader As System.Data.SqlClient.SqlDataReader
             DBReader = DBCommand.ExecuteReader()
