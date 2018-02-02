@@ -729,10 +729,21 @@ Partial Public Class RFQUpdate
     End Function
 
     Private Function CheckLocation() As Boolean
+        ' ログインユーザーが管理権限がない場合に判定する
         If Session("Purchase.isAdmin") = False Then
-            If Session("LocationCode") <> EnqLocationCode.Value And Session("LocationCode") <> QuoLocationCode.Value Then
-                Msg.Text = ERR_ANOTHER_LOCATION
-                Return False
+            ' Enq-Location　が　TCI-J or TCI-Sの場合
+            If EnqLocation.SelectedValue.Equals("JP") Or EnqLocation.SelectedValue.Equals("CN") Then
+                ' ログインユーザが TCI-J または TCI-S または Quo-Location に所属しない場合False
+                If Session("LocationCode") <> "JP" And Session("LocationCode") <> "CN" And Session("LocationCode") <> QuoLocationCode.Value Then
+                    Msg.Text = ERR_ANOTHER_LOCATION
+                    Return False
+                End If
+            Else
+                ' ログインユーザが Enq-Location または Quo-Location に所属しない場合False
+                If Session("LocationCode") <> EnqLocation.SelectedValue And Session("LocationCode") <> QuoLocationCode.Value Then
+                    Msg.Text = ERR_ANOTHER_LOCATION
+                    Return False
+                End If
             End If
         End If
         Return True
@@ -895,10 +906,10 @@ Partial Public Class RFQUpdate
             Msg.Text = String.Empty
             DBCommand = DBConn.CreateCommand()
             If String.IsNullOrEmpty(Confidential.Text) Then
-                DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0) " _
+                DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0) ORDER BY [Name] " _
                                              , EnqLocation.SelectedValue)
             Else
-                DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE') " _
+                DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_User WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE') ORDER BY [Name] " _
                                                  , EnqLocation.SelectedValue)
             End If
             Dim DBReader As System.Data.SqlClient.SqlDataReader
