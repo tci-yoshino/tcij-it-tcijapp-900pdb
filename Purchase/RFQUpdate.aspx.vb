@@ -731,8 +731,8 @@ Partial Public Class RFQUpdate
     Private Function CheckLocation() As Boolean
         ' ログインユーザーが管理権限がない場合に判定する
         If Session("Purchase.isAdmin") = False Then
-            ' Enq-Location　が　TCI-J or TCI-Sの場合
-            If EnqLocation.SelectedValue.Equals("JP") Or EnqLocation.SelectedValue.Equals("CN") Then
+            ' 登録済みのEnqLocationCode　が　TCI-J or TCI-Sの場合
+            If EnqLocationCode.Value.Equals("JP") Or EnqLocationCode.Value.Equals("CN") Then
                 ' ログインユーザが TCI-J または TCI-S または Quo-Location に所属しない場合False
                 If Session("LocationCode") <> "JP" And Session("LocationCode") <> "CN" And Session("LocationCode") <> QuoLocationCode.Value Then
                     Msg.Text = ERR_ANOTHER_LOCATION
@@ -740,7 +740,7 @@ Partial Public Class RFQUpdate
                 End If
             Else
                 ' ログインユーザが Enq-Location または Quo-Location に所属しない場合False
-                If Session("LocationCode") <> EnqLocation.SelectedValue And Session("LocationCode") <> QuoLocationCode.Value Then
+                If Session("LocationCode") <> EnqLocationCode.Value And Session("LocationCode") <> QuoLocationCode.Value Then
                     Msg.Text = ERR_ANOTHER_LOCATION
                     Return False
                 End If
