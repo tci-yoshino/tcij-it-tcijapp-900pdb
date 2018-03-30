@@ -44,6 +44,11 @@
           <References />
         </DtsPackage>
         <DtsPackage FormatVersion="8">
+          <Name>RFQDataExport.dtsx</Name>
+          <FullPath>RFQDataExport.dtsx</FullPath>
+          <References />
+        </DtsPackage>
+        <DtsPackage FormatVersion="8">
           <Name>SupplierExport.dtsx</Name>
           <FullPath>SupplierExport.dtsx</FullPath>
           <References />
