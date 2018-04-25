@@ -89,6 +89,7 @@ Partial Public Class POUpdate
         Public PaymentTermCode As String
         Public PaymentTermText As String   'ReadOnly
         Public IncotermsCode As String
+        Public IncotermsText As String   'ReadOnly
         Public DeliveryTerm As String
         Public PurposeCode As String
         Public PurposeText As String   'ReadOnly
@@ -393,7 +394,7 @@ Partial Public Class POUpdate
         R3MakerCode.Text = POInformation.R3MakerCode
         R3MakerName.Text = POInformation.R3MakerName
         PaymentTerm.Text = POInformation.PaymentTermText
-        Incoterms.Text = POInformation.IncotermsCode
+        Incoterms.Text = POInformation.IncotermsText
         DeliveryTerm.Text = POInformation.DeliveryTerm
         LabelPurpose.Text = POInformation.PurposeText
         If Purpose.Visible = True Then Purpose.SelectedValue = POInformation.PurposeCode.ToString()
@@ -919,6 +920,7 @@ Partial Public Class POUpdate
                 PoInformation.PaymentTermCode = dr("PaymentTermCode").ToString()
                 PoInformation.PaymentTermText = dr("PaymentTermText").ToString()
                 PoInformation.IncotermsCode = dr("IncotermsCode").ToString()
+                PoInformation.IncotermsText = dr("IncotermsText").ToString()
                 PoInformation.DeliveryTerm = dr("DeliveryTerm").ToString()
                 PoInformation.PurposeCode = dr("PurposeCode").ToString()
                 PoInformation.PurposeText = dr("PurposeText").ToString()
@@ -1006,6 +1008,7 @@ Partial Public Class POUpdate
         sb_SQL.Append("	PaymentTermCode, ")
         sb_SQL.Append("	PaymentTermText, ")
         sb_SQL.Append("	IncotermsCode, ")
+        sb_SQL.Append("	IncotermsText, ")
         sb_SQL.Append("	DeliveryTerm, ")
         sb_SQL.Append("	PurposeCode, ")
         sb_SQL.Append("	PurposeText, ")

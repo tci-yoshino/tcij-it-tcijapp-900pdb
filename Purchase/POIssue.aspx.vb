@@ -183,7 +183,7 @@ Partial Public Class POIssue
         R3MakerCode.Text = ds.Tables("RFQLine").Rows(0)("R3MakerCode").ToString
         R3MakerName.Text = ds.Tables("RFQLine").Rows(0)("R3MakerName").ToString
         PaymentTerm.Text = ds.Tables("RFQLine").Rows(0)("PaymentTerm").ToString
-        Incoterms.Text = ds.Tables("RFQLine").Rows(0)("IncotermsCode").ToString
+        Incoterms.Text = ds.Tables("RFQLine").Rows(0)("Incoterms").ToString
         DeliveryTerm.Text = ds.Tables("RFQLine").Rows(0)("DeliveryTerm").ToString
         SupplierItemNumber.Text = ds.Tables("RFQLine").Rows(0)("SupplierItemNumber").ToString
 
@@ -499,6 +499,7 @@ Partial Public Class POIssue
         sb_Sql.Append("  PaymentTermCode, ")
         sb_Sql.Append("  PaymentTerm, ")
         sb_Sql.Append("  IncotermsCode, ")
+        sb_Sql.Append("  Incoterms, ")
         sb_Sql.Append("  DeliveryTerm, ")
         sb_Sql.Append("  PurposeCode, ")
         sb_Sql.Append("  SupplierItemNumber, ")

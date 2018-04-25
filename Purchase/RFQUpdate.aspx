@@ -259,7 +259,7 @@
                             <asp:SqlDataSource ID="SDS_RFQUpdate_Incoterms" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
                                 
-                                SelectCommand="SELECT IncotermsCode FROM s_Incoterms ORDER BY IncotermsCode "></asp:SqlDataSource>
+                                SelectCommand="SELECT IncotermsCode, [Text] FROM s_Incoterms ORDER BY SortOrder "></asp:SqlDataSource>
                         </td>
                         <td colspan="2"><asp:TextBox ID="DeliveryTerm_1" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="Purity_1" runat="server" Width="5em" MaxLength="255"></asp:TextBox></td>

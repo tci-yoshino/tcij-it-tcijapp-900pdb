@@ -881,7 +881,7 @@ Partial Public Class RFQUpdate
             Incoterms(i).Items.Clear()
             Incoterms(i).Items.Add(String.Empty)
             Incoterms(i).DataSourceID = "SDS_RFQUpdate_Incoterms"
-            Incoterms(i).DataTextField = "IncotermsCode"
+            Incoterms(i).DataTextField = "Text"
             Incoterms(i).DataValueField = "IncotermsCode"
             Incoterms(i).DataBind()
             DeliveryTerm(i).Text = String.Empty
