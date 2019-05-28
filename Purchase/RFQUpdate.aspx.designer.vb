@@ -1,10 +1,10 @@
 ﻿'------------------------------------------------------------------------------
-' <自動生成>
-'     このコードはツールによって生成されました。
+' <自动生成>
+'     此代码由工具生成。
 '
-'     このファイルへの変更は、以下の状況下で不正な動作の原因になったり、
-'     コードが再生成されるときに損失したりします。 
-' </自動生成>
+'     对此文件的更改可能会导致不正确的行为，并且如果
+'     重新生成代码，这些更改将会丢失。 
+' </自动生成>
 '------------------------------------------------------------------------------
 
 Option Strict On
@@ -12,1129 +12,1345 @@ Option Explicit On
 
 
 Partial Public Class RFQUpdate
-    
+
     '''<summary>
-    '''RFQForm コントロール。
+    '''RFQForm 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents RFQForm As Global.System.Web.UI.HtmlControls.HtmlForm
-    
+
     '''<summary>
-    '''Confidential コントロール。
+    '''Confidential 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Confidential As Global.System.Web.UI.WebControls.Label
-    
+
     '''<summary>
-    '''Msg コントロール。
+    '''Msg 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
-    
+
     '''<summary>
-    '''RFQNumber コントロール。
+    '''RFQNumber 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents RFQNumber As Global.System.Web.UI.WebControls.Label
-    
+
     '''<summary>
-    '''CurrentRFQStatus コントロール。
+    '''CurrentRFQStatus 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents CurrentRFQStatus As Global.System.Web.UI.WebControls.Label
-    
+
     '''<summary>
-    '''ProductNumber コントロール。
+    '''ProductNumber 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents ProductNumber As Global.System.Web.UI.WebControls.Label
-    
+
     '''<summary>
-    '''ProductName コントロール。
+    '''ProductName 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents ProductName As Global.System.Web.UI.WebControls.Label
-    
+
     '''<summary>
-    '''SupplierCode コントロール。
+    '''SupplierCode 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SupplierCode As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''SupplierSelect コントロール。
+    '''SupplierSelect 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SupplierSelect As Global.System.Web.UI.WebControls.ImageButton
-    
+
     '''<summary>
-    '''SupplierInfo コントロール。
+    '''SupplierInfo 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SupplierInfo As Global.System.Web.UI.WebControls.LinkButton
-    
+
     '''<summary>
-    '''R3SupplierCode コントロール。
+    '''R3SupplierCode 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents R3SupplierCode As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''SupplierName コントロール。
+    '''SupplierName 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SupplierName As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''SupplierCountry コントロール。
+    '''SupplierCountry 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SupplierCountry As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''SupplierContactPerson コントロール。
+    '''SupplierContactPerson 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SupplierContactPerson As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''MakerCode コントロール。
+    '''SupplierContactPersonCodeList 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents SupplierContactPersonCodeList As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''SDS_SupplierContactPersonCodeList 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents SDS_SupplierContactPersonCodeList As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
+    '''MakerCode 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents MakerCode As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''MakerSelect コントロール。
+    '''MakerSelect 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents MakerSelect As Global.System.Web.UI.WebControls.ImageButton
-    
+
     '''<summary>
-    '''MakerInfo コントロール。
+    '''MakerInfo 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents MakerInfo As Global.System.Web.UI.WebControls.LinkButton
-    
+
     '''<summary>
-    '''MakerName コントロール。
+    '''MakerName 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents MakerName As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''MakerCountry コントロール。
+    '''MakerCountry 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents MakerCountry As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''SupplierItemName コントロール。
+    '''SupplierItemName 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SupplierItemName As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''PaymentTerm コントロール。
+    '''PaymentTerm 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents PaymentTerm As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''SDS_RFQUpdate_PaymentTerms コントロール。
+    '''SDS_RFQUpdate_PaymentTerms 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SDS_RFQUpdate_PaymentTerms As Global.System.Web.UI.WebControls.SqlDataSource
-    
+
     '''<summary>
-    '''ShippingHandlingCurrency コントロール。
+    '''ShippingHandlingCurrency 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents ShippingHandlingCurrency As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''SDS_RFQUpdate_Currency コントロール。
+    '''SDS_RFQUpdate_Currency 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SDS_RFQUpdate_Currency As Global.System.Web.UI.WebControls.SqlDataSource
-    
+
     '''<summary>
-    '''ShippingHandlingFee コントロール。
+    '''ShippingHandlingFee 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents ShippingHandlingFee As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''Purpose コントロール。
+    '''Purpose 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Purpose As Global.System.Web.UI.WebControls.Label
-    
+
     '''<summary>
-    '''ListPurpose コントロール。
+    '''ListPurpose 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents ListPurpose As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''SrcPurpose コントロール。
+    '''SrcPurpose 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SrcPurpose As Global.System.Web.UI.WebControls.SqlDataSource
-    
+
     '''<summary>
-    '''Priority コントロール。
+    '''Priority 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Priority As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''LabelPriority コントロール。
+    '''LabelPriority 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents LabelPriority As Global.System.Web.UI.WebControls.Label
-    
+
     '''<summary>
-    '''RequiredPurity コントロール。
+    '''RequiredPurity 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents RequiredPurity As Global.System.Web.UI.WebControls.Label
-    
+
     '''<summary>
-    '''RequiredQMMethod コントロール。
+    '''RequiredQMMethod 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents RequiredQMMethod As Global.System.Web.UI.WebControls.Label
-    
+
     '''<summary>
-    '''RequiredSpecification コントロール。
+    '''RequiredSpecification 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents RequiredSpecification As Global.System.Web.UI.WebControls.Label
-    
+
     '''<summary>
-    '''SpecSheet コントロール。
+    '''SpecSheet 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SpecSheet As Global.System.Web.UI.WebControls.CheckBox
-    
+
     '''<summary>
-    '''Specification コントロール。
+    '''Specification 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Specification As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''EnqUser コントロール。
+    '''EnqUser 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents EnqUser As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''SDS_RFQUpdate_EnqUser コントロール。
+    '''SDS_RFQUpdate_EnqUser 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SDS_RFQUpdate_EnqUser As Global.System.Web.UI.WebControls.SqlDataSource
-    
+
     '''<summary>
-    '''EnqLocation コントロール。
+    '''EnqLocation 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents EnqLocation As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''SDS_RFQUpdate_EnqLocation コントロール。
+    '''SDS_RFQUpdate_EnqLocation 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SDS_RFQUpdate_EnqLocation As Global.System.Web.UI.WebControls.SqlDataSource
-    
+
     '''<summary>
-    '''QuoUser コントロール。
+    '''StorageLocation 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents StorageLocation As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''SDS_RFQUpdate_EnqStorageLocation 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents SDS_RFQUpdate_EnqStorageLocation As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
+    '''QuoUser 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents QuoUser As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''SDS_RFQUpdate_QuoUser コントロール。
+    '''SDS_RFQUpdate_QuoUser 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SDS_RFQUpdate_QuoUser As Global.System.Web.UI.WebControls.SqlDataSource
-    
+
     '''<summary>
-    '''QuoLocation コントロール。
+    '''QuoLocation 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents QuoLocation As Global.System.Web.UI.WebControls.Label
-    
+    Protected WithEvents QuoLocation As Global.System.Web.UI.WebControls.DropDownList
+
     '''<summary>
-    '''Comment コントロール。
+    '''StorageLocation2 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents StorageLocation2 As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''SDS_RFQUpdate_QuoStorageLocation 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents SDS_RFQUpdate_QuoStorageLocation As Global.System.Web.UI.WebControls.SqlDataSource
+
+    '''<summary>
+    '''Comment 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Comment As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''EnqQuantity_1 コントロール。
+    '''PFC1 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents PFC1 As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''EnqQuantity_1 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents EnqQuantity_1 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''EnqUnit_1 コントロール。
+    '''EnqUnit_1 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents EnqUnit_1 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''EnqPiece_1 コントロール。
+    '''EnqPiece_1 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents EnqPiece_1 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''SDS_RFQUpdate_Qua コントロール。
+    '''SDS_RFQUpdate_Qua 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SDS_RFQUpdate_Qua As Global.System.Web.UI.WebControls.SqlDataSource
-    
+
     '''<summary>
-    '''Currency_1 コントロール。
+    '''Currency_1 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Currency_1 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''UnitPrice_1 コントロール。
+    '''UnitPrice_1 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents UnitPrice_1 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''QuoPer_1 コントロール。
+    '''QuoPer_1 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents QuoPer_1 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''QuoUnit_1 コントロール。
+    '''QuoUnit_1 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents QuoUnit_1 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''SDS_RFQUpdate_Unit コントロール。
+    '''SDS_RFQUpdate_Unit 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SDS_RFQUpdate_Unit As Global.System.Web.UI.WebControls.SqlDataSource
-    
+
     '''<summary>
-    '''LeadTime_1 コントロール。
+    '''LeadTime_1 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents LeadTime_1 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''SupplierItemNumber_1 コントロール。
+    '''SupplierItemNumber_1 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SupplierItemNumber_1 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''POIssue_1 コントロール。
+    '''POIssue_1 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents POIssue_1 As Global.System.Web.UI.WebControls.HyperLink
-    
+
     '''<summary>
-    '''LineNumber1 コントロール。
+    '''LineNumber1 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents LineNumber1 As Global.System.Web.UI.WebControls.HiddenField
-    
+
     '''<summary>
-    '''Incoterms_1 コントロール。
+    '''POInterfaceButton_1 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents POInterfaceButton_1 As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''HiddenField1 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents HiddenField1 As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''Incoterms_1 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Incoterms_1 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''SDS_RFQUpdate_Incoterms コントロール。
+    '''SDS_RFQUpdate_Incoterms 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SDS_RFQUpdate_Incoterms As Global.System.Web.UI.WebControls.SqlDataSource
-    
+
     '''<summary>
-    '''DeliveryTerm_1 コントロール。
+    '''DeliveryTerm_1 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents DeliveryTerm_1 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''Purity_1 コントロール。
+    '''Purity_1 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Purity_1 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''QMMethod_1 コントロール。
+    '''QMMethod_1 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents QMMethod_1 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''Packing_1 コントロール。
+    '''SupplierOfferNo_1 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents SupplierOfferNo_1 As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''Packing_1 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Packing_1 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''NoOfferReason_1 コントロール。
+    '''NoOfferReason_1 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents NoOfferReason_1 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''SDS_RFQUpdate_NoOffer コントロール。
+    '''SDS_RFQUpdate_NoOffer 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SDS_RFQUpdate_NoOffer As Global.System.Web.UI.WebControls.SqlDataSource
-    
+
     '''<summary>
-    '''EnqQuantity_2 コントロール。
+    '''PFC2 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents PFC2 As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''EnqQuantity_2 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents EnqQuantity_2 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''EnqUnit_2 コントロール。
+    '''EnqUnit_2 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents EnqUnit_2 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''EnqPiece_2 コントロール。
+    '''EnqPiece_2 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents EnqPiece_2 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''Currency_2 コントロール。
+    '''Currency_2 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Currency_2 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''UnitPrice_2 コントロール。
+    '''UnitPrice_2 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents UnitPrice_2 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''QuoPer_2 コントロール。
+    '''QuoPer_2 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents QuoPer_2 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''QuoUnit_2 コントロール。
+    '''QuoUnit_2 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents QuoUnit_2 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''LeadTime_2 コントロール。
+    '''LeadTime_2 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents LeadTime_2 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''SupplierItemNumber_2 コントロール。
+    '''SupplierItemNumber_2 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SupplierItemNumber_2 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''POIssue_2 コントロール。
+    '''POIssue_2 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents POIssue_2 As Global.System.Web.UI.WebControls.HyperLink
-    
+
     '''<summary>
-    '''LineNumber2 コントロール。
+    '''LineNumber2 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents LineNumber2 As Global.System.Web.UI.WebControls.HiddenField
-    
+
     '''<summary>
-    '''Incoterms_2 コントロール。
+    '''POInterfaceButton_2 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents POInterfaceButton_2 As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''HiddenField2 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents HiddenField2 As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''Incoterms_2 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Incoterms_2 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''DeliveryTerm_2 コントロール。
+    '''DeliveryTerm_2 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents DeliveryTerm_2 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''Purity_2 コントロール。
+    '''Purity_2 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Purity_2 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''QMMethod_2 コントロール。
+    '''QMMethod_2 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents QMMethod_2 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''Packing_2 コントロール。
+    '''SupplierOfferNo_2 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents SupplierOfferNo_2 As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''Packing_2 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Packing_2 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''NoOfferReason_2 コントロール。
+    '''NoOfferReason_2 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents NoOfferReason_2 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''EnqQuantity_3 コントロール。
+    '''PFC3 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents PFC3 As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''EnqQuantity_3 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents EnqQuantity_3 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''EnqUnit_3 コントロール。
+    '''EnqUnit_3 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents EnqUnit_3 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''EnqPiece_3 コントロール。
+    '''EnqPiece_3 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents EnqPiece_3 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''Currency_3 コントロール。
+    '''Currency_3 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Currency_3 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''UnitPrice_3 コントロール。
+    '''UnitPrice_3 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents UnitPrice_3 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''QuoPer_3 コントロール。
+    '''QuoPer_3 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents QuoPer_3 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''QuoUnit_3 コントロール。
+    '''QuoUnit_3 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents QuoUnit_3 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''LeadTime_3 コントロール。
+    '''LeadTime_3 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents LeadTime_3 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''SupplierItemNumber_3 コントロール。
+    '''SupplierItemNumber_3 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SupplierItemNumber_3 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''POIssue_3 コントロール。
+    '''POIssue_3 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents POIssue_3 As Global.System.Web.UI.WebControls.HyperLink
-    
+
     '''<summary>
-    '''LineNumber3 コントロール。
+    '''LineNumber3 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents LineNumber3 As Global.System.Web.UI.WebControls.HiddenField
-    
+
     '''<summary>
-    '''Incoterms_3 コントロール。
+    '''POInterfaceButton_3 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents POInterfaceButton_3 As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''HiddenField3 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents HiddenField3 As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''Incoterms_3 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Incoterms_3 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''DeliveryTerm_3 コントロール。
+    '''DeliveryTerm_3 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents DeliveryTerm_3 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''Purity_3 コントロール。
+    '''Purity_3 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Purity_3 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''QMMethod_3 コントロール。
+    '''QMMethod_3 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents QMMethod_3 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''Packing_3 コントロール。
+    '''SupplierOfferNo_3 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents SupplierOfferNo_3 As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''Packing_3 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Packing_3 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''NoOfferReason_3 コントロール。
+    '''NoOfferReason_3 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents NoOfferReason_3 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''EnqQuantity_4 コントロール。
+    '''PFC4 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents PFC4 As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''EnqQuantity_4 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents EnqQuantity_4 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''EnqUnit_4 コントロール。
+    '''EnqUnit_4 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents EnqUnit_4 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''EnqPiece_4 コントロール。
+    '''EnqPiece_4 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents EnqPiece_4 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''Currency_4 コントロール。
+    '''Currency_4 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Currency_4 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''UnitPrice_4 コントロール。
+    '''UnitPrice_4 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents UnitPrice_4 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''QuoPer_4 コントロール。
+    '''QuoPer_4 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents QuoPer_4 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''QuoUnit_4 コントロール。
+    '''QuoUnit_4 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents QuoUnit_4 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''LeadTime_4 コントロール。
+    '''LeadTime_4 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents LeadTime_4 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''SupplierItemNumber_4 コントロール。
+    '''SupplierItemNumber_4 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents SupplierItemNumber_4 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''POIssue_4 コントロール。
+    '''POIssue_4 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents POIssue_4 As Global.System.Web.UI.WebControls.HyperLink
-    
+
     '''<summary>
-    '''LineNumber4 コントロール。
+    '''LineNumber4 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents LineNumber4 As Global.System.Web.UI.WebControls.HiddenField
-    
+
     '''<summary>
-    '''Incoterms_4 コントロール。
+    '''POInterfaceButton_4 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents POInterfaceButton_4 As Global.System.Web.UI.WebControls.Button
+
+    '''<summary>
+    '''HiddenField4 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents HiddenField4 As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''Incoterms_4 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Incoterms_4 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''DeliveryTerm_4 コントロール。
+    '''DeliveryTerm_4 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents DeliveryTerm_4 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''Purity_4 コントロール。
+    '''Purity_4 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Purity_4 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''QMMethod_4 コントロール。
+    '''QMMethod_4 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents QMMethod_4 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''Packing_4 コントロール。
+    '''SupplierOfferNo_4 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents SupplierOfferNo_4 As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''Packing_4 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Packing_4 As Global.System.Web.UI.WebControls.TextBox
-    
+
     '''<summary>
-    '''NoOfferReason_4 コントロール。
+    '''NoOfferReason_4 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents NoOfferReason_4 As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''RunMsg コントロール。
+    '''RunMsg 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents RunMsg As Global.System.Web.UI.WebControls.Label
-    
+
     '''<summary>
-    '''RFQStatus コントロール。
+    '''RFQStatus 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents RFQStatus As Global.System.Web.UI.WebControls.DropDownList
-    
+
     '''<summary>
-    '''Update コントロール。
+    '''Update 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Update As Global.System.Web.UI.WebControls.Button
-    
+
     '''<summary>
-    '''Close コントロール。
+    '''Close 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Close As Global.System.Web.UI.WebControls.Button
-    
+
     '''<summary>
-    '''QuotedDate コントロール。
+    '''QuotedDate 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents QuotedDate As Global.System.Web.UI.WebControls.HiddenField
-    
+
     '''<summary>
-    '''UpdateDate コントロール。
+    '''UpdateDate 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents UpdateDate As Global.System.Web.UI.WebControls.HiddenField
-    
+
     '''<summary>
-    '''EnqLocationCode コントロール。
+    '''EnqLocationCode 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents EnqLocationCode As Global.System.Web.UI.WebControls.HiddenField
-    
+
     '''<summary>
-    '''QuoLocationCode コントロール。
+    '''QuoLocationCode 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents QuoLocationCode As Global.System.Web.UI.WebControls.HiddenField
-    
+
     '''<summary>
-    '''Hi_RFQStatusCode コントロール。
+    '''Hi_RFQStatusCode 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents Hi_RFQStatusCode As Global.System.Web.UI.WebControls.HiddenField
-    
+
     '''<summary>
-    '''PurposeCode コントロール。
+    '''PurposeCode 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents PurposeCode As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''EnqStorageLOcationCode 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents EnqStorageLOcationCode As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''QuoStorageLOcationCode 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents QuoStorageLOcationCode As Global.System.Web.UI.WebControls.HiddenField
 End Class

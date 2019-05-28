@@ -34,11 +34,20 @@ Partial Public Class UserSetting
     Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
-    '''UserID コントロール。
+    '''R3PurchasingGroup 控件。
     '''</summary>
     '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナ ファイルから分離コード ファイルに移動します。
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents R3PurchasingGroup As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''UserID 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents UserID As Global.System.Web.UI.WebControls.TextBox
 

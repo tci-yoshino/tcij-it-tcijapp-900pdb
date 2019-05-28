@@ -114,7 +114,7 @@ Partial Public Class RFQListBySupplier
         src.SelectCommand = _
               "SELECT distinct RL.RFQLineNumber, RL.EnqQuantity, RL.EnqUnitCode, RL.EnqPiece, " _
             & "       RL.CurrencyCode, RL.UnitPrice, RL.QuoPer, RL.QuoUnitCode, " _
-            & "       RL.LeadTime, RL.Packing, RL.Purity, RL.QMMethod, RL.NoOfferReason, " _
+            & "       RL.LeadTime, RL.Packing, RL.Purity, RL.QMMethod, RL.NoOfferReason,SupplierOfferNo, " _
             & "       PO.RFQLineNumber AS PO, CASE WHEN PO.Priority='C' THEN '' ELSE PO.Priority END AS Priority " _
             & "FROM v_RFQLine AS RL LEFT OUTER JOIN " _
             & " (SELECT RFQLineNumber " _

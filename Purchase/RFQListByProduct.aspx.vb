@@ -215,6 +215,7 @@ Partial Public Class RFQListByProduct
         sb_SQL.Append("	rl.Packing, ")
         sb_SQL.Append("	rl.Purity, ")
         sb_SQL.Append("	rl.QMMethod, ")
+        sb_SQL.Append("	rl.SupplierOfferNo, ")
         sb_SQL.Append("	rl.NoOfferReason, ")
         sb_SQL.Append("	PO.RFQLineNumber AS PO, ")
         sb_SQL.Append("	CASE WHEN PO.Priority = 'C' THEN '' ELSE PO.Priority END AS Priority ")

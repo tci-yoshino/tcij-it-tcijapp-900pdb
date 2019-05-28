@@ -268,7 +268,8 @@ Partial Public Class RFQIssue
                 If DBReader.HasRows = True Then
                     While DBReader.Read
                         SupplierCode.Text = DBReader("SupplierCode").ToString
-                        R3SupplierCode.Text = DBReader("R3SupplierCode").ToString
+                        'R3SupplierCode.Text = DBReader("R3SupplierCode").ToString
+                        R3SupplierCode.Text = DBReader("S4SupplierCode").ToString
                         SupplierName.Text = DBReader("SupplierName").ToString
                         SupplierCountry.Text = DBReader("CountryName").ToString
 
@@ -473,7 +474,8 @@ Partial Public Class RFQIssue
         End If
         'Makerのチェック
         If MakerCode.Text <> "" Then
-            If ExistenceConfirmation(st_Supplier, st_SupplierKey, MakerCode.Text) = False Then
+            'If ExistenceConfirmation(st_Supplier, st_SupplierKey, MakerCode.Text) = False Then
+            If ExistenceConfirmation(st_Supplier, "S4SupplierCode", MakerCode.Text) = False Then
                 Msg.Text = ERR_INCORRECT_MAKERCODE
                 Return False
             End If
@@ -566,6 +568,7 @@ Partial Public Class RFQIssue
         sb_Sql.AppendLine("SELECT")
         sb_Sql.AppendLine("  S.SupplierCode,")
         sb_Sql.AppendLine("  S.R3SupplierCode,")
+        sb_Sql.AppendLine("  S.S4SupplierCode,")
         sb_Sql.AppendLine("  LTRIM(RTRIM(ISNULL(S.Name3, '') + ' ' + ISNULL(S.Name4, ''))) AS SupplierName,")
         sb_Sql.AppendLine("  S.CountryCode,")
         sb_Sql.AppendLine("  C.CountryName,")

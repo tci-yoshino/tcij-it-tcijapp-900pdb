@@ -5,6 +5,8 @@
     Private st_Code As String = String.Empty
     Private st_Name As String = String.Empty
     Const SEARCH_ACTION As String = "Search"
+    Private st_QuLocation As String = String.Empty
+
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -15,18 +17,24 @@
         If Request.RequestType = "POST" Then
             st_Code = IIf(Request.Form("Code") = Nothing, "", Request.Form("Code"))
             st_Name = IIf(Request.Form("Name") = Nothing, "", Request.Form("Name"))
+            
+            st_QuLocation = IIf(Request.Form("Name") = Nothing, "", Request.Form("Name"))
         ElseIf Request.RequestType = "GET" Then
             st_Code = IIf(Request.QueryString("Code") = Nothing, "", Request.QueryString("Code"))
             st_Name = IIf(Request.QueryString("Name") = Nothing, "", Request.QueryString("Name"))
+           
+            st_QuLocation = IIf(Request.QueryString("Name") = Nothing, "", Request.QueryString("Name"))
         End If
 
         ' 空白除去
         st_Code = Trim(st_Code)
         st_Name = Trim(st_Name)
+        st_QuLocation = Trim(st_QuLocation)
 
         ' URL デコード
         st_Code = HttpUtility.UrlDecode(st_Code)
         st_Name = HttpUtility.UrlDecode(st_Name)
+        st_QuLocation = HttpUtility.UrlDecode(st_QuLocation)
 
         ' 全角を半角に変換
         st_Code = StrConv(st_Code, VbStrConv.Narrow)
@@ -91,7 +99,7 @@
         End If
 
         SrcMaker.SelectCommand = _
-              " SELECT SupplierCode, s_Country.[Name] AS CountryName, " _
+              " SELECT S4SupplierCode,SupplierCode,LocationCode, s_Country.[Name] AS CountryName, " _
             & "   LTRIM(RTRIM(ISNULL(Supplier.Name3, '') + ' ' + ISNULL(Supplier.Name4, ''))) AS Name " _
             & " FROM  Supplier " _
             & "   LEFT OUTER JOIN s_Country " _

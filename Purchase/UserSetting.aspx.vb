@@ -60,7 +60,8 @@ Partial Public Class UserSetting
                 st_SQL &= " PrivilegeLevel, "
                 st_SQL &= "isAdmin, "
                 st_SQL &= " isDisabled, "
-                st_SQL &= " CONVERT(VARCHAR,UpdateDate,120) AS UpdateDate "
+                st_SQL &= " CONVERT(VARCHAR,UpdateDate,120) AS UpdateDate, "
+                st_SQL &= "R3PurchasingGroup "
                 st_SQL &= "FROM "
                 st_SQL &= " v_UserAll "
                 st_SQL &= "WHERE "
@@ -82,6 +83,7 @@ Partial Public Class UserSetting
                         isDisabled.Checked = CBool(DBReader("isDisAbled"))
                         '[HiddenField設定]
                         UpdateDate.Value = DBReader("UpdateDate").ToString()
+                        R3PurchasingGroup.Text = DBReader("R3PurchasingGroup").ToString()
                     Else
                         Msg.Text = Common.MSG_NO_DATA_FOUND
                         Exit Sub
@@ -137,7 +139,8 @@ Partial Public Class UserSetting
             st_SQL &= "isAdmin=" & Common.ConvertBoolToInt(isAdmin.Checked) & ", "
             st_SQL &= "isDisAbled=" & Common.ConvertBoolToInt(isDisabled.Checked) & ", "
             st_SQL &= "UpdatedBy=" & Session("UserID").ToString & ", "
-            st_SQL &= "UpdateDate=GetDate() "
+            st_SQL &= "UpdateDate=GetDate(),"
+            st_SQL &= "R3PurchasingGroup='" + R3PurchasingGroup.Text + "'"
             st_SQL &= "WHERE UserID='" & UserID.Text & "'"
 
         ElseIf Mode.Value = String.Empty Then
@@ -155,7 +158,8 @@ Partial Public Class UserSetting
             st_SQL &= "CreatedBy,"
             st_SQL &= "CreateDate,"
             st_SQL &= "UpdatedBy,"
-            st_SQL &= "UpdateDate) "
+            st_SQL &= "UpdateDate,"
+            st_SQL &= "R3PurchasingGroup)"
             st_SQL &= "VALUES "
             st_SQL &= "(" & Common.SafeSqlLiteral(UserID.Text) & ",'"
             st_SQL &= RoleCode.Text & "','"
@@ -165,7 +169,8 @@ Partial Public Class UserSetting
             st_SQL &= Session("UserID").ToString & ","
             st_SQL &= "GetDate(),"
             st_SQL &= Session("UserID").ToString & ","
-            st_SQL &= "GetDate())"
+            st_SQL &= "GetDate(),"
+            st_SQL &= R3PurchasingGroup.Text.ToString & ")"
         Else
             Msg.Text = Common.ERR_INVALID_PARAMETER
             Exit Sub

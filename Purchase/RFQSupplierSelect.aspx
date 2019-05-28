@@ -79,8 +79,9 @@
                     <table ID="itemPlaceholderContainer" runat="server">
                         <tr id="Tr1" runat="server">
                             <th id="Th1" runat="server" style="width:15%">Supplier Code</th>
-                            <th id="Th2" runat="server" style="width:70%">Supplier Name</th>
+                            <th id="Th2" runat="server" style="width:55%">Supplier Name</th>
                             <th id="Th3" runat="server" style="width:15%">Quo-Location</th>
+                            <th id="Th4" runat="server" style="width:15%">Supplier code in SAP</th>
                         </tr>
                         <tr ID="itemPlaceholder" runat="server">
                         </tr>
@@ -90,12 +91,15 @@
                     <h3 style="font-style:italic"><%=Purchase.Common.ERR_NO_MATCH_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onclick="returnValues('<%#Eval("SupplierCode")%>','<%#Eval("R3SupplierCode") %>','<%# Replace(Eval("Name").ToString(), "'", "\'")%>','<%#Eval("CountryName") %>','<%#Eval("QuoLocationCode")%>');<%=st_js_postback %>">
+                    <tr onclick="returnValues('<%#Eval("SupplierCode")%>','<%#Eval("S4SupplierCode") %>','<%# Replace(Eval("Name").ToString(), "'", "\'")%>','<%#Eval("CountryName") %>','<%#Eval("QuoLocationCode")%>');<%=st_js_postback %>">
                         <td><asp:Label ID="SupplierCode" runat="server" Text='<%#Eval("SupplierCode")%>' /></td>
                         <td>
                           <asp:Label ID="SupplierName3" runat="server" Text='<%#Eval("Name")%>' />
                         </td>
                         <td><asp:Label ID="QuoLocationCode" runat="server" Text='<%#Eval("QuoLocationName") %>' /></td>
+                         <td>
+                            <asp:Label ID="SupplierCodeInS4" runat="server" Text='<%#Eval("S4SupplierCode")%>' />
+                        </td>
                     </tr>
                 </ItemTemplate>
             </asp:ListView>

@@ -18,6 +18,12 @@
 		<div class="main">
 			<p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 				<table>
+                     <tr>
+						<th>SAP Purchasing Group : </th>
+						<td>
+						    <asp:TextBox ID="R3PurchasingGroup" runat="server" Width="7em" MaxLength="5"></asp:TextBox>
+						</td>
+					</tr>
 					<tr>
 						<th>User ID<span class="required">*</span> : </th>
 						<td>

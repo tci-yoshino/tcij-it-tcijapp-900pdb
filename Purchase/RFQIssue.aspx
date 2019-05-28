@@ -75,7 +75,7 @@
 						</td>
 					</tr>
 					<tr>
-						<th>TCI-J Supplier Code : </th>
+						<th>SAP Supplier Code : </th>
 						<td><asp:TextBox ID="R3SupplierCode" runat="server" Width="7em" MaxLength="10" 
                                 ReadOnly="true" CssClass="readonly" EnableViewState="False"></asp:TextBox></td>
 					</tr>
@@ -89,7 +89,7 @@
 						</td>
 					</tr>
 					<tr>
-						<th>Maker Code : </th>
+						<th>SAP Maker Code : </th>
 						<td>
 						    <asp:TextBox ID="MakerCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
 						    <asp:ImageButton ID="MakerSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="return MakerSelect_onclick()" />
@@ -144,7 +144,7 @@
                             </asp:DropDownList>
 						    <asp:SqlDataSource ID="SDS_RFQIssue_Pur" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-                                SelectCommand="SELECT [PurposeCode], [Text] FROM [Purpose] ORDER BY [SortOrder]">
+                                SelectCommand="SELECT [PurposeCode], [Text] FROM [Purpose] where IsVisiable=1 ORDER BY [SortOrder]">
                             </asp:SqlDataSource>
 						</td>
 					</tr>
@@ -189,7 +189,7 @@
                             x <asp:TextBox ID="EnqPiece_1" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox>
                             <asp:SqlDataSource ID="SDS_RFQIssue_Qua" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-                                SelectCommand="SELECT [UnitCode] FROM [PurchasingUnit] ORDER BY [UnitCode]">
+                                SelectCommand="SELECT [UnitCode] FROM [PurchasingUnit] where UnitCode<>'ZZ' and UnitCode<>'PC' and UnitCode<>'TON' and UnitCode<>'-' and UnitCode<>'EA' and UnitCode<>'MT' and UnitCode<>'MU' ORDER BY [SortOrder]">
                             </asp:SqlDataSource>
                         </td>
                         <td><asp:TextBox ID="SupplierItemNumber_1" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>

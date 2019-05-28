@@ -11,16 +11,16 @@ Option Strict On
 Option Explicit On
 
 
-Partial Public Class RFQListBySupplier
+Partial Public Class PurchaseGroupSetting
 
     '''<summary>
-    '''RFQListForm 控件。
+    '''CountryForm 控件。
     '''</summary>
     '''<remarks>
     '''自动生成的字段。
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents RFQListForm As Global.System.Web.UI.HtmlControls.HtmlForm
+    Protected WithEvents CountryForm As Global.System.Web.UI.HtmlControls.HtmlForm
 
     '''<summary>
     '''Msg 控件。
@@ -32,164 +32,191 @@ Partial Public Class RFQListBySupplier
     Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
 
     '''<summary>
-    '''SupplierCode 控件。
+    '''UserID 控件。
     '''</summary>
     '''<remarks>
     '''自动生成的字段。
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents SupplierCode As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents UserID As Global.System.Web.UI.WebControls.HiddenField
 
     '''<summary>
-    '''SupplierName 控件。
+    '''R3PurchasingGroup 控件。
     '''</summary>
     '''<remarks>
     '''自动生成的字段。
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents SupplierName As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents R3PurchasingGroup As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
-    '''Address1 控件。
+    '''Location 控件。
     '''</summary>
     '''<remarks>
     '''自动生成的字段。
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents Address1 As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents Location As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
-    '''Address2 控件。
+    '''Name 控件。
     '''</summary>
     '''<remarks>
     '''自动生成的字段。
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents Address2 As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents Name As Global.System.Web.UI.WebControls.TextBox
 
     '''<summary>
-    '''Address3 控件。
+    '''StorageLocationIDsPanel 控件。
     '''</summary>
     '''<remarks>
     '''自动生成的字段。
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents Address3 As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents StorageLocationIDsPanel As Global.System.Web.UI.WebControls.Panel
 
     '''<summary>
-    '''PostalCode 控件。
+    '''AL10 控件。
     '''</summary>
     '''<remarks>
     '''自动生成的字段。
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents PostalCode As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents AL10 As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
-    '''CountryName 控件。
+    '''AL20 控件。
     '''</summary>
     '''<remarks>
     '''自动生成的字段。
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents CountryName As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents AL20 As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
-    '''Telephone 控件。
+    '''CL10 控件。
     '''</summary>
     '''<remarks>
     '''自动生成的字段。
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents Telephone As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents CL10 As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
-    '''Fax 控件。
+    '''CL20 控件。
     '''</summary>
     '''<remarks>
     '''自动生成的字段。
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents Fax As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents CL20 As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
-    '''EmailLink 控件。
+    '''CL30 控件。
     '''</summary>
     '''<remarks>
     '''自动生成的字段。
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents EmailLink As Global.System.Web.UI.WebControls.HyperLink
+    Protected WithEvents CL30 As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
-    '''Email 控件。
+    '''CL40 控件。
     '''</summary>
     '''<remarks>
     '''自动生成的字段。
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents Email As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents CL40 As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
-    '''WebsiteLink 控件。
+    '''CL70 控件。
     '''</summary>
     '''<remarks>
     '''自动生成的字段。
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents WebsiteLink As Global.System.Web.UI.WebControls.HyperLink
+    Protected WithEvents CL70 As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
-    '''Website 控件。
+    '''EL10 控件。
     '''</summary>
     '''<remarks>
     '''自动生成的字段。
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents Website As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents EL10 As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
-    '''SupplierInfoLink 控件。
+    '''EL20 控件。
     '''</summary>
     '''<remarks>
     '''自动生成的字段。
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents SupplierInfoLink As Global.System.Web.UI.WebControls.HyperLink
+    Protected WithEvents EL20 As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
-    '''SupplierInfo 控件。
+    '''HL10 控件。
     '''</summary>
     '''<remarks>
     '''自动生成的字段。
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents SupplierInfo As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents HL10 As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
-    '''Comment 控件。
+    '''HL30 控件。
     '''</summary>
     '''<remarks>
     '''自动生成的字段。
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents Comment As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents HL30 As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
-    '''RFQHeaderList 控件。
+    '''NL10 控件。
     '''</summary>
     '''<remarks>
     '''自动生成的字段。
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents RFQHeaderList As Global.System.Web.UI.WebControls.ListView
+    Protected WithEvents NL10 As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
-    '''SrcRFQHeader 控件。
+    '''NL20 控件。
     '''</summary>
     '''<remarks>
     '''自动生成的字段。
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
-    Protected WithEvents SrcRFQHeader As Global.System.Web.UI.WebControls.SqlDataSource
+    Protected WithEvents NL20 As Global.System.Web.UI.WebControls.CheckBox
+
+    '''<summary>
+    '''Mode 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents Mode As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''Action 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''Save 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents Save As Global.System.Web.UI.WebControls.Button
 End Class

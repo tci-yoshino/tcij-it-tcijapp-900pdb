@@ -899,7 +899,7 @@ Public Class Common
     ''' <remarks></remarks>
     Public Shared Sub SetPurposeDropDownList(ByVal SrcPurpose As System.Web.UI.WebControls.SqlDataSource)
 
-        SrcPurpose.SelectCommand = "SELECT PurposeCode, Text FROM Purpose ORDER BY SortOrder"
+        SrcPurpose.SelectCommand = "SELECT PurposeCode, Text FROM Purpose where IsVisiable=1  ORDER BY SortOrder"
 
     End Sub
 
@@ -960,4 +960,69 @@ Public Class Common
 
     End Sub
 
+    '生成txt文件
+    Public Shared Function CreateTxtFile(ByVal fileName As String) As String
+        Dim strFileName As String
+        strFileName = System.IO.Path.Combine(ConfigurationManager.AppSettings("PoInterfaceDir"), fileName)
+        Dim FileExists As Boolean
+        FileExists = My.Computer.FileSystem.DirectoryExists(ConfigurationManager.AppSettings("PoInterfaceDir"))
+        If FileExists = False Then
+            My.Computer.FileSystem.CreateDirectory(ConfigurationManager.AppSettings("PoInterfaceDir"))
+        End If
+        Dim t As System.IO.StreamWriter = New System.IO.StreamWriter(strFileName, False, System.Text.Encoding.UTF8)
+        t.Write("")
+        t.Close()
+        Return strFileName
+    End Function
+
+    Public Shared Sub WriteLintTxtFile(ByVal fileName As String, ByVal content As String)
+        Dim FileExists As Boolean
+        FileExists = My.Computer.FileSystem.DirectoryExists(ConfigurationManager.AppSettings("PoInterfaceDir"))
+        If FileExists = False Then
+            My.Computer.FileSystem.CreateDirectory(ConfigurationManager.AppSettings("PoInterfaceDir"))
+        End If
+        Dim t As System.IO.StreamWriter = New System.IO.StreamWriter(fileName, True, System.Text.Encoding.UTF8)
+        t.WriteLine(content)
+        t.Close()
+    End Sub
+
+    Public Shared Function GetDataTable(ByVal sql As String, ByVal tablename As String) As System.Data.DataTable
+        Dim DBConn As New System.Data.SqlClient.SqlConnection(DB_CONNECT_STRING)
+        Dim DBAdapter As System.Data.SqlClient.SqlDataAdapter
+        Dim DBCommand As System.Data.SqlClient.SqlCommand
+        DBConn.Open()
+        DBCommand = DBConn.CreateCommand()
+        DBAdapter = New SqlDataAdapter
+        Dim DS As DataSet = New DataSet
+        DBCommand = New SqlCommand(sql, DBConn)
+        DBAdapter.SelectCommand = DBCommand
+        DBAdapter.Fill(DS, tablename)
+        DBCommand.Dispose()
+        Return DS.Tables(tablename)
+    End Function
+
+    Public Shared Function GetDataTable(ByVal sql As String) As System.Data.DataTable
+        Dim DBConn As New System.Data.SqlClient.SqlConnection(DB_CONNECT_STRING)
+        Dim DBAdapter As System.Data.SqlClient.SqlDataAdapter
+        Dim DBCommand As System.Data.SqlClient.SqlCommand
+        DBConn.Open()
+        DBCommand = DBConn.CreateCommand()
+        DBAdapter = New SqlDataAdapter
+        Dim DS As DataSet = New DataSet
+        DBCommand = New SqlCommand(sql, DBConn)
+        DBAdapter.SelectCommand = DBCommand
+        DBAdapter.Fill(DS)
+        DBCommand.Dispose()
+        DBConn.Close()
+        Return DS.Tables(0)
+    End Function
+
+    Public Shared Function GetDataRow(ByVal sql As String, ByVal tablename As String) As System.Data.DataRow
+        Dim DataTable As System.Data.DataTable = GetDataTable(sql, tablename)
+        If DataTable.Rows.Count > 0 Then
+            Return DataTable.Rows(0)
+        Else
+            Return Nothing
+        End If
+    End Function
 End Class
