@@ -119,6 +119,8 @@
     <Content Include="ProductSearch.aspx" />
     <Content Include="ProductSelect.aspx" />
     <Content Include="ProductSetting.aspx" />
+    <Content Include="PurchaseGroup.aspx" />
+    <Content Include="PurchaseGroupSetting.aspx" />
     <Content Include="RequestedTask.aspx" />
     <Content Include="RFQCorrespondence.aspx" />
     <Content Include="RFQIssue.aspx" />
@@ -272,6 +274,20 @@
     </Compile>
     <Compile Include="ProductSetting.aspx.vb">
       <DependentUpon>ProductSetting.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PurchaseGroup.aspx.designer.vb">
+      <DependentUpon>PurchaseGroup.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PurchaseGroup.aspx.vb">
+      <DependentUpon>PurchaseGroup.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PurchaseGroupSetting.aspx.designer.vb">
+      <DependentUpon>PurchaseGroupSetting.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PurchaseGroupSetting.aspx.vb">
+      <DependentUpon>PurchaseGroupSetting.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="RequestedTask.aspx.designer.vb">
