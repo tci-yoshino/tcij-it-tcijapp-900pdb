@@ -140,7 +140,9 @@
     <Content Include="SuppliersProductSetting.aspx" />
     <Content Include="SystemError.aspx" />
     <Content Include="UnassignedTask.aspx" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="AuthError.html" />
     <Content Include="MakerSelect.aspx" />
     <Content Include="SupplierSelect.aspx" />

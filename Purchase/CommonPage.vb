@@ -38,7 +38,7 @@ Public Class CommonPage
             Else
                 st_Action = Request.Form("Action").ToString
             End If
-        ElseIf Request.RequestType = "GET" Then
+        ElseIf (Request.RequestType = "GET" OrElse Request.RequestType = "HEAD") Then
             If Request.Form("Action") = Nothing Then
                 st_Action = IIf(Request.QueryString("Action") = Nothing, String.Empty, Request.QueryString("Action")).ToString
             Else
