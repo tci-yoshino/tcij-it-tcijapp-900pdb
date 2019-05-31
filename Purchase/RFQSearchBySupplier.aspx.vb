@@ -182,6 +182,7 @@ Partial Public Class RFQSearchBySupplier
         sb_SQL.Append("	DISTINCT ")
         sb_SQL.Append("	SupplierCode, ")
         sb_SQL.Append("	R3SupplierCode, ")
+        sb_SQL.Append("	S4SupplierCode, ")
         sb_SQL.Append("	LTRIM(RTRIM(ISNULL(Name3, '') + ' ' + ISNULL(Name4, ''))) AS SupplierName ")
         sb_SQL.Append("FROM ")
         sb_SQL.Append("	Supplier ")

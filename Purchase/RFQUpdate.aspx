@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="./CSS/Style.css" type="text/css" media="screen,print" />
     <script type="text/javascript" src="./JS/Common.js"></script>
     <script type="text/javascript" src="./JS/Colorful.js"></script>
+    <style type="text/css">
+        #POIssue_1{ text-decoration: none;cursor:default;}
+        #POIssue_2{ text-decoration: none;cursor:default;}
+        #POIssue_3{ text-decoration: none;cursor:default;}
+        #POIssue_4{ text-decoration: none;cursor:default;}
+    </style>
 </head>
 <body>
 
@@ -277,7 +283,7 @@
                         </td>
                         <td><asp:TextBox ID="SupplierItemNumber_1" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
                         <td rowspan="2"><asp:HyperLink ID="POIssue_1" runat="server"  
-                                NavigateUrl="./POIssue.aspx" Visible="False">PO Issue</asp:HyperLink>
+                                NavigateUrl="./POIssue.aspx" Visible="False" Enabled="False" ForeColor="#CBD0D3">PO Issue</asp:HyperLink>
                             <asp:HiddenField ID="LineNumber1" runat="server" />
                         </td>
                          <td rowspan="2">
@@ -355,7 +361,7 @@
                         </td>
                         <td><asp:TextBox ID="SupplierItemNumber_2" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
                         <td rowspan="2"><asp:HyperLink ID="POIssue_2" runat="server" 
-                                NavigateUrl="./POIssue.aspx" Visible="False">PO Issue</asp:HyperLink>
+                                NavigateUrl="./POIssue.aspx" Visible="False" ForeColor="#CBD0D3">PO Issue</asp:HyperLink>
                             <asp:HiddenField ID="LineNumber2" runat="server" />
                         </td>
                         <td rowspan="2">
@@ -425,7 +431,7 @@
                         </td>
                         <td><asp:TextBox ID="SupplierItemNumber_3" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
                         <td rowspan="2"><asp:HyperLink ID="POIssue_3" runat="server" 
-                                NavigateUrl="./POIssue.aspx" Visible="False">PO Issue</asp:HyperLink>
+                                NavigateUrl="./POIssue.aspx" Visible="False" ForeColor="#CBD0D3">PO Issue</asp:HyperLink>
                             <asp:HiddenField ID="LineNumber3" runat="server" />
                         </td>
                          <td rowspan="2">
@@ -496,7 +502,7 @@
                         </td>
                         <td><asp:TextBox ID="SupplierItemNumber_4" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
                         <td rowspan="2"><asp:HyperLink ID="POIssue_4" runat="server" 
-                                NavigateUrl="./POIssue.aspx" Visible="False">PO Issue</asp:HyperLink>
+                                NavigateUrl="./POIssue.aspx" Visible="False" ForeColor="#CBD0D3">PO Issue</asp:HyperLink>
                             <asp:HiddenField ID="LineNumber4" runat="server" />
                         </td>
                         <td rowspan="2">
@@ -640,6 +646,10 @@
                     break;
                 case "6":
                     alert('Please quote and update RFQ first! PO interface create unsuccessfully!');
+                    return false;
+                    break;
+                case "7":
+                    alert('Please make sure SAP supplier code already been created! PO interface create unsuccessfully!');
                     return false;
                     break;
             }

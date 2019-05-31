@@ -112,7 +112,7 @@ WHERE                   (RegionCode IN
                     <table ID="itemPlaceholderContainer" runat="server">
                         <tr id="Tr1" runat="server">
                             <th id="Th1" runat="server" style="width:15%">Supplier Code</th>
-                            <th id="Th2" runat="server" style="width:15%">TCI-J Supplier Code</th>
+                            <th id="Th2" runat="server" style="width:15%">SAP Supplier Code</th>
                             <th id="Th3" runat="server" style="width:70%">Supplier Name</th>
                         </tr>
                         <tr ID="itemPlaceholder" runat="server">
@@ -125,7 +125,7 @@ WHERE                   (RegionCode IN
                 <ItemTemplate>
                     <tr style="">
                         <td><asp:HyperLink ID="SupplierCode" runat="server" NavigateUrl='<%#Eval("SupplierCode","./RFQListBySupplier.aspx?SupplierCode={0}")%>' Text = '<%#Eval("SupplierCode")%>' /></td>
-                        <td><asp:HyperLink ID="R3SupplierCode" runat="server" NavigateUrl='<%#Eval("SupplierCode","./RFQListBySupplier.aspx?SupplierCode={0}")%>' Text = '<%#Eval("R3SupplierCode")%>' /></td>
+                        <td><asp:HyperLink ID="R3SupplierCode" runat="server" NavigateUrl='<%#Eval("SupplierCode","./RFQListBySupplier.aspx?SupplierCode={0}")%>' Text = '<%#Eval("S4SupplierCode")%>' /></td>
                         <td><asp:HyperLink ID="SupplierName" runat="server" NavigateUrl='<%#Eval("SupplierCode","./RFQListBySupplier.aspx?SupplierCode={0}")%>' Text = '<%#Eval("SupplierName")%>' /></td>
                     </tr>
                 </ItemTemplate>

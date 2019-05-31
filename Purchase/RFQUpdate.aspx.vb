@@ -656,6 +656,7 @@ Partial Public Class RFQUpdate
                     SupplierItemNumber(j).Text = DS.Tables("RFQLine").Rows(i).Item("SupplierItemNumber").ToString
                     NoOfferReason(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("NoOfferReasonCode").ToString
                     POIssue(j).Visible = True
+                    POIssue(j).Enabled = False
                     POIssue(j).NavigateUrl = "./POIssue.aspx?RFQLineNumber=" & DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
                     LineNumber(j).Value = DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString
                     RFQLineNumberList.Add(DS.Tables("RFQLine").Rows(i).Item("RFQLineNumber").ToString)
@@ -676,6 +677,11 @@ Partial Public Class RFQUpdate
                 PFC2.Value = "6"
                 PFC3.Value = "6"
                 PFC4.Value = "6"
+            ElseIf DS.Tables("RFQHeader").Rows(0)("S4SupplierCode").ToString = "" Then
+                PFC1.Value = "7"
+                PFC2.Value = "7"
+                PFC3.Value = "7"
+                PFC4.Value = "7"
             Else
                 Dim tmpQuoUnitCode As String = ""
                 Dim isFirstClickPointerfac As String = ""
@@ -688,7 +694,7 @@ Partial Public Class RFQUpdate
                         If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
                             PFC1.Value = "2"
                             POIssue_1.Enabled = False
-                            POIssue_1.Attributes.Add("onclick", "return alert('The function was removed!')")
+                            'POIssue_1.Attributes.Add("onclick", "return alert('The function was removed!')")
                         Else
                             PFC1.Value = "3"
                         End If
@@ -697,7 +703,7 @@ Partial Public Class RFQUpdate
                         If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
                             PFC1.Value = "4"
                             POIssue_1.Enabled = False
-                            POIssue_1.Attributes.Add("onclick", "return alert('The function was removed!')")
+                            'POIssue_1.Attributes.Add("onclick", "return alert('The function was removed!')")
                         Else
                             PFC1.Value = "5"
                         End If
@@ -711,7 +717,7 @@ Partial Public Class RFQUpdate
                         If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
                             PFC2.Value = "2"
                             POIssue_2.Enabled = False
-                            POIssue_2.Attributes.Add("onclick", "return alert('The function was removed!')")
+                            'POIssue_2.Attributes.Add("onclick", "return alert('The function was removed!')")
                         Else
                             PFC2.Value = "3"
                         End If
@@ -719,7 +725,7 @@ Partial Public Class RFQUpdate
                         If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
                             PFC2.Value = "4"
                             POIssue_2.Enabled = False
-                            POIssue_2.Attributes.Add("onclick", "return alert('The function was removed!')")
+                            'POIssue_2.Attributes.Add("onclick", "return alert('The function was removed!')")
                         Else
                             PFC2.Value = "5"
                         End If
@@ -733,7 +739,7 @@ Partial Public Class RFQUpdate
                         If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
                             PFC3.Value = "2"
                             POIssue_3.Enabled = False
-                            POIssue_3.Attributes.Add("onclick", "return alert('The function was removed!')")
+                            'POIssue_3.Attributes.Add("onclick", "return alert('The function was removed!')")
                         Else
                             PFC3.Value = "3"
                         End If
@@ -741,7 +747,7 @@ Partial Public Class RFQUpdate
                         If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
                             PFC3.Value = "4"
                             POIssue_3.Enabled = False
-                            POIssue_3.Attributes.Add("onclick", "return alert('The function was removed!')")
+                            'POIssue_3.Attributes.Add("onclick", "return alert('The function was removed!')")
                         Else
                             PFC3.Value = "5"
                         End If
@@ -755,7 +761,7 @@ Partial Public Class RFQUpdate
                         If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
                             PFC4.Value = "2"
                             POIssue_4.Enabled = False
-                            POIssue_4.Attributes.Add("onclick", "return alert('The function was removed!')")
+                            'POIssue_4.Attributes.Add("onclick", "return alert('The function was removed!')")
                         Else
                             PFC4.Value = "3"
                         End If
@@ -763,7 +769,7 @@ Partial Public Class RFQUpdate
                         If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
                             PFC4.Value = "4"
                             POIssue_4.Enabled = False
-                            POIssue_4.Attributes.Add("onclick", "return alert('The function was removed!')")
+                            'POIssue_4.Attributes.Add("onclick", "return alert('The function was removed!')")
                         Else
                             PFC4.Value = "5"
                         End If
@@ -979,26 +985,36 @@ Partial Public Class RFQUpdate
             Msg.Text = ERR_INCORRECT_ENQQUANTITY
             Return False
         End If
-        If CheckLineSet() = False Then
-            'Currency,Price,Quo-Per,Quo-Unitの入力チェック
-            Msg.Text = ERR_INCORRECT_CURRENCY
-            Return False
-        End If
+
+        'If CheckLineSet() = False Then
+        '    'Currency,Price,Quo-Per,Quo-Unitの入力チェック
+        '    Msg.Text = ERR_INCORRECT_CURRENCY
+        '    Return False
+        'End If
+        CheckLineSet()
         Return True
     End Function
     Private Function CheckLineSet() As Boolean
         'RFQLineのCurrency,Price,QuoPer,QuoUnitはどこかが空白で更新することができない。
         For i As Integer = LINE_START To LINE_COUNT
-            'If Currency(i).SelectedValue.Trim = String.Empty And UnitPrice(i).Text.Trim = String.Empty And QuoPer(i).Text.Trim = String.Empty And QuoUnit(i).SelectedValue.Trim = String.Empty Then
-            If Currency(i).SelectedValue.Trim = String.Empty And UnitPrice(i).Text.Trim = String.Empty And QuoUnit(i).SelectedValue.Trim = String.Empty Then
+            If Currency(i).SelectedValue.Trim = String.Empty And UnitPrice(i).Text.Trim = String.Empty And QuoPer(i).Text.Trim = String.Empty Then
+                'If Currency(i).SelectedValue.Trim = String.Empty And UnitPrice(i).Text.Trim = String.Empty And QuoUnit(i).SelectedValue.Trim = String.Empty Then
+                '判断当前行的Reason for "No Offer"是否有值，有值不处理，没有值就提示
+                If LineNumber(i).Value.ToString <> "" And NoOfferReason(i).SelectedValue.ToString = "" Then
+                    Msg.Text = "Please fill in Price or select Reason for 'No Offer'"
+                    Return False
+                End If
             ElseIf Currency(i).SelectedValue.Trim = String.Empty Then
+                Msg.Text = ERR_INCORRECT_CURRENCY
                 Return False
             ElseIf UnitPrice(i).Text.Trim = String.Empty Then
+                Msg.Text = ERR_INCORRECT_CURRENCY
                 Return False
-                'ElseIf QuoPer(i).Text.Trim = String.Empty Then
+            ElseIf QuoPer(i).Text.Trim = String.Empty Then
+                Msg.Text = ERR_INCORRECT_CURRENCY
+                Return False
+                'ElseIf QuoUnit(i).SelectedValue.Trim = String.Empty Then
                 '    Return False
-            ElseIf QuoUnit(i).SelectedValue.Trim = String.Empty Then
-                Return False
             End If
         Next
         Return True
@@ -1172,7 +1188,7 @@ Partial Public Class RFQUpdate
         Dim tmpQuoUnitCode As String = ""
         tmpQuoUnitCode = POInterfaceFunction(st_RFQNumber, LineNumber1.Value, 1)
         POIssue_1.Enabled = False
-        POIssue_1.Attributes.Add("onclick", "return alert('The function was removed!')")
+        'POIssue_1.Attributes.Add("onclick", "return alert('The function was removed!')")
         If tmpQuoUnitCode = "LB" Or tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Then
             PFC1.Value = "2"
         Else
@@ -1191,7 +1207,7 @@ Partial Public Class RFQUpdate
         Dim tmpQuoUnitCode As String = ""
         tmpQuoUnitCode = POInterfaceFunction(st_RFQNumber, LineNumber2.Value, 2)
         POIssue_2.Enabled = False
-        POIssue_2.Attributes.Add("onclick", "return alert('The function was removed!')")
+        'POIssue_2.Attributes.Add("onclick", "return alert('The function was removed!')")
         If tmpQuoUnitCode = "LB" Or tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Then
             PFC2.Value = "2"
         Else
@@ -1210,7 +1226,7 @@ Partial Public Class RFQUpdate
         Dim tmpQuoUnitCode As String = ""
         tmpQuoUnitCode = POInterfaceFunction(st_RFQNumber, LineNumber3.Value, 3)
         POIssue_3.Enabled = False
-        POIssue_3.Attributes.Add("onclick", "return alert('The function was removed!')")
+        'POIssue_3.Attributes.Add("onclick", "return alert('The function was removed!')")
         If tmpQuoUnitCode = "LB" Or tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Then
             PFC3.Value = "2"
         Else
@@ -1229,7 +1245,7 @@ Partial Public Class RFQUpdate
         Dim tmpQuoUnitCode As String = ""
         tmpQuoUnitCode = POInterfaceFunction(st_RFQNumber, LineNumber4.Value, 4)
         POIssue_4.Enabled = False
-        POIssue_4.Attributes.Add("onclick", "return alert('The function was removed!')")
+        'POIssue_4.Attributes.Add("onclick", "return alert('The function was removed!')")
         If tmpQuoUnitCode = "LB" Or tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Then
             PFC4.Value = "2"
         Else
@@ -1648,6 +1664,7 @@ Partial Public Class RFQUpdate
         DBCommand.CommandText = "update  RfqLine set OutputStatus='1' where RFQLineNumber=" + RFQLineNumber
         DBCommand.ExecuteNonQuery()
         DBCommand.Dispose()
+        DBConn.Close()
         Return DS2.Tables("RFQLine").Rows(0).Item("QuoUnitCode").ToString
     End Function
     Public Function CheckIsClickPoInterface(ByVal RFQNumber As String) As Boolean
