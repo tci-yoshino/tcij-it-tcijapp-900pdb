@@ -556,7 +556,11 @@ Partial Public Class RFQUpdate
                 SDS_RFQUpdate_EnqStorageLocation.SelectCommand = String.Format("SELECT Storage FROM StorageLocation ORDER BY Storage")
             End If
             If DS.Tables("RFQHeader").Rows(0)("EnqStorageLocation").ToString <> "" Then
-                StorageLocation.SelectedValue = DS.Tables("RFQHeader").Rows(0)("EnqStorageLocation").ToString
+                Dim enqTmpDt As DataTable
+                enqTmpDt = GetDataTable(String.Format("SELECT Storage FROM StorageLocation where Storage in(select Storage from StorageByPurchasingUser where UserId=" + DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString + ") and Storage='" + DS.Tables("RFQHeader").Rows(0)("EnqStorageLocation").ToString + "'  ORDER BY Storage"))
+                If enqTmpDt.Rows.Count > 0 Then
+                    StorageLocation.SelectedValue = DS.Tables("RFQHeader").Rows(0)("EnqStorageLocation").ToString
+                End If
             End If
             If DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString.Length > 0 Then
                 SDS_RFQUpdate_QuoStorageLocation.SelectCommand = String.Format("SELECT Storage FROM StorageLocation where Storage in(select Storage from StorageByPurchasingUser where UserId=" + DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString + ") ORDER BY Storage")
@@ -564,7 +568,11 @@ Partial Public Class RFQUpdate
                 SDS_RFQUpdate_QuoStorageLocation.SelectCommand = String.Format("SELECT Storage FROM StorageLocation ORDER BY Storage")
             End If
             If DS.Tables("RFQHeader").Rows(0)("QuoStorageLocation").ToString <> "" Then
-                StorageLocation2.SelectedValue = DS.Tables("RFQHeader").Rows(0)("QuoStorageLocation").ToString
+                Dim quoTmpDt As DataTable
+                quoTmpDt = GetDataTable(String.Format("SELECT Storage FROM StorageLocation where Storage in(select Storage from StorageByPurchasingUser where UserId=" + DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString + ") and Storage='" + DS.Tables("RFQHeader").Rows(0)("QuoStorageLocation").ToString + "'  ORDER BY Storage"))
+                If quoTmpDt.Rows.Count > 0 Then
+                    StorageLocation2.SelectedValue = DS.Tables("RFQHeader").Rows(0)("QuoStorageLocation").ToString
+                End If
             End If
             'If DS.Tables("RFQHeader").Rows(0)("QuoLocationName").ToString = String.Empty Then
             '    QuoLocation.Text = EnqLocation.Text
@@ -1158,22 +1166,45 @@ Partial Public Class RFQUpdate
             EnqLocation.SelectedValue = EnqLocationCode.Value
         Else
             Msg.Text = String.Empty
-            DBCommand = DBConn.CreateCommand()
+            'DBCommand = DBConn.CreateCommand()
+            'If String.IsNullOrEmpty(Confidential.Text) Then
+            '    DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
+            '                                 , EnqLocation.SelectedValue)
+            'Else
+            '    DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
+            '                                     , EnqLocation.SelectedValue)
+            'End If
+            'Dim DBReader As System.Data.SqlClient.SqlDataReader
+            'DBReader = DBCommand.ExecuteReader()
+            'DBCommand.Dispose()
+            'EnqUser.Items.Clear()
+            'Do Until DBReader.Read = False
+            '    EnqUser.Items.Add(New ListItem(DBReader("Name").ToString, DBReader("UserID").ToString))
+            'Loop
+            'DBReader.Close()
+            'DBConn.Close()
+            Dim sql As String = ""
+            Dim dt As DataTable
             If String.IsNullOrEmpty(Confidential.Text) Then
-                DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
+                sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
                                              , EnqLocation.SelectedValue)
             Else
-                DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
+                sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
                                                  , EnqLocation.SelectedValue)
             End If
-            Dim DBReader As System.Data.SqlClient.SqlDataReader
-            DBReader = DBCommand.ExecuteReader()
-            DBCommand.Dispose()
+            dt = GetDataTable(sql)
             EnqUser.Items.Clear()
-            Do Until DBReader.Read = False
-                EnqUser.Items.Add(New ListItem(DBReader("Name").ToString, DBReader("UserID").ToString))
-            Loop
-            DBReader.Close()
+            For i As Integer = 0 To dt.Rows.Count - 1
+                EnqUser.Items.Add(New ListItem(dt.Rows(i)("Name").ToString, dt.Rows(i)("UserID").ToString))
+            Next
+            If dt.Rows.Count > 0 Then
+                Dim tmpdt As DataTable
+                tmpdt = GetDataTable("select * from StorageLocation where Storage in(select Storage from StorageByPurchasingUser where UserId=" + dt.Rows(0)("UserID").ToString + ")")
+                StorageLocation.Items.Clear()
+                For i As Integer = 0 To tmpdt.Rows.Count - 1
+                    StorageLocation.Items.Add(New ListItem(tmpdt.Rows(i)("Storage").ToString, tmpdt.Rows(i)("Storage").ToString))
+                Next
+            End If
         End If
 
     End Sub
@@ -1280,6 +1311,8 @@ Partial Public Class RFQUpdate
         DBAdapter.Fill(DS)
         Dim tmpdt As DataTable
         tmpdt = DS.Tables(0)
+        DBCommand.Dispose()
+        DBConn.Close()
         If tmpdt.Rows.Count > 0 Then
             SupplierContactPerson.Text = tmpdt.Rows(0)("SupplierContactperson")
         End If
@@ -1697,22 +1730,45 @@ Partial Public Class RFQUpdate
             QuoLocation.SelectedValue = QuoLocationCode.Value
         Else
             Msg.Text = String.Empty
-            DBCommand = DBConn.CreateCommand()
+            'DBCommand = DBConn.CreateCommand()
+            'If String.IsNullOrEmpty(Confidential.Text) Then
+            '    DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
+            '                                 , QuoLocation.SelectedValue)
+            'Else
+            '    DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
+            '                                     , QuoLocation.SelectedValue)
+            'End If
+            'Dim DBReader As System.Data.SqlClient.SqlDataReader
+            'DBReader = DBCommand.ExecuteReader()
+            'DBCommand.Dispose()
+            'QuoUser.Items.Clear()
+            'Do Until DBReader.Read = False
+            '    QuoUser.Items.Add(New ListItem(DBReader("Name").ToString, DBReader("UserID").ToString))
+            'Loop
+            'DBReader.Close()
+
+            Dim sql As String = ""
+            Dim dt As DataTable
             If String.IsNullOrEmpty(Confidential.Text) Then
-                DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
+                sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
                                              , QuoLocation.SelectedValue)
             Else
-                DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
+                sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
                                                  , QuoLocation.SelectedValue)
             End If
-            Dim DBReader As System.Data.SqlClient.SqlDataReader
-            DBReader = DBCommand.ExecuteReader()
-            DBCommand.Dispose()
+            dt = GetDataTable(sql)
             QuoUser.Items.Clear()
-            Do Until DBReader.Read = False
-                QuoUser.Items.Add(New ListItem(DBReader("Name").ToString, DBReader("UserID").ToString))
-            Loop
-            DBReader.Close()
+            For i As Integer = 0 To dt.Rows.Count - 1
+                QuoUser.Items.Add(New ListItem(dt.Rows(i)("Name").ToString, dt.Rows(i)("UserID").ToString))
+            Next
+            If dt.Rows.Count > 0 Then
+                Dim tmpdt As DataTable
+                tmpdt = GetDataTable("select * from StorageLocation where Storage in(select Storage from StorageByPurchasingUser where UserId=" + dt.Rows(0)("UserID").ToString + ")")
+                StorageLocation2.Items.Clear()
+                For i As Integer = 0 To tmpdt.Rows.Count - 1
+                    StorageLocation2.Items.Add(New ListItem(tmpdt.Rows(i)("Storage").ToString, tmpdt.Rows(i)("Storage").ToString))
+                Next
+            End If
 
         End If
     End Sub
