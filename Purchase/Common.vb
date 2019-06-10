@@ -998,6 +998,7 @@ Public Class Common
         DBAdapter.SelectCommand = DBCommand
         DBAdapter.Fill(DS, tablename)
         DBCommand.Dispose()
+        DBConn.Close()
         Return DS.Tables(tablename)
     End Function
 

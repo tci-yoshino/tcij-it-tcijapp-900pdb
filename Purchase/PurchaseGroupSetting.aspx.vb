@@ -42,8 +42,17 @@ Partial Public Class PurchaseGroupSetting
                         If SLocationByPUser.Rows(i)("Storage").ToString = "AL10" Then
                             AL10.Checked = True
                         End If
+                        If SLocationByPUser.Rows(i)("Storage").ToString = "AL11" Then
+                            AL11.Checked = True
+                        End If
                         If SLocationByPUser.Rows(i)("Storage").ToString = "AL20" Then
                             AL20.Checked = True
+                        End If
+                        If SLocationByPUser.Rows(i)("Storage").ToString = "AL40" Then
+                            AL40.Checked = True
+                        End If
+                        If SLocationByPUser.Rows(i)("Storage").ToString = "AL50" Then
+                            AL50.Checked = True
                         End If
                         If SLocationByPUser.Rows(i)("Storage").ToString = "CL10" Then
                             CL10.Checked = True
@@ -119,8 +128,17 @@ Partial Public Class PurchaseGroupSetting
             If AL10.Checked = True Then
                 st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL10.ID.ToString + "') "
             End If
+            If AL11.Checked = True Then
+                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL11.ID.ToString + "') "
+            End If
             If AL20.Checked = True Then
                 st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL20.ID.ToString + "') "
+            End If
+            If AL40.Checked = True Then
+                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL40.ID.ToString + "') "
+            End If
+            If AL50.Checked = True Then
+                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL50.ID.ToString + "') "
             End If
             If CL10.Checked = True Then
                 st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL10.ID.ToString + "') "

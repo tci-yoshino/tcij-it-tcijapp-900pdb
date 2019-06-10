@@ -73,9 +73,9 @@ Partial Public Class RFQStatus
         src.SelectParameters.Clear()
         src.SelectParameters.Add("RFQNumber", label.Text)
         src.SelectCommand = _
-              "SELECT distinct RL.RFQLineNumber, RL.EnqQuantity, RL.EnqUnitCode, RL.EnqPiece, " _
+              "SELECT distinct RL.RFQLineNumber,RL.RFQNumber, RL.EnqQuantity, RL.EnqUnitCode, RL.EnqPiece, " _
             & "       RL.CurrencyCode, RL.UnitPrice, RL.QuoPer, RL.QuoUnitCode, " _
-            & "       RL.LeadTime, RL.Packing, RL.Purity, RL.QMMethod, RL.NoOfferReason, " _
+            & "       RL.LeadTime, RL.Packing, RL.Purity, RL.QMMethod, RL.NoOfferReason,SupplierOfferNo, " _
             & "       PO.RFQLineNumber AS PO " _
             & "FROM v_RFQLine AS RL LEFT OUTER JOIN " _
             & "     PO ON PO.RFQLineNumber = RL.RFQLineNumber " _
@@ -372,4 +372,14 @@ Partial Public Class RFQStatus
         'HACK 応答速度が充分得られないため、暫定的に180秒（3分）に変更　      
         e.Command.CommandTimeout = 180
     End Sub
+    Public Function GetRFQStatus(ByRef RFQNumber As String, ByRef RFQLineNumber As String) As String
+        Dim ret As String = ""
+        Dim dt As DataTable = GetDataTable("select OutputStatus from RFQLine where RFQNumber='" + RFQNumber + "' and RFQLineNumber=" + RFQLineNumber)
+        If dt.Rows.Count > 0 Then
+            If dt.Rows(0)("OutputStatus").ToString = "True" Then
+                ret = "Interface issued"
+            End If
+        End If
+        Return ret
+    End Function
 End Class

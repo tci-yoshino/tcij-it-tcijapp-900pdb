@@ -112,7 +112,7 @@ Partial Public Class RFQListBySupplier
         src.SelectParameters.Clear()
         src.SelectParameters.Add("RFQNumber", label.Text)
         src.SelectCommand = _
-              "SELECT distinct RL.RFQLineNumber, RL.EnqQuantity, RL.EnqUnitCode, RL.EnqPiece, " _
+              "SELECT distinct RL.RFQLineNumber, RL.RFQNumber,RL.EnqQuantity, RL.EnqUnitCode, RL.EnqPiece, " _
             & "       RL.CurrencyCode, RL.UnitPrice, RL.QuoPer, RL.QuoUnitCode, " _
             & "       RL.LeadTime, RL.Packing, RL.Purity, RL.QMMethod, RL.NoOfferReason,SupplierOfferNo, " _
             & "       PO.RFQLineNumber AS PO, CASE WHEN PO.Priority='C' THEN '' ELSE PO.Priority END AS Priority " _
@@ -130,5 +130,14 @@ Partial Public Class RFQListBySupplier
     Protected Sub SrcRFQHeader_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcRFQHeader.Selecting
         e.Command.CommandTimeout = 0
     End Sub
-
+    Public Function GetRFQStatus(ByRef RFQNumber As String, ByRef RFQLineNumber As String) As String
+        Dim ret As String = ""
+        Dim dt As DataTable = GetDataTable("select OutputStatus from RFQLine where RFQNumber='" + RFQNumber + "' and RFQLineNumber=" + RFQLineNumber)
+        If dt.Rows.Count > 0 Then
+            If dt.Rows(0)("OutputStatus").ToString = "True" Then
+                ret = "Interface issued"
+            End If
+        End If
+        Return ret
+    End Function
 End Class

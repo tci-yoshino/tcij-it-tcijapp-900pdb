@@ -165,10 +165,11 @@
                                     <th id="Th5"  runat="server" style="width:10%">Quo-Quantity</th>
                                     <th id="Th6"  runat="server" style="width:10%">Lead Time</th>
                                     <th id="Th7"  runat="server" style="width:10%">Packing</th>
-                                    <th id="Th8"  runat="server" style="width:10%">Purity</th>
+                                    <th id="Th8"  runat="server" style="width:10%">Purity/Method</th>
                                     <th id="Th9" runat="server" style="width:10%">Supplier Offer No</th>
                                     <th id="Th11" runat="server" style="width:14%">Reason for "No Offer"</th>
                                     <th id="Th10" runat="server" style="width:5%">PO</th>
+                                    <th id="Th12" runat="server" style="width:5%">Interface</th>
                                 </tr>
                                 <tr ID="itemPlaceholder" runat="server">
                                 </tr>
@@ -188,6 +189,7 @@
                             <td><asp:Label ID="SupplierOfferNo" runat="server" Text='<%#Eval("SupplierOfferNo")%>'></asp:Label></td>
                             <td><asp:Label ID="NoOfferReason" runat="server" Text='<%#Eval("NoOfferReason") %>'></asp:Label></td>
                             <td><asp:HyperLink ID="PO" runat="server" NavigateUrl='<%#If(IsDBNull(Eval("PO")), "", "./POListByRFQ.aspx?RFQLineNumber=" & Eval("RFQLineNumber"))%>'><%#If(IsDBNull(Eval("PO")), "", IIf(Eval("Priority") = "", "PO", "PO-" & Eval("Priority")))%></asp:HyperLink></td>
+                            <td><asp:Label ID="RFQStatus" runat="server" Text='<%#GetRFQStatus(Eval("RFQNumber"),Eval("RFQLineNumber")) %>'></asp:Label></td>
                         </tr>
                         </ItemTemplate>
                     </asp:ListView>

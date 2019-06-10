@@ -40,7 +40,7 @@
 					<tr>
 						<th>Supplier Code <span class="required">*</span> : </th>
 						<td>
-						    <asp:TextBox ID="SupplierCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
+						    <asp:TextBox ID="SupplierCode" runat="server" Width="7em" MaxLength="10" OnTextChanged="SupplierCode_TextChanged" AutoPostBack="true"></asp:TextBox>
 						    <asp:ImageButton ID="SupplierSelect" runat="server" 
                                 ImageUrl="./Image/Search.gif" CssClass="magnify" 
                                 OnClientClick="return SupplierSelect_onclick()" />
@@ -129,7 +129,7 @@
                     <tr>
                         <th>Purpose : </th>
                         <td><asp:Label ID="Purpose" runat="server" Text=""></asp:Label>
-                            <asp:DropDownList ID="ListPurpose" runat="server" DataSourceID="SrcPurpose" DataTextField="Text" DataValueField="PurposeCode" AppendDataBoundItems="true">
+                            <asp:DropDownList ID="ListPurpose" runat="server" DataSourceID="SrcPurpose" DataTextField="Text" DataValueField="PurposeCode" AutoPostBack="True" AppendDataBoundItems="true">
                             <asp:ListItem></asp:ListItem>
                             </asp:DropDownList>
                             <asp:SqlDataSource ID="SrcPurpose" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
@@ -544,6 +544,7 @@
                         <asp:ListItem Value="E">Enquired</asp:ListItem>
                         <asp:ListItem Value="PQ">Partly-quoted</asp:ListItem>
                         <asp:ListItem Value="Q">Quoted</asp:ListItem>
+                        <asp:ListItem Value="II"> Interface Issued</asp:ListItem>
                     </asp:DropDownList>
                     
                     <asp:Button ID="Update" runat="server" Text="Update" OnClientClick="checkStatus()"/>
@@ -558,14 +559,14 @@
                     <asp:HiddenField ID="EnqStorageLOcationCode" runat="server" />
                     <asp:HiddenField ID="QuoStorageLOcationCode" runat="server" />
                 </div>
-				<% End If%>                
+				<% End If%>        
             </div>
     </div><!-- Main Content Area END -->
 		<script language ="javascript" type="text/javascript">
 		function SupplierSelect_onclick() {
     		var SupplierCode = encodeURIComponent(document.getElementById('SupplierCode').value);
     		var EnqLocation = encodeURIComponent(document.getElementById('EnqLocation').value);
-	    	popup('./RFQSupplierSelect.aspx?Code=' + SupplierCode + '&Location=' + EnqLocation);
+    		popup('./RFQSupplierSelect.aspx?Code=' + SupplierCode + '&Location=' + EnqLocation);
 	    	return false;
 		}
 		function MakerSelect_onclick() {
@@ -645,11 +646,15 @@
                     return true;
                     break;
                 case "6":
-                    alert('Please quote and update RFQ first! PO interface create unsuccessfully!');
+                    alert('Please quote and update RFQ first! PO interface create failed!');
                     return false;
                     break;
                 case "7":
-                    alert('Please make sure SAP supplier code already been created! PO interface create unsuccessfully!');
+                    alert('Please make sure SAP supplier code already been created! PO interface create failed!');
+                    return false;
+                    break;
+                case "8":
+                    alert('You are not authorized to issue this PO interface!');
                     return false;
                     break;
             }

@@ -33,6 +33,10 @@
             opener.document.getElementById('QuoLocation').value = location
           }
         }
+        var o =  opener.document.getElementById('SupplierCode');
+        o.focus();
+        o.blur();
+        o.onchange();
       }
       //window.close();
     }

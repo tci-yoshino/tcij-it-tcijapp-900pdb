@@ -242,5 +242,16 @@ Partial Public Class RFQListByProduct
         e.Command.CommandTimeout = 0
     End Sub
 
+    Public Function GetRFQStatus(ByRef RFQNumber As String, ByRef RFQLineNumber As String) As String
+        Dim ret As String = ""
+        'Dim dt As DataTable = GetDataTable("select RFQStatusCode from  RFQHeader where RFQNumber=" + RFQNumber)
+        Dim dt As DataTable = GetDataTable("select OutputStatus from RFQLine where RFQNumber='" + RFQNumber + "' and RFQLineNumber=" + RFQLineNumber)
+        If dt.Rows.Count > 0 Then
+            If dt.Rows(0)("OutputStatus").ToString = "True" Then
+                ret = "Interface issued"
+            End If
+        End If
+        Return ret
+    End Function
 
 End Class

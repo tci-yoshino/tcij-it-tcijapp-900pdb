@@ -643,4 +643,8 @@ Partial Public Class RFQIssue
         End If
 
     End Sub
+
+    Protected Sub SupplierCode_TextChanged(sender As Object, e As EventArgs) Handles SupplierCode.TextChanged
+
+    End Sub
 End Class

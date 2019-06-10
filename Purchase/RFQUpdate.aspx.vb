@@ -73,6 +73,7 @@ Partial Public Class RFQUpdate
         DBCommand = DBConn.CreateCommand()
 
         Call SetControlArray()
+        'IsPostBack为True是回发的页面
         If IsPostBack = False Then
             If SetRFQNumber() = False Then
                 'RFQNumberのチェックとst_RFQNumberへのセットを行う。
@@ -443,7 +444,14 @@ Partial Public Class RFQUpdate
             End If
 
             ''Purposeのプルダウンを設定
-            ListPurpose.Items.Clear()
+            If IsPostBack = False Then
+                ListPurpose.Items.Clear()
+                ListPurpose.Items.Add(String.Empty)
+                ListPurpose.DataSourceID = "SrcPurpose"
+                ListPurpose.DataTextField = "Text"
+                ListPurpose.DataValueField = "PurposeCode"
+                ListPurpose.DataBind()
+            End If
             SetPurposeDropDownList(SrcPurpose)
 
             'Hidden
@@ -481,11 +489,14 @@ Partial Public Class RFQUpdate
             Purpose.Text = DS.Tables("RFQHeader").Rows(0)("Purpose").ToString
             PurposeCode.Value = DS.Tables("RFQHeader").Rows(0)("PurposeCode").ToString
             '判断当前值是否在下拉框中, 在则选中否则不选中
-            If DS.Tables("RFQHeader").Rows(0)("PurposeCode").ToString Is Nothing Then
+            If DS.Tables("RFQHeader").Rows(0)("PurposeCode").ToString = "" Then
+                ListPurpose.SelectedValue = ""
             Else
                 Dim PurposeDt As DataTable = GetDataTable("select * from Purpose where IsVisiable=1 and Purposecode='" + DS.Tables("RFQHeader").Rows(0)("PurposeCode").ToString + "'", "Purpose")
                 If PurposeDt.Rows.Count > 0 Then
                     ListPurpose.SelectedValue = DS.Tables("RFQHeader").Rows(0)("PurposeCode").ToString
+                Else
+                    ListPurpose.SelectedValue = ""
                 End If
             End If
             Priority.SelectedValue = DS.Tables("RFQHeader").Rows(0)("Priority").ToString
@@ -690,6 +701,11 @@ Partial Public Class RFQUpdate
                 PFC2.Value = "7"
                 PFC3.Value = "7"
                 PFC4.Value = "7"
+            ElseIf DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString <> Session("UserID").ToString Then
+                PFC1.Value = "8"
+                PFC2.Value = "8"
+                PFC3.Value = "8"
+                PFC4.Value = "8"
             Else
                 Dim tmpQuoUnitCode As String = ""
                 Dim isFirstClickPointerfac As String = ""
@@ -999,33 +1015,36 @@ Partial Public Class RFQUpdate
         '    Msg.Text = ERR_INCORRECT_CURRENCY
         '    Return False
         'End If
-        CheckLineSet()
-        Return True
+        Return CheckLineSet()
     End Function
     Private Function CheckLineSet() As Boolean
-        'RFQLineのCurrency,Price,QuoPer,QuoUnitはどこかが空白で更新することができない。
-        For i As Integer = LINE_START To LINE_COUNT
-            If Currency(i).SelectedValue.Trim = String.Empty And UnitPrice(i).Text.Trim = String.Empty And QuoPer(i).Text.Trim = String.Empty Then
-                'If Currency(i).SelectedValue.Trim = String.Empty And UnitPrice(i).Text.Trim = String.Empty And QuoUnit(i).SelectedValue.Trim = String.Empty Then
-                '判断当前行的Reason for "No Offer"是否有值，有值不处理，没有值就提示
-                If LineNumber(i).Value.ToString <> "" And NoOfferReason(i).SelectedValue.ToString = "" Then
-                    Msg.Text = "Please fill in Price or select Reason for 'No Offer'"
+        If RFQStatus.SelectedValue = "Q" Then
+            'RFQLineのCurrency,Price,QuoPer,QuoUnitはどこかが空白で更新することができない。
+            For i As Integer = LINE_START To LINE_COUNT
+                If Currency(i).SelectedValue.Trim = String.Empty And UnitPrice(i).Text.Trim = String.Empty And QuoPer(i).Text.Trim = String.Empty Then
+                    'If Currency(i).SelectedValue.Trim = String.Empty And UnitPrice(i).Text.Trim = String.Empty And QuoUnit(i).SelectedValue.Trim = String.Empty Then
+                    '判断当前行的Reason for "No Offer"是否有值，有值不处理，没有值就提示
+                    If LineNumber(i).Value.ToString <> "" And NoOfferReason(i).SelectedValue.ToString = "" Then
+                        Msg.Text = "Please fill in Price or select Reason for 'No Offer'"
+                        Return False
+                    End If
+                ElseIf Currency(i).SelectedValue.Trim = String.Empty Then
+                    Msg.Text = ERR_INCORRECT_CURRENCY
                     Return False
+                ElseIf UnitPrice(i).Text.Trim = String.Empty Then
+                    Msg.Text = ERR_INCORRECT_CURRENCY
+                    Return False
+                ElseIf QuoPer(i).Text.Trim = String.Empty Then
+                    Msg.Text = ERR_INCORRECT_CURRENCY
+                    Return False
+                    'ElseIf QuoUnit(i).SelectedValue.Trim = String.Empty Then
+                    '    Return False
                 End If
-            ElseIf Currency(i).SelectedValue.Trim = String.Empty Then
-                Msg.Text = ERR_INCORRECT_CURRENCY
-                Return False
-            ElseIf UnitPrice(i).Text.Trim = String.Empty Then
-                Msg.Text = ERR_INCORRECT_CURRENCY
-                Return False
-            ElseIf QuoPer(i).Text.Trim = String.Empty Then
-                Msg.Text = ERR_INCORRECT_CURRENCY
-                Return False
-                'ElseIf QuoUnit(i).SelectedValue.Trim = String.Empty Then
-                '    Return False
-            End If
-        Next
-        Return True
+            Next
+            Return True
+        Else
+            Return True
+        End If
     End Function
     Private Function CheckLineEnqQuantity() As Boolean
         'RFQLineのEnqQuantity,EnqUnit,EnqPieceはどこかが空白で登録することができない。
@@ -1218,14 +1237,16 @@ Partial Public Class RFQUpdate
         End If
         Dim tmpQuoUnitCode As String = ""
         tmpQuoUnitCode = POInterfaceFunction(st_RFQNumber, LineNumber1.Value, 1)
-        POIssue_1.Enabled = False
-        'POIssue_1.Attributes.Add("onclick", "return alert('The function was removed!')")
-        If tmpQuoUnitCode = "LB" Or tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Then
-            PFC1.Value = "2"
-        Else
-            PFC1.Value = "4"
+        If tmpQuoUnitCode <> "" Then
+            POIssue_1.Enabled = False
+            'POIssue_1.Attributes.Add("onclick", "return alert('The function was removed!')")
+            If tmpQuoUnitCode = "LB" Or tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Then
+                PFC1.Value = "2"
+            Else
+                PFC1.Value = "4"
+            End If
+            Response.Write("<script>alert('PO Interface create successfully!')</script>")
         End If
-        Response.Write("<script>alert('PO Interface create successfully!')</script>")
     End Sub
 
     Protected Sub POInterfaceButton_2_Click(sender As Object, e As EventArgs) Handles POInterfaceButton_2.Click
@@ -1237,14 +1258,16 @@ Partial Public Class RFQUpdate
         End If
         Dim tmpQuoUnitCode As String = ""
         tmpQuoUnitCode = POInterfaceFunction(st_RFQNumber, LineNumber2.Value, 2)
-        POIssue_2.Enabled = False
-        'POIssue_2.Attributes.Add("onclick", "return alert('The function was removed!')")
-        If tmpQuoUnitCode = "LB" Or tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Then
-            PFC2.Value = "2"
-        Else
-            PFC2.Value = "4"
+        If tmpQuoUnitCode <> "" Then
+            POIssue_2.Enabled = False
+            'POIssue_2.Attributes.Add("onclick", "return alert('The function was removed!')")
+            If tmpQuoUnitCode = "LB" Or tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Then
+                PFC2.Value = "2"
+            Else
+                PFC2.Value = "4"
+            End If
+            Response.Write("<script>alert('PO Interface create successfully!')</script>")
         End If
-        Response.Write("<script>alert('PO Interface create successfully!')</script>")
     End Sub
 
     Protected Sub POInterfaceButton_3_Click(sender As Object, e As EventArgs) Handles POInterfaceButton_3.Click
@@ -1256,14 +1279,16 @@ Partial Public Class RFQUpdate
         End If
         Dim tmpQuoUnitCode As String = ""
         tmpQuoUnitCode = POInterfaceFunction(st_RFQNumber, LineNumber3.Value, 3)
-        POIssue_3.Enabled = False
-        'POIssue_3.Attributes.Add("onclick", "return alert('The function was removed!')")
-        If tmpQuoUnitCode = "LB" Or tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Then
-            PFC3.Value = "2"
-        Else
-            PFC3.Value = "4"
+        If tmpQuoUnitCode <> "" Then
+            POIssue_3.Enabled = False
+            'POIssue_3.Attributes.Add("onclick", "return alert('The function was removed!')")
+            If tmpQuoUnitCode = "LB" Or tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Then
+                PFC3.Value = "2"
+            Else
+                PFC3.Value = "4"
+            End If
+            Response.Write("<script>alert('PO Interface create successfully!')</script>")
         End If
-        Response.Write("<script>alert('PO Interface create successfully!')</script>")
     End Sub
 
     Protected Sub POInterfaceButton_4_Click(sender As Object, e As EventArgs) Handles POInterfaceButton_4.Click
@@ -1275,14 +1300,16 @@ Partial Public Class RFQUpdate
         End If
         Dim tmpQuoUnitCode As String = ""
         tmpQuoUnitCode = POInterfaceFunction(st_RFQNumber, LineNumber4.Value, 4)
-        POIssue_4.Enabled = False
-        'POIssue_4.Attributes.Add("onclick", "return alert('The function was removed!')")
-        If tmpQuoUnitCode = "LB" Or tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Then
-            PFC4.Value = "2"
-        Else
-            PFC4.Value = "4"
+        If tmpQuoUnitCode <> "" Then
+            POIssue_4.Enabled = False
+            'POIssue_4.Attributes.Add("onclick", "return alert('The function was removed!')")
+            If tmpQuoUnitCode = "LB" Or tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Then
+                PFC4.Value = "2"
+            Else
+                PFC4.Value = "4"
+            End If
+            Response.Write("<script>alert('PO Interface create successfully!')</script>")
         End If
-        Response.Write("<script>alert('PO Interface create successfully!')</script>")
     End Sub
 
     Protected Sub SupplierContactPersonCodeList_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SupplierContactPersonCodeList.SelectedIndexChanged
@@ -1334,6 +1361,8 @@ Partial Public Class RFQUpdate
     End Function
 
     Public Function POInterfaceFunction(ByVal RFQNumber As String, ByVal RFQLineNumber As String, ByVal index As String) As String
+        Msg.Text = String.Empty
+
         Dim ExecuteSql As String = ""
         '获取主表信息
         Dim DS As DataSet = New DataSet
@@ -1516,9 +1545,73 @@ Partial Public Class RFQUpdate
         parameter(38) = DS.Tables("RFQHeader").Rows(0)("EnqStorageLocation").ToString()
         'Supplier Offer No.
         parameter(39) = DS2.Tables("RFQLine").Rows(0).Item("SupplierOfferNo").ToString()
+
+
+        '判断当前数据是否合法是否需要提醒
+        If parameter(7).ToString = "" Then
+            Msg.Text = "SAP Supplier Code is blank!"
+            Return ""
+            Exit Function
+        End If
+        If parameter(8).ToString = "" Then
+            Msg.Text = "Price is blank!"
+            Return ""
+            Exit Function
+        End If
+        If parameter(9).ToString = "" Then
+            Msg.Text = "Quo-Unit is blank!"
+            Return ""
+            Exit Function
+        End If
+        If parameter(10).ToString = "" Then
+            Msg.Text = "Quo-Per is blank!"
+            Return ""
+            Exit Function
+        End If
+        If parameter(11).ToString = "" Then
+            Msg.Text = "Currency is blank!"
+            Return ""
+            Exit Function
+        End If
+        If parameter(18).ToString <> "" Then
+            If parameter(17).ToString = "" Then
+                Msg.Text = "Handling fee(Currency) is blank!"
+                Return ""
+                Exit Function
+            End If
+        End If
+        If parameter(21).ToString = "" Then
+            Msg.Text = "Enq-User is blank!"
+            Return ""
+            Exit Function
+        End If
+        If parameter(22).ToString = "" Then
+            Msg.Text = "Quo-user  is blank!"
+            Return ""
+            Exit Function
+        End If
+        If parameter(23).ToString = "" Then
+            Msg.Text = "Enq-Quantity is blank!"
+            Return ""
+            Exit Function
+        End If
+        If parameter(24).ToString = "" Then
+            Msg.Text = "Lead time is blank!"
+            Return ""
+            Exit Function
+        End If
+        If DS.Tables("RFQHeader").Rows(0)("QuoStorageLocation").ToString = "" Then
+            Msg.Text = "Quo-User storage location is blank!"
+            Return ""
+            Exit Function
+        End If
+        If DS.Tables("RFQHeader").Rows(0)("EnqStorageLocation").ToString = "" Then
+            Msg.Text = "Enq-User storage location is blank!"
+            Return ""
+            Exit Function
+        End If
         Dim DataTable As System.Data.DataTable = Purchase.Common.GetDataTable("select * from  POInterface where RFQLineNumber=" + RFQLineNumber, "POInterface")
         Dim sql As String
-
         '修改表数据  
         If DataTable.Rows.Count > 0 Then
             '是一条数据 两条数据
@@ -1630,7 +1723,7 @@ Partial Public Class RFQUpdate
             sql += ");"
             '判断purpose是否在条件之内在的话修改sql重新添加
 
-            If parameter(19) = "010" Or parameter(19) = "012" Or parameter(19) = "030" Or parameter(19) = "033" Then
+            If parameter(19) = "10" Or parameter(19) = "12" Or parameter(19) = "30" Or parameter(19) = "33" Then
                 sql += "    INSERT INTO POInterface "
                 sql += "(Id,RFQLineNumber,RFQNumber"
                 'For i = 1 To 39
@@ -1694,7 +1787,7 @@ Partial Public Class RFQUpdate
         DBCommand.ExecuteNonQuery()
         DBCommand.Dispose()
         '更新RfqLine的OutputStatus
-        DBCommand.CommandText = "update  RfqLine set OutputStatus='1' where RFQLineNumber=" + RFQLineNumber
+        DBCommand.CommandText = "update  RfqLine set OutputStatus='1' where RFQLineNumber=" + RFQLineNumber + ";Update RFQHeader set RFQStatusCode='II' where RFQNumber=" + RFQNumber
         DBCommand.ExecuteNonQuery()
         DBCommand.Dispose()
         DBConn.Close()
@@ -1800,4 +1893,33 @@ Partial Public Class RFQUpdate
         Loop
         DBReader.Close()
     End Sub
+
+    Protected Sub SupplierCode_TextChanged(sender As Object, e As EventArgs) Handles SupplierCode.TextChanged
+        Dim sql As String
+        sql = "select * from ("
+        sql += "select '' as supplierInfo,'' as SupplierContactperson,'' as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + ""
+        sql += " Union All "
+        sql += "select (SupplierEmailID1+'-'+ SupplierContactperson1) as supplierInfo,SupplierContactperson1 as SupplierContactperson,SupplierEmailID1 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson1 <>'' and SupplierContactperson1 is not null"
+        sql += " Union All "
+        sql += "select (SupplierEmailID2+'-'+ SupplierContactperson2) as supplierInfo,SupplierContactperson2 as SupplierContactperson,SupplierEmailID2 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson2 <>'' and SupplierContactperson2 is not null"
+        sql += " Union All "
+        sql += "select (SupplierEmailID3+'-'+ SupplierContactperson3) as supplierInfo,SupplierContactperson3 as SupplierContactperson,SupplierEmailID3 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson3 <>'' and SupplierContactperson3 is not null"
+        sql += " Union All "
+        sql += "select (SupplierEmailID4+'-'+ SupplierContactperson4) as supplierInfo,SupplierContactperson4 as SupplierContactperson,SupplierEmailID4 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson4 <>'' and SupplierContactperson4 is not null"
+        sql += " Union All "
+        sql += "select (SupplierEmailID5+'-'+ SupplierContactperson5) as supplierInfo,SupplierContactperson5 as SupplierContactperson,SupplierEmailID5 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson5 <>'' and SupplierContactperson5 is not null"
+        sql += " Union All "
+        sql += "select (SupplierEmailID6+'-'+ SupplierContactperson6) as supplierInfo,SupplierContactperson6 as SupplierContactperson,SupplierEmailID6 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson6 <>'' and SupplierContactperson6 is not null"
+        sql += " Union All "
+        sql += "select (SupplierEmailID7+'-'+ SupplierContactperson7) as supplierInfo,SupplierContactperson7 as SupplierContactperson,SupplierEmailID7 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson7 <>'' and SupplierContactperson7 is not null"
+        sql += " Union All "
+        sql += "select (SupplierEmailID8+'-'+ SupplierContactperson8) as supplierInfo,SupplierContactperson8 as SupplierContactperson,SupplierEmailID9 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson8 <>'' and SupplierContactperson8 is not null"
+        sql += " Union All "
+        sql += "select (SupplierEmailID9+'-'+ SupplierContactperson9) as supplierInfo,SupplierContactperson9 as SupplierContactperson,SupplierEmailID9 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson9 <>'' and SupplierContactperson9 is not null"
+        sql += " Union All "
+        sql += "select (SupplierEmailID10+'-'+ SupplierContactperson10) as supplierInfo,SupplierContactperson10 as SupplierContactperson,SupplierEmailID10 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson10 <>'' and SupplierContactperson10 is not null"
+        sql += ") as A where supplierInfo is not null"
+        SDS_SupplierContactPersonCodeList.SelectCommand = sql
+    End Sub
+
 End Class

@@ -397,7 +397,14 @@ Partial Public Class POUpdate
         Incoterms.Text = POInformation.IncotermsText
         DeliveryTerm.Text = POInformation.DeliveryTerm
         LabelPurpose.Text = POInformation.PurposeText
-        If Purpose.Visible = True Then Purpose.SelectedValue = POInformation.PurposeCode.ToString()
+        If Purpose.Visible = True Then
+            Dim PurposeDt As DataTable = GetDataTable("select * from Purpose where IsVisiable=1 and Purposecode='" + POInformation.PurposeCode.ToString + "'", "Purpose")
+            If PurposeDt.Rows.Count > 0 Then
+                Purpose.SelectedValue = POInformation.PurposeCode.ToString()
+            Else
+                Purpose.SelectedValue = ""
+            End If
+        End If
         LabelPurpose.Text = POInformation.PurposeText.ToString()
         HidPurposeCode.Value = POInformation.PurposeCode
         RawMaterialFor.Text = POInformation.RawMaterialFor

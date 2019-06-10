@@ -40,7 +40,10 @@
 						<td>
 						    <asp:Panel ID="StorageLocationIDsPanel" runat="server">
                                 <asp:CheckBox ID="AL10" Text="AL10" runat="server" />
+                                <asp:CheckBox ID="AL11" Text="AL11" runat="server" />
                                 <asp:CheckBox ID="AL20" Text="AL20" runat="server" />
+                                <asp:CheckBox ID="AL40" Text="AL40" runat="server" />
+                                <asp:CheckBox ID="AL50" Text="AL50" runat="server" />
                                 <asp:CheckBox ID="CL10" Text="CL10" runat="server" />
                                 <asp:CheckBox ID="CL20" Text="CL20" runat="server" />
                                 <asp:CheckBox ID="CL30" Text="CL30" runat="server" />
@@ -52,6 +55,7 @@
                                 <asp:CheckBox ID="HL30" Text="HL30" runat="server" />
                                 <asp:CheckBox ID="NL10" Text="NL10" runat="server" />
                                 <asp:CheckBox ID="NL20" Text="NL20" runat="server" />
+                               
                             </asp:Panel>
 						</td>
 					</tr>

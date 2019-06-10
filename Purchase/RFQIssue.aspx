@@ -70,7 +70,7 @@
 					<tr>
 						<th>Supplier Code <span class="required">*</span> : </th>
 						<td>
-						    <asp:TextBox ID="SupplierCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
+						    <asp:TextBox ID="SupplierCode" runat="server" Width="7em" MaxLength="10" OnTextChanged="SupplierCode_TextChanged" AutoPostBack="true"></asp:TextBox>
 						    <asp:ImageButton ID="SupplierSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="return SupplierSelect_onclick()" />
 						</td>
 					</tr>

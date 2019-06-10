@@ -86,6 +86,15 @@ Partial Public Class PurchaseGroupSetting
     Protected WithEvents AL10 As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
+    '''AL11 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents AL11 As Global.System.Web.UI.WebControls.CheckBox
+
+    '''<summary>
     '''AL20 控件。
     '''</summary>
     '''<remarks>
@@ -93,6 +102,24 @@ Partial Public Class PurchaseGroupSetting
     '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
     '''</remarks>
     Protected WithEvents AL20 As Global.System.Web.UI.WebControls.CheckBox
+
+    '''<summary>
+    '''AL40 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents AL40 As Global.System.Web.UI.WebControls.CheckBox
+
+    '''<summary>
+    '''AL50 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents AL50 As Global.System.Web.UI.WebControls.CheckBox
 
     '''<summary>
     '''CL10 控件。
