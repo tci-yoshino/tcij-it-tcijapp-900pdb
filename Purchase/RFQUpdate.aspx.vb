@@ -160,6 +160,10 @@ Partial Public Class RFQUpdate
                 Exit Sub
             End If
         End If
+        If QuoUser.SelectedValue = "" Then
+            Msg.Text = "please choose Quo-User!"
+            Exit Sub
+        End If
         '更新可能拠点の確認
         If CheckLocation() = False Then
             Exit Sub
@@ -238,7 +242,7 @@ Partial Public Class RFQUpdate
                 st_QuoStorageLocationCode = StorageLocation2.SelectedValue
             End If
 
-            DBCommand.CommandText = "Update RFQHeader SET EnqLocationCode = @EnqLocationCode,QuoLocationCode = @QuoLocationCode, EnqUserID = @EnqUserID, QuoUserID = @QuoUserID, SupplierCode = @SupplierCode, MakerCode = @MakerCode," _
+            DBCommand.CommandText = "Update RFQHeader SET EnqLocationCode = @EnqLocationCode,QuoLocationCode = @QuoLocationCode, EnqUserID = @EnqUserID, QuoUserID = @QuoUserID, SupplierCode = @SupplierCode, MakerCode = @MakerCode,SAPMakerCode = @SAPMakerCode," _
             & "SpecSheet = @SpecSheet, Specification = @Specification, SupplierContactPerson = @SupplierContactPerson," _
             & "SupplierItemName = @SupplierItemName, ShippingHandlingFee = @ShippingHandlingFee," _
             & "ShippingHandlingCurrencyCode = @ShippingHandlingCurrencyCode, PaymentTermCode = @PaymentTermCode," _
@@ -250,6 +254,7 @@ Partial Public Class RFQUpdate
             DBCommand.Parameters.Add("@QuoUserID", SqlDbType.Int).Value = ConvertStringToInt(QuoUser.SelectedValue)
             DBCommand.Parameters.Add("@SupplierCode", SqlDbType.Int).Value = Integer.Parse(SupplierCode.Text)
             DBCommand.Parameters.Add("@MakerCode", SqlDbType.Int).Value = ConvertStringToInt(MakerCode.Text)
+            DBCommand.Parameters.Add("@SAPMakerCode", SqlDbType.Int).Value = ConvertStringToInt(SAPMakerCode.Text)
             DBCommand.Parameters.Add("@SpecSheet", SqlDbType.Bit).Value = SpecSheet.Checked
             DBCommand.Parameters.Add("@Specification", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(Specification.Text)
             DBCommand.Parameters.Add("@SupplierContactPerson", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(SupplierContactPerson.Text)
@@ -421,7 +426,7 @@ Partial Public Class RFQUpdate
         If Integer.TryParse(st_RFQNumber, i_TryParse) Then
             DBCommand = New SqlCommand("Select " _
 & "EnqLocationName, EnqUserID, EnqUserName, QuoLocationName, QuoUserID, QuoUserName, ProductNumber, " _
-& "ProductName, SupplierCode, R3SupplierCode, S4SupplierCode,SupplierName, SupplierCountryCode, MakerCode,R3MakerCode, " _
+& "ProductName, SupplierCode, R3SupplierCode, S4SupplierCode,SupplierName, SupplierCountryCode, MakerCode,SAPMakerCode,R3MakerCode, " _
 & "MakerName, MakerCountryCode, SupplierContactPerson, PaymentTermCode, RequiredPurity, " _
 & "RequiredQMMethod, RequiredSpecification, SpecSheet, Specification, PurposeCode,Purpose, SupplierItemName, " _
 & "ShippingHandlingFee, ShippingHandlingCurrencyCode, Comment, QuotedDate, StatusCode, " _
@@ -451,6 +456,28 @@ Partial Public Class RFQUpdate
                 ListPurpose.DataTextField = "Text"
                 ListPurpose.DataValueField = "PurposeCode"
                 ListPurpose.DataBind()
+
+                StorageLocation.Items.Clear()
+                StorageLocation.Items.Add(String.Empty)
+                StorageLocation.DataSourceID = "SDS_RFQUpdate_EnqStorageLocation"
+                StorageLocation.DataTextField = "Storage"
+                StorageLocation.DataValueField = "Storage"
+                StorageLocation.DataBind()
+
+                StorageLocation2.Items.Clear()
+                StorageLocation2.Items.Add(String.Empty)
+                StorageLocation2.DataSourceID = "SDS_RFQUpdate_QuoStorageLocation"
+                StorageLocation2.DataTextField = "Storage"
+                StorageLocation2.DataValueField = "Storage"
+                StorageLocation2.DataBind()
+
+                QuoUser.Items.Clear()
+                QuoUser.Items.Add(String.Empty)
+                QuoUser.DataSourceID = "SDS_RFQUpdate_QuoUser"
+                QuoUser.DataTextField = "Name"
+                QuoUser.DataValueField = "UserID"
+                QuoUser.DataBind()
+
             End If
             SetPurposeDropDownList(SrcPurpose)
 
@@ -474,6 +501,7 @@ Partial Public Class RFQUpdate
             SupplierCountry.Text = GetCountryName(DS.Tables("RFQHeader").Rows(0)("SupplierCountryCode").ToString)
             SupplierContactPerson.Text = DS.Tables("RFQHeader").Rows(0)("SupplierContactPerson").ToString
             MakerCode.Text = DS.Tables("RFQHeader").Rows(0)("MakerCode").ToString
+            SAPMakerCode.Text = DS.Tables("RFQHeader").Rows(0)("SAPMakerCode").ToString
             'If DS.Tables("RFQHeader").Rows(0)("R3MakerCode").ToString = "" Then
             '    MakerCode.Text = ""
             'Else
@@ -615,18 +643,20 @@ Partial Public Class RFQUpdate
                 End If
             End If
             SDS_RFQUpdate_QuoUser.SelectCommand = st_SelectCommand
-            SDS_RFQUpdate_QuoUser.DataBind()
+            'SDS_RFQUpdate_QuoUser.DataBind()
             If IsDBNull(DS.Tables("RFQHeader").Rows(0)("QuoUserID")) = False Then
                 QuoUser.SelectedValue = DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString
                 ViewState(OLD_QUOUSER_ID) = DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString
             End If
             Comment.Text = DS.Tables("RFQHeader").Rows(0)("Comment").ToString
-
             'Under
             RFQStatus.SelectedValue = ""
             If Session("LocationCode") <> EnqLocationCode.Value Then
                 Close.Visible = False
             Else
+                Close.Visible = True
+            End If
+            If DS.Tables("RFQHeader").Rows(0)("StatusCode").ToString = "II" And Session("LocationCode") = QuoLocationCode.Value Then
                 Close.Visible = True
             End If
             'Line
@@ -684,119 +714,96 @@ Partial Public Class RFQUpdate
                     POInterfaceButton(j).Visible = True
                 Next
             End If
-            Dim isAbleClickPoInterface As Boolean = CheckIsClickPoInterface(st_RFQNumber)
             '判断Purpose是否合法  
-            If isAbleClickPoInterface = False Then
-                PFC1.Value = "1"
-                PFC2.Value = "1"
-                PFC3.Value = "1"
-                PFC4.Value = "1"
-            ElseIf DS.Tables("RFQHeader").Rows(0)("StatusCode").ToString <> "Q" Then
-                PFC1.Value = "6"
-                PFC2.Value = "6"
-                PFC3.Value = "6"
-                PFC4.Value = "6"
-            ElseIf DS.Tables("RFQHeader").Rows(0)("S4SupplierCode").ToString = "" Then
-                PFC1.Value = "7"
-                PFC2.Value = "7"
-                PFC3.Value = "7"
-                PFC4.Value = "7"
-            ElseIf DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString <> Session("UserID").ToString Then
-                PFC1.Value = "8"
-                PFC2.Value = "8"
-                PFC3.Value = "8"
-                PFC4.Value = "8"
-            Else
-                Dim tmpQuoUnitCode As String = ""
-                Dim isFirstClickPointerfac As String = ""
-                If DS.Tables("RFQLine").Rows.Count >= 1 Then
-                    tmpQuoUnitCode = DS.Tables("RFQLine").Rows(0).Item("QuoUnitCode").ToString
-                    isFirstClickPointerfac = DS.Tables("RFQLine").Rows(0).Item("OutputStatus").ToString
-                    '判断Quo单位是否是L ML LB 
-                    If tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Or tmpQuoUnitCode = "LB" Then
-                        '判断是否是第一次点击
-                        If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
-                            PFC1.Value = "2"
-                            POIssue_1.Enabled = False
-                            'POIssue_1.Attributes.Add("onclick", "return alert('The function was removed!')")
-                        Else
-                            PFC1.Value = "3"
-                        End If
+            Dim tmpQuoUnitCode As String = ""
+            Dim isFirstClickPointerfac As String = ""
+            If DS.Tables("RFQLine").Rows.Count >= 1 Then
+                tmpQuoUnitCode = DS.Tables("RFQLine").Rows(0).Item("QuoUnitCode").ToString
+                isFirstClickPointerfac = DS.Tables("RFQLine").Rows(0).Item("OutputStatus").ToString
+                '判断Quo单位是否是L ML LB 
+                If tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Or tmpQuoUnitCode = "LB" Then
+                    '判断是否是第一次点击
+                    If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
+                        PFC1.Value = "2"
+                        POIssue_1.Enabled = False
+                        'POIssue_1.Attributes.Add("onclick", "return alert('The function was removed!')")
                     Else
-                        '判断是否是第一次点击
-                        If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
-                            PFC1.Value = "4"
-                            POIssue_1.Enabled = False
-                            'POIssue_1.Attributes.Add("onclick", "return alert('The function was removed!')")
-                        Else
-                            PFC1.Value = "5"
-                        End If
+                        PFC1.Value = "3"
+                    End If
+                Else
+                    '判断是否是第一次点击
+                    If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
+                        PFC1.Value = "4"
+                        POIssue_1.Enabled = False
+                        'POIssue_1.Attributes.Add("onclick", "return alert('The function was removed!')")
+                    Else
+                        PFC1.Value = "5"
                     End If
                 End If
+            End If
 
-                If DS.Tables("RFQLine").Rows.Count >= 2 Then
-                    tmpQuoUnitCode = DS.Tables("RFQLine").Rows(1).Item("QuoUnitCode").ToString
-                    isFirstClickPointerfac = DS.Tables("RFQLine").Rows(1).Item("OutputStatus").ToString
-                    If tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Or tmpQuoUnitCode = "LB" Then
-                        If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
-                            PFC2.Value = "2"
-                            POIssue_2.Enabled = False
-                            'POIssue_2.Attributes.Add("onclick", "return alert('The function was removed!')")
-                        Else
-                            PFC2.Value = "3"
-                        End If
+            If DS.Tables("RFQLine").Rows.Count >= 2 Then
+                tmpQuoUnitCode = DS.Tables("RFQLine").Rows(1).Item("QuoUnitCode").ToString
+                isFirstClickPointerfac = DS.Tables("RFQLine").Rows(1).Item("OutputStatus").ToString
+                If tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Or tmpQuoUnitCode = "LB" Then
+                    If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
+                        PFC2.Value = "2"
+                        POIssue_2.Enabled = False
+                        'POIssue_2.Attributes.Add("onclick", "return alert('The function was removed!')")
                     Else
-                        If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
-                            PFC2.Value = "4"
-                            POIssue_2.Enabled = False
-                            'POIssue_2.Attributes.Add("onclick", "return alert('The function was removed!')")
-                        Else
-                            PFC2.Value = "5"
-                        End If
+                        PFC2.Value = "3"
+                    End If
+                Else
+                    If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
+                        PFC2.Value = "4"
+                        POIssue_2.Enabled = False
+                        'POIssue_2.Attributes.Add("onclick", "return alert('The function was removed!')")
+                    Else
+                        PFC2.Value = "5"
                     End If
                 End If
+            End If
 
-                If DS.Tables("RFQLine").Rows.Count >= 3 Then
-                    tmpQuoUnitCode = DS.Tables("RFQLine").Rows(2).Item("QuoUnitCode").ToString
-                    isFirstClickPointerfac = DS.Tables("RFQLine").Rows(2).Item("OutputStatus").ToString
-                    If tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Or tmpQuoUnitCode = "LB" Then
-                        If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
-                            PFC3.Value = "2"
-                            POIssue_3.Enabled = False
-                            'POIssue_3.Attributes.Add("onclick", "return alert('The function was removed!')")
-                        Else
-                            PFC3.Value = "3"
-                        End If
+            If DS.Tables("RFQLine").Rows.Count >= 3 Then
+                tmpQuoUnitCode = DS.Tables("RFQLine").Rows(2).Item("QuoUnitCode").ToString
+                isFirstClickPointerfac = DS.Tables("RFQLine").Rows(2).Item("OutputStatus").ToString
+                If tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Or tmpQuoUnitCode = "LB" Then
+                    If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
+                        PFC3.Value = "2"
+                        POIssue_3.Enabled = False
+                        'POIssue_3.Attributes.Add("onclick", "return alert('The function was removed!')")
                     Else
-                        If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
-                            PFC3.Value = "4"
-                            POIssue_3.Enabled = False
-                            'POIssue_3.Attributes.Add("onclick", "return alert('The function was removed!')")
-                        Else
-                            PFC3.Value = "5"
-                        End If
+                        PFC3.Value = "3"
+                    End If
+                Else
+                    If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
+                        PFC3.Value = "4"
+                        POIssue_3.Enabled = False
+                        'POIssue_3.Attributes.Add("onclick", "return alert('The function was removed!')")
+                    Else
+                        PFC3.Value = "5"
                     End If
                 End If
+            End If
 
-                If DS.Tables("RFQLine").Rows.Count >= 4 Then
-                    tmpQuoUnitCode = DS.Tables("RFQLine").Rows(3).Item("QuoUnitCode").ToString
-                    isFirstClickPointerfac = DS.Tables("RFQLine").Rows(3).Item("OutputStatus").ToString
-                    If tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Or tmpQuoUnitCode = "LB" Then
-                        If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
-                            PFC4.Value = "2"
-                            POIssue_4.Enabled = False
-                            'POIssue_4.Attributes.Add("onclick", "return alert('The function was removed!')")
-                        Else
-                            PFC4.Value = "3"
-                        End If
+            If DS.Tables("RFQLine").Rows.Count >= 4 Then
+                tmpQuoUnitCode = DS.Tables("RFQLine").Rows(3).Item("QuoUnitCode").ToString
+                isFirstClickPointerfac = DS.Tables("RFQLine").Rows(3).Item("OutputStatus").ToString
+                If tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Or tmpQuoUnitCode = "LB" Then
+                    If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
+                        PFC4.Value = "2"
+                        POIssue_4.Enabled = False
+                        'POIssue_4.Attributes.Add("onclick", "return alert('The function was removed!')")
                     Else
-                        If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
-                            PFC4.Value = "4"
-                            POIssue_4.Enabled = False
-                            'POIssue_4.Attributes.Add("onclick", "return alert('The function was removed!')")
-                        Else
-                            PFC4.Value = "5"
-                        End If
+                        PFC4.Value = "3"
+                    End If
+                Else
+                    If isFirstClickPointerfac = "1" Or isFirstClickPointerfac.ToLower() = "true" Then
+                        PFC4.Value = "4"
+                        POIssue_4.Enabled = False
+                        'POIssue_4.Attributes.Add("onclick", "return alert('The function was removed!')")
+                    Else
+                        PFC4.Value = "5"
                     End If
                 End If
             End If
@@ -927,11 +934,24 @@ Partial Public Class RFQUpdate
                 Msg.Text = ERR_INCORRECT_MAKERCODE
                 Return False
             End If
-            If ExistenceConfirmation(st_Supplier, "S4SupplierCode", MakerCode.Text) = False Then
+            If ExistenceConfirmation(st_Supplier, st_SupplierKey, MakerCode.Text) = False Then
                 Msg.Text = ERR_INCORRECT_MAKERCODE
                 Return False
+            Else
+                Dim supplierDt = GetDataTable("select S4SupplierCode from supplier where SupplierCode=" + MakerCode.Text)
+                If supplierDt.Rows.Count > 0 Then
+                    SAPMakerCode.Text = supplierDt.Rows(0)("S4SupplierCode").ToString
+                Else
+                    SAPMakerCode.Text = ""
+                End If
             End If
         End If
+        'If MakerCode.Text <> String.Empty Then
+        '    If SAPMakerCode.Text = "" Then
+        '        Msg.Text = "Please make sure SAP Maker Code already been created!"
+        '        Return False
+        '    End If
+        'End If
         Return True
     End Function
 
@@ -1220,6 +1240,7 @@ Partial Public Class RFQUpdate
                 Dim tmpdt As DataTable
                 tmpdt = GetDataTable("select * from StorageLocation where Storage in(select Storage from StorageByPurchasingUser where UserId=" + dt.Rows(0)("UserID").ToString + ")")
                 StorageLocation.Items.Clear()
+                StorageLocation.Items.Add(String.Empty)
                 For i As Integer = 0 To tmpdt.Rows.Count - 1
                     StorageLocation.Items.Add(New ListItem(tmpdt.Rows(i)("Storage").ToString, tmpdt.Rows(i)("Storage").ToString))
                 Next
@@ -1232,9 +1253,9 @@ Partial Public Class RFQUpdate
         If SetRFQNumber() = False Then
             Exit Sub
         End If
-        If CheckIsClickPoInterface(st_RFQNumber) = False Then
-            Exit Sub
-        End If
+        'If CheckIsClickPoInterface(st_RFQNumber) = False Then
+        '    Exit Sub
+        'End If
         Dim tmpQuoUnitCode As String = ""
         tmpQuoUnitCode = POInterfaceFunction(st_RFQNumber, LineNumber1.Value, 1)
         If tmpQuoUnitCode <> "" Then
@@ -1245,15 +1266,13 @@ Partial Public Class RFQUpdate
             Else
                 PFC1.Value = "4"
             End If
-            Response.Write("<script>alert('PO Interface create successfully!')</script>")
+            'Response.Write("<script>alert('PO Interface create successfully!')</script>")
+            ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>MyFun();</script>")
         End If
     End Sub
 
     Protected Sub POInterfaceButton_2_Click(sender As Object, e As EventArgs) Handles POInterfaceButton_2.Click
        If SetRFQNumber() = False Then
-            Exit Sub
-        End If
-        If CheckIsClickPoInterface(st_RFQNumber) = False Then
             Exit Sub
         End If
         Dim tmpQuoUnitCode As String = ""
@@ -1266,15 +1285,13 @@ Partial Public Class RFQUpdate
             Else
                 PFC2.Value = "4"
             End If
-            Response.Write("<script>alert('PO Interface create successfully!')</script>")
+            'Response.Write("<script>alert('PO Interface create successfully!')</script>")
+            ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>MyFun();</script>")
         End If
     End Sub
 
     Protected Sub POInterfaceButton_3_Click(sender As Object, e As EventArgs) Handles POInterfaceButton_3.Click
        If SetRFQNumber() = False Then
-            Exit Sub
-        End If
-        If CheckIsClickPoInterface(st_RFQNumber) = False Then
             Exit Sub
         End If
         Dim tmpQuoUnitCode As String = ""
@@ -1287,15 +1304,13 @@ Partial Public Class RFQUpdate
             Else
                 PFC3.Value = "4"
             End If
-            Response.Write("<script>alert('PO Interface create successfully!')</script>")
+            'Response.Write("<script>alert('PO Interface create successfully!')</script>")
+            ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>MyFun();</script>")
         End If
     End Sub
 
     Protected Sub POInterfaceButton_4_Click(sender As Object, e As EventArgs) Handles POInterfaceButton_4.Click
          If SetRFQNumber() = False Then
-            Exit Sub
-        End If
-        If CheckIsClickPoInterface(st_RFQNumber) = False Then
             Exit Sub
         End If
         Dim tmpQuoUnitCode As String = ""
@@ -1308,7 +1323,8 @@ Partial Public Class RFQUpdate
             Else
                 PFC4.Value = "4"
             End If
-            Response.Write("<script>alert('PO Interface create successfully!')</script>")
+            'Response.Write("<script>alert('PO Interface create successfully!')</script>")
+            ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>MyFun();</script>")
         End If
     End Sub
 
@@ -1465,7 +1481,8 @@ Partial Public Class RFQUpdate
         'Supplier Contact Person Code
         parameter(13) = DS.Tables("RFQHeader").Rows(0)("SupplierContactPersonSel").ToString
         'Maker Code
-        parameter(14) = DS.Tables("RFQHeader").Rows(0)("MakerCode").ToString
+        'parameter(14) = DS.Tables("RFQHeader").Rows(0)("MakerCode").ToString
+        parameter(14) = DS.Tables("RFQHeader").Rows(0)("SAPMakerCode").ToString
         'Supplier Item Name
         parameter(15) = DS.Tables("RFQHeader").Rows(0)("SupplierItemName").ToString
         'Payment Terms
@@ -1548,6 +1565,47 @@ Partial Public Class RFQUpdate
 
 
         '判断当前数据是否合法是否需要提醒
+
+        If CheckIsClickPoInterface(st_RFQNumber) = False Then
+            Msg.Text = "Purpose not exist!"
+            Return ""
+            Exit Function
+        End If
+        If DS.Tables("RFQHeader").Rows(0)("StatusCode").ToString <> "Q" Then
+            Msg.Text = "Please quote and update RFQ first! PO interface create failed!"
+            Return ""
+            Exit Function
+        End If
+        If DS.Tables("RFQHeader").Rows(0)("S4SupplierCode").ToString = "" Then
+            Msg.Text = "Please make sure SAP supplier code already been created! PO interface create failed!"
+            Return ""
+            Exit Function
+        End If
+        If DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString <> Session("UserID").ToString Then
+            Msg.Text = "You are not authorized to issue this PO interface!"
+            Return ""
+            Exit Function
+        End If
+       
+        If DS.Tables("RFQHeader").Rows(0)("MakerCode").ToString <> "" Then
+            If DS.Tables("RFQHeader").Rows(0)("SAPMakerCode").ToString = "" Then
+                Msg.Text = "Please make sure SAP Maker Code already been created! PO interface create failed!"
+                Return ""
+                Exit Function
+            End If
+        End If
+        If parameter(9).ToString = "" Then
+            Msg.Text = "Quo-Unit is blank!"
+            Return ""
+            Exit Function
+        End If
+
+        If parameter(10).ToString = "" Then
+            Msg.Text = "Quo-Per is blank!"
+            Return ""
+            Exit Function
+        End If
+
         If parameter(7).ToString = "" Then
             Msg.Text = "SAP Supplier Code is blank!"
             Return ""
@@ -1851,6 +1909,7 @@ Partial Public Class RFQUpdate
             End If
             dt = GetDataTable(sql)
             QuoUser.Items.Clear()
+            'QuoUser.Items.Add(String.Empty)
             For i As Integer = 0 To dt.Rows.Count - 1
                 QuoUser.Items.Add(New ListItem(dt.Rows(i)("Name").ToString, dt.Rows(i)("UserID").ToString))
             Next
@@ -1858,6 +1917,7 @@ Partial Public Class RFQUpdate
                 Dim tmpdt As DataTable
                 tmpdt = GetDataTable("select * from StorageLocation where Storage in(select Storage from StorageByPurchasingUser where UserId=" + dt.Rows(0)("UserID").ToString + ")")
                 StorageLocation2.Items.Clear()
+                StorageLocation2.Items.Add(String.Empty)
                 For i As Integer = 0 To tmpdt.Rows.Count - 1
                     StorageLocation2.Items.Add(New ListItem(tmpdt.Rows(i)("Storage").ToString, tmpdt.Rows(i)("Storage").ToString))
                 Next
@@ -1874,6 +1934,7 @@ Partial Public Class RFQUpdate
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
         StorageLocation.Items.Clear()
+        StorageLocation.Items.Add(String.Empty)
         Do Until DBReader.Read = False
             StorageLocation.Items.Add(New ListItem(DBReader("Storage").ToString, DBReader("Storage").ToString))
         Loop
@@ -1883,11 +1944,16 @@ Partial Public Class RFQUpdate
     Protected Sub QuoUser_SelectedIndexChanged(sender As Object, e As EventArgs) Handles QuoUser.SelectedIndexChanged
         Msg.Text = String.Empty
         DBCommand = DBConn.CreateCommand()
-        DBCommand.CommandText = "select * from StorageLocation where Storage in(select Storage from StorageByPurchasingUser where UserId=" + QuoUser.SelectedValue + ")"
+        Dim sql As String = "1=2"
+        If QuoUser.SelectedValue <> "" Then
+            sql = "UserId=" + QuoUser.SelectedValue
+        End If
+        DBCommand.CommandText = "select * from StorageLocation where Storage in(select Storage from StorageByPurchasingUser where " + sql + ")"
         Dim DBReader As System.Data.SqlClient.SqlDataReader
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
         StorageLocation2.Items.Clear()
+        StorageLocation2.Items.Add(String.Empty)
         Do Until DBReader.Read = False
             StorageLocation2.Items.Add(New ListItem(DBReader("Storage").ToString, DBReader("Storage").ToString))
         Loop

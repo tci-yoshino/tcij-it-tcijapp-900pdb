@@ -185,6 +185,15 @@ Partial Public Class RFQUpdate
     Protected WithEvents MakerInfo As Global.System.Web.UI.WebControls.LinkButton
 
     '''<summary>
+    '''SAPMakerCode 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents SAPMakerCode As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
     '''MakerName 控件。
     '''</summary>
     '''<remarks>

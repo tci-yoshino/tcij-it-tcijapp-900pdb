@@ -17,11 +17,12 @@ window.onload = function() {
    changeCellColor("SupplierList_itemPlaceholderContainer")
    document.SearchForm.Code.focus();
 }
-    function returnValues(code, name, countryName){
+function returnValues(code, name, countryName,sapcode){
       if(opener){
         opener.document.getElementById('MakerCode').value=code
         opener.document.getElementById('MakerName').value=name
         opener.document.getElementById('MakerCountry').value=countryName
+        opener.document.getElementById('SAPMakerCode').value=sapcode
        }
        window.close();
     }
@@ -78,7 +79,7 @@ window.onload = function() {
                     <h3 style="font-style: italic"><%=Purchase.Common.ERR_NO_MATCH_FOUND%></h3>
                 </EmptyDataTemplate>
                 <ItemTemplate>
-                    <tr onclick="returnValues('<%#Eval("S4SupplierCode")%>','<%# Replace(Eval("Name").ToString(), "'", "\'")%>','<%#Eval("CountryName") %>');">
+                    <tr onclick="returnValues('<%#Eval("SupplierCode")%>','<%# Replace(Eval("Name").ToString(), "'", "\'")%>','<%#Eval("CountryName") %>','<%#Eval("S4SupplierCode")%>');">
                         <td>
                             <asp:Label ID="SupplierCode" runat="server" Text='<%#Eval("SupplierCode")%>' /></td>
                         <td>

@@ -184,8 +184,8 @@
                             <td class="number"><asp:Label ID="UnitPrice" runat="server" Text='<%#Eval("UnitPrice","{0:G29}")%>'></asp:Label></td>
                             <td class="number"><asp:Label ID="QuoPer" runat="server" Text='<%#Eval("QuoPer","{0:G29}") %>'></asp:Label> <asp:Label ID="QuoUnit" runat="server" Text='<%#Eval("QuoUnitCode") %>'></asp:Label></td>
                             <td><asp:Label ID="LeadTime" runat="server" Text='<%#Eval("LeadTime") %>'></asp:Label></td>
-                            <td><asp:Label ID="Packing" runat="server" Text='<%#Eval("Packing") %>'></asp:Label></td>
-                            <td><asp:Label ID="Purity" runat="server" Text='<%#Eval("Purity") %>'></asp:Label></td>
+                            <td><asp:Label ID="Packing" runat="server" Text='<%#Eval("Packing")%>'></asp:Label></td>
+                            <td><asp:Label ID="Purity" runat="server" Text='<%#(Eval("Purity").ToString+ Eval("QMMethod").ToString) %>'></asp:Label></td>
                             <td><asp:Label ID="SupplierOfferNo" runat="server" Text='<%#Eval("SupplierOfferNo")%>'></asp:Label></td>
                             <td><asp:Label ID="NoOfferReason" runat="server" Text='<%#Eval("NoOfferReason") %>'></asp:Label></td>
                             <td><asp:HyperLink ID="PO" runat="server" NavigateUrl='<%#If(IsDBNull(Eval("PO")), "", "./POListByRFQ.aspx?RFQLineNumber=" & Eval("RFQLineNumber"))%>'><%#If(IsDBNull(Eval("PO")), "", IIf(Eval("Priority") = "", "PO", "PO-" & Eval("Priority")))%></asp:HyperLink></td>

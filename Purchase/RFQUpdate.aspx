@@ -74,12 +74,18 @@
                         </td>
                     </tr>
 					<tr>
-						<th>SAP Maker Code : </th>
+						<th>Maker Code : </th>
 						<td>
 						    <asp:TextBox ID="MakerCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
 						    <asp:ImageButton ID="MakerSelect" runat="server" ImageUrl="./Image/Search.gif" 
                                 CssClass="magnify" OnClientClick="return MakerSelect_onclick()" />
                             <asp:LinkButton runat="server" ID="MakerInfo" Text="Supplier Information"/>
+						</td>
+					</tr>
+                    <tr>
+						<th>SAP Maker Code: </th>
+						<td>
+						    <asp:TextBox ID="SAPMakerCode" runat="server" Width="7em" ReadOnly="true" CssClass="readonly"></asp:TextBox>
 						</td>
 					</tr>
 					<tr>
@@ -176,7 +182,7 @@
                             <asp:SqlDataSource ID="SDS_RFQUpdate_EnqLocation" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
                             <asp:DropDownList ID="StorageLocation" runat="server"  AutoPostBack="True"
                                 DataSourceID="SDS_RFQUpdate_EnqStorageLocation" DataTextField="Storage" 
-                                DataValueField="Storage">
+                                DataValueField="Storage" AppendDataBoundItems="true">
                             </asp:DropDownList>
                             <asp:SqlDataSource ID="SDS_RFQUpdate_EnqStorageLocation" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
                         </td>
@@ -186,11 +192,10 @@
                         <td>
                             <asp:DropDownList ID="QuoUser" runat="server" AutoPostBack="True"
                                 DataSourceID="SDS_RFQUpdate_QuoUser" DataTextField="Name" 
-                                DataValueField="UserID">
+                                DataValueField="UserID" AppendDataBoundItems="true">
                             </asp:DropDownList>
                             <asp:SqlDataSource ID="SDS_RFQUpdate_QuoUser" runat="server" 
-                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-                                SelectCommand="SELECT UserID, Name FROM v_User WHERE (LocationName = @Location) ORDER BY Name ">
+                                ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>">
                                <%-- <SelectParameters>
                                     <asp:ControlParameter ControlID="QuoLocation" Name="Location" 
                                         PropertyName="Text" />
@@ -204,7 +209,7 @@
 
                              <asp:DropDownList ID="StorageLocation2" runat="server" AutoPostBack="True"
                                 DataSourceID="SDS_RFQUpdate_QuoStorageLocation" DataTextField="Storage" 
-                                DataValueField="Storage">
+                                DataValueField="Storage" AppendDataBoundItems="true">
                             </asp:DropDownList>
                             <asp:SqlDataSource ID="SDS_RFQUpdate_QuoStorageLocation" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
                         </td>
@@ -544,7 +549,6 @@
                         <asp:ListItem Value="E">Enquired</asp:ListItem>
                         <asp:ListItem Value="PQ">Partly-quoted</asp:ListItem>
                         <asp:ListItem Value="Q">Quoted</asp:ListItem>
-                        <asp:ListItem Value="II"> Interface Issued</asp:ListItem>
                     </asp:DropDownList>
                     
                     <asp:Button ID="Update" runat="server" Text="Update" OnClientClick="checkStatus()"/>
@@ -623,10 +627,6 @@
                         break;
             }
             switch (op) {
-                case "1":
-                    alert('Purpose not exist');
-                    return false;
-                    break;
                 case "2":
                     alert('Please make sure Material Master have unit conversion!');
                     if (confirm('Duplicated/Revise output?'))
@@ -644,18 +644,6 @@
                     break;
                 case "5":
                     return true;
-                    break;
-                case "6":
-                    alert('Please quote and update RFQ first! PO interface create failed!');
-                    return false;
-                    break;
-                case "7":
-                    alert('Please make sure SAP supplier code already been created! PO interface create failed!');
-                    return false;
-                    break;
-                case "8":
-                    alert('You are not authorized to issue this PO interface!');
-                    return false;
                     break;
             }
         }
@@ -683,6 +671,9 @@
 		                return true;
 		            }
 		        }
+		    }
+		    function MyFun() {
+		        alert("PO Interface create successfully!");
 		    }
         </script>
     <!-- Footer -->

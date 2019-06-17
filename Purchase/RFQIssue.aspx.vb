@@ -80,11 +80,11 @@ Partial Public Class RFQIssue
             DBCommand.CommandType = CommandType.Text
             DBCommand.CommandText = "INSERT INTO RFQHeader " _
                                   & "(EnqLocationCode, EnqUserID, QuoLocationCode, QuoUserID, " _
-                                  & "ProductID, SupplierCode, MakerCode, PurposeCode, RequiredPurity, " _
+                                  & "ProductID, SupplierCode, MakerCode,SAPMakerCode, PurposeCode, RequiredPurity, " _
                                   & "RequiredQMMethod, RequiredSpecification, Comment, RFQStatusCode, Priority, " _
                                   & "CreatedBy, UpdatedBy)" _
                                   & "VALUES(@EnqLocationCode, @EnqUserID, @QuoLocationCode, @QuoUserID, " _
-                                  & "@ProductID, @SupplierCode, @MakerCode, @PurposeCode, @RequiredPurity, " _
+                                  & "@ProductID, @SupplierCode, @MakerCode,@SAPMakerCode, @PurposeCode, @RequiredPurity, " _
                                   & "@RequiredQMMethod, @RequiredSpecification, @Comment, @RFQStatusCode, @Priority, " _
                                   & "@CreatedBy, @UpdatedBy); " _
                                   & " SELECT RFQNumber FROM RFQHeader WHERE (RFQNumber = SCOPE_IDENTITY())"
@@ -96,6 +96,7 @@ Partial Public Class RFQIssue
             DBCommand.Parameters.Add("@ProductID", SqlDbType.Int).Value = i_ProductID
             DBCommand.Parameters.Add("@SupplierCode", SqlDbType.Int).Value = SupplierCode.Text
             DBCommand.Parameters.Add("@MakerCode", SqlDbType.Int).Value = ConvertEmptyStringToNull(MakerCode.Text)
+            DBCommand.Parameters.Add("@SAPMakerCode", SqlDbType.Int).Value = ConvertEmptyStringToNull(SAPMakerCode.Text)
             DBCommand.Parameters.Add("@PurposeCode", SqlDbType.VarChar).Value = Purpose.SelectedValue
             DBCommand.Parameters.Add("@RequiredPurity", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(RequiredPurity.Text)
             DBCommand.Parameters.Add("@RequiredQMMethod", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(RequiredQMMethod.Text)
@@ -270,6 +271,7 @@ Partial Public Class RFQIssue
                         SupplierCode.Text = DBReader("SupplierCode").ToString
                         'R3SupplierCode.Text = DBReader("R3SupplierCode").ToString
                         R3SupplierCode.Text = DBReader("S4SupplierCode").ToString
+                        'SAPMakerCode.Text = DBReader("S4SupplierCode").ToString
                         SupplierName.Text = DBReader("SupplierName").ToString
                         SupplierCountry.Text = DBReader("CountryName").ToString
 
@@ -474,12 +476,25 @@ Partial Public Class RFQIssue
         End If
         'Makerのチェック
         If MakerCode.Text <> "" Then
-            'If ExistenceConfirmation(st_Supplier, st_SupplierKey, MakerCode.Text) = False Then
-            If ExistenceConfirmation(st_Supplier, "S4SupplierCode", MakerCode.Text) = False Then
+            If ExistenceConfirmation(st_Supplier, st_SupplierKey, MakerCode.Text) = False Then
+                'If ExistenceConfirmation(st_Supplier, "S4SupplierCode", MakerCode.Text) = False Then
                 Msg.Text = ERR_INCORRECT_MAKERCODE
                 Return False
+            Else
+                Dim supplierDt = GetDataTable("select S4SupplierCode from supplier where SupplierCode=" + MakerCode.Text)
+                If supplierDt.Rows.Count > 0 Then
+                    SAPMakerCode.Text = supplierDt.Rows(0)("S4SupplierCode").ToString
+                Else
+                    SAPMakerCode.Text = ""
+                End If
             End If
         End If
+        'If MakerCode.Text <> String.Empty Then
+        '    If SAPMakerCode.Text = "" Then
+        '        Msg.Text = "Please make sure SAP Maker Code already been created!"
+        '        Return False
+        '    End If
+        'End If
         Return True
     End Function
 
@@ -596,9 +611,9 @@ Partial Public Class RFQIssue
         EnqUser.Items.Add(String.Empty)
 
         If IsConfidentialItem(ProductNumber.Text) Then
-            SDS_RFQIssue_Enq_U.SelectCommand = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 AND RoleCode = 'WRITE' ORDER BY Name"
+            SDS_RFQIssue_Enq_U.SelectCommand = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'' ORDER BY Name"
         Else
-            SDS_RFQIssue_Enq_U.SelectCommand = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 ORDER BY Name"
+            SDS_RFQIssue_Enq_U.SelectCommand = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'' ORDER BY Name"
         End If
 
         SDS_RFQIssue_Enq_U.SelectParameters.Clear()
@@ -616,9 +631,9 @@ Partial Public Class RFQIssue
         QuoUser.Items.Add(String.Empty)
 
         If IsConfidentialItem(ProductNumber.Text) Then
-            SDS_RFQIssue_Que_U.SelectCommand = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 AND RoleCode = 'WRITE' ORDER BY Name"
+            SDS_RFQIssue_Que_U.SelectCommand = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'' ORDER BY Name"
         Else
-            SDS_RFQIssue_Que_U.SelectCommand = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 ORDER BY Name"
+            SDS_RFQIssue_Que_U.SelectCommand = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'' ORDER BY Name"
         End If
 
         SDS_RFQIssue_Que_U.SelectParameters.Clear()

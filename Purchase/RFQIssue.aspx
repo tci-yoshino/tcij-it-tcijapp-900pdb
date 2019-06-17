@@ -74,6 +74,7 @@
 						    <asp:ImageButton ID="SupplierSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="return SupplierSelect_onclick()" />
 						</td>
 					</tr>
+                   
 					<tr>
 						<th>SAP Supplier Code : </th>
 						<td><asp:TextBox ID="R3SupplierCode" runat="server" Width="7em" MaxLength="10" 
@@ -89,11 +90,16 @@
 						</td>
 					</tr>
 					<tr>
-						<th>SAP Maker Code : </th>
+						<th>Maker Code : </th>
 						<td>
 						    <asp:TextBox ID="MakerCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
 						    <asp:ImageButton ID="MakerSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="return MakerSelect_onclick()" />
 						</td>
+					</tr>
+                     <tr>
+						<th>SAP Maker Code : </th>
+						<td><asp:TextBox ID="SAPMakerCode" runat="server" Width="7em" MaxLength="10" 
+                                ReadOnly="true" CssClass="readonly" EnableViewState="False"></asp:TextBox></td>
 					</tr>
 					<tr>
 						<th>Maker Name / Country : </th>
