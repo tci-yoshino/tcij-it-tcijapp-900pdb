@@ -230,7 +230,7 @@
                         <th>Price</th>
                         <th>Quo-Per</th>
                         <th>Quo-Unit</th>
-                        <th>Lead Time</th>
+                        <th>Lead Time(Days)</th>
                         <th>Supplier Item Number</th>
                         <th style="width:5%" rowspan="2">PO Issue</th>
                         <th style="width:5%" rowspan="2">PO Interface</th>
@@ -310,10 +310,10 @@
                                 SelectCommand="SELECT IncotermsCode, [Text] FROM s_Incoterms ORDER BY IncotermsCode "></asp:SqlDataSource>
                         </td>
                         <td colspan="2"><asp:TextBox ID="DeliveryTerm_1" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
-                        <td><asp:TextBox ID="Purity_1" runat="server" Width="5em" MaxLength="255"></asp:TextBox>
+                        <td><asp:TextBox ID="Purity_1" runat="server" Width="10em" MaxLength="255"></asp:TextBox>
                             <asp:TextBox ID="QMMethod_1" runat="server" Visible="false" Width="5em" MaxLength="255"></asp:TextBox>
                         </td>
-                        <td><asp:TextBox ID="SupplierOfferNo_1" runat="server" Width="5em" MaxLength="255"></asp:TextBox></td>
+                        <td><asp:TextBox ID="SupplierOfferNo_1" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="Packing_1" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td>
                             <asp:DropDownList ID="NoOfferReason_1" runat="server" 
@@ -385,10 +385,10 @@
                             </asp:DropDownList>
                         </td>
                         <td colspan="2"><asp:TextBox ID="DeliveryTerm_2" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
-                        <td><asp:TextBox ID="Purity_2" runat="server" Width="5em" MaxLength="255"></asp:TextBox>
+                        <td><asp:TextBox ID="Purity_2" runat="server" Width="10em" MaxLength="255"></asp:TextBox>
                             <asp:TextBox ID="QMMethod_2" runat="server" Width="5em" MaxLength="255" Visible="false"></asp:TextBox>
                         </td>
-                        <td><asp:TextBox ID="SupplierOfferNo_2" runat="server" Width="5em" MaxLength="255"></asp:TextBox></td>
+                        <td><asp:TextBox ID="SupplierOfferNo_2" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="Packing_2" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td>
                             <asp:DropDownList ID="NoOfferReason_2" runat="server" 
@@ -456,10 +456,10 @@
                             </asp:DropDownList>
                         </td>
                         <td colspan="2"><asp:TextBox ID="DeliveryTerm_3" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
-                        <td><asp:TextBox ID="Purity_3" runat="server" Width="5em" MaxLength="255"></asp:TextBox>
+                        <td><asp:TextBox ID="Purity_3" runat="server" Width="10em" MaxLength="255"></asp:TextBox>
                             <asp:TextBox ID="QMMethod_3" runat="server" Width="5em" MaxLength="255" Visible="false"></asp:TextBox>
                         </td>
-                        <td><asp:TextBox ID="SupplierOfferNo_3" runat="server" Width="5em" MaxLength="255"></asp:TextBox></td>
+                        <td><asp:TextBox ID="SupplierOfferNo_3" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="Packing_3" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td>
                             <asp:DropDownList ID="NoOfferReason_3" runat="server" 
@@ -526,10 +526,10 @@
                             </asp:DropDownList>
                         </td>
                         <td colspan="2"><asp:TextBox ID="DeliveryTerm_4" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
-                        <td><asp:TextBox ID="Purity_4" runat="server" Width="5em" MaxLength="255"></asp:TextBox>
+                        <td><asp:TextBox ID="Purity_4" runat="server" Width="10em" MaxLength="255"></asp:TextBox>
                             <asp:TextBox ID="QMMethod_4" runat="server" Width="5em" MaxLength="255" Visible="false"></asp:TextBox>
                         </td>
-                        <td><asp:TextBox ID="SupplierOfferNo_4" runat="server" Width="5em" MaxLength="255"></asp:TextBox></td>
+                        <td><asp:TextBox ID="SupplierOfferNo_4" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td><asp:TextBox ID="Packing_4" runat="server" Width="10em" MaxLength="255"></asp:TextBox></td>
                         <td>
                             <asp:DropDownList ID="NoOfferReason_4" runat="server" 

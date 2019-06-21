@@ -596,7 +596,7 @@ Partial Public Class RFQUpdate
             End If
             If DS.Tables("RFQHeader").Rows(0)("EnqStorageLocation").ToString <> "" Then
                 Dim enqTmpDt As DataTable
-                enqTmpDt = GetDataTable(String.Format("SELECT Storage FROM StorageLocation where Storage in(select Storage from StorageByPurchasingUser where UserId=" + DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString + ") and Storage='" + DS.Tables("RFQHeader").Rows(0)("EnqStorageLocation").ToString + "'  ORDER BY Storage"))
+                enqTmpDt = GetDataTable(String.Format("SELECT Storage FROM StorageLocation where Storage in(select Storage from StorageByPurchasingUser where UserId=" + DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString + ") and Storage='" + DS.Tables("RFQHeader").Rows(0)("EnqStorageLocation").ToString + "'  ORDER BY Storage"))
                 If enqTmpDt.Rows.Count > 0 Then
                     StorageLocation.SelectedValue = DS.Tables("RFQHeader").Rows(0)("EnqStorageLocation").ToString
                 End If
@@ -1577,15 +1577,16 @@ Partial Public Class RFQUpdate
             Exit Function
         End If
         If DS.Tables("RFQHeader").Rows(0)("S4SupplierCode").ToString = "" Then
-            Msg.Text = "Please make sure SAP supplier code already been created! PO interface create failed!"
+            Msg.Text = "SAP Supplier code is blank! PO interface create failed!"
             Return ""
             Exit Function
         End If
-        If DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString <> Session("UserID").ToString Then
-            Msg.Text = "You are not authorized to issue this PO interface!"
-            Return ""
-            Exit Function
-        End If
+        '临时测试用
+        'If DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString <> Session("UserID").ToString Then
+        '    Msg.Text = "You are not authorized to issue this PO interface!"
+        '    Return ""
+        '    Exit Function
+        'End If
        
         If DS.Tables("RFQHeader").Rows(0)("MakerCode").ToString <> "" Then
             If DS.Tables("RFQHeader").Rows(0)("SAPMakerCode").ToString = "" Then
@@ -1595,61 +1596,45 @@ Partial Public Class RFQUpdate
             End If
         End If
         If parameter(9).ToString = "" Then
-            Msg.Text = "Quo-Unit is blank!"
+            Msg.Text = "Quo-Unit is blank!PO interface create failed!"
             Return ""
             Exit Function
         End If
 
         If parameter(10).ToString = "" Then
-            Msg.Text = "Quo-Per is blank!"
-            Return ""
-            Exit Function
-        End If
-
-        If parameter(7).ToString = "" Then
-            Msg.Text = "SAP Supplier Code is blank!"
+            Msg.Text = "Quo-Per is blank!PO interface create failed!"
             Return ""
             Exit Function
         End If
         If parameter(8).ToString = "" Then
-            Msg.Text = "Price is blank!"
-            Return ""
-            Exit Function
-        End If
-        If parameter(9).ToString = "" Then
-            Msg.Text = "Quo-Unit is blank!"
-            Return ""
-            Exit Function
-        End If
-        If parameter(10).ToString = "" Then
-            Msg.Text = "Quo-Per is blank!"
+            Msg.Text = "Price is blank!PO interface create failed!"
             Return ""
             Exit Function
         End If
         If parameter(11).ToString = "" Then
-            Msg.Text = "Currency is blank!"
+            Msg.Text = "Currency is blank!PO interface create failed!"
             Return ""
             Exit Function
         End If
         If parameter(18).ToString <> "" Then
             If parameter(17).ToString = "" Then
-                Msg.Text = "Handling fee(Currency) is blank!"
+                Msg.Text = "Handling fee(Currency) is blank!PO interface create failed!"
                 Return ""
                 Exit Function
             End If
         End If
-        If parameter(21).ToString = "" Then
+        If DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString = "" Then
             Msg.Text = "Enq-User is blank!"
             Return ""
             Exit Function
         End If
-        If parameter(22).ToString = "" Then
+        If DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString = "" Then
             Msg.Text = "Quo-user  is blank!"
             Return ""
             Exit Function
         End If
         If parameter(23).ToString = "" Then
-            Msg.Text = "Enq-Quantity is blank!"
+            Msg.Text = "Enq-Quantity is blank!PO interface create failed!"
             Return ""
             Exit Function
         End If
