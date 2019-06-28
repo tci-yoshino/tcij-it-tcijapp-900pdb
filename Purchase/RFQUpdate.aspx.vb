@@ -360,7 +360,7 @@ Partial Public Class RFQUpdate
             Exit Sub
         End If
         '他セッションでの更新チェック
-        If isLatestData("RFQHeader", "RFQNumber", st_RFQNumber, UpdateDate.Value) = False Then
+        If IsLatestData("RFQHeader", "RFQNumber", st_RFQNumber, UpdateDate.Value) = False Then
             Msg.Text = ERR_UPDATED_BY_ANOTHER_USER
             Exit Sub
         End If
@@ -1253,9 +1253,10 @@ Partial Public Class RFQUpdate
         If SetRFQNumber() = False Then
             Exit Sub
         End If
-        'If CheckIsClickPoInterface(st_RFQNumber) = False Then
-        '    Exit Sub
-        'End If
+        '先判断数据是否符合update验证
+        If RFQCheck(st_RFQNumber, "1") = False Then
+            Exit Sub
+        End If
         Dim tmpQuoUnitCode As String = ""
         tmpQuoUnitCode = POInterfaceFunction(st_RFQNumber, LineNumber1.Value, 1)
         If tmpQuoUnitCode <> "" Then
@@ -1272,7 +1273,10 @@ Partial Public Class RFQUpdate
     End Sub
 
     Protected Sub POInterfaceButton_2_Click(sender As Object, e As EventArgs) Handles POInterfaceButton_2.Click
-       If SetRFQNumber() = False Then
+        If SetRFQNumber() = False Then
+            Exit Sub
+        End If
+        If RFQCheck(st_RFQNumber, "2") = False Then
             Exit Sub
         End If
         Dim tmpQuoUnitCode As String = ""
@@ -1291,7 +1295,10 @@ Partial Public Class RFQUpdate
     End Sub
 
     Protected Sub POInterfaceButton_3_Click(sender As Object, e As EventArgs) Handles POInterfaceButton_3.Click
-       If SetRFQNumber() = False Then
+        If SetRFQNumber() = False Then
+            Exit Sub
+        End If
+        If RFQCheck(st_RFQNumber, "3") = False Then
             Exit Sub
         End If
         Dim tmpQuoUnitCode As String = ""
@@ -1310,7 +1317,10 @@ Partial Public Class RFQUpdate
     End Sub
 
     Protected Sub POInterfaceButton_4_Click(sender As Object, e As EventArgs) Handles POInterfaceButton_4.Click
-         If SetRFQNumber() = False Then
+        If SetRFQNumber() = False Then
+            Exit Sub
+        End If
+        If RFQCheck(st_RFQNumber, "4") = False Then
             Exit Sub
         End If
         Dim tmpQuoUnitCode As String = ""
@@ -1587,7 +1597,7 @@ Partial Public Class RFQUpdate
         '    Return ""
         '    Exit Function
         'End If
-       
+
         If DS.Tables("RFQHeader").Rows(0)("MakerCode").ToString <> "" Then
             If DS.Tables("RFQHeader").Rows(0)("SAPMakerCode").ToString = "" Then
                 Msg.Text = "Please make sure SAP Maker Code already been created! PO interface create failed!"
@@ -1973,4 +1983,144 @@ Partial Public Class RFQUpdate
         SDS_SupplierContactPersonCodeList.SelectCommand = sql
     End Sub
 
+    Public Function RFQCheck(ByVal RFQNumber As String, ByVal i As String) As Boolean
+        Dim Ret As Boolean = True
+        Dim SQLLineUpdate As String = String.Empty
+        Msg.Text = String.Empty
+        If Comment.Text.Length > INT_3000 Then
+            Msg.Text = ERR_COMMENT_OVER
+            Ret = False
+            Exit Function
+        End If
+        If Specification.Text.Length > INT_255 Then
+            Msg.Text = ERR_SPECIFICATION_OVER
+            Ret = False
+            Exit Function
+        End If
+        If CheckSupplierCode() = False Then
+            Ret = False
+            Exit Function
+        End If
+        If QuoUser.SelectedValue = "" Then
+            Msg.Text = "please choose Quo-User!"
+            Ret = False
+            Exit Function
+        End If
+        If CheckLocation() = False Then
+            Ret = False
+            Exit Function
+        End If
+        If IsLatestData("RFQHeader", "RFQNumber", st_RFQNumber, UpdateDate.Value) = False Then
+            Msg.Text = ERR_UPDATED_BY_ANOTHER_USER
+            Ret = False
+            Exit Function
+        End If
+        Dim sqlTran As System.Data.SqlClient.SqlTransaction = DBConn.BeginTransaction()
+        DBCommand.Transaction = sqlTran
+        Try
+            DBCommand.Parameters.Clear()
+            Dim st_Priority As String = String.Empty
+            If (Priority.Visible) Then
+                st_Priority = Priority.Text
+            Else
+                st_Priority = LabelPriority.Text
+            End If
+            Dim st_PurposeCode As String = String.Empty
+            If (ListPurpose.Visible) Then
+                st_PurposeCode = ListPurpose.SelectedValue
+            Else
+                st_PurposeCode = PurposeCode.Value
+            End If
+            Dim st_EnqLocationCode As String = String.Empty
+            If EnqLocation.CssClass = "readonly" Then
+                st_EnqLocationCode = EnqLocationCode.Value
+            Else
+                st_EnqLocationCode = EnqLocation.SelectedValue
+            End If
+            Dim st_QuoLocationCode As String = String.Empty
+            If EnqLocation.CssClass = "readonly" Then
+                st_QuoLocationCode = QuoLocationCode.Value
+            Else
+                st_QuoLocationCode = QuoLocation.SelectedValue
+            End If
+            Dim st_EnqStorageLocationCode As String = String.Empty
+            If EnqLocation.CssClass = "readonly" Then
+                st_EnqStorageLocationCode = EnqStorageLOcationCode.Value
+            Else
+                st_EnqStorageLocationCode = StorageLocation.SelectedValue
+            End If
+            Dim st_QuoStorageLocationCode As String = String.Empty
+            If EnqLocation.CssClass = "readonly" Then
+                st_QuoStorageLocationCode = QuoStorageLOcationCode.Value
+            Else
+                st_QuoStorageLocationCode = StorageLocation2.SelectedValue
+            End If
+            DBCommand.CommandText = "Update RFQHeader SET EnqLocationCode = @EnqLocationCode,QuoLocationCode = @QuoLocationCode, EnqUserID = @EnqUserID, QuoUserID = @QuoUserID, SupplierCode = @SupplierCode, MakerCode = @MakerCode,SAPMakerCode = @SAPMakerCode," _
+            & "SpecSheet = @SpecSheet, Specification = @Specification, SupplierContactPerson = @SupplierContactPerson," _
+            & "SupplierItemName = @SupplierItemName, ShippingHandlingFee = @ShippingHandlingFee," _
+            & "ShippingHandlingCurrencyCode = @ShippingHandlingCurrencyCode, PaymentTermCode = @PaymentTermCode," _
+            & "Comment = @Comment, Priority = @Priority , PurposeCode = @PurposeCode , UpdatedBy = @UpdatedBy,EnqStorageLocation=@EnqStorageLocation,QuoStorageLocation=@QuoStorageLocation,SupplierContactPersonSel=@SupplierContactPersonSel, UpdateDate = GETDATE()" _
+            & " Where RFQNumber = @RFQNumber "
+            DBCommand.Parameters.Add("@EnqLocationCode", SqlDbType.VarChar).Value = st_EnqLocationCode
+            DBCommand.Parameters.Add("@QuoLocationCode", SqlDbType.VarChar).Value = st_QuoLocationCode
+            DBCommand.Parameters.Add("@EnqUserID", SqlDbType.Int).Value = ConvertStringToInt(EnqUser.SelectedValue)
+            DBCommand.Parameters.Add("@QuoUserID", SqlDbType.Int).Value = ConvertStringToInt(QuoUser.SelectedValue)
+            DBCommand.Parameters.Add("@SupplierCode", SqlDbType.Int).Value = Integer.Parse(SupplierCode.Text)
+            DBCommand.Parameters.Add("@MakerCode", SqlDbType.Int).Value = ConvertStringToInt(MakerCode.Text)
+            DBCommand.Parameters.Add("@SAPMakerCode", SqlDbType.Int).Value = ConvertStringToInt(SAPMakerCode.Text)
+            DBCommand.Parameters.Add("@SpecSheet", SqlDbType.Bit).Value = SpecSheet.Checked
+            DBCommand.Parameters.Add("@Specification", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(Specification.Text)
+            DBCommand.Parameters.Add("@SupplierContactPerson", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(SupplierContactPerson.Text)
+            DBCommand.Parameters.Add("@SupplierItemName", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(SupplierItemName.Text)
+            DBCommand.Parameters.Add("@ShippingHandlingFee", SqlDbType.Decimal).Value = ConvertStringToDec(ShippingHandlingFee.Text)
+            DBCommand.Parameters.Add("@ShippingHandlingCurrencyCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(ShippingHandlingCurrency.Text)
+            DBCommand.Parameters.Add("@PaymentTermCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(PaymentTerm.SelectedValue)
+            DBCommand.Parameters.Add("@Comment", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(Comment.Text)
+            DBCommand.Parameters.Add("@Priority", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(st_Priority)
+            DBCommand.Parameters.Add("@PurposeCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(st_PurposeCode)
+            DBCommand.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = Integer.Parse(Session("UserID"))
+            DBCommand.Parameters.Add("@EnqStorageLocation", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(st_EnqStorageLocationCode)
+            DBCommand.Parameters.Add("@QuoStorageLocation", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(st_QuoStorageLocationCode)
+            DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
+            DBCommand.Parameters.Add("@SupplierContactPersonSel", SqlDbType.NVarChar).Value = SupplierContactPersonCodeList.SelectedValue
+            DBCommand.ExecuteNonQuery()
+            DBCommand.Parameters.Clear()
+            DBCommand.Dispose()
+            SQLLineUpdate = "UPDATE RFQLine SET CurrencyCode = @CurrencyCode, UnitPrice = @UnitPrice, " _
+& "QuoPer = @QuoPer, QuoUnitCode = @QuoUnitCode, LeadTime = @LeadTime, SupplierItemNumber = @SupplierItemNumber, " _
+& "IncotermsCode = @IncotermsCode, DeliveryTerm = @DeliveryTerm, Packing = @Packing, Purity = @Purity, " _
+& "QMMethod = @QMMethod,SupplierOfferNo=@SupplierOfferNo,NoOfferReasonCode = @NoOfferReasonCode, UpdatedBy = @UpdatedBy, UpdateDate = GETDATE() " _
+& "Where RFQLineNumber = @RFQLineNumber"
+            If EnqQuantity(i).Text.Trim <> String.Empty Then
+                DBCommand.Parameters.Add("@RFQLineNumber", SqlDbType.Int).Value = ConvertStringToInt(LineNumber(i).Value)
+                DBCommand.Parameters.Add("@CurrencyCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(Currency(i).SelectedValue)
+                DBCommand.Parameters.Add("@UnitPrice", SqlDbType.Decimal).Value = ConvertStringToDec(UnitPrice(i).Text)
+                DBCommand.Parameters.Add("@QuoPer", SqlDbType.Decimal).Value = ConvertStringToDec(QuoPer(i).Text)
+                DBCommand.Parameters.Add("@QuoUnitCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(QuoUnit(i).SelectedValue)
+                DBCommand.Parameters.Add("@LeadTime", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(LeadTime(i).Text)
+                DBCommand.Parameters.Add("@SupplierItemNumber", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(SupplierItemNumber(i).Text)
+                DBCommand.Parameters.Add("@IncotermsCode", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(Incoterms(i).SelectedValue)
+                DBCommand.Parameters.Add("@DeliveryTerm", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(DeliveryTerm(i).Text)
+                DBCommand.Parameters.Add("@Packing", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(Packing(i).Text)
+                DBCommand.Parameters.Add("@Purity", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(Purity(i).Text)
+                DBCommand.Parameters.Add("@QMMethod", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(QMMethod(i).Text)
+                DBCommand.Parameters.Add("@SupplierOfferNo", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(SupplierOfferNo(i).Text)
+                DBCommand.Parameters.Add("@NoOfferReasonCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(NoOfferReason(i).SelectedValue)
+                DBCommand.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = ConvertStringToInt(Session("UserID"))
+                If LineNumber(i).Value.Trim <> String.Empty Then
+                    DBCommand.CommandText = SQLLineUpdate
+                    DBCommand.ExecuteNonQuery()
+                    DBCommand.Parameters.Clear()
+                End If
+            End If
+            sqlTran.Commit()
+        Catch ex As Exception
+            sqlTran.Rollback()
+            Ret = False
+            Throw
+        Finally
+            DBCommand.Dispose()
+        End Try
+        Return Ret
+    End Function
 End Class
