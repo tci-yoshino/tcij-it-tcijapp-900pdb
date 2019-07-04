@@ -11,7 +11,7 @@
 
 	<!-- 出力ファイルパス（ファイル名まで指定） -->
 	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputFilePath].Properties[Value]" ValueType="String">
-		<ConfiguredValue>D:\SAP\OUT\PURCHASE_ORDER\</ConfiguredValue>
+		<ConfiguredValue>D:\SAP\OUT\PURCHASE_ORDER\INBOUND\</ConfiguredValue>
 	</Configuration>
 
 	<!-- Mailcc指定 -->
