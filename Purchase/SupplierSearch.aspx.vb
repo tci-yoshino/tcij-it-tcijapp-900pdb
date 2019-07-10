@@ -55,7 +55,8 @@ Partial Public Class SupplierSearch
             Dim st_R3Code1 As String = Right("0000000000" + SafeSqlLiteral(R3Code.Text), 10)
             Dim st_R3Code2 As String = SafeSqlLiteral(R3Code.Text)
             If SQLStr = "" Then SQLStr = "WHERE " Else SQLStr = SQLStr + " AND "
-            SQLStr = SQLStr + "((R3SupplierCode = '" + st_R3Code1 + "') OR (R3SupplierCode = '" + st_R3Code2 + "'))"
+            'SQLStr = SQLStr + "((R3SupplierCode = '" + st_R3Code1 + "') OR (R3SupplierCode = '" + st_R3Code2 + "'))"
+            SQLStr = SQLStr + "((S4SupplierCode = '" + st_R3Code1 + "') OR (S4SupplierCode = '" + st_R3Code2 + "'))"
         End If
 
         '[Nameの検索指定]-----------------------------------------------------------------

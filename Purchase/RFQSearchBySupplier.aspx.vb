@@ -198,7 +198,9 @@ Partial Public Class RFQSearchBySupplier
 
         If st_SearchKey.R3Code <> String.Empty Then
             sb_SQLConditional.Append(IIf(sb_SQLConditional.Length > 0, " AND ", String.Empty))
-            sb_SQLConditional.Append("R3SupplierCode = @R3SupplierCode ")
+            'sb_SQLConditional.Append("R3SupplierCode = @R3SupplierCode ")
+            '修改为SAP code
+            sb_SQLConditional.Append("S4SupplierCode = @R3SupplierCode ")
         End If
 
         If st_SearchKey.Name <> String.Empty Then

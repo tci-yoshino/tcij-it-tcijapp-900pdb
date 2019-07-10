@@ -258,7 +258,7 @@ Partial Public Class RFQUpdate
             DBCommand.Parameters.Add("@SpecSheet", SqlDbType.Bit).Value = SpecSheet.Checked
             DBCommand.Parameters.Add("@Specification", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(Specification.Text)
             DBCommand.Parameters.Add("@SupplierContactPerson", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(SupplierContactPerson.Text)
-            DBCommand.Parameters.Add("@SupplierItemName", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(SupplierItemName.Text)
+            DBCommand.Parameters.Add("@SupplierItemName", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(SupplierItemName.Text.Trim)
             DBCommand.Parameters.Add("@ShippingHandlingFee", SqlDbType.Decimal).Value = ConvertStringToDec(ShippingHandlingFee.Text)
             DBCommand.Parameters.Add("@ShippingHandlingCurrencyCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(ShippingHandlingCurrency.Text)
             DBCommand.Parameters.Add("@PaymentTermCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(PaymentTerm.SelectedValue)
@@ -360,7 +360,7 @@ Partial Public Class RFQUpdate
             Exit Sub
         End If
         '他セッションでの更新チェック
-        If IsLatestData("RFQHeader", "RFQNumber", st_RFQNumber, UpdateDate.Value) = False Then
+        If isLatestData("RFQHeader", "RFQNumber", st_RFQNumber, UpdateDate.Value) = False Then
             Msg.Text = ERR_UPDATED_BY_ANOTHER_USER
             Exit Sub
         End If
@@ -555,26 +555,27 @@ Partial Public Class RFQUpdate
             sql = "select * from ("
             sql += "select '' as supplierInfo,'' as SupplierContactperson,'' as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + ""
             sql += " Union All "
-            sql += "select (SupplierEmailID1+'-'+ SupplierContactperson1) as supplierInfo,SupplierContactperson1 as SupplierContactperson,SupplierEmailID1 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierContactperson1 <>'' and SupplierContactperson1 is not null"
+            sql += "select (SupplierEmailID1+'-'+ ISNULL(SupplierContactperson1,'')) as supplierInfo,ISNULL(SupplierContactperson1,'') as SupplierContactperson,SupplierEmailID1 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID1 <>'' and SupplierEmailID1 is not null and SupplierEmailID1 <>'000'"
             sql += " Union All "
-            sql += "select (SupplierEmailID2+'-'+ SupplierContactperson2) as supplierInfo,SupplierContactperson2 as SupplierContactperson,SupplierEmailID2 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierContactperson2 <>'' and SupplierContactperson2 is not null"
+            sql += "select (SupplierEmailID2+'-'+ ISNULL(SupplierContactperson2,'')) as supplierInfo,ISNULL(SupplierContactperson2,'') as SupplierContactperson,SupplierEmailID2 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID2 <>'' and SupplierEmailID2 is not null and SupplierEmailID2 <>'000'"
             sql += " Union All "
-            sql += "select (SupplierEmailID3+'-'+ SupplierContactperson3) as supplierInfo,SupplierContactperson3 as SupplierContactperson,SupplierEmailID3 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierContactperson3 <>'' and SupplierContactperson3 is not null"
+            sql += "select (SupplierEmailID3+'-'+ ISNULL(SupplierContactperson3,'')) as supplierInfo,ISNULL(SupplierContactperson3,'') as SupplierContactperson,SupplierEmailID3 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID3 <>'' and SupplierEmailID3 is not null and SupplierEmailID3 <>'000'"
             sql += " Union All "
-            sql += "select (SupplierEmailID4+'-'+ SupplierContactperson4) as supplierInfo,SupplierContactperson4 as SupplierContactperson,SupplierEmailID4 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierContactperson4 <>'' and SupplierContactperson4 is not null"
+            sql += "select (SupplierEmailID4+'-'+ ISNULL(SupplierContactperson4,'')) as supplierInfo,ISNULL(SupplierContactperson4,'') as SupplierContactperson,SupplierEmailID4 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID4 <>'' and SupplierEmailID4 is not null and SupplierEmailID4 <>'000'"
             sql += " Union All "
-            sql += "select (SupplierEmailID5+'-'+ SupplierContactperson5) as supplierInfo,SupplierContactperson5 as SupplierContactperson,SupplierEmailID5 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierContactperson5 <>'' and SupplierContactperson5 is not null"
+            sql += "select (SupplierEmailID5+'-'+ ISNULL(SupplierContactperson5,'')) as supplierInfo,ISNULL(SupplierContactperson5,'') as SupplierContactperson,SupplierEmailID5 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID5 <>'' and SupplierEmailID5 is not null and SupplierEmailID5 <>'000'"
             sql += " Union All "
-            sql += "select (SupplierEmailID6+'-'+ SupplierContactperson6) as supplierInfo,SupplierContactperson6 as SupplierContactperson,SupplierEmailID6 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierContactperson6 <>'' and SupplierContactperson6 is not null"
+            sql += "select (SupplierEmailID6+'-'+ ISNULL(SupplierContactperson6,'')) as supplierInfo,ISNULL(SupplierContactperson6,'') as SupplierContactperson,SupplierEmailID6 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID6 <>'' and SupplierEmailID6 is not null and SupplierEmailID6 <>'000'"
             sql += " Union All "
-            sql += "select (SupplierEmailID7+'-'+ SupplierContactperson7) as supplierInfo,SupplierContactperson7 as SupplierContactperson,SupplierEmailID7 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierContactperson7 <>'' and SupplierContactperson7 is not null"
+            sql += "select (SupplierEmailID7+'-'+ ISNULL(SupplierContactperson7,'')) as supplierInfo,ISNULL(SupplierContactperson7,'') as SupplierContactperson,SupplierEmailID7 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID7 <>'' and SupplierEmailID7 is not null and SupplierEmailID7 <>'000'"
             sql += " Union All "
-            sql += "select (SupplierEmailID8+'-'+ SupplierContactperson8) as supplierInfo,SupplierContactperson8 as SupplierContactperson,SupplierEmailID9 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierContactperson8 <>'' and SupplierContactperson8 is not null"
+            sql += "select (SupplierEmailID8+'-'+ ISNULL(SupplierContactperson8,'')) as supplierInfo,ISNULL(SupplierContactperson8,'') as SupplierContactperson,SupplierEmailID9 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID8 <>'' and SupplierEmailID8 is not null and SupplierEmailID8 <>'000'"
             sql += " Union All "
-            sql += "select (SupplierEmailID9+'-'+ SupplierContactperson9) as supplierInfo,SupplierContactperson9 as SupplierContactperson,SupplierEmailID9 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierContactperson9 <>'' and SupplierContactperson9 is not null"
+            sql += "select (SupplierEmailID9+'-'+ ISNULL(SupplierContactperson9,'')) as supplierInfo,ISNULL(SupplierContactperson9,'') as SupplierContactperson,SupplierEmailID9 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID9 <>'' and SupplierEmailID9 is not null and SupplierEmailID9 <>'000'"
             sql += " Union All "
-            sql += "select (SupplierEmailID10+'-'+ SupplierContactperson10) as supplierInfo,SupplierContactperson10 as SupplierContactperson,SupplierEmailID10 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierContactperson10 <>'' and SupplierContactperson10 is not null"
-            sql += ") as A where supplierInfo is not null"
+            sql += "select (SupplierEmailID10+'-'+ ISNULL(SupplierContactperson10,'')) as supplierInfo,ISNULL(SupplierContactperson10,'') as SupplierContactperson,SupplierEmailID10 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID10 <>'' and SupplierEmailID10 is not null and SupplierEmailID10 <>'000'"
+            'sql += ") as A where supplierInfo is not null"
+            sql += ") as A where 1=1"
             SDS_SupplierContactPersonCodeList.SelectCommand = sql
             If DS.Tables("RFQHeader").Rows(0)("SupplierContactPersonSel").ToString Is Nothing Then
             Else
@@ -1295,7 +1296,7 @@ Partial Public Class RFQUpdate
     End Sub
 
     Protected Sub POInterfaceButton_3_Click(sender As Object, e As EventArgs) Handles POInterfaceButton_3.Click
-        If SetRFQNumber() = False Then
+       If SetRFQNumber() = False Then
             Exit Sub
         End If
         If RFQCheck(st_RFQNumber, "3") = False Then
@@ -1339,35 +1340,38 @@ Partial Public Class RFQUpdate
     End Sub
 
     Protected Sub SupplierContactPersonCodeList_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SupplierContactPersonCodeList.SelectedIndexChanged
-        Dim Sql As String = ""
-        Sql = "select * from ( select * from (select '' as supplierInfo,'' as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        Sql += "Union All select (SupplierEmailID1+'-'+ SupplierEmail1) as supplierInfo,SupplierContactperson1 as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        Sql += "Union All select (SupplierEmailID2+'-'+ SupplierEmail2) as supplierInfo,SupplierContactperson2 as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        Sql += "Union All select (SupplierEmailID3+'-'+ SupplierEmail3) as supplierInfo,SupplierContactperson3 as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        Sql += "Union All select (SupplierEmailID4+'-'+ SupplierEmail4) as supplierInfo,SupplierContactperson4 as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        Sql += "Union All select (SupplierEmailID5+'-'+ SupplierEmail5) as supplierInfo,SupplierContactperson5 as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        Sql += "Union All select (SupplierEmailID6+'-'+ SupplierEmail6) as supplierInfo,SupplierContactperson6 as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        Sql += "Union All select (SupplierEmailID7+'-'+ SupplierEmail7) as supplierInfo,SupplierContactperson7 as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        Sql += "Union All select (SupplierEmailID8+'-'+ SupplierEmail8) as supplierInfo,SupplierContactperson8 as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        Sql += "Union All select (SupplierEmailID9+'-'+ SupplierEmail9) as supplierInfo,SupplierContactperson9 as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        Sql += "Union All select (SupplierEmailID10+'-'+ SupplierEmail10) as supplierInfo,SupplierContactperson10 as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + ") as A "
-        Sql += "where supplierInfo is not null) As B where supplierInfo='" + SupplierContactPersonCodeList.SelectedValue + "'"
-        Dim DBConn As New System.Data.SqlClient.SqlConnection(DB_CONNECT_STRING)
-        Dim DBAdapter As System.Data.SqlClient.SqlDataAdapter
-        Dim DBCommand As System.Data.SqlClient.SqlCommand
-        DBConn.Open()
-        DBCommand = DBConn.CreateCommand()
-        DBAdapter = New SqlDataAdapter
-        Dim DS As DataSet = New DataSet
-        DBCommand = New SqlCommand(Sql, DBConn)
-        DBAdapter.SelectCommand = DBCommand
-        DBAdapter.Fill(DS)
-        Dim tmpdt As DataTable
-        tmpdt = DS.Tables(0)
-        DBCommand.Dispose()
-        DBConn.Close()
-        If tmpdt.Rows.Count > 0 Then
-            SupplierContactPerson.Text = tmpdt.Rows(0)("SupplierContactperson")
+        'Dim Sql As String = ""
+        'Sql = "select * from ( select * from (select '' as supplierInfo,'' as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
+        'Sql += "Union All select (SupplierEmailID1+'-'+ SupplierEmail1) as supplierInfo,ISNULL(SupplierContactperson1,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
+        'Sql += "Union All select (SupplierEmailID2+'-'+ SupplierEmail2) as supplierInfo,ISNULL(SupplierContactperson2,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
+        'Sql += "Union All select (SupplierEmailID3+'-'+ SupplierEmail3) as supplierInfo,ISNULL(SupplierContactperson3,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
+        'Sql += "Union All select (SupplierEmailID4+'-'+ SupplierEmail4) as supplierInfo,ISNULL(SupplierContactperson4,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
+        'Sql += "Union All select (SupplierEmailID5+'-'+ SupplierEmail5) as supplierInfo,ISNULL(SupplierContactperson5,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
+        'Sql += "Union All select (SupplierEmailID6+'-'+ SupplierEmail6) as supplierInfo,ISNULL(SupplierContactperson6,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
+        'Sql += "Union All select (SupplierEmailID7+'-'+ SupplierEmail7) as supplierInfo,ISNULL(SupplierContactperson7,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
+        'Sql += "Union All select (SupplierEmailID8+'-'+ SupplierEmail8) as supplierInfo,ISNULL(SupplierContactperson8,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
+        'Sql += "Union All select (SupplierEmailID9+'-'+ SupplierEmail9) as supplierInfo,ISNULL(SupplierContactperson9,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
+        'Sql += "Union All select (SupplierEmailID10+'-'+ SupplierEmail10) as supplierInfo,ISNULL(SupplierContactperson10,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + ") as A "
+        'Sql += "where supplierInfo is not null) As B where supplierInfo='" + SupplierContactPersonCodeList.SelectedValue + "'"
+        'Dim DBConn As New System.Data.SqlClient.SqlConnection(DB_CONNECT_STRING)
+        'Dim DBAdapter As System.Data.SqlClient.SqlDataAdapter
+        'Dim DBCommand As System.Data.SqlClient.SqlCommand
+        'DBConn.Open()
+        'DBCommand = DBConn.CreateCommand()
+        'DBAdapter = New SqlDataAdapter
+        'Dim DS As DataSet = New DataSet
+        'DBCommand = New SqlCommand(Sql, DBConn)
+        'DBAdapter.SelectCommand = DBCommand
+        'DBAdapter.Fill(DS)
+        'Dim tmpdt As DataTable
+        'tmpdt = DS.Tables(0)
+        'DBCommand.Dispose()
+        'DBConn.Close()
+        'If tmpdt.Rows.Count > 0 Then
+        '    SupplierContactPerson.Text = tmpdt.Rows(0)("SupplierContactperson")
+        'End If
+        If SupplierContactPersonCodeList.SelectedValue.Length > 0 And SupplierContactPersonCodeList.SelectedValue.IndexOf("-") > -1 Then
+            SupplierContactPerson.Text = SupplierContactPersonCodeList.SelectedValue.Split("-")(0).ToString
         End If
     End Sub
 
@@ -1597,7 +1601,7 @@ Partial Public Class RFQUpdate
         '    Return ""
         '    Exit Function
         'End If
-
+       
         If DS.Tables("RFQHeader").Rows(0)("MakerCode").ToString <> "" Then
             If DS.Tables("RFQHeader").Rows(0)("SAPMakerCode").ToString = "" Then
                 Msg.Text = "Please make sure SAP Maker Code already been created! PO interface create failed!"
@@ -1835,6 +1839,7 @@ Partial Public Class RFQUpdate
                 sql += ");"
             End If
         End If
+        DBConn.Open()
         DBCommand = DBConn.CreateCommand()
         DBCommand.CommandText = sql
         DBCommand.ExecuteNonQuery()
@@ -1960,25 +1965,25 @@ Partial Public Class RFQUpdate
         sql = "select * from ("
         sql += "select '' as supplierInfo,'' as SupplierContactperson,'' as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + ""
         sql += " Union All "
-        sql += "select (SupplierEmailID1+'-'+ SupplierContactperson1) as supplierInfo,SupplierContactperson1 as SupplierContactperson,SupplierEmailID1 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson1 <>'' and SupplierContactperson1 is not null"
+        sql += "select (SupplierEmailID1+'-'+ ISNULL(SupplierContactperson1,'')) as supplierInfo,ISNULL(SupplierContactperson1,'') as SupplierContactperson,SupplierEmailID1 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID1 <>'' and SupplierEmailID1 is not null and SupplierEmailID1 <>'000'"
         sql += " Union All "
-        sql += "select (SupplierEmailID2+'-'+ SupplierContactperson2) as supplierInfo,SupplierContactperson2 as SupplierContactperson,SupplierEmailID2 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson2 <>'' and SupplierContactperson2 is not null"
+        sql += "select (SupplierEmailID2+'-'+ ISNULL(SupplierContactperson2,'')) as supplierInfo,ISNULL(SupplierContactperson2,'') as SupplierContactperson,SupplierEmailID2 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID2 <>'' and SupplierEmailID2 is not null and SupplierEmailID2 <>'000'"
         sql += " Union All "
-        sql += "select (SupplierEmailID3+'-'+ SupplierContactperson3) as supplierInfo,SupplierContactperson3 as SupplierContactperson,SupplierEmailID3 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson3 <>'' and SupplierContactperson3 is not null"
+        sql += "select (SupplierEmailID3+'-'+ ISNULL(SupplierContactperson3,'')) as supplierInfo,ISNULL(SupplierContactperson3,'') as SupplierContactperson,SupplierEmailID3 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID3 <>'' and SupplierEmailID3 is not null and SupplierEmailID3 <>'000'"
         sql += " Union All "
-        sql += "select (SupplierEmailID4+'-'+ SupplierContactperson4) as supplierInfo,SupplierContactperson4 as SupplierContactperson,SupplierEmailID4 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson4 <>'' and SupplierContactperson4 is not null"
+        sql += "select (SupplierEmailID4+'-'+ ISNULL(SupplierContactperson4,'')) as supplierInfo,ISNULL(SupplierContactperson4,'') as SupplierContactperson,SupplierEmailID4 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID4 <>'' and SupplierEmailID4 is not null and SupplierEmailID4 <>'000'"
         sql += " Union All "
-        sql += "select (SupplierEmailID5+'-'+ SupplierContactperson5) as supplierInfo,SupplierContactperson5 as SupplierContactperson,SupplierEmailID5 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson5 <>'' and SupplierContactperson5 is not null"
+        sql += "select (SupplierEmailID5+'-'+ ISNULL(SupplierContactperson5,'')) as supplierInfo,ISNULL(SupplierContactperson5,'') as SupplierContactperson,SupplierEmailID5 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID5 <>'' and SupplierEmailID5 is not null and SupplierEmailID5 <>'000'"
         sql += " Union All "
-        sql += "select (SupplierEmailID6+'-'+ SupplierContactperson6) as supplierInfo,SupplierContactperson6 as SupplierContactperson,SupplierEmailID6 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson6 <>'' and SupplierContactperson6 is not null"
+        sql += "select (SupplierEmailID6+'-'+ ISNULL(SupplierContactperson6,'')) as supplierInfo,ISNULL(SupplierContactperson6,'') as SupplierContactperson,SupplierEmailID6 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID6 <>'' and SupplierEmailID6 is not null and SupplierEmailID6 <>'000'"
         sql += " Union All "
-        sql += "select (SupplierEmailID7+'-'+ SupplierContactperson7) as supplierInfo,SupplierContactperson7 as SupplierContactperson,SupplierEmailID7 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson7 <>'' and SupplierContactperson7 is not null"
+        sql += "select (SupplierEmailID7+'-'+ ISNULL(SupplierContactperson7,'')) as supplierInfo,ISNULL(SupplierContactperson7,'') as SupplierContactperson,SupplierEmailID7 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID7 <>'' and SupplierEmailID7 is not null and SupplierEmailID7 <>'000'"
         sql += " Union All "
-        sql += "select (SupplierEmailID8+'-'+ SupplierContactperson8) as supplierInfo,SupplierContactperson8 as SupplierContactperson,SupplierEmailID9 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson8 <>'' and SupplierContactperson8 is not null"
+        sql += "select (SupplierEmailID8+'-'+ ISNULL(SupplierContactperson8,'')) as supplierInfo,ISNULL(SupplierContactperson8,'') as SupplierContactperson,SupplierEmailID9 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID8 <>'' and SupplierEmailID8 is not null and SupplierEmailID8 <>'000'"
         sql += " Union All "
-        sql += "select (SupplierEmailID9+'-'+ SupplierContactperson9) as supplierInfo,SupplierContactperson9 as SupplierContactperson,SupplierEmailID9 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson9 <>'' and SupplierContactperson9 is not null"
+        sql += "select (SupplierEmailID9+'-'+ ISNULL(SupplierContactperson9,'')) as supplierInfo,ISNULL(SupplierContactperson9,'') as SupplierContactperson,SupplierEmailID9 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID9 <>'' and SupplierEmailID9 is not null and SupplierEmailID9 <>'000'"
         sql += " Union All "
-        sql += "select (SupplierEmailID10+'-'+ SupplierContactperson10) as supplierInfo,SupplierContactperson10 as SupplierContactperson,SupplierEmailID10 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierContactperson10 <>'' and SupplierContactperson10 is not null"
+        sql += "select (SupplierEmailID10+'-'+ ISNULL(SupplierContactperson10,'')) as supplierInfo,ISNULL(SupplierContactperson10,'') as SupplierContactperson,SupplierEmailID10 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID10 <>'' and SupplierEmailID10 is not null and SupplierEmailID10 <>'000'"
         sql += ") as A where supplierInfo is not null"
         SDS_SupplierContactPersonCodeList.SelectCommand = sql
     End Sub
@@ -2071,7 +2076,7 @@ Partial Public Class RFQUpdate
             DBCommand.Parameters.Add("@SpecSheet", SqlDbType.Bit).Value = SpecSheet.Checked
             DBCommand.Parameters.Add("@Specification", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(Specification.Text)
             DBCommand.Parameters.Add("@SupplierContactPerson", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(SupplierContactPerson.Text)
-            DBCommand.Parameters.Add("@SupplierItemName", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(SupplierItemName.Text)
+            DBCommand.Parameters.Add("@SupplierItemName", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(SupplierItemName.Text.Trim)
             DBCommand.Parameters.Add("@ShippingHandlingFee", SqlDbType.Decimal).Value = ConvertStringToDec(ShippingHandlingFee.Text)
             DBCommand.Parameters.Add("@ShippingHandlingCurrencyCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(ShippingHandlingCurrency.Text)
             DBCommand.Parameters.Add("@PaymentTermCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(PaymentTerm.SelectedValue)
@@ -2114,12 +2119,14 @@ Partial Public Class RFQUpdate
                 End If
             End If
             sqlTran.Commit()
+            UpdateDate.Value = GetUpdateDate("v_RFQHeader", "RFQNumber", st_RFQNumber)
         Catch ex As Exception
             sqlTran.Rollback()
             Ret = False
             Throw
         Finally
             DBCommand.Dispose()
+            DBConn.Close()
         End Try
         Return Ret
     End Function

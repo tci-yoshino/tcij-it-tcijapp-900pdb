@@ -37,7 +37,7 @@ window.onload = function() {
 						<td><asp:TextBox ID="SupplierCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox></td>
 					</tr>
 					<tr>
-						<th>TCI-J Supplier Code : </th>
+						<th>SAP Supplier Code : </th>
 						<td><asp:TextBox ID="R3SupplierCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox></td>
 					</tr>
 					<tr>
