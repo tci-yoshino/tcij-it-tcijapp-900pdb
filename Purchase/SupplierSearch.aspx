@@ -53,7 +53,7 @@ window.onload = function() {
                     <table ID="itemPlaceholderContainer" runat="server">
                         <tr id="Tr1" runat="server">
                             <th id="Th1" runat="server" style="width:15%">Supplier Code</th>
-                            <th id="Th2" runat="server" style="width:15%">TCI-J Supplier Code</th>
+                            <th id="Th2" runat="server" style="width:15%">SAP Supplier Code</th>
                             <th id="Th3" runat="server" style="width:65%">Supplier Name</th>
                             <th style="width:5%"></th>
                         </tr>
@@ -67,7 +67,7 @@ window.onload = function() {
                 <ItemTemplate>
                     <tr style="">
                         <td><asp:Label ID="Supplier_CodeLabel" runat="server" Text='<%# Eval("[Supplier Code]") %>' /></td>
-                        <td><asp:Label ID="R_3_Supplier_CodeLabel" runat="server" Text='<%# Eval("[R/3 Supplier Code]") %>' /></td>
+                        <td><asp:Label ID="R_3_Supplier_CodeLabel" runat="server" Text='<%# Eval("[S4SupplierCode]") %>' /></td>
                         <td><asp:Label ID="Supplier_NameLabel" runat="server" Text='<%# Eval("[Supplier Name]") %>' /></td>
                         <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl='<%# Eval("Url") %>'>Edit</asp:HyperLink></td>
                     </tr>
