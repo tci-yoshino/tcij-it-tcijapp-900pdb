@@ -29,6 +29,11 @@
           <References />
         </DtsPackage>
         <DtsPackage FormatVersion="8">
+          <Name>RFQHeaderDataExport.dtsx</Name>
+          <FullPath>RFQHeaderDataExport.dtsx</FullPath>
+          <References />
+        </DtsPackage>
+        <DtsPackage FormatVersion="8">
           <Name>POExport.dtsx</Name>
           <FullPath>POExport.dtsx</FullPath>
           <References />
