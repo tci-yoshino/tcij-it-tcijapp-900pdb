@@ -303,6 +303,12 @@ Partial Public Class SupplierSetting
                     If R3Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null, " Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(R3Comment.Text) & "',"
                     st_SQLSTR = st_SQLSTR & "Note="
                     If Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null, " Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(Comment.Text) & "',"
+
+                    ' 20190902 WYS start 追加SupplierWarning
+                    st_SQLSTR = st_SQLSTR & "SupplierWarning="
+                    If SupplierWarning.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null, " Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(SupplierWarning.Text) & "',"
+                    ' 20190902 WYS end
+
                     st_SQLSTR = st_SQLSTR & "Info="
                     If SupplierInfo.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null, " Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(SupplierInfo.Text) & "',"
                     st_SQLSTR = st_SQLSTR & "UpdatedBy=" & Session("UserID") & ", UpdateDate='" & Now() & "' "
@@ -322,7 +328,7 @@ Partial Public Class SupplierSetting
                             & "SupplierContactperson1,SupplierEmailID1,SupplierEmail1,SupplierContactperson2,SupplierEmailID2,SupplierEmail2,SupplierContactperson3,SupplierEmailID3,SupplierEmail3,SupplierContactperson4,SupplierEmailID4,SupplierEmail4,SupplierContactperson5,SupplierEmailID5,SupplierEmail5,SupplierContactperson6,SupplierEmailID6,SupplierEmail6,SupplierContactperson7,SupplierEmailID7,SupplierEmail7,SupplierContactperson8,SupplierEmailID8,SupplierEmail8,SupplierContactperson9,SupplierEmailID9,SupplierEmail9,SupplierContactperson10,SupplierEmailID10,SupplierEmail10," _
                             & "SupplierLocationCode2,SupplierLocationCode3,SupplierLocationCode4,SupplierLocationCode5,SupplierLocationCode6," _
                             & "SupplierLocationCode7,SupplierLocationCode8,SupplierLocationCode9,SupplierLocationCode10," _
-                            & "Name1,Name2,Name3,Name4,SearchTerm1,SearchTerm2,Address1,Address2,Address3,PostalCode,CountryCode,RegionCode,Telephone,Fax,Email,Comment,Website,Note,Info,LocationCode,isDisabled,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ("
+                            & "Name1,Name2,Name3,Name4,SearchTerm1,SearchTerm2,Address1,Address2,Address3,PostalCode,CountryCode,RegionCode,Telephone,Fax,Email,Comment,SupplierWarning,Website,Note,Info,LocationCode,isDisabled,CreatedBy,CreateDate,UpdatedBy,UpdateDate) values ("
                 If R3SupplierCode.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(R3SupplierCode.Text.PadLeft(10, "0"c)) & "',"
                 For i = 2 To 10
                     If CType(Page.FindControl("R3SupplierCode" + i.ToString), TextBox).Text.ToString = "" Then
@@ -376,6 +382,7 @@ Partial Public Class SupplierSetting
                 If R3Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(R3Comment.Text) & "',"
                 If Website.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(Website.Text) & "',"
                 If Comment.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(Comment.Text) & "',"
+                If SupplierWarning.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(SupplierWarning.Text) & "',"
                 If SupplierInfo.Text.ToString = "" Then st_SQLSTR = st_SQLSTR & "null," Else st_SQLSTR = st_SQLSTR & "'" & SafeSqlLiteral(SupplierInfo.Text) & "',"
                 st_SQLSTR = st_SQLSTR & "null,0,'" & Session("UserID") & "','" & Now() & "','" & Session("UserID") & "','" & Now() & "'); "
                 st_SQLSTR = st_SQLSTR & "SELECT SupplierCode FROM Supplier WHERE SupplierCode = SCOPE_IDENTITY()"  '←[新規登録されたSupplierCodeの取得の為]
@@ -434,7 +441,7 @@ Partial Public Class SupplierSetting
                                         "SupplierLocationCode2,SupplierLocationCode3,SupplierLocationCode4,SupplierLocationCode5,SupplierLocationCode6," &
                                         "SupplierLocationCode7,SupplierLocationCode8,SupplierLocationCode9,SupplierLocationCode10," &
                                         "SupplierContactperson1,SupplierEmailID1,SupplierEmail1,SupplierContactperson2,SupplierEmailID2,SupplierEmail2,SupplierContactperson3,SupplierEmailID3,SupplierEmail3,SupplierContactperson4,SupplierEmailID4,SupplierEmail4,SupplierContactperson5,SupplierEmailID5,SupplierEmail5,SupplierContactperson6,SupplierEmailID6,SupplierEmail6,SupplierContactperson7,SupplierEmailID7,SupplierEmail7,SupplierContactperson8,SupplierEmailID8,SupplierEmail8,SupplierContactperson9,SupplierEmailID9,SupplierEmail9,SupplierContactperson10,SupplierEmailID10,SupplierEmail10," &
-                                        "Name1, Name2, Name3, Name4, SearchTerm1, SearchTerm2, Address1, Address2, Address3, PostalCode, CountryCode, RegionCode, Telephone, Fax, Email, Comment, Website, Note, Info,S4SupplierCode, UpdateDate " &
+                                        "Name1, Name2, Name3, Name4, SearchTerm1, SearchTerm2, Address1, Address2, Address3, PostalCode, CountryCode, RegionCode, Telephone, Fax, Email, Comment, Website, Note, Info,S4SupplierCode, UpdateDate, SupplierWarning " &
                                                            "FROM dbo.Supplier WHERE SupplierCode = " & Code.Text.ToString
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
@@ -468,6 +475,7 @@ Partial Public Class SupplierSetting
                     If Not TypeOf DBReader("Website") Is DBNull Then Website.Text = DBReader("Website")
                     If Not TypeOf DBReader("Comment") Is DBNull Then R3Comment.Text = DBReader("Comment")
                     If Not TypeOf DBReader("Note") Is DBNull Then Comment.Text = DBReader("Note")
+                    If Not TypeOf DBReader("SupplierWarning") Is DBNull Then SupplierWarning.Text = DBReader("SupplierWarning")   '201909002 WYS 追加SupplierWarning
                     If Not TypeOf DBReader("Info") Is DBNull Then SupplierInfo.Text = DBReader("Info")
                     If Not TypeOf DBReader("S4SupplierCode") Is DBNull Then S4SupplierCode.Text = DBReader("S4SupplierCode")
                     Country.SelectedValue = DBReader("CountryCode")

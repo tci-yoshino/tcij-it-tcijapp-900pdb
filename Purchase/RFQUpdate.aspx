@@ -16,7 +16,6 @@
     </style>
 </head>
 <body>
-
         <form id="RFQForm" runat="server">
     <!-- Main Content Area -->
     <div id="content">
@@ -35,7 +34,8 @@
                         <th>Current Status : </th><td><asp:Label ID="CurrentRFQStatus" runat="server" Text=""></asp:Label></td>
                     </tr>
                     <tr>
-                        <th>Product Number / Name : </th><td><asp:Label ID="ProductNumber" runat="server" Text=""></asp:Label><span class="indent"><asp:Label ID="ProductName" runat="server" Text=""></asp:Label></span></td>
+                        <th>Product Number / Name : </th><td><asp:Label ID="ProductNumber" runat="server" Text=""></asp:Label><span class="indent"><asp:Label ID="ProductName" runat="server" Text=""></asp:Label></span>
+                            <asp:Label ID="ProductWarning" runat="server" Text="" style="display:none"></asp:Label><asp:Label ID="SupplierWarning" runat="server" Text="" style="display:none"></asp:Label></td>
                     </tr>
 					<tr>
 						<th>Supplier Code <span class="required">*</span> : </th>
@@ -294,7 +294,7 @@
                          <td rowspan="2">
                            <%-- <asp:HyperLink ID="POInterface_1" runat="server"  
                                 NavigateUrl="./POInterface.aspx" Visible="False">PO Interface</asp:HyperLink>--%>
-                            <asp:Button ID="POInterfaceButton_1" Visible="False" runat="server" Text="PO Interface" BackColor="#E5ECF3" BorderColor="#E5ECF3" BorderStyle="None" ForeColor="#2651A5" OnClientClick="return POInterfaceClient(1)" />
+                            <asp:Button ID="POInterfaceButton_1" Visible="False" runat="server" Text="PO Interface" BackColor="#E5ECF3" BorderColor="#E5ECF3" BorderStyle="None" ForeColor="#2651A5" OnClientClick="return POInterfaceClient(1);" />
                             <asp:HiddenField ID="HiddenField1" runat="server" />
                         </td>
                     </tr>
@@ -610,8 +610,34 @@
         function HideComment(i) {
             document.getElementById("comment"+i).style.display = "none";
         }
-        function POInterfaceClient(lin) {
-            var op = ""
+        function insert_flg(str,flg,sn){
+            var newstr="";
+            for(var i=0;i<str.length;i+=sn){
+                var tmp=str.substring(i, i+sn);
+                newstr+=tmp+flg;
+            }
+            return newstr;
+        }
+
+		    function POInterfaceClient(lin) {
+
+		        if (document.getElementById("ProductWarning").innerText != "") {
+		            var warning1 = insert_flg(document.getElementById("ProductWarning").innerText,'\n',40);
+		            if (confirm("Product Warning:\n" + warning1 + "\n Do you still wants to create the interface?")) {
+
+		            } else {
+		                return false;
+		            }
+		        } 
+		        if (document.getElementById("SupplierWarning").innerText != "") {
+		            var warning2 = insert_flg(document.getElementById("SupplierWarning").innerText, '\n', 40);
+		            if (confirm("Supplier Warning:\n" + warning2 + "\n Do you still wants to create the interface?")) {
+
+		            } else {
+		                return false;
+		            }
+		        } 
+           var op = ""
             switch (lin) {
                 case 1:
                     op = document.getElementById("<%= PFC1.ClientID %>").value;
@@ -646,6 +672,7 @@
                     return true;
                     break;
             }
+            
         }
 		    function checkStatus() {
 		        var status = document.getElementById("<%=RFQStatus.ClientID %>").value;

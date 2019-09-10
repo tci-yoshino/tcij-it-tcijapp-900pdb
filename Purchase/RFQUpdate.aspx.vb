@@ -430,7 +430,7 @@ Partial Public Class RFQUpdate
 & "MakerName, MakerCountryCode, SupplierContactPerson, PaymentTermCode, RequiredPurity, " _
 & "RequiredQMMethod, RequiredSpecification, SpecSheet, Specification, PurposeCode,Purpose, SupplierItemName, " _
 & "ShippingHandlingFee, ShippingHandlingCurrencyCode, Comment, QuotedDate, StatusCode, " _
-& "UpdateDate, Status, StatusChangeDate, EnqLocationCode, QuoLocationCode, Priority, isCONFIDENTIAL,QuoStorageLocation,EnqStorageLocation,SupplierContactPersonSel " _
+& "UpdateDate, Status, StatusChangeDate, EnqLocationCode, QuoLocationCode, Priority, isCONFIDENTIAL,QuoStorageLocation,EnqStorageLocation,SupplierContactPersonSel,ProductWarning,SupplierWarning " _
 & " From v_RFQHeader Where RFQNumber = @i_RFQNumber", DBConn)
             DBCommand.Parameters.Add("i_RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
             DBAdapter = New SqlDataAdapter
@@ -494,6 +494,8 @@ Partial Public Class RFQUpdate
             CurrentRFQStatus.Text = DS.Tables("RFQHeader").Rows(0)("Status").ToString
             ProductNumber.Text = DS.Tables("RFQHeader").Rows(0)("ProductNumber").ToString
             ProductName.Text = CutShort(DS.Tables("RFQHeader").Rows(0)("ProductName").ToString)
+            ProductWarning.Text = DS.Tables("RFQHeader").Rows(0)("ProductWarning").ToString  '20190902 WYS 赋值ProductWarning
+            SupplierWarning.Text = DS.Tables("RFQHeader").Rows(0)("SupplierWarning").ToString  '20190902 WYS SupplierWarning
             SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString
             'R3SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("R3SupplierCode").ToString
             R3SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("S4SupplierCode").ToString
@@ -1595,13 +1597,13 @@ Partial Public Class RFQUpdate
             Return ""
             Exit Function
         End If
-        '临时测试用
-        'If DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString <> Session("UserID").ToString Then
-        '    Msg.Text = "You are not authorized to issue this PO interface!"
-        '    Return ""
-        '    Exit Function
-        'End If
-       
+        '临时测试用--功能是选中的EnqUserID与登录用户UserID不一致，用户不能进行更新数据操作
+        If DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString <> Session("UserID").ToString Then
+            Msg.Text = "You are not authorized to issue this PO interface!"
+            Return ""
+            Exit Function
+        End If
+
         If DS.Tables("RFQHeader").Rows(0)("MakerCode").ToString <> "" Then
             If DS.Tables("RFQHeader").Rows(0)("SAPMakerCode").ToString = "" Then
                 Msg.Text = "Please make sure SAP Maker Code already been created! PO interface create failed!"

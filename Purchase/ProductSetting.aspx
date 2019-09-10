@@ -71,6 +71,10 @@
                         <th>P/D : </th>
                         <td><asp:Label ID="PD" runat="server" Text=""></asp:Label></td>
                     </tr>
+                    <tr>
+                        <th>Product	 Warning : </th>
+                        <td><asp:TextBox ID="ProductWarning" runat="server" Columns="50" Rows="3" TextMode="MultiLine"></asp:TextBox></td>
+                    </tr>
                 </table>
                 <asp:HiddenField ID="ProductID" runat="server" />
                 <asp:HiddenField ID="Action" runat="server" Value="Save" />

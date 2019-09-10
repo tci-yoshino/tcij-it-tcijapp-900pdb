@@ -26,12 +26,13 @@ Partial Public Class ProductSetting
                     End If
                 End If
 
-                DBCommand.CommandText = "SELECT Product.ProductNumber, Product.Name, Product.QuoName, Product.CASNumber, Product.MolecularFormula, Product.Reference, Product.Comment, Product.UpdateDate, s_EhsPhrase.ENai AS Status, s_EhsPhrase_1.ENai AS ProposalDept, s_EhsPhrase_2.ENai AS ProcumentDept, s_EhsPhrase_3.ENai AS PD " & _
-                                        "FROM Product LEFT OUTER JOIN " & _
-                                        "s_EhsPhrase AS s_EhsPhrase_3 ON Product.PD = s_EhsPhrase_3.PhID LEFT OUTER JOIN " & _
-                                        "s_EhsPhrase AS s_EhsPhrase_2 ON Product.ProcumentDept = s_EhsPhrase_2.PhID LEFT OUTER JOIN " & _
-                                        "s_EhsPhrase AS s_EhsPhrase_1 ON Product.ProposalDept = s_EhsPhrase_1.PhID LEFT OUTER JOIN " & _
-                                        "s_EhsPhrase ON Product.Status = s_EhsPhrase.PhID " & _
+                DBCommand.CommandText = "SELECT Product.ProductNumber, Product.Name, Product.QuoName, Product.CASNumber, Product.MolecularFormula, Product.Reference, Product.Comment, Product.UpdateDate, s_EhsPhrase.ENai AS Status, s_EhsPhrase_1.ENai AS ProposalDept, s_EhsPhrase_2.ENai AS ProcumentDept, s_EhsPhrase_3.ENai AS PD " &
+                                        " , Product.ProductWarning " &  '20190902 WYS Product表追加字段ProductWarning赋值
+                                        "FROM Product LEFT OUTER JOIN " &
+                                        "s_EhsPhrase AS s_EhsPhrase_3 ON Product.PD = s_EhsPhrase_3.PhID LEFT OUTER JOIN " &
+                                        "s_EhsPhrase AS s_EhsPhrase_2 ON Product.ProcumentDept = s_EhsPhrase_2.PhID LEFT OUTER JOIN " &
+                                        "s_EhsPhrase AS s_EhsPhrase_1 ON Product.ProposalDept = s_EhsPhrase_1.PhID LEFT OUTER JOIN " &
+                                        "s_EhsPhrase ON Product.Status = s_EhsPhrase.PhID " &
                                         "WHERE(dbo.Product.ProductID = " + ProductID.Value + ")"
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
@@ -47,6 +48,7 @@ Partial Public Class ProductSetting
                     If Not TypeOf DBReader("ProposalDept") Is DBNull Then ProposalDept.Text = DBReader("ProposalDept")
                     If Not TypeOf DBReader("ProcumentDept") Is DBNull Then ProcumentDept.Text = DBReader("ProcumentDept")
                     If Not TypeOf DBReader("PD") Is DBNull Then PD.Text = DBReader("PD")
+                    If Not TypeOf DBReader("ProductWarning") Is DBNull Then ProductWarning.Text = DBReader("ProductWarning")  '20190902 WYS Product表追加字段ProductWarning赋值
                     DBReader.Close()
                     UpdateDate.Value = GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
                 Else
@@ -169,6 +171,7 @@ Partial Public Class ProductSetting
         Dim st_PD As String = String.Empty
         Dim st_Reference As String = Reference.Text
         Dim st_Comment As String = Comment.Text
+        Dim st_ProudctWarning As String = ProductWarning.Text
 
         Dim MemoMode As String = Mode.Value
         If Mode.Value = "Edit" Then
@@ -199,6 +202,7 @@ Partial Public Class ProductSetting
             sb_SQL.Append(" MolecularFormula = @MolecularFormula,")
             sb_SQL.Append(" Reference = @Reference,")
             sb_SQL.Append(" Comment = @Comment,")
+            sb_SQL.Append(" ProductWarning = @ProductWarning, ")  '20190902 WYS Product表追加字段ProductWarning赋值
             sb_SQL.Append(" UpdatedBy = @UpdatedBy,")
             sb_SQL.Append(" UpdateDate = GETDATE() ")
             sb_SQL.Append("WHERE ")
@@ -215,6 +219,7 @@ Partial Public Class ProductSetting
             DBCommand.Parameters.AddWithValue("Comment", ConvertEmptyStringToNull(st_Comment))
             DBCommand.Parameters.AddWithValue("UpdatedBy", ConvertStringToInt(Session("UserID")))
             DBCommand.Parameters.AddWithValue("ProductID", ConvertStringToInt(st_ProductID))
+            DBCommand.Parameters.AddWithValue("ProductWarning", ConvertEmptyStringToNull(st_ProudctWarning)) '20190902 WYS Product表追加字段ProductWarning赋值
 
             DBCommand.ExecuteNonQuery()
             RunMsg.Text = MSG_DATA_UPDATED   '"データを更新しました。"
@@ -249,6 +254,7 @@ Partial Public Class ProductSetting
             sb_SQL.Append(" PD,")
             sb_SQL.Append(" Reference,")
             sb_SQL.Append(" Comment,")
+            sb_SQL.Append(" ProductWarning, ") '20190902 WYS Product表追加字段ProductWarning赋值
             sb_SQL.Append(" CreatedBy,")
             sb_SQL.Append(" CreateDate,")
             sb_SQL.Append(" UpdatedBy,")
@@ -270,6 +276,7 @@ Partial Public Class ProductSetting
             sb_SQL.Append(" @PD,")
             sb_SQL.Append(" @Reference,")
             sb_SQL.Append(" @Comment,")
+            sb_SQL.Append(" @ProductWarning, ") '20190902 WYS Product表追加字段ProductWarning赋值
             sb_SQL.Append(" @CreatedBy,")
             sb_SQL.Append(" GETDATE(),")
             sb_SQL.Append(" @UpdatedBy,")
@@ -296,6 +303,7 @@ Partial Public Class ProductSetting
             DBCommand.Parameters.AddWithValue("PD", ConvertEmptyStringToNull(st_PD))
             DBCommand.Parameters.AddWithValue("Reference", ConvertEmptyStringToNull(st_Reference))
             DBCommand.Parameters.AddWithValue("Comment", ConvertEmptyStringToNull(st_Comment))
+            DBCommand.Parameters.AddWithValue("ProductWarning", ConvertEmptyStringToNull(st_ProudctWarning)) '20190902 WYS Product表追加字段ProductWarning赋值
             DBCommand.Parameters.AddWithValue("CreatedBy", ConvertStringToInt(Session("UserID")))
             DBCommand.Parameters.AddWithValue("UpdatedBy", ConvertStringToInt(Session("UserID")))
 

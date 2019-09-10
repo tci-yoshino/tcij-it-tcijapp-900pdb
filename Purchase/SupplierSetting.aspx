@@ -272,6 +272,11 @@
                             </asp:DropDownList>
                         </td>
                     </tr>
+                    <tr>
+                        <th>Supplier Warning : </th>
+                        <td>
+                            <asp:TextBox ID="SupplierWarning" runat="server" Columns="50" Rows="3" TextMode="MultiLine"></asp:TextBox></td>
+                    </tr>
                 </table>
                 <asp:HiddenField ID="Action" runat="server" Value="Save" />
 
