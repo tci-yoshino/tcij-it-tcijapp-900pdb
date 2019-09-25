@@ -57,12 +57,12 @@ Partial Public Class PurchaseGroupSetting
                         If SLocationByPUser.Rows(i)("Storage").ToString = "CL10" Then
                             CL10.Checked = True
                         End If
-                        If SLocationByPUser.Rows(i)("Storage").ToString = "CL20" Then
-                            CL20.Checked = True
-                        End If
-                        If SLocationByPUser.Rows(i)("Storage").ToString = "CL30" Then
-                            CL30.Checked = True
-                        End If
+                        'If SLocationByPUser.Rows(i)("Storage").ToString = "CL20" Then
+                        '    CL20.Checked = True
+                        'End If
+                        'If SLocationByPUser.Rows(i)("Storage").ToString = "CL30" Then
+                        '    CL30.Checked = True
+                        'End If
                         If SLocationByPUser.Rows(i)("Storage").ToString = "CL40" Then
                             CL40.Checked = True
                         End If
@@ -143,12 +143,12 @@ Partial Public Class PurchaseGroupSetting
             If CL10.Checked = True Then
                 st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL10.ID.ToString + "') "
             End If
-            If CL20.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL20.ID.ToString + "') "
-            End If
-            If CL30.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL30.ID.ToString + "') "
-            End If
+            'If CL20.Checked = True Then
+            '    st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL20.ID.ToString + "') "
+            'End If
+            'If CL30.Checked = True Then
+            '    st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL30.ID.ToString + "') "
+            'End If
             If CL40.Checked = True Then
                 st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL40.ID.ToString + "') "
             End If

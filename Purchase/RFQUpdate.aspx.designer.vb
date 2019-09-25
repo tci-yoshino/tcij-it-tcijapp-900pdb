@@ -95,6 +95,15 @@ Partial Public Class RFQUpdate
     Protected WithEvents SupplierWarning As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
+    '''CountryWarning 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents CountryWarning As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
     '''SupplierCode 控件。
     '''</summary>
     '''<remarks>

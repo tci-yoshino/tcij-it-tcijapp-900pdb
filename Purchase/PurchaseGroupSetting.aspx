@@ -45,8 +45,8 @@
                                 <asp:CheckBox ID="AL40" Text="AL40" runat="server" />
                                 <asp:CheckBox ID="AL50" Text="AL50" runat="server" />
                                 <asp:CheckBox ID="CL10" Text="CL10" runat="server" />
-                                <asp:CheckBox ID="CL20" Text="CL20" runat="server" />
-                                <asp:CheckBox ID="CL30" Text="CL30" runat="server" />
+                                <%--<asp:CheckBox ID="CL20" Text="CL20" runat="server" />
+                                <asp:CheckBox ID="CL30" Text="CL30" runat="server" />--%>
                                 <asp:CheckBox ID="CL40" Text="CL40" runat="server" />
                                 <asp:CheckBox ID="CL70" Text="CL70" runat="server" />
                                 <asp:CheckBox ID="EL10" Text="EL10" runat="server" />

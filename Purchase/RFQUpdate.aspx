@@ -35,7 +35,7 @@
                     </tr>
                     <tr>
                         <th>Product Number / Name : </th><td><asp:Label ID="ProductNumber" runat="server" Text=""></asp:Label><span class="indent"><asp:Label ID="ProductName" runat="server" Text=""></asp:Label></span>
-                            <asp:Label ID="ProductWarning" runat="server" Text="" style="display:none"></asp:Label><asp:Label ID="SupplierWarning" runat="server" Text="" style="display:none"></asp:Label></td>
+                            <asp:Label ID="ProductWarning" runat="server" Text="" style="display:none"></asp:Label><asp:Label ID="SupplierWarning" runat="server" Text="" style="display:none"></asp:Label><asp:Label ID="CountryWarning" runat="server" Text="" style="display:none"></asp:Label></td>
                     </tr>
 					<tr>
 						<th>Supplier Code <span class="required">*</span> : </th>
@@ -623,20 +623,32 @@
 
 		        if (document.getElementById("ProductWarning").innerText != "") {
 		            var warning1 = insert_flg(document.getElementById("ProductWarning").innerText,'\n',40);
-		            if (confirm("Product Warning:\n" + warning1 + "\n Do you still wants to create the interface?")) {
+		            //if (confirm("Product Warning:\n" + warning1 + "\n Do you still wants to create the interface?")) {
 
-		            } else {
-		                return false;
-		            }
+		            //} else {
+		            //    return false;
+		            //}
+		            alert("Product Warning:\n" + warning1 + "\n Do you still wants to create the interface?");
 		        } 
 		        if (document.getElementById("SupplierWarning").innerText != "") {
 		            var warning2 = insert_flg(document.getElementById("SupplierWarning").innerText, '\n', 40);
-		            if (confirm("Supplier Warning:\n" + warning2 + "\n Do you still wants to create the interface?")) {
+		            //if (confirm("Supplier Warning:\n" + warning2 + "\n Do you still wants to create the interface?")) {
 
-		            } else {
-		                return false;
-		            }
-		        } 
+		            //} else {
+		            //    return false;
+		            //}
+		            alert("Supplier Warning:\n" + warning2 + "\n Do you still wants to create the interface?");
+		        }
+
+		        if (document.getElementById("CountryWarning").innerText != "" && document.getElementById("CountryWarning").innerText != document.getElementById("QuoLocation").options[document.getElementById("QuoLocation").selectedIndex].text) {
+		            var warning3 = insert_flg("Please check if the supplier extended to your company or Pur. Org.in BP first.", '\n', 40);
+		            //if (confirm("Product Warning:\n" + warning1 + "\n Do you still wants to create the interface?")) {
+
+		            //} else {
+		            //    return false;
+		            //}
+		            alert(warning3);
+		        }
            var op = ""
             switch (lin) {
                 case 1:

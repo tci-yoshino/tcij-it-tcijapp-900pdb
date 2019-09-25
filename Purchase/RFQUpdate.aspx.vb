@@ -501,6 +501,7 @@ Partial Public Class RFQUpdate
             R3SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("S4SupplierCode").ToString
             SupplierName.Text = DS.Tables("RFQHeader").Rows(0)("SupplierName").ToString
             SupplierCountry.Text = GetCountryName(DS.Tables("RFQHeader").Rows(0)("SupplierCountryCode").ToString)
+            CountryWarning.Text = GetCountryQuoName(DS.Tables("RFQHeader").Rows(0)("SupplierCountryCode").ToString)
             SupplierContactPerson.Text = DS.Tables("RFQHeader").Rows(0)("SupplierContactPerson").ToString
             MakerCode.Text = DS.Tables("RFQHeader").Rows(0)("MakerCode").ToString
             SAPMakerCode.Text = DS.Tables("RFQHeader").Rows(0)("SAPMakerCode").ToString
@@ -912,6 +913,27 @@ Partial Public Class RFQUpdate
         If DBReader.HasRows = True Then
             While DBReader.Read
                 GetCountryName = DBReader("CountryName").ToString
+            End While
+        End If
+        DBReader.Close()
+    End Function
+
+    ''' <summary>
+    ''' 根据countrycode获取对应的quoname
+    ''' </summary>
+    ''' <param name="Code"></param>
+    ''' <returns></returns>
+    Private Function GetCountryQuoName(ByVal Code As String) As String
+        Dim DBReader As SqlDataReader
+        GetCountryQuoName = String.Empty
+        DBCommand.CommandText = "SELECT DefaultQuoLocationName FROM v_Country WHERE (CountryCode = @CountryCode)"
+        DBCommand.Parameters.Add("@CountryCode", SqlDbType.NVarChar).Value = Code
+        DBReader = DBCommand.ExecuteReader()
+        DBCommand.Parameters.Clear()
+        DBCommand.Dispose()
+        If DBReader.HasRows = True Then
+            While DBReader.Read
+                GetCountryQuoName = DBReader("DefaultQuoLocationName").ToString
             End While
         End If
         DBReader.Close()
