@@ -856,10 +856,12 @@ Partial Public Class RFQUpdate
         End If
 
         If Hi_RFQStatusCode.Value = STATUS_CLOSED Then
-            ListPurpose.Visible = False
+            'ListPurpose.Visible = False
+            ListPurpose.Attributes.Add("style", "display:none")
             Purpose.Visible = True
         Else
-            ListPurpose.Visible = True
+            'ListPurpose.Visible = True
+            ListPurpose.Attributes.Add("style", "display:block")
             Purpose.Visible = False
         End If
 
@@ -1577,6 +1579,21 @@ Partial Public Class RFQUpdate
             Dim POReminderSecondRem As String = POReminderInfo.Rows(0)("SecondRem").ToString()
             Dim POReminderThirdRem As String = POReminderInfo.Rows(0)("ThirdRem").ToString()
             If POReminderFirstRem = "cal" Then
+                If IsDBNull(DS2.Tables("RFQLine").Rows(0).Item("LeadTime")) Then
+                    Msg.Text = "Lead time error, PO interface create failed!"
+                    Return ""
+                    Exit Function
+                End If
+                If IsNumeric(DS2.Tables("RFQLine").Rows(0).Item("LeadTime")) = False Then
+                    Msg.Text = "Lead time error, PO interface create failed!"
+                    Return ""
+                    Exit Function
+                End If
+                If Convert.ToDouble(DS2.Tables("RFQLine").Rows(0).Item("LeadTime")) < 1 Then
+                    Msg.Text = "Lead time error, PO interface create failed!"
+                    Return ""
+                    Exit Function
+                End If
                 parameter(32) = System.Math.Round(DS2.Tables("RFQLine").Rows(0).Item("LeadTime") * 0.8 - DS2.Tables("RFQLine").Rows(0).Item("LeadTime"), 0)
                 parameter(33) = System.Math.Round(DS2.Tables("RFQLine").Rows(0).Item("LeadTime") * 0.2, 0)
                 parameter(34) = System.Math.Round(DS2.Tables("RFQLine").Rows(0).Item("LeadTime") * 0.6, 0)
@@ -1682,11 +1699,21 @@ Partial Public Class RFQUpdate
             Exit Function
         End If
         If DS.Tables("RFQHeader").Rows(0)("QuoStorageLocation").ToString = "" Then
+            If StorageLocation2.SelectedValue <> "" Then
+                Msg.Text = "please update RFQ first"
+                Return ""
+                Exit Function
+            End If
             Msg.Text = "Quo-User storage location is blank!"
             Return ""
             Exit Function
         End If
         If DS.Tables("RFQHeader").Rows(0)("EnqStorageLocation").ToString = "" Then
+            If StorageLocation.SelectedValue <> "" Then
+                Msg.Text = "please update RFQ first"
+                Return ""
+                Exit Function
+            End If
             Msg.Text = "Enq-User storage location is blank!"
             Return ""
             Exit Function
