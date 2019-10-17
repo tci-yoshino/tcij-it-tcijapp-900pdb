@@ -129,6 +129,13 @@
                             <asp:TextBox ID="ShippingHandlingFee" runat="server" Width="5em" MaxLength="14" CssClass="number"></asp:TextBox>
                         </td>
                     </tr>
+                    <tr>
+                        <th>Supplier Offer Valid To : </th>
+                        <td>
+                            <asp:TextBox ID="txtVaildTo" runat="server" Width="10em" MaxLength="10" CssClass="number"></asp:TextBox>
+                            <span class="indent"><asp:Label ID="Label1" runat="server" Text="">(YYYY-MM-DD)</asp:Label></span>
+                        </td>
+                    </tr>
                 </table>
 
                 <table>

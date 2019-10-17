@@ -293,6 +293,24 @@ Partial Public Class RFQUpdate
     Protected WithEvents ShippingHandlingFee As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
+    '''txtVaildTo 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents txtVaildTo As Global.System.Web.UI.WebControls.TextBox
+    
+    '''<summary>
+    '''Label1 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents Label1 As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
     '''Purpose 控件。
     '''</summary>
     '''<remarks>

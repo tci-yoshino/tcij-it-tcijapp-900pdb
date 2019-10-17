@@ -247,6 +247,7 @@ Partial Public Class RFQUpdate
             & "SupplierItemName = @SupplierItemName, ShippingHandlingFee = @ShippingHandlingFee," _
             & "ShippingHandlingCurrencyCode = @ShippingHandlingCurrencyCode, PaymentTermCode = @PaymentTermCode," _
             & "Comment = @Comment, Priority = @Priority , PurposeCode = @PurposeCode , UpdatedBy = @UpdatedBy,EnqStorageLocation=@EnqStorageLocation,QuoStorageLocation=@QuoStorageLocation,SupplierContactPersonSel=@SupplierContactPersonSel, UpdateDate = GETDATE()" & RFQStatusCode & st_QuotedDate _
+            & ",SupplierOfferValidTo = @SupplierOfferValidTo" _
             & " Where RFQNumber = @RFQNumber "
             DBCommand.Parameters.Add("@EnqLocationCode", SqlDbType.VarChar).Value = st_EnqLocationCode
             DBCommand.Parameters.Add("@QuoLocationCode", SqlDbType.VarChar).Value = st_QuoLocationCode
@@ -270,6 +271,7 @@ Partial Public Class RFQUpdate
             DBCommand.Parameters.Add("@QuoStorageLocation", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(st_QuoStorageLocationCode)
             DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
             DBCommand.Parameters.Add("@SupplierContactPersonSel", SqlDbType.NVarChar).Value = SupplierContactPersonCodeList.SelectedValue
+            DBCommand.Parameters.Add("@SupplierOfferValidTo", SqlDbType.NVarChar).Value = txtVaildTo.Text
             DBCommand.ExecuteNonQuery()
             DBCommand.Parameters.Clear()
             DBCommand.Dispose()
@@ -430,7 +432,7 @@ Partial Public Class RFQUpdate
 & "MakerName, MakerCountryCode, SupplierContactPerson, PaymentTermCode, RequiredPurity, " _
 & "RequiredQMMethod, RequiredSpecification, SpecSheet, Specification, PurposeCode,Purpose, SupplierItemName, " _
 & "ShippingHandlingFee, ShippingHandlingCurrencyCode, Comment, QuotedDate, StatusCode, " _
-& "UpdateDate, Status, StatusChangeDate, EnqLocationCode, QuoLocationCode, Priority, isCONFIDENTIAL,QuoStorageLocation,EnqStorageLocation,SupplierContactPersonSel,ProductWarning,SupplierWarning " _
+& "UpdateDate, Status, StatusChangeDate, EnqLocationCode, QuoLocationCode, Priority, isCONFIDENTIAL,QuoStorageLocation,EnqStorageLocation,SupplierContactPersonSel,ProductWarning,SupplierWarning,SupplierOfferValidTo " _
 & " From v_RFQHeader Where RFQNumber = @i_RFQNumber", DBConn)
             DBCommand.Parameters.Add("i_RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
             DBAdapter = New SqlDataAdapter
@@ -496,6 +498,7 @@ Partial Public Class RFQUpdate
             ProductName.Text = CutShort(DS.Tables("RFQHeader").Rows(0)("ProductName").ToString)
             ProductWarning.Text = DS.Tables("RFQHeader").Rows(0)("ProductWarning").ToString  '20190902 WYS 赋值ProductWarning
             SupplierWarning.Text = DS.Tables("RFQHeader").Rows(0)("SupplierWarning").ToString  '20190902 WYS SupplierWarning
+            txtVaildTo.Text = DS.Tables("RFQHeader").Rows(0)("SupplierOfferValidTo").ToString  '20191012 WYS SupplierOfferValidTo
             SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString
             'R3SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("R3SupplierCode").ToString
             R3SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("S4SupplierCode").ToString
@@ -893,6 +896,15 @@ Partial Public Class RFQUpdate
             End If
         Next
         ItemCheck = True
+    End Function
+
+    Private Function isNum(ByVal a As String) As Boolean
+        Try
+            System.Int32.Parse(a)
+        Catch ex As Exception
+            Return True
+        End Try
+        Return False
     End Function
 
     Private Sub SetReadOnlyItems()
@@ -1618,6 +1630,27 @@ Partial Public Class RFQUpdate
         'Supplier Offer No.
         parameter(39) = DS2.Tables("RFQLine").Rows(0).Item("SupplierOfferNo").ToString()
 
+        '20191012 WYS 追加SupplierOfferValidTo
+        Dim _date As DateTime
+        If txtVaildTo.Text = "" Then
+            If DateTime.Parse("9999-12-12") < DateTime.Now Then
+                Msg.Text = "Please recheck the valid date with supplier at first. PO interface create failed!"
+                Return ""
+                Exit Function
+            End If
+        Else
+            If DateTime.TryParse(txtVaildTo.Text, _date) Then
+                If _date < DateTime.Now Then
+                    Msg.Text = "Please recheck the valid date with supplier at first. PO interface create failed!"
+                    Return ""
+                    Exit Function
+                End If
+            Else
+                Msg.Text = "Supplier offer valid to Incorrect format!"
+                Return ""
+                Exit Function
+            End If
+        End If
 
         '判断当前数据是否合法是否需要提醒
 
@@ -1718,6 +1751,15 @@ Partial Public Class RFQUpdate
             Return ""
             Exit Function
         End If
+
+        If parameter(10) <> String.Empty Then
+            If isNum(parameter(10)) Then
+                Msg.Text = "Please set the Quo-per as integer. PO interface create failed! "
+                Return ""
+                Exit Function
+            End If
+        End If
+
         Dim DataTable As System.Data.DataTable = Purchase.Common.GetDataTable("select * from  POInterface where RFQLineNumber=" + RFQLineNumber, "POInterface")
         Dim sql As String
         '修改表数据  
@@ -2116,6 +2158,7 @@ Partial Public Class RFQUpdate
             & "SupplierItemName = @SupplierItemName, ShippingHandlingFee = @ShippingHandlingFee," _
             & "ShippingHandlingCurrencyCode = @ShippingHandlingCurrencyCode, PaymentTermCode = @PaymentTermCode," _
             & "Comment = @Comment, Priority = @Priority , PurposeCode = @PurposeCode , UpdatedBy = @UpdatedBy,EnqStorageLocation=@EnqStorageLocation,QuoStorageLocation=@QuoStorageLocation,SupplierContactPersonSel=@SupplierContactPersonSel, UpdateDate = GETDATE()" _
+            & ",SupplierOfferValidTo = @SupplierOfferValidTo" _
             & " Where RFQNumber = @RFQNumber "
             DBCommand.Parameters.Add("@EnqLocationCode", SqlDbType.VarChar).Value = st_EnqLocationCode
             DBCommand.Parameters.Add("@QuoLocationCode", SqlDbType.VarChar).Value = st_QuoLocationCode
@@ -2139,6 +2182,7 @@ Partial Public Class RFQUpdate
             DBCommand.Parameters.Add("@QuoStorageLocation", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(st_QuoStorageLocationCode)
             DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
             DBCommand.Parameters.Add("@SupplierContactPersonSel", SqlDbType.NVarChar).Value = SupplierContactPersonCodeList.SelectedValue
+            DBCommand.Parameters.Add("@SupplierOfferValidTo", SqlDbType.NVarChar).Value = txtVaildTo.Text
             DBCommand.ExecuteNonQuery()
             DBCommand.Parameters.Clear()
             DBCommand.Dispose()
