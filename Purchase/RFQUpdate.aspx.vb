@@ -230,14 +230,16 @@ Partial Public Class RFQUpdate
 
             Dim st_EnqStorageLocationCode As String = String.Empty
             If EnqLocation.CssClass = "readonly" Then
-                st_EnqStorageLocationCode = EnqStorageLOcationCode.Value
+                'st_EnqStorageLocationCode = EnqStorageLOcationCode.Value
+                st_EnqStorageLocationCode = StorageLocation.SelectedValue
             Else
                 st_EnqStorageLocationCode = StorageLocation.SelectedValue
             End If
 
             Dim st_QuoStorageLocationCode As String = String.Empty
             If EnqLocation.CssClass = "readonly" Then
-                st_QuoStorageLocationCode = QuoStorageLOcationCode.Value
+                'st_QuoStorageLocationCode = QuoStorageLOcationCode.Value
+                st_QuoStorageLocationCode = StorageLocation2.SelectedValue
             Else
                 st_QuoStorageLocationCode = StorageLocation2.SelectedValue
             End If
@@ -831,9 +833,10 @@ Partial Public Class RFQUpdate
                 If PoCount > 0 Then
                     'Poのキャンセル以外のデータが存在する場合、EnqLocation編集不可
                     EnqLocation.CssClass = "readonly"
-                    EnqLocation.AutoPostBack = False
-                    StorageLocation.CssClass = "readonly"
-                    StorageLocation.AutoPostBack = False
+                    'EnqLocation.AutoPostBack = False
+                    'StorageLocation.CssClass = "readonly"
+                    'StorageLocation.AutoPostBack = False
+                    QuoLocation.CssClass = "readonly"
                 End If
             End If
 
@@ -900,7 +903,9 @@ Partial Public Class RFQUpdate
 
     Private Function isNum(ByVal a As String) As Boolean
         Try
-            System.Int32.Parse(a)
+            If System.Int32.Parse(a) < 0 Then
+                Return True
+            End If
         Catch ex As Exception
             Return True
         End Try
@@ -1242,6 +1247,48 @@ Partial Public Class RFQUpdate
         If EnqLocation.CssClass = "readonly" Then
             ' 処理を中断して変更不可とする。
             EnqLocation.SelectedValue = EnqLocationCode.Value
+
+            Msg.Text = String.Empty
+            'DBCommand = DBConn.CreateCommand()
+            'If String.IsNullOrEmpty(Confidential.Text) Then
+            '    DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
+            '                                 , EnqLocation.SelectedValue)
+            'Else
+            '    DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
+            '                                     , EnqLocation.SelectedValue)
+            'End If
+            'Dim DBReader As System.Data.SqlClient.SqlDataReader
+            'DBReader = DBCommand.ExecuteReader()
+            'DBCommand.Dispose()
+            'EnqUser.Items.Clear()
+            'Do Until DBReader.Read = False
+            '    EnqUser.Items.Add(New ListItem(DBReader("Name").ToString, DBReader("UserID").ToString))
+            'Loop
+            'DBReader.Close()
+            'DBConn.Close()
+            Dim sql As String = ""
+            Dim dt As DataTable
+            If String.IsNullOrEmpty(Confidential.Text) Then
+                sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
+                                             , EnqLocation.SelectedValue)
+            Else
+                sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
+                                                 , EnqLocation.SelectedValue)
+            End If
+            dt = GetDataTable(sql)
+            EnqUser.Items.Clear()
+            For i As Integer = 0 To dt.Rows.Count - 1
+                EnqUser.Items.Add(New ListItem(dt.Rows(i)("Name").ToString, dt.Rows(i)("UserID").ToString))
+            Next
+            If dt.Rows.Count > 0 Then
+                Dim tmpdt As DataTable
+                tmpdt = GetDataTable("select * from StorageLocation where Storage in(select Storage from StorageByPurchasingUser where UserId=" + dt.Rows(0)("UserID").ToString + ")")
+                StorageLocation.Items.Clear()
+                StorageLocation.Items.Add(String.Empty)
+                For i As Integer = 0 To tmpdt.Rows.Count - 1
+                    StorageLocation.Items.Add(New ListItem(tmpdt.Rows(i)("Storage").ToString, tmpdt.Rows(i)("Storage").ToString))
+                Next
+            End If
         Else
             Msg.Text = String.Empty
             'DBCommand = DBConn.CreateCommand()
@@ -1972,6 +2019,31 @@ Partial Public Class RFQUpdate
     Protected Sub QuoLocation_SelectedIndexChanged(sender As Object, e As EventArgs) Handles QuoLocation.SelectedIndexChanged
         If QuoLocation.CssClass = "readonly" Then
             QuoLocation.SelectedValue = QuoLocationCode.Value
+
+            Dim sql As String = ""
+            Dim dt As DataTable
+            If String.IsNullOrEmpty(Confidential.Text) Then
+                sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
+                                             , QuoLocation.SelectedValue)
+            Else
+                sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
+                                                 , QuoLocation.SelectedValue)
+            End If
+            dt = GetDataTable(sql)
+            QuoUser.Items.Clear()
+            'QuoUser.Items.Add(String.Empty)
+            For i As Integer = 0 To dt.Rows.Count - 1
+                QuoUser.Items.Add(New ListItem(dt.Rows(i)("Name").ToString, dt.Rows(i)("UserID").ToString))
+            Next
+            If dt.Rows.Count > 0 Then
+                Dim tmpdt As DataTable
+                tmpdt = GetDataTable("select * from StorageLocation where Storage in(select Storage from StorageByPurchasingUser where UserId=" + dt.Rows(0)("UserID").ToString + ")")
+                StorageLocation2.Items.Clear()
+                StorageLocation2.Items.Add(String.Empty)
+                For i As Integer = 0 To tmpdt.Rows.Count - 1
+                    StorageLocation2.Items.Add(New ListItem(tmpdt.Rows(i)("Storage").ToString, tmpdt.Rows(i)("Storage").ToString))
+                Next
+            End If
         Else
             Msg.Text = String.Empty
             'DBCommand = DBConn.CreateCommand()
@@ -2143,13 +2215,15 @@ Partial Public Class RFQUpdate
             End If
             Dim st_EnqStorageLocationCode As String = String.Empty
             If EnqLocation.CssClass = "readonly" Then
-                st_EnqStorageLocationCode = EnqStorageLOcationCode.Value
+                'st_EnqStorageLocationCode = EnqStorageLOcationCode.Value
+                st_EnqStorageLocationCode = StorageLocation.SelectedValue
             Else
                 st_EnqStorageLocationCode = StorageLocation.SelectedValue
             End If
             Dim st_QuoStorageLocationCode As String = String.Empty
             If EnqLocation.CssClass = "readonly" Then
-                st_QuoStorageLocationCode = QuoStorageLOcationCode.Value
+                'st_QuoStorageLocationCode = QuoStorageLOcationCode.Value
+                st_QuoStorageLocationCode = StorageLocation2.SelectedValue
             Else
                 st_QuoStorageLocationCode = StorageLocation2.SelectedValue
             End If
