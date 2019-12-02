@@ -1,0 +1,22 @@
+USE [Purchase]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER TABLE RFQHeader NOCHECK CONSTRAINT ALL;
+ALTER TABLE PO  NOCHECK CONSTRAINT ALL;
+UPDATE Purpose 
+SET 
+	PurposeCode=SUBSTRING(PurposeCode,2,LEN(PurposeCode)-1) 
+WHERE 
+	PurposeCode in('010','011','012','013','014','015','016','017','018','030','031','032','033','034');
+UPDATE RFQHeader 
+SET 
+	PurposeCode=SUBSTRING(PurposeCode,2,LEN(PurposeCode)-1) 
+WHERE 
+	PurposeCode in('010','011','012','013','014','015','016','017','018','030','031','032','033','034');
+ALTER TABLE RFQHeader CHECK CONSTRAINT ALL;
+ALTER TABLE PO CHECK CONSTRAINT ALL;
+UPDATE Purpose SET [Text]='For Reference' WHERE PurposeCode='14';
+UPDATE Purpose SET [Text]='For Local New' WHERE PurposeCode='32';

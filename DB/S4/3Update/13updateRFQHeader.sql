@@ -1,0 +1,10 @@
+UPDATE RFQHeader SET PurposeCode = '10' WHERE RFQNumber IN (SELECT RFQNumber FROM RFQHeader WHERE PurposeCode= '91');
+UPDATE RFQHeader SET PurposeCode = '11' WHERE RFQNumber IN (SELECT RFQNumber FROM RFQHeader WHERE PurposeCode= '92');
+UPDATE RFQHeader SET PurposeCode = '13' WHERE RFQNumber IN (SELECT RFQNumber FROM RFQHeader WHERE PurposeCode= '93');
+UPDATE RFQHeader SET PurposeCode = '10' WHERE RFQNumber IN (SELECT RFQNumber FROM RFQHeader WHERE PurposeCode= '94');
+UPDATE RFQHeader SET PurposeCode = '12' WHERE RFQNumber IN (SELECT RFQNumber FROM RFQHeader WHERE PurposeCode= '95');
+UPDATE RFQHeader SET PurposeCode = '16' WHERE RFQNumber IN (SELECT RFQNumber FROM RFQHeader WHERE PurposeCode= '96');
+UPDATE RFQHeader SET PurposeCode = '30' WHERE RFQNumber IN (SELECT RFQNumber FROM RFQHeader WHERE PurposeCode= '97');
+UPDATE RFQHeader SET PurposeCode = '10' WHERE RFQNumber IN (SELECT RFQNumber FROM RFQHeader WHERE PurposeCode= '98');
+UPDATE RFQHeader SET PurposeCode = '10' WHERE RFQNumber IN (SELECT RFQNumber FROM RFQHeader WHERE PurposeCode= '99');
+ALTER TABLE RFQHeader ADD SupplierOfferValidTo NVARCHAR(20) NULL;

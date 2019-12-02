@@ -1,0 +1,1 @@
+ALTER TABLE product ADD ProductWarning NVARCHAR(3000) NULL;

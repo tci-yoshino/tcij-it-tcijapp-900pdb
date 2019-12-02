@@ -81,6 +81,9 @@ Partial Public Class PurchaseGroupSetting
                         If SLocationByPUser.Rows(i)("Storage").ToString = "HL30" Then
                             HL30.Checked = True
                         End If
+                        If SLocationByPUser.Rows(i)("Storage").ToString = "HL50" Then
+                            HL50.Checked = True
+                        End If
                         If SLocationByPUser.Rows(i)("Storage").ToString = "NL10" Then
                             NL10.Checked = True
                         End If
@@ -122,56 +125,59 @@ Partial Public Class PurchaseGroupSetting
             End If
             st_SQL &= "UPDATE PurchasingUser SET "
             st_SQL &= "R3PurchasingGroup='" + R3PurchasingGroup.Text + "'"
-            st_SQL &= "WHERE UserID='" & UserID.Value & "' "
+            st_SQL &= "WHERE UserID='" & UserID.Value & "'; "
             '1.先删除后添加
-            st_SQL &= "delete StorageByPurchasingUser where UserID=" + UserID.Value + " "
+            st_SQL &= "delete StorageByPurchasingUser where UserID=" + UserID.Value + "; "
             If AL10.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL10.ID.ToString + "') "
+                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL10.ID.ToString + "'); "
             End If
             If AL11.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL11.ID.ToString + "') "
+                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL11.ID.ToString + "'); "
             End If
             If AL20.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL20.ID.ToString + "') "
+                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL20.ID.ToString + "'); "
             End If
             If AL40.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL40.ID.ToString + "') "
+                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL40.ID.ToString + "'); "
             End If
             If AL50.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL50.ID.ToString + "') "
+                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL50.ID.ToString + "'); "
             End If
             If CL10.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL10.ID.ToString + "') "
+                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL10.ID.ToString + "'); "
             End If
             'If CL20.Checked = True Then
-            '    st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL20.ID.ToString + "') "
+            '    st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL20.ID.ToString + "'); "
             'End If
             'If CL30.Checked = True Then
-            '    st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL30.ID.ToString + "') "
+            '    st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL30.ID.ToString + "'); "
             'End If
             If CL40.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL40.ID.ToString + "') "
+                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL40.ID.ToString + "'); "
             End If
             If CL70.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL70.ID.ToString + "') "
+                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL70.ID.ToString + "'); "
             End If
             If EL10.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + EL10.ID.ToString + "') "
+                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + EL10.ID.ToString + "'); "
             End If
             If EL20.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + EL20.ID.ToString + "') "
+                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + EL20.ID.ToString + "'); "
             End If
             If HL10.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + HL10.ID.ToString + "') "
+                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + HL10.ID.ToString + "'); "
             End If
             If HL30.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + HL30.ID.ToString + "') "
+                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + HL30.ID.ToString + "'); "
+            End If
+            If HL50.Checked = True Then
+                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + HL50.ID.ToString + "'); "
             End If
             If NL10.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + NL10.ID.ToString + "') "
+                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + NL10.ID.ToString + "'); "
             End If
             If NL20.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + NL20.ID.ToString + "') "
+                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + NL20.ID.ToString + "'); "
             End If
         Else
             Msg.Text = Common.ERR_INVALID_PARAMETER

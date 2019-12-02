@@ -53,6 +53,7 @@
                                 <asp:CheckBox ID="EL20" Text="EL20" runat="server" />
                                 <asp:CheckBox ID="HL10" Text="HL10" runat="server" />
                                 <asp:CheckBox ID="HL30" Text="HL30" runat="server" />
+                                <asp:CheckBox ID="HL50" Text="HL50" runat="server" />
                                 <asp:CheckBox ID="NL10" Text="NL10" runat="server" />
                                 <asp:CheckBox ID="NL20" Text="NL20" runat="server" />
                                

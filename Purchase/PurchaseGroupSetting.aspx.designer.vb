@@ -185,6 +185,15 @@ Partial Public Class PurchaseGroupSetting
     Protected WithEvents HL30 As Global.System.Web.UI.WebControls.CheckBox
     
     '''<summary>
+    '''HL50 控件。
+    '''</summary>
+    '''<remarks>
+    '''自动生成的字段。
+    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''</remarks>
+    Protected WithEvents HL50 As Global.System.Web.UI.WebControls.CheckBox
+    
+    '''<summary>
     '''NL10 控件。
     '''</summary>
     '''<remarks>
