@@ -441,7 +441,7 @@ Partial Public Class SupplierSetting
                                         "SupplierLocationCode2,SupplierLocationCode3,SupplierLocationCode4,SupplierLocationCode5,SupplierLocationCode6," &
                                         "SupplierLocationCode7,SupplierLocationCode8,SupplierLocationCode9,SupplierLocationCode10," &
                                         "SupplierContactperson1,SupplierEmailID1,SupplierEmail1,SupplierContactperson2,SupplierEmailID2,SupplierEmail2,SupplierContactperson3,SupplierEmailID3,SupplierEmail3,SupplierContactperson4,SupplierEmailID4,SupplierEmail4,SupplierContactperson5,SupplierEmailID5,SupplierEmail5,SupplierContactperson6,SupplierEmailID6,SupplierEmail6,SupplierContactperson7,SupplierEmailID7,SupplierEmail7,SupplierContactperson8,SupplierEmailID8,SupplierEmail8,SupplierContactperson9,SupplierEmailID9,SupplierEmail9,SupplierContactperson10,SupplierEmailID10,SupplierEmail10," &
-                                        "Name1, Name2, Name3, Name4, SearchTerm1, SearchTerm2, Address1, Address2, Address3, PostalCode, CountryCode, RegionCode, Telephone, Fax, Email, Comment, Website, Note, Info,S4SupplierCode, UpdateDate, SupplierWarning " &
+                                        "Name1, Name2, Name3, Name4, SearchTerm1, SearchTerm2, Address1, Address2, Address3, PostalCode, CountryCode, RegionCode, Telephone, Fax, Email, Comment, Website, Note, Info,S4SupplierCode, UpdateDate, SupplierWarning, isDisabled " &
                                                            "FROM dbo.Supplier WHERE SupplierCode = " & Code.Text.ToString
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
@@ -477,7 +477,10 @@ Partial Public Class SupplierSetting
                     If Not TypeOf DBReader("Note") Is DBNull Then Comment.Text = DBReader("Note")
                     If Not TypeOf DBReader("SupplierWarning") Is DBNull Then SupplierWarning.Text = DBReader("SupplierWarning")   '201909002 WYS 追加SupplierWarning
                     If Not TypeOf DBReader("Info") Is DBNull Then SupplierInfo.Text = DBReader("Info")
-                    If Not TypeOf DBReader("S4SupplierCode") Is DBNull Then S4SupplierCode.Text = DBReader("S4SupplierCode")
+                    'If Not TypeOf DBReader("S4SupplierCode") Is DBNull Then S4SupplierCode.Text = DBReader("S4SupplierCode")
+                    If Not TypeOf DBReader("S4SupplierCode") Is DBNull And DBReader("isDisabled") = False Then
+                        S4SupplierCode.Text = DBReader("S4SupplierCode")
+                    End If
                     Country.SelectedValue = DBReader("CountryCode")
                     UpdateDate.Value = GetUpdateDate("Supplier", "SupplierCode", Code.Text.ToString) '[同時更新チェック用]
                     DBReader.Close()
