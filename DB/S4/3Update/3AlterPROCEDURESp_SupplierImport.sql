@@ -1,9 +1,13 @@
 USE [Purchase]
 GO
+
+/****** Object:  StoredProcedure [dbo].[sp_SupplierImport]    Script Date: 2019/12/26 19:02:15 ******/
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
+
 ALTER PROCEDURE [dbo].[sp_SupplierImport] 
 @ErrNUMBER int output,
 @ErrMESSAGE nvarchar(2000) output,
@@ -39,6 +43,7 @@ begin try
     DECLARE @SupTMei nvarchar(30)
     DECLARE @SupTTel nvarchar(16)
     DECLARE @SupTCom nvarchar(20)
+	
 	DECLARE @SupID1 nvarchar(3)
     DECLARE @SupMAD1 nvarchar(50)
     DECLARE @SupREM1 nvarchar(50)
@@ -128,7 +133,8 @@ begin try
         Fax         = @SupFax,
         Comment     = @SupCom,
         UpdatedBy   = 0,
-        UpdateDate  = GETDATE(),		
+        UpdateDate  = GETDATE(),
+		isDisabled	= CASE WHEN @SupCut is null THEN 0 ELSE 1 END,
 		Email=@SupMail,
 		S4SupplierCode=@SupNo,						
 		SupplierEmailID1=@SupID1,							
