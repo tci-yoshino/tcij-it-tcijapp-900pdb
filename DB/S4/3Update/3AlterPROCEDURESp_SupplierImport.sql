@@ -1,7 +1,7 @@
 USE [Purchase]
 GO
 
-/****** Object:  StoredProcedure [dbo].[sp_SupplierImport]    Script Date: 2020/02/17 21:29:47 ******/
+/****** Object:  StoredProcedure [dbo].[sp_SupplierImport]    Script Date: 2020/02/20 22:06:06 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -76,8 +76,7 @@ begin try
     DECLARE @SupMAD10 nvarchar(50)
     DECLARE @SupREM10 nvarchar(50)
 	DECLARE @ExtSupNo nvarchar(50)
-	DECLARE @SupplierCode  nvarchar(50)
-	DECLARE @S4SupplierCode nvarchar(50)
+	DECLARE @SupplierCode  nvarchar(10)
     DECLARE s_SupplierCursor CURSOR FOR
       SELECT
         SupNo, SupCut, SupCom, SupMei1, SupMei2, SupMei3, SupMei4,
@@ -140,6 +139,19 @@ begin try
 	  @SupID10,@SupMAD10,@SupREM10,@ExtSupNo;
     WHILE @@FETCH_STATUS = 0
     BEGIN    
+		
+	  Select @SupplierCode=SupplierCode From Supplier Where Supplier.S4SupplierCode = @SupNo;
+		IF @SupplierCode <> @ExtSupNo
+			begin
+				Update Supplier
+				Set S4SupplierCode = null
+				Where SupplierCode = @SupplierCode;
+
+				Update Supplier
+				Set S4SupplierCode = @SupNo
+				Where SupplierCode = @ExtSupNo;
+			end
+
       UPDATE Supplier
       SET
         Name1 = @SupMei1,
@@ -161,7 +173,7 @@ begin try
         UpdateDate  = GETDATE(),
 		isDisabled	= CASE WHEN @SupCut is null THEN 0 ELSE 1 END,
 		Email=@SupMail,
-		S4SupplierCode=@SupNo,						
+		S4SupplierCode=CASE WHEN @SupCut is null THEN @SupNo ELSE null END,						
 		SupplierEmailID1=@SupID1,							
 		SupplierEmail1=@SupMAD1,							
 		SupplierContactperson1=@SupREM1,							
@@ -194,19 +206,6 @@ begin try
 		SupplierContactperson10=@SupREM10		
       WHERE 
         S4SupplierCode = @SupNo;
-		
-		Select @SupplierCode=SupplierCode From Supplier Where Supplier.S4SupplierCode = @SupNo;
-		IF @SupplierCode != null and @SupplierCode != @ExtSupNo
-			begin
-				Update Supplier
-				Set S4SupplierCode = null
-				Where SupplierCode = @SupplierCode
-
-				Update Supplier
-				Set S4SupplierCode = @SupNo
-				Where SupplierCode = @ExtSupNo
-			end
-		
     FETCH NEXT FROM s_SupplierCursor
     INTO
       @SupNo, @SupCut, @SupCom, @SupMei1, @SupMei2, @SupMei3, @SupMei4,
@@ -267,7 +266,7 @@ begin try
         UpdateDate  = GETDATE(),
 		isDisabled	= CASE WHEN @SupCut is null THEN 0 ELSE 1 END,
 		Email=@SupMail,
-		S4SupplierCode=@SupNo,						
+		S4SupplierCode=CASE WHEN @SupCut is null THEN @SupNo ELSE null END,						
 		SupplierEmailID1=@SupID1,							
 		SupplierEmail1=@SupMAD1,							
 		SupplierContactperson1=@SupREM1,							
