@@ -1,7 +1,7 @@
 USE [Purchase]
 GO
 
-/****** Object:  StoredProcedure [dbo].[sp_SupplierImport]    Script Date: 2020/02/20 22:06:06 ******/
+/****** Object:  StoredProcedure [dbo].[sp_SupplierImport]    Script Date: 2020/02/25 17:04:10 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -77,6 +77,7 @@ begin try
     DECLARE @SupREM10 nvarchar(50)
 	DECLARE @ExtSupNo nvarchar(50)
 	DECLARE @SupplierCode  nvarchar(10)
+	DECLARE @Count int
     DECLARE s_SupplierCursor CURSOR FOR
       SELECT
         SupNo, SupCut, SupCom, SupMei1, SupMei2, SupMei3, SupMei4,
@@ -139,19 +140,53 @@ begin try
 	  @SupID10,@SupMAD10,@SupREM10,@ExtSupNo;
     WHILE @@FETCH_STATUS = 0
     BEGIN    
-		
-	  Select @SupplierCode=SupplierCode From Supplier Where Supplier.S4SupplierCode = @SupNo;
-		IF @SupplierCode <> @ExtSupNo
+		Set @Count=0
+		Select @Count=(Count(*)) From Supplier Where Supplier.S4SupplierCode = @SupNo;
+		IF @Count = 1
 			begin
-				Update Supplier
-				Set S4SupplierCode = null
-				Where SupplierCode = @SupplierCode;
+				Select @SupplierCode=SupplierCode From Supplier Where Supplier.S4SupplierCode = @SupNo;
+				IF @SupplierCode <> @ExtSupNo
+					begin
+						Update Supplier
+						Set S4SupplierCode = null
+						Where SupplierCode = @SupplierCode;
 
-				Update Supplier
-				Set S4SupplierCode = @SupNo
-				Where SupplierCode = @ExtSupNo;
+						Update Supplier
+						Set S4SupplierCode = @SupNo
+						Where SupplierCode = @ExtSupNo;
+					end
 			end
+		Else IF @Count > 1
+			begin
+				DECLARE s_detail CURSOR FOR
+				SELECT
+					SupplierCode
+				FROM
+					Supplier 
+				WHERE Supplier.S4SupplierCode = @SupNo
+				OPEN s_detail;
+				FETCH NEXT FROM s_detail
+				INTO
+				  @SupplierCode;
+				WHILE @@FETCH_STATUS = 0
+				Begin
+				IF @SupplierCode <> @ExtSupNo
+					begin
+						Update Supplier
+						Set S4SupplierCode = null
+						Where SupplierCode = @SupplierCode;
 
+						Update Supplier
+						Set S4SupplierCode = @SupNo
+						Where SupplierCode = @ExtSupNo;
+					end
+				FETCH NEXT FROM s_detail
+				INTO
+				  @SupplierCode;
+				END -- roop end
+				CLOSE s_detail;
+				DEALLOCATE s_detail;
+			end
       UPDATE Supplier
       SET
         Name1 = @SupMei1,
