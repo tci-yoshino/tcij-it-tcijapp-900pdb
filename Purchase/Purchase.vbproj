@@ -106,6 +106,7 @@
     <Content Include="Image\Check.gif" />
     <Content Include="Image\Logo.gif" />
     <Content Include="Image\Search.gif" />
+    <Content Include="IsuseError.html" />
     <Content Include="JFYISearch.aspx" />
     <Content Include="JS\Colorful.js" />
     <Content Include="JS\Common.js" />
