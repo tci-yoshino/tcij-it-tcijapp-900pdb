@@ -4,6 +4,7 @@ Partial Public Class RFQIssue
     Inherits CommonPage
     Private DBConn As New SqlConnection
     Private DBCommand As SqlCommand
+    Protected b_IsDebug As Boolean
     'エラーメッセージ(入力値不正)
     Private Const ERR_INCORRECT_SUPPLIERCODE As String = "Supplier Code" & ERR_DOES_NOT_EXIST
     Private Const ERR_INCORRECT_MAKERCODE As String = "Maker Code" & ERR_DOES_NOT_EXIST
@@ -23,7 +24,6 @@ Partial Public Class RFQIssue
     Protected Parameter As Boolean = True
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-
         DBConn.ConnectionString = DB_CONNECT_STRING
         DBConn.Open()
         DBCommand = DBConn.CreateCommand()
@@ -299,8 +299,26 @@ Partial Public Class RFQIssue
         EnqLocation.SelectedValue = Session("LocationCode").ToString
         EnqLocation.DataBind()
         SetControl_EnqUser()
+        isAdmin.Text = Session("Purchase.isAdmin").ToString
+        userId.Text = Session("UserID").ToString
         If Session("Purchase.isAdmin") = False Then
-            EnqUser.SelectedValue = Session("UserID").ToString
+            '            Dim flg As Boolean = False
+            '            For index = 0 To EnqUser.Items.Count
+            '                If index = EnqUser.Items.Count Then
+            '                    GoTo tuichu
+            '                End If
+            '                If EnqUser.Items(index).Value = Session("UserID").ToString Then
+            '                    flg = True
+            '                    GoTo tuichu
+            '                End If
+            '            Next
+            'tuichu:
+            '            If Session("UserID").ToString = "" Or flg = False Then
+            '                Response.Redirect("IsuseError.html")
+            '            Else
+            '                EnqUser.SelectedValue = Session("UserID").ToString
+            '            End If
+            'EnqUser.SelectedValue = Session("UserID").ToString
         End If
 
         QuoLocation.DataBind()

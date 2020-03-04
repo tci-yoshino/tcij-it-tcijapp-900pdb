@@ -54,12 +54,7 @@ Public Class Global_asax
         If TypeOf ex Is Web.HttpRequestValidationException Then
             Response.Redirect("./FormError.html", True)
         Else
-            If ex.ToString().IndexOf("EnqUser") > 0 Or ex.ToString().IndexOf("QuoUser") > 0 Then
-                Response.Redirect("IsuseError.html")
-            Else
-                Server.Transfer("./SystemError.aspx")
-            End If
-
+            Server.Transfer("./SystemError.aspx")
         End If
 
     End Sub

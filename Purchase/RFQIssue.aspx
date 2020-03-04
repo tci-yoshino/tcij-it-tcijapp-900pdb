@@ -171,6 +171,8 @@
 					</tr>
 					<tr>
 						<th>Comment : </th>
+                        <asp:TextBox ID="isAdmin" runat="server" style="display:none"></asp:TextBox>
+                            <asp:TextBox ID="userId" runat="server" style="display:none"></asp:TextBox>
 						<td><asp:TextBox ID="Comment" runat="server" Columns="50" Rows="3" TextMode="MultiLine"></asp:TextBox></td>
 					</tr>
 				</table>
@@ -229,6 +231,7 @@
                     <tr>
                         <th>4</th>
                         <td>
+                            
                             <asp:TextBox ID="EnqQuantity_4" runat="server" Width="5em" MaxLength="18" CssClass="number"></asp:TextBox>
                             <asp:DropDownList ID="EnqUnit_4" runat="server" AppendDataBoundItems="True" 
                                 DataSourceID="SDS_RFQIssue_Qua" DataTextField="UnitCode" 
@@ -252,6 +255,24 @@
 	<!--#include virtual="./Footer.html" --><!-- Footer END -->
 		</form>
 		<script language ="javascript" type="text/javascript">
+		    window.onload = function () {
+		        var isAdmin = document.getElementById('isAdmin').value;
+		        var userID = document.getElementById('userId').value;
+		        if (isAdmin == "False") {
+		            var flg = false;
+		            var list = document.getElementById('EnqUser')
+		            for (var i = 0; i < list.length; i++) {
+		                if (list[i].value == userID) {
+		                    flg = true;
+		                    list[i].selected = true;
+		                    break;
+		                }
+		            }
+		            if (userID == "" || flg == false) {
+		                window.location.href = "./IsuseError.html"
+		            } 
+		        }
+		    }
 		function ProductSelect_onclick() {
     		var ProductNumber = encodeURIComponent(document.getElementById('ProductNumber').value);
 	    	popup('./ProductSelect.aspx?ProductNumber=' + ProductNumber);
