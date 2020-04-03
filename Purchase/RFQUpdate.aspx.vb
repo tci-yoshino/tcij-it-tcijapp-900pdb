@@ -1583,7 +1583,9 @@ Partial Public Class RFQUpdate
         'parameter(14) = DS.Tables("RFQHeader").Rows(0)("MakerCode").ToString
         parameter(14) = DS.Tables("RFQHeader").Rows(0)("SAPMakerCode").ToString
         'Supplier Item Name
-        parameter(15) = DS.Tables("RFQHeader").Rows(0)("SupplierItemName").ToString
+        ' 20200402 WYS 增加转义替换单引号 start
+        parameter(15) = DS.Tables("RFQHeader").Rows(0)("SupplierItemName").ToString.Replace("'", "''")
+        ' 20200402 WYS 增加转义替换单引号 end
         'Payment Terms
         Dim PaymentTermInfo As DataTable = GetDataTable("select * from PurchasingPaymentTerm where  PaymentTermCode='" + DS.Tables("RFQHeader").Rows(0)("PaymentTermCode").ToString + "'", "PurchasingPaymentTerm")
         If PaymentTermInfo.Rows.Count > 0 Then
@@ -1676,6 +1678,16 @@ Partial Public Class RFQUpdate
         parameter(38) = DS.Tables("RFQHeader").Rows(0)("EnqStorageLocation").ToString()
         'Supplier Offer No.
         parameter(39) = DS2.Tables("RFQLine").Rows(0).Item("SupplierOfferNo").ToString()
+
+        ' 20200402 WYS 增加对LeadTime是否为数值的判断 start
+        If IsNumeric(DS2.Tables("RFQLine").Rows(0).Item("LeadTime")) Then
+
+        Else
+            Msg.Text = "Lead time should be integer, PO interface output failed!"
+            Return ""
+            Exit Function
+        End If
+        ' 20200402 WYS 增加对LeadTime是否为数值的判断 end
 
         '20191012 WYS 追加SupplierOfferValidTo
         Dim _date As DateTime
@@ -2130,30 +2142,34 @@ Partial Public Class RFQUpdate
 
     Protected Sub SupplierCode_TextChanged(sender As Object, e As EventArgs) Handles SupplierCode.TextChanged
         Dim sql As String
-        sql = "select * from ("
-        sql += "select '' as supplierInfo,'' as SupplierContactperson,'' as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + ""
-        sql += " Union All "
-        sql += "select (SupplierEmailID1+'-'+ ISNULL(SupplierContactperson1,'')) as supplierInfo,ISNULL(SupplierContactperson1,'') as SupplierContactperson,SupplierEmailID1 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID1 <>'' and SupplierEmailID1 is not null and SupplierEmailID1 <>'000'"
-        sql += " Union All "
-        sql += "select (SupplierEmailID2+'-'+ ISNULL(SupplierContactperson2,'')) as supplierInfo,ISNULL(SupplierContactperson2,'') as SupplierContactperson,SupplierEmailID2 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID2 <>'' and SupplierEmailID2 is not null and SupplierEmailID2 <>'000'"
-        sql += " Union All "
-        sql += "select (SupplierEmailID3+'-'+ ISNULL(SupplierContactperson3,'')) as supplierInfo,ISNULL(SupplierContactperson3,'') as SupplierContactperson,SupplierEmailID3 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID3 <>'' and SupplierEmailID3 is not null and SupplierEmailID3 <>'000'"
-        sql += " Union All "
-        sql += "select (SupplierEmailID4+'-'+ ISNULL(SupplierContactperson4,'')) as supplierInfo,ISNULL(SupplierContactperson4,'') as SupplierContactperson,SupplierEmailID4 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID4 <>'' and SupplierEmailID4 is not null and SupplierEmailID4 <>'000'"
-        sql += " Union All "
-        sql += "select (SupplierEmailID5+'-'+ ISNULL(SupplierContactperson5,'')) as supplierInfo,ISNULL(SupplierContactperson5,'') as SupplierContactperson,SupplierEmailID5 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID5 <>'' and SupplierEmailID5 is not null and SupplierEmailID5 <>'000'"
-        sql += " Union All "
-        sql += "select (SupplierEmailID6+'-'+ ISNULL(SupplierContactperson6,'')) as supplierInfo,ISNULL(SupplierContactperson6,'') as SupplierContactperson,SupplierEmailID6 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID6 <>'' and SupplierEmailID6 is not null and SupplierEmailID6 <>'000'"
-        sql += " Union All "
-        sql += "select (SupplierEmailID7+'-'+ ISNULL(SupplierContactperson7,'')) as supplierInfo,ISNULL(SupplierContactperson7,'') as SupplierContactperson,SupplierEmailID7 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID7 <>'' and SupplierEmailID7 is not null and SupplierEmailID7 <>'000'"
-        sql += " Union All "
-        sql += "select (SupplierEmailID8+'-'+ ISNULL(SupplierContactperson8,'')) as supplierInfo,ISNULL(SupplierContactperson8,'') as SupplierContactperson,SupplierEmailID9 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID8 <>'' and SupplierEmailID8 is not null and SupplierEmailID8 <>'000'"
-        sql += " Union All "
-        sql += "select (SupplierEmailID9+'-'+ ISNULL(SupplierContactperson9,'')) as supplierInfo,ISNULL(SupplierContactperson9,'') as SupplierContactperson,SupplierEmailID9 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID9 <>'' and SupplierEmailID9 is not null and SupplierEmailID9 <>'000'"
-        sql += " Union All "
-        sql += "select (SupplierEmailID10+'-'+ ISNULL(SupplierContactperson10,'')) as supplierInfo,ISNULL(SupplierContactperson10,'') as SupplierContactperson,SupplierEmailID10 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID10 <>'' and SupplierEmailID10 is not null and SupplierEmailID10 <>'000'"
-        sql += ") as A where supplierInfo is not null"
-        SDS_SupplierContactPersonCodeList.SelectCommand = sql
+        ' 20200402 追加SupplierCode.text为空判断 start
+        If SupplierCode.Text.Trim().Length > 0 Then
+            sql = "select * from ("
+            sql += "select '' as supplierInfo,'' as SupplierContactperson,'' as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + ""
+            sql += " Union All "
+            sql += "select (SupplierEmailID1+'-'+ ISNULL(SupplierContactperson1,'')) as supplierInfo,ISNULL(SupplierContactperson1,'') as SupplierContactperson,SupplierEmailID1 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID1 <>'' and SupplierEmailID1 is not null and SupplierEmailID1 <>'000'"
+            sql += " Union All "
+            sql += "select (SupplierEmailID2+'-'+ ISNULL(SupplierContactperson2,'')) as supplierInfo,ISNULL(SupplierContactperson2,'') as SupplierContactperson,SupplierEmailID2 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID2 <>'' and SupplierEmailID2 is not null and SupplierEmailID2 <>'000'"
+            sql += " Union All "
+            sql += "select (SupplierEmailID3+'-'+ ISNULL(SupplierContactperson3,'')) as supplierInfo,ISNULL(SupplierContactperson3,'') as SupplierContactperson,SupplierEmailID3 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID3 <>'' and SupplierEmailID3 is not null and SupplierEmailID3 <>'000'"
+            sql += " Union All "
+            sql += "select (SupplierEmailID4+'-'+ ISNULL(SupplierContactperson4,'')) as supplierInfo,ISNULL(SupplierContactperson4,'') as SupplierContactperson,SupplierEmailID4 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID4 <>'' and SupplierEmailID4 is not null and SupplierEmailID4 <>'000'"
+            sql += " Union All "
+            sql += "select (SupplierEmailID5+'-'+ ISNULL(SupplierContactperson5,'')) as supplierInfo,ISNULL(SupplierContactperson5,'') as SupplierContactperson,SupplierEmailID5 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID5 <>'' and SupplierEmailID5 is not null and SupplierEmailID5 <>'000'"
+            sql += " Union All "
+            sql += "select (SupplierEmailID6+'-'+ ISNULL(SupplierContactperson6,'')) as supplierInfo,ISNULL(SupplierContactperson6,'') as SupplierContactperson,SupplierEmailID6 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID6 <>'' and SupplierEmailID6 is not null and SupplierEmailID6 <>'000'"
+            sql += " Union All "
+            sql += "select (SupplierEmailID7+'-'+ ISNULL(SupplierContactperson7,'')) as supplierInfo,ISNULL(SupplierContactperson7,'') as SupplierContactperson,SupplierEmailID7 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID7 <>'' and SupplierEmailID7 is not null and SupplierEmailID7 <>'000'"
+            sql += " Union All "
+            sql += "select (SupplierEmailID8+'-'+ ISNULL(SupplierContactperson8,'')) as supplierInfo,ISNULL(SupplierContactperson8,'') as SupplierContactperson,SupplierEmailID9 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID8 <>'' and SupplierEmailID8 is not null and SupplierEmailID8 <>'000'"
+            sql += " Union All "
+            sql += "select (SupplierEmailID9+'-'+ ISNULL(SupplierContactperson9,'')) as supplierInfo,ISNULL(SupplierContactperson9,'') as SupplierContactperson,SupplierEmailID9 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID9 <>'' and SupplierEmailID9 is not null and SupplierEmailID9 <>'000'"
+            sql += " Union All "
+            sql += "select (SupplierEmailID10+'-'+ ISNULL(SupplierContactperson10,'')) as supplierInfo,ISNULL(SupplierContactperson10,'') as SupplierContactperson,SupplierEmailID10 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID10 <>'' and SupplierEmailID10 is not null and SupplierEmailID10 <>'000'"
+            sql += ") as A where supplierInfo is not null"
+            SDS_SupplierContactPersonCodeList.SelectCommand = sql
+        End If
+        ' 20200402 追加SupplierCode.text为空判断 end
     End Sub
 
     Public Function RFQCheck(ByVal RFQNumber As String, ByVal i As String) As Boolean
