@@ -47,7 +47,7 @@ Partial Public Class PurchaseGroup
             st_SQL &= " isDisabled, "
             st_SQL &= " 'PurchaseGroupSetting.aspx?Action=Edit&UserID=' + Cast(UserID AS varchar) AS URL "
             st_SQL &= "FROM "
-            st_SQL &= " v_UserAll where isDisabled=0 and LocationCode='" + Session("LocationCode").ToString + "'"
+            st_SQL &= " v_UserAll where isDisabled=0 and LocationCode='" + Common.SafeSqlLiteral(Session("LocationCode").ToString) + "'"
             st_SQL &= "ORDER BY "
             st_SQL &= " LocationName, "
             st_SQL &= " isDisabled, "

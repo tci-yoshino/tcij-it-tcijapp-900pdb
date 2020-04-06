@@ -1563,7 +1563,7 @@ Partial Public Class RFQUpdate
         'Vendor (PDB Supplier Name)
         Dim S4SupplierCode As DataTable = GetDataTable("select * from Supplier where  SupplierCode='" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + "'", "Supplier")
         If S4SupplierCode.Rows.Count > 0 Then
-            parameter(7) = S4SupplierCode.Rows(0)("S4SupplierCode").ToString()
+            parameter(7) = Common.SafeSqlLiteral(S4SupplierCode.Rows(0)("S4SupplierCode").ToString())
         Else
             parameter(7) = ""
         End If
@@ -1578,23 +1578,23 @@ Partial Public Class RFQUpdate
         'RFQ Reference Number (in PDB)
         parameter(12) = RFQNumber
         'Supplier Contact Person Code
-        parameter(13) = DS.Tables("RFQHeader").Rows(0)("SupplierContactPersonSel").ToString
+        parameter(13) = Common.SafeSqlLiteral(DS.Tables("RFQHeader").Rows(0)("SupplierContactPersonSel").ToString)
         'Maker Code
         'parameter(14) = DS.Tables("RFQHeader").Rows(0)("MakerCode").ToString
         parameter(14) = DS.Tables("RFQHeader").Rows(0)("SAPMakerCode").ToString
         'Supplier Item Name
         ' 20200402 WYS 增加转义替换单引号 start
-        parameter(15) = DS.Tables("RFQHeader").Rows(0)("SupplierItemName").ToString.Replace("'", "''")
+        parameter(15) = Common.SafeSqlLiteral(DS.Tables("RFQHeader").Rows(0)("SupplierItemName").ToString)
         ' 20200402 WYS 增加转义替换单引号 end
         'Payment Terms
         Dim PaymentTermInfo As DataTable = GetDataTable("select * from PurchasingPaymentTerm where  PaymentTermCode='" + DS.Tables("RFQHeader").Rows(0)("PaymentTermCode").ToString + "'", "PurchasingPaymentTerm")
         If PaymentTermInfo.Rows.Count > 0 Then
-            parameter(16) = PaymentTermInfo.Rows(0)("Text").ToString()
+            parameter(16) = Common.SafeSqlLiteral(PaymentTermInfo.Rows(0)("Text").ToString())
         Else
             parameter(16) = ""
         End If
         'Handling fee(currency)
-        parameter(17) = DS.Tables("RFQHeader").Rows(0)("ShippingHandlingCurrencyCode").ToString
+        parameter(17) = DS.Tables("RFQHeader").Rows(0)("ShippingHandlingCurrencyCode").ToString.Replace("'", "''")
         'Shipment cost
         parameter(18) = SetNullORDecimal(DS.Tables("RFQHeader").Rows(0)("ShippingHandlingFee").ToString)
         'Purpose
@@ -2144,6 +2144,13 @@ Partial Public Class RFQUpdate
         Dim sql As String
         ' 20200402 追加SupplierCode.text为空判断 start
         If SupplierCode.Text.Trim().Length > 0 Then
+            'If IsNumeric(SupplierCode.Text) Then
+
+            'Else
+            '    Msg.Text = "Supplier Code is invalid number!"
+            '    SupplierCode.Focus()
+            'End If
+
             sql = "select * from ("
             sql += "select '' as supplierInfo,'' as SupplierContactperson,'' as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + ""
             sql += " Union All "
