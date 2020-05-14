@@ -1833,7 +1833,7 @@ Partial Public Class RFQUpdate
         End If
 
         Dim DataTable As System.Data.DataTable = Purchase.Common.GetDataTable("select * from  POInterface where RFQLineNumber=" + RFQLineNumber, "POInterface")
-        Dim sql As String
+        Dim sql As String = String.Empty
         '修改表数据  
         If DataTable.Rows.Count > 0 Then
             '是一条数据 两条数据
