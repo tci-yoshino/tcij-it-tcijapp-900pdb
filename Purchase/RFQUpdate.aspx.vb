@@ -1894,7 +1894,7 @@ Partial Public Class RFQUpdate
             If GexMaxIdDt.Rows.Count > 0 Then
                 MaxId = Val(GexMaxIdDt.Rows(0)("Id")) + 1
             End If
-            sql = "INSERT INTO POInterface "
+            sql += "INSERT INTO POInterface "
             sql += "(Id,RFQLineNumber,RFQNumber"
             'For i = 1 To 39
             '    sql += ",Field" + Trim(i) + ""
