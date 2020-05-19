@@ -1834,127 +1834,17 @@ Partial Public Class RFQUpdate
 
         Dim DataTable As System.Data.DataTable = Purchase.Common.GetDataTable("select * from  POInterface where RFQLineNumber=" + RFQLineNumber, "POInterface")
         Dim sql As String = String.Empty
-        '修改表数据  
-        If DataTable.Rows.Count > 0 Then
-            '是一条数据 两条数据
-            'sql = "UPDATE POInterface SET "
-            ''For i = 1 To 39
-            ''    sql += "Field" + Trim(i) + "='" + parameter(i) + "',"
-            ''Next
 
-            'sql += "Pattern='" + parameter(1) + "'"
-            'sql += ",SupplyingPlant='" + parameter(2) + "'"
-            'sql += ",ReceivingPlant='" + parameter(3) + "'"
-            'sql += ",PurOrgShipping='" + parameter(4) + "'"
-            'sql += ",PurOrgReceving='" + parameter(5) + "'"
-            'sql += ",MaterialNumber='" + parameter(6) + "'"
-            'sql += ",Vendor='" + parameter(7) + "'"
-            'sql += ",Price='" + parameter(8) + "'"
-            'sql += ",PriceUnit='" + parameter(9) + "'"
-            'sql += ",OrderPriceUnit='" + parameter(10) + "'"
-            'sql += ",Currency='" + parameter(11) + "'"
-            'sql += ",RFQReferenceNumber='" + parameter(12) + "'"
-            'sql += ",SupplierContactPersonCode='" + parameter(13) + "'"
-            'sql += ",MakerCode='" + parameter(14) + "'"
-            'sql += ",SupplierItemName='" + parameter(15) + "'"
-            'sql += ",PaymentTerms='" + parameter(16) + "'"
-            'sql += ",HandlingFee='" + parameter(17) + "'"
-            'sql += ",ShipmentCost='" + parameter(18) + "'"
-            'sql += ",Purpose='" + parameter(19) + "'"
-            'sql += ",Priority='" + parameter(20) + "'"
-            'sql += ",EnqUser='" + parameter(21) + "'"
-            'sql += ",QuoUser='" + parameter(22) + "'"
-            'sql += ",EnqQuantity='" + parameter(23) + "'"
-            'sql += ",LeadTime='" + parameter(24) + "'"
-            'sql += ",SupplierItemNumber='" + parameter(25) + "'"
-            'sql += ",Incoterms='" + parameter(26) + "'"
-            'sql += ",TermsDelivery='" + parameter(27) + "'"
-            'sql += ",PurityMethod='" + parameter(28) + "'"
-            'sql += ",Packing='" + parameter(29) + "'"
-            'sql += ",SupplyingOfferVaildDateFrom='" + parameter(30) + "'"
-            'sql += ",SupplyingOfferVaildDateTo='" + parameter(31) + "'"
-            'sql += ",SupplyingPlantReminding1='" + parameter(32) + "'"
-            'sql += ",SupplyingPlantReminding2='" + parameter(33) + "'"
-            'sql += ",SupplyingPlantReminding3='" + parameter(34) + "'"
-            'sql += ",ReceivingOfferVaildDateFrom='" + parameter(35) + "'"
-            'sql += ",ReceivingOfferVaildDateTo='" + parameter(36) + "'"
-            'sql += ",SupplyingStorageLocation='" + parameter(37) + "'"
-            'sql += ",ReceivingStorageLocation='" + parameter(38) + "'"
-            'sql += ",SupplierOfferNo='" + parameter(39) + "' "
-
-            'sql += "Where RFQLineNumber=" + RFQLineNumber + " and RFQNumber=" + RFQNumber
-            'If DataTable.Rows.Count > 1 Then
-            '    sql += "    UPDATE POInterface SET MaterialNumber='" + parameter(6) + "-PRO' where id=" + DataTable.Rows(1)("ID").ToString
-            'End If
-            For i = 0 To DataTable.Rows.Count - 1
-                sql += " Delete pointerface where id =" + DataTable.Rows(i)("ID").ToString + ";"
-            Next
-            Dim MaxId As Integer = 1
-            Dim GexMaxIdDt As DataTable = GetDataTable("select top(1) * from  POInterface order by Id desc", "POInterface")
-            If GexMaxIdDt.Rows.Count > 0 Then
-                MaxId = Val(GexMaxIdDt.Rows(0)("Id")) + 1
-            End If
-            sql += "INSERT INTO POInterface "
-            sql += "(Id,RFQLineNumber,RFQNumber"
-            'For i = 1 To 39
-            '    sql += ",Field" + Trim(i) + ""
-            'Next
-            sql += ",Pattern"
-            sql += ",SupplyingPlant"
-            sql += ",ReceivingPlant"
-            sql += ",PurOrgShipping"
-            sql += ",PurOrgReceving"
-            sql += ",MaterialNumber"
-            sql += ",Vendor"
-            sql += ",Price"
-            sql += ",PriceUnit"
-            sql += ",OrderPriceUnit"
-            sql += ",Currency"
-            sql += ",RFQReferenceNumber"
-            sql += ",SupplierContactPersonCode"
-            sql += ",MakerCode"
-            sql += ",SupplierItemName"
-            sql += ",PaymentTerms"
-            sql += ",HandlingFee"
-            sql += ",ShipmentCost"
-            sql += ",Purpose"
-            sql += ",Priority"
-            sql += ",EnqUser"
-            sql += ",QuoUser"
-            sql += ",EnqQuantity"
-            sql += ",LeadTime"
-            sql += ",SupplierItemNumber"
-            sql += ",Incoterms"
-            sql += ",TermsDelivery"
-            sql += ",PurityMethod"
-            sql += ",Packing"
-            sql += ",SupplyingOfferVaildDateFrom"
-            sql += ",SupplyingOfferVaildDateTo"
-            sql += ",SupplyingPlantReminding1"
-            sql += ",SupplyingPlantReminding2"
-            sql += ",SupplyingPlantReminding3"
-            sql += ",ReceivingOfferVaildDateFrom"
-            sql += ",ReceivingOfferVaildDateTo"
-            sql += ",SupplyingStorageLocation"
-            sql += ",ReceivingStorageLocation"
-            sql += ",SupplierOfferNo"
-
-            sql += ")"
-            sql += " VALUES(" + MaxId.ToString + "," + RFQLineNumber + "," + RFQNumber + ""
-            For i = 1 To 39
-                sql += ",'" + parameter(i) + "'"
-            Next
-            sql += ");"
-            Dim f As String = parameter(6).Substring(1, 1)
-            If f <> "9" Then
-                '判断purpose是否在条件之内在的话修改sql重新添加
-                If parameter(19) = "10" Or parameter(19) = "12" Or parameter(19) = "30" Or parameter(19) = "33" Then
-                    sql += "    INSERT INTO POInterface "
+        Dim dt As System.Data.DataTable = Purchase.Common.GetDataTable("select * from  POInterface ", "POInterface")
+        sql += "Delete POInterface;"
+        Dim MaxId As Integer = 0
+        If dt.Rows.Count > 0 Then
+            For i = 0 To dt.Rows.Count - 1
+                If dt.Rows(i)("RFQNumber").ToString().Equals(RFQNumber) Then
+                Else
+                    MaxId += 1
+                    sql += "INSERT INTO POInterface "
                     sql += "(Id,RFQLineNumber,RFQNumber"
-                    'For i = 1 To 39
-                    '    sql += ",Field" + Trim(i) + ""
-                    'Next
-
                     sql += ",Pattern"
                     sql += ",SupplyingPlant"
                     sql += ",ReceivingPlant"
@@ -1996,138 +1886,343 @@ Partial Public Class RFQUpdate
                     sql += ",SupplierOfferNo"
 
                     sql += ")"
-                    sql += " VALUES(" + (MaxId + 1).ToString + "," + RFQLineNumber + "," + RFQNumber + ""
-                    For i = 1 To 39
-                        If i = 6 Then
-                            sql += ",'" + parameter(i) + "-PRO'"
-                        Else
-                            sql += ",'" + parameter(i) + "'"
-                        End If
-                    Next
+                    sql += " VALUES(" + MaxId.ToString
+                    sql += "," + dt.Rows(i)("RFQLineNumber").ToString + ""
+                    sql += "," + dt.Rows(i)("RFQNumber").ToString + ""
+                    sql += ",'" + dt.Rows(i)("Pattern").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("SupplyingPlant").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("ReceivingPlant").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("PurOrgShipping").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("PurOrgReceving").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("MaterialNumber").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("Vendor").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("Price").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("PriceUnit").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("OrderPriceUnit").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("Currency").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("RFQReferenceNumber").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("SupplierContactPersonCode").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("MakerCode").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("SupplierItemName").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("PaymentTerms").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("HandlingFee").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("ShipmentCost").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("Purpose").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("Priority").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("EnqUser").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("QuoUser").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("EnqQuantity").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("LeadTime").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("SupplierItemNumber").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("Incoterms").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("TermsDelivery").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("PurityMethod").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("Packing").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("SupplyingOfferVaildDateFrom").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("SupplyingOfferVaildDateTo").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("SupplyingPlantReminding1").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("SupplyingPlantReminding2").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("SupplyingPlantReminding3").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("ReceivingOfferVaildDateFrom").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("ReceivingOfferVaildDateTo").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("SupplyingStorageLocation").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("ReceivingStorageLocation").ToString + "'"
+                    sql += ",'" + dt.Rows(i)("SupplierOfferNo").ToString + "'"
                     sql += ");"
                 End If
-            End If
-        Else
-            Dim MaxId As Integer = 1
-            Dim GexMaxIdDt As DataTable = GetDataTable("select top(1) * from  POInterface order by Id desc", "POInterface")
-            If GexMaxIdDt.Rows.Count > 0 Then
-                MaxId = Val(GexMaxIdDt.Rows(0)("Id")) + 1
-            End If
-            sql = "INSERT INTO POInterface "
-            sql += "(Id,RFQLineNumber,RFQNumber"
-            'For i = 1 To 39
-            '    sql += ",Field" + Trim(i) + ""
-            'Next
-            sql += ",Pattern"
-            sql += ",SupplyingPlant"
-            sql += ",ReceivingPlant"
-            sql += ",PurOrgShipping"
-            sql += ",PurOrgReceving"
-            sql += ",MaterialNumber"
-            sql += ",Vendor"
-            sql += ",Price"
-            sql += ",PriceUnit"
-            sql += ",OrderPriceUnit"
-            sql += ",Currency"
-            sql += ",RFQReferenceNumber"
-            sql += ",SupplierContactPersonCode"
-            sql += ",MakerCode"
-            sql += ",SupplierItemName"
-            sql += ",PaymentTerms"
-            sql += ",HandlingFee"
-            sql += ",ShipmentCost"
-            sql += ",Purpose"
-            sql += ",Priority"
-            sql += ",EnqUser"
-            sql += ",QuoUser"
-            sql += ",EnqQuantity"
-            sql += ",LeadTime"
-            sql += ",SupplierItemNumber"
-            sql += ",Incoterms"
-            sql += ",TermsDelivery"
-            sql += ",PurityMethod"
-            sql += ",Packing"
-            sql += ",SupplyingOfferVaildDateFrom"
-            sql += ",SupplyingOfferVaildDateTo"
-            sql += ",SupplyingPlantReminding1"
-            sql += ",SupplyingPlantReminding2"
-            sql += ",SupplyingPlantReminding3"
-            sql += ",ReceivingOfferVaildDateFrom"
-            sql += ",ReceivingOfferVaildDateTo"
-            sql += ",SupplyingStorageLocation"
-            sql += ",ReceivingStorageLocation"
-            sql += ",SupplierOfferNo"
-
-            sql += ")"
-            sql += " VALUES(" + MaxId.ToString + "," + RFQLineNumber + "," + RFQNumber + ""
-            For i = 1 To 39
-                sql += ",'" + parameter(i) + "'"
             Next
-            sql += ");"
-            Dim f As String = parameter(6).Substring(1, 1)
-            If f <> "9" Then
-                '判断purpose是否在条件之内在的话修改sql重新添加
-                If parameter(19) = "10" Or parameter(19) = "12" Or parameter(19) = "30" Or parameter(19) = "33" Then
-                    sql += "    INSERT INTO POInterface "
-                    sql += "(Id,RFQLineNumber,RFQNumber"
-                    'For i = 1 To 39
-                    '    sql += ",Field" + Trim(i) + ""
-                    'Next
-
-                    sql += ",Pattern"
-                    sql += ",SupplyingPlant"
-                    sql += ",ReceivingPlant"
-                    sql += ",PurOrgShipping"
-                    sql += ",PurOrgReceving"
-                    sql += ",MaterialNumber"
-                    sql += ",Vendor"
-                    sql += ",Price"
-                    sql += ",PriceUnit"
-                    sql += ",OrderPriceUnit"
-                    sql += ",Currency"
-                    sql += ",RFQReferenceNumber"
-                    sql += ",SupplierContactPersonCode"
-                    sql += ",MakerCode"
-                    sql += ",SupplierItemName"
-                    sql += ",PaymentTerms"
-                    sql += ",HandlingFee"
-                    sql += ",ShipmentCost"
-                    sql += ",Purpose"
-                    sql += ",Priority"
-                    sql += ",EnqUser"
-                    sql += ",QuoUser"
-                    sql += ",EnqQuantity"
-                    sql += ",LeadTime"
-                    sql += ",SupplierItemNumber"
-                    sql += ",Incoterms"
-                    sql += ",TermsDelivery"
-                    sql += ",PurityMethod"
-                    sql += ",Packing"
-                    sql += ",SupplyingOfferVaildDateFrom"
-                    sql += ",SupplyingOfferVaildDateTo"
-                    sql += ",SupplyingPlantReminding1"
-                    sql += ",SupplyingPlantReminding2"
-                    sql += ",SupplyingPlantReminding3"
-                    sql += ",ReceivingOfferVaildDateFrom"
-                    sql += ",ReceivingOfferVaildDateTo"
-                    sql += ",SupplyingStorageLocation"
-                    sql += ",ReceivingStorageLocation"
-                    sql += ",SupplierOfferNo"
-
-                    sql += ")"
-                    sql += " VALUES(" + (MaxId + 1).ToString + "," + RFQLineNumber + "," + RFQNumber + ""
-                    For i = 1 To 39
-                        If i = 6 Then
-                            sql += ",'" + parameter(i) + "-PRO'"
-                        Else
-                            sql += ",'" + parameter(i) + "'"
-                        End If
-                    Next
-                    sql += ");"
-                End If
-            End If
-
         End If
+
+        MaxId += 1
+        sql += "INSERT INTO POInterface "
+        sql += "(Id,RFQLineNumber,RFQNumber"
+        'For i = 1 To 39
+        '    sql += ",Field" + Trim(i) + ""
+        'Next
+        sql += ",Pattern"
+        sql += ",SupplyingPlant"
+        sql += ",ReceivingPlant"
+        sql += ",PurOrgShipping"
+        sql += ",PurOrgReceving"
+        sql += ",MaterialNumber"
+        sql += ",Vendor"
+        sql += ",Price"
+        sql += ",PriceUnit"
+        sql += ",OrderPriceUnit"
+        sql += ",Currency"
+        sql += ",RFQReferenceNumber"
+        sql += ",SupplierContactPersonCode"
+        sql += ",MakerCode"
+        sql += ",SupplierItemName"
+        sql += ",PaymentTerms"
+        sql += ",HandlingFee"
+        sql += ",ShipmentCost"
+        sql += ",Purpose"
+        sql += ",Priority"
+        sql += ",EnqUser"
+        sql += ",QuoUser"
+        sql += ",EnqQuantity"
+        sql += ",LeadTime"
+        sql += ",SupplierItemNumber"
+        sql += ",Incoterms"
+        sql += ",TermsDelivery"
+        sql += ",PurityMethod"
+        sql += ",Packing"
+        sql += ",SupplyingOfferVaildDateFrom"
+        sql += ",SupplyingOfferVaildDateTo"
+        sql += ",SupplyingPlantReminding1"
+        sql += ",SupplyingPlantReminding2"
+        sql += ",SupplyingPlantReminding3"
+        sql += ",ReceivingOfferVaildDateFrom"
+        sql += ",ReceivingOfferVaildDateTo"
+        sql += ",SupplyingStorageLocation"
+        sql += ",ReceivingStorageLocation"
+        sql += ",SupplierOfferNo"
+
+        sql += ")"
+        sql += " VALUES(" + MaxId.ToString + "," + RFQLineNumber + "," + RFQNumber + ""
+        For i = 1 To 39
+            sql += ",'" + parameter(i) + "'"
+        Next
+        sql += ");"
+        Dim f As String = parameter(6).Substring(1, 1)
+        If f <> "9" Then
+            '判断purpose是否在条件之内在的话修改sql重新添加
+            If parameter(19) = "10" Or parameter(19) = "12" Or parameter(19) = "30" Or parameter(19) = "33" Then
+                sql += "    INSERT INTO POInterface "
+                sql += "(Id,RFQLineNumber,RFQNumber"
+                'For i = 1 To 39
+                '    sql += ",Field" + Trim(i) + ""
+                'Next
+
+                sql += ",Pattern"
+                sql += ",SupplyingPlant"
+                sql += ",ReceivingPlant"
+                sql += ",PurOrgShipping"
+                sql += ",PurOrgReceving"
+                sql += ",MaterialNumber"
+                sql += ",Vendor"
+                sql += ",Price"
+                sql += ",PriceUnit"
+                sql += ",OrderPriceUnit"
+                sql += ",Currency"
+                sql += ",RFQReferenceNumber"
+                sql += ",SupplierContactPersonCode"
+                sql += ",MakerCode"
+                sql += ",SupplierItemName"
+                sql += ",PaymentTerms"
+                sql += ",HandlingFee"
+                sql += ",ShipmentCost"
+                sql += ",Purpose"
+                sql += ",Priority"
+                sql += ",EnqUser"
+                sql += ",QuoUser"
+                sql += ",EnqQuantity"
+                sql += ",LeadTime"
+                sql += ",SupplierItemNumber"
+                sql += ",Incoterms"
+                sql += ",TermsDelivery"
+                sql += ",PurityMethod"
+                sql += ",Packing"
+                sql += ",SupplyingOfferVaildDateFrom"
+                sql += ",SupplyingOfferVaildDateTo"
+                sql += ",SupplyingPlantReminding1"
+                sql += ",SupplyingPlantReminding2"
+                sql += ",SupplyingPlantReminding3"
+                sql += ",ReceivingOfferVaildDateFrom"
+                sql += ",ReceivingOfferVaildDateTo"
+                sql += ",SupplyingStorageLocation"
+                sql += ",ReceivingStorageLocation"
+                sql += ",SupplierOfferNo"
+
+                sql += ")"
+                sql += " VALUES(" + (MaxId + 1).ToString + "," + RFQLineNumber + "," + RFQNumber + ""
+                For i = 1 To 39
+                    If i = 6 Then
+                        sql += ",'" + parameter(i) + "-PRO'"
+                    Else
+                        sql += ",'" + parameter(i) + "'"
+                    End If
+                Next
+                sql += ");"
+            End If
+        End If
+
+        '修改表数据  
+        'If DataTable.Rows.Count > 0 Then
+        '    '是一条数据 两条数据
+        '    'sql = "UPDATE POInterface SET "
+        '    ''For i = 1 To 39
+        '    ''    sql += "Field" + Trim(i) + "='" + parameter(i) + "',"
+        '    ''Next
+
+        '    'sql += "Pattern='" + parameter(1) + "'"
+        '    'sql += ",SupplyingPlant='" + parameter(2) + "'"
+        '    'sql += ",ReceivingPlant='" + parameter(3) + "'"
+        '    'sql += ",PurOrgShipping='" + parameter(4) + "'"
+        '    'sql += ",PurOrgReceving='" + parameter(5) + "'"
+        '    'sql += ",MaterialNumber='" + parameter(6) + "'"
+        '    'sql += ",Vendor='" + parameter(7) + "'"
+        '    'sql += ",Price='" + parameter(8) + "'"
+        '    'sql += ",PriceUnit='" + parameter(9) + "'"
+        '    'sql += ",OrderPriceUnit='" + parameter(10) + "'"
+        '    'sql += ",Currency='" + parameter(11) + "'"
+        '    'sql += ",RFQReferenceNumber='" + parameter(12) + "'"
+        '    'sql += ",SupplierContactPersonCode='" + parameter(13) + "'"
+        '    'sql += ",MakerCode='" + parameter(14) + "'"
+        '    'sql += ",SupplierItemName='" + parameter(15) + "'"
+        '    'sql += ",PaymentTerms='" + parameter(16) + "'"
+        '    'sql += ",HandlingFee='" + parameter(17) + "'"
+        '    'sql += ",ShipmentCost='" + parameter(18) + "'"
+        '    'sql += ",Purpose='" + parameter(19) + "'"
+        '    'sql += ",Priority='" + parameter(20) + "'"
+        '    'sql += ",EnqUser='" + parameter(21) + "'"
+        '    'sql += ",QuoUser='" + parameter(22) + "'"
+        '    'sql += ",EnqQuantity='" + parameter(23) + "'"
+        '    'sql += ",LeadTime='" + parameter(24) + "'"
+        '    'sql += ",SupplierItemNumber='" + parameter(25) + "'"
+        '    'sql += ",Incoterms='" + parameter(26) + "'"
+        '    'sql += ",TermsDelivery='" + parameter(27) + "'"
+        '    'sql += ",PurityMethod='" + parameter(28) + "'"
+        '    'sql += ",Packing='" + parameter(29) + "'"
+        '    'sql += ",SupplyingOfferVaildDateFrom='" + parameter(30) + "'"
+        '    'sql += ",SupplyingOfferVaildDateTo='" + parameter(31) + "'"
+        '    'sql += ",SupplyingPlantReminding1='" + parameter(32) + "'"
+        '    'sql += ",SupplyingPlantReminding2='" + parameter(33) + "'"
+        '    'sql += ",SupplyingPlantReminding3='" + parameter(34) + "'"
+        '    'sql += ",ReceivingOfferVaildDateFrom='" + parameter(35) + "'"
+        '    'sql += ",ReceivingOfferVaildDateTo='" + parameter(36) + "'"
+        '    'sql += ",SupplyingStorageLocation='" + parameter(37) + "'"
+        '    'sql += ",ReceivingStorageLocation='" + parameter(38) + "'"
+        '    'sql += ",SupplierOfferNo='" + parameter(39) + "' "
+
+        '    'sql += "Where RFQLineNumber=" + RFQLineNumber + " and RFQNumber=" + RFQNumber
+        '    'If DataTable.Rows.Count > 1 Then
+        '    '    sql += "    UPDATE POInterface SET MaterialNumber='" + parameter(6) + "-PRO' where id=" + DataTable.Rows(1)("ID").ToString
+        '    'End If
+
+
+        'Else
+        '    Dim MaxId As Integer = 1
+        '    Dim GexMaxIdDt As DataTable = GetDataTable("select top(1) * from  POInterface order by Id desc", "POInterface")
+        '    If GexMaxIdDt.Rows.Count > 0 Then
+        '        MaxId = Val(GexMaxIdDt.Rows(0)("Id")) + 1
+        '    End If
+        '    sql = "INSERT INTO POInterface "
+        '    sql += "(Id,RFQLineNumber,RFQNumber"
+        '    'For i = 1 To 39
+        '    '    sql += ",Field" + Trim(i) + ""
+        '    'Next
+        '    sql += ",Pattern"
+        '    sql += ",SupplyingPlant"
+        '    sql += ",ReceivingPlant"
+        '    sql += ",PurOrgShipping"
+        '    sql += ",PurOrgReceving"
+        '    sql += ",MaterialNumber"
+        '    sql += ",Vendor"
+        '    sql += ",Price"
+        '    sql += ",PriceUnit"
+        '    sql += ",OrderPriceUnit"
+        '    sql += ",Currency"
+        '    sql += ",RFQReferenceNumber"
+        '    sql += ",SupplierContactPersonCode"
+        '    sql += ",MakerCode"
+        '    sql += ",SupplierItemName"
+        '    sql += ",PaymentTerms"
+        '    sql += ",HandlingFee"
+        '    sql += ",ShipmentCost"
+        '    sql += ",Purpose"
+        '    sql += ",Priority"
+        '    sql += ",EnqUser"
+        '    sql += ",QuoUser"
+        '    sql += ",EnqQuantity"
+        '    sql += ",LeadTime"
+        '    sql += ",SupplierItemNumber"
+        '    sql += ",Incoterms"
+        '    sql += ",TermsDelivery"
+        '    sql += ",PurityMethod"
+        '    sql += ",Packing"
+        '    sql += ",SupplyingOfferVaildDateFrom"
+        '    sql += ",SupplyingOfferVaildDateTo"
+        '    sql += ",SupplyingPlantReminding1"
+        '    sql += ",SupplyingPlantReminding2"
+        '    sql += ",SupplyingPlantReminding3"
+        '    sql += ",ReceivingOfferVaildDateFrom"
+        '    sql += ",ReceivingOfferVaildDateTo"
+        '    sql += ",SupplyingStorageLocation"
+        '    sql += ",ReceivingStorageLocation"
+        '    sql += ",SupplierOfferNo"
+
+        '    sql += ")"
+        '    sql += " VALUES(" + MaxId.ToString + "," + RFQLineNumber + "," + RFQNumber + ""
+        '    For i = 1 To 39
+        '        sql += ",'" + parameter(i) + "'"
+        '    Next
+        '    sql += ");"
+        '    Dim f As String = parameter(6).Substring(1, 1)
+        '    If f <> "9" Then
+        '        '判断purpose是否在条件之内在的话修改sql重新添加
+        '        If parameter(19) = "10" Or parameter(19) = "12" Or parameter(19) = "30" Or parameter(19) = "33" Then
+        '            sql += "    INSERT INTO POInterface "
+        '            sql += "(Id,RFQLineNumber,RFQNumber"
+        '            'For i = 1 To 39
+        '            '    sql += ",Field" + Trim(i) + ""
+        '            'Next
+
+        '            sql += ",Pattern"
+        '            sql += ",SupplyingPlant"
+        '            sql += ",ReceivingPlant"
+        '            sql += ",PurOrgShipping"
+        '            sql += ",PurOrgReceving"
+        '            sql += ",MaterialNumber"
+        '            sql += ",Vendor"
+        '            sql += ",Price"
+        '            sql += ",PriceUnit"
+        '            sql += ",OrderPriceUnit"
+        '            sql += ",Currency"
+        '            sql += ",RFQReferenceNumber"
+        '            sql += ",SupplierContactPersonCode"
+        '            sql += ",MakerCode"
+        '            sql += ",SupplierItemName"
+        '            sql += ",PaymentTerms"
+        '            sql += ",HandlingFee"
+        '            sql += ",ShipmentCost"
+        '            sql += ",Purpose"
+        '            sql += ",Priority"
+        '            sql += ",EnqUser"
+        '            sql += ",QuoUser"
+        '            sql += ",EnqQuantity"
+        '            sql += ",LeadTime"
+        '            sql += ",SupplierItemNumber"
+        '            sql += ",Incoterms"
+        '            sql += ",TermsDelivery"
+        '            sql += ",PurityMethod"
+        '            sql += ",Packing"
+        '            sql += ",SupplyingOfferVaildDateFrom"
+        '            sql += ",SupplyingOfferVaildDateTo"
+        '            sql += ",SupplyingPlantReminding1"
+        '            sql += ",SupplyingPlantReminding2"
+        '            sql += ",SupplyingPlantReminding3"
+        '            sql += ",ReceivingOfferVaildDateFrom"
+        '            sql += ",ReceivingOfferVaildDateTo"
+        '            sql += ",SupplyingStorageLocation"
+        '            sql += ",ReceivingStorageLocation"
+        '            sql += ",SupplierOfferNo"
+
+        '            sql += ")"
+        '            sql += " VALUES(" + (MaxId + 1).ToString + "," + RFQLineNumber + "," + RFQNumber + ""
+        '            For i = 1 To 39
+        '                If i = 6 Then
+        '                    sql += ",'" + parameter(i) + "-PRO'"
+        '                Else
+        '                    sql += ",'" + parameter(i) + "'"
+        '                End If
+        '            Next
+        '            sql += ");"
+        '        End If
+        '    End If
+
+        'End If
         DBConn.Open()
         DBCommand = DBConn.CreateCommand()
         DBCommand.CommandText = sql
