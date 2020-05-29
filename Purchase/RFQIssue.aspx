@@ -256,22 +256,22 @@
 		</form>
 		<script language ="javascript" type="text/javascript">
 		    window.onload = function () {
-		        //var isAdmin = document.getElementById('isAdmin').value;
-		        //var userID = document.getElementById('userId').value;
-		        //if (isAdmin == "False") {
-		        //    var flg = false;
-		        //    var list = document.getElementById('EnqUser')
-		        //    for (var i = 0; i < list.length; i++) {
-		        //        if (list[i].value == userID) {
-		        //            flg = true;
-		        //            list[i].selected = true;
-		        ////            break;
-		        //        }
-		        //    }
-		        //    if (userID == "" || flg == false) {
-		        //        window.location.href = "./IsuseError.html"
-		        //    } 
-		        //}
+		        var isAdmin = document.getElementById('isAdmin').value;
+		        var userID = document.getElementById('userId').value;
+		        if (isAdmin == "False") {
+		            var flg = false;
+		            var list = document.getElementById('EnqUser')
+		            for (var i = 0; i < list.length; i++) {
+		                if (list[i].value == userID) {
+		                    flg = true;
+		                    list[i].selected = true;
+		                    break;
+		                }
+		            }
+		            //if (userID == "" || flg == false) {
+		            //    window.location.href = "./IsuseError.html"
+		            //} 
+		        }
 		    }
 		function ProductSelect_onclick() {
     		var ProductNumber = encodeURIComponent(document.getElementById('ProductNumber').value);
