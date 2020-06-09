@@ -1,0 +1,17 @@
+<?xml version="1.0"?><DTSConfiguration>
+	<DTSConfigurationHeading>
+		<DTSConfigurationFileInfo GeneratedBy="TCIX\Masumi.Koyama" GeneratedFromPackageName="RFQDataExportForPPQM" GeneratedFromPackageID="{1D1D3ADB-81D6-40BB-83E6-09DB790AB760}" GeneratedDate="2020/06/04 17:20:22"/>
+	</DTSConfigurationHeading>
+
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::CommandTimeout].Properties[Value]" ValueType="Int32">
+		<ConfiguredValue>600</ConfiguredValue>
+	</Configuration>
+
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::TempDir].Properties[Value]" ValueType="String">
+		<ConfiguredValue>C:\tcijapp\Purchase\Batch\Temp</ConfiguredValue>
+	</Configuration>
+
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputDir].Properties[Value]" ValueType="String">
+		<ConfiguredValue>\\TFL5\GlobalProject\RPA\IT\PDB</ConfiguredValue>
+	</Configuration>
+</DTSConfiguration>
