@@ -69,6 +69,8 @@ Partial Public Class SupplierSetting
         If Para_Comment.Value = "1" Then
             Comment.Rows = 35
             Comment.Focus()
+        ElseIf Para_Comment.Value = "2" Then
+            SupplierWarning.Focus()
         End If
 
         If Code.Text <> "" Then

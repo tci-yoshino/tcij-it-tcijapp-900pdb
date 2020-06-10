@@ -11,7 +11,7 @@
 </head>
 <body>
     <form id="RFQListForm" runat="server">
-    <!-- Main Content Area -->
+    <!-- Main Content Area --> 
     <div id="content">
         <div class="main">
             <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
@@ -48,6 +48,16 @@
             <table >
                 <tr>
                     <td><asp:Label ID="Comment" runat="server" Text=""></asp:Label></td>
+                </tr>
+            </table> 
+            <table align="left">
+                <tr>
+                    <td><a href="#" onclick="popup('./SupplierSetting.aspx?Comment=2&Action=Edit&Code=<%Response.Write(st_SupplierCode)%>')"><strong>Supplier Warning : </strong></a></td>
+                </tr>
+            </table>
+            <table >
+                <tr>
+                    <td><asp:Label ID="SupplierWarning" runat="server" Text=""></asp:Label></td>
                 </tr>
             </table> 
         </div>

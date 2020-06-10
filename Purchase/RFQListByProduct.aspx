@@ -32,7 +32,18 @@
                 <strong>Product Name : </strong><asp:Label ID="ProductName" runat="server" Text=''></asp:Label>
                 <strong class="indent">CAS Number : </strong><asp:Label ID="CASNumber" runat="server" Text=''></asp:Label>
                 <strong class="indent">Molecular Formula : </strong><asp:Label ID="MolecularFormula" runat="server" Text=''></asp:Label>
+                <strong class="indent">BUoM : </strong><asp:Label ID="Label1" runat="server" Text='KG'></asp:Label>
             </p>
+            <table align="left">
+                <tr>
+                    <td><a href="#" onclick="popup('./ProductSetting.aspx?Comment=1&Action=Edit&ProductID=<%Response.Write(st_ProductID)%>')"><strong>Product Warning : </strong></a></td>
+                </tr>
+            </table>
+            <table >
+                <tr>
+                    <td><asp:Label ID="ProductWarning" runat="server" Text=""></asp:Label></td>
+                </tr>
+            </table> 
         </div>
 
         <hr />
@@ -202,7 +213,7 @@
 <%  End If%>
     <asp:SqlDataSource ID="SrcRFQHeader" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
 
-    <!-- Footer -->
+    <!-- Footer --> 
     <!--#include virtual="./Footer.html" --><!-- Footer END -->
 </form>    
 </body>

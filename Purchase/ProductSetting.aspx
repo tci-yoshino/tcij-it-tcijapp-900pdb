@@ -58,6 +58,11 @@
                     <tr>
                         <th>Status : </th>
                         <td><asp:Label ID="Status" runat="server" Text=""></asp:Label></td>
+                        
+                    </tr>
+                    <tr>
+                        <th>BUoM : </th>
+                        <td><asp:Label ID="Label1" runat="server" Text="KG"></asp:Label></td>
                     </tr>
                     <tr>
                         <th>Proposal Department : </th>
@@ -89,7 +94,7 @@
                 </div>
             </form>
         </div>
-    </div><!-- Main Content Area END -->
+    </div><!-- Main Content Area END --> 
 
     <!-- Footer -->
     <!--#include virtual="./Footer.html" --><!-- Footer END -->

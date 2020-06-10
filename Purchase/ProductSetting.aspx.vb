@@ -16,6 +16,7 @@ Partial Public Class ProductSetting
             '[ProductIDのセット]------------------------------------------------------------------------
             Mode.Value = Request.QueryString("Action")
             ProductID.Value = Request.QueryString("ProductID")
+            Dim type As String = Request.QueryString("Comment")
 
             If Mode.Value = "Edit" Then
 
@@ -57,6 +58,10 @@ Partial Public Class ProductSetting
                 DBReader.Close()
             Else
                 SupplierList.Visible = False
+            End If
+
+            If type = "1" Then
+                ProductWarning.Focus()
             End If
         End If
 

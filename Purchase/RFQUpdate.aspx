@@ -17,7 +17,7 @@
 </head>
 <body>
         <form id="RFQForm" runat="server">
-    <!-- Main Content Area -->
+    <!-- Main Content Area --> 
     <div id="content">
         <div class="tabs"><a href="#" onclick="return SupplierSetting_onclick()">Supplier Setting</a> | <a href="#" onclick="return Correspondence_onclick()">RFQ Correspondence / History</a></div>
         <h3>Quotation Reply</h3>
@@ -225,6 +225,10 @@
                         <th>Comment : </th>
                         <td><asp:TextBox ID="Comment" runat="server" Columns="50" Rows="3" TextMode="MultiLine"></asp:TextBox></td>
                     </tr>
+                    <tr>
+                        <th>BUoM : </th>
+                        <td><asp:Label runat="server" Text="KG"></asp:Label></td>
+                    </tr>
                 </table>
             </div>
 
@@ -264,7 +268,7 @@
                             x <asp:TextBox ID="EnqPiece_1" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox>
                             <asp:SqlDataSource ID="SDS_RFQUpdate_Qua" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-                                SelectCommand="SELECT [UnitCode] FROM [PurchasingUnit] where UnitCode<>'ZZ' and UnitCode<>'PC' and UnitCode<>'TON' and UnitCode<>'-' and UnitCode<>'EA' and UnitCode<>'MT' and UnitCode<>'MU' ORDER BY [SortOrder]">
+                                SelectCommand="SELECT [UnitCode] FROM [PurchasingUnit] where UnitCode<>'ZZ' and UnitCode<>'PC' and UnitCode<>'TON' and UnitCode<>'-' and UnitCode<>'MT' and UnitCode<>'MU' ORDER BY [SortOrder]">
                             </asp:SqlDataSource></td>
                         <td>
                             <asp:DropDownList ID="Currency_1" runat="server" 
@@ -285,7 +289,7 @@
                             <asp:SqlDataSource ID="SDS_RFQUpdate_Unit" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
                                 
-                                SelectCommand="SELECT [UnitCode] FROM [PurchasingUnit] where UnitCode<>'ZZ' and UnitCode<>'PC' and UnitCode<>'TON' and UnitCode<>'-' and UnitCode<>'EA' and UnitCode<>'MT' and UnitCode<>'MU' ORDER BY [SortOrder]"></asp:SqlDataSource>
+                                SelectCommand="SELECT [UnitCode] FROM [PurchasingUnit] where UnitCode<>'ZZ' and UnitCode<>'PC' and UnitCode<>'TON' and UnitCode<>'-' and UnitCode<>'MT' and UnitCode<>'MU' ORDER BY [SortOrder]"></asp:SqlDataSource>
                         </td>
                         <td style="position:relative;"><asp:TextBox ID="LeadTime_1" runat="server" Width="10em" MaxLength="255" OnClientClick=""  onmouseover="ShowComment(1)" onmouseout="HideComment(1)" ></asp:TextBox>
                             <div id="comment1" style="position:absolute;left:50%;background-color:#cbd0d3;top:50%;padding:10px;width:300px;line-height:15px;margin:auto;height:30px;display:none;">
@@ -700,19 +704,19 @@
 		            var linUnit2=document.getElementById("<%=EnqUnit_2.ClientID%>").value;
 		            var linUnit3=document.getElementById("<%=EnqUnit_3.ClientID%>").value;
 		            var linUnit4 = document.getElementById("<%=EnqUnit_4.ClientID%>").value;
-		            if (linUnit1 == "LB" || linUnit1 == "L" || linUnit1 == "ML") {
+		            if (linUnit1 == "LB" || linUnit1 == "L" || linUnit1 == "ML" || linUnit1 == "EA") {
 		                alert("Please make sure Material Master have unit conversion!");
 		                return true;
 		            }
-		            if (linUnit2 == "LB" || linUnit2 == "L" || linUnit2 == "ML") {
+		            if (linUnit2 == "LB" || linUnit2 == "L" || linUnit2 == "ML" || linUnit2 == "EA") {
 		                alert("Please make sure Material Master have unit conversion!");
 		                return true;
 		            }
-		            if (linUnit3 == "LB" || linUnit3 == "L" || linUnit3 == "ML") {
+		            if (linUnit3 == "LB" || linUnit3 == "L" || linUnit3 == "ML" || linUnit3 == "EA") {
 		                alert("Please make sure Material Master have unit conversion!");
 		                return true;
 		            }
-		            if (linUnit4 == "LB" || linUnit4 == "L" || linUnit4 == "ML") {
+		            if (linUnit4 == "LB" || linUnit4 == "L" || linUnit4 == "ML" || linUnit4 == "EA") {
 		                alert("Please make sure Material Master have unit conversion!");
 		                return true;
 		            }

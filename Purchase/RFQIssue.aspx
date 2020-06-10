@@ -197,7 +197,7 @@
                             x <asp:TextBox ID="EnqPiece_1" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox>
                             <asp:SqlDataSource ID="SDS_RFQIssue_Qua" runat="server" 
                                 ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
-                                SelectCommand="SELECT [UnitCode] FROM [PurchasingUnit] where UnitCode<>'ZZ' and UnitCode<>'PC' and UnitCode<>'TON' and UnitCode<>'-' and UnitCode<>'EA' and UnitCode<>'MT' and UnitCode<>'MU' ORDER BY [SortOrder]">
+                                SelectCommand="SELECT [UnitCode] FROM [PurchasingUnit] where UnitCode<>'ZZ' and UnitCode<>'PC' and UnitCode<>'TON' and UnitCode<>'-'  and UnitCode<>'MT' and UnitCode<>'MU' ORDER BY [SortOrder]">
                             </asp:SqlDataSource>
                         </td>
                         <td><asp:TextBox ID="SupplierItemNumber_1" runat="server" Width="10em" MaxLength="128"></asp:TextBox></td>
@@ -258,7 +258,7 @@
 		    window.onload = function () {
 		        var isAdmin = document.getElementById('isAdmin').value;
 		        var userID = document.getElementById('userId').value;
-		        if (isAdmin == "False") {
+		        if (isAdmin == "False") { 
 		            var flg = false;
 		            var list = document.getElementById('EnqUser')
 		            for (var i = 0; i < list.length; i++) {

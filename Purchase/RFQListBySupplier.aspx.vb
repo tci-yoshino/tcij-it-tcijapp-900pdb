@@ -25,10 +25,10 @@ Partial Public Class RFQListBySupplier
 
         ' Supplier 情報取得
         Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
-            Dim st_query As String = _
+            Dim st_query As String =
                   "SELECT SupplierCode, LTRIM(RTRIM(ISNULL(Name3, '') + ' ' + ISNULL(Name4, ''))) AS Name, " _
                 & "       Address1, Address2, Address3, PostalCode, Telephone, Fax, Email, " _
-                & "       Website, Info, v_Country.CountryName,Note " _
+                & "       Website, Info, v_Country.CountryName,Note,SupplierWarning " _
                 & "FROM Supplier,v_Country " _
                 & "WHERE SupplierCode = @SupplierCode " _
                 & "  AND Supplier.CountryCode = v_Country.CountryCode"
@@ -65,6 +65,7 @@ Partial Public Class RFQListBySupplier
                 End If
                 CountryName.Text = reader("CountryName").ToString()
                 Comment.Text = Replace(reader("Note").ToString(), vbCrLf, "<br />")
+                SupplierWarning.Text = Replace(reader("SupplierWarning").ToString(), vbCrLf, "<br />")
             Else
                 Exit Sub
             End If
@@ -82,7 +83,7 @@ Partial Public Class RFQListBySupplier
             sqlStr.AppendLine("  RH.SupplierItemName, RH.ShippingHandlingFee, RH.ShippingHandlingCurrencyCode,")
             sqlStr.AppendLine("  RH.EnqUserName, RH.EnqLocationName, RH.QuoUserName, RH.QuoLocationName, RH.Comment,")
             sqlStr.AppendLine("  MC.[Name] AS MakerCountryName, SC.[Name] AS SupplierCountryName,")
-            sqlStr.AppendLine("  RH.isCONFIDENTIAL")
+            sqlStr.AppendLine("  RH.isCONFIDENTIAL,RH.SupplierWarning")
             sqlStr.AppendLine("FROM")
             sqlStr.AppendLine("  v_RFQHeader AS RH INNER JOIN ")
             sqlStr.AppendLine("  s_Country AS SC ON SC.CountryCode = RH.SupplierCountryCode LEFT OUTER JOIN ")

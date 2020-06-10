@@ -67,6 +67,7 @@ Partial Public Class RFQListByProduct
                 End If
                 ProductName.Text = reader("Name").ToString()
                 CASNumber.Text = reader("CASNumber").ToString()
+                ProductWarning.Text = reader("ProductWarning").ToString()
                 MolecularFormula.Text = reader("MolecularFormula").ToString()
             End If
             reader.Close()
@@ -123,7 +124,7 @@ Partial Public Class RFQListByProduct
         sb_SQL.Append("	P.QuoName, ")
         sb_SQL.Append("	P.Name, ")
         sb_SQL.Append("	P.CASNumber, ")
-        sb_SQL.Append("	P.MolecularFormula ")
+        sb_SQL.Append("	P.MolecularFormula,P.ProductWarning ")
         sb_SQL.Append("FROM ")
         sb_SQL.Append("	Product AS P ")
         sb_SQL.Append("WHERE ")
