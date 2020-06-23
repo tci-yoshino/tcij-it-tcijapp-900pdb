@@ -434,7 +434,7 @@ Partial Public Class RFQUpdate
 & "MakerName, MakerCountryCode, SupplierContactPerson, PaymentTermCode, RequiredPurity, " _
 & "RequiredQMMethod, RequiredSpecification, SpecSheet, Specification, PurposeCode,Purpose, SupplierItemName, " _
 & "ShippingHandlingFee, ShippingHandlingCurrencyCode, Comment, QuotedDate, StatusCode, " _
-& "UpdateDate, Status, StatusChangeDate, EnqLocationCode, QuoLocationCode, Priority, isCONFIDENTIAL,QuoStorageLocation,EnqStorageLocation,SupplierContactPersonSel,ProductWarning,SupplierWarning,SupplierOfferValidTo " _
+& "UpdateDate, Status, StatusChangeDate, EnqLocationCode, QuoLocationCode, Priority, isCONFIDENTIAL,QuoStorageLocation,EnqStorageLocation,SupplierContactPersonSel,ProductWarning,BUoM,SupplierWarning,SupplierOfferValidTo " _
 & " From v_RFQHeader Where RFQNumber = @i_RFQNumber", DBConn)
             DBCommand.Parameters.Add("i_RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
             DBAdapter = New SqlDataAdapter
@@ -501,6 +501,7 @@ Partial Public Class RFQUpdate
             ProductWarning.Text = DS.Tables("RFQHeader").Rows(0)("ProductWarning").ToString  '20190902 WYS 赋值ProductWarning
             SupplierWarning.Text = DS.Tables("RFQHeader").Rows(0)("SupplierWarning").ToString  '20190902 WYS SupplierWarning
             txtVaildTo.Text = DS.Tables("RFQHeader").Rows(0)("SupplierOfferValidTo").ToString  '20191012 WYS SupplierOfferValidTo
+            labBUoM.Text = DS.Tables("RFQHeader").Rows(0)("BUoM").ToString  '20200610 WYS 赋值BUoM
             SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString
             'R3SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("R3SupplierCode").ToString
             R3SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("S4SupplierCode").ToString
@@ -1710,6 +1711,18 @@ Partial Public Class RFQUpdate
                 Exit Function
             End If
         End If
+
+        '20200617 WYS Please review the Enq-user's and  Quo-user's storage location. PO interface creation failed! start
+        If StorageLocation.SelectedValue <> StorageLocation2.SelectedValue Then
+            If StorageLocation.SelectedValue.Substring(0, 1) = StorageLocation2.SelectedValue.Substring(0, 1) Then
+                If StorageLocation.SelectedValue.Substring(0, 1) <> "H" And StorageLocation.SelectedValue.Substring(0, 1) <> "N" Then
+                    Msg.Text = "Please review the Enq-user's and  Quo-user's storage location. PO interface creation failed!"
+                    Return ""
+                    Exit Function
+                End If
+            End If
+        End If
+        '20200617 WYS end
 
         '判断当前数据是否合法是否需要提醒
 

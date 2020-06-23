@@ -32,7 +32,7 @@
                 <strong>Product Name : </strong><asp:Label ID="ProductName" runat="server" Text=''></asp:Label>
                 <strong class="indent">CAS Number : </strong><asp:Label ID="CASNumber" runat="server" Text=''></asp:Label>
                 <strong class="indent">Molecular Formula : </strong><asp:Label ID="MolecularFormula" runat="server" Text=''></asp:Label>
-                <strong class="indent">BUoM : </strong><asp:Label ID="Label1" runat="server" Text='KG'></asp:Label>
+                <strong class="indent">BUoM : </strong><asp:Label ID="labBUoM" runat="server" Text=''></asp:Label>
             </p>
             <table align="left">
                 <tr>

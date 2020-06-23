@@ -227,7 +227,7 @@
                     </tr>
                     <tr>
                         <th>BUoM : </th>
-                        <td><asp:Label runat="server" Text="KG"></asp:Label></td>
+                        <td><asp:Label ID="labBUoM" runat="server" Text=""></asp:Label></td>
                     </tr>
                 </table>
             </div>

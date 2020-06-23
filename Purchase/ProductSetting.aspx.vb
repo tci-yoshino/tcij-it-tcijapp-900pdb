@@ -6,6 +6,7 @@ Partial Public Class ProductSetting
     Dim DBConn As New System.Data.SqlClient.SqlConnection(DB_CONNECT_STRING)
     Dim DBCommand As System.Data.SqlClient.SqlCommand
     Dim DBReader As System.Data.SqlClient.SqlDataReader
+    Dim DBReader1 As System.Data.SqlClient.SqlDataReader
     Public url As String = ""
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -28,7 +29,7 @@ Partial Public Class ProductSetting
                 End If
 
                 DBCommand.CommandText = "SELECT Product.ProductNumber, Product.Name, Product.QuoName, Product.CASNumber, Product.MolecularFormula, Product.Reference, Product.Comment, Product.UpdateDate, s_EhsPhrase.ENai AS Status, s_EhsPhrase_1.ENai AS ProposalDept, s_EhsPhrase_2.ENai AS ProcumentDept, s_EhsPhrase_3.ENai AS PD " &
-                                        " , Product.ProductWarning " &  '20190902 WYS Product表追加字段ProductWarning赋值
+                                        " , Product.ProductWarning,Product.BUoM " &  '20190902 WYS Product表追加字段ProductWarning赋值
                                         "FROM Product LEFT OUTER JOIN " &
                                         "s_EhsPhrase AS s_EhsPhrase_3 ON Product.PD = s_EhsPhrase_3.PhID LEFT OUTER JOIN " &
                                         "s_EhsPhrase AS s_EhsPhrase_2 ON Product.ProcumentDept = s_EhsPhrase_2.PhID LEFT OUTER JOIN " &
@@ -50,7 +51,23 @@ Partial Public Class ProductSetting
                     If Not TypeOf DBReader("ProcumentDept") Is DBNull Then ProcumentDept.Text = DBReader("ProcumentDept")
                     If Not TypeOf DBReader("PD") Is DBNull Then PD.Text = DBReader("PD")
                     If Not TypeOf DBReader("ProductWarning") Is DBNull Then ProductWarning.Text = DBReader("ProductWarning")  '20190902 WYS Product表追加字段ProductWarning赋值
+
                     DBReader.Close()
+
+                    ' 20200623 WYS start
+                    DBCommand = DBConn.CreateCommand()
+                    DBCommand.CommandText = " select MU.EN AS BUoM " &
+                                                " from TciMaterial.dbo.Material as M,TciMaterial.dbo.Unit as MU,Purchase.dbo.Product as p " &
+                                                " where M.BaseUnitOfMeasure = MU.Unit and p.ProductNumber = M.ERPProductNumber " &
+                                                " and p.ProductID = " + ProductID.Value + " "
+                    DBReader1 = DBCommand.ExecuteReader()
+                    DBCommand.Dispose()
+                    If DBReader1.Read = True Then
+                        If Not TypeOf DBReader1("BUoM") Is DBNull Then txtBUoM.Text = DBReader1("BUoM")  '20200610 WYS Product表追加字段BUoM赋值
+                    End If
+                    DBReader1.Close()
+                    ' 20200623 WYS end
+
                     UpdateDate.Value = GetUpdateDate("Product", "ProductID", ProductID.Value) '[同時更新チェック用]
                 Else
                     UpdateDate.Value = ""
@@ -177,6 +194,7 @@ Partial Public Class ProductSetting
         Dim st_Reference As String = Reference.Text
         Dim st_Comment As String = Comment.Text
         Dim st_ProudctWarning As String = ProductWarning.Text
+        Dim st_BUoM As String = txtBUoM.Text
 
         Dim MemoMode As String = Mode.Value
         If Mode.Value = "Edit" Then
@@ -208,6 +226,7 @@ Partial Public Class ProductSetting
             sb_SQL.Append(" Reference = @Reference,")
             sb_SQL.Append(" Comment = @Comment,")
             sb_SQL.Append(" ProductWarning = @ProductWarning, ")  '20190902 WYS Product表追加字段ProductWarning赋值
+            sb_SQL.Append(" BUoM = @BUoM, ")  '20200610 WYS Product表追加字段BUoM赋值
             sb_SQL.Append(" UpdatedBy = @UpdatedBy,")
             sb_SQL.Append(" UpdateDate = GETDATE() ")
             sb_SQL.Append("WHERE ")
@@ -225,6 +244,7 @@ Partial Public Class ProductSetting
             DBCommand.Parameters.AddWithValue("UpdatedBy", ConvertStringToInt(Session("UserID")))
             DBCommand.Parameters.AddWithValue("ProductID", ConvertStringToInt(st_ProductID))
             DBCommand.Parameters.AddWithValue("ProductWarning", ConvertEmptyStringToNull(st_ProudctWarning)) '20190902 WYS Product表追加字段ProductWarning赋值
+            DBCommand.Parameters.AddWithValue("BUoM", ConvertEmptyStringToNull(st_BUoM)) '20200610 WYS Product表追加字段BUoM赋值
 
             DBCommand.ExecuteNonQuery()
             RunMsg.Text = MSG_DATA_UPDATED   '"データを更新しました。"
@@ -260,6 +280,7 @@ Partial Public Class ProductSetting
             sb_SQL.Append(" Reference,")
             sb_SQL.Append(" Comment,")
             sb_SQL.Append(" ProductWarning, ") '20190902 WYS Product表追加字段ProductWarning赋值
+            sb_SQL.Append(" BUoM, ") '20200610 WYS Product表追加字段BUoM赋值
             sb_SQL.Append(" CreatedBy,")
             sb_SQL.Append(" CreateDate,")
             sb_SQL.Append(" UpdatedBy,")
@@ -282,6 +303,7 @@ Partial Public Class ProductSetting
             sb_SQL.Append(" @Reference,")
             sb_SQL.Append(" @Comment,")
             sb_SQL.Append(" @ProductWarning, ") '20190902 WYS Product表追加字段ProductWarning赋值
+            sb_SQL.Append(" @BUoM, ") '20200610 WYS Product表追加字段BUoM赋值
             sb_SQL.Append(" @CreatedBy,")
             sb_SQL.Append(" GETDATE(),")
             sb_SQL.Append(" @UpdatedBy,")
@@ -309,6 +331,7 @@ Partial Public Class ProductSetting
             DBCommand.Parameters.AddWithValue("Reference", ConvertEmptyStringToNull(st_Reference))
             DBCommand.Parameters.AddWithValue("Comment", ConvertEmptyStringToNull(st_Comment))
             DBCommand.Parameters.AddWithValue("ProductWarning", ConvertEmptyStringToNull(st_ProudctWarning)) '20190902 WYS Product表追加字段ProductWarning赋值
+            DBCommand.Parameters.AddWithValue("BUoM", ConvertEmptyStringToNull(st_BUoM)) '20200610 WYS Product表追加字段BUoM赋值
             DBCommand.Parameters.AddWithValue("CreatedBy", ConvertStringToInt(Session("UserID")))
             DBCommand.Parameters.AddWithValue("UpdatedBy", ConvertStringToInt(Session("UserID")))
 

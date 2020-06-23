@@ -66,6 +66,7 @@ Partial Public Class RFQListByProduct
                     QuoName.Text = reader("Name").ToString()
                 End If
                 ProductName.Text = reader("Name").ToString()
+                labBUoM.Text = reader("BUoM").ToString()
                 CASNumber.Text = reader("CASNumber").ToString()
                 ProductWarning.Text = reader("ProductWarning").ToString()
                 MolecularFormula.Text = reader("MolecularFormula").ToString()
@@ -124,11 +125,13 @@ Partial Public Class RFQListByProduct
         sb_SQL.Append("	P.QuoName, ")
         sb_SQL.Append("	P.Name, ")
         sb_SQL.Append("	P.CASNumber, ")
-        sb_SQL.Append("	P.MolecularFormula,P.ProductWarning ")
+        sb_SQL.Append("	P.MolecularFormula,P.ProductWarning,MU.EN AS BUoM ")
         sb_SQL.Append("FROM ")
-        sb_SQL.Append("	Product AS P ")
+        sb_SQL.Append("	Product AS P,TciMaterial.dbo.Material as M,TciMaterial.dbo.Unit as MU ")
         sb_SQL.Append("WHERE ")
         sb_SQL.Append("	P.ProductID = @ProductID ")
+        sb_SQL.Append(" and M.BaseUnitOfMeasure = MU.Unit ")
+        sb_SQL.Append(" and P.ProductNumber = M.ERPProductNumber ")
 
         Return sb_SQL.ToString()
 
