@@ -704,19 +704,19 @@
 		            var linUnit2=document.getElementById("<%=EnqUnit_2.ClientID%>").value;
 		            var linUnit3=document.getElementById("<%=EnqUnit_3.ClientID%>").value;
 		            var linUnit4 = document.getElementById("<%=EnqUnit_4.ClientID%>").value;
-		            if (linUnit1 == "LB" || linUnit1 == "L" || linUnit1 == "ML" || linUnit1 == "EA") {
+		            if (linUnit1 == "LB" || linUnit1 == "L" || linUnit1 == "ML" || linUnit1 == "ST") {
 		                alert("Please make sure Material Master have unit conversion!");
 		                return true;
 		            }
-		            if (linUnit2 == "LB" || linUnit2 == "L" || linUnit2 == "ML" || linUnit2 == "EA") {
+		            if (linUnit2 == "LB" || linUnit2 == "L" || linUnit2 == "ML" || linUnit2 == "ST") {
 		                alert("Please make sure Material Master have unit conversion!");
 		                return true;
 		            }
-		            if (linUnit3 == "LB" || linUnit3 == "L" || linUnit3 == "ML" || linUnit3 == "EA") {
+		            if (linUnit3 == "LB" || linUnit3 == "L" || linUnit3 == "ML" || linUnit3 == "ST") {
 		                alert("Please make sure Material Master have unit conversion!");
 		                return true;
 		            }
-		            if (linUnit4 == "LB" || linUnit4 == "L" || linUnit4 == "ML" || linUnit4 == "EA") {
+		            if (linUnit4 == "LB" || linUnit4 == "L" || linUnit4 == "ML" || linUnit4 == "ST") {
 		                alert("Please make sure Material Master have unit conversion!");
 		                return true;
 		            }

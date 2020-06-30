@@ -127,11 +127,11 @@ Partial Public Class RFQListByProduct
         sb_SQL.Append("	P.CASNumber, ")
         sb_SQL.Append("	P.MolecularFormula,P.ProductWarning,MU.EN AS BUoM ")
         sb_SQL.Append("FROM ")
-        sb_SQL.Append("	Product AS P,TciMaterial.dbo.Material as M,TciMaterial.dbo.Unit as MU ")
+        sb_SQL.Append("	Product AS P ")
+        sb_SQL.Append(" left join TciMaterial.dbo.Material as M on P.ProductNumber = M.ERPProductNumber ")
+        sb_SQL.Append(" left join TciMaterial.dbo.Unit as MU on M.BaseUnitOfMeasure = MU.Unit ")
         sb_SQL.Append("WHERE ")
         sb_SQL.Append("	P.ProductID = @ProductID ")
-        sb_SQL.Append(" and M.BaseUnitOfMeasure = MU.Unit ")
-        sb_SQL.Append(" and P.ProductNumber = M.ERPProductNumber ")
 
         Return sb_SQL.ToString()
 
