@@ -1680,6 +1680,16 @@ Partial Public Class RFQUpdate
         'Supplier Offer No.
         parameter(39) = DS2.Tables("RFQLine").Rows(0).Item("SupplierOfferNo").ToString()
 
+        ' 20200630 WYS 增加warring：Please review the Unit of Enq-Quantity for PO Interface. PO interface creation failed!  start
+        If parameter(9).Equals("ST") Then
+            If labBUoM.Text.Trim.ToString() <> "EA" Then
+                Msg.Text = "Please review the Unit of Enq-Quantity for PO Interface. PO interface creation failed!"
+                Return ""
+                Exit Function
+            End If
+        End If
+        ' 20200630 WYS end
+
         ' 20200402 WYS 增加对LeadTime是否为数值的判断 start
         If IsNumeric(DS2.Tables("RFQLine").Rows(0).Item("LeadTime")) Then
 
