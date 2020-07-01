@@ -1680,6 +1680,14 @@ Partial Public Class RFQUpdate
         'Supplier Offer No.
         parameter(39) = DS2.Tables("RFQLine").Rows(0).Item("SupplierOfferNo").ToString()
 
+        ' 20200701 WYS The material not yet created in S4. PO interface creation failed! start
+        If labBUoM.Text.Trim.ToString().Equals("") Then
+            Msg.Text = "The material not yet created in S4. PO interface creation failed!"
+            Return ""
+            Exit Function
+        End If
+        ' 20200701 WYS end
+
         ' 20200630 WYS 增加warring：Please review the Unit of Enq-Quantity for PO Interface. PO interface creation failed!  start
         If parameter(9).Equals("ST") Then
             If labBUoM.Text.Trim.ToString() <> "EA" Then
