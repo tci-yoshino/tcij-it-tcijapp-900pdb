@@ -1760,12 +1760,21 @@ Partial Public Class RFQUpdate
             Exit Function
         End If
 
-        ' 20200609 WYS SAPSupplierCode 首字母是否与Quo-user's storage location首字母相等 start
+        ' 20200609 WYS If "Quo-user storage location's Plant number= "SAP supplier code" or both first letter of "Quo-user storage location's Plant number and first letter of  "SAP supplier code"are "A" or "C"  start
         If R3SupplierCode.Text <> "" And StorageLocation2.SelectedItem.ToString() <> "" Then
             If R3SupplierCode.Text.Equals(QuoPlant) Then
-                Msg.Text = "Please review the Quo-user's storage location. PO interface creation failed!"
+                Msg.Text = "Please review the Quo-user's storage location and SAP Supplier code. PO interface creation failed!"
                 Return ""
                 Exit Function
+            End If
+            Dim R3F As String = R3SupplierCode.Text.ToString().Substring(0, 1)
+            Dim quoF As String = QuoPlant.Substring(0, 1)
+            If R3F = quoF Then
+                If R3F = "A" Or R3F = "C" Then
+                    Msg.Text = "Please review the Quo-user's storage location and SAP Supplier code. PO interface creation failed!"
+                    Return ""
+                    Exit Function
+                End If
             End If
         End If
         ' 20200609 WYS end
