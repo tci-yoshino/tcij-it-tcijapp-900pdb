@@ -1762,7 +1762,7 @@ Partial Public Class RFQUpdate
 
         ' 20200609 WYS SAPSupplierCode 首字母是否与Quo-user's storage location首字母相等 start
         If R3SupplierCode.Text <> "" And StorageLocation2.SelectedItem.ToString() <> "" Then
-            If R3SupplierCode.Text.Substring(0, 1).Equals(StorageLocation2.SelectedItem.ToString().Substring(0, 1)) Then
+            If R3SupplierCode.Text.Equals(QuoPlant) Then
                 Msg.Text = "Please review the Quo-user's storage location. PO interface creation failed!"
                 Return ""
                 Exit Function
