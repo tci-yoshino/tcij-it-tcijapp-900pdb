@@ -364,7 +364,7 @@ Partial Public Class RFQUpdate
             Exit Sub
         End If
         '他セッションでの更新チェック
-        If isLatestData("RFQHeader", "RFQNumber", st_RFQNumber, UpdateDate.Value) = False Then
+        If IsLatestData("RFQHeader", "RFQNumber", st_RFQNumber, UpdateDate.Value) = False Then
             Msg.Text = ERR_UPDATED_BY_ANOTHER_USER
             Exit Sub
         End If
@@ -1382,7 +1382,7 @@ Partial Public Class RFQUpdate
     End Sub
 
     Protected Sub POInterfaceButton_3_Click(sender As Object, e As EventArgs) Handles POInterfaceButton_3.Click
-       If SetRFQNumber() = False Then
+        If SetRFQNumber() = False Then
             Exit Sub
         End If
         If RFQCheck(st_RFQNumber, "3") = False Then
@@ -1635,12 +1635,15 @@ Partial Public Class RFQUpdate
         'Supplying Plant' s Reminding 1
         'Supplying Plant' s Reminding 2
         'Supplying Plant' s Reminding 3
+
         Dim POReminderInfo As DataTable = GetDataTable("select * from Reminder where  SupplyingPlant='" + QuoPlant + "'", "Reminder")
         If POReminderInfo.Rows.Count > 0 Then
             Dim POReminderFirstRem As String = POReminderInfo.Rows(0)("FirstRem").ToString()
             Dim POReminderSecondRem As String = POReminderInfo.Rows(0)("SecondRem").ToString()
             Dim POReminderThirdRem As String = POReminderInfo.Rows(0)("ThirdRem").ToString()
-            If POReminderFirstRem = "cal" Then
+            Dim POReminderShowType As Integer = POReminderInfo.Rows(0)("ShowType")
+
+            If POReminderShowType = 1 Then
                 If IsDBNull(DS2.Tables("RFQLine").Rows(0).Item("LeadTime")) Then
                     Msg.Text = "Lead time error, PO interface create failed!"
                     Return ""
@@ -1656,9 +1659,9 @@ Partial Public Class RFQUpdate
                     Return ""
                     Exit Function
                 End If
-                parameter(32) = System.Math.Round(DS2.Tables("RFQLine").Rows(0).Item("LeadTime") * 0.8 - DS2.Tables("RFQLine").Rows(0).Item("LeadTime"), 0)
-                parameter(33) = System.Math.Round(DS2.Tables("RFQLine").Rows(0).Item("LeadTime") * 0.2, 0)
-                parameter(34) = System.Math.Round(DS2.Tables("RFQLine").Rows(0).Item("LeadTime") * 0.6, 0)
+                parameter(32) = System.Math.Round(DS2.Tables("RFQLine").Rows(0).Item("LeadTime") * POReminderFirstRem - DS2.Tables("RFQLine").Rows(0).Item("LeadTime"), 0)
+                parameter(33) = System.Math.Round(DS2.Tables("RFQLine").Rows(0).Item("LeadTime") * POReminderSecondRem, 0)
+                parameter(34) = System.Math.Round(DS2.Tables("RFQLine").Rows(0).Item("LeadTime") * POReminderThirdRem, 0)
             Else
                 parameter(32) = POReminderFirstRem
                 parameter(33) = POReminderSecondRem
@@ -1687,6 +1690,19 @@ Partial Public Class RFQUpdate
             Exit Function
         End If
         ' 20200701 WYS end
+
+        ' 20200720 lxs start
+        If StorageLocation2.SelectedItem.Text.Substring(0, 1) = "H" And DS2.Tables("RFQLine").Rows(0).Item("CurrencyCode").ToString <> "CNY" Then
+            Msg.Text = "The currency conflict with defalt. PO Interface creation failed!"
+            Return ""
+            Exit Function
+        End If
+        If StorageLocation2.SelectedItem.Text.Substring(0, 1) = "N" And DS2.Tables("RFQLine").Rows(0).Item("CurrencyCode").ToString <> "INR" Then
+            Msg.Text = "The currency conflict with defalt. PO Interface creation failed!"
+            Return ""
+            Exit Function
+        End If
+        ' 20200720 lxs end
 
         ' 20200630 WYS 增加warring：Please review the Unit of Enq-Quantity for PO Interface. PO interface creation failed!  start
         If parameter(9).Equals("ST") Then
@@ -1738,24 +1754,27 @@ Partial Public Class RFQUpdate
                     Return ""
                     Exit Function
                 End If
+
             End If
         End If
+
+
         '20200617 WYS end
 
         '判断当前数据是否合法是否需要提醒
 
         If CheckIsClickPoInterface(st_RFQNumber) = False Then
-            Msg.Text = "Purpose not exist!"
+            Msg.Text = "Purpose Not exist!"
             Return ""
             Exit Function
         End If
         If DS.Tables("RFQHeader").Rows(0)("StatusCode").ToString <> "Q" Then
-            Msg.Text = "Please quote and update RFQ first! PO interface create failed!"
+            Msg.Text = "Please quote And update RFQ first! PO Interface create failed!"
             Return ""
             Exit Function
         End If
         If DS.Tables("RFQHeader").Rows(0)("S4SupplierCode").ToString = "" Then
-            Msg.Text = "SAP Supplier code is blank! PO interface create failed!"
+            Msg.Text = "SAP Supplier code Is blank! PO Interface create failed!"
             Return ""
             Exit Function
         End If

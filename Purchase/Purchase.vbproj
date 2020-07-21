@@ -122,6 +122,8 @@
     <Content Include="ProductSetting.aspx" />
     <Content Include="PurchaseGroup.aspx" />
     <Content Include="PurchaseGroupSetting.aspx" />
+    <Content Include="ReminderList.aspx" />
+    <Content Include="ReminderSetting.aspx" />
     <Content Include="RequestedTask.aspx" />
     <Content Include="RFQCorrespondence.aspx" />
     <Content Include="RFQIssue.aspx" />
@@ -291,6 +293,20 @@
     </Compile>
     <Compile Include="PurchaseGroupSetting.aspx.vb">
       <DependentUpon>PurchaseGroupSetting.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReminderList.aspx.designer.vb">
+      <DependentUpon>ReminderList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ReminderList.aspx.vb">
+      <DependentUpon>ReminderList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReminderSetting.aspx.designer.vb">
+      <DependentUpon>ReminderSetting.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ReminderSetting.aspx.vb">
+      <DependentUpon>ReminderSetting.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="RequestedTask.aspx.designer.vb">
@@ -465,7 +481,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Handling rules.pdf" />
-    <Content Include="Evaluated suppliers %282017%29.xlsm" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -476,7 +491,6 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="PO.doc" />
-    <Content Include="Ranking data %28October 1st, 2017%29.xlsm" />
     <None Include="RFQ.doc" />
     <None Include="Sample.xls" />
     <None Include="Web.config-dist" />
