@@ -1692,18 +1692,30 @@ Partial Public Class RFQUpdate
         ' 20200701 WYS end
 
         ' 20200720 lxs start
-        If StorageLocation2.SelectedItem.Text.Substring(0, 1) = "H" And DS2.Tables("RFQLine").Rows(0).Item("CurrencyCode").ToString <> "CNY" Then
-            Msg.Text = "The currency conflict with defalt. PO Interface creation failed!"
-            Return ""
-            Exit Function
+        '20200727修改
+        If StorageLocation2.SelectedItem.Text <> "" Then
+            If StorageLocation2.SelectedItem.Text.Substring(0, 1) = "H" And DS2.Tables("RFQLine").Rows(0).Item("CurrencyCode").ToString <> "CNY" Then
+                Msg.Text = "The currency conflict with defalt. PO Interface creation failed!"
+                Return ""
+                Exit Function
+            End If
         End If
-        If StorageLocation2.SelectedItem.Text.Substring(0, 1) = "N" And DS2.Tables("RFQLine").Rows(0).Item("CurrencyCode").ToString <> "INR" Then
-            Msg.Text = "The currency conflict with defalt. PO Interface creation failed!"
-            Return ""
-            Exit Function
+        If StorageLocation2.SelectedItem.Text <> "" Then
+            If StorageLocation2.SelectedItem.Text.Substring(0, 1) = "N" And DS2.Tables("RFQLine").Rows(0).Item("CurrencyCode").ToString <> "INR" Then
+                Msg.Text = "The currency conflict with defalt. PO Interface creation failed!"
+                Return ""
+                Exit Function
+            End If
         End If
-        ' 20200720 lxs end
 
+        ' 20200720 lxs end
+        '20200727 start 如果触发的采购订单接口数据的价格为“0” 
+        If SetNullORDecimal(DS2.Tables("RFQLine").Rows(0).Item("UnitPrice").ToString) = SetNullORDecimal(0) Then
+            Msg.Text = "PDB Interface can not create free charge PO, please make it manually. PO interface creation failed!"
+            Return ""
+            Exit Function
+        End If
+        ' 20200727 lxs end
         ' 20200630 WYS 增加warring：Please review the Unit of Enq-Quantity for PO Interface. PO interface creation failed!  start
         If parameter(9).Equals("ST") Then
             If labBUoM.Text.Trim.ToString() <> "EA" Then

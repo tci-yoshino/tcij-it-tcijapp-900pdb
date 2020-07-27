@@ -16,7 +16,7 @@
 
     <!-- Main Content Area -->
     <div id="content">
-        <div class="tabs"><a href="./ReminderSetting.aspx">Reminder</a>&nbsp;&nbsp;</div>
+        <%--<div class="tabs"><a href="./ReminderSetting.aspx">Reminder</a>&nbsp;&nbsp;</div>--%>
 
         <h3>Reminder</h3>
 
