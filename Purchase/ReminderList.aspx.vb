@@ -9,7 +9,7 @@ Public Class ReminderList
             Dim st_SQL As String = String.Empty
             st_SQL &= "SELECT "
             st_SQL &= "SupplyingPlant, "
-            st_SQL &= "case when ShowType=0 Then 'constant'else 'Fomula' end as 'ShowType', "
+            st_SQL &= "case when ShowType=0 Then 'constant'else 'Formula' end as 'ShowType', "
             st_SQL &= "FirstRem, "
             st_SQL &= "SecondRem, "
             st_SQL &= "ThirdRem, "

@@ -31,7 +31,7 @@
                         <td>
                             <asp:DropDownList ID="ddlShowType" runat="server" Width="7.7em" AutoPostBack="true">
                                 <asp:ListItem Value="0" Text="Constant">Constant</asp:ListItem>
-                                <asp:ListItem Value="1" Text="Fomular">Fomular</asp:ListItem>
+                                <asp:ListItem Value="1" Text="Formula">Formula</asp:ListItem>
                             </asp:DropDownList></td>
                     </tr>
                     <tr>
