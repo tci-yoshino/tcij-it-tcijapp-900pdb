@@ -119,9 +119,9 @@ Public Class ReminderSetting
         SId = CInt(ddlShowType.SelectedValue)
         If SId = 0 Then
             If IsNumeric(txtConstant1.Text) And IsNumeric(txtConstant2.Text) And IsNumeric(txtConstant3.Text) Then
-                Dim Constant1 As Match = Regex.Match(txtConstant1.Text, "^[0-9]*[1-9][0-9]*$")
-                Dim Constant2 As Match = Regex.Match(txtConstant2.Text, "^[0-9]*[1-9][0-9]*$")
-                Dim Constant3 As Match = Regex.Match(txtConstant3.Text, "^[0-9]*[1-9][0-9]*$")
+                Dim Constant1 As Match = Regex.Match(txtConstant1.Text, "^-?[1-9]\d*$|^0$")
+                Dim Constant2 As Match = Regex.Match(txtConstant2.Text, "^-?[1-9]\d*$|^0$")
+                Dim Constant3 As Match = Regex.Match(txtConstant3.Text, "^-?[1-9]\d*$|^0$")
                 If Constant1.Success = True And Constant2.Success = True And Constant3.Success = True Then
                 Else
                     ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>IntoInteger();</script>")
@@ -152,17 +152,17 @@ Public Class ReminderSetting
         If SId = 0 Then
             st_SQL &= "UPDATE [dbo].[Reminder] "
             st_SQL &= "SET "
-            st_SQL &= "FirstRem='" & txtFirstRem.Text & "', "
-            st_SQL &= "SecondRem='" & txtSecondRem.Text & "', "
-            st_SQL &= "ThirdRem='" & txtThirdRem.Text & "', "
+            st_SQL &= "FirstRem='" & txtConstant1.Text & "', "
+            st_SQL &= "SecondRem='" & txtConstant2.Text & "', "
+            st_SQL &= "ThirdRem='" & txtConstant3.Text & "', "
             st_SQL &= "ShowType='" & ddlShowType.Text & "' "
             st_SQL &= "where SupplyingPlant='" & txtPlant.Text & "'"
         Else
             st_SQL &= "UPDATE [dbo].[Reminder] "
             st_SQL &= "SET "
-            st_SQL &= "FirstRem='" & txtConstant1.Text & "', "
-            st_SQL &= "SecondRem='" & txtConstant2.Text & "', "
-            st_SQL &= "ThirdRem='" & txtConstant3.Text & "', "
+            st_SQL &= "FirstRem='" & txtFirstRem.Text & "', "
+            st_SQL &= "SecondRem='" & txtSecondRem.Text & "', "
+            st_SQL &= "ThirdRem='" & txtThirdRem.Text & "', "
             st_SQL &= "ShowType='" & ddlShowType.Text & "' "
             st_SQL &= "where SupplyingPlant='" & txtPlant.Text & "'"
         End If
