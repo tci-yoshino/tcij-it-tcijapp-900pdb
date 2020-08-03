@@ -8,6 +8,7 @@ Public Class ReminderList
         If IsPostBack = False Then
             Dim st_SQL As String = String.Empty
             st_SQL &= "SELECT "
+            st_SQL &= "[Location], "
             st_SQL &= "SupplyingPlant, "
             st_SQL &= "case when ShowType=0 Then 'constant'else 'Formula' end as 'ShowType', "
             st_SQL &= "FirstRem, "
@@ -16,6 +17,7 @@ Public Class ReminderList
             st_SQL &= " 'ReminderSetting.aspx?Action=Edit&SupplyingPlant=' + Cast(SupplyingPlant AS varchar) AS URL "
             st_SQL &= "FROM "
             st_SQL &= "Purchase.dbo.Reminder "
+            st_SQL &= " where [Location]='" + Common.SafeSqlLiteral(Session("LocationName").ToString) + "'"
             SrcRemined.SelectCommand = st_SQL
         End If
     End Sub

@@ -133,14 +133,78 @@ Public Class ReminderSetting
             End If
         Else
             If IsNumeric(txtFirstRem.Text) And IsNumeric(txtSecondRem.Text) And IsNumeric(txtThirdRem.Text) Then
-                Dim FirstRem As Match = Regex.Match(txtFirstRem.Text, "^[0]+(.[0-9]{1,3})?$")
-                Dim SecondRem As Match = Regex.Match(txtSecondRem.Text, "^[0]+(.[0-9]{1,3})?$")
-                Dim ThirdRem As Match = Regex.Match(txtThirdRem.Text, "^[0]+(.[0-9]{1,3})?$")
-                If FirstRem.Success = True And SecondRem.Success = True And ThirdRem.Success = True Then
+                'Dim FirstRem As Match = Regex.Match(txtFirstRem.Text, "^[0]+(.[0-9]{1,3})?$")
+                'Dim SecondRem As Match = Regex.Match(txtSecondRem.Text, "^[0]+(.[0-9]{1,3})?$")
+                'Dim ThirdRem As Match = Regex.Match(txtThirdRem.Text, "^[0]+(.[0-9]{1,3})?$")
+                'If FirstRem.Success = True And SecondRem.Success = True And ThirdRem.Success = True Then
+                'Else
+                '    ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>IntoDecimal();</script>")
+                '    Exit Sub
+                'End If
+                'If Val(txtFirstRem.Text) >= 1 Or Val(txtFirstRem.Text) <= -1 Or Val(txtSecondRem.Text) >= 1 Or Val(txtSecondRem.Text) <= -1 Or Val(txtThirdRem.Text) >= 1 Or Val(txtThirdRem.Text) <= -1 Then
+                '    ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>IntoFormula();</script>")
+                '    Exit Sub
+                'End If
+                If CBool(InStr(1, txtFirstRem.Text, ".")) Then
+                    Dim FirstRem() As String = txtFirstRem.Text.ToString().Split(CType(".", Char()))
+                    If CInt(FirstRem(0)) <> 0 Or FirstRem(1).Length > 3 Then
+                        txtFirstRem.Text = ""
+                        ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>IntoFormula();</script>")
+                        Exit Sub
+                    End If
                 Else
-                    ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>IntoDecimal();</script>")
-                    Exit Sub
+                    If Val(txtFirstRem.Text) > 1 Or Val(txtFirstRem.Text) < -1 Then
+                        txtFirstRem.Text = ""
+                        ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>IntoFormula();</script>")
+                        Exit Sub
+                    End If
                 End If
+                If CBool(InStr(1, txtSecondRem.Text, ".")) Then
+                    Dim SecondRem() As String = txtSecondRem.Text.ToString().Split(CType(".", Char()))
+                    If CInt(SecondRem(0)) <> 0 Or SecondRem(1).Length > 3 Then
+                        txtSecondRem.Text = ""
+                        ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>IntoFormula();</script>")
+                        Exit Sub
+                    End If
+                Else
+                    If Val(txtSecondRem.Text) > 1 Or Val(txtSecondRem.Text) < -1 Then
+                        txtSecondRem.Text = ""
+                        ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>IntoFormula();</script>")
+                        Exit Sub
+                    End If
+                End If
+                If CBool(InStr(1, txtThirdRem.Text, ".")) Then
+                    Dim ThirdRem() As String = txtThirdRem.Text.ToString().Split(CType(".", Char()))
+                    If CInt(ThirdRem(0)) <> 0 Or ThirdRem(1).Length > 3 Then
+                        txtThirdRem.Text = ""
+                        ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>IntoFormula();</script>")
+                        Exit Sub
+                    End If
+                Else
+                    If Val(txtThirdRem.Text) > 1 Or Val(txtThirdRem.Text) < -1 Then
+                        txtThirdRem.Text = ""
+                        ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>IntoFormula();</script>")
+                        Exit Sub
+                    End If
+                End If
+                'Dim FirstRem() As String = txtFirstRem.Text.ToString().Split(CType(".", Char()))
+                'Dim SecondRem() As String = txtSecondRem.Text.ToString().Split(CType(".", Char()))
+                'Dim ThirdRem() As String = txtThirdRem.Text.ToString().Split(CType(".", Char()))
+                'If CInt(FirstRem(0)) <> 0 Or FirstRem(1).Length > 3 Then
+                '    txtFirstRem.Text = ""
+                '    ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>IntoFormula();</script>")
+                '    Exit Sub
+                'End If
+                'If CInt(SecondRem(0)) <> 0 Or SecondRem(1).Length > 3 Then
+                '    txtSecondRem.Text = ""
+                '    ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>IntoFormula();</script>")
+                '    Exit Sub
+                'End If
+                'If CInt(ThirdRem(0)) <> 0 Or ThirdRem(1).Length > 3 Then
+                '    txtThirdRem.Text = ""
+                '    ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>IntoFormula();</script>")
+                '    Exit Sub
+                'End If
             Else
                 ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>IntoNumber();</script>")
                 Exit Sub
@@ -148,6 +212,7 @@ Public Class ReminderSetting
         End If
         'st_SQL &= "USE [Purchase] "
         'st_SQL &= "GO "
+
 
         If SId = 0 Then
             st_SQL &= "UPDATE [dbo].[Reminder] "

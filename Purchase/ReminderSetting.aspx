@@ -35,9 +35,9 @@
                             </asp:DropDownList></td>
                     </tr>
                     <tr>
-                        <th>Remind Coefficient1 : </th>
+                        <th>Remind Coefficient 1 : </th>
                         <td>
-                            <asp:TextBox ID="txtFirstRem" runat="server" Width="7em" MaxLength="5"></asp:TextBox>
+                            <asp:TextBox ID="txtFirstRem" runat="server" Width="7em" MaxLength="6"></asp:TextBox>
                         </td>
                         <th>
                             <label>Constant1:</label>
@@ -47,9 +47,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>Remind Coefficient2 : </th>
+                        <th>Remind Coefficient 2 : </th>
                         <td>
-                            <asp:TextBox ID="txtSecondRem" runat="server" Width="7em" MaxLength="5"></asp:TextBox>
+                            <asp:TextBox ID="txtSecondRem" runat="server" Width="7em" MaxLength="6"></asp:TextBox>
                         </td>
                         <th>
                             <label>Constant2:</label>
@@ -59,9 +59,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>Remind Coefficient3 : </th>
+                        <th>Remind Coefficient 3 : </th>
                         <td>
-                            <asp:TextBox ID="txtThirdRem" runat="server" Width="7em" MaxLength="5"></asp:TextBox>
+                            <asp:TextBox ID="txtThirdRem" runat="server" Width="7em" MaxLength="6"></asp:TextBox>
                         </td>
                         <th>
                             <label>Constant3:</label>
@@ -71,6 +71,10 @@
                         </td>
                     </tr>
                 </table>
+                <label style="font-weight: 990">Instruction:</label>
+                <label>Formula of Reminder = Round (Remind coefficient N value x Lead time,0)  N=1,2,3 </label><br />
+                <label style="margin-left:80px">-1≤Remind coefficient≤1, Remind coefficient format: 3 decimal</label>
+<%--                <label style>-1≤Remind coefficient≤1, Remind coefficient format: 3 decimal</label>--%>
                 <%--  <asp:HiddenField ID="Mode" runat="server" value="" />--%>
                 <%--		<asp:HiddenField ID="UpdateDate" runat="server" />--%>
                 <asp:HiddenField ID="Action" runat="server" Value="Save" />
@@ -85,7 +89,7 @@
         <!--#include virtual="./Footer.html" -->
         <!-- Footer END -->
 
-        <script language ="javascript" type="text/javascript">
+        <script language="javascript" type="text/javascript">
             //function Search_onclick() {
             //    var UserID = encodeURIComponent(document.getElementById('UserID').value);
             //    popup('./UserSelect.aspx?UserID=' + UserID);
@@ -106,8 +110,12 @@
                 alert("Please enter an integer!");
             }
             //数字
-            function IntoNumber(){
+            function IntoNumber() {
                 alert("The format you entered is not correct. Please enter a number!");
+            }
+            //formula输入规范
+            function IntoFormula() {
+                alert("Please input standard data!");
             }
         </script>
     </form>

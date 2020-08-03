@@ -1659,7 +1659,7 @@ Partial Public Class RFQUpdate
                     Return ""
                     Exit Function
                 End If
-                parameter(32) = System.Math.Round(DS2.Tables("RFQLine").Rows(0).Item("LeadTime") * POReminderFirstRem - DS2.Tables("RFQLine").Rows(0).Item("LeadTime"), 0)
+                parameter(32) = System.Math.Round(DS2.Tables("RFQLine").Rows(0).Item("LeadTime") * POReminderFirstRem, 0)
                 parameter(33) = System.Math.Round(DS2.Tables("RFQLine").Rows(0).Item("LeadTime") * POReminderSecondRem, 0)
                 parameter(34) = System.Math.Round(DS2.Tables("RFQLine").Rows(0).Item("LeadTime") * POReminderThirdRem, 0)
             Else

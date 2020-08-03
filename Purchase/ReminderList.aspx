@@ -29,6 +29,7 @@
                 <LayoutTemplate>
                     <table ID="itemPlaceholderContainer" runat="server" border="0" style="">
                         <tr runat="server" style="">
+                            <th runat="server" style="width:16%">Location</th>
                             <th runat="server" style="width:16%">Plant</th>
                             <th runat="server" style="width:17%">ShowType</th>
                             <th runat="server" style="width:16%">FirstRem</th>
@@ -45,6 +46,7 @@
                 </EmptyDataTemplate>
                 <ItemTemplate>
                     <tr>
+                        <td><asp:Label ID="Label1" runat="server" Text='<%# Eval("Location") %>' /></td>
                         <td><asp:Label ID="PlantLabel" runat="server" Text='<%# Eval("SupplyingPlant") %>' /></td>
                         <td><asp:Label ID="ShowTypeLabel" runat="server" Text='<%# Eval("ShowType") %>' /></td>
                         <td><asp:Label ID="FirstRemLabel" runat="server" Text='<%# Eval("FirstRem") %>' /></td>
