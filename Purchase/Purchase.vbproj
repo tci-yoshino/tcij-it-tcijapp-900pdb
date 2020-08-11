@@ -134,6 +134,7 @@
     <Content Include="RFQSelect.aspx" />
     <Content Include="RFQStatus.aspx" />
     <Content Include="RFQUpdate.aspx" />
+    <Content Include="Setting.aspx" />
     <Content Include="Setting.html" />
     <Content Include="SupplierListByProduct.aspx" />
     <Content Include="SupplierSearch.aspx" />
@@ -377,6 +378,13 @@
     </Compile>
     <Compile Include="RFQUpdate.aspx.vb">
       <DependentUpon>RFQUpdate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Setting.aspx.designer.vb">
+      <DependentUpon>Setting.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Setting.aspx.vb">
+      <DependentUpon>Setting.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SupplierListByProduct.aspx.designer.vb">

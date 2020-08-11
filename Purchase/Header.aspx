@@ -27,7 +27,7 @@
             <li id="supplier"><a href="./RFQSearchBySupplier.aspx" target="main">Supplier</a></li>
             <li id="rfq_status"><a href="./RFQStatus.aspx" target="main">RFQ Status</a></li>
             <li id="po_status"><a href="./POStatus.aspx" target="main">PO Status</a></li>
-            <li id="setting"><a href="./Setting.html" target="main">Setting</a></li>
+            <li id="setting"><a href="./Setting.aspx" target="main">Setting</a></li>
         </ul>
     </div><!-- Global Navigation END -->
 </body>
