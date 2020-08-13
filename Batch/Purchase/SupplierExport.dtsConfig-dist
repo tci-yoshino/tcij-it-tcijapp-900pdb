@@ -1,17 +1,17 @@
-<?xml version="1.0"?>
-<DTSConfiguration>
+<?xml version="1.0"?><DTSConfiguration>
 	<DTSConfigurationHeading>
 		<DTSConfigurationFileInfo GeneratedBy="TCIX\Masumi.Koyama" GeneratedFromPackageName="SupplierExport" GeneratedFromPackageID="{5E4270CF-BE27-42B4-A85E-77D63E766D01}" GeneratedDate="2016/10/18 17:25:33"/>
 	</DTSConfigurationHeading>
 
-	<!-- コマンドタイムアウト（秒）※0 は無限となります -->
 	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::CommandTimeout].Properties[Value]" ValueType="Int32">
 		<ConfiguredValue>600</ConfiguredValue>
 	</Configuration>
 
-	<!-- 出力ファイルパス（ファイル名まで指定） -->
-	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputFilePath].Properties[Value]" ValueType="String">
-		<ConfiguredValue>\\TFL5\file\部署\調達部\受信\情シス提供データ(調達)\PDB_Supplier.xlsx</ConfiguredValue>
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::TempDir].Properties[Value]" ValueType="String">
+		<ConfiguredValue>C:\tcijapp\Purchase\Batch\Temp</ConfiguredValue>
 	</Configuration>
 
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputFilePath].Properties[Value]" ValueType="String">
+		<ConfiguredValue>\\TFL5\GlobalProject\Purchasing_Info_Sharing\0202 IT DATA S4\PDB Supplier info\PDB_Supplier_S4.xlsx</ConfiguredValue>
+	</Configuration>
 </DTSConfiguration>

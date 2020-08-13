@@ -8,12 +8,12 @@
   DTS:DTSID="{5E4270CF-BE27-42B4-A85E-77D63E766D01}"
   DTS:EnableConfig="True"
   DTS:ExecutableType="Microsoft.Package"
-  DTS:LastModifiedProductVersion="13.0.2165.0"
+  DTS:LastModifiedProductVersion="15.0.1100.123"
   DTS:LocaleID="1041"
   DTS:ObjectName="SupplierExport"
   DTS:PackageType="5"
-  DTS:VersionBuild="13"
-  DTS:VersionGUID="{F688FA2C-47E0-48EA-965E-F23056345E9E}">
+  DTS:VersionBuild="20"
+  DTS:VersionGUID="{FE92F62D-D16B-4B35-802A-7B3CC7CFB784}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -25,17 +25,6 @@
       <DTS:ObjectData>
         <SmtpConnectionManager
           ConnectionString="SmtpServer=excas.tcix.local;UseWindowsAuthentication=False;EnableSsl=False;" />
-      </DTS:ObjectData>
-    </DTS:ConnectionManager>
-    <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[SupplierExport.log]"
-      DTS:CreationName="FILE"
-      DTS:DTSID="{DAE47882-CD72-4D98-BC69-22280D9F12FD}"
-      DTS:ObjectName="SupplierExport.log">
-      <DTS:ObjectData>
-        <DTS:ConnectionManager
-          DTS:FileUsageType="1"
-          DTS:ConnectionString="C:\tcijapp\Purchase\Batch\log\SupplierExport.log" />
       </DTS:ObjectData>
     </DTS:ConnectionManager>
   </DTS:ConnectionManagers>
@@ -53,18 +42,6 @@
       DTS:DTSID="{20D585FD-D022-49BF-B93B-FEBA9B1707A2}"
       DTS:ObjectName="構成 2" />
   </DTS:Configurations>
-  <DTS:LogProviders>
-    <DTS:LogProvider
-      DTS:ConfigString="SupplierExport.log"
-      DTS:CreationName="Microsoft.LogProviderTextFile"
-      DTS:Description="イベントのログ エントリを CSV ファイルに書き込みます"
-      DTS:DTSID="{4B0FE41B-70B2-4C1F-9037-64B97F5A3FD5}"
-      DTS:ObjectName="テキスト ファイルの SSIS ログ プロバイダー">
-      <DTS:ObjectData>
-        <InnerObject />
-      </DTS:ObjectData>
-    </DTS:LogProvider>
-  </DTS:LogProviders>
   <DTS:Variables>
     <DTS:Variable
       DTS:CreationName=""
@@ -110,7 +87,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="MailTo">
       <DTS:VariableValue
-        DTS:DataType="8">devteam_app@tcichemicals.com</DTS:VariableValue>
+        DTS:DataType="8">masumi.koyama@tcichemicals.com</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -119,7 +96,16 @@
       DTS:Namespace="User"
       DTS:ObjectName="OutputFilePath">
       <DTS:VariableValue
-        DTS:DataType="8">\\TFL5\file\部署\調達部\受信\情シス提供データ(調達)\PDB_Supplier.xlsx</DTS:VariableValue>
+        DTS:DataType="8">C:\Users\Masumi.Koyama\Desktop\PDB_Supplier_S4.xlsx</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{36723F5C-0CAA-4488-8802-95197B1319BD}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="TempDir">
+      <DTS:VariableValue
+        DTS:DataType="8">C:\tcijapp\Purchase\Batch\Temp</DTS:VariableValue>
     </DTS:Variable>
   </DTS:Variables>
   <DTS:LoggingOptions
@@ -182,292 +168,340 @@
       <DTS:Property
         DTS:Name="DataBytes">-1</DTS:Property>
     </DTS:Property>
-    <DTS:SelectedLogProviders>
-      <DTS:SelectedLogProvider
-        DTS:InstanceID="{4B0FE41B-70B2-4C1F-9037-64B97F5A3FD5}" />
-    </DTS:SelectedLogProviders>
   </DTS:LoggingOptions>
   <DTS:Executables>
     <DTS:Executable
-      DTS:refId="Package\スクリプト タスク"
-      DTS:CreationName="Microsoft.ScriptTask"
-      DTS:Description="スクリプト タスク"
-      DTS:DTSID="{591CACD9-1D09-4428-8724-7B239E5E441E}"
-      DTS:ExecutableType="Microsoft.ScriptTask"
+      DTS:refId="Package\エラーメール送信"
+      DTS:CreationName="Microsoft.SendMailTask"
+      DTS:Description="メール送信タスク"
+      DTS:DTSID="{95C18BCF-65A8-402C-B257-09963D50A01A}"
+      DTS:ExecutableType="Microsoft.SendMailTask"
       DTS:LocaleID="-1"
-      DTS:ObjectName="スクリプト タスク"
+      DTS:ObjectName="エラーメール送信"
+      DTS:TaskContact="Send Mail Task; Microsoft Corporation; Microsoft SQL Server 2008 R2; © 2007 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
       DTS:ThreadHint="0">
       <DTS:Variables />
       <DTS:LoggingOptions
         DTS:FilterKind="0" />
+      <DTS:PropertyExpression
+        DTS:Name="ToLine">@[User::MailTo]</DTS:PropertyExpression>
       <DTS:ObjectData>
-        <ScriptProject
-          Name="ST_5f715d9205384d0d87610b825ac487b0"
-          VSTAMajorVersion="14"
-          VSTAMinorVersion="0"
-          Language="VisualBasic"
-          ReadOnlyVariables="User::ConnectionString, User::CommandTimeout, User::OutputFilePath"
-          ReadWriteVariables="User::ErrorMessage">
-          <ProjectItem
-            Name="ScriptMain.vb"
-            Encoding="UTF8"><![CDATA[' Microsoft SQL Server Integration Services Script Task
-' Write scripts using Microsoft Visual Basic 2008.
-' The ScriptMain is the entry point class of the script.
-
-Imports System
+        <SendMailTask:SendMailTaskData
+          SendMailTask:SMTPServer="{0AD186C2-2559-4809-8E51-09449B4289C8}"
+          SendMailTask:From="devteam_app@tcichemicals.com"
+          SendMailTask:To="masumi.koyama@tcichemicals.com"
+          SendMailTask:Subject="[Purchase] 仕入先マスタデータ出力エラー"
+          SendMailTask:MessageSourceType="Variable"
+          SendMailTask:MessageSource="User::ErrorMessage" xmlns:SendMailTask="www.microsoft.com/sqlserver/dts/tasks/sendmailtask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\シーケンス コンテナー"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="シーケンス コンテナー"
+      DTS:DTSID="{3DD8640C-BC60-4984-938C-B0B0347D20F6}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="シーケンス コンテナー">
+      <DTS:Variables />
+      <DTS:LoggingOptions
+        DTS:FilterKind="0" />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\シーケンス コンテナー\仕入先マスタデータ出力"
+          DTS:CreationName="Microsoft.ScriptTask"
+          DTS:Description="スクリプト タスク"
+          DTS:DTSID="{D5BF20E5-24B7-4194-816D-37C7283EFD37}"
+          DTS:ExecutableType="Microsoft.ScriptTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="仕入先マスタデータ出力"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:LoggingOptions
+            DTS:FilterKind="0" />
+          <DTS:ObjectData>
+            <ScriptProject
+              Name="ST_4ab155c31afb4a8d8385b37db8cdf9b0"
+              VSTAMajorVersion="14"
+              VSTAMinorVersion="0"
+              Language="VisualBasic"
+              ReadOnlyVariables="User::ConnectionString, User::CommandTimeout, User::TempDir, User::OutputFilePath"
+              ReadWriteVariables="User::ErrorMessage">
+              <ProjectItem
+                Name="ScriptMain.vb"
+                Encoding="UTF8"><![CDATA[#Region "Imports"
 Imports System.Collections.Generic
-Imports System.Data.SqlClient
 Imports System.IO
 Imports System.Reflection
 Imports System.Text
-Imports System.Text.RegularExpressions
-Imports Microsoft.SqlServer.Dts.Runtime
+#End Region
 
-<Microsoft.SqlServer.Dts.Tasks.ScriptTask.SSISScriptTaskEntryPointAttribute> _
+'ScriptMain is the entry point class of the script.  Do not change the name, attributes,
+'or parent of this class.
+<Microsoft.SqlServer.Dts.Tasks.ScriptTask.SSISScriptTaskEntryPointAttribute()> _
 <System.CLSCompliantAttribute(False)> _
 Partial Public Class ScriptMain
-	Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
+    Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
 
-	Enum ScriptResults
-		Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
-		Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
-	End Enum
+    'This method is called when this script task executes in the control flow.
+    'Before returning from this method, set the value of Dts.TaskResult to indicate success or failure.
+    'To open Help, press F1.
 
-    Dim connectionString As String = String.Empty
-    Dim commandTimeout As Integer = 0
-    Dim outputFilePath As String = String.Empty
+    Private connectionString As String = String.Empty
+    Private commandTimeout As Integer = 0
+    Private outputFilePath As String = String.Empty
+    Private tempFilePath As String = String.Empty
 
     ''' <summary>
     ''' メイン処理を行います。
     ''' </summary>
     Public Sub Main()
 
+        Dts.TaskResult = ScriptResults.Success
+
         connectionString = Dts.Variables("ConnectionString").Value.ToString
-        commandTimeout = CInt(Dts.Variables("CommandTimeout").Value.ToString)
+        commandTimeout = CInt(Dts.Variables("CommandTimeout").Value)
         outputFilePath = Dts.Variables("OutputFilePath").Value.ToString
+        tempFilePath = Path.Combine(Dts.Variables("TempDir").Value.ToString, Path.GetFileName(outputFilePath))
 
         Dim sqlStr As New StringBuilder
-        Dim sqlList As List(Of String) = New List(Of String)
-        Dim sheetList As List(Of String) = New List(Of String)
+        sqlStr.AppendLine("SELECT")
+        sqlStr.AppendLine("    S.SupplierCode AS SupCODE")
+        sqlStr.AppendLine("    ,S.S4SupplierCode AS SupNo")
+        sqlStr.AppendLine("    ,S.Name3 AS SupName1")
+        sqlStr.AppendLine("    ,S.Name4 AS SupName2")
+        sqlStr.AppendLine("    ,S.SupplierEmailID1 AS SupID1")
+        sqlStr.AppendLine("    ,S.SupplierEmail1 AS SupREM1")
+        sqlStr.AppendLine("    ,S.SupplierContactPerson1 AS SupMAD1")
+        sqlStr.AppendLine("    ,S.SupplierEmailID2 AS SupID2")
+        sqlStr.AppendLine("    ,S.SupplierEmail2 AS SupREM2")
+        sqlStr.AppendLine("    ,S.SupplierContactPerson2 AS SupMAD2")
+        sqlStr.AppendLine("    ,S.SupplierEmailID3 AS SupID3")
+        sqlStr.AppendLine("    ,S.SupplierEmail3 AS SupREM3")
+        sqlStr.AppendLine("    ,S.SupplierContactPerson3 AS SupMAD3")
+        sqlStr.AppendLine("    ,S.SupplierEmailID4 AS SupID4")
+        sqlStr.AppendLine("    ,S.SupplierEmail4 AS SupREM4")
+        sqlStr.AppendLine("    ,S.SupplierContactPerson4 AS SupMAD4")
+        sqlStr.AppendLine("    ,S.SupplierEmailID5 AS SupID5")
+        sqlStr.AppendLine("    ,S.SupplierEmail5 AS SupREM5")
+        sqlStr.AppendLine("    ,S.SupplierContactPerson5 AS SupMAD5")
+        sqlStr.AppendLine("    ,S.SupplierEmailID6 AS SupID6")
+        sqlStr.AppendLine("    ,S.SupplierEmail6 AS SupREM6")
+        sqlStr.AppendLine("    ,S.SupplierContactPerson6 AS SupMAD6")
+        sqlStr.AppendLine("    ,S.SupplierEmailID7 AS SupID7")
+        sqlStr.AppendLine("    ,S.SupplierEmail7 AS SupREM7")
+        sqlStr.AppendLine("    ,S.SupplierContactPerson7 AS SupMAD7")
+        sqlStr.AppendLine("    ,S.SupplierEmailID8 AS SupID8")
+        sqlStr.AppendLine("    ,S.SupplierEmail8 AS SupREM8")
+        sqlStr.AppendLine("    ,S.SupplierContactPerson8 AS SupMAD8")
+        sqlStr.AppendLine("    ,S.SupplierEmailID9 AS SupID9")
+        sqlStr.AppendLine("    ,S.SupplierEmail9 AS SupREM9")
+        sqlStr.AppendLine("    ,S.SupplierContactPerson9 AS SupMAD9")
+        sqlStr.AppendLine("    ,S.SupplierEmailID10 AS SupID10")
+        sqlStr.AppendLine("    ,S.SupplierEmail10 AS SupREM10")
+        sqlStr.AppendLine("    ,S.SupplierContactPerson10 AS SupMAD10")
+        sqlStr.AppendLine("    ,C.[Name] AS SupCry")
+        sqlStr.AppendLine("    ,S.Email AS [E-mail]")
+        sqlStr.AppendLine("FROM")
+        sqlStr.AppendLine("    s_Country AS C")
+        sqlStr.AppendLine("    ,Supplier AS S")
+        sqlStr.AppendLine("WHERE")
+        sqlStr.AppendLine("    S.CountryCode = C.CountryCode")
+        sqlStr.AppendLine("ORDER BY")
+        sqlStr.AppendLine("    SupplierCode")
 
         Try
-            'ファイルが既に存在する場合は削除する
-            If File.Exists(outputFilePath) Then
-                File.Delete(outputFilePath)
+            If File.Exists(tempFilePath) Then
+                File.Delete(tempFilePath)
             End If
 
-            '重複確認用
-            sqlStr = New StringBuilder
-            sqlStr.AppendLine("WITH PS AS (")
-            sqlStr.AppendLine("    SELECT")
-            sqlStr.AppendLine("        S.SupplierCode,")
-            sqlStr.AppendLine("        ISNULL(S.Name3, '') + ' ' + ISNULL(S.Name4, '') AS SupplierName,")
-            sqlStr.AppendLine("        C.Name AS Country")
-            sqlStr.AppendLine("    FROM")
-            sqlStr.AppendLine("        s_Country AS C,")
-            sqlStr.AppendLine("        Supplier AS S")
-            sqlStr.AppendLine("    WHERE")
-            sqlStr.AppendLine("        S.CountryCode = C.CountryCode")
-            sqlStr.AppendLine("),")
-            sqlStr.AppendLine("SS AS (")
-            sqlStr.AppendLine("    SELECT")
-            sqlStr.AppendLine("        R3SupplierCode,")
-            sqlStr.AppendLine("        R3SupplierName1,")
-            sqlStr.AppendLine("        R3SupplierName2,")
-            sqlStr.AppendLine("        R3SupplierCountry,")
-            sqlStr.AppendLine("        [1] AS SupplierCode1,")
-            sqlStr.AppendLine("        [2] AS SupplierCode2,")
-            sqlStr.AppendLine("        [3] AS SupplierCode3,")
-            sqlStr.AppendLine("        [4] AS SupplierCode4,")
-            sqlStr.AppendLine("        [5] AS SupplierCode5,")
-            sqlStr.AppendLine("        [6] AS SupplierCode6,")
-            sqlStr.AppendLine("        [7] AS SupplierCode7,")
-            sqlStr.AppendLine("        [8] AS SupplierCode8,")
-            sqlStr.AppendLine("        [9] AS SupplierCode9,")
-            sqlStr.AppendLine("        [10] AS SupplierCode10")
-            sqlStr.AppendLine("    FROM")
-            sqlStr.AppendLine("        (")
-            sqlStr.AppendLine("            SELECT")
-            sqlStr.AppendLine("                ROW_NUMBER() OVER(PARTITION BY R3SupplierCode ORDER BY SupplierCode) AS NUM,")
-            sqlStr.AppendLine("                R3SupplierCode,")
-            sqlStr.AppendLine("                R3SupplierName1,")
-            sqlStr.AppendLine("                R3SupplierName2,")
-            sqlStr.AppendLine("                R3SupplierCountry,")
-            sqlStr.AppendLine("                SupplierCode")
-            sqlStr.AppendLine("            FROM")
-            sqlStr.AppendLine("                v_R3Supplier")
-            sqlStr.AppendLine("        ) AS BASE")
-            sqlStr.AppendLine("        PIVOT (MIN(SupplierCode) FOR NUM IN ([1], [2], [3], [4], [5], [6], [7], [8], [9], [10])) AS PVT")
-            sqlStr.AppendLine(")")
-            sqlStr.AppendLine("SELECT")
-            sqlStr.AppendLine("    SS.R3SupplierCode AS SAPSupplierCode,")
-            sqlStr.AppendLine("    CASE WHEN LEN(RTRIM(SS.R3SupplierName2)) = 0 THEN SS.R3SupplierName1 ELSE SS.R3SupplierName2 END AS SAPSupplierName,")
-            sqlStr.AppendLine("    SS.R3SupplierCountry AS SAPCountry,")
-            sqlStr.AppendLine("    PS1.SupplierCode AS PDBSupplierCode1,")
-            sqlStr.AppendLine("    PS1.SupplierName AS PDBSupplierName1,")
-            sqlStr.AppendLine("    PS1.Country AS PDBCountry1,")
-            sqlStr.AppendLine("    PS2.SupplierCode AS PDBSupplierCode2,")
-            sqlStr.AppendLine("    PS2.SupplierName AS PDBSupplierName2,")
-            sqlStr.AppendLine("    PS2.Country AS PDBCountry2,")
-            sqlStr.AppendLine("    PS3.SupplierCode AS PDBSupplierCode3,")
-            sqlStr.AppendLine("    PS3.SupplierName AS PDBSupplierName3,")
-            sqlStr.AppendLine("    PS3.Country AS PDBCountry3,")
-            sqlStr.AppendLine("    PS4.SupplierCode AS PDBSupplierCode4,")
-            sqlStr.AppendLine("    PS4.SupplierName AS PDBSupplierName4,")
-            sqlStr.AppendLine("    PS4.Country AS PDBCountry4,")
-            sqlStr.AppendLine("    PS5.SupplierCode AS PDBSupplierCode5,")
-            sqlStr.AppendLine("    PS5.SupplierName AS PDBSupplierName5,")
-            sqlStr.AppendLine("    PS5.Country AS PDBCountry5,")
-            sqlStr.AppendLine("    PS6.SupplierCode AS PDBSupplierCode6,")
-            sqlStr.AppendLine("    PS6.SupplierName AS PDBSupplierName6,")
-            sqlStr.AppendLine("    PS6.Country AS PDBCountry6,")
-            sqlStr.AppendLine("    PS7.SupplierCode AS PDBSupplierCode7,")
-            sqlStr.AppendLine("    PS7.SupplierName AS PDBSupplierName7,")
-            sqlStr.AppendLine("    PS7.Country AS PDBCountry7,")
-            sqlStr.AppendLine("    PS8.SupplierCode AS PDBSupplierCode8,")
-            sqlStr.AppendLine("    PS8.SupplierName AS PDBSupplierName8,")
-            sqlStr.AppendLine("    PS8.Country AS PDBCountry8,")
-            sqlStr.AppendLine("    PS9.SupplierCode AS PDBSupplierCode9,")
-            sqlStr.AppendLine("    PS9.SupplierName AS PDBSupplierName9,")
-            sqlStr.AppendLine("    PS9.Country AS PDBCountry9,")
-            sqlStr.AppendLine("    PS10.SupplierCode AS PDBSupplierCode10,")
-            sqlStr.AppendLine("    PS10.SupplierName AS PDBSupplierName10,")
-            sqlStr.AppendLine("    PS10.Country AS PDBCountry10")
-            sqlStr.AppendLine("FROM")
-            sqlStr.AppendLine("    SS")
-            sqlStr.AppendLine("        LEFT OUTER JOIN PS AS PS1 ON PS1.SupplierCode = SS.SupplierCode1")
-            sqlStr.AppendLine("        LEFT OUTER JOIN PS AS PS2 ON PS2.SupplierCode = SS.SupplierCode2")
-            sqlStr.AppendLine("        LEFT OUTER JOIN PS AS PS3 ON PS3.SupplierCode = SS.SupplierCode3")
-            sqlStr.AppendLine("        LEFT OUTER JOIN PS AS PS4 ON PS4.SupplierCode = SS.SupplierCode4")
-            sqlStr.AppendLine("        LEFT OUTER JOIN PS AS PS5 ON PS5.SupplierCode = SS.SupplierCode5")
-            sqlStr.AppendLine("        LEFT OUTER JOIN PS AS PS6 ON PS6.SupplierCode = SS.SupplierCode6")
-            sqlStr.AppendLine("        LEFT OUTER JOIN PS AS PS7 ON PS7.SupplierCode = SS.SupplierCode7")
-            sqlStr.AppendLine("        LEFT OUTER JOIN PS AS PS8 ON PS8.SupplierCode = SS.SupplierCode8")
-            sqlStr.AppendLine("        LEFT OUTER JOIN PS AS PS9 ON PS9.SupplierCode = SS.SupplierCode9")
-            sqlStr.AppendLine("        LEFT OUTER JOIN PS AS PS10 ON PS10.SupplierCode = SS.SupplierCode10")
-            sqlStr.AppendLine("ORDER BY")
-            sqlStr.AppendLine("    SS.R3SupplierCode")
+            Dim sqlList As New List(Of String)
+            Dim sheetList As New List(Of String)
 
             sqlList.Add(sqlStr.ToString)
-            sheetList.Add("重複確認用")
+            sheetList.Add("Sheet1")
 
-            '登録確認用
-            sqlStr = New StringBuilder
-            sqlStr.AppendLine("SELECT")
-            sqlStr.AppendLine("    PS.SupplierCode,")
-            sqlStr.AppendLine("    ISNULL(PS.Name3, '') + ' ' + ISNULL(PS.Name4, '') AS SupplierName,")
-            sqlStr.AppendLine("    C.Name AS Country,")
-            sqlStr.AppendLine("    CONVERT(date, PS.CreateDate) AS CreationDate,")
-            sqlStr.AppendLine("    PS.R3SupplierCode AS SAPSupplierCode1,")
-            sqlStr.AppendLine("    S1.SupMei1 AS SAPSupplierName1,")
-            sqlStr.AppendLine("    PS.R3SupplierCode2 AS SAPSupplierCode2,")
-            sqlStr.AppendLine("    S2.SupMei1 AS SAPSupplierName2,")
-            sqlStr.AppendLine("    PS.R3SupplierCode3 AS SAPSupplierCode3,")
-            sqlStr.AppendLine("    S3.SupMei1 AS SAPSupplierName3,")
-            sqlStr.AppendLine("    PS.R3SupplierCode4 AS SAPSupplierCode4,")
-            sqlStr.AppendLine("    S4.SupMei1 AS SAPSupplierName4,")
-            sqlStr.AppendLine("    PS.R3SupplierCode5 AS SAPSupplierCode5,")
-            sqlStr.AppendLine("    S5.SupMei1 AS SAPSupplierName5,")
-            sqlStr.AppendLine("    PS.R3SupplierCode6 AS SAPSupplierCode6,")
-            sqlStr.AppendLine("    S6.SupMei1 AS SAPSupplierName6,")
-            sqlStr.AppendLine("    PS.R3SupplierCode7 AS SAPSupplierCode7,")
-            sqlStr.AppendLine("    S7.SupMei1 AS SAPSupplierName7,")
-            sqlStr.AppendLine("    PS.R3SupplierCode8 AS SAPSupplierCode8,")
-            sqlStr.AppendLine("    S8.SupMei1 AS SAPSupplierName8,")
-            sqlStr.AppendLine("    PS.R3SupplierCode9 AS SAPSupplierCode9,")
-            sqlStr.AppendLine("    S9.SupMei1 AS SAPSupplierName9,")
-            sqlStr.AppendLine("    PS.R3SupplierCode10 AS SAPSupplierCode10,")
-            sqlStr.AppendLine("    S10.SupMei1 AS SAPSupplierName10")
-            sqlStr.AppendLine("FROM")
-            sqlStr.AppendLine("    s_Country AS C,")
-            sqlStr.AppendLine("    Supplier AS PS")
-            sqlStr.AppendLine("        LEFT OUTER JOIN s_Supplier AS S1 ON S1.SupNo = PS.R3SupplierCode")
-            sqlStr.AppendLine("        LEFT OUTER JOIN s_Supplier AS S2 ON S2.SupNo = PS.R3SupplierCode2")
-            sqlStr.AppendLine("        LEFT OUTER JOIN s_Supplier AS S3 ON S3.SupNo = PS.R3SupplierCode3")
-            sqlStr.AppendLine("        LEFT OUTER JOIN s_Supplier AS S4 ON S4.SupNo = PS.R3SupplierCode4")
-            sqlStr.AppendLine("        LEFT OUTER JOIN s_Supplier AS S5 ON S5.SupNo = PS.R3SupplierCode5")
-            sqlStr.AppendLine("        LEFT OUTER JOIN s_Supplier AS S6 ON S6.SupNo = PS.R3SupplierCode6")
-            sqlStr.AppendLine("        LEFT OUTER JOIN s_Supplier AS S7 ON S7.SupNo = PS.R3SupplierCode7")
-            sqlStr.AppendLine("        LEFT OUTER JOIN s_Supplier AS S8 ON S8.SupNo = PS.R3SupplierCode8")
-            sqlStr.AppendLine("        LEFT OUTER JOIN s_Supplier AS S9 ON S9.SupNo = PS.R3SupplierCode9")
-            sqlStr.AppendLine("        LEFT OUTER JOIN s_Supplier AS S10 ON S10.SupNo = PS.R3SupplierCode10")
-            sqlStr.AppendLine("WHERE")
-            sqlStr.AppendLine("    PS.CountryCode = C.CountryCode")
-            sqlStr.AppendLine("ORDER BY")
-            sqlStr.AppendLine("    PS.SupplierCode")
+            Dim setup As AppDomainSetup = New AppDomainSetup
+            setup.ApplicationBase = AppDomain.CurrentDomain.BaseDirectory.ToString
 
-            sqlList.Add(sqlStr.ToString)
-            sheetList.Add("登録確認用")
+            Dim evidence As Security.Policy.Evidence = New Security.Policy.Evidence
+            evidence.AddHostEvidence(New Security.Policy.Zone(Security.SecurityZone.MyComputer))
 
-            Dim domain As AppDomain = AppDomain.CreateDomain("MyDomain")
-            Dim obj = domain.CreateInstanceAndUnwrap("TCIOpenXML", "TCIOpenXML.TCIOpenXML")
+            Dim domain As AppDomain = AppDomain.CreateDomain("MyDomain", evidence, setup)
+            Dim obj As Object = domain.CreateInstanceAndUnwrap("TCIOpenXML", "TCIOpenXML.TCIOpenXML")
 
-            Dim info As MethodInfo = obj.GetType().GetMethod("CreateOpenXML", _
-                                                                New Type() {GetType(String), _
-                                                                            GetType(List(Of String)), _
-                                                                            GetType(String), _
-                                                                            GetType(List(Of String)), _
-                                                                            GetType(Boolean), _
-                                                                            GetType(Integer)})
+            Dim info As MethodInfo = obj.GetType().GetMethod("CreateOpenXML",
+                                                             New Type() {GetType(String),
+                                                             GetType(List(Of String)),
+                                                             GetType(String),
+                                                             GetType(List(Of String)),
+                                                             GetType(Boolean),
+                                                             GetType(Integer)})
 
-            info.Invoke(obj, New Object() {connectionString, _
-                                           sqlList, _
-                                           outputFilePath, _
-                                           sheetList, _
-                                           True, _
+            info.Invoke(obj, New Object() {connectionString,
+                                           sqlList,
+                                           tempFilePath,
+                                           sheetList,
+                                           False,
                                            commandTimeout})
 
-        Catch ex As Exception
-            Dts.TaskResult = ScriptResults.Failure
-            SetErrorMessage(ex)
+            File.Copy(tempFilePath, outputFilePath, True)
 
-            Throw ex
+        Catch ex As Exception
+
+            Dim errStr As New StringBuilder
+            errStr.AppendLine(String.Format("仕入先マスタデータ出力 ({0}) に失敗しました。", outputFilePath))
+            errStr.AppendLine("エラーメッセージ：")
+            errStr.AppendLine(ex.ToString)
+
+            Dts.Variables("ErrorMessage").Value = errStr.ToString
+
+            Dts.TaskResult = ScriptResults.Failure
 
         End Try
 
-        Dts.TaskResult = ScriptResults.Success
-
     End Sub
 
-    ''' <summary>
-    ''' ユーザ変数にエラーメッセージを設定します。
-    ''' </summary>
-    Private Sub SetErrorMessage(ByVal ex As Exception)
+#Region "ScriptResults declaration"
+    'This enum provides a convenient shorthand within the scope of this class for setting the
+    'result of the script.
 
-        Dim msgStr As New StringBuilder
+    'This code was generated automatically.
+    Enum ScriptResults
+        Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
+        Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
+    End Enum
 
-        msgStr.AppendLine("仕入先マスタデータの出力において、システムエラーが発生しました。")
-        msgStr.AppendLine()
-        msgStr.AppendLine("実行パス：")
-        msgStr.AppendLine(System.Environment.CommandLine)
-        msgStr.AppendLine()
-        msgStr.AppendLine("エラーメッセージ：")
-
-        If ex.InnerException Is Nothing Then
-            msgStr.AppendLine(ex.Message)
-            msgStr.AppendLine(ex.StackTrace)
-        Else
-            msgStr.AppendLine(ex.InnerException.Message)
-            msgStr.AppendLine(ex.InnerException.StackTrace)
-        End If
-
-        Dts.Variables("ErrorMessage").Value = msgStr.ToString
-
-    End Sub
+#End Region
 
 End Class]]></ProjectItem>
-          <ProjectItem
-            Name="My Project\Settings.settings"
-            Encoding="UTF8"><![CDATA[<?xml version='1.0' encoding='iso-8859-1'?>
+              <ProjectItem
+                Name="ST_4ab155c31afb4a8d8385b37db8cdf9b0.vbproj"
+                Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectTypeGuids>{30D016F9-3734-4E33-A861-5E7D899E18F3};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8133a23c-bf6d-4608-aff5-59f57b831889}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>My Project</AppDesignerFolder>
+    <RootNamespace>ST_4ab155c31afb4a8d8385b37db8cdf9b0</RootNamespace>
+    <AssemblyName>ST_4ab155c31afb4a8d8385b37db8cdf9b0</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ResolveAssemblyReferenceIgnoreTargetFrameworkAttributeVersionMismatch>true</ResolveAssemblyReferenceIgnoreTargetFrameworkAttributeVersionMismatch>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>.\bin\Debug\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+    <OutputPath>.\bin\Release\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.SqlServer.ManagedDTS, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+    <Reference Include="Microsoft.SqlServer.ScriptTask, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AppDesigner Include="My Project\" />
+    <Compile Include="My Project\AssemblyInfo.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ScriptMain.vb">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <!-- Include the build rules for a VB project.-->
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{30D016F9-3734-4E33-A861-5E7D899E18F3}">
+        <ProjectProperties HostName="ScriptTask"
+                           HostPackage="{B3A685AA-7EAF-4BC6-9940-57959FA5AC07}"
+                           ApplicationType="usd"
+                           Language="vb"
+                           TemplatesPath=""
+                           DebugInfoCommandLine=""
+                           DebugInfoWorkingDir=""
+                           IconImageList=""/>
+
+        <Host Name="ScriptTask" IconIndex="">
+        </Host>
+        <ProjectClient>
+          <HostIdentifier>SSIS_ST130</HostIdentifier>
+        </ProjectClient>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>]]></ProjectItem>
+              <ProjectItem
+                Name="My Project\Settings.settings"
+                Encoding="UTF8"><![CDATA[<?xml version='1.0' encoding='iso-8859-1'?>
 <SettingsFile xmlns="uri:settings" CurrentProfile="(Default)" GeneratedClassNamespace="$safeprojectname" GeneratedClassName="MySettings">
   <Profiles>
     <Profile Name="(Default)" />
   </Profiles>
   <Settings />
 </SettingsFile>]]></ProjectItem>
-          <ProjectItem
-            Name="My Project\AssemblyInfo.vb"
-            Encoding="UTF8"><![CDATA[Imports System
+              <ProjectItem
+                Name="My Project\AssemblyInfo.vb"
+                Encoding="UTF8"><![CDATA[Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 
@@ -477,18 +511,18 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("ST_5f715d9205384d0d87610b825ac487b0.vbproj")> 
+<Assembly: AssemblyTitle("ST_4ab155c31afb4a8d8385b37db8cdf9b0")> 
 <Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("ST_5f715d9205384d0d87610b825ac487b0.vbproj")> 
-<Assembly: AssemblyCopyright("Copyright @  2016")> 
+<Assembly: AssemblyProduct("ST_4ab155c31afb4a8d8385b37db8cdf9b0")> 
+<Assembly: AssemblyCopyright("Copyright @  2020")> 
 <Assembly: AssemblyTrademark("")> 
 <Assembly: CLSCompliant(True)> 
 
 <Assembly: ComVisible(False)> 
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("893616b7-6ab5-4ec2-94bf-6d8cb5c4f9f9")> 
+<Assembly: Guid("916b7a22-3b45-495d-a45d-4c6a229af692")> 
 
 ' Version information for an assembly consists of the following four values:
 '
@@ -503,9 +537,9 @@ Imports System.Runtime.InteropServices
 
 <Assembly: AssemblyVersion("1.0.0.0")> 
 <Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
-          <ProjectItem
-            Name="My Project\Settings.Designer.vb"
-            Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
+              <ProjectItem
+                Name="My Project\Settings.Designer.vb"
+                Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
 ' <autogenerated>
 '     This code was generated by a tool.
 '
@@ -543,174 +577,18 @@ Partial Friend NotInheritable Class MySettings
         End Get
     End Property
 End Class]]></ProjectItem>
-          <ProjectItem
-            Name="st_5f715d9205384d0d87610b825ac487b0.vbproj"
-            Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="utf-16"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!-- This section defines project-level properties.
-
-       Configuration - Specifies whether the default configuration is Release or Debug.
-       Platform - Specifies what CPU the output of this project can run on.
-       OutputType - Must be "Library" for VSTA.
-       NoStandardLibraries - Set to "false" for VSTA.
-       RootNamespace - In C#, this specifies the namespace given to new files.
-                       In Visual Basic, all objects are wrapped in this namespace at runtime.
-       AssemblyName - Name of the output assembly.
-  -->
-  <PropertyGroup>
-    <ProjectTypeGuids>{30D016F9-3734-4E33-A861-5E7D899E18F3};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Library</OutputType>
-    <RootNamespace>ST_5f715d9205384d0d87610b825ac487b0.vbproj</RootNamespace>
-    <AssemblyName>ST_5f715d9205384d0d87610b825ac487b0.vbproj</AssemblyName>
-    <StartupObject></StartupObject>
-    <OptionExplicit>On</OptionExplicit>
-    <OptionCompare>Binary</OptionCompare>
-    <OptionStrict>Off</OptionStrict>
-    <OptionInfer>On</OptionInfer>
-    <ProjectGuid>{639D4ECF-22EF-4F7A-9AD9-9BB3A53FF3D9}</ProjectGuid>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
-  </PropertyGroup>
-  <!-- This section defines properties that are set when the "Debug" configuration is
-       selected.
-
-       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
-       Optimize - If true, optimize the build output. If false, do not optimize.
-       OutputPath - Output path of the project relative to the project file.
-       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
-       DefineConstants - Constants defined for the preprocessor.
-       Warning Level - Warning level for the compiler.
-  -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DefineConstants></DefineConstants>
-    <DefineDebug>true</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
-  </PropertyGroup>
-  <!-- This section defines properties that are set when the "Release" configuration is
-       selected.
-
-       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
-       Optimize - If true, optimize the build output. If false, do not optimize.
-       OutputPath - Output path of the project relative to the project file.
-       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
-       DefineConstants - Constants defined for the preprocessor.
-       Warning Level - Warning level for the compiler.
-  -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DefineConstants></DefineConstants>
-    <DefineDebug>false</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <DebugSymbols>false</DebugSymbols>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
-  </PropertyGroup>
-  <!-- This section enables pre- and post-build steps. However,
-       it is recommended that MSBuild tasks be used instead of these properties.
-  -->
-  <PropertyGroup>
-    <PreBuildEvent></PreBuildEvent>
-    <PostBuildEvent></PostBuildEvent>
-  </PropertyGroup>
-  <!-- This sections specifies references for the project. -->
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.SqlServer.ManagedDTS, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
-    <Reference Include="Microsoft.SqlServer.ScriptTask, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
-  </ItemGroup>
-  <!-- Visual Basic supports Importing namespaces (equivalent to using statements in C#).-->
-  <ItemGroup>
-    <Import Include="Microsoft.VisualBasic" />
-    <Import Include="System" />
-    <Import Include="System.Collections" />
-    <Import Include="System.Data" />
-    <Import Include="System.Diagnostics" />
-    <Import Include="System.Windows.Forms" />
-  </ItemGroup>
-  <!-- This section defines the user source files that are part of the
-       project.
-
-       Compile - Specifies a source file to compile.
-       EmbeddedResource - Specifies a .resx file for embedded resources.
-       None - Specifies a file that is not to be passed to the compiler (for instance,
-              a text file or XML file).
-       AppDesigner - Specifies the directory where the application properties files can
-                     be found.
-  -->
-  <ItemGroup>
-    <AppDesigner Include="My Project\" />
-    <Compile Include="My Project\AssemblyInfo.vb">
-      <SubType>Code</SubType>
-    </Compile>
-    <EmbeddedResource Include="My Project\Resources.resx">
-      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
-      <CustomToolNamespace>My.Resources</CustomToolNamespace>
-    </EmbeddedResource>
-    <Compile Include="My Project\Resources.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <None Include="My Project\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
-    </None>
-    <Compile Include="My Project\Settings.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ScriptMain.vb">
-      <SubType>Code</SubType>
-    </Compile>
-    <!-- Include the default configuration information and metadata files for the add-in.
-         These files are copied to the build output directory when the project is
-         built, and the path to the configuration file is passed to add-in on the command
-         line when debugging.
-    -->
-  </ItemGroup>
-  <!-- Include the build rules for a VB project.-->
-  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
-  <!-- This section defines VSTA properties that describe the host-changable project properties. -->
-  <ProjectExtensions>
-    <VisualStudio>
-      <FlavorProperties GUID="{30D016F9-3734-4E33-A861-5E7D899E18F3}">
-        <ProjectProperties HostName="VSTAHostName" HostPackage="{B3A685AA-7EAF-4BC6-9940-57959FA5AC07}" ApplicationType="usd" Language="vb" TemplatesPath="" DebugInfoExeName="" />
-        <Host Name="SSIS_ScriptTask" />
-        <ProjectClient>
-          <HostIdentifier>SSIS_ST130</HostIdentifier>
-        </ProjectClient>
-      </FlavorProperties>
-    </VisualStudio>
-  </ProjectExtensions>
-</Project>]]></ProjectItem>
-          <ProjectItem
-            Name="Project"
-            Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="UTF-16" standalone="yes"?>
-<c:Project xmlns:c="http://schemas.microsoft.com/codeprojectml/2010/08/main" xmlns:msb="http://schemas.microsoft.com/developer/msbuild/2003" runtimeVersion="4.0" schemaVersion="1.0">
+              <ProjectItem
+                Name="Project"
+                Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="UTF-16" standalone="yes"?>
+<c:Project xmlns:c="http://schemas.microsoft.com/codeprojectml/2010/08/main" xmlns:msb="http://schemas.microsoft.com/developer/msbuild/2003" runtimeVersion="3.0" schemaVersion="1.0">
 	<msb:PropertyGroup>
-		<msb:CodeName>st_5f715d9205384d0d87610b825ac487b0</msb:CodeName>
 		<msb:Language>msBuild</msb:Language>
-		<msb:DisplayName>st_5f715d9205384d0d87610b825ac487b0</msb:DisplayName>
-		<msb:ProjectId>{824CC51A-6116-4C4E-B7F1-815943A2193A}</msb:ProjectId>
+		<msb:CodeName>ST_4ab155c31afb4a8d8385b37db8cdf9b0</msb:CodeName>
+		<msb:DisplayName>ST_4ab155c31afb4a8d8385b37db8cdf9b0</msb:DisplayName>
+		<msb:ProjectId>{04933874-A096-4D1D-8AC2-DBB1E2CA5CF4}</msb:ProjectId>
 	</msb:PropertyGroup>
 	<msb:ItemGroup>
-		<msb:Project Include="st_5f715d9205384d0d87610b825ac487b0.vbproj"/>
+		<msb:Project Include="ST_4ab155c31afb4a8d8385b37db8cdf9b0.vbproj"/>
 		<msb:File Include="My Project\AssemblyInfo.vb"/>
 		<msb:File Include="ScriptMain.vb"/>
 		<msb:File Include="My Project\Resources.resx"/>
@@ -719,9 +597,9 @@ End Class]]></ProjectItem>
 		<msb:File Include="My Project\Settings.Designer.vb"/>
 	</msb:ItemGroup>
 </c:Project>]]></ProjectItem>
-          <ProjectItem
-            Name="My Project\Resources.resx"
-            Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+              <ProjectItem
+                Name="My Project\Resources.resx"
+                Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -838,9 +716,9 @@ End Class]]></ProjectItem>
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
 </root>]]></ProjectItem>
-          <ProjectItem
-            Name="My Project\Resources.Designer.vb"
-            Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
+              <ProjectItem
+                Name="My Project\Resources.Designer.vb"
+                Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
 ' <autogenerated>
 '     This code was generated by a tool.
 '
@@ -901,394 +779,250 @@ Namespace My.Resources
         End Property
     End Class
 End Namespace]]></ProjectItem>
-          <BinaryItem
-            Name="ST_5f715d9205384d0d87610b825ac487b0.vbproj.dll">TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+              <BinaryItem
+                Name="ST_4ab155c31afb4a8d8385b37db8cdf9b0.dll">TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAgAAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1v
-ZGUuDQ0KJAAAAAAAAABQRQAATAEDAKIWaFkAAAAAAAAAAOAAIiALAVAAAE4AAAAIAAAAAAAA+mwA
-AAAgAAAAgAAAAAAAEAAgAAAAAgAABAAAAAAAAAAEAAAAAAAAAADAAAAAAgAAAAAAAAMAQIUAABAA
-ABAAAAAAEAAAEAAAAAAAABAAAAAAAAAAAAAAAKhsAABPAAAAAIAAAIgEAAAAAAAAAAAAAAAAAAAA
-AAAAAKAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAIAAACAAAAAAAAAAAAAAACCAAAEgAAAAAAAAAAAAAAC50ZXh0AAAAAE0AAAAgAAAATgAAAAIA
-AAAAAAAAAAAAAAAAACAAAGAucnNyYwAAAIgEAAAAgAAAAAYAAABQAAAAAAAAAAAAAAAAAABAAABA
-LnJlbG9jAAAMAAAAAKAAAAACAAAAVgAAAAAAAAAAAAAAAAAAQAAAQgAAAAAAAAAAAAAAAAAAAADc
-bAAAAAAAAEgAAAACAAUADCsAAORAAAABAAAAAAAAAPBrAAC4AAAAAAAAAAAAAAAAAAAAAAAAAAAA
+ZGUuDQ0KJAAAAAAAAABQRQAATAEDAFOpNF8AAAAAAAAAAOAAIiALAVAAAC4AAAAIAAAAAAAAVkwA
+AAAgAAAAYAAAAAAAEAAgAAAAAgAABAAAAAAAAAAGAAAAAAAAAACgAAAAAgAAAAAAAAMAYIUAABAA
+ABAAAAAAEAAAEAAAAAAAABAAAAAAAAAAAAAAAARMAABPAAAAAGAAAEgEAAAAAAAAAAAAAAAAAAAA
+AAAAAIAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAIAAACAAAAAAAAAAAAAAACCAAAEgAAAAAAAAAAAAAAC50ZXh0AAAAXCwAAAAgAAAALgAAAAIA
+AAAAAAAAAAAAAAAAACAAAGAucnNyYwAAAEgEAAAAYAAAAAYAAAAwAAAAAAAAAAAAAAAAAABAAABA
+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
-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
-AQAUBW8AIQBFCjMBBgaTAJ4BVoDOCaEBVoDKAaEBUCAAAAAABhj8BwYAAQBYIAAAAAAGGPwHBgAB
-AGAgAAAAABEYAgilAQEAiiAAAAAAEwjCB6kBAQCWIAAAAAATCHMGrgEBAKIgAAAAABMIswezAQEA
-riAAAAAAEwhCCLgBAQC6IAAAAAADGPwHBgABAMIgAAAAABYIfQe9AQEA7iAAAAAAFgjSAcIBAQD1
-IAAAAAAWCN4BxwEBAP0gAAAAABEYAgilAQIADiEAAAAABhj8BwYAAgAYIQAAAAAWCKwEzQECAHQh
-AAAAAAYY/AcGAAIAnCEAAAAABgBXBgYAAgC0KQAAAAABAD4B0gECAG0qAAAAAMYCrAkLAQMAeyoA
-AAAAxgImARABBACDKgAAAACDAMIB0wAEAI8qAAAAAMYCCwWfAAQAmCoAAAAAEQCAANkBBAC4KgAA
-AAABAGwA4QEFALogAAAAAAYY/AcGAAYAxCoAAAAAAwgNAUoABgD4KgAAAAAGGPwHBgAGAAAAAQDJ
-BAAAAQBPCgAAAQD1BgAAAQAdAQAAAQAdAQkA/AcBABEA/AcGABkA/AcKACkA/AcQADEA/AcQADkA
-/AcQAEEA/AcQAEkA/AcQAFEA/AcQAFkA/AcVAGEA/AcVAGkA/AcQAHEA/AcQAHkA/AcQAIEA/Aca
-AJEA/AcgAKkA/AcGALEA/AcGALkA/AcGANEA/AcmAOkA/AcQAAkB/AcGABEB/AcGAJkA/AcGAKEA
-/AcGAAwA/AcGABQA/AcGABwA/AcGACQA/AcGAAwADQFKABQADQFKABwADQFKACQADQFKAMEA/AcG
-ANkAcAFPANkAgApXAPEA/AddAFEBwARlAAEB/AcGAFkBvAdqAFkBCgpqABkB/AcGAGEBjQpvABkB
-1gmIAGkBkwmOAHEBFwaUAHkBrASbAMEACwWfAIEBkQejACEB/AcGACwA/AcGAIkB7AmvAIkBWgK0
-ACEBtwG5ACEBCwWfACwA4QDAAJEBXAbGAJEB9wbNAMEAwgHTANkA5QDYALEBTgHiALkB4gfpAGkB
-DwoBACEBtwH2AMEBpwH8ADEBzQYAATEBMgGfADEB7wCfAHkBtgQGAcEArAkLAcEAJgEQAckB/gAc
-ATwARQozAUQArARKAEQAtgTAAEQA/AcGAAgAOABlAQgAPABqASkAqwCYAy4ACwARAi4AEwAaAi4A
-GwA5Ai4AIwBCAi4AKwByAi4AMwByAi4AOwBCAi4AQwB4Ai4ASwByAi4AUwCPAi4AWwByAi4AYwCV
-Ai4AawC/Ai4AcwDMAkAAiwBqAUAAgwAUA0MAewAdA0MAgwAUA0kAqwCpA2MAewAdA2MAgwAUA2kA
-qwC9A4AAiwBqAYMAkwBqAYMAmwBqAYMAewAdA4kAqwDKA6AAiwBqAakAgwA5AsAAiwBqAckAgwA5
-AuAAiwBqAeMAuwBqAeMAUwByAukAswBqAQMBgwAUAwMBowA2AyMBgwAUAyMBWwByAkACgwAUA0AC
-iwBqAWACgwAUA2ACiwBqAYACgwAUA4ACiwBqAaACgwAUA6ACiwBqAcACiwBqAeACiwBqAQADiwBq
-AQADgwAUAyADiwBqAUADiwBqAUADgwAUA3IA8AAUAScBBAABAAUABQAGAAcACQAIAAAA0QfpAQAA
-hQbuAQAAtwfzAQAAVAj4AQAAgQf9AQAA7gECAgAAyQQHAgAAEQEMAgIABAADAAIABQAFAAIABgAH
-AAIABwAJAAIACQALAAIACgANAAEACwANAAIADgAPAAIAGQARAC4ANQA8AEMAqAAZASwBOwFCAQSA
-AAABAAAAAAAAAAAAAAAAACMFAAAEAAAAAAAAAAAAAABKAacAAAAAAAQAAAAAAAAAAAAAAEoBIAYA
-AAAACgAAAAAAAAAAAAAAUwHLAAAAAAANAAAAAAAAAAAAAABcAU4FAAAAAA0AAAAAAAAAAAAAAFwB
-SwAAAAAAAAAAAAEAAABFCQAACAAEAAkABAAKAAcAAAAQABIAagAAABAALQBqAAAAAAAvAGoAkQAi
-AZEARQEAAAAAAENvbnRleHRWYWx1ZWAxAFRocmVhZFNhZmVPYmplY3RQcm92aWRlcmAxAExpc3Rg
-MQBJbnQzMgA8TW9kdWxlPgBTeXN0ZW0uSU8ATWljcm9zb2Z0LlNxbFNlcnZlci5NYW5hZ2VkRFRT
-AFQARGlzcG9zZV9fSW5zdGFuY2VfXwBDcmVhdGVfX0luc3RhbmNlX18AdmFsdWVfXwBQcm9qZWN0
-RGF0YQBtc2NvcmxpYgBTeXN0ZW0uQ29sbGVjdGlvbnMuR2VuZXJpYwBNaWNyb3NvZnQuVmlzdWFs
-QmFzaWMAQWRkAEdldE1ldGhvZABnZXRfU3RhY2tUcmFjZQBDcmVhdGVJbnN0YW5jZQBnZXRfR2V0
-SW5zdGFuY2UAaW5zdGFuY2UAR2V0SGFzaENvZGUAZ2V0X01lc3NhZ2UAU2V0RXJyb3JNZXNzYWdl
-AEludm9rZQBWYXJpYWJsZQBSdW50aW1lVHlwZUhhbmRsZQBHZXRUeXBlRnJvbUhhbmRsZQBGaWxl
-AE1pY3Jvc29mdC5TcWxTZXJ2ZXIuRHRzLlJ1bnRpbWUAZ2V0X0NvbW1hbmRMaW5lAEFwcGVuZExp
-bmUAR2V0VHlwZQBGYWlsdXJlAGdldF9DdWx0dXJlAHNldF9DdWx0dXJlAF9yZXNDdWx0dXJlAE1l
-dGhvZEJhc2UAVlNUQVJUU2NyaXB0T2JqZWN0TW9kZWxCYXNlAEFwcGxpY2F0aW9uQmFzZQBBcHBs
-aWNhdGlvblNldHRpbmdzQmFzZQBFZGl0b3JCcm93c2FibGVTdGF0ZQBEZWxldGUAR3VpZEF0dHJp
-YnV0ZQBIZWxwS2V5d29yZEF0dHJpYnV0ZQBHZW5lcmF0ZWRDb2RlQXR0cmlidXRlAERlYnVnZ2Vy
-Tm9uVXNlckNvZGVBdHRyaWJ1dGUARGVidWdnYWJsZUF0dHJpYnV0ZQBFZGl0b3JCcm93c2FibGVB
-dHRyaWJ1dGUAQ29tVmlzaWJsZUF0dHJpYnV0ZQBBc3NlbWJseVRpdGxlQXR0cmlidXRlAFN0YW5k
-YXJkTW9kdWxlQXR0cmlidXRlAEhpZGVNb2R1bGVOYW1lQXR0cmlidXRlAEFzc2VtYmx5VHJhZGVt
-YXJrQXR0cmlidXRlAFRhcmdldEZyYW1ld29ya0F0dHJpYnV0ZQBEZWJ1Z2dlckhpZGRlbkF0dHJp
-YnV0ZQBBc3NlbWJseUZpbGVWZXJzaW9uQXR0cmlidXRlAE15R3JvdXBDb2xsZWN0aW9uQXR0cmli
-dXRlAEFzc2VtYmx5RGVzY3JpcHRpb25BdHRyaWJ1dGUAQ29tcGlsYXRpb25SZWxheGF0aW9uc0F0
-dHJpYnV0ZQBBc3NlbWJseVByb2R1Y3RBdHRyaWJ1dGUAQXNzZW1ibHlDb3B5cmlnaHRBdHRyaWJ1
-dGUAQ0xTQ29tcGxpYW50QXR0cmlidXRlAFNTSVNTY3JpcHRUYXNrRW50cnlQb2ludEF0dHJpYnV0
-ZQBBc3NlbWJseUNvbXBhbnlBdHRyaWJ1dGUAUnVudGltZUNvbXBhdGliaWxpdHlBdHRyaWJ1dGUA
-bV9WYWx1ZQBnZXRfVmFsdWUAc2V0X1ZhbHVlAEdldE9iamVjdFZhbHVlAFN5c3RlbS5UaHJlYWRp
-bmcAU3lzdGVtLlJ1bnRpbWUuVmVyc2lvbmluZwBjb25uZWN0aW9uU3RyaW5nAFRvU3RyaW5nAG91
-dHB1dEZpbGVQYXRoAFNUXzVmNzE1ZDkyMDUzODRkMGQ4NzYxMGI4MjVhYzQ4N2IwLnZicHJvagBN
-aWNyb3NvZnQuU3FsU2VydmVyLlNjcmlwdFRhc2sATWljcm9zb2Z0LlNxbFNlcnZlci5EdHMuVGFz
-a3MuU2NyaXB0VGFzawBNaWNyb3NvZnQuVmlzdWFsQmFzaWMuTXlTZXJ2aWNlcy5JbnRlcm5hbABT
-Y3JpcHRPYmplY3RNb2RlbABTeXN0ZW0uQ29tcG9uZW50TW9kZWwAU1RfNWY3MTVkOTIwNTM4NGQw
-ZDg3NjEwYjgyNWFjNDg3YjAudmJwcm9qLmRsbABnZXRfSXRlbQBTeXN0ZW0ARW51bQBCb29sZWFu
-AFN5c3RlbS5Db21wb25lbnRNb2RlbC5EZXNpZ24AU2NyaXB0TWFpbgBDcmVhdGVEb21haW4AQXBw
-RG9tYWluAGdldF9BcHBsaWNhdGlvbgBNeUFwcGxpY2F0aW9uAFN5c3RlbS5Db25maWd1cmF0aW9u
-AFN5c3RlbS5HbG9iYWxpemF0aW9uAFN5c3RlbS5SZWZsZWN0aW9uAGdldF9Jbm5lckV4Y2VwdGlv
-bgBNZXRob2RJbmZvAEN1bHR1cmVJbmZvAENyZWF0ZUluc3RhbmNlQW5kVW53cmFwAG1fQXBwT2Jq
-ZWN0UHJvdmlkZXIAbV9Vc2VyT2JqZWN0UHJvdmlkZXIAbV9Db21wdXRlck9iamVjdFByb3ZpZGVy
-AG1fTXlXZWJTZXJ2aWNlc09iamVjdFByb3ZpZGVyAFN0cmluZ0J1aWxkZXIAZ2V0X1Jlc291cmNl
-TWFuYWdlcgBUb0ludGVnZXIAU3lzdGVtLkNvZGVEb20uQ29tcGlsZXIAZ2V0X1VzZXIARW50ZXIA
-Z2V0X0NvbXB1dGVyAE15Q29tcHV0ZXIAX3Jlc01ncgBTZXRQcm9qZWN0RXJyb3IAQWN0aXZhdG9y
-AC5jdG9yAC5jY3RvcgBNb25pdG9yAFN5c3RlbS5EaWFnbm9zdGljcwBNaWNyb3NvZnQuVmlzdWFs
-QmFzaWMuRGV2aWNlcwBnZXRfV2ViU2VydmljZXMATXlXZWJTZXJ2aWNlcwBNaWNyb3NvZnQuVmlz
-dWFsQmFzaWMuQXBwbGljYXRpb25TZXJ2aWNlcwBTeXN0ZW0uUnVudGltZS5JbnRlcm9wU2Vydmlj
-ZXMATWljcm9zb2Z0LlZpc3VhbEJhc2ljLkNvbXBpbGVyU2VydmljZXMAU3lzdGVtLlJ1bnRpbWUu
-Q29tcGlsZXJTZXJ2aWNlcwBTeXN0ZW0uUmVzb3VyY2VzAFNUXzVmNzE1ZDkyMDUzODRkMGQ4NzYx
-MGI4MjVhYzQ4N2IwLnZicHJvai5NeS5SZXNvdXJjZXMATXlSZXNvdXJjZXMAU1RfNWY3MTVkOTIw
-NTM4NGQwZDg3NjEwYjgyNWFjNDg3YjAudmJwcm9qLlJlc291cmNlcy5yZXNvdXJjZXMARGVidWdn
-aW5nTW9kZXMAZ2V0X1ZhcmlhYmxlcwBNeVNldHRpbmdzAEVxdWFscwBDb252ZXJzaW9ucwBSdW50
-aW1lSGVscGVycwBTdWNjZXNzAGdldF9EdHMAU2NyaXB0UmVzdWx0cwBFeGlzdHMAbV9TeW5jT2Jq
-ZWN0AE15UHJvamVjdABFeGl0AHNldF9UYXNrUmVzdWx0AEVudmlyb25tZW50AGNvbW1hbmRUaW1l
-b3V0AFN5c3RlbS5UZXh0AG1fQ29udGV4dABleABTVF81ZjcxNWQ5MjA1Mzg0ZDBkODc2MTBiODI1
-YWM0ODdiMC52YnByb2ouTXkAZ2V0X0Fzc2VtYmx5AEVtcHR5AAAAMU0AeQAuAFIAZQBzAG8AdQBy
-AGMAZQBzAC4ATQB5AFIAZQBzAG8AdQByAGMAZQBzAAAhQwBvAG4AbgBlAGMAdABpAG8AbgBTAHQA
-cgBpAG4AZwAAHUMAbwBtAG0AYQBuAGQAVABpAG0AZQBvAHUAdAAAHU8AdQB0AHAAdQB0AEYAaQBs
-AGUAUABhAHQAaAAAGVcASQBUAEgAIABQAFMAIABBAFMAIAAoAAAVIAAgACAAIABTAEUATABFAEMA
-VAAALyAAIAAgACAAIAAgACAAIABTAC4AUwB1AHAAcABsAGkAZQByAEMAbwBkAGUALAAAgJEgACAA
-IAAgACAAIAAgACAASQBTAE4AVQBMAEwAKABTAC4ATgBhAG0AZQAzACwAIAAnACcAKQAgACsAIAAn
-ACAAJwAgACsAIABJAFMATgBVAEwATAAoAFMALgBOAGEAbQBlADQALAAgACcAJwApACAAQQBTACAA
-UwB1AHAAcABsAGkAZQByAE4AYQBtAGUALAABMyAAIAAgACAAIAAgACAAIABDAC4ATgBhAG0AZQAg
-AEEAUwAgAEMAbwB1AG4AdAByAHkAABEgACAAIAAgAEYAUgBPAE0AAC8gACAAIAAgACAAIAAgACAA
-cwBfAEMAbwB1AG4AdAByAHkAIABBAFMAIABDACwAACsgACAAIAAgACAAIAAgACAAUwB1AHAAcABs
-AGkAZQByACAAQQBTACAAUwAAEyAAIAAgACAAVwBIAEUAUgBFAABLIAAgACAAIAAgACAAIAAgAFMA
-LgBDAG8AdQBuAHQAcgB5AEMAbwBkAGUAIAA9ACAAQwAuAEMAbwB1AG4AdAByAHkAQwBvAGQAZQAA
-BSkALAAAD1MAUwAgAEEAUwAgACgAAC8gACAAIAAgACAAIAAgACAAUgAzAFMAdQBwAHAAbABpAGUA
-cgBDAG8AZABlACwAADEgACAAIAAgACAAIAAgACAAUgAzAFMAdQBwAHAAbABpAGUAcgBOAGEAbQBl
-ADEALAAAMSAAIAAgACAAIAAgACAAIABSADMAUwB1AHAAcABsAGkAZQByAE4AYQBtAGUAMgAsAAA1
-IAAgACAAIAAgACAAIAAgAFIAMwBTAHUAcABwAGwAaQBlAHIAQwBvAHUAbgB0AHIAeQAsAAA7IAAg
-ACAAIAAgACAAIAAgAFsAMQBdACAAQQBTACAAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAMQAsAAA7
-IAAgACAAIAAgACAAIAAgAFsAMgBdACAAQQBTACAAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAMgAs
-AAA7IAAgACAAIAAgACAAIAAgAFsAMwBdACAAQQBTACAAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUA
-MwAsAAA7IAAgACAAIAAgACAAIAAgAFsANABdACAAQQBTACAAUwB1AHAAcABsAGkAZQByAEMAbwBk
-AGUANAAsAAA7IAAgACAAIAAgACAAIAAgAFsANQBdACAAQQBTACAAUwB1AHAAcABsAGkAZQByAEMA
-bwBkAGUANQAsAAA7IAAgACAAIAAgACAAIAAgAFsANgBdACAAQQBTACAAUwB1AHAAcABsAGkAZQBy
-AEMAbwBkAGUANgAsAAA7IAAgACAAIAAgACAAIAAgAFsANwBdACAAQQBTACAAUwB1AHAAcABsAGkA
-ZQByAEMAbwBkAGUANwAsAAA7IAAgACAAIAAgACAAIAAgAFsAOABdACAAQQBTACAAUwB1AHAAcABs
-AGkAZQByAEMAbwBkAGUAOAAsAAA7IAAgACAAIAAgACAAIAAgAFsAOQBdACAAQQBTACAAUwB1AHAA
-cABsAGkAZQByAEMAbwBkAGUAOQAsAAA9IAAgACAAIAAgACAAIAAgAFsAMQAwAF0AIABBAFMAIABT
-AHUAcABwAGwAaQBlAHIAQwBvAGQAZQAxADAAABMgACAAIAAgACAAIAAgACAAKAAAJSAAIAAgACAA
-IAAgACAAIAAgACAAIAAgAFMARQBMAEUAQwBUAACAuSAAIAAgACAAIAAgACAAIAAgACAAIAAgACAA
-IAAgACAAUgBPAFcAXwBOAFUATQBCAEUAUgAoACkAIABPAFYARQBSACgAUABBAFIAVABJAFQASQBP
-AE4AIABCAFkAIABSADMAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAIABPAFIARABFAFIAIABCAFkA
-IABTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQApACAAQQBTACAATgBVAE0ALAAAPyAAIAAgACAAIAAg
-ACAAIAAgACAAIAAgACAAIAAgACAAUgAzAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlACwAAEEgACAA
-IAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgAFIAMwBTAHUAcABwAGwAaQBlAHIATgBhAG0AZQAx
-ACwAAEEgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgAFIAMwBTAHUAcABwAGwAaQBlAHIA
-TgBhAG0AZQAyACwAAEUgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgAFIAMwBTAHUAcABw
-AGwAaQBlAHIAQwBvAHUAbgB0AHIAeQAsAAA5IAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAA
-IABTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAAISAAIAAgACAAIAAgACAAIAAgACAAIAAgAEYAUgBP
-AE0AADkgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgAHYAXwBSADMAUwB1AHAAcABsAGkA
-ZQByAAAjIAAgACAAIAAgACAAIAAgACkAIABBAFMAIABCAEEAUwBFAACAzyAAIAAgACAAIAAgACAA
-IABQAEkAVgBPAFQAIAAoAE0ASQBOACgAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAKQAgAEYATwBS
-ACAATgBVAE0AIABJAE4AIAAoAFsAMQBdACwAIABbADIAXQAsACAAWwAzAF0ALAAgAFsANABdACwA
-IABbADUAXQAsACAAWwA2AF0ALAAgAFsANwBdACwAIABbADgAXQAsACAAWwA5AF0ALAAgAFsAMQAw
-AF0AKQApACAAQQBTACAAUABWAFQAAAMpAAANUwBFAEwARQBDAFQAAFMgACAAIAAgAFMAUwAuAFIA
-MwBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAgAEEAUwAgAFMAQQBQAFMAdQBwAHAAbABpAGUAcgBD
-AG8AZABlACwAAIDxIAAgACAAIABDAEEAUwBFACAAVwBIAEUATgAgAEwARQBOACgAUgBUAFIASQBN
-ACgAUwBTAC4AUgAzAFMAdQBwAHAAbABpAGUAcgBOAGEAbQBlADIAKQApACAAPQAgADAAIABUAEgA
-RQBOACAAUwBTAC4AUgAzAFMAdQBwAHAAbABpAGUAcgBOAGEAbQBlADEAIABFAEwAUwBFACAAUwBT
-AC4AUgAzAFMAdQBwAHAAbABpAGUAcgBOAGEAbQBlADIAIABFAE4ARAAgAEEAUwAgAFMAQQBQAFMA
-dQBwAHAAbABpAGUAcgBOAGEAbQBlACwAAE8gACAAIAAgAFMAUwAuAFIAMwBTAHUAcABwAGwAaQBl
-AHIAQwBvAHUAbgB0AHIAeQAgAEEAUwAgAFMAQQBQAEMAbwB1AG4AdAByAHkALAAAUyAAIAAgACAA
-UABTADEALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAgAEEAUwAgAFAARABCAFMAdQBwAHAAbABp
-AGUAcgBDAG8AZABlADEALAAAUyAAIAAgACAAUABTADEALgBTAHUAcABwAGwAaQBlAHIATgBhAG0A
-ZQAgAEEAUwAgAFAARABCAFMAdQBwAHAAbABpAGUAcgBOAGEAbQBlADEALAAAPyAAIAAgACAAUABT
-ADEALgBDAG8AdQBuAHQAcgB5ACAAQQBTACAAUABEAEIAQwBvAHUAbgB0AHIAeQAxACwAAFMgACAA
-IAAgAFAAUwAyAC4AUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAIABBAFMAIABQAEQAQgBTAHUAcABw
-AGwAaQBlAHIAQwBvAGQAZQAyACwAAFMgACAAIAAgAFAAUwAyAC4AUwB1AHAAcABsAGkAZQByAE4A
-YQBtAGUAIABBAFMAIABQAEQAQgBTAHUAcABwAGwAaQBlAHIATgBhAG0AZQAyACwAAD8gACAAIAAg
-AFAAUwAyAC4AQwBvAHUAbgB0AHIAeQAgAEEAUwAgAFAARABCAEMAbwB1AG4AdAByAHkAMgAsAABT
-IAAgACAAIABQAFMAMwAuAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlACAAQQBTACAAUABEAEIAUwB1
-AHAAcABsAGkAZQByAEMAbwBkAGUAMwAsAABTIAAgACAAIABQAFMAMwAuAFMAdQBwAHAAbABpAGUA
-cgBOAGEAbQBlACAAQQBTACAAUABEAEIAUwB1AHAAcABsAGkAZQByAE4AYQBtAGUAMwAsAAA/IAAg
-ACAAIABQAFMAMwAuAEMAbwB1AG4AdAByAHkAIABBAFMAIABQAEQAQgBDAG8AdQBuAHQAcgB5ADMA
-LAAAUyAAIAAgACAAUABTADQALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAgAEEAUwAgAFAARABC
-AFMAdQBwAHAAbABpAGUAcgBDAG8AZABlADQALAAAUyAAIAAgACAAUABTADQALgBTAHUAcABwAGwA
-aQBlAHIATgBhAG0AZQAgAEEAUwAgAFAARABCAFMAdQBwAHAAbABpAGUAcgBOAGEAbQBlADQALAAA
-PyAAIAAgACAAUABTADQALgBDAG8AdQBuAHQAcgB5ACAAQQBTACAAUABEAEIAQwBvAHUAbgB0AHIA
-eQA0ACwAAFMgACAAIAAgAFAAUwA1AC4AUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAIABBAFMAIABQ
-AEQAQgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQA1ACwAAFMgACAAIAAgAFAAUwA1AC4AUwB1AHAA
-cABsAGkAZQByAE4AYQBtAGUAIABBAFMAIABQAEQAQgBTAHUAcABwAGwAaQBlAHIATgBhAG0AZQA1
-ACwAAD8gACAAIAAgAFAAUwA1AC4AQwBvAHUAbgB0AHIAeQAgAEEAUwAgAFAARABCAEMAbwB1AG4A
-dAByAHkANQAsAABTIAAgACAAIABQAFMANgAuAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlACAAQQBT
-ACAAUABEAEIAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUANgAsAABTIAAgACAAIABQAFMANgAuAFMA
-dQBwAHAAbABpAGUAcgBOAGEAbQBlACAAQQBTACAAUABEAEIAUwB1AHAAcABsAGkAZQByAE4AYQBt
-AGUANgAsAAA/IAAgACAAIABQAFMANgAuAEMAbwB1AG4AdAByAHkAIABBAFMAIABQAEQAQgBDAG8A
-dQBuAHQAcgB5ADYALAAAUyAAIAAgACAAUABTADcALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAg
-AEEAUwAgAFAARABCAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlADcALAAAUyAAIAAgACAAUABTADcA
-LgBTAHUAcABwAGwAaQBlAHIATgBhAG0AZQAgAEEAUwAgAFAARABCAFMAdQBwAHAAbABpAGUAcgBO
-AGEAbQBlADcALAAAPyAAIAAgACAAUABTADcALgBDAG8AdQBuAHQAcgB5ACAAQQBTACAAUABEAEIA
-QwBvAHUAbgB0AHIAeQA3ACwAAFMgACAAIAAgAFAAUwA4AC4AUwB1AHAAcABsAGkAZQByAEMAbwBk
-AGUAIABBAFMAIABQAEQAQgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQA4ACwAAFMgACAAIAAgAFAA
-UwA4AC4AUwB1AHAAcABsAGkAZQByAE4AYQBtAGUAIABBAFMAIABQAEQAQgBTAHUAcABwAGwAaQBl
-AHIATgBhAG0AZQA4ACwAAD8gACAAIAAgAFAAUwA4AC4AQwBvAHUAbgB0AHIAeQAgAEEAUwAgAFAA
-RABCAEMAbwB1AG4AdAByAHkAOAAsAABTIAAgACAAIABQAFMAOQAuAFMAdQBwAHAAbABpAGUAcgBD
-AG8AZABlACAAQQBTACAAUABEAEIAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAOQAsAABTIAAgACAA
-IABQAFMAOQAuAFMAdQBwAHAAbABpAGUAcgBOAGEAbQBlACAAQQBTACAAUABEAEIAUwB1AHAAcABs
-AGkAZQByAE4AYQBtAGUAOQAsAAA/IAAgACAAIABQAFMAOQAuAEMAbwB1AG4AdAByAHkAIABBAFMA
-IABQAEQAQgBDAG8AdQBuAHQAcgB5ADkALAAAVyAAIAAgACAAUABTADEAMAAuAFMAdQBwAHAAbABp
-AGUAcgBDAG8AZABlACAAQQBTACAAUABEAEIAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAMQAwACwA
-AFcgACAAIAAgAFAAUwAxADAALgBTAHUAcABwAGwAaQBlAHIATgBhAG0AZQAgAEEAUwAgAFAARABC
-AFMAdQBwAHAAbABpAGUAcgBOAGEAbQBlADEAMAAsAABBIAAgACAAIABQAFMAMQAwAC4AQwBvAHUA
-bgB0AHIAeQAgAEEAUwAgAFAARABCAEMAbwB1AG4AdAByAHkAMQAwAAAJRgBSAE8ATQAADSAAIAAg
-ACAAUwBTAACAkSAAIAAgACAAIAAgACAAIABMAEUARgBUACAATwBVAFQARQBSACAASgBPAEkATgAg
-AFAAUwAgAEEAUwAgAFAAUwAxACAATwBOACAAUABTADEALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQA
-ZQAgAD0AIABTAFMALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAxAACAkSAAIAAgACAAIAAgACAA
-IABMAEUARgBUACAATwBVAFQARQBSACAASgBPAEkATgAgAFAAUwAgAEEAUwAgAFAAUwAyACAATwBO
-ACAAUABTADIALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAgAD0AIABTAFMALgBTAHUAcABwAGwA
-aQBlAHIAQwBvAGQAZQAyAACAkSAAIAAgACAAIAAgACAAIABMAEUARgBUACAATwBVAFQARQBSACAA
-SgBPAEkATgAgAFAAUwAgAEEAUwAgAFAAUwAzACAATwBOACAAUABTADMALgBTAHUAcABwAGwAaQBl
-AHIAQwBvAGQAZQAgAD0AIABTAFMALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAzAACAkSAAIAAg
-ACAAIAAgACAAIABMAEUARgBUACAATwBVAFQARQBSACAASgBPAEkATgAgAFAAUwAgAEEAUwAgAFAA
-UwA0ACAATwBOACAAUABTADQALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAgAD0AIABTAFMALgBT
-AHUAcABwAGwAaQBlAHIAQwBvAGQAZQA0AACAkSAAIAAgACAAIAAgACAAIABMAEUARgBUACAATwBV
-AFQARQBSACAASgBPAEkATgAgAFAAUwAgAEEAUwAgAFAAUwA1ACAATwBOACAAUABTADUALgBTAHUA
-cABwAGwAaQBlAHIAQwBvAGQAZQAgAD0AIABTAFMALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQA1
-AACAkSAAIAAgACAAIAAgACAAIABMAEUARgBUACAATwBVAFQARQBSACAASgBPAEkATgAgAFAAUwAg
-AEEAUwAgAFAAUwA2ACAATwBOACAAUABTADYALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAgAD0A
-IABTAFMALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQA2AACAkSAAIAAgACAAIAAgACAAIABMAEUA
-RgBUACAATwBVAFQARQBSACAASgBPAEkATgAgAFAAUwAgAEEAUwAgAFAAUwA3ACAATwBOACAAUABT
-ADcALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAgAD0AIABTAFMALgBTAHUAcABwAGwAaQBlAHIA
-QwBvAGQAZQA3AACAkSAAIAAgACAAIAAgACAAIABMAEUARgBUACAATwBVAFQARQBSACAASgBPAEkA
-TgAgAFAAUwAgAEEAUwAgAFAAUwA4ACAATwBOACAAUABTADgALgBTAHUAcABwAGwAaQBlAHIAQwBv
-AGQAZQAgAD0AIABTAFMALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQA4AACAkSAAIAAgACAAIAAg
-ACAAIABMAEUARgBUACAATwBVAFQARQBSACAASgBPAEkATgAgAFAAUwAgAEEAUwAgAFAAUwA5ACAA
-TwBOACAAUABTADkALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAgAD0AIABTAFMALgBTAHUAcABw
-AGwAaQBlAHIAQwBvAGQAZQA5AACAlyAAIAAgACAAIAAgACAAIABMAEUARgBUACAATwBVAFQARQBS
-ACAASgBPAEkATgAgAFAAUwAgAEEAUwAgAFAAUwAxADAAIABPAE4AIABQAFMAMQAwAC4AUwB1AHAA
-cABsAGkAZQByAEMAbwBkAGUAIAA9ACAAUwBTAC4AUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAMQAw
-AAARTwBSAEQARQBSACAAQgBZAAArIAAgACAAIABTAFMALgBSADMAUwB1AHAAcABsAGkAZQByAEMA
-bwBkAGUAAAvNkQeJuniNiih1ASkgACAAIAAgAFAAUwAuAFMAdQBwAHAAbABpAGUAcgBDAG8AZABl
-ACwAAICNIAAgACAAIABJAFMATgBVAEwATAAoAFAAUwAuAE4AYQBtAGUAMwAsACAAJwAnACkAIAAr
-ACAAJwAgACcAIAArACAASQBTAE4AVQBMAEwAKABQAFMALgBOAGEAbQBlADQALAAgACcAJwApACAA
-QQBTACAAUwB1AHAAcABsAGkAZQByAE4AYQBtAGUALAABLSAAIAAgACAAQwAuAE4AYQBtAGUAIABB
-AFMAIABDAG8AdQBuAHQAcgB5ACwAAGMgACAAIAAgAEMATwBOAFYARQBSAFQAKABkAGEAdABlACwA
-IABQAFMALgBDAHIAZQBhAHQAZQBEAGEAdABlACkAIABBAFMAIABDAHIAZQBhAHQAaQBvAG4ARABh
-AHQAZQAsAABVIAAgACAAIABQAFMALgBSADMAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAIABBAFMA
-IABTAEEAUABTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAxACwAAEcgACAAIAAgAFMAMQAuAFMAdQBw
-AE0AZQBpADEAIABBAFMAIABTAEEAUABTAHUAcABwAGwAaQBlAHIATgBhAG0AZQAxACwAAFcgACAA
-IAAgAFAAUwAuAFIAMwBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAyACAAQQBTACAAUwBBAFAAUwB1
-AHAAcABsAGkAZQByAEMAbwBkAGUAMgAsAABHIAAgACAAIABTADIALgBTAHUAcABNAGUAaQAxACAA
-QQBTACAAUwBBAFAAUwB1AHAAcABsAGkAZQByAE4AYQBtAGUAMgAsAABXIAAgACAAIABQAFMALgBS
-ADMAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAMwAgAEEAUwAgAFMAQQBQAFMAdQBwAHAAbABpAGUA
-cgBDAG8AZABlADMALAAARyAAIAAgACAAUwAzAC4AUwB1AHAATQBlAGkAMQAgAEEAUwAgAFMAQQBQ
-AFMAdQBwAHAAbABpAGUAcgBOAGEAbQBlADMALAAAVyAAIAAgACAAUABTAC4AUgAzAFMAdQBwAHAA
-bABpAGUAcgBDAG8AZABlADQAIABBAFMAIABTAEEAUABTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQA0
-ACwAAEcgACAAIAAgAFMANAAuAFMAdQBwAE0AZQBpADEAIABBAFMAIABTAEEAUABTAHUAcABwAGwA
-aQBlAHIATgBhAG0AZQA0ACwAAFcgACAAIAAgAFAAUwAuAFIAMwBTAHUAcABwAGwAaQBlAHIAQwBv
-AGQAZQA1ACAAQQBTACAAUwBBAFAAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUANQAsAABHIAAgACAA
-IABTADUALgBTAHUAcABNAGUAaQAxACAAQQBTACAAUwBBAFAAUwB1AHAAcABsAGkAZQByAE4AYQBt
-AGUANQAsAABXIAAgACAAIABQAFMALgBSADMAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUANgAgAEEA
-UwAgAFMAQQBQAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlADYALAAARyAAIAAgACAAUwA2AC4AUwB1
-AHAATQBlAGkAMQAgAEEAUwAgAFMAQQBQAFMAdQBwAHAAbABpAGUAcgBOAGEAbQBlADYALAAAVyAA
-IAAgACAAUABTAC4AUgAzAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlADcAIABBAFMAIABTAEEAUABT
-AHUAcABwAGwAaQBlAHIAQwBvAGQAZQA3ACwAAEcgACAAIAAgAFMANwAuAFMAdQBwAE0AZQBpADEA
-IABBAFMAIABTAEEAUABTAHUAcABwAGwAaQBlAHIATgBhAG0AZQA3ACwAAFcgACAAIAAgAFAAUwAu
-AFIAMwBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQA4ACAAQQBTACAAUwBBAFAAUwB1AHAAcABsAGkA
-ZQByAEMAbwBkAGUAOAAsAABHIAAgACAAIABTADgALgBTAHUAcABNAGUAaQAxACAAQQBTACAAUwBB
-AFAAUwB1AHAAcABsAGkAZQByAE4AYQBtAGUAOAAsAABXIAAgACAAIABQAFMALgBSADMAUwB1AHAA
-cABsAGkAZQByAEMAbwBkAGUAOQAgAEEAUwAgAFMAQQBQAFMAdQBwAHAAbABpAGUAcgBDAG8AZABl
-ADkALAAARyAAIAAgACAAUwA5AC4AUwB1AHAATQBlAGkAMQAgAEEAUwAgAFMAQQBQAFMAdQBwAHAA
-bABpAGUAcgBOAGEAbQBlADkALAAAWyAAIAAgACAAUABTAC4AUgAzAFMAdQBwAHAAbABpAGUAcgBD
-AG8AZABlADEAMAAgAEEAUwAgAFMAQQBQAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlADEAMAAsAABJ
-IAAgACAAIABTADEAMAAuAFMAdQBwAE0AZQBpADEAIABBAFMAIABTAEEAUABTAHUAcABwAGwAaQBl
-AHIATgBhAG0AZQAxADAAACcgACAAIAAgAHMAXwBDAG8AdQBuAHQAcgB5ACAAQQBTACAAQwAsAAAl
-IAAgACAAIABTAHUAcABwAGwAaQBlAHIAIABBAFMAIABQAFMAAICRIAAgACAAIAAgACAAIAAgAEwA
-RQBGAFQAIABPAFUAVABFAFIAIABKAE8ASQBOACAAcwBfAFMAdQBwAHAAbABpAGUAcgAgAEEAUwAg
-AFMAMQAgAE8ATgAgAFMAMQAuAFMAdQBwAE4AbwAgAD0AIABQAFMALgBSADMAUwB1AHAAcABsAGkA
-ZQByAEMAbwBkAGUAAICTIAAgACAAIAAgACAAIAAgAEwARQBGAFQAIABPAFUAVABFAFIAIABKAE8A
-SQBOACAAcwBfAFMAdQBwAHAAbABpAGUAcgAgAEEAUwAgAFMAMgAgAE8ATgAgAFMAMgAuAFMAdQBw
-AE4AbwAgAD0AIABQAFMALgBSADMAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAMgAAgJMgACAAIAAg
-ACAAIAAgACAATABFAEYAVAAgAE8AVQBUAEUAUgAgAEoATwBJAE4AIABzAF8AUwB1AHAAcABsAGkA
-ZQByACAAQQBTACAAUwAzACAATwBOACAAUwAzAC4AUwB1AHAATgBvACAAPQAgAFAAUwAuAFIAMwBT
-AHUAcABwAGwAaQBlAHIAQwBvAGQAZQAzAACAkyAAIAAgACAAIAAgACAAIABMAEUARgBUACAATwBV
-AFQARQBSACAASgBPAEkATgAgAHMAXwBTAHUAcABwAGwAaQBlAHIAIABBAFMAIABTADQAIABPAE4A
-IABTADQALgBTAHUAcABOAG8AIAA9ACAAUABTAC4AUgAzAFMAdQBwAHAAbABpAGUAcgBDAG8AZABl
-ADQAAICTIAAgACAAIAAgACAAIAAgAEwARQBGAFQAIABPAFUAVABFAFIAIABKAE8ASQBOACAAcwBf
-AFMAdQBwAHAAbABpAGUAcgAgAEEAUwAgAFMANQAgAE8ATgAgAFMANQAuAFMAdQBwAE4AbwAgAD0A
-IABQAFMALgBSADMAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUANQAAgJMgACAAIAAgACAAIAAgACAA
-TABFAEYAVAAgAE8AVQBUAEUAUgAgAEoATwBJAE4AIABzAF8AUwB1AHAAcABsAGkAZQByACAAQQBT
-ACAAUwA2ACAATwBOACAAUwA2AC4AUwB1AHAATgBvACAAPQAgAFAAUwAuAFIAMwBTAHUAcABwAGwA
-aQBlAHIAQwBvAGQAZQA2AACAkyAAIAAgACAAIAAgACAAIABMAEUARgBUACAATwBVAFQARQBSACAA
-SgBPAEkATgAgAHMAXwBTAHUAcABwAGwAaQBlAHIAIABBAFMAIABTADcAIABPAE4AIABTADcALgBT
-AHUAcABOAG8AIAA9ACAAUABTAC4AUgAzAFMAdQBwAHAAbABpAGUAcgBDAG8AZABlADcAAICTIAAg
-ACAAIAAgACAAIAAgAEwARQBGAFQAIABPAFUAVABFAFIAIABKAE8ASQBOACAAcwBfAFMAdQBwAHAA
-bABpAGUAcgAgAEEAUwAgAFMAOAAgAE8ATgAgAFMAOAAuAFMAdQBwAE4AbwAgAD0AIABQAFMALgBS
-ADMAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAOAAAgJMgACAAIAAgACAAIAAgACAATABFAEYAVAAg
-AE8AVQBUAEUAUgAgAEoATwBJAE4AIABzAF8AUwB1AHAAcABsAGkAZQByACAAQQBTACAAUwA5ACAA
-TwBOACAAUwA5AC4AUwB1AHAATgBvACAAPQAgAFAAUwAuAFIAMwBTAHUAcABwAGwAaQBlAHIAQwBv
-AGQAZQA5AACAmSAAIAAgACAAIAAgACAAIABMAEUARgBUACAATwBVAFQARQBSACAASgBPAEkATgAg
-AHMAXwBTAHUAcABwAGwAaQBlAHIAIABBAFMAIABTADEAMAAgAE8ATgAgAFMAMQAwAC4AUwB1AHAA
-TgBvACAAPQAgAFAAUwAuAFIAMwBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAxADAAAAtXAEgARQBS
-AEUAAEUgACAAIAAgAFAAUwAuAEMAbwB1AG4AdAByAHkAQwBvAGQAZQAgAD0AIABDAC4AQwBvAHUA
-bgB0AHIAeQBDAG8AZABlAAAnIAAgACAAIABQAFMALgBTAHUAcABwAGwAaQBlAHIAQwBvAGQAZQAA
-C3t2MpO6eI2KKHUBEU0AeQBEAG8AbQBhAGkAbgAAFVQAQwBJAE8AcABlAG4AWABNAEwAACtUAEMA
-SQBPAHAAZQBuAFgATQBMAC4AVABDAEkATwBwAGUAbgBYAE0ATAAAG0MAcgBlAGEAdABlAE8AcABl
-AG4AWABNAEwAAEHVTmVRSFHeMLkwvzDHMPwwvzBuMPpRm1JrMEowRDBmMAEwtzC5MMYw4DCoMOkw
-/DBMMHp2H3VXMH4wVzBfMAIwAQufW0yI0TC5MBr/AROoMOkw/DDhMMMwuzD8MLgwGv8BGUUAcgBy
-AG8AcgBNAGUAcwBzAGEAZwBlAACwEZFDrcRvS7/SWtb/dx4yAAQgAQEIAyAAAQUgAQEREQQgAQEO
-BCABAQIFIAIBDg4FIAEBEUUHIAQBDg4ODgYVEiQBEgwGFRIkARIIBhUSJAESZQYVEiQBEiAEIAAT
-AAcAARJtEYChBSAAEoClByACAQ4SgKUEAAEcHAQAAQEcAgYOFQcFEoCRFRKAlQEOFRKAlQEOHBKA
-mQUgABKAtQUgABKAuQYgARKAvRwDIAAcAyAADgQAAQgOBhUSgJUBDgQAAQIOBAABAQ4GIAESgJEO
-BSABARMABgABEoDJDgUgAhwODgQgABJtCSACEoDVDh0SbQYgAhwcHRwGAAEBEoCZBQcBEoCRBSAA
-EoCRAwAADgUgABKAmQQgAQEcBCABAhwDIAAIBAcBHgACHgAFEAEAHgAECgEeAAQHARMABhUSJAET
-AAcGFRJxARMABhUScQETAAITAAQKARMACLd6XFYZNOCJCLA/X38R1Qo6CImEXc2AgMyRBAAAAAAE
-AQAAAAcGFRIkARIMBwYVEiQBEggHBhUSJAESZQcGFRIkARIgAwYSeQMGEn0DBhIYAgYcAgYIAwYR
-KAMAAAEEAAASDAQAABIIBAAAEmUEAAASIAQAABJ5BAAAEn0FAAEBEn0EAAASGAYgAQESgJkHEAEB
-HgAeAAcwAQEBEB4ABAgAEgwECAASCAQIABJlBAgAEiAECAASeQQIABJ9BAgAEhgEKAATAAgBAAgA
-AAAAAB4BAAEAVAIWV3JhcE5vbkV4Y2VwdGlvblRocm93cwEIAQACAAAAAAAvAQAqU1RfNWY3MTVk
-OTIwNTM4NGQwZDg3NjEwYjgyNWFjNDg3YjAudmJwcm9qAAAFAQAAAAAWAQARQ29weXJpZ2h0IEAg
-IDIwMTYAAAUBAAEAACkBACQ4OTM2MTZiNy02YWI1LTRlYzItOTRiZi02ZDhjYjVjNGY5ZjkAAAwB
-AAcxLjAuMC4wAABHAQAaLk5FVEZyYW1ld29yayxWZXJzaW9uPXY0LjABAFQOFEZyYW1ld29ya0Rp
-c3BsYXlOYW1lEC5ORVQgRnJhbWV3b3JrIDQIAQABAAAAAAAYAQAKTXlUZW1wbGF0ZQgxMS4wLjAu
-MAAAYQEANFN5c3RlbS5XZWIuU2VydmljZXMuUHJvdG9jb2xzLlNvYXBIdHRwQ2xpZW50UHJvdG9j
-b2wSQ3JlYXRlX19JbnN0YW5jZV9fE0Rpc3Bvc2VfX0luc3RhbmNlX18AAAAQAQALTXkuQ29tcHV0
-ZXIAABMBAA5NeS5BcHBsaWNhdGlvbgAADAEAB015LlVzZXIAABMBAA5NeS5XZWJTZXJ2aWNlcwAA
-AAC0AAAAzsrvvgEAAACRAAAAbFN5c3RlbS5SZXNvdXJjZXMuUmVzb3VyY2VSZWFkZXIsIG1zY29y
-bGliLCBWZXJzaW9uPTQuMC4wLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49Yjc3
-YTVjNTYxOTM0ZTA4OSNTeXN0ZW0uUmVzb3VyY2VzLlJ1bnRpbWVSZXNvdXJjZVNldAIAAAAAAAAA
-AAAAAFBBRFBBRFC0AAAA0GwAAAAAAAAAAAAA6mwAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAANxs
-AAAAAAAAAAAAAAAAX0NvckRsbE1haW4AbXNjb3JlZS5kbGwAAAAAAP8lACAAEAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAEAAAABgAAIAAAAAAAAAAAAAAAAAAAAEA
-AQAAADAAAIAAAAAAAAAAAAAAAAAAAAEAAAAAAEgAAABYgAAALAQAAAAAAAAAAAAALAQ0AAAAVgBT
-AF8AVgBFAFIAUwBJAE8ATgBfAEkATgBGAE8AAAAAAL0E7/4AAAEAAAABAAAAAAAAAAEAAAAAAD8A
-AAAAAAAABAAAAAIAAAAAAAAAAAAAAAAAAABEAAAAAQBWAGEAcgBGAGkAbABlAEkAbgBmAG8AAAAA
-ACQABAAAAFQAcgBhAG4AcwBsAGEAdABpAG8AbgAAAAAAAACwBIwDAAABAFMAdAByAGkAbgBnAEYA
-aQBsAGUASQBuAGYAbwAAAGgDAAABADAAMAAwADAAMAA0AGIAMAAAABoAAQABAEMAbwBtAG0AZQBu
-AHQAcwAAAAAAAAAiAAEAAQBDAG8AbQBwAGEAbgB5AE4AYQBtAGUAAAAAAAAAAAB+ACsAAQBGAGkA
-bABlAEQAZQBzAGMAcgBpAHAAdABpAG8AbgAAAAAAUwBUAF8ANQBmADcAMQA1AGQAOQAyADAANQAz
-ADgANABkADAAZAA4ADcANgAxADAAYgA4ADIANQBhAGMANAA4ADcAYgAwAC4AdgBiAHAAcgBvAGoA
-AAAAADAACAABAEYAaQBsAGUAVgBlAHIAcwBpAG8AbgAAAAAAMQAuADAALgAwAC4AMAAAAH4ALwAB
-AEkAbgB0AGUAcgBuAGEAbABOAGEAbQBlAAAAUwBUAF8ANQBmADcAMQA1AGQAOQAyADAANQAzADgA
-NABkADAAZAA4ADcANgAxADAAYgA4ADIANQBhAGMANAA4ADcAYgAwAC4AdgBiAHAAcgBvAGoALgBk
-AGwAbAAAAAAASAASAAEATABlAGcAYQBsAEMAbwBwAHkAcgBpAGcAaAB0AAAAQwBvAHAAeQByAGkA
-ZwBoAHQAIABAACAAIAAyADAAMQA2AAAAKgABAAEATABlAGcAYQBsAFQAcgBhAGQAZQBtAGEAcgBr
-AHMAAAAAAAAAAACGAC8AAQBPAHIAaQBnAGkAbgBhAGwARgBpAGwAZQBuAGEAbQBlAAAAUwBUAF8A
-NQBmADcAMQA1AGQAOQAyADAANQAzADgANABkADAAZAA4ADcANgAxADAAYgA4ADIANQBhAGMANAA4
-ADcAYgAwAC4AdgBiAHAAcgBvAGoALgBkAGwAbAAAAAAAdgArAAEAUAByAG8AZAB1AGMAdABOAGEA
-bQBlAAAAAABTAFQAXwA1AGYANwAxADUAZAA5ADIAMAA1ADMAOAA0AGQAMABkADgANwA2ADEAMABi
-ADgAMgA1AGEAYwA0ADgANwBiADAALgB2AGIAcAByAG8AagAAAAAANAAIAAEAUAByAG8AZAB1AGMA
-dABWAGUAcgBzAGkAbwBuAAAAMQAuADAALgAwAC4AMAAAADgACAABAEEAcwBzAGUAbQBiAGwAeQAg
-AFYAZQByAHMAaQBvAG4AAAAxAC4AMAAuADAALgAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+KCkAAArcfgcAAAQqAAEQAAACAB0ADCkAEAAAAAC+AigqAAAKAn4rAAAKfQkAAAQCFn0KAAAEAn4r
+AAAKfQsAAAQCfisAAAp9DAAABCobMAYAiAQAAAEAABECKCwAAAoWby0AAAoCAigsAAAKby4AAApy
+MwAAcG8vAAAKbzAAAApvMQAACn0JAAAEAgIoLAAACm8uAAAKclUAAHBvLwAACm8wAAAKKDIAAAp9
+CgAABAICKCwAAApvLgAACnJzAABwby8AAApvMAAACm8xAAAKfQsAAAQCAigsAAAKby4AAApykQAA
+cG8vAAAKbzAAAApvMQAACgJ7CwAABCgzAAAKKDQAAAp9DAAABHM1AAAKCgZyoQAAcG82AAAKJgZy
+rwAAcG82AAAKJgZy6wAAcG82AAAKJgZyKQEAcG82AAAKJgZyWwEAcG82AAAKJgZyjQEAcG82AAAK
+JgZy0QEAcG82AAAKJgZyEwIAcG82AAAKJgZyZQIAcG82AAAKJgZyqQIAcG82AAAKJgZy6wIAcG82
+AAAKJgZyPQMAcG82AAAKJgZygQMAcG82AAAKJgZywwMAcG82AAAKJgZyFQQAcG82AAAKJgZyWQQA
+cG82AAAKJgZymwQAcG82AAAKJgZy7QQAcG82AAAKJgZyMQUAcG82AAAKJgZycwUAcG82AAAKJgZy
+xQUAcG82AAAKJgZyCQYAcG82AAAKJgZySwYAcG82AAAKJgZynQYAcG82AAAKJgZy4QYAcG82AAAK
+JgZyIwcAcG82AAAKJgZydQcAcG82AAAKJgZyuQcAcG82AAAKJgZy+wcAcG82AAAKJgZyTQgAcG82
+AAAKJgZykQgAcG82AAAKJgZy0wgAcG82AAAKJgZyJQkAcG82AAAKJgZybQkAcG82AAAKJgZyswkA
+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
+AT8BAwBqJgAAAACDANwBBwEDAHYmAAAAAMYCKQWoAAMAgCYAAAAAEQCkAP0BAwCgJgAAAAABAJAA
+BQIEALogAAAAAAYYHwgGAAUArCYAAAAAAwgiAUoABQDgJgAAAAAGGB8IBgAFAAAAAQDnBAAAAQD3
+BgAAAQAyAQAAAQAyAQkAHwgBABEAHwgGABkAHwgKACkAHwgQADEAHwgQADkAHwgQAEEAHwgQAEkA
+HwgQAFEAHwgQAFkAHwgVAGEAHwgVAGkAHwgQAHEAHwgQAHkAHwgQAIEAHwgaAJEAHwggAKkAHwgG
+ALEAHwgGALkAHwgGANEAHwgmAOkAHwgQAAkBHwgGABEBHwgGAJkAHwgGAKEAHwgGAAwAHwgGABQA
+HwgGABwAHwgGACQAHwgGAAwAIgFKABQAIgFKABwAIgFKACQAIgFKAMEAHwgGANkAeQFPANkAnQpX
+APEAHwhdAGEB3gRlAAEBHwgGAGkBzQdqAGkBJgpqABkBHwgGAHEB0QpvABkB6wmRAHkBKwoBAHkB
+qAmXAIEBEAadAIkBygSkAMEAKQWoAJEBogesAJkBkAGxAJkBxwG2ACEBHwgGACEBvAG8AKEBAQrD
+AKEBeALIACwAHwgGACEBKQWoACwABQHUADEBHwgGAKkBbAbaAKkBrwqoAHEBKQWoADEBNwIQADkB
+HwgGALEBHwjgADkBOwHnAKkBVQb0AKkB+QYBAcEA3AEHAdkACQEMAdkBVwEWAaEBqgodAeEBBQgk
+AXEBCAorAUEBKQWoAIkB1AQxAeEB8wc2AcEAwQk6AcEASwE/AekBEwFLATwAVQpiAUQAygRKAEQA
+1ATUAEQAHwgGAAgAPACUAQgAQACZASkAqwC3Ay4ACwA1Ai4AEwA+Ai4AGwBdAi4AIwBmAi4AKwCP
+Ai4AMwCPAi4AOwBmAi4AQwCVAi4ASwCPAi4AUwCsAi4AWwCPAi4AYwCyAi4AawDcAi4AcwDpAkAA
+iwCZAUAAgwAzA0MAewA8A0MAgwAzA0kAqwDIA2MAewA8A2MAgwAzA2kAqwDcA4AAiwCZAYMAkwCZ
+AYMAmwCZAYMAewA8A4kAqwDpA6AAiwCZAakAgwBdAsAAiwCZAckAgwBdAuAAiwCZAeMAuwCZAeMA
+UwCPAukAswCZAQMBgwAzAwMBowBVAyMBgwAzAyMBWwCPAiACgwAzAyACiwCZAUACgwAzA0ACiwCZ
+AWACgwAzA2ACiwCZAYACgwAzA4ACiwCZAaACiwCZAcACiwCZAeACiwCZAeACgwAzAwADiwCZASAD
+iwCZASADgwAzA3IAQwFWAQQAAQAFAAUABgAHAAkACAAAAOIHDQIAAJAGEgIAAMgHFwIAAHcIHAIA
+AJIHIQIAAAgCJgIAAOcEKwIAACYBMAICAAQAAwACAAUABQACAAYABwACAAcACQACAAkACwACAAoA
+DQABAAsADQACAA4ADwACABgAEQAuADUAPABDAM0ASAFbAWoBcQEEgAAAAQAAAAAAAAAAAAAAAAAB
+AAAABAAAAAAAAAAAAAAAeQHLAAAAAAAEAAAAAAAAAAAAAAB5ARkGAAAAAAoAAAAAAAAAAAAAAIIB
+7wAAAAAADQAAAAAAAAAAAAAAiwFOBQAAAAANAAAAAAAAAAAAAACLAW8AAAAAAAAAAAABAAAAYQkA
+AAgABAAJAAQACgAHAAAAEAASAI4AAAAQACsAjgAAAAAALQCOAIcA7gCjAFEBowB0AQAAAFNUXzRh
+YjE1NWMzMWFmYjRhOGQ4Mzg1YjM3ZGI4Y2RmOWIwAENvbnRleHRWYWx1ZWAxAFRocmVhZFNhZmVP
+YmplY3RQcm92aWRlcmAxAExpc3RgMQBJbnQzMgA8TW9kdWxlPgBTeXN0ZW0uSU8ATWljcm9zb2Z0
+LlNxbFNlcnZlci5NYW5hZ2VkRFRTAFQARGlzcG9zZV9fSW5zdGFuY2VfXwBDcmVhdGVfX0luc3Rh
+bmNlX18AdmFsdWVfXwBQcm9qZWN0RGF0YQBtc2NvcmxpYgBTeXN0ZW0uQ29sbGVjdGlvbnMuR2Vu
+ZXJpYwBNaWNyb3NvZnQuVmlzdWFsQmFzaWMAQWRkAEdldE1ldGhvZABDcmVhdGVJbnN0YW5jZQBn
+ZXRfR2V0SW5zdGFuY2UAaW5zdGFuY2UAQWRkSG9zdEV2aWRlbmNlAEdldEhhc2hDb2RlAEludm9r
+ZQBWYXJpYWJsZQBSdW50aW1lVHlwZUhhbmRsZQBHZXRUeXBlRnJvbUhhbmRsZQBGaWxlAEdldEZp
+bGVOYW1lAE1pY3Jvc29mdC5TcWxTZXJ2ZXIuRHRzLlJ1bnRpbWUAQXBwZW5kTGluZQBDb21iaW5l
+AFNlY3VyaXR5Wm9uZQBHZXRUeXBlAEZhaWx1cmUAZ2V0X0N1bHR1cmUAc2V0X0N1bHR1cmUAX3Jl
+c0N1bHR1cmUATWV0aG9kQmFzZQBWU1RBUlRTY3JpcHRPYmplY3RNb2RlbEJhc2UAc2V0X0FwcGxp
+Y2F0aW9uQmFzZQBBcHBsaWNhdGlvblNldHRpbmdzQmFzZQBFZGl0b3JCcm93c2FibGVTdGF0ZQBE
+ZWxldGUAR3VpZEF0dHJpYnV0ZQBIZWxwS2V5d29yZEF0dHJpYnV0ZQBHZW5lcmF0ZWRDb2RlQXR0
+cmlidXRlAERlYnVnZ2VyTm9uVXNlckNvZGVBdHRyaWJ1dGUARGVidWdnYWJsZUF0dHJpYnV0ZQBF
+ZGl0b3JCcm93c2FibGVBdHRyaWJ1dGUAQ29tVmlzaWJsZUF0dHJpYnV0ZQBBc3NlbWJseVRpdGxl
+QXR0cmlidXRlAFN0YW5kYXJkTW9kdWxlQXR0cmlidXRlAEhpZGVNb2R1bGVOYW1lQXR0cmlidXRl
+AEFzc2VtYmx5VHJhZGVtYXJrQXR0cmlidXRlAFRhcmdldEZyYW1ld29ya0F0dHJpYnV0ZQBEZWJ1
+Z2dlckhpZGRlbkF0dHJpYnV0ZQBBc3NlbWJseUZpbGVWZXJzaW9uQXR0cmlidXRlAE15R3JvdXBD
+b2xsZWN0aW9uQXR0cmlidXRlAEFzc2VtYmx5RGVzY3JpcHRpb25BdHRyaWJ1dGUAQ29tcGlsYXRp
+b25SZWxheGF0aW9uc0F0dHJpYnV0ZQBBc3NlbWJseVByb2R1Y3RBdHRyaWJ1dGUAQXNzZW1ibHlD
+b3B5cmlnaHRBdHRyaWJ1dGUAQ0xTQ29tcGxpYW50QXR0cmlidXRlAFNTSVNTY3JpcHRUYXNrRW50
+cnlQb2ludEF0dHJpYnV0ZQBBc3NlbWJseUNvbXBhbnlBdHRyaWJ1dGUAUnVudGltZUNvbXBhdGli
+aWxpdHlBdHRyaWJ1dGUAbV9WYWx1ZQBnZXRfVmFsdWUAc2V0X1ZhbHVlAEdldE9iamVjdFZhbHVl
+AFN5c3RlbS5UaHJlYWRpbmcAU3lzdGVtLlJ1bnRpbWUuVmVyc2lvbmluZwBjb25uZWN0aW9uU3Ry
+aW5nAFRvU3RyaW5nAHRlbXBGaWxlUGF0aABvdXRwdXRGaWxlUGF0aABNaWNyb3NvZnQuU3FsU2Vy
+dmVyLlNjcmlwdFRhc2sATWljcm9zb2Z0LlNxbFNlcnZlci5EdHMuVGFza3MuU2NyaXB0VGFzawBN
+aWNyb3NvZnQuVmlzdWFsQmFzaWMuTXlTZXJ2aWNlcy5JbnRlcm5hbABTY3JpcHRPYmplY3RNb2Rl
+bABTeXN0ZW0uQ29tcG9uZW50TW9kZWwAU1RfNGFiMTU1YzMxYWZiNGE4ZDgzODViMzdkYjhjZGY5
+YjAuZGxsAGdldF9JdGVtAFN5c3RlbQBFbnVtAEJvb2xlYW4AU3lzdGVtLkNvbXBvbmVudE1vZGVs
+LkRlc2lnbgBTY3JpcHRNYWluAENyZWF0ZURvbWFpbgBBcHBEb21haW4AZ2V0X0N1cnJlbnREb21h
+aW4AZ2V0X0FwcGxpY2F0aW9uAE15QXBwbGljYXRpb24AU3lzdGVtLkNvbmZpZ3VyYXRpb24AU3lz
+dGVtLkdsb2JhbGl6YXRpb24AU3lzdGVtLlJlZmxlY3Rpb24ARXhjZXB0aW9uAE1ldGhvZEluZm8A
+Q3VsdHVyZUluZm8AQ3JlYXRlSW5zdGFuY2VBbmRVbndyYXAAQXBwRG9tYWluU2V0dXAAbV9BcHBP
+YmplY3RQcm92aWRlcgBtX1VzZXJPYmplY3RQcm92aWRlcgBtX0NvbXB1dGVyT2JqZWN0UHJvdmlk
+ZXIAbV9NeVdlYlNlcnZpY2VzT2JqZWN0UHJvdmlkZXIAU3RyaW5nQnVpbGRlcgBnZXRfUmVzb3Vy
+Y2VNYW5hZ2VyAFRvSW50ZWdlcgBTeXN0ZW0uQ29kZURvbS5Db21waWxlcgBnZXRfVXNlcgBFbnRl
+cgBnZXRfQ29tcHV0ZXIATXlDb21wdXRlcgBfcmVzTWdyAENsZWFyUHJvamVjdEVycm9yAFNldFBy
+b2plY3RFcnJvcgBBY3RpdmF0b3IALmN0b3IALmNjdG9yAE1vbml0b3IAU3lzdGVtLkRpYWdub3N0
+aWNzAE1pY3Jvc29mdC5WaXN1YWxCYXNpYy5EZXZpY2VzAGdldF9XZWJTZXJ2aWNlcwBNeVdlYlNl
+cnZpY2VzAE1pY3Jvc29mdC5WaXN1YWxCYXNpYy5BcHBsaWNhdGlvblNlcnZpY2VzAFN5c3RlbS5S
+dW50aW1lLkludGVyb3BTZXJ2aWNlcwBNaWNyb3NvZnQuVmlzdWFsQmFzaWMuQ29tcGlsZXJTZXJ2
+aWNlcwBTeXN0ZW0uUnVudGltZS5Db21waWxlclNlcnZpY2VzAFN5c3RlbS5SZXNvdXJjZXMAU1Rf
+NGFiMTU1YzMxYWZiNGE4ZDgzODViMzdkYjhjZGY5YjAuTXkuUmVzb3VyY2VzAE15UmVzb3VyY2Vz
+AFNUXzRhYjE1NWMzMWFmYjRhOGQ4Mzg1YjM3ZGI4Y2RmOWIwLlJlc291cmNlcy5yZXNvdXJjZXMA
+RGVidWdnaW5nTW9kZXMAZ2V0X1ZhcmlhYmxlcwBNeVNldHRpbmdzAEVxdWFscwBDb252ZXJzaW9u
+cwBSdW50aW1lSGVscGVycwBTdWNjZXNzAGdldF9EdHMAU2NyaXB0UmVzdWx0cwBFeGlzdHMARm9y
+bWF0AG1fU3luY09iamVjdABNeVByb2plY3QARXhpdABzZXRfVGFza1Jlc3VsdABjb21tYW5kVGlt
+ZW91dABTeXN0ZW0uVGV4dABtX0NvbnRleHQAU1RfNGFiMTU1YzMxYWZiNGE4ZDgzODViMzdkYjhj
+ZGY5YjAuTXkAU3lzdGVtLlNlY3VyaXR5LlBvbGljeQBnZXRfQXNzZW1ibHkAQ29weQBnZXRfQmFz
+ZURpcmVjdG9yeQBTeXN0ZW0uU2VjdXJpdHkARW1wdHkAAAAxTQB5AC4AUgBlAHMAbwB1AHIAYwBl
+AHMALgBNAHkAUgBlAHMAbwB1AHIAYwBlAHMAACFDAG8AbgBuAGUAYwB0AGkAbwBuAFMAdAByAGkA
+bgBnAAAdQwBvAG0AbQBhAG4AZABUAGkAbQBlAG8AdQB0AAAdTwB1AHQAcAB1AHQARgBpAGwAZQBQ
+AGEAdABoAAAPVABlAG0AcABEAGkAcgAADVMARQBMAEUAQwBUAAA7IAAgACAAIABTAC4AUwB1AHAA
+cABsAGkAZQByAEMAbwBkAGUAIABBAFMAIABTAHUAcABDAE8ARABFAAA9IAAgACAAIAAsAFMALgBT
+ADQAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAIABBAFMAIABTAHUAcABOAG8AADEgACAAIAAgACwA
+UwAuAE4AYQBtAGUAMwAgAEEAUwAgAFMAdQBwAE4AYQBtAGUAMQAAMSAAIAAgACAALABTAC4ATgBh
+AG0AZQA0ACAAQQBTACAAUwB1AHAATgBhAG0AZQAyAABDIAAgACAAIAAsAFMALgBTAHUAcABwAGwA
+aQBlAHIARQBtAGEAaQBsAEkARAAxACAAQQBTACAAUwB1AHAASQBEADEAAEEgACAAIAAgACwAUwAu
+AFMAdQBwAHAAbABpAGUAcgBFAG0AYQBpAGwAMQAgAEEAUwAgAFMAdQBwAFIARQBNADEAAFEgACAA
+IAAgACwAUwAuAFMAdQBwAHAAbABpAGUAcgBDAG8AbgB0AGEAYwB0AFAAZQByAHMAbwBuADEAIABB
+AFMAIABTAHUAcABNAEEARAAxAABDIAAgACAAIAAsAFMALgBTAHUAcABwAGwAaQBlAHIARQBtAGEA
+aQBsAEkARAAyACAAQQBTACAAUwB1AHAASQBEADIAAEEgACAAIAAgACwAUwAuAFMAdQBwAHAAbABp
+AGUAcgBFAG0AYQBpAGwAMgAgAEEAUwAgAFMAdQBwAFIARQBNADIAAFEgACAAIAAgACwAUwAuAFMA
+dQBwAHAAbABpAGUAcgBDAG8AbgB0AGEAYwB0AFAAZQByAHMAbwBuADIAIABBAFMAIABTAHUAcABN
+AEEARAAyAABDIAAgACAAIAAsAFMALgBTAHUAcABwAGwAaQBlAHIARQBtAGEAaQBsAEkARAAzACAA
+QQBTACAAUwB1AHAASQBEADMAAEEgACAAIAAgACwAUwAuAFMAdQBwAHAAbABpAGUAcgBFAG0AYQBp
+AGwAMwAgAEEAUwAgAFMAdQBwAFIARQBNADMAAFEgACAAIAAgACwAUwAuAFMAdQBwAHAAbABpAGUA
+cgBDAG8AbgB0AGEAYwB0AFAAZQByAHMAbwBuADMAIABBAFMAIABTAHUAcABNAEEARAAzAABDIAAg
+ACAAIAAsAFMALgBTAHUAcABwAGwAaQBlAHIARQBtAGEAaQBsAEkARAA0ACAAQQBTACAAUwB1AHAA
+SQBEADQAAEEgACAAIAAgACwAUwAuAFMAdQBwAHAAbABpAGUAcgBFAG0AYQBpAGwANAAgAEEAUwAg
+AFMAdQBwAFIARQBNADQAAFEgACAAIAAgACwAUwAuAFMAdQBwAHAAbABpAGUAcgBDAG8AbgB0AGEA
+YwB0AFAAZQByAHMAbwBuADQAIABBAFMAIABTAHUAcABNAEEARAA0AABDIAAgACAAIAAsAFMALgBT
+AHUAcABwAGwAaQBlAHIARQBtAGEAaQBsAEkARAA1ACAAQQBTACAAUwB1AHAASQBEADUAAEEgACAA
+IAAgACwAUwAuAFMAdQBwAHAAbABpAGUAcgBFAG0AYQBpAGwANQAgAEEAUwAgAFMAdQBwAFIARQBN
+ADUAAFEgACAAIAAgACwAUwAuAFMAdQBwAHAAbABpAGUAcgBDAG8AbgB0AGEAYwB0AFAAZQByAHMA
+bwBuADUAIABBAFMAIABTAHUAcABNAEEARAA1AABDIAAgACAAIAAsAFMALgBTAHUAcABwAGwAaQBl
+AHIARQBtAGEAaQBsAEkARAA2ACAAQQBTACAAUwB1AHAASQBEADYAAEEgACAAIAAgACwAUwAuAFMA
+dQBwAHAAbABpAGUAcgBFAG0AYQBpAGwANgAgAEEAUwAgAFMAdQBwAFIARQBNADYAAFEgACAAIAAg
+ACwAUwAuAFMAdQBwAHAAbABpAGUAcgBDAG8AbgB0AGEAYwB0AFAAZQByAHMAbwBuADYAIABBAFMA
+IABTAHUAcABNAEEARAA2AABDIAAgACAAIAAsAFMALgBTAHUAcABwAGwAaQBlAHIARQBtAGEAaQBs
+AEkARAA3ACAAQQBTACAAUwB1AHAASQBEADcAAEEgACAAIAAgACwAUwAuAFMAdQBwAHAAbABpAGUA
+cgBFAG0AYQBpAGwANwAgAEEAUwAgAFMAdQBwAFIARQBNADcAAFEgACAAIAAgACwAUwAuAFMAdQBw
+AHAAbABpAGUAcgBDAG8AbgB0AGEAYwB0AFAAZQByAHMAbwBuADcAIABBAFMAIABTAHUAcABNAEEA
+RAA3AABDIAAgACAAIAAsAFMALgBTAHUAcABwAGwAaQBlAHIARQBtAGEAaQBsAEkARAA4ACAAQQBT
+ACAAUwB1AHAASQBEADgAAEEgACAAIAAgACwAUwAuAFMAdQBwAHAAbABpAGUAcgBFAG0AYQBpAGwA
+OAAgAEEAUwAgAFMAdQBwAFIARQBNADgAAFEgACAAIAAgACwAUwAuAFMAdQBwAHAAbABpAGUAcgBD
+AG8AbgB0AGEAYwB0AFAAZQByAHMAbwBuADgAIABBAFMAIABTAHUAcABNAEEARAA4AABDIAAgACAA
+IAAsAFMALgBTAHUAcABwAGwAaQBlAHIARQBtAGEAaQBsAEkARAA5ACAAQQBTACAAUwB1AHAASQBE
+ADkAAEEgACAAIAAgACwAUwAuAFMAdQBwAHAAbABpAGUAcgBFAG0AYQBpAGwAOQAgAEEAUwAgAFMA
+dQBwAFIARQBNADkAAFEgACAAIAAgACwAUwAuAFMAdQBwAHAAbABpAGUAcgBDAG8AbgB0AGEAYwB0
+AFAAZQByAHMAbwBuADkAIABBAFMAIABTAHUAcABNAEEARAA5AABHIAAgACAAIAAsAFMALgBTAHUA
+cABwAGwAaQBlAHIARQBtAGEAaQBsAEkARAAxADAAIABBAFMAIABTAHUAcABJAEQAMQAwAABFIAAg
+ACAAIAAsAFMALgBTAHUAcABwAGwAaQBlAHIARQBtAGEAaQBsADEAMAAgAEEAUwAgAFMAdQBwAFIA
+RQBNADEAMAAAVSAAIAAgACAALABTAC4AUwB1AHAAcABsAGkAZQByAEMAbwBuAHQAYQBjAHQAUABl
+AHIAcwBvAG4AMQAwACAAQQBTACAAUwB1AHAATQBBAEQAMQAwAAAvIAAgACAAIAAsAEMALgBbAE4A
+YQBtAGUAXQAgAEEAUwAgAFMAdQBwAEMAcgB5AAAxIAAgACAAIAAsAFMALgBFAG0AYQBpAGwAIABB
+AFMAIABbAEUALQBtAGEAaQBsAF0AAQlGAFIATwBNAAAlIAAgACAAIABzAF8AQwBvAHUAbgB0AHIA
+eQAgAEEAUwAgAEMAACUgACAAIAAgACwAUwB1AHAAcABsAGkAZQByACAAQQBTACAAUwAAC1cASABF
+AFIARQAAQyAAIAAgACAAUwAuAEMAbwB1AG4AdAByAHkAQwBvAGQAZQAgAD0AIABDAC4AQwBvAHUA
+bgB0AHIAeQBDAG8AZABlAAARTwBSAEQARQBSACAAQgBZAAAhIAAgACAAIABTAHUAcABwAGwAaQBl
+AHIAQwBvAGQAZQAADVMAaABlAGUAdAAxAAARTQB5AEQAbwBtAGEAaQBuAAAVVABDAEkATwBwAGUA
+bgBYAE0ATAAAK1QAQwBJAE8AcABlAG4AWABNAEwALgBUAEMASQBPAHAAZQBuAFgATQBMAAAbQwBy
+AGUAYQB0AGUATwBwAGUAbgBYAE0ATAAANdVOZVFIUd4wuTC/MMcw/DC/MPpRm1IgACgAewAwAH0A
+KQAgAGswMVlXZVcwfjBXMF8wAjABE6gw6TD8MOEwwzC7MPwwuDAa/wEZRQByAHIAbwByAE0AZQBz
+AHMAYQBnAGUAAABE3Q+h4UA5SrL3VUglzQhGAAQgAQEIAyAAAQUgAQEREQQgAQEOBCABAQIFIAIB
+Dg4FIAEBEUUHIAQBDg4ODgYVEiQBEgwGFRIkARIIBhUSJAESZQYVEiQBEiAEIAATAAcAARJtEYCp
+BSAAEoCtByACAQ4SgK0EAAEcHAQAAQEcAgYOHgcIEoCRFRKAlQEOFRKAlQEOEoCZEoCdHBKAoRKA
+kQUgABKAvQUgABKAwQYgARKAxRwDIAAcAyAADgQAAQgcBAABDg4FAAIODg4GIAESgJEOBAABAg4E
+AAEBDgYVEoCVAQ4FIAEBEwAFAAASgNUGIAEBEYDdBjABAQEeAAUKARKA2QwAAxKA1Q4SgJ0SgJkF
+IAIcDg4EIAASbQkgAhKA6Q4dEm0GIAIcHB0cBgADAQ4OAgYAAQESgKEFAAIODhwEIAEBHAMAAAEE
+IAECHAMgAAgEBwEeAAIeAAUQAQAeAAQKAR4ABAcBEwAGFRIkARMABwYVEnEBEwAGFRJxARMAAhMA
+BAoBEwAIt3pcVhk04IkIsD9ffxHVCjoIiYRdzYCAzJEEAAAAAAQBAAAABwYVEiQBEgwHBhUSJAES
+CAcGFRIkARJlBwYVEiQBEiADBhJ5AwYSfQMGEhgCBhwCBggDBhEoBAAAEgwEAAASCAQAABJlBAAA
+EiAEAAASeQQAABJ9BQABARJ9BAAAEhgHEAEBHgAeAAcwAQEBEB4ABAgAEgwECAASCAQIABJlBAgA
+EiAECAASeQQIABJ9BAgAEhgEKAATAAgBAAgAAAAAAB4BAAEAVAIWV3JhcE5vbkV4Y2VwdGlvblRo
+cm93cwEIAQACAAAAAAAoAQAjU1RfNGFiMTU1YzMxYWZiNGE4ZDgzODViMzdkYjhjZGY5YjAAAAUB
+AAAAABYBABFDb3B5cmlnaHQgQCAgMjAyMAAABQEAAQAAKQEAJDkxNmI3YTIyLTNiNDUtNDk1ZC1h
+NDVkLTRjNmEyMjlhZjY5MgAADAEABzEuMC4wLjAAAEkBABouTkVURnJhbWV3b3JrLFZlcnNpb249
+djQuNQEAVA4URnJhbWV3b3JrRGlzcGxheU5hbWUSLk5FVCBGcmFtZXdvcmsgNC41CAEAAQAAAAAA
+GAEACk15VGVtcGxhdGUIMTEuMC4wLjAAAGEBADRTeXN0ZW0uV2ViLlNlcnZpY2VzLlByb3RvY29s
+cy5Tb2FwSHR0cENsaWVudFByb3RvY29sEkNyZWF0ZV9fSW5zdGFuY2VfXxNEaXNwb3NlX19JbnN0
+YW5jZV9fAAAAEAEAC015LkNvbXB1dGVyAAATAQAOTXkuQXBwbGljYXRpb24AAAwBAAdNeS5Vc2Vy
+AAATAQAOTXkuV2ViU2VydmljZXMAAAAAALQAAADOyu++AQAAAJEAAABsU3lzdGVtLlJlc291cmNl
+cy5SZXNvdXJjZVJlYWRlciwgbXNjb3JsaWIsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0
+cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5I1N5c3RlbS5SZXNvdXJjZXMuUnVu
+dGltZVJlc291cmNlU2V0AgAAAAAAAAAAAAAAUEFEUEFEULQAAAAsTAAAAAAAAAAAAABGTAAAACAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAOEwAAAAAAAAAAAAAAABfQ29yRGxsTWFpbgBtc2NvcmVlLmRs
+bAAAAAAA/yUAIAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAYAAADAAAAPw8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABABAAAAAYAACA
+AAAAAAAAAAAAAAAAAAABAAEAAAAwAACAAAAAAAAAAAAAAAAAAAABAAAAAABIAAAAWGAAAOwDAAAA
+AAAAAAAAAOwDNAAAAFYAUwBfAFYARQBSAFMASQBPAE4AXwBJAE4ARgBPAAAAAAC9BO/+AAABAAAA
+AQAAAAAAAAABAAAAAAA/AAAAAAAAAAQAAAACAAAAAAAAAAAAAAAAAAAARAAAAAEAVgBhAHIARgBp
+AGwAZQBJAG4AZgBvAAAAAAAkAAQAAABUAHIAYQBuAHMAbABhAHQAaQBvAG4AAAAAAAAAsARMAwAA
+AQBTAHQAcgBpAG4AZwBGAGkAbABlAEkAbgBmAG8AAAAoAwAAAQAwADAAMAAwADAANABiADAAAAAa
+AAEAAQBDAG8AbQBtAGUAbgB0AHMAAAAAAAAAIgABAAEAQwBvAG0AcABhAG4AeQBOAGEAbQBlAAAA
+AAAAAAAAcAAkAAEARgBpAGwAZQBEAGUAcwBjAHIAaQBwAHQAaQBvAG4AAAAAAFMAVABfADQAYQBi
+ADEANQA1AGMAMwAxAGEAZgBiADQAYQA4AGQAOAAzADgANQBiADMANwBkAGIAOABjAGQAZgA5AGIA
+MAAAADAACAABAEYAaQBsAGUAVgBlAHIAcwBpAG8AbgAAAAAAMQAuADAALgAwAC4AMAAAAHAAKAAB
+AEkAbgB0AGUAcgBuAGEAbABOAGEAbQBlAAAAUwBUAF8ANABhAGIAMQA1ADUAYwAzADEAYQBmAGIA
+NABhADgAZAA4ADMAOAA1AGIAMwA3AGQAYgA4AGMAZABmADkAYgAwAC4AZABsAGwAAABIABIAAQBM
+AGUAZwBhAGwAQwBvAHAAeQByAGkAZwBoAHQAAABDAG8AcAB5AHIAaQBnAGgAdAAgAEAAIAAgADIA
+MAAyADAAAAAqAAEAAQBMAGUAZwBhAGwAVAByAGEAZABlAG0AYQByAGsAcwAAAAAAAAAAAHgAKAAB
+AE8AcgBpAGcAaQBuAGEAbABGAGkAbABlAG4AYQBtAGUAAABTAFQAXwA0AGEAYgAxADUANQBjADMA
+MQBhAGYAYgA0AGEAOABkADgAMwA4ADUAYgAzADcAZABiADgAYwBkAGYAOQBiADAALgBkAGwAbAAA
+AGgAJAABAFAAcgBvAGQAdQBjAHQATgBhAG0AZQAAAAAAUwBUAF8ANABhAGIAMQA1ADUAYwAzADEA
+YQBmAGIANABhADgAZAA4ADMAOAA1AGIAMwA3AGQAYgA4AGMAZABmADkAYgAwAAAANAAIAAEAUABy
+AG8AZAB1AGMAdABWAGUAcgBzAGkAbwBuAAAAMQAuADAALgAwAC4AMAAAADgACAABAEEAcwBzAGUA
+bQBiAGwAeQAgAFYAZQByAHMAaQBvAG4AAAAxAC4AMAAuADAALgAwAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAwAAABYPAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -1297,45 +1031,22 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAA==</BinaryItem>
-        </ScriptProject>
-      </DTS:ObjectData>
-    </DTS:Executable>
-    <DTS:Executable
-      DTS:refId="Package\メール送信タスク"
-      DTS:CreationName="Microsoft.SendMailTask"
-      DTS:Description="メール送信タスク"
-      DTS:DTSID="{95C18BCF-65A8-402C-B257-09963D50A01A}"
-      DTS:ExecutableType="Microsoft.SendMailTask"
-      DTS:LocaleID="-1"
-      DTS:ObjectName="メール送信タスク"
-      DTS:TaskContact="Send Mail Task; Microsoft Corporation; Microsoft SQL Server 2008 R2; © 2007 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-      DTS:ThreadHint="0">
-      <DTS:Variables />
-      <DTS:LoggingOptions
-        DTS:FilterKind="0" />
-      <DTS:PropertyExpression
-        DTS:Name="ToLine">@[User::MailTo]</DTS:PropertyExpression>
-      <DTS:ObjectData>
-        <SendMailTask:SendMailTaskData
-          SendMailTask:SMTPServer="{0AD186C2-2559-4809-8E51-09449B4289C8}"
-          SendMailTask:From="devteam_app@tcichemicals.com"
-          SendMailTask:To="devteam_app@tcichemicals.com"
-          SendMailTask:Subject="[Purchase] 仕入先マスタデータ出力エラー"
-          SendMailTask:MessageSourceType="Variable"
-          SendMailTask:MessageSource="User::ErrorMessage" xmlns:SendMailTask="www.microsoft.com/sqlserver/dts/tasks/sendmailtask" />
-      </DTS:ObjectData>
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</BinaryItem>
+            </ScriptProject>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
     </DTS:Executable>
   </DTS:Executables>
   <DTS:PrecedenceConstraints>
     <DTS:PrecedenceConstraint
       DTS:refId="Package.PrecedenceConstraints[制約]"
       DTS:CreationName=""
-      DTS:DTSID="{6BE4AD53-473A-4636-93C1-1B8BF0214A28}"
-      DTS:From="Package\スクリプト タスク"
+      DTS:DTSID="{36DD861A-4D20-429B-9BB9-B2464FBD3C99}"
+      DTS:From="Package\シーケンス コンテナー"
       DTS:LogicalAnd="True"
       DTS:ObjectName="制約"
-      DTS:To="Package\メール送信タスク"
+      DTS:To="Package\エラーメール送信"
       DTS:Value="1" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
@@ -1351,38 +1062,53 @@ AAAAAAAAAAAAAAAAAA==</BinaryItem>
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
-          Size="136,44"
-          Id="Package\スクリプト タスク"
-          TopLeft="5.5,5.5" />
+          Size="157.6,41.6"
+          Id="Package\エラーメール送信"
+          TopLeft="336.281675976058,146.414717014193" />
         <NodeLayout
-          Size="136,44"
-          Id="Package\メール送信タスク"
-          TopLeft="53.4245283018868,142.254716981132" />
+          Size="192.8,41.6"
+          Id="Package\シーケンス コンテナー\仕入先マスタデータ出力"
+          TopLeft="23.4285727131122,40.2133343141344" />
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="244.8,136.8"
+          Size="244.8,180"
+          Id="Package\シーケンス コンテナー"
+          TopLeft="52.0000008855548,40.2133336529202" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[制約]"
-          TopLeft="73.3867924528302,49.4245283018868">
+          TopLeft="296.800000885555,130.21333365292">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="47.9245283018868,92.8301886792453"
+              EndConnector="39.4816750905034,37.0013833612726"
               Start="0,0"
-              End="47.9245283018868,85.3301886792453">
+              End="31.9816750905034,37.0013833612726">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,43.9245283018868" />
+                    End="15.7408375452517,0" />
+                  <mssgle:CubicBezierSegment
+                    Point1="15.7408375452517,0"
+                    Point2="19.7408375452517,0"
+                    Point3="19.7408375452517,4" />
                   <mssgle:LineSegment
-                    End="47.9245283018868,43.9245283018868" />
+                    End="19.7408375452517,33.0013833612726" />
+                  <mssgle:CubicBezierSegment
+                    Point1="19.7408375452517,33.0013833612726"
+                    Point2="19.7408375452517,37.0013833612726"
+                    Point3="23.7408375452517,37.0013833612726" />
                   <mssgle:LineSegment
-                    End="47.9245283018868,85.3301886792453" />
+                    End="31.9816750905034,37.0013833612726" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="13.3797446196934,48.9245283018868,21.1650390625,11.0087890625"
+              BoundingBox="9.26573988900168,-16.9892578125,20.9501953125,10.9892578125"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
