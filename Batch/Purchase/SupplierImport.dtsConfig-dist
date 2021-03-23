@@ -1,38 +1,47 @@
-<?xml version="1.0"?>
-<DTSConfiguration>
-<DTSConfigurationHeading>
-  <DTSConfigurationFileInfo GeneratedBy="akutsu" GeneratedFromPackageName="ProductImport" GeneratedFromPackageID="{19D05BC8-92A0-47B5-B85E-BAD0746F3CA5}" GeneratedDate="2008/07/11 11:16:45"/>
-</DTSConfigurationHeading>
+<?xml version="1.0"?><DTSConfiguration>
+	<DTSConfigurationHeading>
+		<DTSConfigurationFileInfo GeneratedBy="TCIX\Hiroko.Akutsu" GeneratedFromPackageName="ProductImport" GeneratedFromPackageID="{19D05BC8-92A0-47B5-B85E-BAD0746F3CA5}" GeneratedDate="2008/07/11 11:16:45"/>
+	</DTSConfigurationHeading>
 
-<!-- DB Settings -->
-<Configuration ConfiguredType="Property" Path="\Package.Connections[ADO.Purchase].Properties[ServerName]" ValueType="String">
-  <ConfiguredValue>"(local)"</ConfiguredValue>
-</Configuration>
-<Configuration ConfiguredType="Property" Path="\Package.Connections[ADO.Purchase].Properties[UserName]" ValueType="String">
-  <ConfiguredValue>Purchase</ConfiguredValue>
-</Configuration>
-<Configuration ConfiguredType="Property" Path="\Package.Connections[ADO.Purchase].Properties[Password]" ValueType="String">
-  <ConfiguredValue>n061t@kun</ConfiguredValue>
-</Configuration>
-<Configuration ConfiguredType="Property" Path="\Package.Connections[ADO.Purchase].Properties[InitialCatalog]" ValueType="String">
-  <ConfiguredValue>Purchase</ConfiguredValue>
-</Configuration>
+	<!-- データベース接続設定 -->
+	<Configuration ConfiguredType="Property" Path="\Package.Connections[ADO.Purchase].Properties[ServerName]" ValueType="String">
+		<ConfiguredValue>"(local)"</ConfiguredValue>
+	</Configuration>
+	<Configuration ConfiguredType="Property" Path="\Package.Connections[ADO.Purchase].Properties[UserName]" ValueType="String">
+		<ConfiguredValue>Purchase</ConfiguredValue>
+	</Configuration>
+	<Configuration ConfiguredType="Property" Path="\Package.Connections[ADO.Purchase].Properties[Password]" ValueType="String">
+		<ConfiguredValue>n061t@kun</ConfiguredValue>
+	</Configuration>
+	<Configuration ConfiguredType="Property" Path="\Package.Connections[ADO.Purchase].Properties[InitialCatalog]" ValueType="String">
+		<ConfiguredValue>Purchase</ConfiguredValue>
+	</Configuration>
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::SPTimeOut].Properties[Value]" ValueType="Int32">
+		<ConfiguredValue>300</ConfiguredValue>
+	</Configuration>
 
-<!-- Error Mail Settings -->
-<Configuration ConfiguredType="Property" Path="\Package.Connections[SMTP].Properties[SmtpServer]" ValueType="String">
-  <ConfiguredValue>excas.tcix.local</ConfiguredValue>
-</Configuration>
-<Configuration ConfiguredType="Property" Path="\Package.Variables[User::Mail_To].Properties[Value]" ValueType="String">
-  <ConfiguredValue>app@TCIchemicals.com</ConfiguredValue>
-</Configuration>
+	<!-- メール送信設定 -->
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::SMTPEndPoint].Properties[Value]" ValueType="String">
+		<ConfiguredValue>tcichemicals.smtps.jp</ConfiguredValue>
+	</Configuration>
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::SMTPPort].Properties[Value]" ValueType="Int32">
+		<ConfiguredValue>10025</ConfiguredValue>
+	</Configuration>
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::SMTPUserName].Properties[Value]" ValueType="String">
+		<ConfiguredValue>cmc_tcijapp@tcichemicals.com</ConfiguredValue>
+	</Configuration>
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::SMTPPassword].Properties[Value]" ValueType="String">
+		<ConfiguredValue>nyWsT4NTF!tV</ConfiguredValue>
+	</Configuration>
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::MailFrom].Properties[Value]" ValueType="String">
+		<ConfiguredValue>app@tcichemicals.com</ConfiguredValue>
+	</Configuration>
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::MailTo].Properties[Value]" ValueType="String">
+		<ConfiguredValue>app@tcichemicals.com</ConfiguredValue>
+	</Configuration>
 
-<!-- Directory Settings -->
-<Configuration ConfiguredType="Property" Path="\Package.Variables[User::Dir_Log].Properties[Value]" ValueType="String">
-  <ConfiguredValue>C:\tcijapp\Purchase\Batch\log\</ConfiguredValue>
-</Configuration>
-
-<!-- Stored Procedure time out setting -->
-<Configuration ConfiguredType="Property" Path="\Package.Variables[User::SPTimeOut].Properties[Value]" ValueType="Int32">
-  <ConfiguredValue>300</ConfiguredValue>
-</Configuration>
+	<!-- ファイル/ディレクトリ設定 -->
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::Dir_Log].Properties[Value]" ValueType="String">
+		<ConfiguredValue>C:\tcijapp\Purchase\Batch\log\</ConfiguredValue>
+	</Configuration>
 </DTSConfiguration>

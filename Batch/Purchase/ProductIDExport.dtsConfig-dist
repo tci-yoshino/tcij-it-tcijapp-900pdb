@@ -1,9 +1,17 @@
 <?xml version="1.0"?><DTSConfiguration>
-<DTSConfigurationHeading><DTSConfigurationFileInfo GeneratedBy="TCIX\Masumi.Koyama" GeneratedFromPackageName="SupplierPerformance" GeneratedFromPackageID="{D4C3B75A-B13C-42EE-B6A6-48312244AE4D}" GeneratedDate="2015/06/15 9:56:53"/></DTSConfigurationHeading>
+	<DTSConfigurationHeading>
+		<DTSConfigurationFileInfo GeneratedBy="TCIX\Masumi.Koyama" GeneratedFromPackageName="ProductIDExport" GeneratedFromPackageID="{D4C3B75A-B13C-42EE-B6A6-48312244AE4D}" GeneratedDate="2015/06/15 9:56:53"/>
+	</DTSConfigurationHeading>
 
-	<!-- 出力ファイルパス（ファイル名まで指定） -->
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::CommandTimeout].Properties[Value]" ValueType="Int32">
+		<ConfiguredValue>300</ConfiguredValue>
+	</Configuration>
+
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::TempDir].Properties[Value]" ValueType="String">
+		<ConfiguredValue>C:\tcijapp\Purchase\Batch\Temp</ConfiguredValue>
+	</Configuration>
+
 	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputFilePath].Properties[Value]" ValueType="String">
 		<ConfiguredValue>\\TFL5\file\部署\調達部\受信\情シス提供データ(調達)\ProductID.txt</ConfiguredValue>
 	</Configuration>
-
 </DTSConfiguration>

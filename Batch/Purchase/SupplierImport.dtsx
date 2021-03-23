@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
   DTS:refId="Package"
   DTS:CreationDate="5/28/2008 5:56:05 PM"
@@ -8,13 +8,13 @@
   DTS:DTSID="{23F09C9A-DF24-49D4-8292-E077E4F563AA}"
   DTS:EnableConfig="True"
   DTS:ExecutableType="Microsoft.Package"
-  DTS:LastModifiedProductVersion="13.0.2165.0"
+  DTS:LastModifiedProductVersion="15.0.1100.123"
   DTS:LocaleID="1041"
   DTS:ObjectName="Package"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="68"
-  DTS:VersionGUID="{C9E96161-9B21-4DAD-9AC8-3A8633DAC1C1}">
+  DTS:VersionBuild="70"
+  DTS:VersionGUID="{EB15D172-AB82-4D88-9AAF-C6F13D365771}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -25,18 +25,11 @@
       DTS:ObjectName="ADO.Purchase">
       <DTS:ObjectData>
         <DTS:ConnectionManager
-          DTS:ConnectionString="Data Source=TDB1DEV;User ID=Purchase;Initial Catalog=Purchase;Persist Security Info=True;" />
-      </DTS:ObjectData>
-    </DTS:ConnectionManager>
-    <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[SMTP]"
-      DTS:CreationName="SMTP"
-      DTS:Description="PurchaseDB SupplierImport.dtsx エラーメール送信"
-      DTS:DTSID="{E271125B-E698-49A8-B2B0-0B0D1949DB2C}"
-      DTS:ObjectName="SMTP">
-      <DTS:ObjectData>
-        <SmtpConnectionManager
-          ConnectionString="SmtpServer=excas.tcix.local;UseWindowsAuthentication=True;EnableSsl=False;" />
+          DTS:ConnectionString="Data Source=TDB2QAS;User ID=Purchase;Initial Catalog=Purchase;Persist Security Info=True;">
+          <DTS:Password
+            DTS:Name="Password"
+            Sensitive="1"></DTS:Password>
+        </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
   </DTS:ConnectionManagers>
@@ -88,12 +81,57 @@
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
-      DTS:DTSID="{A9879246-3B3D-45EC-89A2-609BCAE9F23B}"
+      DTS:DTSID="{D48D5F3D-1C2E-4A51-AEA7-44CEF5EF21B9}"
       DTS:IncludeInDebugDump="2345"
       DTS:Namespace="User"
-      DTS:ObjectName="Mail_To">
+      DTS:ObjectName="MailFrom">
       <DTS:VariableValue
-        DTS:DataType="8">akane.taniguchi@TCIchemicals.com</DTS:VariableValue>
+        DTS:DataType="8">app@tcichemicals.com</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{1BE4543C-8F33-4A69-85EC-FFE43848A92E}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="MailTo">
+      <DTS:VariableValue
+        DTS:DataType="8">app@tcichemicals.com</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{85AEAC58-942F-419B-94E5-6948C27BB127}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SMTPEndPoint">
+      <DTS:VariableValue
+        DTS:DataType="8">tcichemicals.smtps.jp</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B0BEA3C0-4B15-4574-8834-39B04F27FF90}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SMTPPassword">
+      <DTS:VariableValue
+        DTS:DataType="8">nyWsT4NTF!tV</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{52358FE6-EEB9-4CFA-8D40-0AB5B271428F}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="SMTPPort">
+      <DTS:VariableValue
+        DTS:DataType="3">10025</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{0866B3BD-D054-42E7-AAC4-8E481153072B}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="SMTPUserName">
+      <DTS:VariableValue
+        DTS:DataType="8">cmc_tcijapp@tcichemicals.com</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -116,13 +154,793 @@
   </DTS:Variables>
   <DTS:Executables>
     <DTS:Executable
-      DTS:refId="Package\スクリプト タスク"
+      DTS:refId="Package\エラーメール送信"
+      DTS:CreationName="Microsoft.ScriptTask"
+      DTS:Description="スクリプト タスク"
+      DTS:DTSID="{CBA0E51F-EC57-48FF-8FBF-5E7CBAD291C5}"
+      DTS:ExecutableType="Microsoft.ScriptTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="エラーメール送信"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <ScriptProject
+          Name="ST_158815b0e15844b2bdd03db42d1e4d26"
+          VSTAMajorVersion="14"
+          VSTAMinorVersion="0"
+          Language="VisualBasic"
+          ReadOnlyVariables="User::SMTPEndPoint, User::SMTPPort, User::SMTPUserName, User::SMTPPassword, User::MailFrom, User::MailTo, User::Comment">
+          <ProjectItem
+            Name="ScriptMain.vb"
+            Encoding="UTF8"><![CDATA[#Region "Imports"
+Imports MailKit
+Imports MimeKit
+Imports System.Text.RegularExpressions
+#End Region
+
+'ScriptMain is the entry point class of the script.  Do not change the name, attributes,
+'or parent of this class.
+<Microsoft.SqlServer.Dts.Tasks.ScriptTask.SSISScriptTaskEntryPointAttribute()> _
+<System.CLSCompliantAttribute(False)> _
+Partial Public Class ScriptMain
+    Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
+
+    'This method is called when this script task executes in the control flow.
+    'Before returning from this method, set the value of Dts.TaskResult to indicate success or failure.
+    'To open Help, press F1.
+
+    Private Const MAIL_SUBJECT As String = "[Purchase] 仕入先インポートでエラーが発生しました"
+
+    Private smtpEndPoint As String = String.Empty
+    Private smtpPort As Integer = 0
+    Private smtpUserName As String = String.Empty
+    Private smtpPassword As String = String.Empty
+    Private mailFrom As String = String.Empty
+    Private errorMessage As String = String.Empty
+
+    ''' <summary>
+    ''' メイン処理を行います。
+    ''' </summary>
+    Public Sub Main()
+
+        Dts.TaskResult = ScriptResults.Success
+
+        smtpEndPoint = Dts.Variables("SMTPEndPoint").Value.ToString
+        smtpPort = Convert.ToInt32(Dts.Variables("SMTPPort").Value)
+        smtpUserName = Dts.Variables("SMTPUserName").Value.ToString
+        smtpPassword = Dts.Variables("SMTPPassword").Value.ToString
+        mailFrom = Dts.Variables("MailFrom").Value.ToString
+        errorMessage = Dts.Variables("Comment").Value.ToString
+
+        Dim mailTo() As String = Regex.Split(Dts.Variables("MailTo").Value.ToString, ",|;")
+
+        Try
+            'メールを送信する
+            SendMailSync(mailTo)
+
+        Catch ex As Exception
+            Dts.TaskResult = ScriptResults.Failure
+
+        End Try
+
+    End Sub
+
+    ''' <summary>
+    ''' メールを送信します。(同期バージョン)
+    ''' </summary>
+    Private Sub SendMailSync(ByVal mailTo() As String)
+
+        Dim addressList As New InternetAddressList
+        For Each address As String In mailTo
+            addressList.Add(New MailboxAddress(address, address))
+        Next
+
+        Dim mailMsg As New MimeMessage
+        mailMsg.From.Add(New MailboxAddress(mailFrom, mailFrom))
+        mailMsg.To.AddRange(addressList)
+        mailMsg.Subject = MAIL_SUBJECT
+        mailMsg.Priority = MessagePriority.Urgent
+
+        Dim bodyText As New TextPart(Text.TextFormat.Plain) With {
+            .Text = errorMessage
+        }
+        mailMsg.Body = bodyText
+
+        Using client As Net.Smtp.SmtpClient = New Net.Smtp.SmtpClient()
+            client.Connect(smtpEndPoint, smtpPort)
+            client.Authenticate(smtpUserName, smtpPassword)
+            client.Send(mailMsg)
+            client.Disconnect(True)
+        End Using
+
+    End Sub
+
+    ''' <summary>
+    ''' メールを送信します。(非同期バージョン・サーバ環境で動作しないため未使用)
+    ''' </summary>
+    Async Sub SendMailAsync(ByVal mailTo() As String)
+
+        Dim addressList As New InternetAddressList
+        For Each address As String In mailTo
+            addressList.Add(New MailboxAddress(address, address))
+        Next
+
+        Dim mailMsg As New MimeMessage
+        mailMsg.From.Add(New MailboxAddress(mailFrom, mailFrom))
+        mailMsg.To.AddRange(addressList)
+        mailMsg.Subject = MAIL_SUBJECT
+        mailMsg.Priority = MessagePriority.Urgent
+
+        Dim bodyText As New TextPart(Text.TextFormat.Plain) With {
+            .Text = errorMessage
+        }
+        mailMsg.Body = bodyText
+
+        Using client As Net.Smtp.SmtpClient = New Net.Smtp.SmtpClient()
+            Await client.ConnectAsync(smtpEndPoint, smtpPort,)
+            Await client.AuthenticateAsync(smtpUserName, smtpPassword)
+            Await client.SendAsync(mailMsg)
+            Await client.DisconnectAsync(True)
+        End Using
+
+    End Sub
+
+#Region "ScriptResults declaration"
+    'This enum provides a convenient shorthand within the scope of this class for setting the
+    'result of the script.
+
+    'This code was generated automatically.
+    Enum ScriptResults
+        Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
+        Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
+    End Enum
+
+#End Region
+
+End Class]]></ProjectItem>
+          <ProjectItem
+            Name="My Project\Settings.settings"
+            Encoding="UTF8"><![CDATA[<?xml version='1.0' encoding='iso-8859-1'?>
+<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)" GeneratedClassNamespace="$safeprojectname" GeneratedClassName="MySettings">
+  <Profiles>
+    <Profile Name="(Default)" />
+  </Profiles>
+  <Settings />
+</SettingsFile>]]></ProjectItem>
+          <ProjectItem
+            Name="My Project\AssemblyInfo.vb"
+            Encoding="UTF8"><![CDATA[Imports System
+Imports System.Reflection
+Imports System.Runtime.InteropServices
+
+' General Information about an assembly is controlled through the following 
+' set of attributes. Change these attribute values to modify the information
+' associated with an assembly.
+
+' Review the values of the assembly attributes
+
+<Assembly: AssemblyTitle("ST_158815b0e15844b2bdd03db42d1e4d26")> 
+<Assembly: AssemblyDescription("")> 
+<Assembly: AssemblyCompany("")> 
+<Assembly: AssemblyProduct("ST_158815b0e15844b2bdd03db42d1e4d26")> 
+<Assembly: AssemblyCopyright("Copyright @  2021")> 
+<Assembly: AssemblyTrademark("")> 
+<Assembly: CLSCompliant(True)> 
+
+<Assembly: ComVisible(False)> 
+
+'The following GUID is for the ID of the typelib if this project is exposed to COM
+<Assembly: Guid("d0680624-eaaa-4872-8b33-146868ac359d")> 
+
+' Version information for an assembly consists of the following four values:
+'
+'      Major Version
+'      Minor Version 
+'      Build Number
+'      Revision
+'
+' You can specify all the values or you can default the Build and Revision Numbers 
+' by using the '*' as shown below:
+' <Assembly: AssemblyVersion("1.0.*")>
+
+<Assembly: AssemblyVersion("1.0.0.0")> 
+<Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
+          <ProjectItem
+            Name="My Project\Settings.Designer.vb"
+            Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
+' <autogenerated>
+'     This code was generated by a tool.
+'
+'     Changes to this file may cause incorrect behavior and will be lost if
+'     the code is regenerated.
+' </autogenerated>
+'------------------------------------------------------------------------------
+
+Option Strict Off
+Option Explicit On
+
+
+
+Partial Friend NotInheritable Class MySettings
+    Inherits System.Configuration.ApplicationSettingsBase
+
+    Private Shared m_Value As MySettings
+
+    Private Shared m_SyncObject As Object = New Object
+
+    <System.Diagnostics.DebuggerNonUserCode()> _
+    Public Shared ReadOnly Property Value() As MySettings
+        Get
+            If (MySettings.m_Value Is Nothing) Then
+                System.Threading.Monitor.Enter(MySettings.m_SyncObject)
+                If (MySettings.m_Value Is Nothing) Then
+                    Try
+                        MySettings.m_Value = New MySettings
+                    Finally
+                        System.Threading.Monitor.Exit(MySettings.m_SyncObject)
+                    End Try
+                End If
+            End If
+            Return MySettings.m_Value
+        End Get
+    End Property
+End Class]]></ProjectItem>
+          <ProjectItem
+            Name="ST_158815b0e15844b2bdd03db42d1e4d26.vbproj"
+            Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectTypeGuids>{30D016F9-3734-4E33-A861-5E7D899E18F3};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AB87EB85-ABE2-491B-A295-8E89944D601D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>My Project</AppDesignerFolder>
+    <RootNamespace>ST_158815b0e15844b2bdd03db42d1e4d26</RootNamespace>
+    <AssemblyName>ST_158815b0e15844b2bdd03db42d1e4d26</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ResolveAssemblyReferenceIgnoreTargetFrameworkAttributeVersionMismatch>true</ResolveAssemblyReferenceIgnoreTargetFrameworkAttributeVersionMismatch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>.\bin\Debug\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+    <OutputPath>.\bin\Release\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MailKit">
+      <HintPath>C:\Windows\Microsoft.NET\Framework\v4.0.30319\MailKit.dll</HintPath>
+    </Reference>
+    <Reference Include="MimeKit">
+      <HintPath>C:\Windows\Microsoft.NET\Framework\v4.0.30319\MimeKit.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers">
+      <HintPath>C:\Windows\Microsoft.NET\Framework\v4.0.30319\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.SqlServer.ManagedDTS, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+    <Reference Include="Microsoft.SqlServer.ScriptTask, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppDesigner Include="My Project\" />
+    <Compile Include="My Project\AssemblyInfo.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ScriptMain.vb">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <!-- Include the build rules for a VB project.-->
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{30D016F9-3734-4E33-A861-5E7D899E18F3}">
+        <ProjectProperties HostName="VSTAHostName" HostPackage="{B3A685AA-7EAF-4BC6-9940-57959FA5AC07}" ApplicationType="usd" Language="vb" TemplatesPath="" />
+        <Host Name="ScriptTask" />
+        <ProjectClient>
+          <HostIdentifier>SSIS_ST130</HostIdentifier>
+        </ProjectClient>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>]]></ProjectItem>
+          <ProjectItem
+            Name="Project"
+            Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="UTF-16" standalone="yes"?>
+<c:Project xmlns:c="http://schemas.microsoft.com/codeprojectml/2010/08/main" xmlns:msb="http://schemas.microsoft.com/developer/msbuild/2003" runtimeVersion="3.0" schemaVersion="1.0">
+	<msb:PropertyGroup>
+		<msb:CodeName>ST_158815b0e15844b2bdd03db42d1e4d26</msb:CodeName>
+		<msb:Language>msBuild</msb:Language>
+		<msb:DisplayName>ST_158815b0e15844b2bdd03db42d1e4d26</msb:DisplayName>
+		<msb:ProjectId>{7C014A6E-3B4E-49D9-A435-410C440D153C}</msb:ProjectId>
+	</msb:PropertyGroup>
+	<msb:ItemGroup>
+		<msb:Project Include="ST_158815b0e15844b2bdd03db42d1e4d26.vbproj"/>
+		<msb:File Include="My Project\AssemblyInfo.vb"/>
+		<msb:File Include="My Project\Resources.resx"/>
+		<msb:File Include="ScriptMain.vb"/>
+		<msb:File Include="My Project\Resources.Designer.vb"/>
+		<msb:File Include="My Project\Settings.settings"/>
+		<msb:File Include="My Project\Settings.Designer.vb"/>
+	</msb:ItemGroup>
+</c:Project>]]></ProjectItem>
+          <ProjectItem
+            Name="My Project\Resources.resx"
+            Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+</root>]]></ProjectItem>
+          <ProjectItem
+            Name="My Project\Resources.Designer.vb"
+            Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
+' <autogenerated>
+'     This code was generated by a tool.
+'
+'     Changes to this file may cause incorrect behavior and will be lost if
+'     the code is regenerated.
+' </autogenerated>
+'------------------------------------------------------------------------------
+
+Option Strict Off
+Option Explicit On
+
+
+Namespace My.Resources
+    
+    '''<summary>
+    '''   A strongly-typed resource class, for looking up localized strings, etc.
+    '''</summary>
+    'This class was auto-generated by the Strongly Typed Resource Builder
+    'class via a tool like ResGen or Visual Studio.NET.
+    'To add or remove a member, edit your .ResX file then rerun ResGen
+    'with the /str option, or rebuild your VS project.
+    Class MyResources
+        
+        Private Shared _resMgr As System.Resources.ResourceManager
+        
+        Private Shared _resCulture As System.Globalization.CultureInfo
+        
+        Friend Sub New()
+            MyBase.New
+        End Sub
+        
+        '''<summary>
+        '''   Returns the cached ResourceManager instance used by this class.
+        '''</summary>
+        <System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)>  _
+        Public Shared ReadOnly Property ResourceManager() As System.Resources.ResourceManager
+            Get
+                If (_resMgr Is Nothing) Then
+                    Dim temp As System.Resources.ResourceManager = New System.Resources.ResourceManager("My.Resources.MyResources", GetType(MyResources).Assembly)
+                    _resMgr = temp
+                End If
+                Return _resMgr
+            End Get
+        End Property
+        
+        '''<summary>
+        '''   Overrides the current thread's CurrentUICulture property for all
+        '''   resource lookups using this strongly typed resource class.
+        '''</summary>
+        <System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)>  _
+        Public Shared Property Culture() As System.Globalization.CultureInfo
+            Get
+                Return _resCulture
+            End Get
+            Set
+                _resCulture = value
+            End Set
+        End Property
+    End Class
+End Namespace]]></ProjectItem>
+          <BinaryItem
+            Name="ST_158815b0e15844b2bdd03db42d1e4d26.dll">TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAgAAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1v
+ZGUuDQ0KJAAAAAAAAABQRQAATAEDABaNWWAAAAAAAAAAAOAAIiALAVAAACoAAAAIAAAAAAAAakgA
+AAAgAAAAYAAAAAAAEAAgAAAAAgAABAAAAAAAAAAGAAAAAAAAAACgAAAAAgAAAAAAAAMAYIUAABAA
+ABAAAAAAEAAAEAAAAAAAABAAAAAAAAAAAAAAABhIAABPAAAAAGAAAEgEAAAAAAAAAAAAAAAAAAAA
+AAAAAIAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAIAAACAAAAAAAAAAAAAAACCAAAEgAAAAAAAAAAAAAAC50ZXh0AAAAcCgAAAAgAAAAKgAAAAIA
+AAAAAAAAAAAAAAAAACAAAGAucnNyYwAAAEgEAAAAYAAAAAYAAAAsAAAAAAAAAAAAAAAAAABAAABA
+LnJlbG9jAAAMAAAAAIAAAAACAAAAMgAAAAAAAAAAAAAAAAAAQAAAQgAAAAAAAAAAAAAAAAAAAABM
+SAAAAAAAAEgAAAACAAUA2CgAAIgeAAABAAAAAAAAAGBHAAC4AAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4CKBwAAAoqHgIoHQAACiqmcx4AAAqAAQAABHMfAAAKgAIA
+AARzIAAACoADAAAEcyEAAAqABAAABCoufgEAAARvIgAACioufgIAAARvIwAACioufgMAAARvJAAA
+CioufgQAAARvJQAACioeAigmAAAKKq5+BQAABC0ecgEAAHDQBQAAAignAAAKbygAAApzKQAACoAF
+AAAEfgUAAAQqGn4GAAAEKh4CgAYAAAQqQnMmAAAKKCoAAAqACAAABCoeAigrAAAKKgAAGzABAD8A
+AAAAAAAAfgcAAAQtMn4IAAAEKCoAAAooLAAACn4HAAAELRxzDQAABoAHAAAE3hB+CAAABCgqAAAK
+KC0AAArcfgcAAAQqAAEQAAACAB0ADCkAEAAAAAATMAIARQAAAAAAAAACKC4AAAoCfi8AAAp9CgAA
+BAIWfQsAAAQCfi8AAAp9DAAABAJ+LwAACn0NAAAEAn4vAAAKfQ4AAAQCfi8AAAp9DwAABCoAAAAb
+MAMAPQEAAAEAABECKDAAAAoWbzEAAAoCAigwAAAKbzIAAApyMwAAcG8zAAAKbzQAAApvNQAACn0K
+AAAEAgIoMAAACm8yAAAKck0AAHBvMwAACm80AAAKKCoAAAooNgAACn0LAAAEAgIoMAAACm8yAAAK
+cl8AAHBvMwAACm80AAAKbzUAAAp9DAAABAICKDAAAApvMgAACnJ5AABwbzMAAApvNAAACm81AAAK
+fQ0AAAQCAigwAAAKbzIAAApykwAAcG8zAAAKbzQAAApvNQAACn0OAAAEAgIoMAAACm8yAAAKcqUA
+AHBvMwAACm80AAAKbzUAAAp9DwAABAIoMAAACm8yAAAKcrUAAHBvMwAACm80AAAKbzUAAApywwAA
+cCg3AAAKCgIGKBEAAAbeGiUoOAAACgsCKDAAAAoXbzEAAAooOQAACt4AKgAAAAEQAAAAABkBCSIB
+GiQAAAEbMAUA/wAAAAIAABFzOgAACgoDDRYTBCsbCREEmhMFBhEFEQVzOwAACm88AAAKEQQX1hME
+EQQJjmky3nM9AAAKCwdvPgAACgJ7DgAABAJ7DgAABHM7AAAKbzwAAAoHbz8AAAoGb0AAAAoHcssA
+AHBvQQAACgcYb0IAAAoWc0MAAAolAnsPAAAEb0QAAAoMBwhvRQAACnNGAAAKEwYRBgJ7CgAABAJ7
+CwAABBcSB/4VKQAAAREHb0cAAAoRBgJ7DAAABAJ7DQAABBIH/hUpAAABEQdvSAAAChEGBxIH/hUp
+AAABEQcUb0kAAAoRBhcSB/4VKQAAAREHb0oAAAreDBEGLAcRBm9LAAAK3CoAARAAAAIAkABi8gAM
+AAAAABMwAgA7AAAAAwAAERIA/hULAAACEgACfRcAAAQSAAN9FgAABBIAFX0UAAAEEgAoTAAACn0V
+AAAEEgB8FQAABBIAKAEAACsqNgIDKCoAAAooTgAACioeAihPAAAKKi7QCAAAAignAAAKKh4CKDUA
+AAoqAAAAEzABABQAAAAEAAARAowFAAAbLQgoAgAAKworAgIKBioiA/4VBQAAGyoAAAATMAIAKAAA
+AAUAABECe1EAAApvUgAACgoGjAgAABstEigDAAArCgJ7UQAACgZvUwAACgYqSgIoJgAACgJzVAAA
+Cn1RAAAKKgAbMAUAXgMAAAYAABECexQAAAQKBhpDxgAAAHM6AAAKCwJ7FgAABA0WEwQrGwkRBJoT
+BQcRBREFczsAAApvPAAAChEEF9YTBBEECY5pMt4Ccz0AAAp9GQAABAJ7GQAABG8+AAAKAnsXAAAE
+ew4AAAQCexcAAAR7DgAABHM7AAAKbzwAAAoCexkAAARvPwAACgdvQAAACgJ7GQAABHLLAABwb0EA
+AAoCexkAAAQYb0IAAAoWc0MAAAolAnsXAAAEew8AAARvRAAACgwCexkAAAQIb0UAAAoCc0YAAAp9
+GAAABAAGRQUAAABwAAAAAgAAAPsAAAB3AQAA7QEAACsOAhUlCn0UAAAE3V4CAAACexgAAAQCexcA
+AAR7CgAABAJ7FwAABHsLAAAEFxIH/hUpAAABEQdvVQAACm9WAAAKEwYSBihXAAAKLUECFiUKfRQA
+AAQCEQZ9GgAABAJ8FQAABBIGAigEAAAr3f4BAAACFSUKfRQAAAQCexoAAAQTBgJ8GgAABP4VLwAA
+ARIGKFkAAAoSBv4VLwAAAQJ7GAAABAJ7FwAABHsMAAAEAnsXAAAEew0AAAQSB/4VKQAAAREHb1oA
+AApvVgAAChMIEggoVwAACi1BAhglCn0UAAAEAhEIfRoAAAQCfBUAAAQSCAIoBAAAK91zAQAAAhUl
+Cn0UAAAEAnsaAAAEEwgCfBoAAAT+FS8AAAESCChZAAAKEgj+FS8AAAECexgAAAQCexkAAAQSB/4V
+KQAAAREHFG9bAAAKb1YAAAoTCRIJKFcAAAotQQIZJQp9FAAABAIRCX0aAAAEAnwVAAAEEgkCKAQA
+ACvd9wAAAAIVJQp9FAAABAJ7GgAABBMJAnwaAAAE/hUvAAABEgkoWQAAChIJ/hUvAAABAnsYAAAE
+FxIH/hUpAAABEQdvXAAACm9WAAAKEwoSCihXAAAKLUECGiUKfRQAAAQCEQp9GgAABAJ8FQAABBIK
+AigEAAAr3YEAAAACFSUKfRQAAAQCexoAAAQTCgJ8GgAABP4VLwAAARIKKFkAAAoSCv4VLwAAAd4Y
+BhYvEwJ7GAAABCwLAnsYAAAEb0sAAArc3iQlKDgAAAoTCwIf/n0UAAAEAnwVAAAEEQsoXQAACig5
+AAAK3hUCH/4lCn0UAAAEAnwVAAAEKF4AAAoqAABBNAAAAgAAANUAAAA1AgAACgMAABgAAAAAAAAA
+AAAAAAcAAAAdAwAAJAMAACQAAAAkAAABNgJ8FQAABAMoXwAACioAAEJTSkIBAAEAAAAAAAwAAAB2
+NC4wLjMwMzE5AAAAAAUAbAAAAFQKAAAjfgAAwAoAAGgNAAAjU3RyaW5ncwAAAAAoGAAADAEAACNV
+UwA0GQAAEAAAACNHVUlEAAAARBkAAEQFAAAjQmxvYgAAAAAAAAACAAABVx+iCwkPAAAA+gEzABYA
+AAEAAABIAAAACwAAABoAAAAdAAAABwAAAAEAAABfAAAAAwAAADoAAAAGAAAABAAAAAgAAAAJAAAA
+AgAAAAgAAAABAAAABwAAAAEAAAAEAAAAAwAAAAQAAAAAAE4HAQAAAAAABgCSBWUKBgA3BmUKBgBO
+BKYJDwALCwAABgCPBB8IBgB1BR8IBgAeBh8IBgCyBR8IBgDLBR8IBgDxBB8IBgDmBX8HBgB7BB8K
+BgD3Ax8KBgA9BR8IBgAMBZEGCgAaBAcJCgDHAzgHCgBiBDgHDgB8A/UJDgBUCbkJBgAlBaYJDgCm
+BD4KDgC+BDYBBgDzC38HDgAjCfUJDgBaBTYBBgAvA38HDgBMAPwGCgAFBK8HBgD3CIUKBgBWCAoI
+CgCMA/UHBgAxBKYJEgD8BdMGEgBgA9MGBgA0CH8HFgCnDCMMFgA3AiMMFgB5DCMMGgBhDGIIBgCd
+B4AGBgDWBGUKBgCYB38HBgDcA2UKBgAiA38HBgC/AmUKBgAoCWUKBgDcCGUKBgBuAn8HBgAeDR8I
+BgCEC2UKBgCeCYAGBgCtBn8HEgAmB9MGHgAeC58CHgBZAp8CBgCIDH8HCgDkDFELDgAGAT4KFgCr
+CyMMFgCbCyMMBgA+ABsBFgA0DSMMFgDiC8QMFgBVDSMMGgBwC0QNGgD3ASsMGgCZDCsMGgC6CysM
+BgBiAn8HBgCHCX8HBgD3BjMLAAAAAKIAAAAAAAEAAQAAAAAA5wfqDE0AAQABAAAAAABSCeoMUQAB
+AAIAAAEQAAYM6gxhAAEAAwAAAAAAxwqWCmEABQAIAAABEAAoC34AgQAHAAwAAQAAAMwHfgCNAAkA
+DwAFAQAA5wkAAGEAEAATAAUBAABbAAAAYQAQABoAAgEAANQLAACtABEAHAADAQAAdQEAALUAFAAc
+ADEAnAhuAjEAcwh2AjEAhwh+AjEAtQiGAhEAXQmOAhEAVAOSAhEAVQaWAhEA7QuaAlGAygB8AAEA
+bAx8AAEAkAydAgEAkgJ8AAEA4wF8AAEAjwd8AAEAQwJ8ACEA2gxnAQYG/gCdAlaAkwugAlaANAOg
+AgYAwAOdAgYA0wikAgMARQipAgMA8AGtAgMAAQCxAgMAIQC2AgMAHQC7AlAgAAAAAAYYkQkGAAEA
+WCAAAAAABhiRCQYAAQBgIAAAAAARGJcJtQABAIogAAAAABMIRQnAAgEAliAAAAAAEwjXB8UCAQCi
+IAAAAAATCB8JygIBAK4gAAAAABMI1wnPAgEAuiAAAAAAAxiRCQYAAQDCIAAAAAAWCPMI1AIBAO4g
+AAAAABYIPAPZAgEA9SAAAAAAFghIA94CAQD9IAAAAAARGJcJtQACAA4hAAAAAAYYkQkGAAIAGCEA
+AAAAFghdBuQCAgB0IQAAAAAGGJEJBgACAMghAAAAAAYA0gcGAAIAJCMAAAAAAQBMAekCAgBAJAAA
+AAAGAIgB6QIDAIckAAAAAMYCSgs/AQQAlSQAAAAAxgIrAkQBBQCdJAAAAACDACwD7wIFAKkkAAAA
+AMYCqwaeAAUAtCQAAAAAEQDrAPQCBQDUJAAAAAABANcAMgEGALogAAAAAAYYkQkGAAcA4CQAAAAA
+AwgSAlcABwAUJQAAAAAGGJEJBgAHACglAAAAAGMDuwwGAAcAyCgAAAAAYQPSAjQABwAAAAEAegYA
+AAEATwgAAAEATwgAAAEAYAgAAAEAIgIAAAEAIgIAAAEAFQMLALkACQCRCQEAEQCRCQYAGQCRCQoA
+KQCRCRAAMQCRCRAAOQCRCRAAQQCRCRAASQCRCRAAUQCRCRAAWQCRCRUAYQCRCRUAaQCRCRAAcQCR
+CRAAeQCRCRAAgQCRCRoAkQCRCSAAqQCRCQYAsQCRCQYAuQCRCQYA0QCRCSYA6QCRCRAACQGRCQYA
+EQGRCQYAUQGRCS4AYQGRCQYAcQG7DAYAcQEFAzQAmQCRCQYAoQCRCQYADACRCQYAFACRCQYAHACR
+CQYAJACRCQYADAASAlcAFAASAlcAHAASAlcAJAASAlcAwQCRCQYA2QCAAlwA2QAaDWQA8QCRCWoA
+mQFxBnIAAQGRCQYAoQE/CXcAoQE5DHcAGQGRCQYAqQFgDXwAGQHMC4cAsQE+DAEAsQEaC40AuQF2
+B5MAwQFdBpoAwQCrBp4AyQF2AKIA0QEzDKcA2QF3Ca4A2QFlCbUAKQGRCQYA4QGRCRoAKQGzAc8A
+MQGRCQYAMQGGB9YAMQE+CNYAKQFQAtwAMQH6CxAAMQEnDegAOQGRCe8AOQHRDBAAMQERDfYAQQGR
+CQYAQQEQDP0AGQKsAwkBIQLeARIBQQEYDB8BMQKkAwYAgQG5AywBgQGCDDIBwQBKCz8BwQArAkQB
+OQIDAlABNADaDGcBPABdBlcAPABnBn4BPACRCQYAQQGWAaQBQQI0CbIBeQHOAbgBgQG3AbwBeQFN
+DAYAGQJjAc8BIQJZAdoBQQGjAekBgQExCPMBgQFXDAYAgQEFAzQADgAkACcCCABIAGQCCABMAGkC
+KQCrAPsELgALACQDLgATAC0DLgAbAEwDLgAjAFUDLgArAH4DLgAzAH4DLgA7AFUDLgBDAIQDLgBL
+AH4DLgBTAJsDLgBbAH4DLgBjAKEDLgBrAMsDLgBzANgDQACLAGkCQACDACIEQwB7AIAEQwCDACIE
+SQCrAAwFYwB7AIAEYwCDACIEaQCrACAFgACLAGkCgwCTAGkCgwCbAGkCgwB7AIAEiQCrAC0FoACL
+AGkCqQCDAEwDwACLAGkCyQCDAEwD4ACLAGkC4wC7AGkC4wBTAH4D6QCzAGkCAwGDACIEAwGjAJkE
+IwGDACIEIwFbAH4DYwHLAGkCQALDACsEYAKDACIEYAKLAGkCgAKDACIEgAKLAGkCoAKDACIEoAKL
+AGkCwAKDACIEwAKLAGkC4AKLAGkCAAOLAGkCIAOLAGkCIAODACIEQAOLAGkCYAOLAGkCYAODACIE
+gAPLAGkCfwC5ACcBSAFbAYQBBAABAAUABQAGAAcACQAIAAAAVAn8AgAA6QcBAwAAIwkGAwAA6QkL
+AwAA9wgQAwAAWAMVAwAAegYaAwAAFgIfAwIABAADAAIABQAFAAIABgAHAAIABwAJAAIACQALAAIA
+CgANAAEACwANAAIADgAPAAIAGgARAAsAOAA1AAsAOgA3ADsAQgBJAFAATQFgAW8BdgEEgAAAAQAA
+AAAAAAAAAAAAAAB+AAAABAAAAAAAAAAAAAAA+gESAQAAAAAEAAAAAAAAAAAAAAD6AX8HAAAAAAoA
+AAAAAAAAAAAAAAMCNgEAAAAADQAAAAAAAAAAAAAADAK0BgAAAAACAAoAAAAAAAAAAAAVAiMMAAAA
+AAIACgAAAAAAAAAAAB4CKwwAAAAADQAAAAAAAAAAAAAADAKrAAAAAAAAAAAAAQAAANMKAAAIAAQA
+CQAEAAoABwALAAcAAAAQABIA1QAAABAALwDVAAAAAAAxANUAmwA6AaEAVgGhAHkBsQDHAQAAAAAA
+JFZCJFJlc3VtYWJsZUxvY2FsX2NsaWVudCQwACRBMAAkVkIkUmVzdW1hYmxlTG9jYWxfbWFpbE1z
+ZyQxAElFbnVtZXJhYmxlYDEAQ29udGV4dFZhbHVlYDEAVGhyZWFkU2FmZU9iamVjdFByb3ZpZGVy
+YDEAVG9JbnQzMgBTVF8xNTg4MTViMGUxNTg0NGIyYmRkMDNkYjQyZDFlNGQyNgA8TW9kdWxlPgBN
+aWNyb3NvZnQuU3FsU2VydmVyLk1hbmFnZWREVFMATUFJTF9TVUJKRUNUAERpc3Bvc2VfX0luc3Rh
+bmNlX18AQ3JlYXRlX19JbnN0YW5jZV9fAHZhbHVlX18AUHJvamVjdERhdGEAbXNjb3JsaWIAU3lz
+dGVtLkNvbGxlY3Rpb25zLkdlbmVyaWMATWljcm9zb2Z0LlZpc3VhbEJhc2ljAFNlbmRNYWlsU3lu
+YwBTZW5kQXN5bmMAQXV0aGVudGljYXRlQXN5bmMAVkIkU3RhdGVNYWNoaW5lXzEwX1NlbmRNYWls
+QXN5bmMAQ29ubmVjdEFzeW5jAERpc2Nvbm5lY3RBc3luYwBBZGQAQXdhaXRVbnNhZmVPbkNvbXBs
+ZXRlZABnZXRfSXNDb21wbGV0ZWQAU2VuZABzbXRwUGFzc3dvcmQAJFZCJE1lAE1haWxTZXJ2aWNl
+AENyZWF0ZUluc3RhbmNlAGdldF9HZXRJbnN0YW5jZQBpbnN0YW5jZQBHZXRIYXNoQ29kZQBNaW1l
+TWVzc2FnZQBlcnJvck1lc3NhZ2UAQWRkUmFuZ2UAVmFyaWFibGUASURpc3Bvc2FibGUAUnVudGlt
+ZVR5cGVIYW5kbGUAR2V0VHlwZUZyb21IYW5kbGUAc210cFVzZXJOYW1lAE1pY3Jvc29mdC5TcWxT
+ZXJ2ZXIuRHRzLlJ1bnRpbWUASUFzeW5jU3RhdGVNYWNoaW5lAFN5c3RlbS5SdW50aW1lLkNvbXBp
+bGVyU2VydmljZXMuSUFzeW5jU3RhdGVNYWNoaW5lLlNldFN0YXRlTWFjaGluZQBzdGF0ZU1hY2hp
+bmUAVmFsdWVUeXBlAEdldFR5cGUARmFpbHVyZQBnZXRfQ3VsdHVyZQBzZXRfQ3VsdHVyZQBfcmVz
+Q3VsdHVyZQBWU1RBUlRTY3JpcHRPYmplY3RNb2RlbEJhc2UAQXBwbGljYXRpb25CYXNlAEFwcGxp
+Y2F0aW9uU2V0dGluZ3NCYXNlAERpc3Bvc2UAQXV0aGVudGljYXRlAENyZWF0ZQAkU3RhdGUARWRp
+dG9yQnJvd3NhYmxlU3RhdGUAQ29tcGlsZXJHZW5lcmF0ZWRBdHRyaWJ1dGUAR3VpZEF0dHJpYnV0
+ZQBIZWxwS2V5d29yZEF0dHJpYnV0ZQBHZW5lcmF0ZWRDb2RlQXR0cmlidXRlAERlYnVnZ2VyTm9u
+VXNlckNvZGVBdHRyaWJ1dGUARGVidWdnYWJsZUF0dHJpYnV0ZQBFZGl0b3JCcm93c2FibGVBdHRy
+aWJ1dGUAQ29tVmlzaWJsZUF0dHJpYnV0ZQBBc3NlbWJseVRpdGxlQXR0cmlidXRlAFN0YW5kYXJk
+TW9kdWxlQXR0cmlidXRlAEhpZGVNb2R1bGVOYW1lQXR0cmlidXRlAEFzeW5jU3RhdGVNYWNoaW5l
+QXR0cmlidXRlAEFzc2VtYmx5VHJhZGVtYXJrQXR0cmlidXRlAFRhcmdldEZyYW1ld29ya0F0dHJp
+YnV0ZQBEZWJ1Z2dlckhpZGRlbkF0dHJpYnV0ZQBBc3NlbWJseUZpbGVWZXJzaW9uQXR0cmlidXRl
+AE15R3JvdXBDb2xsZWN0aW9uQXR0cmlidXRlAEFzc2VtYmx5RGVzY3JpcHRpb25BdHRyaWJ1dGUA
+Q29tcGlsYXRpb25SZWxheGF0aW9uc0F0dHJpYnV0ZQBBc3NlbWJseVByb2R1Y3RBdHRyaWJ1dGUA
+QXNzZW1ibHlDb3B5cmlnaHRBdHRyaWJ1dGUAQ0xTQ29tcGxpYW50QXR0cmlidXRlAFNTSVNTY3Jp
+cHRUYXNrRW50cnlQb2ludEF0dHJpYnV0ZQBBc3NlbWJseUNvbXBhbnlBdHRyaWJ1dGUAUnVudGlt
+ZUNvbXBhdGliaWxpdHlBdHRyaWJ1dGUAbV9WYWx1ZQBnZXRfVmFsdWUAc2V0X1ZhbHVlAEdldE9i
+amVjdFZhbHVlAFN5c3RlbS5UaHJlYWRpbmcAU3lzdGVtLlJ1bnRpbWUuVmVyc2lvbmluZwBUb1N0
+cmluZwBNaWNyb3NvZnQuU3FsU2VydmVyLlNjcmlwdFRhc2sATWljcm9zb2Z0LlNxbFNlcnZlci5E
+dHMuVGFza3MuU2NyaXB0VGFzawBNaWNyb3NvZnQuVmlzdWFsQmFzaWMuTXlTZXJ2aWNlcy5JbnRl
+cm5hbABTY3JpcHRPYmplY3RNb2RlbABTeXN0ZW0uQ29tcG9uZW50TW9kZWwAU1RfMTU4ODE1YjBl
+MTU4NDRiMmJkZDAzZGI0MmQxZTRkMjYuZGxsAGdldF9JdGVtAFN5c3RlbQBnZXRfRnJvbQBtYWls
+RnJvbQBFbnVtAENhbmNlbGxhdGlvblRva2VuAFN5c3RlbS5Db21wb25lbnRNb2RlbC5EZXNpZ24A
+U2NyaXB0TWFpbgBnZXRfQXBwbGljYXRpb24ATXlBcHBsaWNhdGlvbgBTeXN0ZW0uQ29uZmlndXJh
+dGlvbgBTeXN0ZW0uR2xvYmFsaXphdGlvbgBTeXN0ZW0uUmVmbGVjdGlvbgBTZXRFeGNlcHRpb24A
+Z2V0X1RvACRWQiRMb2NhbF9tYWlsVG8AQ3VsdHVyZUluZm8ATWFpbEtpdC5OZXQuU210cABtX0Fw
+cE9iamVjdFByb3ZpZGVyAG1fVXNlck9iamVjdFByb3ZpZGVyAG1fQ29tcHV0ZXJPYmplY3RQcm92
+aWRlcgBtX015V2ViU2VydmljZXNPYmplY3RQcm92aWRlcgAkQnVpbGRlcgBBc3luY1ZvaWRNZXRo
+b2RCdWlsZGVyAGdldF9SZXNvdXJjZU1hbmFnZXIAU3lzdGVtLkNvZGVEb20uQ29tcGlsZXIAZ2V0
+X1VzZXIAVGFza0F3YWl0ZXIAR2V0QXdhaXRlcgBFbnRlcgBnZXRfQ29tcHV0ZXIATXlDb21wdXRl
+cgBfcmVzTWdyAENsZWFyUHJvamVjdEVycm9yAFNldFByb2plY3RFcnJvcgBBY3RpdmF0b3IALmN0
+b3IALmNjdG9yAE1vbml0b3IAU3lzdGVtLkRpYWdub3N0aWNzAE1pY3Jvc29mdC5WaXN1YWxCYXNp
+Yy5EZXZpY2VzAGdldF9XZWJTZXJ2aWNlcwBNeVdlYlNlcnZpY2VzAE1pY3Jvc29mdC5WaXN1YWxC
+YXNpYy5BcHBsaWNhdGlvblNlcnZpY2VzAFN5c3RlbS5SdW50aW1lLkludGVyb3BTZXJ2aWNlcwBN
+aWNyb3NvZnQuVmlzdWFsQmFzaWMuQ29tcGlsZXJTZXJ2aWNlcwBTeXN0ZW0uUnVudGltZS5Db21w
+aWxlclNlcnZpY2VzAFN5c3RlbS5SZXNvdXJjZXMAU1RfMTU4ODE1YjBlMTU4NDRiMmJkZDAzZGI0
+MmQxZTRkMjYuTXkuUmVzb3VyY2VzAE15UmVzb3VyY2VzAFNUXzE1ODgxNWIwZTE1ODQ0YjJiZGQw
+M2RiNDJkMWU0ZDI2LlJlc291cmNlcy5yZXNvdXJjZXMARGVidWdnaW5nTW9kZXMAZ2V0X1Zhcmlh
+YmxlcwBNeVNldHRpbmdzAFN5c3RlbS5UaHJlYWRpbmcuVGFza3MARXF1YWxzAFN5c3RlbS5UZXh0
+LlJlZ3VsYXJFeHByZXNzaW9ucwBTZWN1cmVTb2NrZXRPcHRpb25zAFJ1bnRpbWVIZWxwZXJzAFN1
+Y2Nlc3MASW50ZXJuZXRBZGRyZXNzAE1haWxib3hBZGRyZXNzAElUcmFuc2ZlclByb2dyZXNzAGdl
+dF9EdHMAU2NyaXB0UmVzdWx0cwBUZXh0Rm9ybWF0AG1fU3luY09iamVjdABzZXRfU3ViamVjdABN
+eVByb2plY3QAQ29ubmVjdABEaXNjb25uZWN0AE1pbWVLaXQATWFpbEtpdABTcGxpdABFeGl0AHNl
+dF9UYXNrUmVzdWx0AEdldFJlc3VsdABTZXRSZXN1bHQAU210cENsaWVudABzbXRwRW5kUG9pbnQA
+VGV4dFBhcnQAU3RhcnQAQ29udmVydABzbXRwUG9ydABNYWlsVHJhbnNwb3J0AEludGVybmV0QWRk
+cmVzc0xpc3QATW92ZU5leHQATWltZUtpdC5UZXh0AHNldF9UZXh0AG1fQ29udGV4dABSZWdleABT
+VF8xNTg4MTViMGUxNTg0NGIyYmRkMDNkYjQyZDFlNGQyNi5NeQBzZXRfQm9keQBnZXRfQXNzZW1i
+bHkAc2V0X1ByaW9yaXR5AE1lc3NhZ2VQcmlvcml0eQBNYWlsS2l0LlNlY3VyaXR5AE1pbWVFbnRp
+dHkARW1wdHkAAAAAMU0AeQAuAFIAZQBzAG8AdQByAGMAZQBzAC4ATQB5AFIAZQBzAG8AdQByAGMA
+ZQBzAAAZUwBNAFQAUABFAG4AZABQAG8AaQBuAHQAABFTAE0AVABQAFAAbwByAHQAABlTAE0AVABQ
+AFUAcwBlAHIATgBhAG0AZQAAGVMATQBUAFAAUABhAHMAcwB3AG8AcgBkAAARTQBhAGkAbABGAHIA
+bwBtAAAPQwBvAG0AbQBlAG4AdAAADU0AYQBpAGwAVABvAAAHLAB8ADsAAD1bAFAAdQByAGMAaABh
+AHMAZQBdACAA1U5lUUhRpDDzMN0w/DDIMGcwqDDpMPwwTDB6dh91VzB+MFcwXzABAAAAXvS9H9Vp
++k+pJSCf8PHLkgAEIAEBCAMgAAEFIAEBEREEIAEBDgQgAQECBSACAQ4OBSABARFFByAEAQ4ODg4F
+IAEBEm0GIAEBEoC5BhUSJAESDAYVEiQBEggGFRIkARJlBhUSJAESIAQgABMABwABEm0RgMUFIAAS
+gMkHIAIBDhKAyQQAARwcBAABARwCBg4HBwIdDhKAkQUgABKA2QUgABKA3QYgARKA4RwDIAAcAyAA
+DgQAAQgcBgACHQ4ODgYAAQESgJEDAAABFQcIEoCVEoCZEoCdHQ4IDhKAoRGApQYgAQESgPUFIAAS
+gJULIAEBFRKA+QESgPUGIAEBEYD9BiABARGBAQYgAQESgQULIAQBDggRgQkRgKUIIAMBDg4RgKUM
+IAMBEoCZEYClEoEVByACAQIRgKUEBwERLAUAABGAwQcwAQEBEB4ABAoBESwEIAECHAMgAAgEBwEe
+AAIeAAUQAQAeAAQKAR4ABAcBEwAGFRIkARMABwYVEnEBEwAGFRJxARMAAhMABAoBEwAFIAEBEwAf
+BwwIEoCVEoCdHQ4IDhGAvRGApRGAvRGAvRGAvRKAkQ0gBBKBIQ4IEYEJEYClBSAAEYC9AyAAAgow
+AgIBEB4AEB4BBwoCEYC9ESwKIAMSgSEODhGApQ4gAxKBIRKAmRGApRKBFQkgAhKBIQIRgKUGIAEB
+EoCRCLd6XFYZNOCJCLA/X38R1Qo6CImEXc2AgMyRCL7eHIpGxmgUCE4GT+fESo8bPFsAUAB1AHIA
+YwBoAGEAcwBlAF0AIADVTmVRSFGkMPMw3TD8MMgwZzCoMOkw/DBMMHp2H3VXMH4wVzBfMAQAAAAA
+BAEAAAAHBhUSJAESDAcGFRIkARIIBwYVEiQBEmUHBhUSJAESIAMGEnkDBhJ9AwYSGAIGHAIGCAMG
+ESgEBhGAwQMGHQ4DBhIcBAYSgKEEBhKAmQQGEYC9BAAAEgwEAAASCAQAABJlBAAAEiAEAAASeQQA
+ABJ9BQABARJ9BAAAEhgFIAEBHQ4EIAASbQcQAQEeAB4ABAgAEgwECAASCAQIABJlBAgAEiAECAAS
+eQQIABJ9BAgAEhgEKAATAAgBAAgAAAAAAB4BAAEAVAIWV3JhcE5vbkV4Y2VwdGlvblRocm93cwEI
+AQACAAAAAAAoAQAjU1RfMTU4ODE1YjBlMTU4NDRiMmJkZDAzZGI0MmQxZTRkMjYAAAUBAAAAABYB
+ABFDb3B5cmlnaHQgQCAgMjAyMQAABQEAAQAAKQEAJGQwNjgwNjI0LWVhYWEtNDg3Mi04YjMzLTE0
+Njg2OGFjMzU5ZAAADAEABzEuMC4wLjAAAEkBABouTkVURnJhbWV3b3JrLFZlcnNpb249djQuNQEA
+VA4URnJhbWV3b3JrRGlzcGxheU5hbWUSLk5FVCBGcmFtZXdvcmsgNC41CAEAAQAAAAAAVAEAT1NU
+XzE1ODgxNWIwZTE1ODQ0YjJiZGQwM2RiNDJkMWU0ZDI2LlNjcmlwdE1haW4rVkIkU3RhdGVNYWNo
+aW5lXzEwX1NlbmRNYWlsQXN5bmMAABgBAApNeVRlbXBsYXRlCDExLjAuMC4wAABhAQA0U3lzdGVt
+LldlYi5TZXJ2aWNlcy5Qcm90b2NvbHMuU29hcEh0dHBDbGllbnRQcm90b2NvbBJDcmVhdGVfX0lu
+c3RhbmNlX18TRGlzcG9zZV9fSW5zdGFuY2VfXwAAABABAAtNeS5Db21wdXRlcgAAEwEADk15LkFw
+cGxpY2F0aW9uAAAMAQAHTXkuVXNlcgAAEwEADk15LldlYlNlcnZpY2VzAAAAAAC0AAAAzsrvvgEA
+AACRAAAAbFN5c3RlbS5SZXNvdXJjZXMuUmVzb3VyY2VSZWFkZXIsIG1zY29ybGliLCBWZXJzaW9u
+PTQuMC4wLjAsIEN1bHR1cmU9bmV1dHJhbCwgUHVibGljS2V5VG9rZW49Yjc3YTVjNTYxOTM0ZTA4
+OSNTeXN0ZW0uUmVzb3VyY2VzLlJ1bnRpbWVSZXNvdXJjZVNldAIAAAAAAAAAAAAAAFBBRFBBRFC0
+AAAAQEgAAAAAAAAAAAAAWkgAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAExIAAAAAAAAAAAAAAAA
+X0NvckRsbE1haW4AbXNjb3JlZS5kbGwAAAAAAP8lACAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAEAAAABgA
+AIAAAAAAAAAAAAAAAAAAAAEAAQAAADAAAIAAAAAAAAAAAAAAAAAAAAEAAAAAAEgAAABYYAAA7AMA
+AAAAAAAAAAAA7AM0AAAAVgBTAF8AVgBFAFIAUwBJAE8ATgBfAEkATgBGAE8AAAAAAL0E7/4AAAEA
+AAABAAAAAAAAAAEAAAAAAD8AAAAAAAAABAAAAAIAAAAAAAAAAAAAAAAAAABEAAAAAQBWAGEAcgBG
+AGkAbABlAEkAbgBmAG8AAAAAACQABAAAAFQAcgBhAG4AcwBsAGEAdABpAG8AbgAAAAAAAACwBEwD
+AAABAFMAdAByAGkAbgBnAEYAaQBsAGUASQBuAGYAbwAAACgDAAABADAAMAAwADAAMAA0AGIAMAAA
+ABoAAQABAEMAbwBtAG0AZQBuAHQAcwAAAAAAAAAiAAEAAQBDAG8AbQBwAGEAbgB5AE4AYQBtAGUA
+AAAAAAAAAABwACQAAQBGAGkAbABlAEQAZQBzAGMAcgBpAHAAdABpAG8AbgAAAAAAUwBUAF8AMQA1
+ADgAOAAxADUAYgAwAGUAMQA1ADgANAA0AGIAMgBiAGQAZAAwADMAZABiADQAMgBkADEAZQA0AGQA
+MgA2AAAAMAAIAAEARgBpAGwAZQBWAGUAcgBzAGkAbwBuAAAAAAAxAC4AMAAuADAALgAwAAAAcAAo
+AAEASQBuAHQAZQByAG4AYQBsAE4AYQBtAGUAAABTAFQAXwAxADUAOAA4ADEANQBiADAAZQAxADUA
+OAA0ADQAYgAyAGIAZABkADAAMwBkAGIANAAyAGQAMQBlADQAZAAyADYALgBkAGwAbAAAAEgAEgAB
+AEwAZQBnAGEAbABDAG8AcAB5AHIAaQBnAGgAdAAAAEMAbwBwAHkAcgBpAGcAaAB0ACAAQAAgACAA
+MgAwADIAMQAAACoAAQABAEwAZQBnAGEAbABUAHIAYQBkAGUAbQBhAHIAawBzAAAAAAAAAAAAeAAo
+AAEATwByAGkAZwBpAG4AYQBsAEYAaQBsAGUAbgBhAG0AZQAAAFMAVABfADEANQA4ADgAMQA1AGIA
+MABlADEANQA4ADQANABiADIAYgBkAGQAMAAzAGQAYgA0ADIAZAAxAGUANABkADIANgAuAGQAbABs
+AAAAaAAkAAEAUAByAG8AZAB1AGMAdABOAGEAbQBlAAAAAABTAFQAXwAxADUAOAA4ADEANQBiADAA
+ZQAxADUAOAA0ADQAYgAyAGIAZABkADAAMwBkAGIANAAyAGQAMQBlADQAZAAyADYAAAA0AAgAAQBQ
+AHIAbwBkAHUAYwB0AFYAZQByAHMAaQBvAG4AAAAxAC4AMAAuADAALgAwAAAAOAAIAAEAQQBzAHMA
+ZQBtAGIAbAB5ACAAVgBlAHIAcwBpAG8AbgAAADEALgAwAC4AMAAuADAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAADAAAAGw4AAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</BinaryItem>
+        </ScriptProject>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\仕入先マスタインポート"
       DTS:CreationName="Microsoft.ScriptTask"
       DTS:Description="スクリプト タスク"
       DTS:DTSID="{988D1188-F12A-4350-93B6-B62D3D3AFBAA}"
       DTS:ExecutableType="Microsoft.ScriptTask"
       DTS:LocaleID="-1"
-      DTS:ObjectName="スクリプト タスク"
+      DTS:ObjectName="仕入先マスタインポート"
       DTS:ThreadHint="0">
       <DTS:Variables />
       <DTS:ObjectData>
@@ -304,125 +1122,6 @@ Namespace My.Resources
     End Class
 End Namespace]]></ProjectItem>
           <ProjectItem
-            Name="\my project\resources.resx"
-            Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
-<root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-</root>]]></ProjectItem>
-          <ProjectItem
             Name="ScriptMain.vb"
             Encoding="UTF8"><![CDATA[' Microsoft SQL Server Integration Services Script Task
 ' Write scripts using Microsoft Visual Basic
@@ -557,43 +1256,124 @@ Partial Public Class ScriptMain
 
 End Class]]></ProjectItem>
           <ProjectItem
-            Name="My Project\AssemblyInfo.vb"
-            Encoding="UTF8"><![CDATA[Imports System
-Imports System.Reflection
-Imports System.Runtime.InteropServices
+            Name="\my project\resources.resx"
+            Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
 
-' General Information about an assembly is controlled through the following 
-' set of attributes. Change these attribute values to modify the information
-' associated with an assembly.
-
-' Review the values of the assembly attributes
-
-<Assembly: AssemblyTitle("ScriptTask_9e65551ff303482f84e792f7451c76bd.vbproj")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("ScriptTask_9e65551ff303482f84e792f7451c76bd.vbproj")> 
-<Assembly: AssemblyCopyright("Copyright @  2012")> 
-<Assembly: AssemblyTrademark("")> 
-<Assembly: CLSCompliant(True)> 
-
-<Assembly: ComVisible(False)> 
-
-'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("1e4b6b92-719d-4bbf-855a-f389ee8311ea")> 
-
-' Version information for an assembly consists of the following four values:
-'
-'      Major Version
-'      Minor Version 
-'      Build Number
-'      Revision
-'
-' You can specify all the values or you can default the Build and Revision Numbers 
-' by using the '*' as shown below:
-' <Assembly: AssemblyVersion("1.0.*")>
-
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+</root>]]></ProjectItem>
           <ProjectItem
             Name="\my project\settings.designer.vb"
             Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
@@ -1053,6 +1833,44 @@ End Class]]></ProjectItem>
   </ProjectExtensions>
 </Project>]]></ProjectItem>
           <ProjectItem
+            Name="My Project\AssemblyInfo.vb"
+            Encoding="UTF8"><![CDATA[Imports System
+Imports System.Reflection
+Imports System.Runtime.InteropServices
+
+' General Information about an assembly is controlled through the following 
+' set of attributes. Change these attribute values to modify the information
+' associated with an assembly.
+
+' Review the values of the assembly attributes
+
+<Assembly: AssemblyTitle("ScriptTask_9e65551ff303482f84e792f7451c76bd.vbproj")> 
+<Assembly: AssemblyDescription("")> 
+<Assembly: AssemblyCompany("")> 
+<Assembly: AssemblyProduct("ScriptTask_9e65551ff303482f84e792f7451c76bd.vbproj")> 
+<Assembly: AssemblyCopyright("Copyright @  2012")> 
+<Assembly: AssemblyTrademark("")> 
+<Assembly: CLSCompliant(True)> 
+
+<Assembly: ComVisible(False)> 
+
+'The following GUID is for the ID of the typelib if this project is exposed to COM
+<Assembly: Guid("1e4b6b92-719d-4bbf-855a-f389ee8311ea")> 
+
+' Version information for an assembly consists of the following four values:
+'
+'      Major Version
+'      Minor Version 
+'      Build Number
+'      Revision
+'
+' You can specify all the values or you can default the Build and Revision Numbers 
+' by using the '*' as shown below:
+' <Assembly: AssemblyVersion("1.0.*")>
+
+<Assembly: AssemblyVersion("1.0.0.0")> 
+<Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
+          <ProjectItem
             Name="\scripttask_9e65551ff303482f84e792f7451c76bd.vbproj"
             Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="utf-16"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
@@ -1483,30 +2301,6 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</BinaryItem>
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
-      DTS:refId="Package\メール送信タスク"
-      DTS:CreationName="Microsoft.SendMailTask"
-      DTS:Description="メール送信タスク"
-      DTS:DTSID="{2F30E273-A823-49CE-AB13-376E0394D36D}"
-      DTS:ExecutableType="Microsoft.SendMailTask"
-      DTS:LocaleID="-1"
-      DTS:ObjectName="メール送信タスク"
-      DTS:TaskContact="Send Mail Task; Microsoft Corporation; Microsoft SQL Server v9; © 2004 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-      DTS:ThreadHint="0">
-      <DTS:Variables />
-      <DTS:PropertyExpression
-        DTS:Name="ToLine">@[User::Mail_To]</DTS:PropertyExpression>
-      <DTS:ObjectData>
-        <SendMailTask:SendMailTaskData
-          SendMailTask:SMTPServer="{E271125B-E698-49A8-B2B0-0B0D1949DB2C}"
-          SendMailTask:From="app@TCIchemicals.com"
-          SendMailTask:To="akane.taniguchi@TCIchemicals.com"
-          SendMailTask:Subject="[Purchase] 仕入先インポートでエラーが発生しました"
-          SendMailTask:Priority="High"
-          SendMailTask:MessageSourceType="Variable"
-          SendMailTask:MessageSource="User::Comment" xmlns:SendMailTask="www.microsoft.com/sqlserver/dts/tasks/sendmailtask" />
-      </DTS:ObjectData>
-    </DTS:Executable>
-    <DTS:Executable
       DTS:refId="Package\終了メッセージ生成"
       DTS:CreationName="Microsoft.ScriptTask"
       DTS:Description="終了メッセージ生成"
@@ -1693,125 +2487,6 @@ Namespace My.Resources
         End Property
     End Class
 End Namespace]]></ProjectItem>
-          <ProjectItem
-            Name="\my project\resources.resx"
-            Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
-<root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-</root>]]></ProjectItem>
           <ProjectItem
             Name="ScriptMain.vb"
             Encoding="UTF8"><![CDATA[' Microsoft SQL Server Integration Services Script Task
@@ -2022,43 +2697,124 @@ End Class]]></ProjectItem>
   </ProjectExtensions>
 </Project>]]></ProjectItem>
           <ProjectItem
-            Name="My Project\AssemblyInfo.vb"
-            Encoding="UTF8"><![CDATA[Imports System
-Imports System.Reflection
-Imports System.Runtime.InteropServices
+            Name="\my project\resources.resx"
+            Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
 
-' General Information about an assembly is controlled through the following 
-' set of attributes. Change these attribute values to modify the information
-' associated with an assembly.
-
-' Review the values of the assembly attributes
-
-<Assembly: AssemblyTitle("ScriptTask_ec3d93af191b459daecbf87693118396.vbproj")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("ScriptTask_ec3d93af191b459daecbf87693118396.vbproj")> 
-<Assembly: AssemblyCopyright("Copyright @  2012")> 
-<Assembly: AssemblyTrademark("")> 
-<Assembly: CLSCompliant(True)> 
-
-<Assembly: ComVisible(False)> 
-
-'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("9231a048-b551-49ed-a2c7-3e66c95e2aff")> 
-
-' Version information for an assembly consists of the following four values:
-'
-'      Major Version
-'      Minor Version 
-'      Build Number
-'      Revision
-'
-' You can specify all the values or you can default the Build and Revision Numbers 
-' by using the '*' as shown below:
-' <Assembly: AssemblyVersion("1.0.*")>
-
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+</root>]]></ProjectItem>
           <ProjectItem
             Name="\my project\settings.designer.vb"
             Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
@@ -2437,6 +3193,44 @@ End Class]]></ProjectItem>
   </ProjectExtensions>
 </Project>]]></ProjectItem>
           <ProjectItem
+            Name="My Project\AssemblyInfo.vb"
+            Encoding="UTF8"><![CDATA[Imports System
+Imports System.Reflection
+Imports System.Runtime.InteropServices
+
+' General Information about an assembly is controlled through the following 
+' set of attributes. Change these attribute values to modify the information
+' associated with an assembly.
+
+' Review the values of the assembly attributes
+
+<Assembly: AssemblyTitle("ScriptTask_ec3d93af191b459daecbf87693118396.vbproj")> 
+<Assembly: AssemblyDescription("")> 
+<Assembly: AssemblyCompany("")> 
+<Assembly: AssemblyProduct("ScriptTask_ec3d93af191b459daecbf87693118396.vbproj")> 
+<Assembly: AssemblyCopyright("Copyright @  2012")> 
+<Assembly: AssemblyTrademark("")> 
+<Assembly: CLSCompliant(True)> 
+
+<Assembly: ComVisible(False)> 
+
+'The following GUID is for the ID of the typelib if this project is exposed to COM
+<Assembly: Guid("9231a048-b551-49ed-a2c7-3e66c95e2aff")> 
+
+' Version information for an assembly consists of the following four values:
+'
+'      Major Version
+'      Minor Version 
+'      Build Number
+'      Revision
+'
+' You can specify all the values or you can default the Build and Revision Numbers 
+' by using the '*' as shown below:
+' <Assembly: AssemblyVersion("1.0.*")>
+
+<Assembly: AssemblyVersion("1.0.0.0")> 
+<Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
+          <ProjectItem
             Name="\my project\resources.designer.vb"
             Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
 ' <autogenerated>
@@ -2686,62 +3480,99 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</BinaryItem>
   </DTS:Executables>
   <DTS:PrecedenceConstraints>
     <DTS:PrecedenceConstraint
-      DTS:refId="Package.PrecedenceConstraints[制約]"
-      DTS:CreationName=""
-      DTS:DTSID="{81CFFE4B-CB0B-4CD3-B895-919BAB86580A}"
-      DTS:EvalOp="1"
-      DTS:Expression="@[User::Err_Flag] == True"
-      DTS:From="Package\終了メッセージ生成"
-      DTS:LogicalAnd="True"
-      DTS:ObjectName="制約"
-      DTS:To="Package\メール送信タスク"
-      DTS:Value="1" />
-    <DTS:PrecedenceConstraint
       DTS:refId="Package.PrecedenceConstraints[制約 1]"
       DTS:CreationName=""
       DTS:DTSID="{6E54981B-18CE-44B4-9AB0-B8BB858B9029}"
-      DTS:From="Package\スクリプト タスク"
+      DTS:From="Package\仕入先マスタインポート"
       DTS:LogicalAnd="True"
       DTS:ObjectName="制約 1"
       DTS:To="Package\終了メッセージ生成"
       DTS:Value="2" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[制約 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{46DE0085-4870-478B-8129-C14C42605CBC}"
+      DTS:EvalOp="1"
+      DTS:Expression="@[User::Err_Flag] == True"
+      DTS:From="Package\終了メッセージ生成"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="制約 2"
+      DTS:To="Package\エラーメール送信" />
   </DTS:PrecedenceConstraints>
-  <DTS:PackageVariables>
-    <DTS:PackageVariable
-      DTS:CreationName=""
-      DTS:DTSID="{BCD15DD8-BFA6-4854-A5B6-ECFE9FD8BD82}"
-      DTS:Namespace="dts-designer-1.0"
-      DTS:ObjectName="{6E54981B-18CE-44B4-9AB0-B8BB858B9029}">
-      <DTS:Property
-        DTS:DataType="8"
-        DTS:Name="PackageVariableValue">&lt;PrecedenceConstraint xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:EvalOp&gt;Constraint&lt;/dwd:EvalOp&gt;&lt;/PrecedenceConstraint&gt;</DTS:Property>
-    </DTS:PackageVariable>
-    <DTS:PackageVariable
-      DTS:CreationName=""
-      DTS:DTSID="{AC9E66E6-E86D-41AB-B785-6AA472590046}"
-      DTS:Namespace="dts-designer-1.0"
-      DTS:ObjectName="{81CFFE4B-CB0B-4CD3-B895-919BAB86580A}">
-      <DTS:Property
-        DTS:DataType="8"
-        DTS:Name="PackageVariableValue">&lt;PrecedenceConstraint xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:EvalOp&gt;Expression&lt;/dwd:EvalOp&gt;&lt;/PrecedenceConstraint&gt;</DTS:Property>
-    </DTS:PackageVariable>
-    <DTS:PackageVariable
-      DTS:CreationName=""
-      DTS:DTSID="{CE094B05-67DB-4512-BEBB-B95456DA463A}"
-      DTS:Namespace="dts-designer-1.0"
-      DTS:ObjectName="package-diagram">
-      <DTS:Property
-        DTS:DataType="8"
-        DTS:Name="PackageVariableValue">&lt;Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:DtsControlFlowDiagram&gt;&lt;dwd:Layout&gt;&lt;dds&gt;&lt;diagram fontclsid="{0BE35203-8F91-11CE-9DE3-00AA004BB851}" mouseiconclsid="{0BE35204-8F91-11CE-9DE3-00AA004BB851}" defaultlayout="Microsoft.DataWarehouse.Layout.GraphLayout110" defaultlineroute="Microsoft.DataWarehouse.Layout.GraphLayout110" version="7" nextobject="17" scale="100" pagebreakanchorx="0" pagebreakanchory="0" pagebreaksizex="0" pagebreaksizey="0" scrollleft="0" scrolltop="0" gridx="150" gridy="150" marginx="1000" marginy="1000" zoom="100" x="26405" y="15663" backcolor="15334399" defaultpersistence="2" PrintPageNumbersMode="3" PrintMarginTop="0" PrintMarginBottom="635" PrintMarginLeft="0" PrintMarginRight="0" marqueeselectionmode="1" mousepointer="0" snaptogrid="0" autotypeannotation="1" showscrollbars="0" viewpagebreaks="0" donotforceconnectorsbehindshapes="1" backpictureclsid="{00000000-0000-0000-0000-000000000000}"&gt;&lt;font&gt;&lt;ddsxmlobjectstreamwrapper binary="010100009001905f01000c4d5320554920476f74686963" /&gt;&lt;/font&gt;&lt;mouseicon&gt;&lt;ddsxmlobjectstreamwrapper binary="6c74000000000000" /&gt;&lt;/mouseicon&gt;&lt;/diagram&gt;&lt;layoutmanager&gt;&lt;ddsxmlobj /&gt;&lt;/layoutmanager&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="スクリプト タスク" left="0" top="1000" logicalid="7" controlid="1" masterid="0" hint1="0" hint2="0" width="3598" height="1164" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="000800000e0e00008c040000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\スクリプト タスク" vartype="8" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="メール送信タスク" left="10242" top="1106" logicalid="8" controlid="2" masterid="0" hint1="0" hint2="0" width="3598" height="1164" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="000800000e0e00008c040000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\メール送信タスク" vartype="8" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="終了メッセージ生成" left="4975" top="1032" logicalid="9" controlid="3" masterid="0" hint1="0" hint2="0" width="3598" height="1164" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="000800000e0e00008c040000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\終了メッセージ生成" vartype="8" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="MSDDS.Polyline" left="3199" top="1183" logicalid="10" controlid="4" masterid="0" hint1="0" hint2="0" width="2076" height="831" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobj&gt;&lt;polyline endtypedst="3" endtypesrc="1" usercolor="16711680" linestyle="0" linerender="2" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1" /&gt;&lt;/ddsxmlobj&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package.PrecedenceConstraints[制約 1]" vartype="8" /&gt;&lt;property name="Virtual" value="0" vartype="11" /&gt;&lt;property name="VisibleAP" value="0" vartype="3" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;connector lineroutestyle="Microsoft.DataWarehouse.Layout.GraphLayout110" sourceid="1" destid="3" sourceattachpoint="15" destattachpoint="14" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="2" relatedid="0" virtual="0"&gt;&lt;point x="3598" y="1582" /&gt;&lt;point x="4286" y="1582" /&gt;&lt;point x="4286" y="1614" /&gt;&lt;point x="4975" y="1614" /&gt;&lt;/connector&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="MSDDS.Polyline" left="8174" top="1215" logicalid="11" controlid="5" masterid="0" hint1="0" hint2="0" width="2368" height="873" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobj&gt;&lt;polyline endtypedst="3" endtypesrc="1" usercolor="16711680" linestyle="0" linerender="2" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1"&gt;&lt;adornment percentpos="0" controlid="8" width="423" height="423" side="0" behavior="2" himetric="0" distfromline="175" startobj="0" x="8573" y="1789" visible="1" allowoverlap="1" usepercent="1" /&gt;&lt;/polyline&gt;&lt;/ddsxmlobj&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package.PrecedenceConstraints[制約]" vartype="8" /&gt;&lt;property name="Virtual" value="0" vartype="11" /&gt;&lt;property name="VisibleAP" value="0" vartype="3" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;connector lineroutestyle="Microsoft.DataWarehouse.Layout.GraphLayout110" sourceid="3" destid="2" sourceattachpoint="15" destattachpoint="14" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="2" relatedid="0" virtual="0"&gt;&lt;point x="8573" y="1614" /&gt;&lt;point x="9407" y="1614" /&gt;&lt;point x="9407" y="1688" /&gt;&lt;point x="10242" y="1688" /&gt;&lt;/connector&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="@[User::Err_Flag] == True" left="8573" top="1789" logicalid="14" controlid="8" masterid="5" hint1="0" hint2="0" width="423" height="423" noresize="1" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="1" selectable="0" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="1" groupcollapsed="0" tabstop="0" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="00080000a7010000a7010000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="RESERVED_IS_DECORATION" value="5" vartype="3" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;/dds&gt;&lt;/dwd:Layout&gt;&lt;/dwd:DtsControlFlowDiagram&gt;&lt;/Package&gt;</DTS:Property>
-    </DTS:PackageVariable>
-    <DTS:PackageVariable
-      DTS:CreationName=""
-      DTS:DTSID="{DCD19CCA-DEB7-426A-805A-2DF6A2324D20}"
-      DTS:Namespace="dts-designer-1.0"
-      DTS:ObjectName="package-diagram">
-      <DTS:Property
-        DTS:DataType="8"
-        DTS:Name="PackageVariableValue">&lt;Package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0"&gt;&lt;dwd:DtsControlFlowDiagram&gt;&lt;dwd:Layout&gt;&lt;dds&gt;&lt;diagram fontclsid="{0BE35203-8F91-11CE-9DE3-00AA004BB851}" mouseiconclsid="{0BE35204-8F91-11CE-9DE3-00AA004BB851}" defaultlayout="Microsoft.DataWarehouse.Layout.GraphLayout110" defaultlineroute="Microsoft.DataWarehouse.Layout.GraphLayout110" version="7" nextobject="17" scale="100" pagebreakanchorx="0" pagebreakanchory="0" pagebreaksizex="0" pagebreaksizey="0" scrollleft="0" scrolltop="0" gridx="150" gridy="150" marginx="1000" marginy="1000" zoom="100" x="26405" y="15663" backcolor="15334399" defaultpersistence="2" PrintPageNumbersMode="3" PrintMarginTop="0" PrintMarginBottom="635" PrintMarginLeft="0" PrintMarginRight="0" marqueeselectionmode="1" mousepointer="0" snaptogrid="0" autotypeannotation="1" showscrollbars="0" viewpagebreaks="0" donotforceconnectorsbehindshapes="1" backpictureclsid="{00000000-0000-0000-0000-000000000000}"&gt;&lt;font&gt;&lt;ddsxmlobjectstreamwrapper binary="010100009001905f01000c4d5320554920476f74686963" /&gt;&lt;/font&gt;&lt;mouseicon&gt;&lt;ddsxmlobjectstreamwrapper binary="6c74000000000000" /&gt;&lt;/mouseicon&gt;&lt;/diagram&gt;&lt;layoutmanager&gt;&lt;ddsxmlobj /&gt;&lt;/layoutmanager&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="スクリプト タスク" left="0" top="1000" logicalid="7" controlid="1" masterid="0" hint1="0" hint2="0" width="3598" height="1164" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="000800000e0e00008c040000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\スクリプト タスク" vartype="8" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="メール送信タスク" left="10242" top="1106" logicalid="8" controlid="2" masterid="0" hint1="0" hint2="0" width="3598" height="1164" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="000800000e0e00008c040000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\メール送信タスク" vartype="8" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="終了メッセージ生成" left="4975" top="1032" logicalid="9" controlid="3" masterid="0" hint1="0" hint2="0" width="3598" height="1164" noresize="0" nomove="0" nodefaultattachpoints="0" autodrag="1" usedefaultiddshape="1" selectable="1" showselectionhandles="1" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="000800000e0e00008c040000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package\終了メッセージ生成" vartype="8" /&gt;&lt;property name="ShowConnectorSource" value="0" vartype="2" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="MSDDS.Polyline" left="3199" top="1183" logicalid="10" controlid="4" masterid="0" hint1="0" hint2="0" width="2076" height="831" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobj&gt;&lt;polyline endtypedst="3" endtypesrc="1" usercolor="16711680" linestyle="0" linerender="2" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1" /&gt;&lt;/ddsxmlobj&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package.PrecedenceConstraints[制約 1]" vartype="8" /&gt;&lt;property name="Virtual" value="0" vartype="11" /&gt;&lt;property name="VisibleAP" value="0" vartype="3" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;connector lineroutestyle="Microsoft.DataWarehouse.Layout.GraphLayout110" sourceid="1" destid="3" sourceattachpoint="15" destattachpoint="14" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="2" relatedid="0" virtual="0"&gt;&lt;point x="3598" y="1582" /&gt;&lt;point x="4286" y="1582" /&gt;&lt;point x="4286" y="1614" /&gt;&lt;point x="4975" y="1614" /&gt;&lt;/connector&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="MSDDS.Polyline" left="8174" top="1215" logicalid="11" controlid="5" masterid="0" hint1="0" hint2="0" width="2368" height="873" noresize="0" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="0" selectable="1" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="0" groupcollapsed="0" tabstop="1" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobj&gt;&lt;polyline endtypedst="3" endtypesrc="1" usercolor="16711680" linestyle="0" linerender="2" customendtypedstid="0" customendtypesrcid="0" adornsvisible="1"&gt;&lt;adornment percentpos="0" controlid="8" width="423" height="423" side="0" behavior="2" himetric="0" distfromline="175" startobj="0" x="8573" y="1789" visible="1" allowoverlap="1" usepercent="1" /&gt;&lt;/polyline&gt;&lt;/ddsxmlobj&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="LogicalObject" value="Package.PrecedenceConstraints[制約]" vartype="8" /&gt;&lt;property name="Virtual" value="0" vartype="11" /&gt;&lt;property name="VisibleAP" value="0" vartype="3" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;connector lineroutestyle="Microsoft.DataWarehouse.Layout.GraphLayout110" sourceid="3" destid="2" sourceattachpoint="15" destattachpoint="14" segmenteditmode="0" bendpointeditmode="0" bendpointvisibility="2" relatedid="0" virtual="0"&gt;&lt;point x="8573" y="1614" /&gt;&lt;point x="9407" y="1614" /&gt;&lt;point x="9407" y="1688" /&gt;&lt;point x="10242" y="1688" /&gt;&lt;/connector&gt;&lt;/ddscontrol&gt;&lt;ddscontrol controlprogid="DdsShapes.DdsObjectManagedBridge.2" tooltip="@[User::Err_Flag] == True" left="8573" top="1789" logicalid="14" controlid="8" masterid="5" hint1="0" hint2="0" width="423" height="423" noresize="1" nomove="0" nodefaultattachpoints="1" autodrag="0" usedefaultiddshape="1" selectable="0" showselectionhandles="0" allownudging="1" isannotation="0" dontautolayout="1" groupcollapsed="0" tabstop="0" visible="1" snaptogrid="0"&gt;&lt;control&gt;&lt;ddsxmlobjectstreaminitwrapper binary="00080000a7010000a7010000" /&gt;&lt;/control&gt;&lt;layoutobject&gt;&lt;ddsxmlobj&gt;&lt;property name="RESERVED_IS_DECORATION" value="5" vartype="3" /&gt;&lt;/ddsxmlobj&gt;&lt;/layoutobject&gt;&lt;shape groupshapeid="0" groupnode="0" /&gt;&lt;/ddscontrol&gt;&lt;/dds&gt;&lt;/dwd:Layout&gt;&lt;/dwd:DtsControlFlowDiagram&gt;&lt;/Package&gt;</DTS:Property>
-    </DTS:PackageVariable>
-  </DTS:PackageVariables>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--この CDATA セクションにはパッケージのレイアウト情報が含まれています。(x,y) 座標、幅、高さなどの情報が含まれます。-->
+<!--このセクションを手動で編集して間違った場合は、セクションを削除できます。-->
+<!--パッケージは正常に読み込むことができますが、以前のレイアウト情報は失われ、デザイン画面上の要素が自動的に再配置されます。-->
+<Objects
+  Version="8">
+  <!--次の各ノードには、実行時の動作に影響しないプロパティが含まれます。-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="187,42"
+          Id="Package\仕入先マスタインポート"
+          TopLeft="53.5,28" />
+        <NodeLayout
+          Size="172,42"
+          Id="Package\終了メッセージ生成"
+          TopLeft="60.235849056604,116.957546733952" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[制約 1]"
+          TopLeft="146.617924528302,70">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,46.9575467339524"
+              Start="0,0"
+              End="0,39.4575467339524">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,39.4575467339524" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-10.150390625,14.2536757107262,20.30078125,10.9501953125"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="158,42"
+          Id="Package\エラーメール送信"
+          TopLeft="69,203.416665768044" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[制約 2]"
+          TopLeft="147.117924528302,158.957546733952">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,44.4591190340915"
+              Start="0,0"
+              End="0,36.9591190340915">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,36.9591190340915" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-8,10.4795595170457,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+</Objects>]]></DTS:DesignTimeProperties>
 </DTS:Executable>
