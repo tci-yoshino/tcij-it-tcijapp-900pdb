@@ -12,6 +12,6 @@
 	</Configuration>
 
 	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputFilePath].Properties[Value]" ValueType="String">
-		<ConfiguredValue>\\TFL5\file\部署\調達部\受信\情シス提供データ(調達)\ProductID.txt</ConfiguredValue>
+		<ConfiguredValue>\\TFL5\GlobalProject\Purchasing_Info_Sharing\0200 IT data\ProductID.txt</ConfiguredValue>
 	</Configuration>
 </DTSConfiguration>
