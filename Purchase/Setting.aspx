@@ -21,9 +21,9 @@
                         <li id="CountryListli" runat="server"><a href="./CountryList.aspx">Country</a></li>
                         <li id="SupplierSearchli" runat="server"><a href="./SupplierSearch.aspx">Supplier</a></li>
                         <li id="ProductSearchli" runat="server"><a href="./ProductSearch.aspx">Product</a></li>
-                        <li id="PurchaseGroupli" runat="server"><a href="./PurchaseGroup.aspx">PurchaseGroup</a></li>
+                        <li id="PurchaseGroupli" runat="server"><a href="./PurchaseGroup.aspx">Purchasing Group</a></li>
                         <li id="ReminderListli" runat="server"><a href="./ReminderList.aspx">Reminder</a></li>
-                        <li id="UserListli" runat="server"><a href="./UserList.aspx">User</a></li>
+                        <%--<li id="UserListli" runat="server"><a href="./UserList.aspx">User</a></li>--%>
                     </ul>
                 </div>
 

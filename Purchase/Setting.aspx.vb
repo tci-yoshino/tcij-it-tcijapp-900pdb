@@ -12,7 +12,7 @@ Public Class Setting
         ProductSearchli.Visible = False
         PurchaseGroupli.Visible = False
         ReminderListli.Visible = False
-        UserListli.Visible = False
+        'UserListli.Visible = False
         Dim c As String
         Dim DataTable As System.Data.DataTable = GetDataTable("SELECT ScriptName from Privilege AS P,Role_Privilege AS RP 
 WHERE RP.RoleCode = '" & Session("Purchase.RoleCode") & "'  AND RP.PrivilegeCode = P.PrivilegeCode And Action is null and 
@@ -30,8 +30,8 @@ ScriptName in('CountryList','SupplierSearch','ProductSearch','PurchaseGroup','Re
                     PurchaseGroupli.Visible = True
                 ElseIf c = "ReminderList" Then
                     ReminderListli.Visible = True
-                ElseIf c = "UserList" Then
-                    UserListli.Visible = True
+                    'ElseIf c = "UserList" Then
+                    '    UserListli.Visible = True
                 End If
             Next i
         End If
