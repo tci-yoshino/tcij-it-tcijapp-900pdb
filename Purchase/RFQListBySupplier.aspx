@@ -10,6 +10,9 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
 </head>
 <body>
+    <!-- Header -->
+    <commonUC:Header ID="HeaderMenu" runat="server" />
+    <!-- Header End -->
     <form id="RFQListForm" runat="server">
     <!-- Main Content Area --> 
     <div id="content">
@@ -23,6 +26,7 @@
         <div class="tabs">
             <a href="./RFQIssue.aspx?SupplierCode=<%Response.Write(st_SupplierCode)%>">RFQ Issue</a>
             | <a href="#" onclick="popup('./SupplierSetting.aspx?Action=Edit&Code=<%Response.Write(st_SupplierCode)%>')">Supplier Setting</a>
+            | <a href="./ProductListBySupplier.aspx?Supplier=<%Response.Write(st_SupplierCode)%>" target="_blank">Product List</a>
         </div>
 
         <h3><asp:Label ID="SupplierCode" runat="server" Text=""></asp:Label><span class="indent"><asp:Label ID="SupplierName" runat="server" Text=""></asp:Label></span></h3>
@@ -61,9 +65,23 @@
                 </tr>
             </table> 
         </div>
-        <BR>
-        <hr />
 
+        <br />
+        <hr style="height:0" />
+        
+        <div class="main switch">
+            <table style="margin-bottom:5px">
+                <tr>
+                    <th>Validity Quotation : </th>
+                    <td><asp:DropDownList ID="ValidQuotation" runat="server" DataValueField="ValidQuotation" DataTextField="ValidQuotationText"></asp:DropDownList></td>
+                    <td>
+                        <asp:Button runat="server" ID="Search" Text="Search" />
+                        <asp:Button runat="server" ID="Release" Text="Release" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
         <div class="list">
             <asp:ListView ID="RFQHeaderList" runat="server" DataSourceID="SrcRFQHeader">
                 <LayoutTemplate>
@@ -145,11 +163,15 @@
                         </tr>
                         <tr>
                             <th>Product Number / Name</th>
-                            <td colspan="5"><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label><span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Eval("ProductName")%>'></asp:Label></span></td>
+                            <td colspan="5">
+                                <asp:HyperLink ID="ProductRFQLink" runat="server" NavigateUrl='<%#Eval("ProductRFQLink")%>' Target="_blank"><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label></asp:HyperLink>
+                                <span class="indent"><asp:Label ID="CodeExtensionCode" runat="server" Text='<%#Eval("CodeExtensionCode")%>'></asp:Label></span>
+                                <span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Eval("ProductName")%>'></asp:Label></span>
+                            </td>
                         </tr>
                         <tr>
-                            <th>Supplier Name / Country</th>
-                            <td colspan="3"><asp:Label ID="SupplierName" runat="server" Text='<%#Eval("SupplierName")%>'></asp:Label><span class="indent">(<asp:Label ID="SupplierCountry" runat="server" Text='<%#Eval("SupplierCountryName")%>'></asp:Label>)</span></td>
+                            <th>Supplier Code / Name / Country</th>
+                            <td colspan="3"><asp:Label ID="SupplierCode" runat="server" Text='<%#Eval("SupplierCode")%>'></asp:Label><span class="indent"><asp:Label ID="SupplierName" runat="server" Text='<%#Eval("SupplierName")%>'></asp:Label></span><span class="indent">(<asp:Label ID="SupplierCountry" runat="server" Text='<%#Eval("SupplierCountryName")%>'></asp:Label>)</span></td>
                             <th>Purpose</th>
                             <td><asp:Label ID="Purpose" runat="server" Text='<%#Eval("Purpose")%>'></asp:Label></td>
                         </tr>
@@ -190,9 +212,10 @@
                                     <th id="Th7"  runat="server" style="width:10%">Packing</th>
                                     <th id="Th8"  runat="server" style="width:10%">Purity/Method</th>
                                     <th id="Th9" runat="server" style="width:10%">Supplier Offer No</th>
+                                    <th id="Th10" runat="server" style="">Supplier Item Number</th>
                                     <th id="Th11" runat="server" style="width:14%">Reason for "No Offer"</th>
-                                    <th id="Th10" runat="server" style="width:5%">PO</th>
-                                    <th id="Th12" runat="server" style="width:5%">Interface</th>
+                                    <th id="Th12" runat="server" style="width:5%">PO</th>
+                                    <th id="Th13" runat="server" style="width:5%">Interface</th>
                                 </tr>
                                 <tr ID="itemPlaceholder" runat="server">
                                 </tr>
@@ -210,9 +233,10 @@
                             <td><asp:Label ID="Packing" runat="server" Text='<%#Eval("Packing") %>'></asp:Label></td>
                             <td><asp:Label ID="Purity" runat="server" Text='<%# (Eval("Purity").ToString+ Eval("QMMethod").ToString) %>'></asp:Label></td>
                             <td><asp:Label ID="SupplierOfferNo" runat="server" Text='<%#Eval("SupplierOfferNo")%>'></asp:Label></td>
+                            <td><asp:Label ID="SupplierItemNumber" runat="server" Text='<%#Eval("SupplierItemNumber")%>'></asp:Label></td>
                             <td><asp:Label ID="NoOfferReason" runat="server" Text='<%#Eval("NoOfferReason") %>'></asp:Label></td>
                             <td><asp:HyperLink ID="PO" runat="server" NavigateUrl='<%#If(IsDBNull(Eval("PO")), "", "./POListByRFQ.aspx?RFQLineNumber=" & Eval("RFQLineNumber"))%>'><%#If(IsDBNull(Eval("PO")), "", IIf(Eval("Priority") = "", "PO", "PO-" & Eval("Priority")))%></asp:HyperLink></td>
-                             <td><asp:Label ID="RFQStatus" runat="server" Text='<%#GetRFQStatus(Eval("RFQNumber"),Eval("RFQLineNumber")) %>'></asp:Label></td>
+                            <td><asp:Label ID="OutputStatus" runat="server" Text='<%#Eval("OutputStatus")%>'></asp:Label></td>
                         </tr>
                         </ItemTemplate>
                     </asp:ListView>

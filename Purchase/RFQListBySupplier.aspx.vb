@@ -23,6 +23,10 @@ Partial Public Class RFQListBySupplier
             Exit Sub
         End If
 
+        If Not IsPostBack Then
+            SetValidQuotation(String.Empty)
+        End If
+
         ' Supplier 情報取得
         Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
             Dim st_query As String =
@@ -74,32 +78,7 @@ Partial Public Class RFQListBySupplier
 
         ' RFQHeader 取得
         If i_DataNum = 1 Then
-
-            Dim sqlStr As StringBuilder = New StringBuilder
-            sqlStr.AppendLine("SELECT")
-            sqlStr.AppendLine("  RH.RFQNumber, ISNULL(RH.Priority, '') AS Priority, RH.QuotedDate, RH.StatusChangeDate, RH.Status,")
-            sqlStr.AppendLine("  RH.ProductNumber,RH.ProductName, RH.SupplierName,")
-            sqlStr.AppendLine("  RH.Purpose, RH.MakerName, RH.MakerInfo,")
-            sqlStr.AppendLine("  RH.SupplierItemName, RH.ShippingHandlingFee, RH.ShippingHandlingCurrencyCode,")
-            sqlStr.AppendLine("  RH.EnqUserName, RH.EnqLocationName, RH.QuoUserName, RH.QuoLocationName, RH.Comment,")
-            sqlStr.AppendLine("  MC.[Name] AS MakerCountryName, SC.[Name] AS SupplierCountryName,")
-            sqlStr.AppendLine("  RH.isCONFIDENTIAL,RH.SupplierWarning")
-            sqlStr.AppendLine("FROM")
-            sqlStr.AppendLine("  v_RFQHeader AS RH INNER JOIN ")
-            sqlStr.AppendLine("  s_Country AS SC ON SC.CountryCode = RH.SupplierCountryCode LEFT OUTER JOIN ")
-            sqlStr.AppendLine("  s_Country AS MC ON MC.CountryCode = RH.MakerCountryCode ")
-            sqlStr.AppendLine("WHERE")
-            sqlStr.AppendLine("  (RH.SupplierCode = @SupplierCode OR RH.MakerCode = @SupplierCode)")
-            '権限ロールに従い極秘品を除外する
-            If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
-                sqlStr.Append("  AND RH.isCONFIDENTIAL = 0 ")
-            End If
-            sqlStr.AppendLine("ORDER BY")
-            sqlStr.AppendLine("  RH.StatusSortOrder ASC, RH.QuotedDate DESC, RH.StatusChangeDate DESC, RH.RFQNumber ASC")
-
-            SrcRFQHeader.SelectParameters.Clear()
-            SrcRFQHeader.SelectParameters.Add("SupplierCode", st_SupplierCode)
-            SrcRFQHeader.SelectCommand = sqlStr.ToString
+            ShowList(st_SupplierCode, ValidQuotation.SelectedValue)
         End If
 
     End Sub
@@ -110,20 +89,45 @@ Partial Public Class RFQListBySupplier
         Dim src As SqlDataSource = CType(e.Item.FindControl("SrcRFQLine"), SqlDataSource)
         Dim label As Label = CType(e.Item.FindControl("RFQNumber"), Label)
 
+        Dim sqlStr As New StringBuilder
+        sqlStr.AppendLine("WITH POPriority AS (")
+        sqlStr.AppendLine("    SELECT")
+        sqlStr.AppendLine("        RFQLineNumber")
+        sqlStr.AppendLine("        ,MIN(CASE WHEN PO.QMStartingDate IS NOT NULL OR PO.QMFinishDate IS NOT NULL THEN 'C' ELSE ISNULL(PO.[Priority], 'C') END) AS [Priority]")
+        sqlStr.AppendLine("    FROM")
+        sqlStr.AppendLine("        PO")
+        sqlStr.AppendLine("    GROUP BY")
+        sqlStr.AppendLine("        RFQLineNumber")
+        sqlStr.AppendLine(")")
+        sqlStr.AppendLine("SELECT DISTINCT")
+        sqlStr.AppendLine("    RL.RFQLineNumber")
+        sqlStr.AppendLine("    ,RL.RFQNumber")
+        sqlStr.AppendLine("    ,RL.EnqQuantity")
+        sqlStr.AppendLine("    ,RL.EnqUnitCode")
+        sqlStr.AppendLine("    ,RL.EnqPiece")
+        sqlStr.AppendLine("    ,RL.CurrencyCode")
+        sqlStr.AppendLine("    ,RL.UnitPrice")
+        sqlStr.AppendLine("    ,RL.QuoPer")
+        sqlStr.AppendLine("    ,RL.QuoUnitCode")
+        sqlStr.AppendLine("    ,RL.LeadTime")
+        sqlStr.AppendLine("    ,RL.Packing")
+        sqlStr.AppendLine("    ,RL.Purity")
+        sqlStr.AppendLine("    ,RL.QMMethod")
+        sqlStr.AppendLine("    ,RL.SupplierOfferNo")
+        sqlStr.AppendLine("    ,RL.SupplierItemNumber")
+        sqlStr.AppendLine("    ,RL.NoOfferReason")
+        sqlStr.AppendLine("    ,P.RFQLineNumber AS PO")
+        sqlStr.AppendLine("    ,CASE WHEN P.[Priority]='C' THEN '' ELSE P.[Priority] END AS [Priority]")
+        sqlStr.AppendLine("    ,CASE WHEN RL.OutputStatus = 1 THEN 'Interface issued' END AS OutputStatus")
+        sqlStr.AppendLine("FROM")
+        sqlStr.AppendLine("    v_RFQLine AS RL")
+        sqlStr.AppendLine("        LEFT OUTER JOIN POPriority AS P ON P.RFQLineNumber = RL.RFQLineNumber")
+        sqlStr.AppendLine("WHERE")
+        sqlStr.AppendLine("    RL.RFQNumber = @RFQNumber")
+
         src.SelectParameters.Clear()
         src.SelectParameters.Add("RFQNumber", label.Text)
-        src.SelectCommand = _
-              "SELECT distinct RL.RFQLineNumber, RL.RFQNumber,RL.EnqQuantity, RL.EnqUnitCode, RL.EnqPiece, " _
-            & "       RL.CurrencyCode, RL.UnitPrice, RL.QuoPer, RL.QuoUnitCode, " _
-            & "       RL.LeadTime, RL.Packing, RL.Purity, RL.QMMethod, RL.NoOfferReason,SupplierOfferNo, " _
-            & "       PO.RFQLineNumber AS PO, CASE WHEN PO.Priority='C' THEN '' ELSE PO.Priority END AS Priority " _
-            & "FROM v_RFQLine AS RL LEFT OUTER JOIN " _
-            & " (SELECT RFQLineNumber " _
-            & " ,MIN(CASE WHEN PO.QMStartingDate IS NOT NULL OR PO.QMFinishDate IS NOT NULL THEN 'C'" _
-            & "     ELSE ISNULL(PO.Priority, 'C') END) AS Priority " _
-            & " FROM PO GROUP BY RFQLineNumber )" _
-            & " PO ON PO.RFQLineNumber = RL.RFQLineNumber " _
-            & "WHERE RL.RFQNumber = @RFQNumber"
+        src.SelectCommand = sqlStr.ToString
         lv.DataSourceID = src.ID
         lv.DataBind()
     End Sub
@@ -131,14 +135,115 @@ Partial Public Class RFQListBySupplier
     Protected Sub SrcRFQHeader_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcRFQHeader.Selecting
         e.Command.CommandTimeout = 0
     End Sub
-    Public Function GetRFQStatus(ByRef RFQNumber As String, ByRef RFQLineNumber As String) As String
-        Dim ret As String = ""
-        Dim dt As DataTable = GetDataTable("select OutputStatus from RFQLine where RFQNumber='" + RFQNumber + "' and RFQLineNumber=" + RFQLineNumber)
-        If dt.Rows.Count > 0 Then
-            If dt.Rows(0)("OutputStatus").ToString = "True" Then
-                ret = "Interface issued"
-            End If
+
+    ''' <summary>
+    ''' RFQHeader の一覧を表示します。
+    ''' </summary>
+    ''' <param name="supplierCode">仕入先コード</param>
+    ''' <param name="validQuotation">有額回答の有無</param>
+    Private Sub ShowList(ByVal supplierCode As String, ByVal validQuotation As String)
+
+        Dim sqlStr As StringBuilder = New StringBuilder
+        sqlStr.AppendLine("SELECT")
+        sqlStr.AppendLine("    RH.RFQNumber")
+        sqlStr.AppendLine("    ,ISNULL(RH.[Priority], '') AS [Priority]")
+        sqlStr.AppendLine("    ,RH.QuotedDate")
+        sqlStr.AppendLine("    ,RH.StatusChangeDate")
+        sqlStr.AppendLine("    ,RH.[Status]")
+        sqlStr.AppendLine("    ,RH.ProductNumber")
+        sqlStr.AppendLine("    ,RH.CodeExtensionCode")
+        sqlStr.AppendLine("    ,RH.ProductName")
+        sqlStr.AppendLine("    ,RH.SupplierCode")
+        sqlStr.AppendLine("    ,RH.SupplierName")
+        sqlStr.AppendLine("    ,RH.Purpose")
+        sqlStr.AppendLine("    ,RH.MakerName")
+        sqlStr.AppendLine("    ,RH.MakerInfo")
+        sqlStr.AppendLine("    ,RH.SupplierItemName")
+        sqlStr.AppendLine("    ,RH.ShippingHandlingFee")
+        sqlStr.AppendLine("    ,RH.ShippingHandlingCurrencyCode")
+        sqlStr.AppendLine("    ,RH.EnqUserName")
+        sqlStr.AppendLine("    ,RH.EnqLocationName")
+        sqlStr.AppendLine("    ,RH.QuoUserName")
+        sqlStr.AppendLine("    ,RH.QuoLocationName")
+        sqlStr.AppendLine("    ,RH.Comment")
+        sqlStr.AppendLine("    ,MC.[Name] AS MakerCountryName")
+        sqlStr.AppendLine("    ,SC.[Name] AS SupplierCountryName")
+        sqlStr.AppendLine("    ,RH.isCONFIDENTIAL")
+        sqlStr.AppendLine("    ,RH.SupplierWarning")
+        sqlStr.AppendLine("    ,'./RFQListByProduct.aspx?ProductID=' + CONVERT(varchar(10), RH.ProductID) AS ProductRFQLink")
+        sqlStr.AppendLine("FROM")
+        sqlStr.AppendLine("    v_RFQHeader AS RH")
+        sqlStr.AppendLine("        INNER JOIN s_Country AS SC ON SC.CountryCode = RH.SupplierCountryCode")
+        sqlStr.AppendLine("        LEFT OUTER JOIN s_Country AS MC ON MC.CountryCode = RH.MakerCountryCode")
+        sqlStr.AppendLine("WHERE")
+        sqlStr.AppendLine("    (RH.SupplierCode = @SupplierCode")
+        sqlStr.AppendLine("        OR RH.MakerCode = @SupplierCode)")
+
+        '権限ロールに従い極秘品を除外する
+        If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+            sqlStr.Append("    AND RH.isCONFIDENTIAL = 0")
         End If
-        Return ret
-    End Function
+
+        '有額回答の有無が指定された場合は条件を追加する
+        If Not String.IsNullOrEmpty(validQuotation) Then
+            sqlStr.Append(String.Format("    AND RH.ValidQuotation = {0}", validQuotation))
+        End If
+
+        sqlStr.AppendLine("ORDER BY")
+        sqlStr.AppendLine("    RH.StatusSortOrder")
+        sqlStr.AppendLine("    ,RH.QuotedDate DESC")
+        sqlStr.AppendLine("    ,RH.StatusChangeDate DESC")
+        sqlStr.AppendLine("    ,RH.RFQNumber")
+
+        SrcRFQHeader.SelectParameters.Clear()
+        SrcRFQHeader.SelectParameters.Add("SupplierCode", supplierCode)
+        SrcRFQHeader.SelectCommand = sqlStr.ToString
+
+    End Sub
+
+    ''' <summary>
+    ''' Search ボタンクリック時の処理を行います。
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    Private Sub Search_Click(sender As Object, e As EventArgs) Handles Search.Click
+
+        ShowList(SupplierCode.Text, ValidQuotation.SelectedValue)
+
+        'ページ番号をリセットする
+        Dim pager As DataPager = RFQHeaderList.FindControl("RFQPagerCountTop")
+        pager.SetPageProperties(0, pager.MaximumRows, False)
+
+    End Sub
+
+    ''' <summary>
+    ''' Release ボタンクリック時の処理を行います。
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    Private Sub Release_Click(sender As Object, e As EventArgs) Handles Release.Click
+
+        SetValidQuotation(String.Empty)
+        ShowList(SupplierCode.Text, ValidQuotation.SelectedValue)
+
+        'ページ番号をリセットする
+        Dim pager As DataPager = RFQHeaderList.FindControl("RFQPagerCountTop")
+        pager.SetPageProperties(0, pager.MaximumRows, False)
+
+    End Sub
+
+    ''' <summary>
+    ''' 有額回答の有無 (Validity Quotation) ドロップダウンリストを設定します。
+    ''' </summary>
+    ''' <param name="selectedValue">選択する値</param>
+    Private Sub SetValidQuotation(ByVal selectedValue As String)
+
+        ValidQuotation.Items.Clear()
+        ValidQuotation.Items.Add(New ListItem("Valid Price", "1"))
+        ValidQuotation.Items.Add(New ListItem("Invalid Price", "0"))
+        ValidQuotation.Items.Add(New ListItem("ALL", String.Empty))
+        ValidQuotation.Items.FindByValue(selectedValue).Selected = True
+
+    End Sub
+
 End Class
