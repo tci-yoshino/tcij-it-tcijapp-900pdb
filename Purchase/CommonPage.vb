@@ -74,6 +74,7 @@ Public Class CommonPage
             Session("Purchase.RoleCode") = ds.Tables("User").Rows(0)("RoleCode").ToString
             Session("Purchase.PrivilegeLevel") = ds.Tables("User").Rows(0)("PrivilegeLevel").ToString
             Session("Purchase.isAdmin") = IIf(ds.Tables("User").Rows(0)("isAdmin").ToString = "True", True, False)
+            Session("Purchase.MMSTAInvalidationEditable") = ds.Tables("User").Rows(0)("MMSTAInvalidationEditable").ToString
         End If
 
         If CBool(Session("Purchase.isAdmin")) Then
@@ -107,7 +108,9 @@ Public Class CommonPage
         sb_Sql.Append("  L.Name AS LocationName, ")
         sb_Sql.Append("  PU.RoleCode, ")
         sb_Sql.Append("  PU.PrivilegeLevel, ")
-        sb_Sql.Append("  PU.isAdmin ")
+        sb_Sql.Append("  PU.isAdmin, ")
+        sb_Sql.Append("  CASE PU.MMSTAInvalidationEditable WHEN 1 THEN 'Y'  ")
+        sb_Sql.Append("  ELSE 'N' END AS MMSTAInvalidationEditable ")
         sb_Sql.Append("FROM ")
         sb_Sql.Append("  PurchasingUser AS PU, ")
         sb_Sql.Append("  s_User AS U, ")

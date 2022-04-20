@@ -20,11 +20,9 @@
     </script>
 </head>
 <body>
-    <!-- Sub Navigation -->
-    <div id="subNavi">
-        <a href="./MyTask.aspx">My Tasks</a> | <a href="./RequestedTask.aspx">Requested Tasks</a> | <a href="./UnassignedTask.aspx">Unassigned Tasks</a> | <a href="./JFYISearch.aspx" class="current">JFYI</a>
-    </div><!-- Sub Navigation END -->
-
+    <!-- Header -->
+    <commonUC:Header ID="HeaderMenu" runat="server" />
+    <!-- Header End -->
     <!-- Main Content Area -->
     <div id="content">
         <div class="main">

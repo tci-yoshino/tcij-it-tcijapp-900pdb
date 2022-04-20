@@ -82,8 +82,13 @@ Partial Public Class RFQUpdate
                 Parameter = False
                 Exit Sub
             End If
-            'プライオリティのプルダウンを設定する
-            SetPriorityDropDownList(Priority, PRIORITY_FOR_EDIT)
+
+            Dim st_ProductNumber As String = RFQListByProductID.Text
+            CodeExtensionList.Items.Clear()
+            If Not String.IsNullOrWhiteSpace(st_ProductNumber) Then
+                ' Code Extensionのドロップダウンリストに値を設定するメソッドを呼び出す
+                Common.SetCodeExtensionDropDownList(CodeExtensionList, st_ProductNumber)
+            End If
 
             Call SetPostBackUrl()
             If FormDataSet() = False Then
@@ -97,9 +102,26 @@ Partial Public Class RFQUpdate
             LeadTime_2.Attributes.Add("onchange", "return  RegleadTime(2)")
             LeadTime_3.Attributes.Add("onchange", "return  RegleadTime(3)")
             LeadTime_4.Attributes.Add("onchange", "return  RegleadTime(4)")
-
         Else
             Call SetReadOnlyItems()
+        End If
+
+        If StorageLocation.SelectedValue <> "" Then
+            Call EnqUserPlantSpmatlStatus()
+        End If
+        If StorageLocation2.SelectedValue <> "" Then
+            Call QuoUserPlantSpmatlStatus()
+        End If
+        If MMSTAInvalidation.Checked = False Then
+            If EnqUserPlantStatus.Text <> "" Then
+                Call EnqMMSTAValidationSearch()
+            End If
+            If EnqUserPlantStatus.Text <> "" Then
+                Call QuoMMSTAValidationSearch()
+            End If
+            If EnqUserPlantStatus.Text <> "" And QuoUserPlantStatus.Text <> "" Then
+                Call POInterfaceMsgSet()
+            End If
         End If
     End Sub
 
@@ -112,6 +134,7 @@ Partial Public Class RFQUpdate
         Dim st_QuotedDate As String = String.Empty
         Dim SQLLineUpdate As String = String.Empty
         Dim SQLLineInsert As String = String.Empty
+
         RunMsg.Text = String.Empty
         Msg.Text = String.Empty
         If SetRFQNumber() = False Then
@@ -160,10 +183,6 @@ Partial Public Class RFQUpdate
                 Exit Sub
             End If
         End If
-        If QuoUser.SelectedValue = "" Then
-            Msg.Text = "please choose Quo-User!"
-            Exit Sub
-        End If
         '更新可能拠点の確認
         If CheckLocation() = False Then
             Exit Sub
@@ -184,10 +203,6 @@ Partial Public Class RFQUpdate
                 'RFQStatus を選択してある場合は RFQStatusCode を更新する。
                 RFQStatusCode = ", RFQStatusCode = @RFQStatusCode "
                 DBCommand.Parameters.Add("@RFQStatusCode", SqlDbType.NVarChar).Value = RFQStatus.SelectedValue
-            ElseIf Hi_RFQStatusCode.Value = "N" And QuoUser.SelectedValue <> String.Empty Then
-                'ステータスを Create から Assign に変更する。
-                RFQStatusCode = ", RFQStatusCode = @RFQStatusCode "
-                DBCommand.Parameters.Add("@RFQStatusCode", SqlDbType.NVarChar).Value = "A"
             End If
             If QuotedDate.Value = String.Empty Then
                 'QuotedDateは初回のみ登録し上書きしない。登録条件はRFQStatusが「Q」or「PQ」
@@ -244,18 +259,19 @@ Partial Public Class RFQUpdate
                 st_QuoStorageLocationCode = StorageLocation2.SelectedValue
             End If
 
-            DBCommand.CommandText = "Update RFQHeader SET EnqLocationCode = @EnqLocationCode,QuoLocationCode = @QuoLocationCode, EnqUserID = @EnqUserID, QuoUserID = @QuoUserID, SupplierCode = @SupplierCode, MakerCode = @MakerCode,SAPMakerCode = @SAPMakerCode," _
+            DBCommand.CommandText = "Update RFQHeader  SET EnqLocationCode = @EnqLocationCode,QuoLocationCode = @QuoLocationCode, EnqUserID = @EnqUserID, QuoUserID = @QuoUserID, CodeExtensionCode = @CodeExtensionCode, SupplierCode = @SupplierCode, MakerCode = @MakerCode,SAPMakerCode = @SAPMakerCode," _
             & "SpecSheet = @SpecSheet, Specification = @Specification, SupplierContactPerson = @SupplierContactPerson," _
             & "SupplierItemName = @SupplierItemName, ShippingHandlingFee = @ShippingHandlingFee," _
             & "ShippingHandlingCurrencyCode = @ShippingHandlingCurrencyCode, PaymentTermCode = @PaymentTermCode," _
             & "Comment = @Comment, Priority = @Priority , PurposeCode = @PurposeCode , UpdatedBy = @UpdatedBy,EnqStorageLocation=@EnqStorageLocation,QuoStorageLocation=@QuoStorageLocation,SupplierContactPersonSel=@SupplierContactPersonSel, UpdateDate = GETDATE()" & RFQStatusCode & st_QuotedDate _
-            & ",SupplierOfferValidTo = @SupplierOfferValidTo" _
+            & ",SupplierOfferValidTo = @SupplierOfferValidTo , MMSTAInvalidation = @MMSTAInvalidation" _
             & " Where RFQNumber = @RFQNumber "
             DBCommand.Parameters.Add("@EnqLocationCode", SqlDbType.VarChar).Value = st_EnqLocationCode
             DBCommand.Parameters.Add("@QuoLocationCode", SqlDbType.VarChar).Value = st_QuoLocationCode
             DBCommand.Parameters.Add("@EnqUserID", SqlDbType.Int).Value = ConvertStringToInt(EnqUser.SelectedValue)
             DBCommand.Parameters.Add("@QuoUserID", SqlDbType.Int).Value = ConvertStringToInt(QuoUser.SelectedValue)
             DBCommand.Parameters.Add("@SupplierCode", SqlDbType.Int).Value = Integer.Parse(SupplierCode.Text)
+            DBCommand.Parameters.Add("@CodeExtensionCode", SqlDbType.VarChar).Value = CodeExtensionList.SelectedValue
             DBCommand.Parameters.Add("@MakerCode", SqlDbType.Int).Value = ConvertStringToInt(MakerCode.Text)
             DBCommand.Parameters.Add("@SAPMakerCode", SqlDbType.Int).Value = ConvertStringToInt(SAPMakerCode.Text)
             DBCommand.Parameters.Add("@SpecSheet", SqlDbType.Bit).Value = SpecSheet.Checked
@@ -274,13 +290,22 @@ Partial Public Class RFQUpdate
             DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
             DBCommand.Parameters.Add("@SupplierContactPersonSel", SqlDbType.NVarChar).Value = SupplierContactPersonCodeList.SelectedValue
             DBCommand.Parameters.Add("@SupplierOfferValidTo", SqlDbType.NVarChar).Value = txtVaildTo.Text
+
+            If Session("Purchase.MMSTAInvalidationEditable") = "Y" Then
+
+                If MMSTAInvalidation.Checked = True Then
+                    DBCommand.Parameters.Add("@MMSTAInvalidation", SqlDbType.Bit).Value = 1
+                Else
+                    DBCommand.Parameters.Add("@MMSTAInvalidation", SqlDbType.Bit).Value = 0
+                End If
+            End If
             DBCommand.ExecuteNonQuery()
             DBCommand.Parameters.Clear()
             DBCommand.Dispose()
 
             'RFQLine の更新もしくはデータ追加
             'Update文作成
-            SQLLineUpdate = "UPDATE RFQLine SET CurrencyCode = @CurrencyCode, UnitPrice = @UnitPrice, " _
+            SQLLineUpdate = "UPDATE RFQLine SET EnqQuantity =@EnqQuantity, EnqUnitCode =@EnqUnitCode, EnqPiece =@EnqPiece, CurrencyCode = @CurrencyCode, UnitPrice = @UnitPrice, " _
 & "QuoPer = @QuoPer, QuoUnitCode = @QuoUnitCode, LeadTime = @LeadTime, SupplierItemNumber = @SupplierItemNumber, " _
 & "IncotermsCode = @IncotermsCode, DeliveryTerm = @DeliveryTerm, Packing = @Packing, Purity = @Purity, " _
 & "QMMethod = @QMMethod,SupplierOfferNo=@SupplierOfferNo,NoOfferReasonCode = @NoOfferReasonCode, UpdatedBy = @UpdatedBy, UpdateDate = GETDATE() " _
@@ -296,6 +321,9 @@ Partial Public Class RFQUpdate
             For i As Integer = LINE_START To LINE_COUNT
                 If EnqQuantity(i).Text.Trim <> String.Empty Then
                     DBCommand.Parameters.Add("@RFQLineNumber", SqlDbType.Int).Value = ConvertStringToInt(LineNumber(i).Value)
+                    DBCommand.Parameters.Add("@EnqQuantity", SqlDbType.Decimal).Value = ConvertStringToDec(EnqQuantity(i).Text)
+                    DBCommand.Parameters.Add("@EnqUnitCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(EnqUnit(i).SelectedValue)
+                    DBCommand.Parameters.Add("@EnqPiece", SqlDbType.Int).Value = ConvertStringToInt(EnqPiece(i).Text)
                     DBCommand.Parameters.Add("@CurrencyCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(Currency(i).SelectedValue)
                     DBCommand.Parameters.Add("@UnitPrice", SqlDbType.Decimal).Value = ConvertStringToDec(UnitPrice(i).Text)
                     DBCommand.Parameters.Add("@QuoPer", SqlDbType.Decimal).Value = ConvertStringToDec(QuoPer(i).Text)
@@ -318,9 +346,6 @@ Partial Public Class RFQUpdate
                     Else
                         '登録処理
                         DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = ConvertStringToInt(st_RFQNumber)
-                        DBCommand.Parameters.Add("@EnqQuantity", SqlDbType.Decimal).Value = ConvertStringToDec(EnqQuantity(i).Text)
-                        DBCommand.Parameters.Add("@EnqUnitCode", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(EnqUnit(i).SelectedValue)
-                        DBCommand.Parameters.Add("@EnqPiece", SqlDbType.Int).Value = ConvertStringToInt(EnqPiece(i).Text)
                         DBCommand.Parameters.Add("@CreatedBy", SqlDbType.Int).Value = ConvertStringToInt(Session("UserID"))
                         DBCommand.CommandText = SQLLineInsert
                         DBCommand.ExecuteNonQuery()
@@ -425,17 +450,20 @@ Partial Public Class RFQUpdate
         Dim i As Integer = 0
         Dim j As Integer = 0
         Dim st_SelectCommand As String = String.Empty
+        Dim PurchaseCommand As String = String.Empty
         Dim DS As DataSet = New DataSet
         Call ClearLineData()
+
         If Integer.TryParse(st_RFQNumber, i_TryParse) Then
             DBCommand = New SqlCommand("Select " _
-& "EnqLocationName, EnqUserID, EnqUserName, QuoLocationName, QuoUserID, QuoUserName, ProductNumber, " _
-& "ProductName, SupplierCode, R3SupplierCode, S4SupplierCode,SupplierName, SupplierCountryCode, MakerCode,SAPMakerCode,R3MakerCode, " _
+& "EnqLocationName, EnqUserID, EnqUserName, QuoLocationName, QuoUserID, QuoUserName, ProductNumber, CASNumber, ProductID, CodeExtensionCode, " _
+& "ProductName, SupplierCode, R3SupplierCode, S4SupplierCode, SupplierName, SupplierCountryCode, MakerCode,SAPMakerCode, R3MakerCode, " _
 & "MakerName, MakerCountryCode, SupplierContactPerson, PaymentTermCode, RequiredPurity, " _
 & "RequiredQMMethod, RequiredSpecification, SpecSheet, Specification, PurposeCode,Purpose, SupplierItemName, " _
-& "ShippingHandlingFee, ShippingHandlingCurrencyCode, Comment, QuotedDate, StatusCode, " _
-& "UpdateDate, Status, StatusChangeDate, EnqLocationCode, QuoLocationCode, Priority, isCONFIDENTIAL,QuoStorageLocation,EnqStorageLocation,SupplierContactPersonSel,ProductWarning,BUoM,SupplierWarning,SupplierOfferValidTo " _
-& " From v_RFQHeader Where RFQNumber = @i_RFQNumber", DBConn)
+& "ShippingHandlingFee, ShippingHandlingCurrencyCode, Comment, QuotedDate, StatusCode,  " _
+& "UpdateDate, Status, StatusChangeDate, EnqLocationCode, QuoLocationCode, Priority, isCONFIDENTIAL, QuoStorageLocation, EnqStorageLocation, SupplierContactPersonSel, ProductWarning, BUoM, SupplierWarning, SupplierOfferValidTo, CASE MMSTAInvalidation WHEN 1 THEN 'Y'  ELSE 'N' END AS MMSTAInvalidation" _
+& " From v_RFQHeader " _
+& " Where RFQNumber = @i_RFQNumber", DBConn)
             DBCommand.Parameters.Add("i_RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
             DBAdapter = New SqlDataAdapter
             DBAdapter.SelectCommand = DBCommand
@@ -496,17 +524,31 @@ Partial Public Class RFQUpdate
             Confidential.Text = IIf(CBool(DS.Tables("RFQHeader").Rows(0)("isCONFIDENTIAL")), Common.CONFIDENTIAL, String.Empty).ToString
             RFQNumber.Text = st_RFQNumber
             CurrentRFQStatus.Text = DS.Tables("RFQHeader").Rows(0)("Status").ToString
-            ProductNumber.Text = DS.Tables("RFQHeader").Rows(0)("ProductNumber").ToString
+            CASNumber.Text = DS.Tables("RFQHeader").Rows(0)("CASNumber").ToString
+            RFQListByProductID.NavigateUrl = "./RFQListByProduct.aspx?ProductID=" + DS.Tables("RFQHeader").Rows(0)("ProductID").ToString
+            RFQListByProductID.Text = CutShort(DS.Tables("RFQHeader").Rows(0)("ProductNumber").ToString)
+            If DS.Tables("RFQHeader").Rows(0)("CodeExtensionCode").ToString = "" Then
+                CodeExtensionList.SelectedValue = ""
+            Else
+                Dim CodeExtensionDt As DataTable = GetDataTable("select * from CodeExtension where CodeExtensionCode='" + DS.Tables("RFQHeader").Rows(0)("CodeExtensionCode").ToString + "'", "CodeExtension")
+                If CodeExtensionDt.Rows.Count > 0 Then
+                    CodeExtensionList.SelectedValue = DS.Tables("RFQHeader").Rows(0)("CodeExtensionCode").ToString
+                Else
+                    CodeExtensionList.SelectedValue = ""
+                End If
+            End If
             ProductName.Text = CutShort(DS.Tables("RFQHeader").Rows(0)("ProductName").ToString)
             ProductWarning.Text = DS.Tables("RFQHeader").Rows(0)("ProductWarning").ToString  '20190902 WYS 赋值ProductWarning
             SupplierWarning.Text = DS.Tables("RFQHeader").Rows(0)("SupplierWarning").ToString  '20190902 WYS SupplierWarning
             txtVaildTo.Text = DS.Tables("RFQHeader").Rows(0)("SupplierOfferValidTo").ToString  '20191012 WYS SupplierOfferValidTo
             labBUoM.Text = DS.Tables("RFQHeader").Rows(0)("BUoM").ToString  '20200610 WYS 赋值BUoM
             SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString
+            Hidden_SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString 'SupplierCodeをキーにSupplierNameTextBoxからSupplierPageに遷移するための値をHiddenで持たせる
             'R3SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("R3SupplierCode").ToString
             R3SupplierCode.Text = DS.Tables("RFQHeader").Rows(0)("S4SupplierCode").ToString
             SupplierName.Text = DS.Tables("RFQHeader").Rows(0)("SupplierName").ToString
             SupplierCountry.Text = GetCountryName(DS.Tables("RFQHeader").Rows(0)("SupplierCountryCode").ToString)
+            SuplierCountryShort.Text = DS.Tables("RFQHeader").Rows(0)("SupplierCountryCode").ToString
             CountryWarning.Text = GetCountryQuoName(DS.Tables("RFQHeader").Rows(0)("SupplierCountryCode").ToString)
             SupplierContactPerson.Text = DS.Tables("RFQHeader").Rows(0)("SupplierContactPerson").ToString
             MakerCode.Text = DS.Tables("RFQHeader").Rows(0)("MakerCode").ToString
@@ -546,6 +588,19 @@ Partial Public Class RFQUpdate
             Else
                 SpecSheet.Checked = False
             End If
+
+
+
+            If Session("Purchase.MMSTAInvalidationEditable") = "N" Then
+                MMSTAInvalidation.Enabled = False
+            End If
+
+            If DS.Tables("RFQHeader").Rows(0)("MMSTAInvalidation").ToString = "Y" Then
+                MMSTAInvalidation.Checked = True
+            Else
+                MMSTAInvalidation.Checked = False
+            End If
+
             Specification.Text = DS.Tables("RFQHeader").Rows(0)("Specification").ToString
 
             If CBool(DS.Tables("RFQHeader").Rows(0)("isCONFIDENTIAL")) Then
@@ -560,39 +615,16 @@ Partial Public Class RFQUpdate
                                                  & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1}) ORDER BY [Name]" _
                                                  , EnqLocationCode.Value, DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString)
             End If
-            Dim sql As String
-            sql = "select * from ("
-            sql += "select '' as supplierInfo,'' as SupplierContactperson,'' as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + ""
-            sql += " Union All "
-            sql += "select (SupplierEmailID1+'-'+ ISNULL(SupplierContactperson1,'')) as supplierInfo,ISNULL(SupplierContactperson1,'') as SupplierContactperson,SupplierEmailID1 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID1 <>'' and SupplierEmailID1 is not null and SupplierEmailID1 <>'000'"
-            sql += " Union All "
-            sql += "select (SupplierEmailID2+'-'+ ISNULL(SupplierContactperson2,'')) as supplierInfo,ISNULL(SupplierContactperson2,'') as SupplierContactperson,SupplierEmailID2 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID2 <>'' and SupplierEmailID2 is not null and SupplierEmailID2 <>'000'"
-            sql += " Union All "
-            sql += "select (SupplierEmailID3+'-'+ ISNULL(SupplierContactperson3,'')) as supplierInfo,ISNULL(SupplierContactperson3,'') as SupplierContactperson,SupplierEmailID3 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID3 <>'' and SupplierEmailID3 is not null and SupplierEmailID3 <>'000'"
-            sql += " Union All "
-            sql += "select (SupplierEmailID4+'-'+ ISNULL(SupplierContactperson4,'')) as supplierInfo,ISNULL(SupplierContactperson4,'') as SupplierContactperson,SupplierEmailID4 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID4 <>'' and SupplierEmailID4 is not null and SupplierEmailID4 <>'000'"
-            sql += " Union All "
-            sql += "select (SupplierEmailID5+'-'+ ISNULL(SupplierContactperson5,'')) as supplierInfo,ISNULL(SupplierContactperson5,'') as SupplierContactperson,SupplierEmailID5 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID5 <>'' and SupplierEmailID5 is not null and SupplierEmailID5 <>'000'"
-            sql += " Union All "
-            sql += "select (SupplierEmailID6+'-'+ ISNULL(SupplierContactperson6,'')) as supplierInfo,ISNULL(SupplierContactperson6,'') as SupplierContactperson,SupplierEmailID6 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID6 <>'' and SupplierEmailID6 is not null and SupplierEmailID6 <>'000'"
-            sql += " Union All "
-            sql += "select (SupplierEmailID7+'-'+ ISNULL(SupplierContactperson7,'')) as supplierInfo,ISNULL(SupplierContactperson7,'') as SupplierContactperson,SupplierEmailID7 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID7 <>'' and SupplierEmailID7 is not null and SupplierEmailID7 <>'000'"
-            sql += " Union All "
-            sql += "select (SupplierEmailID8+'-'+ ISNULL(SupplierContactperson8,'')) as supplierInfo,ISNULL(SupplierContactperson8,'') as SupplierContactperson,SupplierEmailID9 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID8 <>'' and SupplierEmailID8 is not null and SupplierEmailID8 <>'000'"
-            sql += " Union All "
-            sql += "select (SupplierEmailID9+'-'+ ISNULL(SupplierContactperson9,'')) as supplierInfo,ISNULL(SupplierContactperson9,'') as SupplierContactperson,SupplierEmailID9 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID9 <>'' and SupplierEmailID9 is not null and SupplierEmailID9 <>'000'"
-            sql += " Union All "
-            sql += "select (SupplierEmailID10+'-'+ ISNULL(SupplierContactperson10,'')) as supplierInfo,ISNULL(SupplierContactperson10,'') as SupplierContactperson,SupplierEmailID10 as SupplierEmailID FROM  Supplier where SupplierCode=" + DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString + " and SupplierEmailID10 <>'' and SupplierEmailID10 is not null and SupplierEmailID10 <>'000'"
-            'sql += ") as A where supplierInfo is not null"
-            sql += ") as A where 1=1"
-            SDS_SupplierContactPersonCodeList.SelectCommand = sql
-            If DS.Tables("RFQHeader").Rows(0)("SupplierContactPersonSel").ToString Is Nothing Then
-            Else
-                Dim SupplierContactPersonDt As DataTable = GetDataTable(sql + " and SupplierEmailID='" + DS.Tables("RFQHeader").Rows(0)("SupplierContactPersonSel").ToString + "'")
-                If SupplierContactPersonDt.Rows.Count > 0 Then
-                    SupplierContactPersonCodeList.SelectedValue = DS.Tables("RFQHeader").Rows(0)("SupplierContactPersonSel").ToString
-                End If
-            End If
+            'Dim Supplier As TCIDataAccess.Supplier
+            'Dim sql As String = Supplier.SetSupplierContactPersonCodeList(DS.Tables("RFQHeader").Rows(0)("SupplierCode").ToString)
+            'SDS_SupplierContactPersonCodeList.SelectCommand = sql
+            'If DS.Tables("RFQHeader").Rows(0)("SupplierContactPersonSel").ToString Is Nothing Then
+            'Else
+            '    Dim SupplierContactPersonDt As DataTable = GetDataTable(sql + " and SupplierEmailID='" + DS.Tables("RFQHeader").Rows(0)("SupplierContactPersonSel").ToString + "'")
+            '    If SupplierContactPersonDt.Rows.Count > 0 Then
+            '        SupplierContactPersonCodeList.SelectedValue = DS.Tables("RFQHeader").Rows(0)("SupplierContactPersonSel").ToString
+            '    End If
+            'End If
             EnqUser.SelectedValue = DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString
             ViewState(OLD_ENQUSER_ID) = DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString
             ' EnqLocationの設定
@@ -671,7 +703,7 @@ Partial Public Class RFQUpdate
             End If
             'Line
             DBCommand = New SqlCommand("Select " _
-& "RFQLineNumber, EnqQuantity, EnqUnitCode, EnqPiece, CurrencyCode, " _
+& "RFQLineNumber, StatusCode, EnqQuantity, EnqUnitCode, EnqPiece, CurrencyCode, " _
 & "UnitPrice, QuoPer, QuoUnitCode, LeadTime, SupplierItemNumber, " _
 & "IncotermsCode, DeliveryTerm, Packing, Purity, QMMethod,SupplierOfferNo, NoOfferReasonCode,OutputStatus" _
 & " From v_RFQLine Where RFQNumber = @i_RFQNumber Order by RFQLineNumber", DBConn)
@@ -689,14 +721,26 @@ Partial Public Class RFQUpdate
                 For i = 0 To i_Cnt - 1
                     j = i + 1
                     EnqQuantity(j).Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("EnqQuantity").ToString)
-                    EnqQuantity(j).ReadOnly = True
-                    EnqQuantity(j).CssClass = "readonly number"
+                    If DS.Tables("RFQLine").Rows(i).Item("StatusCode").ToString = "N" Or DS.Tables("RFQLine").Rows(i).Item("StatusCode").ToString = "A" Then
+                        EnqQuantity(j).ReadOnly = False
+                    Else
+                        EnqQuantity(j).ReadOnly = True
+                        EnqQuantity(j).CssClass = "readonly number"
+                    End If
                     EnqUnit(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("EnqUnitCode").ToString
-                    EnqUnit(j).CssClass = "readonly"
-                    EnqUnit(j).Enabled = False
+                    If DS.Tables("RFQLine").Rows(i).Item("StatusCode").ToString = "N" Or DS.Tables("RFQLine").Rows(i).Item("StatusCode").ToString = "A" Then
+                        EnqUnit(j).Enabled = True
+                    Else
+                        EnqUnit(j).Enabled = False
+                        EnqUnit(j).CssClass = "readonly"
+                    End If
                     EnqPiece(j).Text = DS.Tables("RFQLine").Rows(i).Item("EnqPiece").ToString
-                    EnqPiece(j).ReadOnly = True
-                    EnqPiece(j).CssClass = "readonly number"
+                    If DS.Tables("RFQLine").Rows(i).Item("StatusCode").ToString = "N" Or DS.Tables("RFQLine").Rows(i).Item("StatusCode").ToString = "A" Then
+                        EnqPiece(j).ReadOnly = False
+                    Else
+                        EnqPiece(j).ReadOnly = True
+                        EnqPiece(j).CssClass = "readonly number"
+                    End If
                     Incoterms(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("IncotermsCode").ToString
                     Currency(j).SelectedValue = DS.Tables("RFQLine").Rows(i).Item("CurrencyCode").ToString
                     UnitPrice(j).Text = SetNullORDecimal(DS.Tables("RFQLine").Rows(i).Item("UnitPrice").ToString)
@@ -871,7 +915,6 @@ Partial Public Class RFQUpdate
             ListPurpose.Attributes.Add("style", "display:block")
             Purpose.Visible = False
         End If
-
         Return True
 
     End Function
@@ -1914,6 +1957,56 @@ Partial Public Class RFQUpdate
             End If
         End If
 
+        If EnqUserStatus.Text = "Success" Then
+            If QuoUserStatus.Text = "Forbidden" Then
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Need application " Then
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+            End If
+        ElseIf EnqUserStatus.Text = "Warning" Then
+            If QuoUserStatus.Text = "Forbidden" Then
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Need application " Then
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+        ElseIf EnqUserStatus.Text = "Forbidden" Then
+            If QuoUserStatus.Text = "Success" Then
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Warning" Then
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Forbidden" Then
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Need application " Then
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+        ElseIf EnqUserStatus.Text = "Need application " Then
+            If QuoUserStatus.Text = "Success" Then
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Warning" Then
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Forbidden" Then
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Need application " Then
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+        End If
+
         Dim DataTable As System.Data.DataTable = Purchase.Common.GetDataTable("select * from  POInterface where RFQLineNumber=" + RFQLineNumber, "POInterface")
         Dim sql As String = String.Empty
 
@@ -2121,13 +2214,20 @@ Partial Public Class RFQUpdate
                 sql += " VALUES(" + (MaxId + 1).ToString + "," + RFQLineNumber + "," + RFQNumber + ""
                 For i = 1 To 39
                     If i = 6 Then
-                        sql += ",'" + parameter(i) + "-PRO'"
+                        sql += ",'" + parameter(i) + "@PrdNonCdExt'"
                     Else
                         sql += ",'" + parameter(i) + "'"
                     End If
                 Next
                 sql += ");"
             End If
+        End If
+
+
+        If CodeExtensionList.SelectedValue <> "" Then
+            DBCommand.Parameters.Add("@PrdNonCdExt", SqlDbType.VarChar).Value = RFQListByProductID.Text & CodeExtensionList.SelectedValue
+        Else
+            DBCommand.Parameters.Add("@PrdNonCdExt", SqlDbType.VarChar).Value = RFQListByProductID.Text
         End If
 
         '修改表数据  
@@ -2315,6 +2415,9 @@ Partial Public Class RFQUpdate
         DBCommand.ExecuteNonQuery()
         DBCommand.Dispose()
         DBConn.Close()
+        If MMSTAInvalidation.Checked = False Then
+            MMSTAInvalidation.Checked = True
+        End If
         Return DS2.Tables("RFQLine").Rows(0).Item("QuoUnitCode").ToString
     End Function
     Public Function CheckIsClickPoInterface(ByVal RFQNumber As String) As Boolean
@@ -2508,11 +2611,6 @@ Partial Public Class RFQUpdate
             Ret = False
             Exit Function
         End If
-        If QuoUser.SelectedValue = "" Then
-            Msg.Text = "please choose Quo-User!"
-            Ret = False
-            Exit Function
-        End If
         If CheckLocation() = False Then
             Ret = False
             Exit Function
@@ -2636,4 +2734,444 @@ Partial Public Class RFQUpdate
         End Try
         Return Ret
     End Function
+    ''' <summary> 
+    ''' EnqUserパラメータのPlantを取得
+    ''' </summary> 
+    Private Sub EnqUserPlantSpmatlStatus()
+        Dim DS As DataSet = New DataSet
+        Dim Connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
+        Dim DBCommand As SqlClient.SqlCommand
+        Dim EnqUserStrageLocation As String
+
+        Dim sb_SQL As New Text.StringBuilder
+
+        sb_SQL.Append("SELECT ")
+        sb_SQL.Append("  EnqStorageLocation ")
+        sb_SQL.Append("FROM ")
+        sb_SQL.Append("  v_RFQHeader ")
+        sb_SQL.Append("WHERE ")
+        sb_SQL.Append("  RFQNumber = @RFQNumber ")
+
+        DBCommand = Connection.CreateCommand
+        DBCommand.CommandText = sb_SQL.ToString
+        DBCommand.Parameters.Clear()
+        DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = RFQNumber.Text
+        Connection.Open()
+        DBCommand.ExecuteNonQuery()
+        Connection.Close()
+        Dim DBAdapter As New SqlClient.SqlDataAdapter()
+        DBAdapter.SelectCommand = DBCommand
+        DBAdapter.Fill(DS, "v_RFQHeader")
+
+        If StorageLocation.SelectedValue = "" Then
+            EnqUserStrageLocation = DS.Tables("v_RFQHeader").Rows(0)("EnqStorageLocation").ToString
+        Else
+            EnqUserStrageLocation = StorageLocation.SelectedValue
+        End If
+
+        If EnqUserStrageLocation <> "" Then
+            sb_SQL.Clear()
+            sb_SQL.Append("SELECT ")
+            sb_SQL.Append("  MP.MaterialStatus , PM.[Text] ")
+            sb_SQL.Append("FROM  ")
+            sb_SQL.Append("  StorageLocation As SL ")
+            sb_SQL.Append("INNER JOIN ")
+            sb_SQL.Append("  v_RFQHeader AS RH ")
+            sb_SQL.Append("ON SL.Storage = RH.EnqStorageLocation ")
+            sb_SQL.Append("INNER JOIN ")
+            sb_SQL.Append("   s_MaterialPlant AS MP ")
+            sb_SQL.Append("ON MP.Plant = SL.Plant ")
+            sb_SQL.Append("  AND MP.ERPProductNumber = RH.ProductNumber + ISNULL ( CASE RH.CodeExtensionCode,'') ")
+            sb_SQL.Append("INNER JOIN ")
+            sb_SQL.Append(" s_PlantMaterialStatus AS PM ")
+            sb_SQL.Append("ON PM.MaterialStatus = MP.MaterialStatus ")
+            sb_SQL.Append("WHERE MP.ERPProductNumber = @PrdNonCdExt ")
+
+            DBCommand = Connection.CreateCommand
+            DBCommand.CommandText = sb_SQL.ToString
+            DBCommand.Parameters.Clear()
+            If CodeExtensionList.SelectedValue <> "" Then
+                If CodeExtensionList.SelectedValue = "T" Then
+                    DBCommand.Parameters.Add("@PrdNonCdExt", SqlDbType.VarChar).Value = RFQListByProductID.Text & "-TECH"
+                End If
+                If CodeExtensionList.SelectedValue = "B" Then
+                    DBCommand.Parameters.Add("@PrdNonCdExt", SqlDbType.VarChar).Value = RFQListByProductID.Text & "-BULK"
+                End If
+                If CodeExtensionList.SelectedValue = "P" Then
+                    DBCommand.Parameters.Add("@PrdNonCdExt", SqlDbType.VarChar).Value = RFQListByProductID.Text & "-PRO"
+                End If
+                If CodeExtensionList.SelectedValue = "R" Then
+                    DBCommand.Parameters.Add("@PrdNonCdExt", SqlDbType.VarChar).Value = RFQListByProductID.Text & "-REF"
+                End If
+                If CodeExtensionList.SelectedValue = "G" Then
+                    DBCommand.Parameters.Add("@PrdNonCdExt", SqlDbType.VarChar).Value = RFQListByProductID.Text & "-GMP"
+                End If
+            Else
+                DBCommand.Parameters.Add("@PrdNonCdExt", SqlDbType.VarChar).Value = RFQListByProductID.Text
+            End If
+
+            DBCommand.Parameters.Add("@EnqUserStrageLocation", SqlDbType.VarChar).Value = EnqUserStrageLocation
+
+            Connection.Open()
+            DBCommand.ExecuteNonQuery()
+            Connection.Close()
+            DBAdapter.SelectCommand = DBCommand
+            DBAdapter.Fill(DS, "s_MaterialPlant")
+            DBAdapter.Fill(DS, "s_PlantMaterialStatus")
+            If EnqUserStrageLocation <> "" Then
+                EnqUserPlantStatus.Text = DS.Tables("s_MaterialPlant").Rows(0)("MaterialStatus").ToString
+                EnqUserPlantDescriptions.Text = DS.Tables("s_PlantMaterialStatus").Rows(0)("Text").ToString
+            End If
+        End If
+    End Sub
+    ''' <summary> 
+    ''' QuoUserパラメータのPlantを取得
+    ''' </summary> 
+    Private Sub QuoUserPlantSpmatlStatus()
+        Dim DS As DataSet = New DataSet
+        Dim Connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
+        Dim DBCommand As SqlClient.SqlCommand
+        Dim sb_SQL As New Text.StringBuilder
+
+        Dim RFQNum As Integer = RFQNumber.Text
+
+        Dim DBAdapter As New SqlClient.SqlDataAdapter()
+
+        Dim QuoUserStrageLocation As String
+
+        sb_SQL.Append("SELECT ")
+        sb_SQL.Append("  QuoStorageLocation ")
+        sb_SQL.Append("FROM ")
+        sb_SQL.Append("  v_RFQHeader ")
+        sb_SQL.Append("WHERE ")
+        sb_SQL.Append("  RFQNumber = @RFQNumber ")
+
+        DBCommand = Connection.CreateCommand
+        DBCommand.CommandText = sb_SQL.ToString
+        DBCommand.Parameters.Clear()
+        DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = RFQNumber.Text
+        Connection.Open()
+        DBCommand.ExecuteNonQuery()
+        Connection.Close()
+        DBAdapter.SelectCommand = DBCommand
+        DBAdapter.Fill(DS, "v_RFQHeader")
+        If StorageLocation2.SelectedValue = "" Then
+            QuoUserStrageLocation = DS.Tables("v_RFQHeader").Rows(0)("QuoStorageLocation").ToString
+        Else
+            QuoUserStrageLocation = StorageLocation2.SelectedValue
+        End If
+        QuoUserStrageLocation = StorageLocation2.SelectedValue
+
+        If QuoUserStrageLocation <> "" Then
+            sb_SQL.Clear()
+            sb_SQL.Append("SELECT ")
+            sb_SQL.Append("  MP.MaterialStatus , PM.[Text] ")
+            sb_SQL.Append("FROM  ")
+            sb_SQL.Append("  StorageLocation As SL ")
+            sb_SQL.Append("INNER JOIN ")
+            sb_SQL.Append("  v_RFQHeader AS RH ")
+            sb_SQL.Append("ON SL.Storage = RH.EnqStorageLocation ")
+            sb_SQL.Append("INNER JOIN ")
+            sb_SQL.Append("   s_MaterialPlant AS MP ")
+            sb_SQL.Append("ON MP.Plant = SL.Plant ")
+            sb_SQL.Append("  AND MP.ERPProductNumber = RH.ProductNumber + ISNULL ( CASE RH.CodeExtensionCode End,'') ")
+            sb_SQL.Append("INNER JOIN ")
+            sb_SQL.Append(" s_PlantMaterialStatus AS PM ")
+            sb_SQL.Append("ON PM.MaterialStatus = MP.MaterialStatus ")
+            sb_SQL.Append("WHERE MP.ERPProductNumber = @PrdNonCdExt ")
+
+            DBCommand = Connection.CreateCommand
+            DBCommand.CommandText = sb_SQL.ToString
+            DBCommand.Parameters.Clear()
+            If CodeExtensionList.SelectedValue <> "" Then
+                If CodeExtensionList.SelectedValue = "T" Then
+                    DBCommand.Parameters.Add("@PrdNonCdExt", SqlDbType.VarChar).Value = RFQListByProductID.Text & "-TECH"
+                End If
+                If CodeExtensionList.SelectedValue = "B" Then
+                    DBCommand.Parameters.Add("@PrdNonCdExt", SqlDbType.VarChar).Value = RFQListByProductID.Text & "-BULK"
+                End If
+                If CodeExtensionList.SelectedValue = "P" Then
+                    DBCommand.Parameters.Add("@PrdNonCdExt", SqlDbType.VarChar).Value = RFQListByProductID.Text & "-PRO"
+                End If
+                If CodeExtensionList.SelectedValue = "R" Then
+                    DBCommand.Parameters.Add("@PrdNonCdExt", SqlDbType.VarChar).Value = RFQListByProductID.Text & "-REF"
+                End If
+                If CodeExtensionList.SelectedValue = "G" Then
+                    DBCommand.Parameters.Add("@PrdNonCdExt", SqlDbType.VarChar).Value = RFQListByProductID.Text & "-GMP"
+                End If
+            Else
+                DBCommand.Parameters.Add("@PrdNonCdExt", SqlDbType.VarChar).Value = RFQListByProductID.Text
+            End If
+
+            Connection.Open()
+            DBCommand.ExecuteNonQuery()
+            Connection.Close()
+            DBAdapter.SelectCommand = DBCommand
+            DBAdapter.Fill(DS, "s_MaterialPlant")
+            DBAdapter.Fill(DS, "s_PlantMaterialStatus")
+            If QuoUserStrageLocation <> "" Then
+                QuoUserPlantStatus.Text = DS.Tables("s_MaterialPlant").Rows(0)("MaterialStatus").ToString
+                QuoUserPlantDescriptions.Text = DS.Tables("s_PlantMaterialStatus").Rows(0)("Text").ToString
+            End If
+        End If
+    End Sub
+    ''' <summary> 
+    ''' EnqUserMMSTAValidationステータスを取得
+    ''' </summary> 
+    Private Sub EnqMMSTAValidationSearch()
+
+        Dim DS As DataSet = New DataSet
+        Dim Connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
+        Dim DBCommand As SqlClient.SqlCommand
+        Dim DBAdapter As New SqlClient.SqlDataAdapter()
+
+        Dim EnqCountry As String
+        Dim QuoCountry As String
+        Dim EnqDosFlag As String
+
+
+        Dim sb_SQL As New Text.StringBuilder
+
+        'Enq-User の　CountryCode 取得
+        sb_SQL.Clear()
+        sb_SQL.Append("SELECT ")
+        sb_SQL.Append("  CountryCode ")
+        sb_SQL.Append("FROM ")
+        sb_SQL.Append("  StorageLocation ")
+        sb_SQL.Append("WHERE ")
+        sb_SQL.Append("  CountryCode = @EnqCountryCode")
+
+        DBCommand = Connection.CreateCommand
+        DBCommand.CommandText = sb_SQL.ToString
+        DBCommand.Parameters.Clear()
+        DBCommand.Parameters.Add("@EnqCountryCode", SqlDbType.VarChar).Value = EnqLocationCode.Value
+        Connection.Open()
+        DBCommand.ExecuteNonQuery()
+        Connection.Close()
+        DBAdapter.SelectCommand = DBCommand
+        DBAdapter.Fill(DS, "StorageLocation")
+        EnqCountry = DS.Tables("StorageLocation").Rows(0)("CountryCode").ToString
+
+        'Quo-User の　CountryCode 取得
+        sb_SQL.Clear()
+        sb_SQL.Append("SELECT ")
+        sb_SQL.Append("  CountryCode ")
+        sb_SQL.Append("FROM ")
+        sb_SQL.Append("  StorageLocation ")
+        sb_SQL.Append("WHERE ")
+        sb_SQL.Append("  CountryCode = @QuoCountryCode")
+
+        DBCommand = Connection.CreateCommand
+        DBCommand.CommandText = sb_SQL.ToString
+        DBCommand.Parameters.Clear()
+        DBCommand.Parameters.Add("@QuoCountryCode", SqlDbType.VarChar).Value = EnqLocationCode.Value
+        Connection.Open()
+        DBCommand.ExecuteNonQuery()
+        Connection.Close()
+        DBAdapter.SelectCommand = DBCommand
+        DBAdapter.Fill(DS, "StorageLocation")
+        QuoCountry = DS.Tables("StorageLocation").Rows(0)("CountryCode").ToString
+
+        If EnqCountry = QuoCountry Then
+            EnqDosFlag = "1"
+        Else
+            EnqDosFlag = "0"
+        End If
+
+        sb_SQL.Clear()
+        sb_SQL.Append("SELECT ")
+        sb_SQL.Append("  Validation ")
+        sb_SQL.Append("FROM ")
+        sb_SQL.Append("  MMSTAValidation ")
+        sb_SQL.Append("WHERE ")
+        sb_SQL.Append("  PlantSp_Matlstatus = @EnqPlantStatus  AND DomestiocFlag = @EnqDosFlag")
+
+        DBCommand = Connection.CreateCommand
+        DBCommand.CommandText = sb_SQL.ToString
+        DBCommand.Parameters.Clear()
+
+        DBCommand.Parameters.Add("@EnqPlantStatus", SqlDbType.VarChar).Value = EnqUserPlantStatus.Text
+        DBCommand.Parameters.Add("@EnqDosFlag", SqlDbType.VarChar).Value = EnqDosFlag
+        Connection.Open()
+        DBCommand.ExecuteNonQuery()
+        Connection.Close()
+
+
+        DBAdapter.SelectCommand = DBCommand
+        DBAdapter.Fill(DS, "Validation")
+        EnqUserStatus.Text = DS.Tables("MMSTAValidation").Rows(0)("Validation").ToString
+
+
+    End Sub
+    ''' <summary> 
+    ''' QuoUserMMSTAValidationステータスを取得
+    ''' </summary> 
+    Private Sub QuoMMSTAValidationSearch()
+        Dim DS As DataSet = New DataSet
+        Dim Connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
+        Dim DBCommand As SqlClient.SqlCommand
+        Dim DBAdapter As New SqlClient.SqlDataAdapter()
+
+        Dim SupCountry As String = SuplierCountryShort.Text
+        Dim QuoCountry As String
+        Dim QuoDosFlag As String
+
+        Dim sb_SQL As New Text.StringBuilder
+
+        'Quo-User の　CountryCode 取得
+        sb_SQL.Clear()
+        sb_SQL.Append("SELECT ")
+        sb_SQL.Append("  CountryCode ")
+        sb_SQL.Append("FROM ")
+        sb_SQL.Append("  StorageLocation ")
+        sb_SQL.Append("WHERE ")
+        sb_SQL.Append("  CountryCode = @QuoCountryCode")
+
+        DBCommand = Connection.CreateCommand
+        DBCommand.CommandText = sb_SQL.ToString
+        DBCommand.Parameters.Clear()
+        DBCommand.Parameters.Add("@QuoCountryCode", SqlDbType.VarChar).Value = EnqLocationCode.Value
+        Connection.Open()
+        DBCommand.ExecuteNonQuery()
+        Connection.Close()
+        DBAdapter.SelectCommand = DBCommand
+        DBAdapter.Fill(DS, "StorageLocation")
+        QuoCountry = DS.Tables("StorageLocation").Rows(0)("CountryCode").ToString
+
+        If SupCountry = QuoCountry Then
+            QuoDosFlag = "1"
+        Else
+            QuoDosFlag = "0"
+        End If
+
+        sb_SQL.Clear()
+        sb_SQL.Append("SELECT ")
+        sb_SQL.Append("  Validation ")
+        sb_SQL.Append("FROM ")
+        sb_SQL.Append("   MMSTAValidation ")
+        sb_SQL.Append("WHERE ")
+        sb_SQL.Append("  PlantSp_Matlstatus = @QuoPlantStatus  AND DomestiocFlag = @QuoDosFlag")
+
+
+        DBCommand = Connection.CreateCommand
+        DBCommand.CommandText = sb_SQL.ToString
+        DBCommand.Parameters.Clear()
+        DBCommand.Parameters.Add("@QuoPlantStatus", SqlDbType.VarChar).Value = QuoUserPlantStatus.Text
+        DBCommand.Parameters.Add("@QuoDosFlag", SqlDbType.VarChar).Value = QuoDosFlag
+        Connection.Open()
+        DBCommand.ExecuteNonQuery()
+        Connection.Close()
+
+        DBAdapter.SelectCommand = DBCommand
+        DBAdapter.Fill(DS, "MMSTAValidation")
+        QuoUserStatus.Text = DS.Tables("MMSTAValidation").Rows(0)("Validation").ToString
+
+    End Sub
+    ''' <summary> 
+    ''' POInterfaceメッセージ取得
+    ''' </summary> 
+    Private Sub POInterfaceMsgSet()
+        Dim DS As DataSet = New DataSet
+        Dim Connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
+        Dim DBCommand As SqlClient.SqlCommand
+
+        Dim Enquser As String = EnqUserStatus.Text
+        Dim Quouser As String = QuoUserStatus.Text
+
+        Dim sb_SQL As New Text.StringBuilder
+        sb_SQL.Append("SELECT ")
+        sb_SQL.Append("  EnqUser, QuoUser, POIMessage ")
+        sb_SQL.Append("FROM ")
+        sb_SQL.Append("  POInterfaceMesseage ")
+        sb_SQL.Append("WHERE")
+        sb_SQL.Append("  EnqUser = @Enquser AND QuoUser = @Quouser")
+
+        DBCommand = Connection.CreateCommand
+        DBCommand.CommandText = sb_SQL.ToString
+        DBCommand.Parameters.Clear()
+
+        DBCommand.Parameters.Add("@Enquser", SqlDbType.VarChar).Value = EnqUserStatus.Text
+        DBCommand.Parameters.Add("@Quouser", SqlDbType.VarChar).Value = QuoUserStatus.Text
+
+        Connection.Open()
+        DBCommand.ExecuteNonQuery()
+        Connection.Close()
+
+        Dim DBAdapter As New SqlClient.SqlDataAdapter()
+        DBAdapter.SelectCommand = DBCommand
+        DBAdapter.Fill(DS, "POInterfaceMesseage")
+
+        EnqUserStatus.Text = DS.Tables("POInterfaceMesseage").Rows(0)("EnqUser").ToString
+        QuoUserStatus.Text = DS.Tables("POInterfaceMesseage").Rows(0)("QuoUser").ToString
+        POInterfaceMsg.Text = DS.Tables("POInterfaceMesseage").Rows(0)("POIMessage").ToString
+
+        If EnqUserStatus.Text = "Success" Then
+            If QuoUserStatus.Text = "Success" Then
+                POInterfaceMsg.Text = ""
+            End If
+            If QuoUserStatus.Text = "Warning" Then
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Forbidden" Then
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Need application " Then
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+            End If
+        ElseIf EnqUserStatus.Text = "Warning" Then
+            If QuoUserStatus.Text = "Success" Then
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Warning" Then
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Need application " Then
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Forbidden" Then
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Need application " Then
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+        ElseIf EnqUserStatus.Text = "Forbidden" Then
+            If QuoUserStatus.Text = "Success" Then
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Warning" Then
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Forbidden" Then
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Need application " Then
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+        ElseIf EnqUserStatus.Text = "Need application " Then
+            If QuoUserStatus.Text = "Success" Then
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Warning" Then
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Forbidden" Then
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+            If QuoUserStatus.Text = "Need application " Then
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
+                POInterfaceMsg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            End If
+        End If
+    End Sub
+
+
 End Class

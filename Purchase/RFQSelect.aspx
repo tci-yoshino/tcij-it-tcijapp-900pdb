@@ -12,6 +12,10 @@
     <%' JavaScript は VB ファイルの Set_JavaScript 関数で生成しています。 %>
 </head>
 <body>
+    <!-- Header -->
+    <commonUC:Header ID="HeaderMenu" runat="server" />
+    <!-- Header End -->
+
     <!-- Main Content Area -->
     <div id="content">
         <div class="tabs"></div>

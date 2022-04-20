@@ -10,6 +10,9 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
 </head>
 <body>
+    <!-- Header -->
+    <commonUC:Header ID="HeaderMenu" runat="server" />
+    <!-- Header End -->
 	<!-- Main Content Area -->
 	<form id="CountryForm" runat="server">
 	<div id="content">

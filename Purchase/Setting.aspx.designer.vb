@@ -14,6 +14,15 @@ Option Explicit On
 Partial Public Class Setting
     
     '''<summary>
+    '''HeaderMenu コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents HeaderMenu As Global.Purchase.Header
+    
+    '''<summary>
     '''form1 コントロール。
     '''</summary>
     '''<remarks>
@@ -66,4 +75,13 @@ Partial Public Class Setting
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents ReminderListli As Global.System.Web.UI.HtmlControls.HtmlGenericControl
+    
+    '''<summary>
+    '''UserListli コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents UserListli As Global.System.Web.UI.HtmlControls.HtmlGenericControl
 End Class

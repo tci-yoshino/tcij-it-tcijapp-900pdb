@@ -1,4 +1,6 @@
 ﻿Imports Purchase.Common
+Imports Purchase.TCIDataAccess
+Imports Purchase.TCIDataAccess.Join
 
 Partial Public Class ProductListBySupplier
     Inherits CommonPage
@@ -10,81 +12,161 @@ Partial Public Class ProductListBySupplier
     Public AddUrl As String = ""
     Public ImpUrl As String = ""
 
+    ''' <summary>
+    ''' ページロード
+    ''' </summary>
+    ''' <remarks>
+    ''' ページを読み込む
+    ''' </remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        '[DBの接続]-----------------------------------------------------------------------
-        DBConn.Open()
-        DBCommand = DBConn.CreateCommand()
-
         If Not IsPostBack Then
+            ' 初期表示の場合
             '[QueryString("Supplier")のチェック]----------------------------------------------
-            If Request.QueryString("Supplier") = "" Then
-                SrcSupplierProduct.SelectCommand = ""
+            If String.IsNullOrWhiteSpace(Request.QueryString("Supplier")) Then
+                SupplierProductList.DataSource = String.Empty
                 SupplierProductList.DataBind()
                 Msg.Text = Common.ERR_INVALID_PARAMETER
                 Exit Sub
             End If
 
-            SupplierCode.Text = Request.QueryString("Supplier")
-            DBCommand.CommandText = "SELECT Name3,Name4 FROM Supplier WHERE (SupplierCode = '" & SupplierCode.Text.ToString & "')"
-            DBReader = DBCommand.ExecuteReader()
-            DBCommand.Dispose()
-            If DBReader.Read = True Then
-                If Not TypeOf DBReader("Name3") Is DBNull Then SupplierName.Text = DBReader("Name3")
-                If Not TypeOf DBReader("Name4") Is DBNull Then
-                    If SupplierName.Text = String.Empty Then
-                        SupplierName.Text = DBReader("Name4")
-                    Else
-                        SupplierName.Text = SupplierName.Text & " " & DBReader("Name4")
-                    End If
-                End If
-            End If
-            DBReader.Close()
+            Dim st_SupplierCode As String = Request.QueryString("Supplier").ToString
 
-            Dim strSql As StringBuilder = New StringBuilder
-            strSql.AppendLine("SELECT")
-            strSql.AppendLine("  P.ProductID,")
-            strSql.AppendLine("  P.ProductNumber,")
-            strSql.AppendLine("  CASE WHEN NOT P.QuoName IS NULL THEN P.QuoName ELSE P.Name END AS ProductName,")
-            strSql.AppendLine("  SP.SupplierItemNumber,")
-            strSql.AppendLine("  SP.Note,")
-            strSql.AppendLine("  SP.UpdateDate,")
-            strSql.AppendLine("  './SuppliersProductSetting.aspx?Action=Edit&Supplier=" + SupplierCode.Text.ToString + "&Product='+RTRIM(LTRIM(STR(P.ProductID))) AS Url,")
-            strSql.AppendLine("  ISNULL(C.isCONFIDENTIAL, 0) AS isCONFIDENTIAL")
-            strSql.AppendLine("FROM")
-            strSql.AppendLine("  Supplier_Product AS SP")
-            strSql.AppendLine("    LEFT OUTER JOIN Product AS P ON SP.ProductID = P.ProductID")
-            strSql.AppendLine("    LEFT OUTER JOIN v_CONFIDENTIAL AS C ON C.ProductID = SP.ProductID")
-            strSql.AppendLine("WHERE")
-            strSql.AppendLine("  SP.SupplierCode = '" & SupplierCode.Text.ToString & "'")
+            ' 画面表示項目ををセット
+            Dim productListBySupplierDispList As ProductListBySupplierDispList = New ProductListBySupplierDispList
+            productListBySupplierDispList.Load(st_SupplierCode, Session(SESSION_ROLE_CODE).ToString, HiddenSelectedValidityFilter.Value, _
+                                               SupplierProductList.ID, HiddenSortField.Value, HiddenSortType.Value)
+            SupplierCode.Text = st_SupplierCode
+            If Not String.IsNullOrEmpty(productListBySupplierDispList.SupplierName.ToString) Then SupplierName.Text = _
+                productListBySupplierDispList.SupplierName.ToString
+            If Not String.IsNullOrEmpty(productListBySupplierDispList.Territory.ToString) Then Territory.Text = _
+                productListBySupplierDispList.Territory.ToString
 
-            '権限ロールに従い極秘品を除外する
-            If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
-                strSql.AppendLine("  AND C.isCONFIDENTIAL = 0")
-            End If
-
-            SrcSupplierProduct.SelectCommand = strSql.ToString
+            HiddenSortType.Value = "asc"
+            HiddenSortField.Value = "ProductNumHeader"
+            SupplierProductList.DataSource = productListBySupplierDispList.ProductListBySupplierList
             SupplierProductList.DataBind()
+
+            'ページャーの1ページ辺りの表示件数に定数の値を設定
+            Dim PgrSupplierProductPagerCountTop As DataPager
+            PgrSupplierProductPagerCountTop = SupplierProductList.FindControl("SupplierProductPagerCountTop")
+            PgrSupplierProductPagerCountTop.PageSize = Common.LIST_ONEPAGE_ROW_ProductListBySupplier
+
+            Dim PgrSupplierProductPagerLinkTop As DataPager
+            PgrSupplierProductPagerLinkTop = SupplierProductList.FindControl("SupplierProductPagerLinkTop")
+            PgrSupplierProductPagerLinkTop.PageSize = Common.LIST_ONEPAGE_ROW_ProductListBySupplier
+
+            Dim PgrSupplierProductPagerCountBottom As DataPager
+            PgrSupplierProductPagerCountBottom = SupplierProductList.FindControl("SupplierProductPagerCountBottom")
+            PgrSupplierProductPagerCountBottom.PageSize = Common.LIST_ONEPAGE_ROW_ProductListBySupplier
+
+            Dim PgrSupplierProductPagerLinkBottom As DataPager
+            PgrSupplierProductPagerLinkBottom = SupplierProductList.FindControl("SupplierProductPagerLinkBottom")
+            PgrSupplierProductPagerLinkBottom.PageSize = Common.LIST_ONEPAGE_ROW_ProductListBySupplier
+
+        Else
+            Dim productListBySupplierDispList As ProductListBySupplierDispList = New ProductListBySupplierDispList
+            SupplierProductList.DataSource = Nothing 
+            productListBySupplierDispList.Load(SupplierCode.Text, Session(SESSION_ROLE_CODE).ToString, HiddenSelectedValidityFilter.Value, _
+                                               SupplierProductList.ID, HiddenSortField.Value, HiddenSortType.Value)
+            SupplierProductList.DataSource = productListBySupplierDispList.ProductListBySupplierList
+            SupplierProductList.DataBind()
+
         End If
     End Sub
 
     Private Sub Page_PreRenderComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRenderComplete
         If Request.Form("Action") = "Delete" Then
+
             '[指定レコード削除]-----------------------------------------------------------------
-            DBCommand.CommandText = "DELETE Supplier_Product WHERE SupplierCode=" + Request.QueryString("Supplier") + " AND ProductID=" + Request.Form("ProductID")
-            DBCommand.ExecuteNonQuery()
+            Dim facadeProductListBySupplier As FacadeProductListBySupplier = New FacadeProductListBySupplier
+            facadeProductListBySupplier.SupplierCode = Request.QueryString("Supplier")
+            facadeProductListBySupplier.ProductID = Request.Form("ProductID")
+            facadeProductListBySupplier.Delete
+            ' リダイレクト
             Url = "./ProductListBySupplier.aspx?Supplier=" & SupplierCode.Text.ToString
             Response.Redirect(Url)
+
         End If
 
         '[New Suppliers ProductのURL設定]------------------------------------------------------------
         AddUrl = "./SuppliersProductSetting.aspx?Supplier=" & SupplierCode.Text.ToString
-
         '[Excel ImportのURL設定]---------------------------------------------------------------------
         ImpUrl = "./SuppliersProductImport.aspx?Supplier=" & SupplierCode.Text.ToString
+
     End Sub
 
+    ''' <summary>
+    ''' ページアンロード
+    ''' </summary>
+    ''' <remarks>
+    ''' ページアンロード
+    ''' </remarks>
     Private Sub Page_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload
         DBConn.Close()
     End Sub
+
+    ''' <summary>
+    ''' SupplierProductList プロパティ変更時イベントハンドラ
+    ''' </summary>
+    ''' <remarks>
+    ''' 
+    ''' </remarks>
+    Protected Sub SupplierProductList_PagePropertiesChanged(ByVal sender As Object, ByVal e As EventArgs) Handles SupplierProductList.PagePropertiesChanged
+        Dim productListBySupplierDispList As ProductListBySupplierDispList = New ProductListBySupplierDispList
+        productListBySupplierDispList.Load(SupplierCode.Text, Session(SESSION_ROLE_CODE).ToString, HiddenSelectedValidityFilter.Value, SupplierProductList.ID, HiddenSortField.Value, HiddenSortType.Value)
+        SupplierProductList.DataSource = productListBySupplierDispList.ProductListBySupplierList
+        SupplierProductList.DataBind()
+    End Sub
+
+    ''' <summary>
+    ''' ExcelExportBtn ボタン押下時イベントハンドラ
+    ''' </summary>
+    ''' <remarks>
+    ''' EXCEL形式で一覧を出力する。
+    ''' </remarks>
+    Protected Sub ExcelExportBtn_Click(sender As Object, e As EventArgs) Handles ExcelExportBtn.Click
+        Dim rept As New Report_SupplierProduct(Response)
+        rept.DownloadExcel(SupplierCode.Text, SupplierName.Text, Territory.Text, Session(SESSION_ROLE_CODE).ToString, HiddenSelectedValidityFilter.Value, _
+                           SupplierProductList.ID, HiddenSortField.Value, HiddenSortType.Value)
+
+    End Sub
+
+    ''' <summary>
+    ''' HiddenSortType 値変更時イベントハンドラ
+    ''' </summary>
+    ''' <remarks>
+    ''' 
+    ''' </remarks>
+    Protected Sub HiddenSelectedButton_ValueChanged(sender As Object, e As EventArgs) Handles HiddenSortType.ValueChanged
+        ResetPagerIndex(True)
+    End Sub
+
+    ''' <summary>
+    ''' 画面表示しているDatapagerのページを1ページ目にセットする
+    ''' </summary>
+    ''' <remarks>
+    ''' 画面上部のSupplierProductPagerCountTop、SupplierProductPagerLinkTop、
+    ''' 画面下部のSupplierProductPagerCountBottom、SupplierProductPagerLinkBottomに対し最初のページを設定する
+    ''' </remarks>
+    Protected Sub ResetPagerIndex(Optional databind As Boolean = False)
+        '各Pagerに1ページ目を設定する
+        Dim PgrSupplierProductPagerCountTop As DataPager
+        PgrSupplierProductPagerCountTop = SupplierProductList.FindControl("SupplierProductPagerCountTop")
+        PgrSupplierProductPagerCountTop.SetPageProperties(0, PgrSupplierProductPagerCountTop.MaximumRows, databind)
+
+        Dim PgrSupplierProductPagerLinkTop As DataPager
+        PgrSupplierProductPagerLinkTop = SupplierProductList.FindControl("SupplierProductPagerLinkTop")
+        PgrSupplierProductPagerLinkTop.SetPageProperties(0, PgrSupplierProductPagerLinkTop.MaximumRows, databind)
+
+        Dim PgrSupplierProductPagerCountBottom As DataPager
+        PgrSupplierProductPagerCountBottom = SupplierProductList.FindControl("SupplierProductPagerCountBottom")
+        PgrSupplierProductPagerCountBottom.SetPageProperties(0, PgrSupplierProductPagerCountBottom.MaximumRows, databind)
+
+        Dim PgrSupplierProductPagerLinkBottom As DataPager
+        PgrSupplierProductPagerLinkBottom = SupplierProductList.FindControl("SupplierProductPagerLinkBottom")
+        PgrSupplierProductPagerLinkBottom.SetPageProperties(0, PgrSupplierProductPagerLinkBottom.MaximumRows, databind)
+
+    End Sub
+
 End Class
 

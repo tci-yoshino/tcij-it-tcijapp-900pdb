@@ -34,6 +34,9 @@ function returnValues(code, name){
 </script>
 </head>
 <body>
+    <!-- Header -->
+    <commonUC:Header ID="HeaderMenu" runat="server" />
+    <!-- Header End -->
     <!-- Main Content Area -->
     <div id="content">
         <div class="tabs"></div>

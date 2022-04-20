@@ -50,6 +50,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -66,6 +67,7 @@
     <Reference Include="System.Web.Mobile" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="TCICommon" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
@@ -91,6 +93,10 @@
     <Import Include="System.Web.UI.HtmlControls" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\ExcelForm.xml" />
+    <Content Include="Class\JME.jar" />
+    <Content Include="Control\Header.ascx" />
+    <Content Include="Control\SearchResult.ascx" />
     <Content Include="CountryList.aspx" />
     <Content Include="CountrySelect.aspx" />
     <Content Include="CountrySetting.aspx" />
@@ -101,15 +107,53 @@
     <Content Include="Footer.html" />
     <Content Include="FormError.html" />
     <Content Include="Global.asax" />
-    <Content Include="Header.aspx" />
     <Content Include="Image\Arrow.gif" />
     <Content Include="Image\Check.gif" />
     <Content Include="Image\Logo.gif" />
     <Content Include="Image\Search.gif" />
     <Content Include="IsuseError.html" />
     <Content Include="JFYISearch.aspx" />
+    <Content Include="jsme\gwt\chrome\chrome.css" />
+    <Content Include="jsme\gwt\chrome\chrome_rtl.css" />
+    <Content Include="jsme\gwt\chrome\images\button\menu-button-arrow-disabled.png" />
+    <Content Include="jsme\gwt\chrome\images\button\menu-button-arrow.png" />
+    <Content Include="jsme\gwt\chrome\images\button\split-button-arrow-active.png" />
+    <Content Include="jsme\gwt\chrome\images\button\split-button-arrow-disabled.png" />
+    <Content Include="jsme\gwt\chrome\images\button\split-button-arrow-focus.png" />
+    <Content Include="jsme\gwt\chrome\images\button\split-button-arrow-hover.png" />
+    <Content Include="jsme\gwt\chrome\images\button\split-button-arrow.png" />
+    <Content Include="jsme\gwt\chrome\images\combobox\arrow-down-disabled.png" />
+    <Content Include="jsme\gwt\chrome\images\combobox\arrow-down.png" />
+    <Content Include="jsme\gwt\chrome\images\combobox\ellipsis-disabled.png" />
+    <Content Include="jsme\gwt\chrome\images\combobox\ellipsis.png" />
+    <Content Include="jsme\gwt\chrome\images\corner.png" />
+    <Content Include="jsme\gwt\chrome\images\corner_ie6.png" />
+    <Content Include="jsme\gwt\chrome\images\fastree\selectionBar.gif" />
+    <Content Include="jsme\gwt\chrome\images\fastree\treeClosed.gif" />
+    <Content Include="jsme\gwt\chrome\images\fastree\treeLoading.gif" />
+    <Content Include="jsme\gwt\chrome\images\fastree\treeOpen.gif" />
+    <Content Include="jsme\gwt\chrome\images\glasspanel\blue_ridge.png" />
+    <Content Include="jsme\gwt\chrome\images\hborder.png" />
+    <Content Include="jsme\gwt\chrome\images\hborder_ie6.png" />
+    <Content Include="jsme\gwt\chrome\images\ie6\corner_dialog_topleft.png" />
+    <Content Include="jsme\gwt\chrome\images\ie6\corner_dialog_topright.png" />
+    <Content Include="jsme\gwt\chrome\images\ie6\hborder_blue_shadow.png" />
+    <Content Include="jsme\gwt\chrome\images\ie6\hborder_gray_shadow.png" />
+    <Content Include="jsme\gwt\chrome\images\ie6\vborder_blue_shadow.png" />
+    <Content Include="jsme\gwt\chrome\images\ie6\vborder_gray_shadow.png" />
+    <Content Include="jsme\gwt\chrome\images\scrolltable\bg_header_gradient.gif" />
+    <Content Include="jsme\gwt\chrome\images\splitPanelThumb.png" />
+    <Content Include="jsme\gwt\chrome\images\valuespinner\bg_textbox.png" />
+    <Content Include="jsme\gwt\chrome\images\vborder.png" />
+    <Content Include="jsme\gwt\chrome\images\vborder_ie6.png" />
+    <Content Include="jsme\gwt\chrome\mosaic.css" />
+    <Content Include="jsme\gwt\chrome\mosaic_rtl.css" />
+    <Content Include="jsme\hosted.html" />
+    <Content Include="jsme\jsa.css" />
+    <Content Include="jsme\jsme.nocache.js" />
     <Content Include="JS\Colorful.js" />
     <Content Include="JS\Common.js" />
+    <Content Include="JS\jquery-1.11.2.min.js" />
     <Content Include="MyTask.aspx" />
     <Content Include="POCorrespondence.aspx" />
     <Content Include="POIssue.aspx" />
@@ -118,6 +162,7 @@
     <Content Include="POUpdate.aspx" />
     <Content Include="ProductListBySupplier.aspx" />
     <Content Include="ProductSearch.aspx" />
+    <Content Include="ProductSearchByKeyword.aspx" />
     <Content Include="ProductSelect.aspx" />
     <Content Include="ProductSetting.aspx" />
     <Content Include="PurchaseGroup.aspx" />
@@ -129,13 +174,16 @@
     <Content Include="RFQIssue.aspx" />
     <Content Include="RFQListByProduct.aspx" />
     <Content Include="RFQListBySupplier.aspx" />
+    <Content Include="MultipleList.aspx" />
     <Content Include="RFQSearchByProduct.aspx" />
     <Content Include="RFQSearchBySupplier.aspx" />
+    <Content Include="RFQSearch.aspx" />
     <Content Include="RFQSelect.aspx" />
     <Content Include="RFQStatus.aspx" />
     <Content Include="RFQUpdate.aspx" />
     <Content Include="Setting.aspx" />
     <Content Include="Setting.html" />
+    <Content Include="ProductSearchByStructure.aspx" />
     <Content Include="SupplierListByProduct.aspx" />
     <Content Include="SupplierSearch.aspx" />
     <Content Include="RFQSupplierSelect.aspx" />
@@ -157,6 +205,20 @@
   <ItemGroup>
     <Compile Include="Common.vb" />
     <Compile Include="CommonPage.vb">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Control\Header.ascx.designer.vb">
+      <DependentUpon>Header.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Control\Header.ascx.vb">
+      <DependentUpon>Header.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Control\SearchResult.ascx.designer.vb">
+      <DependentUpon>SearchResult.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Control\SearchResult.ascx.vb">
+      <DependentUpon>SearchResult.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="CountryList.aspx.designer.vb">
@@ -182,13 +244,6 @@
     </Compile>
     <Compile Include="Global.asax.vb">
       <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
-    <Compile Include="Header.aspx.designer.vb">
-      <DependentUpon>Header.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Header.aspx.vb">
-      <DependentUpon>Header.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="JFYISearch.aspx.designer.vb">
       <DependentUpon>JFYISearch.aspx</DependentUpon>
@@ -268,6 +323,13 @@
       <DependentUpon>ProductSearch.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="ProductSearchByKeyword.aspx.designer.vb">
+      <DependentUpon>ProductSearchByKeyword.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProductSearchByKeyword.aspx.vb">
+      <DependentUpon>ProductSearchByKeyword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="ProductSelect.aspx.designer.vb">
       <DependentUpon>ProductSelect.aspx</DependentUpon>
     </Compile>
@@ -310,6 +372,8 @@
       <DependentUpon>ReminderSetting.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Report\Report_RFQSearch.vb" />
+    <Compile Include="Report\Report_SupplierProduct.vb" />
     <Compile Include="RequestedTask.aspx.designer.vb">
       <DependentUpon>RequestedTask.aspx</DependentUpon>
     </Compile>
@@ -345,6 +409,13 @@
       <DependentUpon>RFQListBySupplier.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="MultipleList.aspx.designer.vb">
+      <DependentUpon>MultipleList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MultipleList.aspx.vb">
+      <DependentUpon>MultipleList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="RFQSearchByProduct.aspx.designer.vb">
       <DependentUpon>RFQSearchByProduct.aspx</DependentUpon>
     </Compile>
@@ -357,6 +428,13 @@
     </Compile>
     <Compile Include="RFQSearchBySupplier.aspx.vb">
       <DependentUpon>RFQSearchBySupplier.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RFQSearch.aspx.designer.vb">
+      <DependentUpon>RFQSearch.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RFQSearch.aspx.vb">
+      <DependentUpon>RFQSearch.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="RFQSelect.aspx.designer.vb">
@@ -385,6 +463,13 @@
     </Compile>
     <Compile Include="Setting.aspx.vb">
       <DependentUpon>Setting.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProductSearchByStructure.aspx.designer.vb">
+      <DependentUpon>ProductSearchByStructure.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProductSearchByStructure.aspx.vb">
+      <DependentUpon>ProductSearchByStructure.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="SupplierListByProduct.aspx.designer.vb">
@@ -443,6 +528,44 @@
       <DependentUpon>SystemError.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
     </Compile>
+    <Compile Include="TCIDataAccess\CodeExtension.vb" />
+    <Compile Include="TCIDataAccess\DBCommon.vb" />
+    <Compile Include="TCIDataAccess\EhsHeader_Personalize.vb" />
+    <Compile Include="TCIDataAccess\FacadeProductListBySupplier.vb" />
+    <Compile Include="TCIDataAccess\FacadeRFQIssue.vb" />
+    <Compile Include="TCIDataAccess\FacadeSupplierListByProduct.vb" />
+    <Compile Include="TCIDataAccess\Join\Export_ProductListSupplier.vb" />
+    <Compile Include="TCIDataAccess\Join\ProductSearchByKeywordDisp.vb" />
+    <Compile Include="TCIDataAccess\Join\ProductSearchDisp.vb" />
+    <Compile Include="TCIDataAccess\Join\RFQHeader.vb" />
+    <Compile Include="TCIDataAccess\Join\MyTaskDisp.vb" />
+    <Compile Include="TCIDataAccess\Join\ProductListBySupplierDisp.vb" />
+    <Compile Include="TCIDataAccess\Join\RequestedTaskDisp.vb" />
+    <Compile Include="TCIDataAccess\Join\RFQIssueDisp.vb" />
+    <Compile Include="TCIDataAccess\Join\StructureSearchDisp.vb" />
+    <Compile Include="TCIDataAccess\Join\SupplierListByProductDisp.vb" />
+    <Compile Include="TCIDataAccess\Join\ExcelReportBase.vb" />
+    <Compile Include="TCIDataAccess\Join\Export_RFQSearch.vb" />
+    <Compile Include="TCIDataAccess\Join\RFQLine.vb" />
+    <Compile Include="TCIDataAccess\Join\v_UserAll.vb" />
+    <Compile Include="TCIDataAccess\Join\v_Country.vb" />
+    <Compile Include="TCIDataAccess\Product.vb" />
+    <Compile Include="TCIDataAccess\PurchasingUser.vb" />
+    <Compile Include="TCIDataAccess\Purpose.vb" />
+    <Compile Include="TCIDataAccess\RFQHeader.vb" />
+    <Compile Include="TCIDataAccess\RFQLine.vb" />
+    <Compile Include="TCIDataAccess\RFQStatus.vb" />
+    <Compile Include="TCIDataAccess\StorageByPurchasingUser.vb" />
+    <Compile Include="TCIDataAccess\Supplier.vb" />
+    <Compile Include="TCIDataAccess\Supplier_Product.vb" />
+    <Compile Include="TCIDataAccess\s_BranchSortOrder.vb" />
+    <Compile Include="TCIDataAccess\s_EhsHeader.vb" />
+    <Compile Include="TCIDataAccess\s_Location.vb" />
+    <Compile Include="TCIDataAccess\s_NewProduct.vb" />
+    <Compile Include="TCIDataAccess\s_SPECS.vb" />
+    <Compile Include="TCIDataAccess\v_CONFIDENTIAL.vb" />
+    <Compile Include="TCIDataAccess\v_Territory.vb" />
+    <Compile Include="TCIDataAccess\v_User.vb" />
     <Compile Include="UnassignedTask.aspx.designer.vb">
       <DependentUpon>UnassignedTask.aspx</DependentUpon>
     </Compile>
@@ -489,6 +612,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Handling rules.pdf" />
+    <Content Include="App_Data\RFQSearch.xlsx" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -503,9 +627,7 @@
     <None Include="Sample.xls" />
     <None Include="Web.config-dist" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

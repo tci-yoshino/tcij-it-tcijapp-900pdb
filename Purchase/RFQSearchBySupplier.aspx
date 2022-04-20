@@ -20,9 +20,11 @@ window.onload = function() {
     </script>
 </head>
 <body>
-            
-            <form id="SearchForm" runat="server">
-<!-- Main Content Area -->
+    <!-- Header -->
+    <commonUC:Header ID="HeaderMenu" runat="server" />
+    <!-- Header End -->
+    <form id="SearchForm" runat="server">
+    <!-- Main Content Area -->
     <div id="content">
         <div class="tabs"><a href="#" onclick="popup('./SupplierSetting.aspx')">New Supplier</a></div>
 

@@ -4,6 +4,18 @@
     <add key="Debug" value="false"/>
     <add key="TempDir" value="D:\temp\purchase\"/>
     <add key="aspnet:MaxHttpCollectionKeys" value="2000"/>
+    <add key="LIST_ONEPAGE_ROW_MyTask" value="50"/>
+    <add key="LIST_ONEPAGE_ROW_ProductListBySupplier" value="200"/>
+    <add key="LIST_ONEPAGE_ROW_RequestedTask" value="50"/>
+    <add key="LIST_ONEPAGE_ROW_RFQSearch" value="10"/>
+    <add key="LIST_ONEPAGE_ROW_RFQSearchByProduct" value="10"/>
+    <add key="LIST_ONEPAGE_ROW_ProductSearchByStructure" value="40"/>
+    <add key="MAX_ROW_ProductSearchByKeyword" value="100"/>
+    <add key="ReportTemplate_RFQSearch" value="D:\tcijapp\Purchase\Purchase\App_Data\RFQSearch.xlsx"/>
+    <add key="ReportTemplate_SupplierProduct" value="D:\tcijapp\Purchase\Purchase\App_Data\SupplierProduct.xlsx"/>
+    <add key="FileName_StructureDB" value="D:\tcijapp\Purchase\Structure\structure.db" />
+    <add key="FilePath_Misearch" value="D:\tcijapp\Purchase\Class\" />
+    <add key="NPMSURL" value="http://tcijapp/NPMS" />
   </appSettings>
   <connectionStrings>
     <clear/>
@@ -55,6 +67,11 @@
         <add namespace="System.Web.UI.WebControls.WebParts"/>
         <add namespace="System.Web.UI.HtmlControls"/>
       </namespaces>
+      <controls>
+        <add tagPrefix="commonUC" tagName="Header" src="~/Control/Header.ascx"/>
+        <add tagPrefix="commonUC" tagName="SearchResult" src="~/Control/SearchResult.ascx"/>
+        <add tagPrefix="commonUC" tagName="HeaderEhs" src="~/Control/HeaderEhs.ascx"/>
+      </controls>
     </pages>
     <!--
             <customErrors> セクションは、要求の実行中にハンドル

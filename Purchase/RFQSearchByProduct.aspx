@@ -20,6 +20,9 @@ window.onload = function() {
     </script>
 </head>
 <body>
+    <!-- Header -->
+    <commonUC:Header ID="HeaderMenu" runat="server" />
+    <!-- Header End -->
     <!-- Main Content Area -->
     <div id="content">
         <div class="tabs"><a href="#" onclick = "popup('./ProductSetting.aspx')">New Product</a></div>

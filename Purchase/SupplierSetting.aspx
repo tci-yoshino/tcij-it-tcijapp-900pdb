@@ -10,7 +10,10 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
 </head>
 <body>
-    <form id="SupplierForm" runat="server">
+        <!-- Header -->
+        <commonUC:Header ID="HeaderMenu" runat="server" />
+        <!-- Header End -->
+        <form id="SupplierForm" runat="server">
         <!-- Main Content Area -->
         <div id="content">
             <div class="tabs">

@@ -19,6 +19,9 @@ window.onload = function() {
     </script>
 </head>
 <body>
+    <!-- Header -->
+    <commonUC:Header ID="HeaderMenu" runat="server" />
+    <!-- Header End -->
     <!-- Main Content Area -->
     <div id="content">
         <div class="tabs"><a href="./ProductSetting.aspx">New Product</a></div>
@@ -38,7 +41,7 @@ window.onload = function() {
                         <td><asp:TextBox ID="ProductNumber" runat="server" Width="7em" MaxLength="32"></asp:TextBox></td>
                     </tr>
                 </table>
-                <asp:Button ID="Search" runat="server" Text="Search" />
+                <asp:Button ID="Search" runat="server" Text="Search" OnClientClick="setAction('Search');" />
                 <input type="button" value="Clear" onclick="clearForm('SearchForm');" />
             </form>
         </div>

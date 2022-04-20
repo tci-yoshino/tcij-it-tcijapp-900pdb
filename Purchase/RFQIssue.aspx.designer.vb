@@ -1,10 +1,10 @@
 '------------------------------------------------------------------------------
-' <自动生成>
-'     此代码由工具生成。
+' <帺摦惗惉>
+'     偙偺僐乕僪偼僣乕儖偵傛偭偰惗惉偝傟傑偟偨丅
 '
-'     对此文件的更改可能导致不正确的行为，如果
-'     重新生成代码，则所做更改将丢失。
-' </自动生成>
+'     偙偺僼傽僀儖傊偺曄峏偼丄埲壓偺忬嫷壓偱晄惓側摦嶌偺尨場偵側偭偨傝丄
+'     僐乕僪偑嵞惗惉偝傟傞偲偒偵懝幐偟偨傝偟傑偡丅 
+' </帺摦惗惉>
 '------------------------------------------------------------------------------
 
 Option Strict On
@@ -14,443 +14,497 @@ Option Explicit On
 Partial Public Class RFQIssue
     
     '''<summary>
-    '''RFQForm 控件。
+    '''HeaderMenu 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
+    '''</remarks>
+    Protected WithEvents HeaderMenu As Global.Purchase.Header
+    
+    '''<summary>
+    '''RFQForm 僐儞僩儘乕儖丅
+    '''</summary>
+    '''<remarks>
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents RFQForm As Global.System.Web.UI.HtmlControls.HtmlForm
     
     '''<summary>
-    '''Msg 控件。
+    '''Msg 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
-    '''EnqLocation 控件。
+    '''EnqLocation 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents EnqLocation As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
-    '''SDS_RFQIssue_Loc 控件。
+    '''SDS_RFQIssue_Loc 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents SDS_RFQIssue_Loc As Global.System.Web.UI.WebControls.SqlDataSource
     
     '''<summary>
-    '''EnqUser 控件。
+    '''EnqUser 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents EnqUser As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
-    '''SDS_RFQIssue_Enq_U 控件。
+    '''SDS_RFQIssue_Enq_U 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents SDS_RFQIssue_Enq_U As Global.System.Web.UI.WebControls.SqlDataSource
     
     '''<summary>
-    '''ProductNumber 控件。
+    '''ProductNumber 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents ProductNumber As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''ProductSelect 控件。
+    '''ProductSelect 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents ProductSelect As Global.System.Web.UI.WebControls.ImageButton
     
     '''<summary>
-    '''ProductName 控件。
+    '''CodeExtensionList 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
+    '''</remarks>
+    Protected WithEvents CodeExtensionList As Global.System.Web.UI.WebControls.DropDownList
+    
+    '''<summary>
+    '''CASNumber 僐儞僩儘乕儖丅
+    '''</summary>
+    '''<remarks>
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
+    '''</remarks>
+    Protected WithEvents CASNumber As Global.System.Web.UI.WebControls.TextBox
+    
+    '''<summary>
+    '''ProductName 僐儞僩儘乕儖丅
+    '''</summary>
+    '''<remarks>
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents ProductName As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''SupplierCode 控件。
+    '''SupplierCode 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents SupplierCode As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''SupplierSelect 控件。
+    '''SupplierSelect 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents SupplierSelect As Global.System.Web.UI.WebControls.ImageButton
     
     '''<summary>
-    '''R3SupplierCode 控件。
+    '''R3SupplierCode 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents R3SupplierCode As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''SupplierName 控件。
+    '''SupplierName 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents SupplierName As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''SupplierCountry 控件。
+    '''SupplierCountry 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents SupplierCountry As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''MakerCode 控件。
+    '''MakerCode 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents MakerCode As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''MakerSelect 控件。
+    '''MakerSelect 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents MakerSelect As Global.System.Web.UI.WebControls.ImageButton
     
     '''<summary>
-    '''SAPMakerCode 控件。
+    '''SAPMakerCode 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents SAPMakerCode As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''MakerName 控件。
+    '''MakerName 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents MakerName As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''MakerCountry 控件。
+    '''MakerCountry 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents MakerCountry As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''QuoLocation 控件。
+    '''QuoLocation 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents QuoLocation As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
-    '''QuoUser 控件。
+    '''QuoUser 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents QuoUser As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
-    '''SDS_RFQIssue_Que_U 控件。
+    '''SDS_RFQIssue_Que_U 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents SDS_RFQIssue_Que_U As Global.System.Web.UI.WebControls.SqlDataSource
     
     '''<summary>
-    '''Purpose 控件。
+    '''Purpose 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents Purpose As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
-    '''SDS_RFQIssue_Pur 控件。
+    '''SDS_RFQIssue_Pur 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents SDS_RFQIssue_Pur As Global.System.Web.UI.WebControls.SqlDataSource
     
     '''<summary>
-    '''Priority 控件。
+    '''Priority 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents Priority As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
-    '''RequiredPurity 控件。
+    '''RequiredPurity 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents RequiredPurity As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''RequiredQMMethod 控件。
+    '''RequiredQMMethod 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents RequiredQMMethod As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''RequiredSpecification 控件。
+    '''RequiredSpecification 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents RequiredSpecification As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''isAdmin 控件。
+    '''isAdmin 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents isAdmin As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''userId 控件。
+    '''userId 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents userId As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''Comment 控件。
+    '''Comment 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents Comment As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''EnqQuantity_1 控件。
+    '''SupplierItemName 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
+    '''</remarks>
+    Protected WithEvents SupplierItemName As Global.System.Web.UI.WebControls.TextBox
+    
+    '''<summary>
+    '''SupplierContactPerson 僐儞僩儘乕儖丅
+    '''</summary>
+    '''<remarks>
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
+    '''</remarks>
+    Protected WithEvents SupplierContactPerson As Global.System.Web.UI.WebControls.TextBox
+    
+    '''<summary>
+    '''SupplierContactPersonCodeList 僐儞僩儘乕儖丅
+    '''</summary>
+    '''<remarks>
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
+    '''</remarks>
+    Protected WithEvents SupplierContactPersonCodeList As Global.System.Web.UI.WebControls.DropDownList
+    
+    '''<summary>
+    '''EnqQuantity_1 僐儞僩儘乕儖丅
+    '''</summary>
+    '''<remarks>
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents EnqQuantity_1 As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''EnqUnit_1 控件。
+    '''EnqUnit_1 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents EnqUnit_1 As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
-    '''EnqPiece_1 控件。
+    '''EnqPiece_1 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents EnqPiece_1 As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''SDS_RFQIssue_Qua 控件。
+    '''SDS_RFQIssue_Qua 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents SDS_RFQIssue_Qua As Global.System.Web.UI.WebControls.SqlDataSource
     
     '''<summary>
-    '''SupplierItemNumber_1 控件。
+    '''SupplierItemNumber_1 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents SupplierItemNumber_1 As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''EnqQuantity_2 控件。
+    '''EnqQuantity_2 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents EnqQuantity_2 As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''EnqUnit_2 控件。
+    '''EnqUnit_2 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents EnqUnit_2 As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
-    '''EnqPiece_2 控件。
+    '''EnqPiece_2 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents EnqPiece_2 As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''SupplierItemNumber_2 控件。
+    '''SupplierItemNumber_2 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents SupplierItemNumber_2 As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''EnqQuantity_3 控件。
+    '''EnqQuantity_3 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents EnqQuantity_3 As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''EnqUnit_3 控件。
+    '''EnqUnit_3 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents EnqUnit_3 As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
-    '''EnqPiece_3 控件。
+    '''EnqPiece_3 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents EnqPiece_3 As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''SupplierItemNumber_3 控件。
+    '''SupplierItemNumber_3 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents SupplierItemNumber_3 As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''EnqQuantity_4 控件。
+    '''EnqQuantity_4 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents EnqQuantity_4 As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''EnqUnit_4 控件。
+    '''EnqUnit_4 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents EnqUnit_4 As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
-    '''EnqPiece_4 控件。
+    '''EnqPiece_4 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents EnqPiece_4 As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''SupplierItemNumber_4 控件。
+    '''SupplierItemNumber_4 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents SupplierItemNumber_4 As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''Issue 控件。
+    '''Issue 僐儞僩儘乕儖丅
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''帺摦惗惉偝傟偨僼傿乕儖僪丅
+    '''曄峏偡傞偵偼丄僼傿乕儖僪偺愰尵傪僨僓僀僫乕 僼傽僀儖偐傜暘棧僐乕僪 僼傽僀儖偵堏摦偟傑偡丅
     '''</remarks>
     Protected WithEvents Issue As Global.System.Web.UI.WebControls.Button
 End Class

@@ -16,26 +16,30 @@ Partial Public Class PurchaseGroupSetting
                 Msg.Text = Common.ERR_INVALID_PARAMETER
                 Exit Sub
             End If
-                Dim st_SQL As String = String.Empty
-                st_SQL &= "SELECT "
-                st_SQL &= " UserID, "
-                st_SQL &= " LocationName, "
-                st_SQL &= " AccountName, "
-                st_SQL &= "[Name], "
+            Dim st_SQL As String = String.Empty
+            st_SQL &= "SELECT "
+            st_SQL &= " UserID, "
+            st_SQL &= " LocationName, "
+            st_SQL &= " AccountName, "
+            st_SQL &= " CASE RFQCorrespondenceEditable WHEN 1 THEN 'Y' "
+            st_SQL &= " ELSE '' END AS RFQCorrespondenceEditable, "
+            st_SQL &= " CASE MMSTAInvalidationEditable WHEN 1 THEN 'Y' "
+            st_SQL &= " ELSE '' END AS MMSTAInvalidationEditable, "
+            st_SQL &= "[Name], "
             st_SQL &= "R3PurchasingGroup "
             st_SQL &= "FROM "
-                st_SQL &= " v_UserAll "
-                st_SQL &= "WHERE "
-                st_SQL &= "UserID = "
+            st_SQL &= " v_UserAll "
+            st_SQL &= "WHERE "
+            st_SQL &= "UserID = "
             st_SQL &= UserID.Value
-                Using DBConn As New SqlConnection(Common.DB_CONNECT_STRING)
-                    Dim DBCommand As SqlCommand = DBConn.CreateCommand()
-                    DBCommand.CommandText = st_SQL
-                    DBConn.Open()
-                    Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
-                    If DBReader.Read = True Then
-                        Location.Text = CStr(DBReader("LocationName"))
-                        Name.Text = CStr(DBReader("Name"))
+            Using DBConn As New SqlConnection(Common.DB_CONNECT_STRING)
+                Dim DBCommand As SqlCommand = DBConn.CreateCommand()
+                DBCommand.CommandText = st_SQL
+                DBConn.Open()
+                Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                If DBReader.Read = True Then
+                    Location.Text = CStr(DBReader("LocationName"))
+                    Name.Text = CStr(DBReader("Name"))
                     R3PurchasingGroup.Text = DBReader("R3PurchasingGroup").ToString()
                     Dim SLocationByPUser As DataTable = GetDataTable("select * from StorageByPurchasingUser where UserID=" + UserID.Value)
                     For i As Integer = 0 To SLocationByPUser.Rows.Count - 1
@@ -95,6 +99,12 @@ Partial Public Class PurchaseGroupSetting
                     Msg.Text = Common.MSG_NO_DATA_FOUND
                     Exit Sub
                 End If
+                If DBReader("RFQCorrespondenceEditable").ToString = "Y" Then
+                    RFQCorrespondenceEditable.Checked = True
+                End If
+                If DBReader("MMSTAInvalidationEditable").ToString = "Y" Then
+                    MMSTAInvalidationEditable.Checked = True
+                End If
                 DBReader.Close()
             End Using
         End If
@@ -125,6 +135,16 @@ Partial Public Class PurchaseGroupSetting
             End If
             st_SQL &= "UPDATE PurchasingUser SET "
             st_SQL &= "R3PurchasingGroup='" + R3PurchasingGroup.Text + "'"
+            If RFQCorrespondenceEditable.Checked = True Then
+                st_SQL &= ", RFQCorrespondenceEditable = 1 "
+            Else
+                st_SQL &= ", RFQCorrespondenceEditable = '' "
+            End If
+            If MMSTAInvalidationEditable.Checked = True Then
+                st_SQL &= ", MMSTAInvalidationEditable = 1 "
+            Else
+                st_SQL &= ", MMSTAInvalidationEditable = '' "
+            End If
             st_SQL &= "WHERE UserID='" & UserID.Value & "'; "
             '1.先删除后添加
             st_SQL &= "delete StorageByPurchasingUser where UserID=" + UserID.Value + "; "

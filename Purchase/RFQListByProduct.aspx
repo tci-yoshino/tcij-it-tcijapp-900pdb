@@ -8,8 +8,18 @@
     <link rel="stylesheet" href="./CSS/Style.css" type="text/css" media="screen,print" />
     <script type="text/javascript" src="./JS/Common.js"></script>
     <script type="text/javascript" src="./JS/Colorful.js"></script>
+    <script type="text/javascript">
+
+window.onload = function() {
+   navi('product');
+}
+    </script>
 </head>
 <body>
+    <!-- Header -->
+    <commonUC:Header ID="HeaderMenu" runat="server" />
+    <!-- Header End -->
+
     <form id="RFQListForm" runat="server">
     <div id="content">
         <div class="main">

@@ -2,68 +2,114 @@
 
 Partial Public Class RequestedTask
     Inherits CommonPage
+    Protected st_Action As String = String.Empty ' aspx 側で読むため、Protected にする
+    Private st_UserID As String = String.Empty
+    Private stb_PONumbers As StringBuilder = New StringBuilder ' PONumber を格納するオブジェクト。この値を見て、重複するPONumber を除外する。
+
+    Dim RequestedTaskDate = New TCIDataAccess.Join.RequestedTaskDispList
+
+
+    Const SWITCH_ACTION As String = "Switch"
+    Const RFQ_PO_ACTION As String = "Cancel"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        If Not IsPostBack Then
-            SetPriorityDropDownList(Priority, PRIORITY_FOR_SEARCH)
-            Priority.SelectedValue = PRIORITY_ALL
+        ' パラメータ UserID 取得
+        If Request.RequestType = "POST" Then
+            st_UserID = IIf(Request.Form("UserID") = Nothing, "", Request.Form("UserID"))
+        ElseIf Request.RequestType = "GET" Then
+            st_UserID = IIf(Request.QueryString("UserID") = Nothing, "", Request.QueryString("UserID"))
+        End If
 
-            SrcRFQ.SelectCommand = CreateRHQHeaderSelectSQL()
+        If String.IsNullOrEmpty(st_UserID) Then
+            st_UserID = Session("UserID")
+        End If
+
+        ' セッション変数 PrivilegeLevel が  'P' の場合は 
+        ' 変数 st_UserID がログインユーザと同じ拠点かをチェックし、ビュー v_User からデータ取得。
+        ' セッション変数 PrivilegeLevel が 'A' の場合は v_UserAll からデータ取得。
+        Dim ds As DataSet = New DataSet
+        ds.Tables.Add("UserID")
+
+        If Session("Purchase.PrivilegeLevel") = "P" Then
+            Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
+
+                ' 拠点チェック
+                Dim vUser As New TCIDataAccess.v_User()
+                Dim st_query As String = vUser.CreateUserCountSQL()
+                Dim command As New SqlClient.SqlCommand(st_query, connection)
+                command.Parameters.AddWithValue("UserID", st_UserID)
+                command.Parameters.AddWithValue("LocationCode", Session("LocationCode"))
+                connection.Open()
+
+                Dim reader As SqlClient.SqlDataReader = command.ExecuteReader()
+                Dim b_hasrows As Boolean = reader.HasRows
+                reader.Close()
+
+                ' 同拠点ならばデータ取得
+                If b_hasrows Then
+                    st_query = vUser.CreateUserSelectSQL(Session("Purchase.PrivilegeLevel"))
+                    command.CommandText = st_query
+
+                    Dim adapter As New SqlClient.SqlDataAdapter()
+                    adapter.SelectCommand = command
+                    adapter.Fill(ds.Tables("UserID"))
+
+                    UserID.DataValueField = "UserID"
+                    UserID.DataTextField = "Name"
+                    UserID.DataSource = ds.Tables("UserID")
+                    UserID.DataBind()
+                End If
+            End Using
+        ElseIf Session("Purchase.PrivilegeLevel") = "A" Then
+            Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
+                Dim vUser As New TCIDataAccess.v_User()
+                Dim st_query As String = vUser.CreateUserSelectSQL(Session("Purchase.PrivilegeLevel"))
+                Dim adapter As New SqlClient.SqlDataAdapter()
+                Dim command As New SqlClient.SqlCommand(st_query, connection)
+                adapter.SelectCommand = command
+                adapter.Fill(ds.Tables("UserID"))
+
+                UserID.DataValueField = "UserID"
+                UserID.DataTextField = "Name"
+                UserID.DataSource = ds.Tables("UserID")
+                UserID.DataBind()
+            End Using
+        End If
+
+        If Not IsPostBack Then
+            'RFQPriorityドロップダウンリスト設定
+            SetPriorityDropDownList(RFQPriority, PRIORITY_FOR_SEARCH)
+            RFQPriority.SelectedValue = PRIORITY_ALL
+
+            'RFQStatusドロップダウンリスト設定
+            Dim dc_RFQStatusList As New TCIDataAccess.RFQStatusList()
+            dc_RFQStatusList.SetRFQStatusDropDownList(RFQStatus,RFQSTATUS_ALL)
+            RFQStatus.SelectedValue = PRIORITY_ALL
+
+            'Orderbyドロップダウンリスト設定
+            SetRFQOrderByDropDownList(Orderby)
+            ShowList()
         End If
     End Sub
-
+    ''' <summary>
+    ''' Switchボタン押下時処理  
+    ''' </summary>
     Protected Sub Switch_Click()
-        SrcRFQ.SelectCommand = CreateRHQHeaderSelectSQL()
+        ShowList()
     End Sub
 
     Protected Sub SrcRFQ_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcRFQ.Selecting
         e.Command.CommandTimeout = 0
     End Sub
 
-    Private Function CreateRHQHeaderSelectSQL() As String
-
-        Dim sb_SQL As New Text.StringBuilder
-
-        'SQL文字列の作成
-        sb_SQL.Append("SELECT ")
-        sb_SQL.Append("  RH.RFQNumber, ")
-        sb_SQL.Append("  CASE WHEN RH.Priority IS NULL THEN 1 ELSE 0  END AS PrioritySort, ")
-        sb_SQL.Append("  ISNULL(RH.Priority, '') AS Priority, ")
-        sb_SQL.Append("  RH.CreateDate, ")
-        sb_SQL.Append("  RH.StatusChangeDate, ")
-        sb_SQL.Append("  RH.Status, ")
-        sb_SQL.Append("  RH.ProductNumber, ")
-        sb_SQL.Append("  RH.ProductName, ")
-        sb_SQL.Append("  RH.Purpose, ")
-        sb_SQL.Append("  RH.QuoUserName, ")
-        sb_SQL.Append("  RH.QuoLocationName, ")
-        sb_SQL.Append("  RH.SupplierName, ")
-        sb_SQL.Append("  RH.MakerName, ")
-        sb_SQL.Append("  RR.RFQCorres AS RFQCorrespondence, ")
-        sb_SQL.Append("  RH.isCONFIDENTIAL ")
-        sb_SQL.Append("FROM ")
-        sb_SQL.Append("  v_RFQHeader AS RH LEFT ")
-        sb_SQL.Append("    OUTER JOIN v_RFQReminder AS RR ON RH.RFQNumber = RR.RFQNumber AND RR.RcptUserID = '" & Session("UserID") & "' ")
-        sb_SQL.Append("WHERE ")
-        sb_SQL.Append("  EnqUserID = '" & Session("UserID") & "' ")
-        sb_SQL.Append("  AND NOT (RH.StatusCode = 'C' AND RR.RFQHistoryNumber IS NULL) ")
-        Select Case Priority.SelectedValue
-            Case PRIORITY_A
-                sb_SQL.Append("  AND RH.Priority = 'A' ")
-            Case PRIORITY_B
-                sb_SQL.Append("  AND RH.Priority = 'B' ")
-            Case PRIORITY_AB
-                sb_SQL.Append("  AND RH.Priority IN('A','B') ")
-        End Select
-        '権限ロールに従い極秘品を除外する
-        If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
-            sb_SQL.Append("  AND RH.isCONFIDENTIAL = 0 ")
-        End If
-        sb_SQL.Append("ORDER BY ")
-        sb_SQL.Append("  PrioritySort, Priority, StatusSortOrder, StatusChangeDate ")
-
-        Return sb_SQL.ToString()
-
-    End Function
-
+    ''' <summary>
+    ''' 検索結果一覧を表示  
+    ''' </summary>
+    Protected Sub ShowList()
+        Dim dc_RequestedTaskList As New TCIDataAccess.Join.RequestedTaskDispList
+        dc_RequestedTaskList.Load(st_UserID, RFQPriority.SelectedValue, RFQStatus.SelectedValue, Orderby.SelectedValue, Session(SESSION_ROLE_CODE).ToString)
+        RequestedTaskDate = dc_RequestedTaskList
+        RFQList.DataSource = RequestedTaskDate
+        RFQList.DataBind()
+    End Sub
 End Class

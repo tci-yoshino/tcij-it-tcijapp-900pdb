@@ -22,6 +22,7 @@ function navi(menu) {
 //    doc.getElementById('product_type').className = '';
     doc.getElementById('rfq_status').className = '';
     doc.getElementById('po_status').className = '';
+    doc.getElementById('rfq_search').className = '';
     doc.getElementById('setting').className = '';
 //    doc.getElementById('personal_setting').className = '';
 
@@ -82,3 +83,81 @@ function outCell(){
         td[no].className = classname;
   }
 }
+
+function setAction(action) {
+    const hiddenElem = document.getElementById('Action');
+    if (!hiddenElem) { console.error('id="Action" element does not exist. in ' + window.location.href.split('/').pop()); return false; }
+    hiddenElem.value = action;
+    return true;
+}
+
+function ListSort(hidden_sort_type, hidden_sort_field) {
+    // 選択されたソート条件を表示する
+    var sort_type = hidden_sort_type.value;
+    var sort_field = hidden_sort_field.value;
+
+    let ths = document.getElementsByTagName("th");
+    for (var i = 0; i < ths.length; i++) {
+        if (!ths[i].classList.contains('sortField')) {
+            continue;
+        }
+        // 値比較
+        if (ths[i].id == sort_field) {
+            if (sort_type == 'asc') {
+                ths[i].classList.add('asc')
+            } else if (sort_type == 'desc') {
+                ths[i].classList.add('desc')
+            } else {
+                ths[i].classList.add('asc')
+            }
+        }
+
+        // マウスリーブ
+        ths[i].onmouseleave = event => {
+            let element = event.target;
+            if (element.id == sort_field) {
+                if (element.classList.contains('asc')) {
+                    element.classList.replace('asc', 'desc');
+                } else if (element.classList.contains('desc')) {
+                    element.classList.replace('desc', 'asc');
+                } else {
+                    element.classList.add('asc');
+                }
+            } else {
+                element.classList.remove('asc', 'desc')
+            }
+        };
+
+        // マウスオーバー
+        ths[i].onmouseover = event => {
+            let element = event.target;
+            if (element.classList.contains('asc')) {
+                element.classList.replace('asc', 'desc');
+            } else if (element.classList.contains('desc')) {
+                element.classList.replace('desc', 'asc');
+            } else {
+                element.classList.add('asc');
+            }
+            let sort_field = hidden_sort_field.value;
+            Array.from(element.parentNode.children)
+                .filter(e => e !== element)
+                .filter(e => e.id !== sort_field)
+                .forEach(e => e.classList.remove('asc', 'desc'));
+        };
+
+        // クリック時
+        ths[i].onclick = event => {
+            let element = event.target;
+            if (element.classList.contains('asc')) {
+                hidden_sort_type.value = 'asc';
+            } else if (element.classList.contains('desc')) {
+                hidden_sort_type.value = 'desc';
+            } else {
+                hidden_sort_type.value = 'asc';
+            }
+            hidden_sort_field.value = element.id;
+            document.forms["PageForm"].submit();
+        };
+    };
+}
+

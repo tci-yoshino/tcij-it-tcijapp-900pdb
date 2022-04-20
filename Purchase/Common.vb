@@ -1,5 +1,6 @@
 ﻿Option Strict On
 Imports System.Data.SqlClient
+Imports Purchase.TCIDataAccess
 
 ''' <summary>
 ''' Common クラス
@@ -12,6 +13,12 @@ Public Class Common
     ''' </summary>
     ''' <remarks></remarks>
     Public Shared ReadOnly DB_CONNECT_STRING As String = ConfigurationManager.ConnectionStrings("DatabaseConnect").ConnectionString
+
+    ''' <summary>
+    ''' RFQSearch (Excel) テンプレート 
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Shared ReadOnly REPORT_TEMPLATE_RFQSEARCH As String = ConfigurationManager.AppSettings("ReportTemplate_RFQSearch")
 
     ''' <summary>
     ''' 拠点コードがダイレクトであることを表す文字列
@@ -233,7 +240,13 @@ Public Class Common
     ''' </summary>
     ''' <remarks></remarks>
     Public Const ERR_OVER_3000 As String = " cannot contain more than 3000 characters."
-
+    
+    ''' <summary>
+    ''' エラーメッセージ 「値が100を超えています。コピーする値は100以下である必要があります」
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const ERR_ITEMS_OVER_100 As String = "Number of paste data exceeds 100 items. Pasting is allowed up to 100 items."
+    
     ''' <summary>
     ''' エラーメッセージ 「未処理のコレポンが存在します」
     ''' </summary>
@@ -252,8 +265,32 @@ Public Class Common
     ''' <remarks></remarks>
     Public Const ERR_DUPLICATE_CODE As String = " is duplicated."
 
-    Public Const LOCATION_JP As String = "JP"
+    ''' <summary>
+    ''' エラーメッセージ 「構造検索はできません。」
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const ERR_STRUCTURE_SEARCH As String = "Structure Search is not possible."
+
+    ''' <summary>
+    ''' エラーメッセージ 「○○件を越えました。条件を変更するかStructure Search画面に遷移して下さい。」
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const MSG_RESULT_OVER_LIMIT As String = "The result is over {0}hits as the limit.<br />Please change the criteria or go to Structure Search."
+
+
+    ''  拠点情報
+    ''' <summary>拠点：TCI-A </summary>
+    Public Const LOCATION_US As String = "US"
+    ''' <summary>拠点：TCI-E</summary>
+    Public Const LOCATION_EU As String = "EU"
+    ''' <summary>拠点：TCI-S</summary>
+    Public Const LOCATION_CN As String = "CN"
+    ''' <summary>拠点：TCI-I</summary>
     Public Const LOCATION_IN As String = "IN"
+    ''' <summary>拠点：TCI-J</summary>
+    Public Const LOCATION_JP As String = "JP"
+    ''' <summary>拠点：GLOBAL</summary>
+    Public Const LOCATION_GL As String = "GL"
 
     ''' <summary>
     ''' プライオリティ
@@ -270,6 +307,12 @@ Public Class Common
     ''' <remarks></remarks>
     Public Const PRIORITY_FOR_SEARCH As String = "Search"
     Public Const PRIORITY_FOR_EDIT As String = "Edit"
+
+    ''' <summary>
+    ''' RFQステータス
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const RFQSTATUS_ALL As String = "ALL"
 
     ''' <summary>
     ''' 極秘表記
@@ -294,7 +337,42 @@ Public Class Common
     Public Const STATUS_PAR_PO_CANCELLED As String = "PPC"
     Public Const STATUS_CHI_PO_CANCELLED As String = "CPC"
 
+    ''' <summary>リストのページあたりの件数</summary>
+    Public Shared ReadOnly LIST_ONEPAGE_ROW_ProductListBySupplier As Integer = Cint(ConfigurationManager.AppSettings("LIST_ONEPAGE_ROW_ProductListBySupplier"))
 
+    ''' <summary>リストの検索最大件数</summary>
+    Public Shared ReadOnly MAX_ROW_ProductSearchByKeyword As Integer = Cint(ConfigurationManager.AppSettings("MaxRow_ProductSearchByKeyword"))
+
+    ' Excel出力用テンプレートの保存ディレクトリ
+    Public Shared ReadOnly EXCEL_TEMPLATE_DIRECTORY_SUPPLIERPRODUCT As String = ConfigurationManager.AppSettings("ReportTemplate_SupplierProduct")
+
+    ' Valid_Filter
+    Public Const VALID_FILTER_VALID As String = "Valid Price"
+    Public Const VALID_FILTER_INVALID As String = "Invalid Price"
+
+    '--ファイル・ディレクトリ情報
+    ''' <summary> ファイル・ディレクトリ情報：構造式 DB </summary>
+    Public Shared ReadOnly FILE_NAME_STRUCTUREDB As String = ConfigurationManager.AppSettings("FileName_StructureDB")
+    ''' <summary> ファイル・ディレクトリ情報：misearch.jar </summary>
+    Public Shared ReadOnly FILE_PATH_MISEARCH As String = ConfigurationManager.AppSettings("FilePath_Misearch")
+    ''' <summary> 画像なし GIF URL (相対パス) </summary>
+    Public Const FILE_PATH_NOIMAGE As String = "./Image/NoImage.gif"
+    '--URL書式
+    ''' <summary> 画像表示の URL書式 (arg0 = RegistryNumber , arg1 = システム日付)  </summary>
+    Public Shared ReadOnly NPMSURL As String = ConfigurationManager.AppSettings("NPMSURL")
+    Public Const IMG_URL_FORMAT As String = "/Image.aspx?RegistryNumber={0}&Conf=Y&Key={1:yyMMddHHmmss}"
+
+    ''' <summary>
+    ''' Web.configに設定された各画面毎の低数値をリストのページあたりの件数を設定する共通処理
+    ''' </summary>
+    ''' <param name ="name">プログラム名（Request.Url.ToString()の形式で値を設定）</param>
+    ''' <remarks></remarks>
+    Public Shared ReadOnly Property LIST_ONEPAGE_ROW(name as String)  As Integer
+    Get
+        name =System.IO.Path.GetFileNameWithoutExtension(name)
+        Return Integer.Parse(System.Configuration.ConfigurationManager.AppSettings("LIST_ONEPAGE_ROW_" + name))
+    End Get
+End Property
     ''' <summary>
     ''' セッション情報
     ''' </summary>
@@ -317,6 +395,9 @@ Public Class Common
         Dim st_ErrMsg As String = String.Empty
         Dim st_Format As String = String.Empty
         Dim da_Date As Date = DatabaseTime
+        IF da_Date.Equals(DateTime.MinValue)
+            Return String.Empty
+        End If
 
         If TCICommon.Func.ConvertDate(da_Date, LOCATION_JP, LocationCode, st_ErrMsg) < 0 Then
             Throw New Exception(String.Format("TCICommon.ConvertDate: {0}", st_ErrMsg))
@@ -352,7 +433,6 @@ Public Class Common
         Return Format(da_Date, DATE_FORMAT)
 
     End Function
-
 
     ''' <summary>
     ''' データベース時間を取得する。
@@ -538,7 +618,6 @@ Public Class Common
         End Try
         Return False
     End Function
-
 
     ''' <summary>
     ''' レコードの更新日を yyyy-mm-dd hh:mi:ss 形式の文字列で取得します。
@@ -766,6 +845,19 @@ Public Class Common
     End Sub
 
     ''' <summary>
+    ''' RFQOrderByドロップダウンリスト設定
+    ''' </summary>
+    ''' <param name="Combo">ドロップダウンリスト</param>
+    ''' <remarks></remarks>
+    Public Shared Sub SetRFQOrderByDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl)
+        Combo.Items.Add(New ListItem("RFQ Reminder", "REM"))
+        Combo.Items.Add(New ListItem("Last Status Change Date ASC", "ASC"))
+        Combo.Items.Add(New ListItem("Last Status Change Date DESC", "DESC"))
+        Combo.SelectedValue = "REM"
+        Combo.DataBind()
+    End Sub
+
+    ''' <summary>
     ''' プライオリティ取得
     ''' </summary>
     ''' <param name="st_ParPONumber">親 PONumber</param>
@@ -891,8 +983,7 @@ Public Class Common
         Return returnValue
 
     End Function
-
-
+    
     ''' <summary>
     ''' PurposeのプルダウンにPurposeCodeを設定する
     ''' </summary>
@@ -902,8 +993,7 @@ Public Class Common
         SrcPurpose.SelectCommand = "SELECT PurposeCode, Text FROM Purpose where IsVisiable=1  ORDER BY SortOrder"
 
     End Sub
-
-
+    
     ''' <summary>
     ''' OrderUnitのプルダウンにUnitCodeを設定する 
     ''' </summary>
@@ -913,7 +1003,240 @@ Public Class Common
         SrcUnit.SelectCommand = "SELECT UnitCode FROM PurchasingUnit ORDER BY UnitCode"
 
     End Sub
+    ''' <summary>
+    ''' CodeExtension のドロップダウンリストに値を設定します。
+    ''' </summary>
+    ''' <param name="Combo"></param>
+    ''' <param name="st_ProductNumber">ProductNumber</param>
+    ''' <remarks></remarks>
+    Public Shared Sub SetCodeExtensionDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal st_ProductNumber As String)
 
+        SetCodeExtensionDropDownList(Combo, st_ProductNumber, True)
+
+    End Sub
+
+    ''' <summary>
+    ''' CodeExtension のドロップダウンリストに値を設定します。
+    ''' </summary>
+    ''' <param name="Combo"></param>
+    ''' <param name="st_ProductNumber">ProductNumber</param>
+    ''' <param name="isBlank">選択肢に空欄を含む</param>
+    ''' <remarks></remarks>
+    Private Shared Sub SetCodeExtensionDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal st_ProductNumber As String, ByVal isBlank As Boolean)
+        Dim lst_DropDownList As List(Of DropDownListItems) = New List(Of DropDownListItems)
+        Dim codeExtension As CodeExtension = New CodeExtension
+        Dim lst_DropDown As List(Of DropDownListItems) = codeExtension.GetCodeExtensionDropDownList(st_ProductNumber)
+
+        If isBlank Then
+            Dim obj_DropDownListBlank As New DropDownListItems
+            obj_DropDownListBlank.ItemValue = String.Empty 
+            obj_DropDownListBlank.ItemText = String.Empty 
+            obj_DropDownListBlank.ItemOrder = 0
+            lst_DropDownList.Add(obj_DropDownListBlank)
+        End If
+
+        If lst_DropDown.Count <> 0 Then 
+            For Each dropDownListItems As DropDownListItems In lst_DropDown
+                If Not String.IsNullOrWhiteSpace(dropDownListItems.ItemValue) Then 
+                    Dim obj_DropDownListItems As New DropDownListItems
+                    obj_DropDownListItems.ItemValue = dropDownListItems.ItemValue
+                    obj_DropDownListItems.ItemText = dropDownListItems.ItemText
+                    obj_DropDownListItems.ItemOrder = dropDownListItems.ItemOrder
+                    lst_DropDownList.Add(obj_DropDownListItems)
+                End If
+            Next
+        End If
+
+        If lst_DropDownList.Count <> 0 Then 
+            Combo.DataSource = lst_DropDownList
+        End If
+
+        Combo.DataTextField = "ItemText"
+        Combo.DataValueField = "ItemValue"
+        Combo.DataBind
+
+    End Sub
+    ''' <summary>
+    ''' Supplier Contact Person のドロップダウンリストに値を設定します。
+    ''' </summary>
+    ''' <remarks></remarks>
+    ''' <param name="Combo"></param>
+    ''' <param name="st_SupplierCode">SupplierCode</param>
+    Public Shared Sub SetSupplierContactPersonCodeList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal st_SupplierCode As String)
+
+        SetSupplierContactPersonCodeList(Combo, st_SupplierCode, True)
+
+    End Sub
+
+    ''' <summary>
+    ''' Supplier Contact Person のドロップダウンリストに値を設定します。
+    ''' </summary>
+    ''' <remarks></remarks>
+    ''' <param name="Combo"></param>
+    ''' <param name="st_SupplierCode">SupplierCode</param>
+    ''' <param name="isBlank">選択肢に空欄を含む</param>
+    Private Shared Sub SetSupplierContactPersonCodeList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal st_SupplierCode As String, ByVal isBlank As Boolean)
+        Dim lst_DropDownList As List(Of DropDownListItems) = New List(Of DropDownListItems)
+        Dim supplier As Supplier = New Supplier
+        Dim lst_DropDown As List(Of DropDownListItems) = supplier.GetSupplierContactPersonCodeDropDownList(st_SupplierCode)
+
+        If isBlank Then
+            Dim obj_DropDownListBlank As New DropDownListItems
+            obj_DropDownListBlank.ItemValue = String.Empty 
+            obj_DropDownListBlank.ItemText = String.Empty 
+            obj_DropDownListBlank.ItemOrder = 0
+            lst_DropDownList.Add(obj_DropDownListBlank)
+        End If
+
+        If lst_DropDown.Count <> 0 Then 
+            For Each dropDownListItems As DropDownListItems In lst_DropDown
+                If Not String.IsNullOrWhiteSpace(dropDownListItems.ItemValue) Then 
+                    Dim obj_DropDownListItems As New DropDownListItems
+                    obj_DropDownListItems.ItemValue = dropDownListItems.ItemValue
+                    obj_DropDownListItems.ItemText = dropDownListItems.ItemText
+                    obj_DropDownListItems.ItemOrder = dropDownListItems.ItemOrder
+                    lst_DropDownList.Add(obj_DropDownListItems)
+                End If
+            Next
+        End If
+
+        If lst_DropDownList.Count <> 0 Then 
+            Combo.DataSource = lst_DropDownList
+        End If
+
+        Combo.DataTextField = "ItemText"
+        Combo.DataValueField = "ItemValue"
+        Combo.DataBind
+
+    End Sub
+
+    ''' <summary>
+    ''' Territory のドロップダウンリストに値を設定します。
+    ''' </summary>
+    ''' <param name="Combo"></param>
+    ''' <param name="hasDirect">選択肢にDirectを含む</param>
+    ''' <remarks></remarks>
+    Public Shared Sub SetTerritoryDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal hasDirect As Boolean)
+
+        SetTerritoryDropDownList(Combo, True, False)
+
+    End Sub
+
+    ''' <summary>
+    ''' Territory のドロップダウンリストに値を設定します。
+    ''' </summary>
+    ''' <param name="Combo"></param>
+    ''' <param name="hasDirect">選択肢にDirectを含む</param>
+    ''' <param name="isBlank">選択肢に空欄を含む</param>
+    ''' <remarks></remarks>
+    Private Shared Sub SetTerritoryDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal hasDirect As Boolean, ByVal isBlank As Boolean)
+        Dim lst_DropDownList As List(Of DropDownListItems) = New List(Of DropDownListItems)
+        Dim s_Location As s_LocationList = New s_LocationList
+        s_Location.Load 
+        Dim lst_DropDown As List(Of DropDownListItems) = New List(Of DropDownListItems)
+        Dim i As Integer = 0
+
+        If isBlank Then
+            Dim obj_DropDownListBlank As New DropDownListItems
+            obj_DropDownListBlank.ItemValue = String.Empty 
+            obj_DropDownListBlank.ItemText = String.Empty 
+            obj_DropDownListBlank.ItemOrder = i
+            lst_DropDownList.Add(obj_DropDownListBlank)
+            i = i + 1
+        End If
+
+        If hasDirect Then
+            Dim obj_DropDownListBlank As New DropDownListItems
+            obj_DropDownListBlank.ItemValue = "Direct" 
+            obj_DropDownListBlank.ItemText = Direct 
+            obj_DropDownListBlank.ItemOrder = i
+            lst_DropDownList.Add(obj_DropDownListBlank)
+            i = i + 1
+        End If
+
+        If s_Location.Count <> 0 Then 
+            For Each dropDownListItems As s_Location In s_Location
+                Dim obj_DropDownListItems As New DropDownListItems
+                obj_DropDownListItems.ItemValue = dropDownListItems.Name
+                obj_DropDownListItems.ItemText = dropDownListItems.Name
+                obj_DropDownListItems.ItemOrder = i
+                lst_DropDownList.Add(obj_DropDownListItems)
+                i = i + 1
+            Next
+        End If
+
+        If lst_DropDownList.Count <> 0 Then 
+            Combo.DataSource = lst_DropDownList
+        End If
+
+        Combo.DataTextField = "ItemText"
+        Combo.DataValueField = "ItemValue"
+        Combo.DataBind
+
+    End Sub
+
+    ''' <summary>
+    ''' Validity Quotation のドロップダウンリストに値を設定します。
+    ''' </summary>
+    ''' <remarks></remarks>
+    ''' <param name="Combo"></param>
+    Public Shared Sub SetValidityQuotationList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal hasAll As Boolean)
+
+        SetValidityQuotationList(Combo, False, False)
+
+    End Sub
+
+    ''' <summary>
+    ''' Validity Quotation のドロップダウンリストに値を設定します。
+    ''' </summary>
+    ''' <remarks></remarks>
+    ''' <param name="Combo"></param>
+    ''' <param name="isBlank">選択肢に空欄を含む</param>
+    Private Shared Sub SetValidityQuotationList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal hasAll As Boolean, ByVal isBlank As Boolean)
+        Dim lst_DropDownList As List(Of DropDownListItems) = New List(Of DropDownListItems)
+        Dim supplier As Supplier = New Supplier
+        Dim lst_DropDown As String() = {"All", "Valid Price", "Invalid Price"}
+
+        If isBlank Then
+            Dim obj_DropDownListBlank As New DropDownListItems
+            obj_DropDownListBlank.ItemValue = String.Empty 
+            obj_DropDownListBlank.ItemText = String.Empty 
+            obj_DropDownListBlank.ItemOrder = 0
+            lst_DropDownList.Add(obj_DropDownListBlank)
+        End If
+
+        Dim i As Integer = 0
+        If lst_DropDown.Count <> 0 Then 
+            For Each dropDownListItems As String In lst_DropDown
+                Dim obj_DropDownListItems As New DropDownListItems
+                If hasAll Or Not dropDownListItems.ToString.Equals("All") Then
+                    obj_DropDownListItems.ItemText = dropDownListItems.ToString
+                Else 
+                    obj_DropDownListItems.ItemText = ""
+                End If
+                Select Case dropDownListItems.ToString
+                    Case "Valid Price"
+                        obj_DropDownListItems.ItemValue = "Y"
+                    Case "Invalid Price"
+                        obj_DropDownListItems.ItemValue = "N"
+                    Case Else
+                        obj_DropDownListItems.ItemValue = ""
+                End Select
+                obj_DropDownListItems.ItemOrder = i
+                lst_DropDownList.Add(obj_DropDownListItems)
+                i += 1
+            Next
+        End If
+
+        If lst_DropDownList.Count <> 0 Then 
+            Combo.DataSource = lst_DropDownList
+        End If
+
+        Combo.DataTextField = "ItemText"
+        Combo.DataValueField = "ItemValue"
+        Combo.DataBind
+
+    End Sub
 
     ''' <summary>
     ''' SupplierNameのプルダウンに仕入先情報を設定します。
@@ -1026,4 +1349,95 @@ Public Class Common
             Return Nothing
         End If
     End Function
+    
+    ''' <summary>
+    ''' ログインユーザーのセッション情報を確認する
+    ''' </summary>
+    ''' <param name="st_RoleCode">SESSION_ROLE_CODE</param>
+    ''' <returns>
+    ''' </returns>
+    ''' <remarks>
+    ''' 1.<br/>
+    ''' 2.IDの文字列と合致する項目のフラグを活性化し、他のフラグは非活性化する
+    ''' </remarks>
+    Public Shared Function CheckSessionRole(ByVal st_RoleCode As String) As Boolean
+        '権限ロールに従い極秘品を除外する
+        If st_RoleCode = ROLE_WRITE_P OrElse st_RoleCode = ROLE_READ_P Then
+            Return False
+        Else
+            Return True
+        End If
+    End Function
+    
+    ''' <summary>
+    ''' 変換文字列を含むメッセージを組み立てる
+    ''' </summary>
+    ''' <param name="st_Msg">メッセージ</param>
+    ''' <param name="ary_RplaceWords">変換後文字列配列</param>
+    ''' <returns>
+    ''' </returns>
+    ''' <remarks>
+    ''' </remarks>
+    Public Shared Function CreateMSG(st_Msg As String, ary_RplaceWords As ArrayList) As String
+        Dim msg As String = String.Empty 
+
+        For i As Integer = 0 To ary_RplaceWords.Count - 1
+            msg = st_Msg.Replace("{" + i.ToString + "}", ary_RplaceWords(i).ToString)
+        Next
+
+        Return msg
+
+    End Function
+
 End Class
+Public Class DropDownListItems
+
+    Protected _ItemValue As String = String.Empty
+    Protected _ItemText As String = String.Empty
+    Protected _ItemOrder As Integer = 0
+
+    ''' <summary> 
+    ''' ItemValue を設定、または取得する 
+    ''' </summary> 
+    Public Property ItemValue() As String
+        Get
+            Return _ItemValue
+        End Get
+        Set(ByVal value As String)
+            _ItemValue = value
+        End Set
+    End Property
+
+    ''' <summary> 
+    ''' ItemText を設定、または取得する 
+    ''' </summary> 
+    Public Property ItemText() As String
+        Get
+            Return _ItemText
+        End Get
+        Set(ByVal value As String)
+            _ItemText = value
+        End Set
+    End Property
+
+    ''' <summary> 
+    ''' ItemOrder を設定、または取得する 
+    ''' </summary> 
+    Public Property ItemOrder() As Integer
+        Get
+            Return _ItemOrder
+        End Get
+        Set(ByVal value As Integer)
+            _ItemOrder = value
+        End Set
+    End Property
+
+    ''' <summary>
+    ''' コンストラクタ
+    ''' </summary>
+    Public Sub New()
+
+    End Sub
+
+End Class
+

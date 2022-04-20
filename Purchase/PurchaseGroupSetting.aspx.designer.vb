@@ -1,10 +1,10 @@
 ﻿'------------------------------------------------------------------------------
-' <自动生成>
-'     此代码由工具生成。
+' <自動生成>
+'     このコードはツールによって生成されました。
 '
-'     对此文件的更改可能导致不正确的行为，如果
-'     重新生成代码，则所做更改将丢失。
-' </自动生成>
+'     このファイルへの変更は、以下の状況下で不正な動作の原因になったり、
+'     コードが再生成されるときに損失したりします。 
+' </自動生成>
 '------------------------------------------------------------------------------
 
 Option Strict On
@@ -14,227 +14,245 @@ Option Explicit On
 Partial Public Class PurchaseGroupSetting
     
     '''<summary>
-    '''CountryForm 控件。
+    '''CountryForm コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents CountryForm As Global.System.Web.UI.HtmlControls.HtmlForm
     
     '''<summary>
-    '''Msg 控件。
+    '''Msg コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
-    '''UserID 控件。
+    '''UserID コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents UserID As Global.System.Web.UI.WebControls.HiddenField
     
     '''<summary>
-    '''R3PurchasingGroup 控件。
+    '''R3PurchasingGroup コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents R3PurchasingGroup As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''Location 控件。
+    '''Location コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Location As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''Name 控件。
+    '''Name コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Name As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''StorageLocationIDsPanel 控件。
+    '''StorageLocationIDsPanel コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents StorageLocationIDsPanel As Global.System.Web.UI.WebControls.Panel
     
     '''<summary>
-    '''AL10 控件。
+    '''AL10 コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents AL10 As Global.System.Web.UI.WebControls.CheckBox
     
     '''<summary>
-    '''AL11 控件。
+    '''AL11 コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents AL11 As Global.System.Web.UI.WebControls.CheckBox
     
     '''<summary>
-    '''AL20 控件。
+    '''AL20 コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents AL20 As Global.System.Web.UI.WebControls.CheckBox
     
     '''<summary>
-    '''AL40 控件。
+    '''AL40 コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents AL40 As Global.System.Web.UI.WebControls.CheckBox
     
     '''<summary>
-    '''AL50 控件。
+    '''AL50 コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents AL50 As Global.System.Web.UI.WebControls.CheckBox
     
     '''<summary>
-    '''CL10 控件。
+    '''CL10 コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents CL10 As Global.System.Web.UI.WebControls.CheckBox
     
     '''<summary>
-    '''CL40 控件。
+    '''CL40 コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents CL40 As Global.System.Web.UI.WebControls.CheckBox
     
     '''<summary>
-    '''CL70 控件。
+    '''CL70 コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents CL70 As Global.System.Web.UI.WebControls.CheckBox
     
     '''<summary>
-    '''EL10 控件。
+    '''EL10 コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents EL10 As Global.System.Web.UI.WebControls.CheckBox
     
     '''<summary>
-    '''EL20 控件。
+    '''EL20 コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents EL20 As Global.System.Web.UI.WebControls.CheckBox
     
     '''<summary>
-    '''HL10 控件。
+    '''HL10 コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents HL10 As Global.System.Web.UI.WebControls.CheckBox
     
     '''<summary>
-    '''HL30 控件。
+    '''HL30 コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents HL30 As Global.System.Web.UI.WebControls.CheckBox
     
     '''<summary>
-    '''HL50 控件。
+    '''HL50 コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents HL50 As Global.System.Web.UI.WebControls.CheckBox
     
     '''<summary>
-    '''NL10 控件。
+    '''NL10 コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents NL10 As Global.System.Web.UI.WebControls.CheckBox
     
     '''<summary>
-    '''NL20 控件。
+    '''NL20 コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents NL20 As Global.System.Web.UI.WebControls.CheckBox
     
     '''<summary>
-    '''Mode 控件。
+    '''RFQCorrespondenceEditable コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents RFQCorrespondenceEditable As Global.System.Web.UI.WebControls.CheckBox
+    
+    '''<summary>
+    '''MMSTAInvalidationEditable コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents MMSTAInvalidationEditable As Global.System.Web.UI.WebControls.CheckBox
+    
+    '''<summary>
+    '''Mode コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Mode As Global.System.Web.UI.WebControls.HiddenField
     
     '''<summary>
-    '''Action 控件。
+    '''Action コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
     
     '''<summary>
-    '''Save 控件。
+    '''Save コントロール。
     '''</summary>
     '''<remarks>
-    '''自动生成的字段。
-    '''若要进行修改，请将字段声明从设计器文件移到代码隐藏文件。
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents Save As Global.System.Web.UI.WebControls.Button
 End Class

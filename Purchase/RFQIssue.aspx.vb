@@ -1,5 +1,8 @@
 ﻿Imports System.Data.SqlClient
 Imports Purchase.Common
+Imports Purchase.TCIDataAccess
+'Imports Purchase.TCIDataAccess.Join
+
 Partial Public Class RFQIssue
     Inherits CommonPage
     Private DBConn As New SqlConnection
@@ -21,210 +24,214 @@ Partial Public Class RFQIssue
     'Private Const ERR_ISCASNUMBER As String = "You can not enquire with CAS Number. Please convert it into either ""New Product Registry Number"" or ""TCI Product Number""."
     'エラーメッセージ(文字数制限オーバー)
     Private Const ERR_COMMENT_OVER As String = "Comment" & ERR_OVER_3000
-    Protected Parameter As Boolean = True
+    Protected bol_Parameter As Boolean = True
+    Protected st_Role As String = Nothing
+    Protected st_ProductID As String = Nothing
+    Protected st_ProductNumber As String = Nothing
+    Protected st_SupplierCode As String = Nothing
 
+    ''' <summary>
+    ''' ページロード
+    ''' </summary>
+    ''' <remarks>
+    ''' ページを読み込む
+    ''' </remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         DBConn.ConnectionString = DB_CONNECT_STRING
         DBConn.Open()
         DBCommand = DBConn.CreateCommand()
+        ' ロールの取得
+        st_Role = Session(SESSION_ROLE_CODE).ToString
+        Dim st_ProductID As String = String.Empty
+        Dim st_ProductNumber As String = String.Empty
+        Dim st_SupplierCode As String = String.Empty
         If IsPostBack = False Then
+            ' 初期遷移の場合
+            If String.IsNullOrWhiteSpace(Request.QueryString("ProductID")) = False Then
+                st_ProductID = Request.QueryString("ProductID")
+                Dim rFQIssueDisp As Join.RFQIssueDisp = New Join.RFQIssueDisp
+                st_ProductNumber = rFQIssueDisp.GetProductNumber(Integer.Parse(st_ProductID))
+            End If
+            If String.IsNullOrWhiteSpace(Request.QueryString("SupplierCode")) = False Then
+                st_SupplierCode = Request.QueryString("SupplierCode")
+            End If
             Call SetPostBackUrl()
+
             If CheckPram() = False Then
                 Msg.Text = ERR_INVALID_PARAMETER
                 '画面上の入力項目を隠す。
-                Parameter = False
+                bol_Parameter = False
                 Exit Sub
             End If
-            Call InitDropDownList()
+            Call InitDropDownList(st_ProductID, st_SupplierCode)
+
         Else
+            ' ポストバックの場合
+            If String.IsNullOrWhiteSpace(Request.Form("ProductNumber")) = False Then
+                st_ProductNumber = Request.Form("ProductNumber")
+            ElseIf String.IsNullOrWhiteSpace(Request.Form("ProductID")) = False Then
+                st_ProductID = Request.Form("ProductID")
+                Dim rFQIssueDisp As Join.RFQIssueDisp = New Join.RFQIssueDisp
+                st_ProductNumber = rFQIssueDisp.GetProductNumber(Integer.Parse(st_ProductID))
+            End If
+            If String.IsNullOrWhiteSpace(Request.Form("SupplierCode")) = False Then
+                st_SupplierCode = Request.Form("SupplierCode")
+            End If
+
             Call SetReadOnlyItems()
+
         End If
+
         Call SetOnClientClick()
+
     End Sub
 
+    ''' <summary>
+    ''' ページアンロード
+    ''' </summary>
+    ''' <remarks>
+    ''' ページアンロード
+    ''' </remarks>
     Private Sub Page_Unload(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Unload
         'DB切断
         DBConn.Close()
     End Sub
 
+    ''' <summary>
+    ''' Issueボタン押下
+    ''' </summary>
+    ''' <remarks>
+    ''' 入力された情報をRFQHeaderとRFQLineに登録する。
+    ''' </remarks>
     Protected Sub Issue_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Issue.Click
 
-        Dim i As Integer = 0
         Dim i_RFQNumber As Integer = -1
         Dim i_ProductID As Integer = -1
-        Dim Enq_Quantity1 As Boolean = False
-        Dim Enq_Quantity2 As Boolean = False
-        Dim Enq_Quantity3 As Boolean = False
-        Dim Enq_Quantity4 As Boolean = False
+        Dim bol_EnqQuantity1 As Boolean = False
+        Dim bol_EnqQuantity2 As Boolean = False
+        Dim bol_EnqQuantity3 As Boolean = False
+        Dim bol_EnqQuantity4 As Boolean = False
+
         Msg.Text = ""
+        ' パラメータの確認
         If Request.QueryString("Action") <> "Issue" Then
             Msg.Text = ERR_INVALID_PARAMETER
             Exit Sub
         End If
-
+        ' RFQHeaderの入力チェック
         If CheckRFQHeader() = False Then
             Exit Sub
         End If
-        If CheckRFQLine(Enq_Quantity1, Enq_Quantity2, Enq_Quantity3, Enq_Quantity4) = False Then
+        ' RFQLineの入力チェック
+        If CheckRFQLine(bol_EnqQuantity1, bol_EnqQuantity2, bol_EnqQuantity3, bol_EnqQuantity4) = False Then
             Exit Sub
         End If
+        ' Insert情報の入力チェック
         If CheckInsertColumn(ProductNumber.Text, i_ProductID) = False Then
             Exit Sub
         End If
 
-        Dim sqlTran As System.Data.SqlClient.SqlTransaction = DBConn.BeginTransaction()
-        DBCommand.Transaction = sqlTran
-        Try
-            'RFQHeader登録処理
-            Dim DBReader As SqlDataReader
-            DBCommand.CommandType = CommandType.Text
-            DBCommand.CommandText = "INSERT INTO RFQHeader " _
-                                  & "(EnqLocationCode, EnqUserID, QuoLocationCode, QuoUserID, " _
-                                  & "ProductID, SupplierCode, MakerCode,SAPMakerCode, PurposeCode, RequiredPurity, " _
-                                  & "RequiredQMMethod, RequiredSpecification, Comment, RFQStatusCode, Priority, " _
-                                  & "CreatedBy, UpdatedBy)" _
-                                  & "VALUES(@EnqLocationCode, @EnqUserID, @QuoLocationCode, @QuoUserID, " _
-                                  & "@ProductID, @SupplierCode, @MakerCode,@SAPMakerCode, @PurposeCode, @RequiredPurity, " _
-                                  & "@RequiredQMMethod, @RequiredSpecification, @Comment, @RFQStatusCode, @Priority, " _
-                                  & "@CreatedBy, @UpdatedBy); " _
-                                  & " SELECT RFQNumber FROM RFQHeader WHERE (RFQNumber = SCOPE_IDENTITY())"
+        ' RFQheaderとRFQLineにレコード追加を実行
+        Dim i_InsCount As Integer = 0
 
-            DBCommand.Parameters.Add("@EnqLocationCode", SqlDbType.VarChar).Value = EnqLocation.SelectedValue
-            DBCommand.Parameters.Add("@EnqUserID", SqlDbType.Int).Value = EnqUser.SelectedValue
-            DBCommand.Parameters.Add("@QuoLocationCode", SqlDbType.VarChar).Value = QuoLocation.SelectedValue
-            DBCommand.Parameters.Add("@QuoUserID", SqlDbType.Int).Value = ConvertEmptyStringToNull(QuoUser.SelectedValue)
-            DBCommand.Parameters.Add("@ProductID", SqlDbType.Int).Value = i_ProductID
-            DBCommand.Parameters.Add("@SupplierCode", SqlDbType.Int).Value = SupplierCode.Text
-            DBCommand.Parameters.Add("@MakerCode", SqlDbType.Int).Value = ConvertEmptyStringToNull(MakerCode.Text)
-            DBCommand.Parameters.Add("@SAPMakerCode", SqlDbType.Int).Value = ConvertEmptyStringToNull(SAPMakerCode.Text)
-            DBCommand.Parameters.Add("@PurposeCode", SqlDbType.VarChar).Value = Purpose.SelectedValue
-            DBCommand.Parameters.Add("@RequiredPurity", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(RequiredPurity.Text)
-            DBCommand.Parameters.Add("@RequiredQMMethod", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(RequiredQMMethod.Text)
-            DBCommand.Parameters.Add("@RequiredSpecification", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(RequiredSpecification.Text)
-            DBCommand.Parameters.Add("@Comment", SqlDbType.NVarChar).Value = ConvertEmptyStringToNull(Comment.Text)
-            DBCommand.Parameters.Add("@RFQStatusCode", SqlDbType.VarChar).Value = IIf(Integer.TryParse(QuoUser.SelectedValue, i) = True, "A", "N")
-            DBCommand.Parameters.Add("@Priority", SqlDbType.VarChar).Value = ConvertEmptyStringToNull(Priority.SelectedValue)
-            DBCommand.Parameters.Add("@CreatedBy", SqlDbType.Int).Value = Integer.Parse(Session("UserID"))
-            DBCommand.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = Integer.Parse(Session("UserID"))
-            DBReader = DBCommand.ExecuteReader()
-            DBCommand.Dispose()
-            'Header登録と登録時のIDを取得
-            If DBReader.HasRows = True Then
-                While DBReader.Read
-                    'ID取得部分
-                    i_RFQNumber = Integer.Parse(DBReader("RFQNumber").ToString)
-                End While
-            End If
-            DBReader.Close()
-            'RFQLine登録
-            '登録用SQL文作成
-            DBCommand.CommandText = "INSERT INTO RFQLine " _
-              & "(RFQNumber, EnqQuantity, EnqUnitCode, EnqPiece, SupplierItemNumber, CreatedBy, UpdatedBy) " _
-              & "VALUES(@RFQNumber, @EnqQuantity, @EnqUnitCode, @EnqPiece, " _
-              & "@SupplierItemNumber, @CreatedBy, @UpdatedBy); "
+        Dim f_RFQIssue As FacadeRFQIssue = New FacadeRFQIssue
+        f_RFQIssue.RFQHeader = SetRFQheaderInfo(i_ProductID)
+        f_RFQIssue.RFQLineList = SetRFQLineInfo(i_RFQNumber, bol_EnqQuantity1, bol_EnqQuantity2, bol_EnqQuantity3, bol_EnqQuantity4)
+        i_InsCount = f_RFQIssue.Save()
 
-            Dim param1 As SqlParameter = DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int)
-            Dim param2 As SqlParameter = DBCommand.Parameters.Add("@EnqQuantity", SqlDbType.Decimal)
-            Dim param3 As SqlParameter = DBCommand.Parameters.Add("@EnqUnitCode", SqlDbType.VarChar, 5)
-            Dim param4 As SqlParameter = DBCommand.Parameters.Add("@EnqPiece", SqlDbType.Int)
-            Dim param5 As SqlParameter = DBCommand.Parameters.Add("@SupplierItemNumber", SqlDbType.VarChar, 128)
-            param1.Value = i_RFQNumber
-            '画面内各行の入力欄が条件を満たしていたらTrueになっているため、Trueの行を登録する。
-            If Enq_Quantity1 = True Then
-                param2.Value = EnqQuantity_1.Text
-                param3.Value = EnqUnit_1.SelectedValue
-                param4.Value = EnqPiece_1.Text
-                param5.Value = IIf(SupplierItemNumber_1.Text = "", System.DBNull.Value, SupplierItemNumber_1.Text)
-                DBCommand.ExecuteNonQuery()
-            End If
-            If Enq_Quantity2 = True Then
-                param2.Value = EnqQuantity_2.Text
-                param3.Value = EnqUnit_2.SelectedValue
-                param4.Value = EnqPiece_2.Text
-                param5.Value = IIf(SupplierItemNumber_2.Text = "", System.DBNull.Value, SupplierItemNumber_2.Text)
-                DBCommand.ExecuteNonQuery()
-            End If
-            If Enq_Quantity3 = True Then
-                param2.Value = EnqQuantity_3.Text
-                param3.Value = EnqUnit_3.SelectedValue
-                param4.Value = EnqPiece_3.Text
-                param5.Value = IIf(SupplierItemNumber_3.Text = "", System.DBNull.Value, SupplierItemNumber_3.Text)
-                DBCommand.ExecuteNonQuery()
-            End If
-            If Enq_Quantity4 = True Then
-                param2.Value = EnqQuantity_4.Text
-                param3.Value = EnqUnit_4.SelectedValue
-                param4.Value = EnqPiece_4.Text
-                param5.Value = IIf(SupplierItemNumber_4.Text = "", System.DBNull.Value, SupplierItemNumber_4.Text)
-                DBCommand.ExecuteNonQuery()
-            End If
-            sqlTran.Commit()
-
-        Catch ex As Exception
-            sqlTran.Rollback()
-            Throw
-        Finally
-            DBCommand.Dispose()
-        End Try
         Response.Redirect("RFQUpdate.aspx?RFQNumber=" & i_RFQNumber, False)
-    End Sub
-
-    Private Sub SetParamForRFQLine(ByVal param1 As SqlParameter, ByVal param2 As SqlParameter, ByVal param3 As SqlParameter, ByVal param4 As SqlParameter, ByVal param5 As SqlParameter)
-        param2.Value = EnqQuantity_1.Text
-        param3.Value = EnqUnit_1.SelectedValue
-        param4.Value = EnqPiece_1.Text
-        param5.Value = IIf(SupplierItemNumber_1.Text = "", System.DBNull.Value, SupplierItemNumber_1.Text)
-        DBCommand.ExecuteNonQuery()
-    End Sub
-
-    Private Function IsAllNullOfRFQList(ByVal EnqQuantity As String, ByVal EnqUnit As String, ByVal EnqPiece As String) As Boolean
-        '全ての項目が空白かチェック
-        If EnqQuantity.Trim = String.Empty And EnqUnit.Trim = String.Empty And EnqPiece.Trim = String.Empty Then
-            Return True
-        Else
-            Return False
-        End If
-    End Function
-
-    Private Function IsAllInputOfRFQList(ByVal EnqQuantity As String, ByVal EnqUnit As String, ByVal EnqPiece As String) As Boolean
-
-        '量入力の必須チェック
-        If EnqQuantity.Trim = String.Empty Then
-            Return False
-        End If
-
-        '単位入力の必須チェック
-        If EnqUnit.Trim = String.Empty Then
-            Return False
-        End If
-
-        '数量入力の必須チェック
-        If EnqPiece.Trim = String.Empty Then
-            Return False
-        End If
-
-        Return True
-    End Function
-
-    Private Function IsCheckRFQLineFormat(ByVal EnqQuantity As String, ByVal EnqPiece As String) As Boolean
-        '量入力の書式チェック
-        If Regex.IsMatch(EnqQuantity.Trim, DECIMAL_7_3_REGEX) = False Then
-            Return False
-        End If
-
-        '数量入力の整数チェック
-        Dim i_Result As Integer = 0
-        If Regex.IsMatch(EnqPiece.Trim, INT_5_REGEX) = False Then
-            Return False
-        End If
-        Return True
-    End Function
-
-    Protected Sub QuoLocation_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles QuoLocation.SelectedIndexChanged
-
-        SetControl_QuoUser()
 
     End Sub
+
+    ''' <summary>
+    ''' RFQheaderの追加に必要な画面情報を格納する
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Function SetRFQheaderInfo(ByVal productID As Integer) As TCIDataAccess.RFQHeader
+        Dim RFQHeaderInfo As TCIDataAccess.RFQHeader = New TCIDataAccess.RFQHeader
+        Dim i As Integer = 0
+
+        RFQHeaderInfo.EnqLocationCode = EnqLocation.SelectedValue
+        RFQHeaderInfo.EnqUserID = EnqUser.SelectedValue
+        RFQHeaderInfo.QuoLocationCode = QuoLocation.SelectedValue
+        RFQHeaderInfo.QuoUserID = If(String.IsNullOrWhiteSpace(QuoUser.SelectedValue) = True, Nothing, QuoUser.SelectedValue)
+        RFQHeaderInfo.ProductID = productID
+        RFQHeaderInfo.SupplierCode = SupplierCode.Text
+        RFQHeaderInfo.MakerCode = If(String.IsNullOrWhiteSpace(MakerCode.Text) = True, Nothing, MakerCode.Text)
+        RFQHeaderInfo.PurposeCode = Purpose.SelectedValue
+        RFQHeaderInfo.RequiredPurity = If(String.IsNullOrWhiteSpace(RequiredPurity.Text) = True, Nothing, RequiredPurity.Text)
+        RFQHeaderInfo.RequiredQMMethod = If(String.IsNullOrWhiteSpace(RequiredQMMethod.Text) = True, Nothing, RequiredQMMethod.Text)
+        RFQHeaderInfo.RequiredSpecification = If(String.IsNullOrWhiteSpace(RequiredSpecification.Text) = True, Nothing, RequiredSpecification.Text)
+        RFQHeaderInfo.SupplierContactPerson = If(String.IsNullOrWhiteSpace(SupplierContactPerson.Text) = True, Nothing, SupplierContactPerson.Text)
+        RFQHeaderInfo.SupplierItemName = If(String.IsNullOrWhiteSpace(SupplierItemName.Text) = True, Nothing, SupplierItemName.Text)
+        RFQHeaderInfo.Comment = If(String.IsNullOrWhiteSpace(Comment.Text) = True, Nothing, Comment.Text)
+        RFQHeaderInfo.RFQStatusCode = IIf(Integer.TryParse(QuoUser.SelectedValue, i) = True, "A", "N")
+        RFQHeaderInfo.Priority = If(String.IsNullOrWhiteSpace(Priority.SelectedValue) = True, Nothing, Priority.SelectedValue)
+        RFQHeaderInfo.CreatedBy = Integer.Parse(Session("UserID"))
+        RFQHeaderInfo.UpdatedBy = Integer.Parse(Session("UserID"))
+        RFQHeaderInfo.SupplierContactPersonSel = SupplierContactPersonCodeList.SelectedValue
+        RFQHeaderInfo.SAPMakerCode = If(String.IsNullOrWhiteSpace(SAPMakerCode.Text) = True, Nothing, SAPMakerCode.Text)
+        RFQHeaderInfo.CodeExtensionCode = CodeExtensionList.SelectedValue
+
+        Return RFQHeaderInfo
+
+    End Function
+
+    ''' <summary>
+    ''' RFQLineの追加に必要な画面情報を格納する
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Function  SetRFQLineInfo(ByVal RFQNumber As Integer, ByVal enqQuantity1 As Boolean, ByVal enqQuantity2 As Boolean, ByVal enqQuantity3 As Boolean, ByVal enqQuantity4 As Boolean) As TCIDataAccess.RFQLineList
+        Dim RFQLineListInfo As TCIDataAccess.RFQLineList = New TCIDataAccess.RFQLineList
+
+        If enqQuantity1 = True Then
+            Dim RFQLineInfo As TCIDataAccess.RFQLine = New TCIDataAccess.RFQLine 
+            RFQLineInfo.RFQNumber = RFQNumber
+            RFQLineInfo.EnqQuantity = EnqQuantity_1.Text
+            RFQLineInfo.EnqUnitCode = EnqUnit_1.SelectedValue
+            RFQLineInfo.EnqPiece = EnqPiece_1.Text
+            RFQLineInfo.SupplierItemNumber = IIf(SupplierItemNumber_1.Text = "", System.DBNull.Value, SupplierItemNumber_1.Text)
+
+            RFQLineListInfo.Add(RFQLineInfo)
+        End If
+
+        If enqQuantity2 = True Then
+            Dim RFQLineInfo As TCIDataAccess.RFQLine = New TCIDataAccess.RFQLine 
+            RFQLineInfo.RFQNumber = RFQNumber
+            RFQLineInfo.EnqQuantity = EnqQuantity_2.Text
+            RFQLineInfo.EnqUnitCode = EnqUnit_2.SelectedValue
+            RFQLineInfo.EnqPiece = EnqPiece_2.Text
+            RFQLineInfo.SupplierItemNumber = IIf(SupplierItemNumber_2.Text = "", System.DBNull.Value, SupplierItemNumber_2.Text)
+
+            RFQLineListInfo.Add(RFQLineInfo)
+        End If
+
+        If enqQuantity3 = True Then
+            Dim RFQLineInfo As TCIDataAccess.RFQLine = New TCIDataAccess.RFQLine 
+            RFQLineInfo.RFQNumber = RFQNumber
+            RFQLineInfo.EnqQuantity = EnqQuantity_3.Text
+            RFQLineInfo.EnqUnitCode = EnqUnit_3.SelectedValue
+            RFQLineInfo.EnqPiece = EnqPiece_3.Text
+            RFQLineInfo.SupplierItemNumber = IIf(SupplierItemNumber_3.Text = "", System.DBNull.Value, SupplierItemNumber_3.Text)
+
+            RFQLineListInfo.Add(RFQLineInfo)
+        End If
+
+        If enqQuantity4 = True Then
+            Dim RFQLineInfo As TCIDataAccess.RFQLine = New TCIDataAccess.RFQLine 
+            RFQLineInfo.RFQNumber = RFQNumber
+            RFQLineInfo.EnqQuantity = EnqQuantity_4.Text
+            RFQLineInfo.EnqUnitCode = EnqUnit_4.SelectedValue
+            RFQLineInfo.EnqPiece = EnqPiece_4.Text
+            RFQLineInfo.SupplierItemNumber = IIf(SupplierItemNumber_4.Text = "", System.DBNull.Value, SupplierItemNumber_4.Text)
+
+            RFQLineListInfo.Add(RFQLineInfo)
+        End If
+
+        Return RFQLineListInfo
+
+    End Function
+
     Private Sub SetPostBackUrl()
         'ボタンクリック時にPostBackするActionを追記する。
         Issue.PostBackUrl = "~/RFQIssue.aspx?Action=Issue"
@@ -239,22 +246,15 @@ Partial Public Class RFQIssue
         If Request.QueryString("ProductID") <> "" Or Request.Form("ProductID") <> "" Then
             st_ProductID = IIf(Request.QueryString("ProductID") <> "", Request.QueryString("ProductID"), Request.Form("ProductID"))
             If IsNumeric(st_ProductID) Then
-                DBCommand.CommandText = "Select ProductNumber, Name, QuoName FROM Product WHERE ProductID = @i_ProductID"
-                DBCommand.Parameters.Add("i_ProductID", SqlDbType.Int).Value = Integer.Parse(st_ProductID)
-                DBReader = DBCommand.ExecuteReader()
-                DBCommand.Dispose()
-                If DBReader.HasRows = True Then
-                    While DBReader.Read
-                        ProductNumber.Text = DBReader("ProductNumber").ToString
-                        ProductName.Text = IIf(DBReader("QuoName").ToString.Trim = String.Empty, DBReader("Name").ToString, DBReader("QuoName").ToString)
-                    End While
-                    ProductNumber.ReadOnly = True
-                    ProductNumber.CssClass = "readonly"
-                    ProductSelect.Visible = False
-                Else
-                    Return False
-                End If
-                DBReader.Close()
+                Dim product As Product = New Product
+                product.Load(Integer.Parse(st_ProductID))
+
+                ProductNumber.Text = product.ProductNumber
+                CASNumber.Text = product.CASNumber
+                ProductName.Text = IIf(product.QuoName.Trim = String.Empty, product.Name, product.QuoName)
+                ProductNumber.ReadOnly = True
+                ProductNumber.CssClass = "readonly"
+                ProductSelect.Visible = False
             Else
                 Return False
             End If
@@ -269,9 +269,7 @@ Partial Public Class RFQIssue
                 If DBReader.HasRows = True Then
                     While DBReader.Read
                         SupplierCode.Text = DBReader("SupplierCode").ToString
-                        'R3SupplierCode.Text = DBReader("R3SupplierCode").ToString
                         R3SupplierCode.Text = DBReader("S4SupplierCode").ToString
-                        'SAPMakerCode.Text = DBReader("S4SupplierCode").ToString
                         SupplierName.Text = DBReader("SupplierName").ToString
                         SupplierCountry.Text = DBReader("CountryName").ToString
 
@@ -292,12 +290,15 @@ Partial Public Class RFQIssue
                 Return False
             End If
         End If
+
         Return True
+
     End Function
-    Private Sub InitDropDownList()
+    Private Sub InitDropDownList(ByVal st_ProductID As String, ByVal st_SupplierCode As String)
         'ドロップダウン初期設定
         EnqLocation.SelectedValue = Session("LocationCode").ToString
         EnqLocation.DataBind()
+
         SetControl_EnqUser()
         isAdmin.Text = Session("Purchase.isAdmin").ToString
         userId.Text = Session("UserID").ToString
@@ -325,53 +326,87 @@ Partial Public Class RFQIssue
         QuoUser.Items.Clear()
         QuoUser.Items.Add(String.Empty)
 
+        ' Priorityのドロップダウンリストに値を設定する
         SetPriorityDropDownList(Priority, PRIORITY_FOR_EDIT)
         Priority.SelectedValue = ""
         Priority.Visible = True
+
+        ' Code Extension のドロップダウンリストに値を設定する
+        If Not String.IsNullOrWhiteSpace(st_ProductID) Then
+            If IsNumeric(st_ProductID) Then
+                ' Code Extension のドロップダウンリストの値を取得する
+                Common.SetCodeExtensionDropDownList(CodeExtensionList, st_ProductNumber)
+            End If
+        End If
+        ' Supplier Contact PersonCode のドロップダウンリストに値を設定する
+        If Not String.IsNullOrWhiteSpace(st_SupplierCode) Then
+            If IsNumeric(st_SupplierCode) Then
+                ' SupplierContactPersonCode のドロップダウンリストの値を取得する
+                Common.SetSupplierContactPersonCodeList(SupplierContactPersonCodeList, st_SupplierCode)
+            Else
+                Msg.Text = ERR_INCORRECT_SUPPLIERCODE
+            End If
+        End If
+
     End Sub
+
     Private Sub SetReadOnlyItems()
         'ReadOnly項目の再設定
-        ProductName.Text = Request.Form("ProductName").ToString
-        R3SupplierCode.Text = Request.Form("R3SupplierCode").ToString
-        SupplierName.Text = Request.Form("SupplierName").ToString
-        SupplierCountry.Text = Request.Form("SupplierCountry").ToString
-        MakerName.Text = Request.Form("MakerName").ToString
-        MakerCountry.Text = Request.Form("MakerCountry").ToString
-        If SupplierCode.ReadOnly = True Then
-            SupplierCode.Text = Request.Form("SupplierCode").ToString
-        End If
         If ProductNumber.ReadOnly = True Then
             ProductNumber.Text = Request.Form("ProductNumber").ToString
         End If
+        CASNumber.Text = Request.Form("CASNumber").ToString
+        ProductName.Text = Request.Form("ProductName").ToString
+        If SupplierCode.ReadOnly = True Then
+            SupplierCode.Text = Request.Form("SupplierCode").ToString
+        End If
+        R3SupplierCode.Text = Request.Form("R3SupplierCode").ToString
+        SupplierName.Text = Request.Form("SupplierName").ToString
+        SupplierCountry.Text = Request.Form("SupplierCountry").ToString
+        SAPMakerCode.Text = Request.Form("SAPMakerCode").ToString
+        MakerName.Text = Request.Form("MakerName").ToString
+        MakerCountry.Text = Request.Form("MakerCountry").ToString
     End Sub
+
+    ''' <summary>
+    ''' RFQSupplierSelect 画面へ遷移する際のパラメータを一部セット
+    ''' </summary>
+    ''' <remarks>
+    ''' </remarks>
     Private Sub SetOnClientClick()
         'RFQSupplierSelect 画面へ遷移する際のパラメータを一部セットする。
-        SupplierSelect.OnClientClick = _
-        String.Format("return SupplierSelect_onclick(""" & _
+        SupplierSelect.OnClientClick =
+        String.Format("return SupplierSelect_onclick(""" &
                       Server.UrlEncode(ClientScript.GetPostBackEventReference(SupplierSelect, String.Empty)) _
                       & """)")
     End Sub
+
+    ''' <summary>
+    ''' RFQHeaderの必須入力と文字数をチェックする
+    ''' </summary>
+    ''' <remarks>
+    ''' </remarks>
+    ''' <returns>Boolean</returns>
     Private Function CheckRFQHeader() As Boolean
         '必須入力項目チェックHeader
         Dim i_Result As Integer = 0
 
-        If EnqLocation.SelectedValue = "" Then
+        If String.IsNullOrWhiteSpace(EnqLocation.SelectedValue) Then
             Msg.Text = ERR_REQUIRED_ENQLOCATION
             Return False
         End If
-        If EnqUser.SelectedValue = "" Then
+        If String.IsNullOrWhiteSpace(EnqUser.SelectedValue) Then
             Msg.Text = ERR_REQUIRED_ENQUSER
             Return False
         End If
-        If ProductNumber.Text = "" Then
+        If String.IsNullOrWhiteSpace(ProductNumber.Text) Then
             Msg.Text = ERR_REQUIRED_PRODUCTNUMBER
             Return False
-
         Else
             '権限ロールに従い極秘品はエラーとする
-            If Session(SESSION_ROLE_CODE).ToString = ROLE_WRITE_P OrElse Session(SESSION_ROLE_CODE).ToString = ROLE_READ_P Then
+            If String.Equals(st_Role, Common.ROLE_WRITE_P) OrElse String.Equals(st_Role, Common.ROLE_READ_P) Then
                 If IsConfidentialItem(ProductNumber.Text) Then
-                    Msg.Text = ERR_CONFIDENTIAL_PRODUCT
+                    Msg.Text = Common.ERR_CONFIDENTIAL_PRODUCT
                     Return False
                 End If
             End If
@@ -382,15 +417,15 @@ Partial Public Class RFQIssue
             '    Msg.Text = ERR_ISCASNUMBER
             '    Return False
         End If
-        If SupplierCode.Text = "" Then
+        If String.IsNullOrWhiteSpace(SupplierCode.Text) Then
             Msg.Text = ERR_REQUIRED_SUPPLIERCODE
             Return False
         End If
-        If QuoLocation.SelectedValue = "" Then
+        If String.IsNullOrWhiteSpace(QuoLocation.SelectedValue) Then
             Msg.Text = ERR_REQUIRED_QUOLOCATION
             Return False
         End If
-        If Purpose.SelectedValue = "" Then
+        If String.IsNullOrWhiteSpace(Purpose.SelectedValue) Then
             Msg.Text = ERR_REQUIRED_PURPOSE
             Return False
         End If
@@ -398,7 +433,7 @@ Partial Public Class RFQIssue
             Msg.Text = ERR_INCORRECT_SUPPLIERCODE
             Return False
         End If
-        If MakerCode.Text = "" Then
+        If String.IsNullOrWhiteSpace(MakerCode.Text) Then
             'MakerCodeは省略可能
         ElseIf Integer.TryParse(MakerCode.Text, i_Result) Then
             '数値に変換できた場合の処理(小数点含まず)は正常
@@ -407,54 +442,124 @@ Partial Public Class RFQIssue
             Msg.Text = ERR_INCORRECT_MAKERCODE
             Return False
         End If
+
         '入力項目の文字数チェック
         If Comment.Text.Length > INT_3000 Then
             Msg.Text = ERR_COMMENT_OVER
             Exit Function
         End If
+
+        Return True
+
+    End Function
+
+    ''' <summary>
+    ''' RFQLineの入力値の妥当性をチェックする。
+    ''' </summary>
+    ''' <remarks>
+    ''' </remarks>
+    ''' <returns>Boolean</returns>
+    Private Function IsCheckRFQLineFormat(ByVal EnqQuantity As String, ByVal EnqPiece As String) As Boolean
+        '量入力の書式チェック
+        If Regex.IsMatch(EnqQuantity.Trim, DECIMAL_7_3_REGEX) = False Then
+            Return False
+        End If
+
+        '数量入力の整数チェック
+        Dim i_Result As Integer = 0
+        If Regex.IsMatch(EnqPiece.Trim, INT_5_REGEX) = False Then
+            Return False
+        End If
         Return True
     End Function
-    Private Function CheckRFQLine(ByRef Enq_Quantity1 As Boolean, ByRef Enq_Quantity2 As Boolean, ByRef Enq_Quantity3 As Boolean, ByRef Enq_Quantity4 As Boolean) As Boolean
+
+    ''' <summary>
+    ''' RFQLineの必須入力をチェックする。
+    ''' </summary>
+    ''' <remarks>
+    ''' </remarks>
+    ''' <returns>Boolean</returns>
+    Private Function IsAllInputOfRFQList(ByVal EnqQuantity As String, ByVal EnqUnit As String, ByVal EnqPiece As String) As Boolean
+
+        '量入力の必須チェック
+        If EnqQuantity.Trim = String.Empty Then
+            Return False
+        End If
+
+        '単位入力の必須チェック
+        If EnqUnit.Trim = String.Empty Then
+            Return False
+        End If
+
+        '数量入力の必須チェック
+        If EnqPiece.Trim = String.Empty Then
+            Return False
+        End If
+
+        Return True
+    End Function
+
+    ''' <summary>
+    ''' RFQLineが全て空欄である事をチェックする。
+    ''' </summary>
+    ''' <remarks>
+    ''' </remarks>
+    ''' <returns>Boolean</returns>
+    Private Function IsAllNullOfRFQList(ByVal EnqQuantity As String, ByVal EnqUnit As String, ByVal EnqPiece As String) As Boolean
+        '全ての項目が空白かチェック
+        If String.IsNullOrWhiteSpace(EnqQuantity.Trim) And String.IsNullOrWhiteSpace(EnqUnit.Trim) And String.IsNullOrWhiteSpace(EnqPiece.Trim) Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    ''' <summary>
+    ''' RFQLineの入力をチェックする
+    ''' </summary>
+    ''' <remarks>
+    ''' </remarks>
+    ''' <returns>Boolean</returns>
+    Private Function CheckRFQLine(ByRef enqQuantity1 As Boolean, ByRef enqQuantity2 As Boolean, ByRef enqQuantity3 As Boolean, ByRef enqQuantity4 As Boolean) As Boolean
         '入力項目チェックLine
         Dim Bo_UnLine As Boolean = False
 
-        Enq_Quantity1 = IsAllInputOfRFQList(EnqQuantity_1.Text, EnqUnit_1.SelectedValue, EnqPiece_1.Text)
+        enqQuantity1 = IsAllInputOfRFQList(EnqQuantity_1.Text, EnqUnit_1.SelectedValue, EnqPiece_1.Text)
         Dim bo_UnLine_1 = IsAllNullOfRFQList(EnqQuantity_1.Text, EnqUnit_1.SelectedValue, EnqPiece_1.Text)
-        If Enq_Quantity1 = False And bo_UnLine_1 = False Then
+        If enqQuantity1 = False And bo_UnLine_1 = False Then
             Bo_UnLine = True
         End If
         If IsCheckRFQLineFormat(EnqQuantity_1.Text, EnqPiece_1.Text) = False And bo_UnLine_1 = False Then
             Bo_UnLine = True
         End If
 
-        Enq_Quantity2 = IsAllInputOfRFQList(EnqQuantity_2.Text, EnqUnit_2.SelectedValue, EnqPiece_2.Text)
+        enqQuantity2 = IsAllInputOfRFQList(EnqQuantity_2.Text, EnqUnit_2.SelectedValue, EnqPiece_2.Text)
         Dim bo_UnLine_2 = IsAllNullOfRFQList(EnqQuantity_2.Text, EnqUnit_2.SelectedValue, EnqPiece_2.Text)
-        If Enq_Quantity2 = False And bo_UnLine_2 = False Then
+        If enqQuantity2 = False And bo_UnLine_2 = False Then
             Bo_UnLine = True
         End If
         If IsCheckRFQLineFormat(EnqQuantity_2.Text, EnqPiece_2.Text) = False And bo_UnLine_2 = False Then
             Bo_UnLine = True
         End If
 
-        Enq_Quantity3 = IsAllInputOfRFQList(EnqQuantity_3.Text, EnqUnit_3.SelectedValue, EnqPiece_3.Text)
+        enqQuantity3 = IsAllInputOfRFQList(EnqQuantity_3.Text, EnqUnit_3.SelectedValue, EnqPiece_3.Text)
         Dim bo_UnLine_3 = IsAllNullOfRFQList(EnqQuantity_3.Text, EnqUnit_3.SelectedValue, EnqPiece_3.Text)
-        If Enq_Quantity3 = False And bo_UnLine_3 = False Then
+        If enqQuantity3 = False And bo_UnLine_3 = False Then
             Bo_UnLine = True
         End If
         If IsCheckRFQLineFormat(EnqQuantity_3.Text, EnqPiece_3.Text) = False And bo_UnLine_3 = False Then
             Bo_UnLine = True
         End If
 
-        Enq_Quantity4 = IsAllInputOfRFQList(EnqQuantity_4.Text, EnqUnit_4.SelectedValue, EnqPiece_4.Text)
+        enqQuantity4 = IsAllInputOfRFQList(EnqQuantity_4.Text, EnqUnit_4.SelectedValue, EnqPiece_4.Text)
         Dim bo_UnLine_4 = IsAllNullOfRFQList(EnqQuantity_4.Text, EnqUnit_4.SelectedValue, EnqPiece_4.Text)
-        If Enq_Quantity4 = False And bo_UnLine_4 = False Then
+        If enqQuantity4 = False And bo_UnLine_4 = False Then
             Bo_UnLine = True
         End If
         If IsCheckRFQLineFormat(EnqQuantity_4.Text, EnqPiece_4.Text) = False And bo_UnLine_4 = False Then
             Bo_UnLine = True
         End If
-        If Enq_Quantity1 = False And Enq_Quantity2 = False And _
-            Enq_Quantity3 = False And Enq_Quantity4 = False Then
+        If enqQuantity1 = False And enqQuantity2 = False And enqQuantity3 = False And enqQuantity4 = False Then
             If Not Purpose.SelectedValue = "JFYI" Then
                 'JFYI時は明細行なしで登録可能
                 Msg.Text = ERR_REQUIRED_ENQQUANTITY
@@ -465,19 +570,29 @@ Partial Public Class RFQIssue
             Msg.Text = ERR_INCORRECT_ENQQUANTITY
             Return False
         End If
+
         Return True
+
     End Function
+
+    ''' <summary>
+    ''' Insert処理の事前チェックを行う。
+    ''' </summary>
+    ''' <remarks>
+    ''' </remarks>
+    ''' <returns>Boolean</returns>
     Private Function CheckInsertColumn(ByVal CheckProductNumber As String, ByRef ReturnProductID As Integer) As Boolean
         'Insert内容の入力チェック ProductNumberからProductIDを取得して返す。
-        '入力内容のチェック
         Dim DBReader As SqlDataReader
         Dim st_Supplier As String = "Supplier"
         Dim st_SupplierKey As String = "SupplierCode"
+
         'ProductNumberのチェック
         DBCommand.CommandText = "Select ProductID FROM Product WHERE ProductNumber = @ProductNumber"
         DBCommand.Parameters.Add("ProductNumber", SqlDbType.VarChar).Value = CheckProductNumber
         DBReader = DBCommand.ExecuteReader()
         DBCommand.Dispose()
+
         If DBReader.HasRows = True Then
             While DBReader.Read
                 ReturnProductID = DBReader("ProductID").ToString
@@ -487,6 +602,7 @@ Partial Public Class RFQIssue
             Return False
         End If
         DBReader.Close()
+
         'Supplierのチェック
         If ExistenceConfirmation(st_Supplier, st_SupplierKey, SupplierCode.Text) = False Then
             Msg.Text = ERR_INCORRECT_SUPPLIERCODE
@@ -513,7 +629,9 @@ Partial Public Class RFQIssue
         '        Return False
         '    End If
         'End If
+
         Return True
+
     End Function
 
     'CreateSql_SelectQuoLocation() に処理を統一したためコメントアウト
@@ -543,6 +661,18 @@ Partial Public Class RFQIssue
     '        Throw
     '    End Try
     'End Sub
+
+    ''' <summary>
+    ''' QuoLocation プルダウンリストが変更されたときに発生するイベントです。
+    ''' </summary>
+    ''' <param name="sender">ASP.NET の既定値</param>
+    ''' <param name="e">ASP.NET の既定値</param>
+    ''' <remarks></remarks>
+    Protected Sub QuoLocation_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles QuoLocation.SelectedIndexChanged
+
+        SetControl_QuoUser()
+
+    End Sub
 
     ''' <summary>
     ''' EnqLocation プルダウンリストが変更されたときに発生するイベントです。
@@ -589,31 +719,31 @@ Partial Public Class RFQIssue
     Private Function CreateSql_SelectQuoLocation() As String
         Dim sb_Sql As New StringBuilder
 
-        sb_Sql.AppendLine("WITH IrregularQuoLocation AS (")
+        sb_Sql.AppendLine("WITH [IrregularQuoLocation] AS (")
         sb_Sql.AppendLine("  SELECT")
-        sb_Sql.AppendLine("    I.SupplierCode,")
-        sb_Sql.AppendLine("    I.QuoLocationCode AS QuoLocationCode,")
+        sb_Sql.AppendLine("    I.[SupplierCode],")
+        sb_Sql.AppendLine("    I.[QuoLocationCode] AS QuoLocationCode,")
         sb_Sql.AppendLine("    ISNULL(L.[Name], '" & DIRECT & "') AS QuoLocationName")
         sb_Sql.AppendLine("  FROM")
-        sb_Sql.AppendLine("    IrregularRFQLocation AS I")
-        sb_Sql.AppendLine("      LEFT OUTER JOIN s_Location AS L ON L.LocationCode = I.QuoLocationCode")
+        sb_Sql.AppendLine("    [IrregularRFQLocation] AS I")
+        sb_Sql.AppendLine("      LEFT OUTER JOIN [s_Location] AS L ON L.[LocationCode] = I.[QuoLocationCode]")
         sb_Sql.AppendLine(")")
         sb_Sql.AppendLine("SELECT")
-        sb_Sql.AppendLine("  S.SupplierCode,")
-        sb_Sql.AppendLine("  S.R3SupplierCode,")
-        sb_Sql.AppendLine("  S.S4SupplierCode,")
-        sb_Sql.AppendLine("  LTRIM(RTRIM(ISNULL(S.Name3, '') + ' ' + ISNULL(S.Name4, ''))) AS SupplierName,")
-        sb_Sql.AppendLine("  S.CountryCode,")
-        sb_Sql.AppendLine("  C.CountryName,")
-        sb_Sql.AppendLine("  CASE WHEN I.QuoLocationName IS NULL THEN C.DefaultQuoLocationCode ELSE I.QuoLocationCode END AS QuoLocationCode,")
-        sb_Sql.AppendLine("  ISNULL(I.QuoLocationName, C.DefaultQuoLocationName) AS QuoLocationName")
+        sb_Sql.AppendLine("  S.[SupplierCode],")
+        sb_Sql.AppendLine("  S.[R3SupplierCode],")
+        sb_Sql.AppendLine("  S.[S4SupplierCode],")
+        sb_Sql.AppendLine("  LTRIM(RTRIM(ISNULL(S.[Name3], '') + ' ' + ISNULL(S.[Name4], ''))) AS SupplierName,")
+        sb_Sql.AppendLine("  S.[CountryCode],")
+        sb_Sql.AppendLine("  C.[CountryName],")
+        sb_Sql.AppendLine("  CASE WHEN I.[QuoLocationName] IS NULL THEN C.[DefaultQuoLocationCode] ELSE I.[QuoLocationCode] END AS QuoLocationCode,")
+        sb_Sql.AppendLine("  ISNULL(I.[QuoLocationName], C.[DefaultQuoLocationName]) AS QuoLocationName")
         sb_Sql.AppendLine("FROM")
-        sb_Sql.AppendLine("  Supplier AS S")
-        sb_Sql.AppendLine("    LEFT OUTER JOIN IrregularQuoLocation AS I ON I.SupplierCode = S.SupplierCode,")
-        sb_Sql.AppendLine("  v_Country AS C")
+        sb_Sql.AppendLine("  [Supplier] AS S")
+        sb_Sql.AppendLine("    LEFT OUTER JOIN [IrregularQuoLocation] AS I ON I.[SupplierCode] = S.[SupplierCode],")
+        sb_Sql.AppendLine("  [v_Country] AS C")
         sb_Sql.AppendLine("WHERE")
-        sb_Sql.AppendLine("  S.CountryCode = C.CountryCode")
-        sb_Sql.AppendLine("  AND S.SupplierCode = @SupplierCode")
+        sb_Sql.AppendLine("  S.[CountryCode] = C.[CountryCode]")
+        sb_Sql.AppendLine("  AND S.[SupplierCode] = @SupplierCode")
 
         Return sb_Sql.ToString
 
@@ -629,9 +759,9 @@ Partial Public Class RFQIssue
         EnqUser.Items.Add(String.Empty)
 
         If IsConfidentialItem(ProductNumber.Text) Then
-            SDS_RFQIssue_Enq_U.SelectCommand = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'' ORDER BY Name"
+            SDS_RFQIssue_Enq_U.SelectCommand = "SELECT [UserID], [Name] FROM [v_User] WHERE [LocationCode] = @LocationCode AND isDisabled = 0 AND [RoleCode] = 'WRITE' and  [R3PurchasingGroup] is not null and [R3PurchasingGroup] <>'' ORDER BY [Name]"
         Else
-            SDS_RFQIssue_Enq_U.SelectCommand = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'' ORDER BY Name"
+            SDS_RFQIssue_Enq_U.SelectCommand = "SELECT [UserID], [Name] FROM [v_User] WHERE [LocationCode] = @LocationCode AND isDisabled = 0 and [R3PurchasingGroup] is not null and [R3PurchasingGroup] <>'' ORDER BY [Name]"
         End If
 
         SDS_RFQIssue_Enq_U.SelectParameters.Clear()
@@ -649,9 +779,9 @@ Partial Public Class RFQIssue
         QuoUser.Items.Add(String.Empty)
 
         If IsConfidentialItem(ProductNumber.Text) Then
-            SDS_RFQIssue_Que_U.SelectCommand = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'' ORDER BY Name"
+            SDS_RFQIssue_Que_U.SelectCommand = "SELECT [UserID], [Name] FROM [v_User] WHERE [LocationCode] = @LocationCode AND [isDisabled] = 0 AND [RoleCode] = 'WRITE' and [R3PurchasingGroup] is not null and [R3PurchasingGroup] <>'' ORDER BY [Name]"
         Else
-            SDS_RFQIssue_Que_U.SelectCommand = "SELECT UserID, [Name] FROM v_User WHERE LocationCode = @LocationCode AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'' ORDER BY Name"
+            SDS_RFQIssue_Que_U.SelectCommand = "SELECT [UserID], [Name] FROM [v_User] WHERE [LocationCode] = @LocationCode AND [isDisabled] = 0 and [R3PurchasingGroup] is not null and [R3PurchasingGroup] <>'' ORDER BY [Name]"
         End If
 
         SDS_RFQIssue_Que_U.SelectParameters.Clear()
@@ -665,19 +795,105 @@ Partial Public Class RFQIssue
     ''' <remarks></remarks>
     Protected Sub ProductNumber_TextChanged(ByVal sender As Object, ByVal e As EventArgs) Handles ProductNumber.TextChanged
 
-        If IsConfidentialItem(ProductNumber.Text) Then
-            If GetRole(EnqUser.SelectedValue) = ROLE_WRITE_P Then
+        Dim rFQIssueDisp As Join.RFQIssueDisp = New Join.RFQIssueDisp
+        Dim productNumberInfo As List(Of Join.RFQIssueDispProductInfo) = New List(Of Join.RFQIssueDispProductInfo)
+        If Not String.IsNullOrWhiteSpace(ProductNumber.Text) Then
+            productNumberInfo = rFQIssueDisp.GetProductInfo(ProductNumber.Text, Session(SESSION_ROLE_CODE))
+            If productNumberInfo.Count <> 0 Then
+                For Each productInfo As Join.RFQIssueDispProductInfo In productNumberInfo
+                    CASNumber.Text = productInfo.CASNumber
+                    ProductName.Text = productInfo.ProductName
+                Next
+            End If
+        Else
+            CASNumber.Text = String.Empty
+            ProductName.Text = String.Empty
+        End If
+
+        Dim st_ProductNumber As String = ProductNumber.Text
+        CodeExtensionList.Items.Clear()
+        If Not String.IsNullOrWhiteSpace(st_ProductNumber) Then
+            ' Code Extensionのドロップダウンリストに値を設定するメソッドを呼び出す
+            Common.SetCodeExtensionDropDownList(CodeExtensionList, st_ProductNumber)
+        End If
+
+        If Common.IsConfidentialItem(st_ProductNumber) Then
+            If String.Equals(Common.GetRole(EnqUser.SelectedValue), Common.ROLE_WRITE_P) Then
                 SetControl_EnqUser()
             End If
 
-            If GetRole(QuoUser.SelectedValue) = ROLE_WRITE_P Then
+            If String.Equals(Common.GetRole(QuoUser.SelectedValue), Common.ROLE_WRITE_P) Then
                 SetControl_QuoUser()
             End If
         End If
 
     End Sub
 
-    Protected Sub SupplierCode_TextChanged(sender As Object, e As EventArgs) Handles SupplierCode.TextChanged
+    ''' <summary>
+    '''  SupplierCod 変更時イベント
+    ''' </summary>
+    ''' <param name="sender">ASP.NETの既定値</param>
+    ''' <param name="e">ASP.NETの既定値</param>
+    ''' <remarks>UpdatePanelコントロールによるAjaxの非同期ポストバックで実行されます。</remarks>
+    Protected Sub SupplierCode_TextChanged(ByVal sender As Object, e As EventArgs) Handles SupplierCode.TextChanged
+
+        Dim rFQIssueDisp As Join.RFQIssueDisp = New Join.RFQIssueDisp
+        Dim supplierCodeInfo As List(Of Join.RFQIssueDispSupplierInfo) = New List(Of Join.RFQIssueDispSupplierInfo)
+        If Not String.IsNullOrWhiteSpace(SupplierCode.Text) Then
+            supplierCodeInfo = rFQIssueDisp.GetSupplierInfo(SupplierCode.Text, Session(SESSION_ROLE_CODE))
+
+            If supplierCodeInfo.Count <> 0 Then
+                For Each supplierInfo As Join.RFQIssueDispSupplierInfo In supplierCodeInfo
+                    R3SupplierCode.Text = supplierInfo.R3SupplierCode
+                    SupplierName.Text = supplierInfo.Name
+                    SupplierCountry.Text = supplierInfo.CountryName
+                Next
+            End If
+        Else
+            R3SupplierCode.Text = String.Empty
+            SupplierName.Text = String.Empty
+            SupplierCountry.Text = String.Empty
+        End If
+
+        Dim st_SupplierCode As String = SupplierCode.Text
+        SupplierContactPersonCodeList.Items.Clear()
+        If Not String.IsNullOrWhiteSpace(st_SupplierCode) Then
+            If IsNumeric(st_SupplierCode) Then
+                ' SupplierContactPersonCodeのドロップダウンリストに値を設定するメソッドを呼び出す
+                Common.SetSupplierContactPersonCodeList(SupplierContactPersonCodeList, st_SupplierCode)
+            Else
+                Msg.Text = ERR_INCORRECT_SUPPLIERCODE
+            End If
+        End If
 
     End Sub
+
+    ''' <summary>
+    '''  MakerCode 変更時イベント
+    ''' </summary>
+    ''' <param name="sender">ASP.NETの既定値</param>
+    ''' <param name="e">ASP.NETの既定値</param>
+    ''' <remarks>UpdatePanelコントロールによるAjaxの非同期ポストバックで実行されます。</remarks>
+    Protected Sub MakerCode_TextChanged(ByVal sender As Object, e As EventArgs) Handles MakerCode.TextChanged
+
+        Dim rFQIssueDisp As Join.RFQIssueDisp = New Join.RFQIssueDisp
+        Dim makerCodeInfo As List(Of Join.RFQIssueDispMakerInfo) = New List(Of Join.RFQIssueDispMakerInfo)
+        If Not String.IsNullOrWhiteSpace(MakerCode.Text) Then
+            makerCodeInfo = rFQIssueDisp.GetMakerInfo(MakerCode.Text, Session(SESSION_ROLE_CODE))
+
+            If makerCodeInfo.Count <> 0 Then
+                For Each makerInfo As Join.RFQIssueDispMakerInfo In makerCodeInfo
+                    SAPMakerCode.Text = makerInfo.S4SupplierCode
+                    MakerName.Text = makerInfo.Name
+                    MakerCountry.Text = makerInfo.CountryName
+                Next
+            End If
+        Else
+            SAPMakerCode.Text = String.Empty
+            MakerName.Text = String.Empty
+            MakerCountry.Text = String.Empty
+        End If
+
+    End Sub
+
 End Class
