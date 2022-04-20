@@ -1,0 +1,9 @@
+<?xml version="1.0"?><DTSConfiguration>
+	<DTSConfigurationHeading>
+		<DTSConfigurationFileInfo GeneratedBy="TCIX\Masumi.Koyama" GeneratedFromPackageName="SupplierProductsImport" GeneratedFromPackageID="{199473AC-0ABB-47EF-A179-57ED6FDC538A}" GeneratedDate="2022/04/20 21:52:54"/>
+	</DTSConfigurationHeading>
+
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::CommandTimeout].Properties[Value]" ValueType="Int32">
+		<ConfiguredValue>300</ConfiguredValue>
+	</Configuration>
+</DTSConfiguration>
