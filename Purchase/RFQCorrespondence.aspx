@@ -50,6 +50,10 @@
                     <asp:Button ID="Send" runat="server" Text="Send" 
                         PostBackUrl="RFQCorrespondence.aspx?Action=Send" />
                 </div>
+            <asp:HiddenField ID="EnqUserID" runat="server" />
+            <asp:HiddenField ID="EnqLocationCode" runat="server" />
+            <asp:HiddenField ID="QuoUserID" runat="server" />
+            <asp:HiddenField ID="QuoLocationCode" runat="server" />
         </div>
 
         <hr />
@@ -62,20 +66,19 @@
                     <table class="zebra2">
                         <tr>
                             <th style="width:20%">Status:</th>
-                            <td style="width:65%"><asp:Label ID="StatusLabel" runat="server" Font-Bold="True" Text='<%# Eval("Status") %>' /></td>
-                            <td style="width:15%" rowspan="4">
+                            <td style="width:60%"><asp:Label ID="StatusLabel" runat="server" Font-Bold="True" Text='<%# Eval("Status") %>' /></td>
+                            <td style="width:20%">
                                 <asp:LinkButton ID="Check" runat="server" PostBackUrl="RFQCorrespondence.aspx?Action=Check">
-                                  <asp:Image ID="ImgCheck" runat="server" ImageUrl="./Image/Check.gif" />Check
-                                </asp:LinkButton>
+                                <asp:Image ID="ImgCheck" runat="server" ImageUrl="./Image/Check.gif" /> Mark as Read</asp:LinkButton>
                             </td>
                         </tr>
                         <tr>
                             <th>Date:</th>
-                            <td><asp:Label ID="DateLabel" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("Date"), true, true)%>' /></td>
+                            <td colspan="2"><asp:Label ID="DateLabel" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("Date"), true, true)%>' /></td>
                         </tr>
                         <tr>
                             <th>Sender:</th>
-                            <td>
+                            <td colspan="2">
                                 <asp:Label ID="SenderLabel" runat="server" Text='<%# Eval("Sender") %>' />
                                 <span class="indent"></span>
                                 <asp:Label ID="SenderLocationLabel" runat="server" Text='<%# Eval("SenderLocation") %>' />
@@ -83,7 +86,7 @@
                         </tr>
                         <tr>
                             <th>Addressee:</th>
-                            <td>
+                            <td colspan="2">
                                 <asp:Label ID="AddresseeLabel" runat="server" Text='<%# Eval("Addressee") %>' />
                                 <span class="indent"></span>
                                 <asp:Label ID="AddresseeLocationLabel" runat="server" Text='<%# Eval("AddresseeLocation") %>' />
@@ -91,7 +94,7 @@
                         </tr>
                         <tr>
                             <th>Notes:</th>
-                            <td>
+                            <td colspan="2">
                                 <asp:Label ID="TitleLabel" runat="server" CssClass="attention" Text='<%# Eval("Title") %>' />
                                 <%#If(IsDBNull(Eval("Title")), "", "<br />")%>
                                 <asp:Label ID="Label1" runat="server" Text='<%# Eval("Notes") %>' />
@@ -115,19 +118,19 @@
                     <table class="zebra1">
                         <tr>
                             <th style="width:20%">Status:</th>
-                            <td style="width:65%"><asp:Label ID="StatusLabel" runat="server" Font-Bold="True" Text='<%# Eval("Status") %>' /></td>
-                            <td style="width:15%" rowspan="4">
+                            <td style="width:60%"><asp:Label ID="StatusLabel" runat="server" Font-Bold="True" Text='<%# Eval("Status") %>' /></td>
+                            <td style="width:20%">
                                 <asp:LinkButton ID="Check" runat="server" PostBackUrl="RFQCorrespondence.aspx?Action=Check">
-                                <asp:Image ID="ImgCheck" runat="server" ImageUrl="./Image/Check.gif" />Check</asp:LinkButton>
+                                <asp:Image ID="ImgCheck" runat="server" ImageUrl="./Image/Check.gif" /> Mark as Read</asp:LinkButton>
                             </td>
                         </tr>
                         <tr>
                             <th>Date:</th>
-                            <td><asp:Label ID="DateLabel" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("Date"),true,true)%>' /></td>
+                            <td colspan="2"><asp:Label ID="DateLabel" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("Date"),true,true)%>' /></td>
                         </tr>
                         <tr>
                             <th>Sender:</th>
-                            <td>
+                            <td colspan="2">
                                 <asp:Label ID="SenderLabel" runat="server" Text='<%# Eval("Sender") %>' />
                                 <span class="indent"></span>
                                 <asp:Label ID="SenderLocationLabel" runat="server" Text='<%# Eval("SenderLocation") %>' />
@@ -135,7 +138,7 @@
                         </tr>
                         <tr>
                             <th>Addressee:</th>
-                            <td>
+                            <td colspan="2">
                                 <asp:Label ID="AddresseeLabel" runat="server" Text='<%# Eval("Addressee") %>' />
                                 <span class="indent"></span>
                                 <asp:Label ID="AddresseeLocationLabel" runat="server" Text='<%# Eval("AddresseeLocation") %>' />
@@ -143,7 +146,7 @@
                         </tr>
                         <tr>
                             <th>Notes:</th>
-                            <td>
+                            <td colspan="2">
                                 <asp:Label ID="TitleLabel" runat="server" CssClass="attention" Text='<%# Eval("Title") %>' />
                                 <%#If(IsDBNull(Eval("Title")), "", "<br />")%>
                                 <asp:Label ID="Label1" runat="server" Text='<%# Eval("Notes") %>' />
