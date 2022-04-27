@@ -165,6 +165,7 @@ Namespace TCIDataAccess
             'データベースからデータを読み込む SQL 文字列を生成する。
             Dim Value As StringBuilder = New StringBuilder
             Value.AppendLine("SELECT")
+            Value.AppendLine("    [LocationCode],")
             Value.AppendLine("    [Name]")
             Value.AppendLine("FROM")
             Value.AppendLine("    [s_Location]")
@@ -177,6 +178,7 @@ Namespace TCIDataAccess
                     Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
                     While DBReader.Read()
                         Dim dc_Data As New s_Location
+                        SetProperty(DBReader("LocationCode"), dc_Data.LocationCode)
                         SetProperty(DBReader("Name"), dc_Data.Name)
                         Me.Add(dc_Data)
                     End While
@@ -184,39 +186,6 @@ Namespace TCIDataAccess
                 End Using
             End Using
 
-        End Sub
-        ''' <summary>
-        ''' Territoryドロップダウンリスト設定
-        ''' </summary>
-        ''' <param name="Combo">ドロップダウンリスト</param>
-        ''' <remarks></remarks>
-        Public Sub SetTerritoryDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl)
-            Combo.Items.Clear()
-            Me.Load()
-            Combo.Items.Add(New ListItem(Common.DIRECT, Common.DIRECT))
-            For Each s_Location As s_Location In Me
-                Combo.Items.Add(New ListItem(s_Location.Name, s_Location.Name))
-            Next
-        End Sub
-
-        ''' <summary>
-        ''' Locationドロップダウンリスト設定
-        ''' </summary>
-        ''' <param name="Combo">ドロップダウンリスト</param>
-        ''' <param name="st_FirstItemText">先頭項目名</param>
-        ''' <remarks></remarks>
-        Public Sub SetLocationDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal st_FirstItemText As String)
-            Combo.Items.Clear()
-            Me.Load()
-            If String.IsNullOrEmpty(st_FirstItemText) Then
-                Combo.Items.Add(New ListItem(String.Empty, String.Empty))
-            Else
-                Combo.Items.Add(New ListItem(st_FirstItemText, st_FirstItemText))
-            End If
-
-            For Each s_Location As s_Location In Me
-                Combo.Items.Add(New ListItem(s_Location.Name, s_Location.Name))
-            Next
         End Sub
 
     End Class

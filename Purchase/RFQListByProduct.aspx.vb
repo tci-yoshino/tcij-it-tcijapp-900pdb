@@ -34,11 +34,119 @@ Partial Public Class RFQListByProduct
             Exit Sub
         End If
 
-        ' 空白除去
-        st_ProductID = st_ProductID.Trim()
-        SearchProduct(st_ProductID)
-        SearchRFQHeader(st_ProductID)
+        If Not IsPostBack Then 
+            ' Valid Quotation ドロップダウンリスト設定
+            Common.SetValidQuotationList(ValidQuotation, "All")
 
+            ' EHSHeader 設定
+            HeaderEhs.UserID = Integer.Parse(Session("UserID").ToString)
+            HeaderEhs.LocationCode = Session("LocationCode").ToString
+            HeaderEhs.ProductNumber = ProductNumber.Text
+            HeaderEhs.GetEhsHeader
+
+            '' 一覧検索
+            st_ProductID = st_ProductID.Trim()
+            ShowList()
+
+        End If
+
+    End Sub
+
+    Private Sub ShowList
+        ' 製品情報検索
+        SearchProduct(st_ProductID)
+        ' 見積情報検索
+        SearchRFQHeader(st_ProductID)
+    End Sub
+
+    ''' <summary>
+    ''' Searchボタン押下
+    ''' </summary>
+    ''' <remarks>
+    ''' 入力されたProductNumberとProductNameに入力された条件に該当する情報を一覧に表示する。
+    ''' </remarks>
+    Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
+        'メッセージクリア
+        Msg.Text = String.Empty
+        '[Search実行可能確認]----------------------------------------------------------
+        If Not String.Equals(Action.Value, "Search") Then
+            Msg.Text = Common.ERR_INVALID_PARAMETER
+            Exit Sub
+
+        End If
+
+        '[ProductListを表示]-----------------------------------------------------
+        RFQHeaderList.Visible = True
+
+        '' 一覧検索
+        st_ProductID = st_ProductID.Trim()
+        ShowList()
+
+    End Sub
+
+    ''' <summary>
+    ''' Releaseボタンクリックイベント
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    Protected Sub Release_Click(sender As Object, e As EventArgs) Handles Release.Click
+        'メッセージクリア
+        Msg.Text = String.Empty
+        'Valid Quotation クリア
+        ValidQuotation.SelectedIndex = 0
+
+        '' 一覧検索
+        st_ProductID = st_ProductID.Trim()
+        ShowList()
+
+    End Sub
+
+    Private Sub ReSetPager()
+
+        'ページャーを初期化
+        Dim PgrRFQPagerCountTop As DataPager
+        PgrRFQPagerCountTop = CType(RFQHeaderList.FindControl("RFQPagerCountTop"), DataPager)
+
+        Dim PgRFQPagerLinkTop As DataPager
+        PgRFQPagerLinkTop = CType(RFQHeaderList.FindControl("RFQPagerLinkTop"), DataPager)
+
+        Dim PgrRFQPagerLinkBottom As DataPager
+        PgrRFQPagerLinkBottom = CType(RFQHeaderList.FindControl("RFQPagerLinkBottom"), DataPager)
+
+        Dim PgrRFQPagerCountBottom As DataPager
+        PgrRFQPagerCountBottom = CType(RFQHeaderList.FindControl("RFQPagerCountBottom"), DataPager)
+
+        'ResetPageTemplatePagerField(PgrRFQPagerCountTop)
+        ResetPageNumericPagerField(PgRFQPagerLinkTop)
+        'ResetPageNumericPagerField(PgrRFQPagerLinkBottom)
+        'ResetPageTemplatePagerField(PgrRFQPagerCountBottom)
+
+    End Sub
+
+    ''' <summary>
+    ''' ページを初期化します。
+    ''' </summary>
+    private Sub ResetPageNumericPagerField(ByVal dp As DataPager)
+        If Not IsNothing(dp) And Not dp.StartRowIndex = 0 Then
+            Dim numericPF As NumericPagerField = Ctype(dp.Fields(0), NumericPagerField)
+            If Not IsNothing(numericPF) Then
+　　　　　　　　'' 引数に0をセット
+                Dim args As CommandEventArgs = New CommandEventArgs("0", "")
+　　　　　　　　'' イベント発生
+                numericPF.HandleEvent(args)
+            End If
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' RFQList プロパティ変更時イベントハンドラ
+    ''' </summary>
+    ''' <remarks>
+    ''' 
+    ''' </remarks>
+    Protected Sub RFQHeaderList_PagePropertiesChanged(ByVal sender As Object, ByVal e As EventArgs) Handles RFQHeaderList.PagePropertiesChanged
+        ' 一覧を表示する（ページャー押下時）
+        ShowList()
     End Sub
 
     ''' <summary>
@@ -47,10 +155,11 @@ Partial Public Class RFQListByProduct
     ''' <param name="st_ProductID">製品ID</param>
     ''' <remarks></remarks>
     Private Sub SearchProduct(ByVal st_ProductID As String)
+        Dim rFQListByProductDisp As TCIDataAccess.Join.RFQListByProductDisp = New TCIDataAccess.Join.RFQListByProductDisp 
 
         Using connection As New SqlClient.SqlConnection(DB_CONNECT_STRING)
 
-            Dim command As New SqlClient.SqlCommand(CreateProductHeaderSelectSQL(), connection)
+            Dim command As New SqlClient.SqlCommand(rFQListByProductDisp.CreateProductHeaderSelectSQL(), connection)
             connection.Open()
 
             command.Parameters.AddWithValue("ProductID", st_ProductID)
@@ -75,15 +184,21 @@ Partial Public Class RFQListByProduct
         End Using
     End Sub
 
-
     ''' <summary>
     ''' 見積依頼の検索を行います。
     ''' </summary>
     ''' <param name="st_ProductID">製品ID</param>
     ''' <remarks></remarks>
     Private Sub SearchRFQHeader(ByVal st_ProductID As String)
+        Dim rFQListByProduct As TCIDataAccess.Join.RFQListByProductDisp = New TCIDataAccess.Join.RFQListByProductDisp
+        rFQListByProduct.ValidityQuotation = Me.ValidQuotation.SelectedValue
 
-        SrcRFQHeader.SelectCommand = CreateRFQHeaderSelectSQL()
+        If String.Equals(Action.Value, "Release") Then 
+            '' 条件変更時はページャーをリセット
+            ReSetPager
+        End If
+
+        SrcRFQHeader.SelectCommand = rFQListByProduct.CreateRFQHeaderSelectSQL()
         SrcRFQHeader.SelectParameters.Clear()
         SrcRFQHeader.SelectParameters.Add("ProductID", st_ProductID)
         RFQHeaderList.DataBind()
@@ -102,145 +217,14 @@ Partial Public Class RFQListByProduct
         Dim src As SqlDataSource = CType(CType(e, ListViewItemEventArgs).Item.FindControl("SrcRFQLine"), SqlDataSource)
         Dim link As HyperLink = CType(CType(e, System.Web.UI.WebControls.ListViewItemEventArgs).Item.FindControl("RFQNumber"), HyperLink)
 
+        Dim rFQListByProduct As TCIDataAccess.Join.RFQListByProductDisp = New TCIDataAccess.Join.RFQListByProductDisp
+
         src.SelectParameters.Clear()
         src.SelectParameters.Add("RFQNumber", link.Text)
-        src.SelectCommand = CreateRFQLineSelectSQL()
+        src.SelectCommand = rFQListByProduct.CreateRFQLineSelectSQL()
         lv.DataSourceID = src.ID
         lv.DataBind()
     End Sub
-
-
-    ''' <summary>
-    ''' 製品検索SQL文字列を生成します。
-    ''' </summary>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Private Function CreateProductHeaderSelectSQL() As String
-
-        Dim sb_SQL As New Text.StringBuilder
-
-        'SQL文字列の作成
-        sb_SQL.Append("SELECT ")
-        sb_SQL.Append("	P.ProductNumber, ")
-        sb_SQL.Append("	P.QuoName, ")
-        sb_SQL.Append("	P.Name, ")
-        sb_SQL.Append("	P.CASNumber, ")
-        sb_SQL.Append("	P.MolecularFormula,P.ProductWarning,MU.EN AS BUoM ")
-        sb_SQL.Append("FROM ")
-        sb_SQL.Append("	Product AS P ")
-        sb_SQL.Append(" left join TciMaterial.dbo.Material as M on P.ProductNumber = M.ERPProductNumber ")
-        sb_SQL.Append(" left join TciMaterial.dbo.Unit as MU on M.BaseUnitOfMeasure = MU.Unit ")
-        sb_SQL.Append("WHERE ")
-        sb_SQL.Append("	P.ProductID = @ProductID ")
-
-        Return sb_SQL.ToString()
-
-    End Function
-
-    ''' <summary>
-    ''' RFQヘッダー検索SQL文字列を生成します。
-    ''' </summary>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Private Function CreateRFQHeaderSelectSQL() As String
-
-        Dim sb_SQL As New Text.StringBuilder
-
-        'SQL文字列の作成
-        sb_SQL.Append("SELECT ")
-        sb_SQL.Append("	rfh.StatusChangeDate, ")
-        sb_SQL.Append("	rfh.Status, ")
-        sb_SQL.Append("	rfh.RFQNumber, ")
-        sb_SQL.Append("	ISNULL(rfh.Priority, '') AS Priority, ")
-        sb_SQL.Append("	rfh.QuotedDate, ")
-        sb_SQL.Append("	rfh.ProductNumber, ")
-        sb_SQL.Append("	rfh.ProductName, ")
-        sb_SQL.Append("	rfh.SupplierName, ")
-        sb_SQL.Append("	rfh.SupplierInfo, ")
-        sb_SQL.Append("	rfh.MakerCountryCode, ")
-        sb_SQL.Append("	mcry.Name AS MakerCountryName, ")
-        sb_SQL.Append("	rfh.Purpose, ")
-        sb_SQL.Append("	rfh.MakerName, ")
-        sb_SQL.Append("	rfh.MakerInfo, ")
-        sb_SQL.Append("	rfh.SupplierCountryCode, ")
-        sb_SQL.Append("	scry.Name AS SupplierCountryName, ")
-        sb_SQL.Append("	rfh.SupplierItemName, ")
-        sb_SQL.Append("	rfh.ShippingHandlingCurrencyCode,")
-        sb_SQL.Append("	rfh.ShippingHandlingFee, ")
-        sb_SQL.Append("	rfh.EnqUserName, ")
-        sb_SQL.Append("	rfh.EnqLocationName, ")
-        sb_SQL.Append("	rfh.QuoUserName, ")
-        sb_SQL.Append("	rfh.QuoLocationName, ")
-        sb_SQL.Append("	rfh.Comment, ")
-        sb_SQL.Append("	rfh.isCONFIDENTIAL ")
-        sb_SQL.Append("FROM ")
-        sb_SQL.Append("	v_RFQHeader rfh ")
-        sb_SQL.Append("LEFT JOIN ")
-        sb_SQL.Append("	s_Country mcry ")
-        sb_SQL.Append("ON ")
-        sb_SQL.Append("	rfh.MakerCountryCode = mcry.CountryCode, ")
-        sb_SQL.Append("	s_Country scry ")
-        sb_SQL.Append("WHERE ")
-        sb_SQL.Append("	rfh.SupplierCountryCode = scry.CountryCode ")
-        sb_SQL.Append("	AND ProductID = @ProductID ")
-        sb_SQL.Append("ORDER BY ")
-        sb_SQL.Append(" rfh.StatusSortOrder ASC, ")
-        sb_SQL.Append(" rfh.QuotedDate DESC, ")
-        sb_SQL.Append(" rfh.StatusChangeDate DESC, ")
-        sb_SQL.Append(" rfh.RFQNumber ASC")
-
-        Return sb_SQL.ToString()
-
-    End Function
-
-
-    ''' <summary>
-    ''' RFQ詳細検索SQL文字列を生成します。
-    ''' </summary>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Private Function CreateRFQLineSelectSQL() As String
-
-        Dim sb_SQL As New Text.StringBuilder
-
-        'SQL文字列の作成
-        sb_SQL.Append("SELECT ")
-        sb_SQL.Append("	DISTINCT ")
-        sb_SQL.Append("	rl.RFQNumber, ")
-        sb_SQL.Append("	rl.RFQLineNumber, ")
-        sb_SQL.Append("	rl.EnqQuantity, ")
-        sb_SQL.Append("	rl.EnqUnitCode, ")
-        sb_SQL.Append("	rl.EnqPiece, ")
-        sb_SQL.Append("	rl.CurrencyCode, ")
-        sb_SQL.Append("	rl.UnitPrice, ")
-        sb_SQL.Append("	rl.QuoPer, ")
-        sb_SQL.Append("	rl.QuoUnitCode, ")
-        sb_SQL.Append("	rl.LeadTime, ")
-        sb_SQL.Append("	rl.Packing, ")
-        sb_SQL.Append("	rl.Purity, ")
-        sb_SQL.Append("	rl.QMMethod, ")
-        sb_SQL.Append("	rl.SupplierOfferNo, ")
-        sb_SQL.Append("	rl.NoOfferReason, ")
-        sb_SQL.Append("	PO.RFQLineNumber AS PO, ")
-        sb_SQL.Append("	CASE WHEN PO.Priority = 'C' THEN '' ELSE PO.Priority END AS Priority ")
-        sb_SQL.Append("FROM  ")
-        sb_SQL.Append("	v_RFQLine rl")
-        sb_SQL.Append("	LEFT OUTER JOIN ")
-        sb_SQL.Append("	(SELECT RFQLineNumber ")
-        sb_SQL.Append("	,MIN(CASE WHEN PO.QMStartingDate IS NOT NULL OR PO.QMFinishDate IS NOT NULL THEN 'C' ")
-        sb_SQL.Append("	     ELSE ISNULL(PO.Priority, 'C') END) AS Priority ")
-        sb_SQL.Append("	FROM PO ")
-        sb_SQL.Append("	GROUP BY RFQLineNumber ")
-        sb_SQL.Append("	)")
-        sb_SQL.Append("	PO ")
-        sb_SQL.Append("	ON ")
-        sb_SQL.Append("PO.RFQLineNumber = RL.RFQLineNumber ")
-        sb_SQL.Append("WHERE ")
-        sb_SQL.Append("	RFQNumber = @RFQNumber ")
-
-        Return sb_SQL.ToString()
-
-    End Function
 
     Protected Sub SrcRFQHeader_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcRFQHeader.Selecting
         e.Command.CommandTimeout = 0

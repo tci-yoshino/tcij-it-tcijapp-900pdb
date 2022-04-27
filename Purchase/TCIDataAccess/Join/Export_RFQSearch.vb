@@ -727,7 +727,7 @@ Namespace TCIDataAccess.Join
             Value.AppendLine("        s_Country scry")
             Value.AppendLine("        ON")
             Value.AppendLine("        rfh.SupplierCountryCode = scry.CountryCode")
-            If Cond.ValidityQuotation = "Valid Price" Then
+            If Cond.ValidQuotation = "Valid Price" Then
 
                 Value.AppendLine("    INNER JOIN ")
                 Value.AppendLine("        (SELECT")
@@ -746,7 +746,7 @@ Namespace TCIDataAccess.Join
                 Value.AppendLine("        ON")
                 Value.AppendLine("        rfh.[RFQNumber] =  vRL.[RFQNumber]")
             End If
-            If Cond.ValidityQuotation = "Inalid Price" Then
+            If Cond.ValidQuotation = "Inalid Price" Then
                 Value.AppendLine("    INNER JOIN ")
                 Value.AppendLine("        (SELECT")
                 Value.AppendLine("            [ProductID],")

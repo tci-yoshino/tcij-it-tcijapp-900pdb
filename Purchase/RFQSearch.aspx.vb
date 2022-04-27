@@ -5,7 +5,7 @@ Imports System.Data.SqlClient
 Imports Purchase.Common
 
 Public Class RFQSearch
-    Inherits System.Web.UI.Page
+    Inherits CommonPage
     Dim DBConn As New System.Data.SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
     Private DBCommand As SqlCommand
     Dim DBReader As System.Data.SqlClient.SqlDataReader
@@ -25,8 +25,10 @@ Public Class RFQSearch
     Private Const COLNAME_RFQSEARCH As String = "RFQSearch"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-
+        
         If IsPostBack = False Then
+            SearchMode.Value = "basic"
+            
             '初期表示時は検索結果表示欄を非表示
             ResultArea.Visible = False
 
@@ -34,17 +36,15 @@ Public Class RFQSearch
             SearchResultList.PageSize = Common.LIST_ONEPAGE_ROW(Request.Url.ToString())
 
             'EnqLocationCode,QuoLocationCodeのプルダウンリストの設定
-            Dim list_LocationList As New TCIDataAccess.s_LocationList
-            list_LocationList.SetLocationDropDownList(EnqLocationCode,"")
-            list_LocationList.SetLocationDropDownList(QuoLocationCode,"")
+            SetLocationDropDownList(EnqLocationCode)
+            SetLocationDropDownList(QuoLocationCode)
 
             'ドロップダウンリストの設定
             'StatusFrom
-            Dim RFQStatusList As TCIDataAccess.RFQStatusList = New TCIDataAccess.RFQStatusList
-            RFQStatusList.SetRFQStatusDropDownList(StatusFrom,"")
+            SetRFQStatusDropDownList(StatusFrom,"")
             StatusFrom.Items.Insert(0,New ListItem(String.Empty, String.Empty))
             'StatusTo
-            RFQStatusList.SetRFQStatusDropDownList(StatusTo,"")
+            SetRFQStatusDropDownList(StatusTo,"")
             StatusTo.Items.Insert(0,New ListItem(String.Empty, String.Empty))
             'Priority
             SetPriorityDropDownList(Priority, "SEARCH")
@@ -56,11 +56,10 @@ Public Class RFQSearch
             Dim PL_PurposeList As TCIDataAccess.PurposeList = New TCIDataAccess.PurposeList
             PL_PurposeList.SetPurposeDropDownList(PurposeList)
             'Territory
-            Dim LocationList As TCIDataAccess.s_LocationList = New TCIDataAccess.s_LocationList
-            LocationList.SetTerritoryDropDownList(TerritoryList)
+            SetTerritoryDropDownList(TerritoryList)
 
-            'ValidityQuotation
-            Common.SetValidityQuotationList(ValidityQuotation, False)
+            'ValidQuotation
+            SetValidQuotationList(ValidQuotation, String.Empty)
 
         End If
     End Sub
@@ -96,6 +95,19 @@ Public Class RFQSearch
             Msg.Text = ERR_NO_MATCH_FOUND
             Exit Sub
         End If
+
+        '[入力データを1Byte形式に変換する]------------------------------------------------------
+        RFQNumber.Text = Trim(StrConv(RFQNumber.Text,VbStrConv.Narrow))
+        ProductNumber.Text = Trim(StrConv(ProductNumber.Text,VbStrConv.Narrow))
+        SupplierCode.Text = Trim(StrConv(SupplierCode.Text, VbStrConv.Narrow))
+        S4SupplierCode.Text = Trim(StrConv(S4SupplierCode.Text, VbStrConv.Narrow))
+        RFQCreatedDateFrom.Text = Trim(StrConv(RFQCreatedDateFrom.Text, VbStrConv.Narrow))
+        RFQCreatedDateTo.Text = Trim(StrConv(RFQCreatedDateTo.Text, VbStrConv.Narrow))
+        RFQQuotedDateFrom.Text = Trim(StrConv(RFQQuotedDateFrom.Text, VbStrConv.Narrow))
+        RFQQuotedDateTo.Text = Trim(StrConv(RFQQuotedDateTo.Text, VbStrConv.Narrow))
+        LastRFQStatusChangeDateFrom.Text = Trim(StrConv(LastRFQStatusChangeDateFrom.Text, VbStrConv.Narrow))
+        LastRFQStatusChangeDateTo.Text = Trim(StrConv(LastRFQStatusChangeDateTo.Text, VbStrConv.Narrow))
+
         Msg.Text = CheckBeforeSearch()
         
         ' エラーメッセージが設定されている場合は処理を中断する
@@ -112,7 +124,11 @@ Public Class RFQSearch
         '----------------------------------------
         ' 一覧表示
         '----------------------------------------
-        SetListData(_CurrentPageIndexAtReturn, (SearchResultList.PageSize * _CurrentPageIndexAtReturn))
+        Msg.Text = SetListData(_CurrentPageIndexAtReturn, (SearchResultList.PageSize * _CurrentPageIndexAtReturn))
+        ' エラーメッセージが設定されている場合は処理を中断する
+        IF Not String.IsNullOrEmpty(Msg.Text)
+            Exit Sub
+        End If
 
         ResultArea.Visible = True
 
@@ -123,7 +139,7 @@ Public Class RFQSearch
     ''' <param name="sender"></param>
     ''' <param name="e"></param>
     Protected Sub SearchResultList_Paging(ByVal sender As System.Object, ByVal e As PagingEventArgs) Handles SearchResultList.Paging
-        SetListData(e.NewCurrentPageIndex, e.NewSkipRecord)
+        Msg.Text = SetListData(e.NewCurrentPageIndex, e.NewSkipRecord)
     End Sub
     'Clearボタン押下時、テキストボックス・ドロップダウンリスト・チェックボックスをクリアまたは未選択の状態にする
     Protected Sub Release_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Release.Click
@@ -140,7 +156,7 @@ Public Class RFQSearch
         PurposeList.SelectedIndex = -1
         TerritoryList.SelectedIndex = -1
         Priority.SelectedIndex = 0
-        ValidityQuotation.SelectedIndex = 0
+        ValidQuotation.SelectedIndex = 0
         ResultArea.Visible = False
     End Sub
 
@@ -150,20 +166,20 @@ Public Class RFQSearch
     ''' <param name="MultipleItem">複数値項目のテキストボックス</param>
     ''' <returns>st_ErrMsg：空白の場合はエラーなし</returns>
     ''' <remarks></remarks>
-    Private Function CheckValueType(Byval MultipleItem As System.Web.UI.WebControls.TextBox) As String
+    Private Function CheckValueType(Byval MultipleItem As System.Web.UI.WebControls.TextBox) As Boolean
         Dim st_MultipleItem() As String = Split(MultipleItem.Text, "|")
         Dim i_MultipleItemLength As Integer = st_MultipleItem.Length
         Dim i_Count As Integer = 0
         Dim i_CheckInteger As Integer
-        Dim st_ErrMsg As String = ""
+        Dim  bl_isErrg As Boolean = False
 
         '値が複数設定される可能性がある項目のIDのセット
-        Dim st_RequestValue As String = StrConv(st_MultipleItem(i_Count), VbStrConv.Narrow)  'DBに格納されているデータは半角のため、画面で全角文字列で入力されていた場合、文字列を半角文字列に変換
+        Dim st_RequestValue As String = st_MultipleItem(i_Count)  'DBに格納されているデータは半角のため、画面で全角文字列で入力されていた場合、文字列を半角文字列に変換
 
         'DBに数値型で登録されている値の入力チェック
         While Not String.IsNullOrEmpty(st_RequestValue)
             If Not Integer.TryParse(st_RequestValue, i_CheckInteger) And Not String.IsNullOrEmpty(st_RequestValue.Trim) Then
-                st_ErrMsg = ERR_INCORRECT_RHQNUMMBER
+                bl_isErrg = True
                 Exit While
             End If
 
@@ -172,12 +188,12 @@ Public Class RFQSearch
             If i_MultipleItemLength = i_Count Then
                 Exit While
             Else
-                st_RequestValue = StrConv(st_MultipleItem(i_Count), VbStrConv.Narrow)
+                st_RequestValue = st_MultipleItem(i_Count)
             End If
 
         End While
 
-        Return st_ErrMsg
+        Return bl_isErrg
 
     End Function
 
@@ -244,9 +260,10 @@ Public Class RFQSearch
     ''' </summary>
     ''' <param name="CurrentPageIndex">表示するカレントページインデックス</param>
     ''' <param name="SkipRecord">スキップするレコード数</param>
+    ''' <returns>st_ErrMsg：空白の場合はエラーなし</returns>
     ''' <remarks></remarks>
-    Private Sub SetListData(ByVal CurrentPageIndex As Integer, ByVal SkipRecord As Integer)
-
+    Private Function SetListData(ByVal CurrentPageIndex As Integer, ByVal SkipRecord As Integer) As String
+        Dim st_ErrMsg As String = String.Empty
         '検索時の条件を設定する
         Dim cond As New TCIDataAccess.Join.KeywordSearchConditionParameter
         GetConditionFromViewState(cond)
@@ -255,8 +272,9 @@ Public Class RFQSearch
         Dim i_TotalDataCount As Integer = RFQHeaderList.Load(SkipRecord, SearchResultList.PageSize, cond)
 
         If i_TotalDataCount > 1000 Then
-            Msg.Text = Common.MSG_RESULT_OVER_1000
-            Exit Sub
+            st_ErrMsg = Common.MSG_RESULT_OVER_1000
+            ResultArea.Visible = False
+            Return st_ErrMsg
         End If
 
         If CurrentPageIndex > 0 AndAlso i_TotalDataCount > 0 AndAlso RFQHeaderList.Count = 0 Then
@@ -271,7 +289,8 @@ Public Class RFQSearch
         '検索条件を Session に格納
         cond.CurrentPageIndex = CurrentPageIndex     '現在のページをセット
 
-    End Sub
+        Return st_ErrMsg
+    End Function
 
     ''' <summary>
     ''' 検索条件のViewStateへの取り出し
@@ -343,6 +362,10 @@ Public Class RFQSearch
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
+        If Not String.IsNullOrEmpty(S4SupplierCode.Text)
+            bl_IsAllConditionsNotSet = False
+            Return bl_IsAllConditionsNotSet
+        End If
         If Not String.IsNullOrEmpty(SupplierName.Text)
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
@@ -411,7 +434,7 @@ Public Class RFQSearch
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(ValidityQuotation.SelectedValue)
+        If Not String.IsNullOrEmpty(ValidQuotation.SelectedValue)
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
@@ -485,11 +508,13 @@ Public Class RFQSearch
         End If
         cond.EnqLocationCode = EnqLocationCode.SelectedValue
         cond.EnqUserID = EnqUserID.SelectedValue
+        cond.EnqStorageLocation = EnqStorageLocation.SelectedValue
         cond.QuoLocationCode = QuoLocationCode.SelectedValue
         cond.QuoUserID = QuoUserID.SelectedValue
+        cond.QuoStorageLocation = QuoStorageLocation.SelectedValue
         cond.Purpose = PurposeList.Items
         cond.Territory = TerritoryList.Items
-        cond.ValidityQuotation = ValidityQuotation.SelectedValue
+        cond.ValidQuotation = ValidQuotation.SelectedValue
 
     End Sub
 
@@ -519,7 +544,7 @@ Public Class RFQSearch
         Dim ar_ResultMultipleItem(ar_MultipleItem.Length) As String
 
         For Each st_RFQNumber As String In ar_MultipleItem
-            ar_ResultMultipleItem(i_Count) = StrConv(st_RFQNumber, VbStrConv.Narrow)
+            ar_ResultMultipleItem(i_Count) = st_RFQNumber
             i_Count = i_Count + 1
         Next
         Return ar_ResultMultipleItem
@@ -536,36 +561,30 @@ Public Class RFQSearch
             ProductNumber.Text = UCase(ProductNumber.Text)
         End If
 
-        '数値型の項目の入力値チェック
-        '複数入力される可能性があるので関数にてチェック
-        Dim RFQNumberType As String = CheckValueType(RFQNumber)
-        Dim SupplierCodeType As String = CheckValueType(SupplierCode)
-        Dim S4SupplierCodeType As String = CheckValueType(S4SupplierCode)
-
         '画面に表示するエラーメッセージを設定
         'RFQNumber
-        If Not String.IsNullOrEmpty(RFQNumberType) Then
-            ErrMessage = RFQNumberType
+        If CheckValueType(RFQNumber) Then
+            ErrMessage = ERR_INCORRECT_RHQNUMMBER
             Return ErrMessage
         End If
 
         'SupplierCode
-        If Not String.IsNullOrEmpty(SupplierCodeType) Then
-            ErrMessage = SupplierCodeType
+        If CheckValueType(SupplierCode) Then
+            ErrMessage = ERR_INCORRECT_SUPPLIERCODE
             Return ErrMessage
         End If
 
         'S4Supplier
-        If Not String.IsNullOrEmpty(S4SupplierCodeType) Then
-            ErrMessage = RFQNumberType
+        If CheckValueType(S4SupplierCode) Then
+            ErrMessage = ERR_INCORRECT_SAPSUPPLIERCODE
             Return ErrMessage
         End If
 
         '日付の入力値チェック
         'DBに格納されているデータは半角のため、画面で全角文字列で入力されていた場合、文字列を半角文字列に変換
-        Dim RFQCreatedDate As String = CheckDate(StrConv(RFQCreatedDateFrom.Text, VbStrConv.Narrow), StrConv(RFQCreatedDateTo.Text, VbStrConv.Narrow), "RFQ Created Date")
-        Dim RFQQuotedDate As String = CheckDate(StrConv(RFQQuotedDateFrom.Text, VbStrConv.Narrow), StrConv(RFQQuotedDateTo.Text, VbStrConv.Narrow), "RFQ Quoted Date")
-        Dim LastRFQStatusChangeDate As String = CheckDate(StrConv(LastRFQStatusChangeDateFrom.Text, VbStrConv.Narrow), StrConv(LastRFQStatusChangeDateTo.Text, VbStrConv.Narrow), "Last RFQ Status Change Date")
+        Dim RFQCreatedDate As String = CheckDate(RFQCreatedDateFrom.Text, RFQCreatedDateTo.Text, "RFQ Created Date")
+        Dim RFQQuotedDate As String = CheckDate(RFQQuotedDateFrom.Text, RFQQuotedDateTo.Text, "RFQ Quoted Date")
+        Dim LastRFQStatusChangeDate As String = CheckDate(LastRFQStatusChangeDateFrom.Text, LastRFQStatusChangeDateTo.Text, "Last RFQ Status Change Date")
 
         '日付の入力値チェック時にエラーとなった場合、画面に表示するエラーメッセージを設定
         'RFQ Created Date

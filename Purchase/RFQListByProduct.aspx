@@ -13,6 +13,19 @@
 window.onload = function() {
    navi('product');
 }
+
+// 画面ボタンアクション時判定処理
+function setFormAction(button_type) {
+    if (button_type == "Search") {
+        setAction('Search');
+    } else if (button_type == "Release") {
+        setAction('Release');
+        clearForm('SearchForm')
+    } else {
+        document.getElementById("Action").value = "";
+    }
+}
+
     </script>
 </head>
 <body>
@@ -33,6 +46,7 @@ window.onload = function() {
         <div class="tabs">
             <a href="./RFQIssue.aspx?ProductID=<%=st_ProductID %>">RFQ Issue</a>            
             | <a href="#" onclick="popup('./ProductSetting.aspx?Action=Edit&ProductID=<%=st_ProductID %>')">Product Setting</a>
+            | <a href="#" onclick="popup('./SupplierListByProduct.aspx?ProductID=<%=st_ProductID %>')">Supplier List</a>
         </div>
 
         <h3><asp:Label ID="ProductNumber" runat="server" Text=''></asp:Label><span class="indent"><asp:Label ID="QuoName" runat="server" Text=''></asp:Label></span></h3>
@@ -57,6 +71,21 @@ window.onload = function() {
         </div>
 
         <hr />
+
+        <commonUC:HeaderEhs ID="HeaderEhs" runat="server" />
+
+        <div class="cond-left">
+            <b>Valid Quotation : </b>
+            <span >
+                <asp:DropDownList runat="server" ID="ValidQuotation" CssClass="filterdata">
+                    <asp:ListItem></asp:ListItem>
+                </asp:DropDownList>
+            </span> 
+            <asp:Button ID="Search" runat="server" Text="Search"  OnClientClick ="setFormAction('Search');" />
+            <asp:Button ID="Release" runat="server" Text="Release" OnClientClick ="setFormAction('Release');" />
+        </div>
+
+        <input type="hidden" runat="server" id="Action" value="" />
 
         <div class="list">
             <asp:ListView ID="RFQHeaderList" runat="server" DataSourceID="SrcRFQHeader">
@@ -120,9 +149,11 @@ window.onload = function() {
                     </div>
 
                 </LayoutTemplate>
+
                 <EmptyDataTemplate>
                     <h3 style="font-style:italic"><% =Purchase.Common.MSG_NO_DATA_FOUND%></h3>
                 </EmptyDataTemplate>
+
                 <ItemTemplate>
                     <table>
                         <tr>
@@ -139,14 +170,20 @@ window.onload = function() {
                         </tr>
                         <tr>
                             <th>Product Number / Name</th>
-                            <td colspan="5"><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label><span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Eval("ProductName")%>'></asp:Label></span></td>
+                            <td colspan="5">
+                                <asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label>
+                                <span class="indent"><asp:Label ID="CodeExtension" runat="server" Text='<%#Eval("CodeExtensionCode")%>'></asp:Label></span>
+                                <span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Eval("ProductName")%>'></asp:Label></span>
+                            </td>
                         </tr>
                         <tr>
                             <th>Supplier Name / Country</th>
-                            <td colspan="3">
+                            <td colspan="4">
+                                <span class="placedright"><asp:HyperLink ID="SupplierCode" runat="server" NavigateUrl='<%#Eval("SupplierCode","./RFQListBySupplier.aspx?SupplierCode={0}")%>' Text='<%#Eval("SupplierCode")%>' /></span>
                                 <!-- １段下に改行されて表示される現象の対策のため他項目より前に記述する -->
                                 <span class="placedright"><asp:HyperLink ID="SupplierInfoLink" runat="server" NavigateUrl='<%#Eval("SupplierInfo")%>' Target="_blank"><asp:Label ID="SupplierInfo" runat="server" Text='<%#If(IsDBNull(Eval("SupplierInfo")), "", "Supplier Information")%>'></asp:Label></asp:HyperLink></span>
-                                <asp:Label ID="SupplierName" runat="server" Text='<%#Eval("SupplierName")%>'></asp:Label><span class="indent">(<asp:Label ID="SupplierCountry" runat="server" Text='<%#Eval("SupplierCountryName")%>'></asp:Label>)</span>
+                                <asp:Label ID="SupplierName" runat="server" Text='<%#Eval("SupplierName")%>'></asp:Label>
+                                <span class="indent">(<asp:Label ID="SupplierCountry" runat="server" Text='<%#Eval("SupplierCountryName")%>'></asp:Label>)</span>
                             </td>
                             <th>Purpose</th>
                             <td><asp:Label ID="Purpose" runat="server" Text='<%#Eval("Purpose")%>'></asp:Label></td>
@@ -188,6 +225,7 @@ window.onload = function() {
                                     <th id="Th7"  runat="server" style="width:10%">Packing</th>
                                     <th id="Th8"  runat="server" style="width:10%">Purity/Method</th>
                                     <th id="Th9" runat="server" style="width:10%">Supplier Offer No</th>
+                                    <th id="Th13" runat="server" style="width:10%">Supplier Item No</th>
                                     <th id="Th11" runat="server" style="width:14%">Reason for "No Offer"</th>
                                     <th id="Th10" runat="server" style="width:5%">PO</th>
                                     <th id="Th12" runat="server" style="width:5%">Interface</th>
@@ -208,6 +246,7 @@ window.onload = function() {
                             <td><asp:Label ID="Packing" runat="server" Text='<%#Eval("Packing")%>'></asp:Label></td>
                             <td><asp:Label ID="Purity" runat="server" Text='<%#(Eval("Purity").ToString+ Eval("QMMethod").ToString) %>'></asp:Label></td>
                             <td><asp:Label ID="SupplierOfferNo" runat="server" Text='<%#Eval("SupplierOfferNo")%>'></asp:Label></td>
+                            <td><asp:Label ID="SupplierItemNumber" runat="server" Text='<%#Eval("SupplierItemNumber")%>'></asp:Label></td>
                             <td><asp:Label ID="NoOfferReason" runat="server" Text='<%#Eval("NoOfferReason") %>'></asp:Label></td>
                             <td><asp:HyperLink ID="PO" runat="server" NavigateUrl='<%#If(IsDBNull(Eval("PO")), "", "./POListByRFQ.aspx?RFQLineNumber=" & Eval("RFQLineNumber"))%>'><%#If(IsDBNull(Eval("PO")), "", IIf(Eval("Priority") = "", "PO", "PO-" & Eval("Priority")))%></asp:HyperLink></td>
                             <td><asp:Label ID="RFQStatus" runat="server" Text='<%#GetRFQStatus(Eval("RFQNumber"),Eval("RFQLineNumber")) %>'></asp:Label></td>

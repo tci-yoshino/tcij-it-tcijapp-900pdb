@@ -14,6 +14,7 @@ Namespace TCIDataAccess.Join
         Protected _StatusChangeDate As DateTime
         Protected _SupplierCode As Integer = 0
         Protected _Status As String = String.Empty
+        Protected _ProductID As Integer = 0
         Protected _ProductNumber As String = String.Empty
         Protected _ProductName As String = String.Empty
         Protected _Purpose As String = String.Empty
@@ -63,6 +64,14 @@ Namespace TCIDataAccess.Join
             End Get
             Set(ByVal value As String)
                 _Status = value
+            End Set
+        End Property
+        Public Property ProductID() As Integer
+            Get
+                Return _ProductID
+            End Get
+            Set(ByVal value As Integer)
+                _ProductID = value
             End Set
         End Property
         Public Property ProductNumber() As String
@@ -179,6 +188,7 @@ Namespace TCIDataAccess.Join
             Value.AppendLine("    RH.[CreateDate],")
             Value.AppendLine("    RH.[StatusChangeDate],")
             Value.AppendLine("    RH.[Status],")
+            Value.AppendLine("    RH.[ProductID],")
             Value.AppendLine("    RH.[ProductNumber],")
             Value.AppendLine("    RH.[ProductName],")
             Value.AppendLine("    RH.[Purpose],")
@@ -253,6 +263,7 @@ Namespace TCIDataAccess.Join
                 DBCommon.SetProperty(DBReader("CreateDate"), dc_Date.CreateDate)
                 DBCommon.SetProperty(DBReader("StatusChangeDate"), dc_Date.StatusChangeDate)
                 DBCommon.SetProperty(DBReader("Status"), dc_Date.Status)
+                DBCommon.SetProperty(DBReader("ProductID"), dc_Date.ProductID)
                 DBCommon.SetProperty(DBReader("ProductNumber"), dc_Date.ProductNumber)
                 DBCommon.SetProperty(DBReader("ProductName"), dc_Date.ProductName)
                 DBCommon.SetProperty(DBReader("Purpose"), dc_Date.Purpose)

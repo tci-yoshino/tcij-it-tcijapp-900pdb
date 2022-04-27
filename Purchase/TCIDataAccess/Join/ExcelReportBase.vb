@@ -537,6 +537,8 @@ Public Class ExcelReportBase
     ''' <param name="TableData">テーブルデータ</param>
     ''' <param name="ColNumber">出力列番号</param>
     ''' <param name="RowNumber">出力行番号</param>
+    ''' <param name="TitleStyle">タイトル書式</param>
+    ''' <param name="HeadStyle">ヘッダ書式</param>
     ''' <returns>出力を終えた後の行番号</returns>
     Public Function AddHeaderRow(ByVal ShtData As SheetData, _
                                  ByVal TableData As DataTable, _

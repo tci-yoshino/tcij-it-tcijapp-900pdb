@@ -23,7 +23,6 @@ Namespace TCIDataAccess
 #End Region 'User-Defined Constant End
 
         Protected _CodeExtensionCode As String = String.Empty
-        Protected _Text As String = String.Empty
         Protected _SortOrder As Integer = 0
 
         ''' <summary> 
@@ -35,18 +34,6 @@ Namespace TCIDataAccess
             End Get
             Set(ByVal value As String)
                 _CodeExtensionCode = value
-            End Set
-        End Property
-
-        ''' <summary> 
-        ''' Text を設定、または取得する 
-        ''' </summary> 
-        Public Property Text() As String
-            Get
-                Return _Text
-            End Get
-            Set(ByVal value As String)
-                _Text = value
             End Set
         End Property
 
@@ -79,7 +66,6 @@ Namespace TCIDataAccess
             Dim Value As New StringBuilder()
             Value.AppendLine("SELECT")
             Value.AppendLine("    [CodeExtensionCode],")
-            Value.AppendLine("    [Text],")
             Value.AppendLine("    [SortOrder]")
             Value.AppendLine("FROM")
             Value.AppendLine("    [CodeExtension]")
@@ -94,7 +80,6 @@ Namespace TCIDataAccess
                     Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
                     While DBReader.Read()
                         SetProperty(DBReader("CodeExtensionCode"), _CodeExtensionCode)
-                        SetProperty(DBReader("Text"), _Text)
                         SetProperty(DBReader("SortOrder"), _SortOrder)
                     End While
                     DBReader.Close()
@@ -130,7 +115,6 @@ Namespace TCIDataAccess
             DBCommand.CommandText = CreateSaveSQL()
             DBCommand.Parameters.Clear()
             DBCommand.Parameters.AddWithValue("CodeExtensionCode", _CodeExtensionCode)
-            DBCommand.Parameters.AddWithValue("Text", _Text)
             DBCommand.Parameters.AddWithValue("SortOrder", _SortOrder)
             Dim ob_ID As Object = DBCommand.ExecuteScalar()
             If Not IsDBNull(ob_ID) Then
@@ -157,12 +141,10 @@ Namespace TCIDataAccess
             Value.AppendLine("    ) = 0")
             Value.AppendLine("        INSERT [CodeExtension] (")
             Value.AppendLine("            [CodeExtensionCode],")
-            Value.AppendLine("            [Text],")
             Value.AppendLine("            [SortOrder]")
             Value.AppendLine("        )")
             Value.AppendLine("        Values(")
             Value.AppendLine("            @CodeExtensionCode,")
-            Value.AppendLine("            @Text,")
             Value.AppendLine("            @SortOrder")
             Value.AppendLine("        )")
             Value.AppendLine("    ELSE")
@@ -170,7 +152,6 @@ Namespace TCIDataAccess
             Value.AppendLine("            [CodeExtension]")
             Value.AppendLine("        SET")
             Value.AppendLine("            [CodeExtensionCode] = @CodeExtensionCode,")
-            Value.AppendLine("            [Text] = @Text,")
             Value.AppendLine("            [SortOrder] = @SortOrder")
             Value.AppendLine("        WHERE ")
             Value.AppendLine("            [CodeExtensionCode] = @CodeExtensionCode")
@@ -223,7 +204,6 @@ Namespace TCIDataAccess
 
             sb_SQL.AppendLine("SELECT ")
             sb_SQL.AppendLine("	 CE.[CodeExtensionCode] AS ItemValue, ")
-            sb_SQL.AppendLine("  CE.[Text] AS ItemText, ")
             sb_SQL.AppendLine("  CE.[SortOrder] AS ItemOrder ")
             sb_SQL.AppendLine("FROM ")
             sb_SQL.AppendLine("  [CodeExtension] AS CE ")
@@ -249,7 +229,6 @@ Namespace TCIDataAccess
                             Dim dc_DropDownListItems As DropDownListItems = New DropDownListItems
 
                             DBCommon.SetProperty(DBReader("ItemValue"), dc_DropDownListItems.ItemValue)
-                            DBCommon.SetProperty(DBReader("ItemText"), dc_DropDownListItems.ItemText)
                             DBCommon.SetProperty(DBReader("ItemOrder"), dc_DropDownListItems.ItemOrder)
                             dropDownListItems.Add(dc_DropDownListItems)
 

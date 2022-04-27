@@ -96,6 +96,7 @@
     <Content Include="App_Data\ExcelForm.xml" />
     <Content Include="Class\JME.jar" />
     <Content Include="Control\Header.ascx" />
+    <Content Include="Control\HeaderEhs.ascx" />
     <Content Include="Control\SearchResult.ascx" />
     <Content Include="CountryList.aspx" />
     <Content Include="CountrySelect.aspx" />
@@ -113,6 +114,7 @@
     <Content Include="Image\Search.gif" />
     <Content Include="IsuseError.html" />
     <Content Include="JFYISearch.aspx" />
+    <Content Include="jsme\clear.cache.gif" />
     <Content Include="jsme\gwt\chrome\chrome.css" />
     <Content Include="jsme\gwt\chrome\chrome_rtl.css" />
     <Content Include="jsme\gwt\chrome\images\button\menu-button-arrow-disabled.png" />
@@ -160,6 +162,7 @@
     <Content Include="POListByRFQ.aspx" />
     <Content Include="POStatus.aspx" />
     <Content Include="POUpdate.aspx" />
+    <Content Include="ProductInfoRegulation.aspx" />
     <Content Include="ProductListBySupplier.aspx" />
     <Content Include="ProductSearch.aspx" />
     <Content Include="ProductSearchByKeyword.aspx" />
@@ -212,6 +215,13 @@
     </Compile>
     <Compile Include="Control\Header.ascx.vb">
       <DependentUpon>Header.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Control\HeaderEhs.ascx.designer.vb">
+      <DependentUpon>HeaderEhs.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Control\HeaderEhs.ascx.vb">
+      <DependentUpon>HeaderEhs.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Control\SearchResult.ascx.designer.vb">
@@ -307,6 +317,13 @@
     </Compile>
     <Compile Include="POUpdate.aspx.vb">
       <DependentUpon>POUpdate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProductInfoRegulation.aspx.designer.vb">
+      <DependentUpon>ProductInfoRegulation.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProductInfoRegulation.aspx.vb">
+      <DependentUpon>ProductInfoRegulation.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ProductListBySupplier.aspx.designer.vb">
@@ -531,10 +548,14 @@
     <Compile Include="TCIDataAccess\CodeExtension.vb" />
     <Compile Include="TCIDataAccess\DBCommon.vb" />
     <Compile Include="TCIDataAccess\EhsHeader_Personalize.vb" />
+    <Compile Include="TCIDataAccess\FacadeEhsHeader.vb" />
     <Compile Include="TCIDataAccess\FacadeProductListBySupplier.vb" />
     <Compile Include="TCIDataAccess\FacadeRFQIssue.vb" />
     <Compile Include="TCIDataAccess\FacadeSupplierListByProduct.vb" />
+    <Compile Include="TCIDataAccess\Join\EhsHeader_Personalize_Sort.vb" />
     <Compile Include="TCIDataAccess\Join\Export_ProductListSupplier.vb" />
+    <Compile Include="TCIDataAccess\Join\HeaderEhsDisp.vb" />
+    <Compile Include="TCIDataAccess\Join\ProductInfoRegulationDisp.vb" />
     <Compile Include="TCIDataAccess\Join\ProductSearchByKeywordDisp.vb" />
     <Compile Include="TCIDataAccess\Join\ProductSearchDisp.vb" />
     <Compile Include="TCIDataAccess\Join\RFQHeader.vb" />
@@ -542,6 +563,7 @@
     <Compile Include="TCIDataAccess\Join\ProductListBySupplierDisp.vb" />
     <Compile Include="TCIDataAccess\Join\RequestedTaskDisp.vb" />
     <Compile Include="TCIDataAccess\Join\RFQIssueDisp.vb" />
+    <Compile Include="TCIDataAccess\Join\RFQListByProductDisp.vb" />
     <Compile Include="TCIDataAccess\Join\StructureSearchDisp.vb" />
     <Compile Include="TCIDataAccess\Join\SupplierListByProductDisp.vb" />
     <Compile Include="TCIDataAccess\Join\ExcelReportBase.vb" />
@@ -564,6 +586,7 @@
     <Compile Include="TCIDataAccess\s_NewProduct.vb" />
     <Compile Include="TCIDataAccess\s_SPECS.vb" />
     <Compile Include="TCIDataAccess\v_CONFIDENTIAL.vb" />
+    <Compile Include="TCIDataAccess\v_RFQHeader.vb" />
     <Compile Include="TCIDataAccess\v_Territory.vb" />
     <Compile Include="TCIDataAccess\v_User.vb" />
     <Compile Include="UnassignedTask.aspx.designer.vb">

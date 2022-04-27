@@ -23,8 +23,6 @@ Partial Public Class ProductListBySupplier
             ' 初期表示の場合
             '[QueryString("Supplier")のチェック]----------------------------------------------
             If String.IsNullOrWhiteSpace(Request.QueryString("Supplier")) Then
-                SupplierProductList.DataSource = String.Empty
-                SupplierProductList.DataBind()
                 Msg.Text = Common.ERR_INVALID_PARAMETER
                 Exit Sub
             End If
@@ -46,23 +44,7 @@ Partial Public Class ProductListBySupplier
             SupplierProductList.DataSource = productListBySupplierDispList.ProductListBySupplierList
             SupplierProductList.DataBind()
 
-            'ページャーの1ページ辺りの表示件数に定数の値を設定
-            Dim PgrSupplierProductPagerCountTop As DataPager
-            PgrSupplierProductPagerCountTop = SupplierProductList.FindControl("SupplierProductPagerCountTop")
-            PgrSupplierProductPagerCountTop.PageSize = Common.LIST_ONEPAGE_ROW_ProductListBySupplier
-
-            Dim PgrSupplierProductPagerLinkTop As DataPager
-            PgrSupplierProductPagerLinkTop = SupplierProductList.FindControl("SupplierProductPagerLinkTop")
-            PgrSupplierProductPagerLinkTop.PageSize = Common.LIST_ONEPAGE_ROW_ProductListBySupplier
-
-            Dim PgrSupplierProductPagerCountBottom As DataPager
-            PgrSupplierProductPagerCountBottom = SupplierProductList.FindControl("SupplierProductPagerCountBottom")
-            PgrSupplierProductPagerCountBottom.PageSize = Common.LIST_ONEPAGE_ROW_ProductListBySupplier
-
-            Dim PgrSupplierProductPagerLinkBottom As DataPager
-            PgrSupplierProductPagerLinkBottom = SupplierProductList.FindControl("SupplierProductPagerLinkBottom")
-            PgrSupplierProductPagerLinkBottom.PageSize = Common.LIST_ONEPAGE_ROW_ProductListBySupplier
-
+            ResetPagerIndex(True)
         Else
             Dim productListBySupplierDispList As ProductListBySupplierDispList = New ProductListBySupplierDispList
             SupplierProductList.DataSource = Nothing 
@@ -116,6 +98,7 @@ Partial Public Class ProductListBySupplier
         productListBySupplierDispList.Load(SupplierCode.Text, Session(SESSION_ROLE_CODE).ToString, HiddenSelectedValidityFilter.Value, SupplierProductList.ID, HiddenSortField.Value, HiddenSortType.Value)
         SupplierProductList.DataSource = productListBySupplierDispList.ProductListBySupplierList
         SupplierProductList.DataBind()
+
     End Sub
 
     ''' <summary>
@@ -132,14 +115,15 @@ Partial Public Class ProductListBySupplier
     End Sub
 
     ''' <summary>
-    ''' HiddenSortType 値変更時イベントハンドラ
+    ''' HiddenSortType HiddenSortField 値変更時イベントハンドラ
     ''' </summary>
     ''' <remarks>
-    ''' 
+    ''' ページャーを１ページ目に移動
     ''' </remarks>
-    Protected Sub HiddenSelectedButton_ValueChanged(sender As Object, e As EventArgs) Handles HiddenSortType.ValueChanged
+    Protected Sub HiddenSortTypeAndSortField_ValueChanged(sender As Object, e As EventArgs) Handles HiddenSortType.ValueChanged, HiddenSortField.ValueChanged
         ResetPagerIndex(True)
     End Sub
+
 
     ''' <summary>
     ''' 画面表示しているDatapagerのページを1ページ目にセットする

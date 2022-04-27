@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./CSS/Style.css" type="text/css" media="screen,print" />
     <script type="text/javascript" src="./JS/Common.js"></script>
     <script type="text/javascript" src="./JS/Colorful.js"></script>
+
 </head>
 <body>
     <!-- Header -->
@@ -15,7 +16,7 @@
     <!-- Header End -->
     <!-- Main Content Area -->
     <div id="content">
-        <form id="SwitchForm" runat="server">
+        <form id="SwitchForm" runat="server" method="post">
             <div class="main switch">
                 <table style="margin-bottom: 0">
                     <tr>
@@ -39,7 +40,7 @@
                             </asp:DropDownList>
                         </td>
                         <td>
-                            <asp:Button ID="Switch" runat="server" Text="Switch" OnClick="Switch_Click" PostBackUrl="RequestedTask.aspx?Action=Switch" /></td>
+                            <asp:Button ID="Switch" runat="server" Text="Switch" /></td>
                     </tr>
                 </table>
             </div>
@@ -47,10 +48,14 @@
             <div class="list">
                 <%--ページング時の押下ボタンフラグ保持用にHiddenField作成--%>
                 <asp:HiddenField ID="HiddenSelectedButton" runat="server" Value="" />
+                <asp:HiddenField ID="HiddenUserID" runat="server" Value="" />
+                <asp:HiddenField ID="HiddenRFQPriority" runat="server" Value="" />
+                <asp:HiddenField ID="HiddenRFQStatus" runat="server" Value="" />
+                <asp:HiddenField ID="HiddenOrderby" runat="server" Value="" />
                 <asp:ListView ID="RFQList" runat="server">
                     <LayoutTemplate>
                         <div class="pagingHead">
-                            <asp:DataPager ID="RFQPagerCountTop" runat="server" PageSize="50">
+                            <asp:DataPager ID="RFQPagerCountTop" runat="server">
                                 <Fields>
                                     <asp:TemplatePagerField>
                                         <PagerTemplate>
@@ -69,7 +74,7 @@
                         </div>
 
                         <div class="paging">
-                            <asp:DataPager ID="RFQPagerLinkTop" runat="server" PageSize="50">
+                            <asp:DataPager ID="RFQPagerLinkTop" runat="server">
                                 <Fields>
                                     <asp:NumericPagerField ButtonCount="10" CurrentPageLabelCssClass="current" NumericButtonCssClass="numeric" PreviousPageText="&laquo; Previous" NextPageText="Next &raquo;" />
                                 </Fields>
@@ -81,7 +86,7 @@
                             </tr>
                         </table>
                         <div class="paging">
-                            <asp:DataPager ID="RFQPagerLinkBottom" runat="server" PageSize="50">
+                            <asp:DataPager ID="RFQPagerLinkBottom" runat="server">
                                 <Fields>
                                     <asp:NumericPagerField ButtonCount="10" CurrentPageLabelCssClass="current" NumericButtonCssClass="numeric" PreviousPageText="&laquo; Previous" NextPageText="Next &raquo;" />
                                 </Fields>
@@ -89,7 +94,7 @@
                         </div>
 
                         <div class="pagingHead">
-                            <asp:DataPager ID="RFQPagerCountBottom" runat="server" PageSize="50">
+                            <asp:DataPager ID="RFQPagerCountBottom" runat="server">
                                 <Fields>
                                     <asp:TemplatePagerField>
                                         <PagerTemplate>

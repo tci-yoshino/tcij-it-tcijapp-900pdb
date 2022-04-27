@@ -256,13 +256,313 @@ Namespace TCIDataAccess
     Public Class s_EhsHeaderList
         Inherits List(Of s_EhsHeader)
 
-        ''' <summary>
-        ''' コンストラクタ
-        ''' </summary>
         Public Sub New()
+            MyBase.New
 
         End Sub
 
+        ''' <summary>
+        ''' データベースから拠点初期設定のデータを読み込む（拠点ソート）
+        ''' </summary>
+        ''' <param name="locationCode"></param>
+        Public Sub LoadForLocation(ByVal locationCode As String)
+            'データベースから全てのデータを読み込む SQL 文字列を生成する
+            Dim Value As StringBuilder = New StringBuilder
+            Value.AppendLine("SELECT")
+            Value.AppendLine("    [LocationCode],")
+            Value.AppendLine("    [Item],")
+            Value.AppendLine("    [Text],")
+            Value.AppendLine("    [SortOrder],")
+            Value.AppendLine("    [isRestockingControlSettings],")
+            Value.AppendLine("    [isOutputTransferOrder],")
+            Value.AppendLine("    [isOutputPriceRevision],")
+            Value.AppendLine("    [CreatedBy],")
+            Value.AppendLine("    [CreateDate],")
+            Value.AppendLine("    [UpdatedBy],")
+            Value.AppendLine("    [UpdateDate]")
+            Value.AppendLine("FROM")
+            Value.AppendLine("    [s_EhsHeader]")
+            Value.AppendLine("WHERE")
+            Value.AppendLine("    [LocationCode] IN (@global, @locationCode)")
+            Value.AppendLine("ORDER BY")
+            Value.AppendLine("    CASE WHEN [LocationCode] = @global THEN 0 ELSE 1 END, [LocationCode],")
+            Value.AppendLine("    [SortOrder]")
+            Dim DBConn As SqlConnection = New SqlConnection(DBCommon.DB_CONNECT_STRING)
+            Dim DBCommand As SqlCommand = DBConn.CreateCommand
+            DBCommand.CommandText = Value.ToString
+            DBCommand.Parameters.Clear()
+            DBCommand.Parameters.AddWithValue("global", Common.LOCATION_CODE_GL)
+            DBCommand.Parameters.AddWithValue("locationCode", locationCode)
+            DBConn.Open()
+            Dim DBReader As SqlDataReader = DBCommand.ExecuteReader
+
+            While DBReader.Read
+                Dim _LocationCode As String = String.Empty
+                Dim _Item As String = String.Empty
+                Dim _Text As String = String.Empty
+                Dim _SortOrder As Integer = 0
+                Dim _isRestockingControlSettings As Boolean = False
+                Dim _isOutputTransferOrder As Boolean = False
+                Dim _isOutputPriceRevision As Boolean = False
+                Dim _CreatedBy As Integer = 0
+                Dim _CreateDate As DateTime = New DateTime(0)
+                Dim _UpdatedBy As Integer = 0
+                Dim _UpdateDate As DateTime = New DateTime(0)
+                Dim dc_EhsHeader As s_EhsHeader = New s_EhsHeader
+                DBCommon.SetProperty(DBReader("LocationCode"), _LocationCode)
+                DBCommon.SetProperty(DBReader("Item"), _Item)
+                DBCommon.SetProperty(DBReader("Text"), _Text)
+                DBCommon.SetProperty(DBReader("SortOrder"), _SortOrder)
+                DBCommon.SetProperty(DBReader("isRestockingControlSettings"), _isRestockingControlSettings)
+                DBCommon.SetProperty(DBReader("isOutputTransferOrder"), _isOutputTransferOrder)
+                DBCommon.SetProperty(DBReader("isOutputPriceRevision"), _isOutputPriceRevision)
+                DBCommon.SetProperty(DBReader("CreatedBy"), _CreatedBy)
+                DBCommon.SetProperty(DBReader("CreateDate"), _CreateDate)
+                DBCommon.SetProperty(DBReader("UpdatedBy"), _UpdatedBy)
+                DBCommon.SetProperty(DBReader("UpdateDate"), _UpdateDate)
+                dc_EhsHeader.LocationCode = _LocationCode
+                dc_EhsHeader.Item = _Item
+                dc_EhsHeader.Text = _Text
+                dc_EhsHeader.SortOrder = _SortOrder
+                dc_EhsHeader.isRestockingControlSettings = _isRestockingControlSettings
+                dc_EhsHeader.isOutputTransferOrder = _isOutputTransferOrder
+                dc_EhsHeader.isOutputPriceRevision = _isOutputPriceRevision
+                dc_EhsHeader.CreatedBy = _CreatedBy
+                dc_EhsHeader.CreateDate = _CreateDate
+                dc_EhsHeader.UpdatedBy = _UpdatedBy
+                dc_EhsHeader.UpdateDate = _UpdateDate
+                Me.Add(dc_EhsHeader)
+
+            End While
+
+            DBReader.Close()
+        End Sub
+
+        ''' <summary>
+        ''' データベースから全てのデータを読み込む（拠点ソート）    
+        ''' </summary>
+        Public Sub Load(ByVal locationCode As String)
+            'データベースから全てのデータを読み込む SQL 文字列を生成する
+            Dim Value As StringBuilder = New StringBuilder
+            Value.AppendLine("SELECT")
+            Value.AppendLine("    [LocationCode],")
+            Value.AppendLine("    [Item],")
+            Value.AppendLine("    [Text],")
+            Value.AppendLine("    [SortOrder],")
+            Value.AppendLine("    [isRestockingControlSettings],")
+            Value.AppendLine("    [isOutputTransferOrder],")
+            Value.AppendLine("    [isOutputPriceRevision],")
+            Value.AppendLine("    [CreatedBy],")
+            Value.AppendLine("    [CreateDate],")
+            Value.AppendLine("    [UpdatedBy],")
+            Value.AppendLine("    [UpdateDate]")
+            Value.AppendLine("FROM")
+            Value.AppendLine("    [s_EhsHeader] ")
+            Value.AppendLine("ORDER BY")
+            Value.AppendLine("    CASE [LocationCode] ")
+            Value.AppendLine("    WHEN @gl ")
+            Value.AppendLine("        THEN 0")
+            Value.AppendLine("    WHEN @jp ")
+            Value.AppendLine("        THEN (SELECT CAST([SortOrder] AS int) ")
+            Value.AppendLine("              FROM s_BranchSortOrder")
+            Value.AppendLine("              WHERE LocationCode = @locationCode AND DisplayLocationCode = @jp) ")
+            Value.AppendLine("    WHEN @us ")
+            Value.AppendLine("        THEN (SELECT CAST([SortOrder] AS int) ")
+            Value.AppendLine("              FROM s_BranchSortOrder")
+            Value.AppendLine("              WHERE LocationCode = @locationCode AND DisplayLocationCode = @us) ")
+            Value.AppendLine("    WHEN @eu ")
+            Value.AppendLine("        THEN (SELECT CAST([SortOrder] AS int) ")
+            Value.AppendLine("              FROM s_BranchSortOrder")
+            Value.AppendLine("              WHERE LocationCode = @locationCode AND DisplayLocationCode = @eu) ")
+            Value.AppendLine("    WHEN @in ")
+            Value.AppendLine("        THEN (SELECT CAST([SortOrder] AS int) ")
+            Value.AppendLine("              FROM s_BranchSortOrder")
+            Value.AppendLine("              WHERE LocationCode = @locationCode AND DisplayLocationCode = @in) ")
+            Value.AppendLine("    WHEN @cn ")
+            Value.AppendLine("        THEN (SELECT CAST([SortOrder] AS int) ")
+            Value.AppendLine("              FROM s_BranchSortOrder")
+            Value.AppendLine("              WHERE LocationCode = @locationCode AND DisplayLocationCode = @cn) ")
+            Value.AppendLine("    END,")
+            Value.AppendLine("    [LocationCode], ")
+            Value.AppendLine("    [SortOrder]")
+            Dim DBConn As SqlConnection = New SqlConnection(DBCommon.DB_CONNECT_STRING)
+            Dim DBCommand As SqlCommand = DBConn.CreateCommand
+            DBCommand.CommandText = Value.ToString
+            DBCommand.Parameters.Clear()
+
+            DBCommand.Parameters.AddWithValue("gl", Common.LOCATION_CODE_GL)
+            DBCommand.Parameters.AddWithValue("jp", Common.LOCATION_CODE_JP)
+            DBCommand.Parameters.AddWithValue("us", Common.LOCATION_CODE_US)
+            DBCommand.Parameters.AddWithValue("eu", Common.LOCATION_CODE_EU)
+            DBCommand.Parameters.AddWithValue("cn", Common.LOCATION_CODE_CN)
+            DBCommand.Parameters.AddWithValue("in", Common.LOCATION_CODE_IN)
+            DBCommand.Parameters.AddWithValue("locationCode", locationCode)
+            DBConn.Open()
+            Dim DBReader As SqlDataReader = DBCommand.ExecuteReader
+
+            While DBReader.Read
+                Dim _LocationCode As String = String.Empty
+                Dim _Item As String = String.Empty
+                Dim _Text As String = String.Empty
+                Dim _SortOrder As Integer = 0
+                Dim _isRestockingControlSettings As Boolean = False
+                Dim _isOutputTransferOrder As Boolean = False
+                Dim _isOutputPriceRevision As Boolean = False
+                Dim _CreatedBy As Integer = 0
+                Dim _CreateDate As DateTime = New DateTime(0)
+                Dim _UpdatedBy As Integer = 0
+                Dim _UpdateDate As DateTime = New DateTime(0)
+                Dim dc_EhsHeader As s_EhsHeader = New s_EhsHeader
+                DBCommon.SetProperty(DBReader("LocationCode"), _LocationCode)
+                DBCommon.SetProperty(DBReader("Item"), _Item)
+                DBCommon.SetProperty(DBReader("Text"), _Text)
+                DBCommon.SetProperty(DBReader("SortOrder"), _SortOrder)
+                DBCommon.SetProperty(DBReader("isRestockingControlSettings"), _isRestockingControlSettings)
+                DBCommon.SetProperty(DBReader("isOutputTransferOrder"), _isOutputTransferOrder)
+                DBCommon.SetProperty(DBReader("isOutputPriceRevision"), _isOutputPriceRevision)
+                DBCommon.SetProperty(DBReader("CreatedBy"), _CreatedBy)
+                DBCommon.SetProperty(DBReader("CreateDate"), _CreateDate)
+                DBCommon.SetProperty(DBReader("UpdatedBy"), _UpdatedBy)
+                DBCommon.SetProperty(DBReader("UpdateDate"), _UpdateDate)
+                dc_EhsHeader.LocationCode = _LocationCode
+                dc_EhsHeader.Item = _Item
+                dc_EhsHeader.Text = _Text
+                dc_EhsHeader.SortOrder = _SortOrder
+                dc_EhsHeader.isRestockingControlSettings = _isRestockingControlSettings
+                dc_EhsHeader.isOutputTransferOrder = _isOutputTransferOrder
+                dc_EhsHeader.isOutputPriceRevision = _isOutputPriceRevision
+                dc_EhsHeader.CreatedBy = _CreatedBy
+                dc_EhsHeader.CreateDate = _CreateDate
+                dc_EhsHeader.UpdatedBy = _UpdatedBy
+                dc_EhsHeader.UpdateDate = _UpdateDate
+                Me.Add(dc_EhsHeader)
+
+            End While
+
+            DBReader.Close()
+        End Sub
+
+        ''' <summary>
+        ''' データベースから全てのデータを読み込む
+        ''' 
+        ''' </summary>
+        ''' <param name="LocationCode">拠点コード(ソートのみに使用)</param>
+        Public Sub LoadForSettings(ByVal locationCode As String)
+            Dim Value As StringBuilder = New StringBuilder
+            Value.AppendLine("SELECT")
+            Value.AppendLine("    BSO.[LocationCode],")
+            Value.AppendLine("    BSO.[SortOrder],")
+            Value.AppendLine("    EH.[LocationCode],")
+            Value.AppendLine("    EH.[Item],")
+            Value.AppendLine("    EH.[Text],")
+            Value.AppendLine("    EH.[SortOrder],")
+            Value.AppendLine("    EH.[isRestockingControlSettings],")
+            Value.AppendLine("    EH.[isOutputTransferOrder],")
+            Value.AppendLine("    EH.[isOutputPriceRevision],")
+            Value.AppendLine("    EH.[CreatedBy],")
+            Value.AppendLine("    EH.[CreateDate],")
+            Value.AppendLine("    EH.[UpdatedBy],")
+            Value.AppendLine("    EH.[UpdateDate]")
+            Value.AppendLine("FROM")
+            Value.AppendLine("    [s_EhsHeader] AS EH")
+            Value.AppendLine("" & "LEFT OUTER JOIN s_BranchSortOrder AS BSO")
+            Value.AppendLine("" & "ON BSO.[DisplayLocationCode] = EH.[LocationCode]")
+            Value.AppendLine("WHERE")
+            Value.AppendLine("    EH.[isRestockingControlSettings] = 1 ")
+            Value.AppendLine("    AND (BSO.[LocationCode] IS NULL OR BSO.[LocationCode] = @LocationCode)")
+            Value.AppendLine("ORDER BY")
+            Value.AppendLine("    BSO.[LocationCode],")
+            Value.AppendLine("    BSO.[SortOrder],")
+            Value.AppendLine("    EH.[SortOrder]")
+            Dim DBConn As SqlConnection = New SqlConnection(DBCommon.DB_CONNECT_STRING)
+            Dim DBCommand As SqlCommand = DBConn.CreateCommand
+            DBCommand.CommandText = Value.ToString
+            DBCommand.Parameters.Clear()
+            DBCommand.Parameters.AddWithValue("locationCode", locationCode)
+            DBConn.Open()
+            Dim DBReader As SqlDataReader = DBCommand.ExecuteReader
+
+            While DBReader.Read
+                Dim _LocationCode As String = String.Empty
+                Dim _Item As String = String.Empty
+                Dim _Text As String = String.Empty
+                Dim _SortOrder As Integer = 0
+                Dim _isRestockingControlSettings As Boolean = False
+                Dim _isOutputTransferOrder As Boolean = False
+                Dim _isOutputPriceRevision As Boolean = False
+                Dim _CreatedBy As Integer = 0
+                Dim _CreateDate As DateTime = New DateTime(0)
+                Dim _UpdatedBy As Integer = 0
+                Dim _UpdateDate As DateTime = New DateTime(0)
+                Dim dc_EhsHeader As s_EhsHeader = New s_EhsHeader
+                DBCommon.SetProperty(DBReader("LocationCode"), _LocationCode)
+                DBCommon.SetProperty(DBReader("Item"), _Item)
+                DBCommon.SetProperty(DBReader("Text"), _Text)
+                DBCommon.SetProperty(DBReader("SortOrder"), _SortOrder)
+                DBCommon.SetProperty(DBReader("isRestockingControlSettings"), _isRestockingControlSettings)
+                DBCommon.SetProperty(DBReader("isOutputTransferOrder"), _isOutputTransferOrder)
+                DBCommon.SetProperty(DBReader("isOutputPriceRevision"), _isOutputPriceRevision)
+                DBCommon.SetProperty(DBReader("CreatedBy"), _CreatedBy)
+                DBCommon.SetProperty(DBReader("CreateDate"), _CreateDate)
+                DBCommon.SetProperty(DBReader("UpdatedBy"), _UpdatedBy)
+                DBCommon.SetProperty(DBReader("UpdateDate"), _UpdateDate)
+                dc_EhsHeader.LocationCode = _LocationCode
+                dc_EhsHeader.Item = _Item
+                dc_EhsHeader.Text = _Text
+                dc_EhsHeader.SortOrder = _SortOrder
+                dc_EhsHeader.isRestockingControlSettings = _isRestockingControlSettings
+                dc_EhsHeader.isOutputTransferOrder = _isOutputTransferOrder
+                dc_EhsHeader.isOutputPriceRevision = _isOutputPriceRevision
+                dc_EhsHeader.CreatedBy = _CreatedBy
+                dc_EhsHeader.CreateDate = _CreateDate
+                dc_EhsHeader.UpdatedBy = _UpdatedBy
+                dc_EhsHeader.UpdateDate = _UpdateDate
+                Me.Add(dc_EhsHeader)
+
+            End While
+
+            DBReader.Close()
+        End Sub
+
+        Private Function UpdateSQL() As String
+            Dim Value As StringBuilder = New StringBuilder
+            Value.AppendLine("UPDATE")
+            Value.AppendLine("    [EhsHeader]")
+            Value.AppendLine("SET")
+            Value.AppendLine("    [isOutputTransferOrder] = @isOutputTransferOrder,")
+            Value.AppendLine("    [isOutputPriceRevision] = @isOutputPriceRevision,")
+            Value.AppendLine("    [UpdatedBy] = @UpdatedBy,")
+            Value.AppendLine("    [UpdateDate] = GETDATE()")
+            Value.AppendLine("WHERE ")
+            Value.AppendLine("    [Item] = @Item")
+            Value.AppendLine(";")
+            Value.AppendLine("SELECT SCOPE_IDENTITY();")
+            Return Value.ToString
+        End Function
+
+        ''' <summary>
+        ''' 最後に更新されたUpdateDateを取得
+        ''' </summary>
+        Public Function GetLatestUpdateDate() As DateTime
+            Dim retVal As DateTime = DateTime.MinValue
+            ' データベースからデータを読み込む SQL 文字列を生成する。
+            Dim Value As StringBuilder = New StringBuilder
+            Value.AppendLine("SELECT")
+            Value.AppendLine("    MAX([UpdateDate]) AS UpdateDate")
+            Value.AppendLine("FROM")
+            Value.AppendLine("    [EhsHeader]")
+            Dim DBConn As SqlConnection = New SqlConnection(DBCommon.DB_CONNECT_STRING)
+            Dim DBCommand As SqlCommand = DBConn.CreateCommand
+            DBCommand.CommandText = Value.ToString
+            DBCommand.Parameters.Clear()
+            DBConn.Open()
+
+            If (DBCommand.ExecuteScalar IsNot DBNull.Value) Then
+                retVal = Convert.ToDateTime(DBCommand.ExecuteScalar)
+            End If
+
+            Return retVal
+        End Function
     End Class
 
 End Namespace

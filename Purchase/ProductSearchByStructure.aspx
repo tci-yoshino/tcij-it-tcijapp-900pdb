@@ -78,16 +78,17 @@
                         </table>
                     </LayoutTemplate>
                     <ItemTemplate>
-        <tr id="TrSearchResult" runat="server" class='<%#IIF((Container.DataItemIndex Mod 2) = 0 ,"","zebra") %>' onclick=''>
+                        <tr id="TrSearchResult" runat="server" class='<%#IIF((Container.DataItemIndex Mod 2) = 0 ,"","zebra") %>' onclick=''>
                             <td><asp:Image ID="pStructure" runat="server" CssClass="structure-img" src='<%# Eval("pStructure") %>' onerror="this.src='./Image/NoImage.gif'"  /></td>
                             <td class="number percent"><asp:Label ID="Similariry" runat="server" Text='<%# Eval("Similarity") %>' /></td>
                             <td><asp:Label ID="ProductNumber" runat="server" Text='<%# Eval("ProductNumber") %>' /></td>
                             <td><asp:Label ID="CASNumber" runat="server" Text='<%# Eval("CASNumber") %>' /></td>
                             <td><asp:Label ID="ProductName" runat="server" Text='<%# Eval("ProductName") %>' /></td>
                             <td><asp:HyperLink ID="Setting" runat="server"
-                                        NavigateUrl='<%#"./ProductSetting.aspx?Action=Edit&ProductID=" & Eval("ProductID") %>'>Product Setting</asp:HyperLink></td>
+                                        NavigateUrl='#' onclick='<%# "popup(""ProductSetting.aspx?Action=Edit&ProductID=" & Eval("ProductID") & """);" %>'>Product Setting</asp:HyperLink></td>
                             <td><asp:HyperLink ID="RFQList" runat="server"
-                                        NavigateUrl='<%#"./RFQListByProduct.aspx?ProductID=" & Eval("ProductID") %>'>RFQ List</asp:HyperLink></td>                        </tr>
+                                        NavigateUrl='#' onclick='<%# "popup(""./RFQListByProduct.aspx?ProductID=" & Eval("ProductID") & """);" %>'>RFQ List</asp:HyperLink></td>
+                        </tr>
                     </ItemTemplate>
                     <EmptyDataTemplate>
                         <h3 style="font-style:italic"><% =Purchase.Common.ERR_NO_MATCH_FOUND%></h3>

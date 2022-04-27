@@ -558,6 +558,7 @@ div.purpose table td{
 .table th.sortField {
     cursor: pointer;
     position: relative;
+    color: blue
 }
 
 .table th::before, .table th::after {
@@ -584,3 +585,11 @@ div.purpose table td{
 .table th.desc.sortField::after {
     border-top-color: #2b428f;
 }
+
+#ehs ul {
+    column-count: 4;
+    list-style: none;
+}
+#ehs ul li {
+}
+

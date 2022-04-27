@@ -77,6 +77,15 @@ Partial Public Class MyTask
     Protected WithEvents Switch As Global.System.Web.UI.WebControls.Button
     
     '''<summary>
+    '''Action コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
+    
+    '''<summary>
     '''Msg コントロール。
     '''</summary>
     '''<remarks>
@@ -93,6 +102,42 @@ Partial Public Class MyTask
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents HiddenSelectedButton As Global.System.Web.UI.WebControls.HiddenField
+    
+    '''<summary>
+    '''HiddenUserID コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents HiddenUserID As Global.System.Web.UI.WebControls.HiddenField
+    
+    '''<summary>
+    '''HiddenRFQPriority コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents HiddenRFQPriority As Global.System.Web.UI.WebControls.HiddenField
+    
+    '''<summary>
+    '''HiddenRFQStatus コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents HiddenRFQStatus As Global.System.Web.UI.WebControls.HiddenField
+    
+    '''<summary>
+    '''HiddenOrderby コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents HiddenOrderby As Global.System.Web.UI.WebControls.HiddenField
     
     '''<summary>
     '''RFQList コントロール。

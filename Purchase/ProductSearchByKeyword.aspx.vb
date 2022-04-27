@@ -87,12 +87,12 @@ Partial Public Class ProductSearchByKeyword
             UnDsp_ProductList()
             Exit Sub
 
-        Elseif i_RFQCount > common.MAX_ROW_ProductSearchByKeyword Then
+        ElseIf i_RFQCount > common.LIST_ONEPAGE_ROW_ProductSearchByKeyword Then
             '検索結果が100件以上ならエラーメッセージを表示する
             Dim ary_Msg As ArrayList = New ArrayList
-            ary_Msg.Add(MAX_ROW_ProductSearchByKeyword.ToString)
+            ary_Msg.Add(Common.LIST_ONEPAGE_ROW_ProductSearchByKeyword.ToString)
             Msg.Text = common.CreateMSG(Common.MSG_RESULT_OVER_LIMIT, ary_Msg)
-            ds_ProductSearchByKeywordDispList = productSearchByKeywordDispList.GetRange(0, MAX_ROW_ProductSearchByKeyword - 1)
+            ds_ProductSearchByKeywordDispList = productSearchByKeywordDispList.GetRange(0, Common.LIST_ONEPAGE_ROW_ProductSearchByKeyword)
         Else
             ds_ProductSearchByKeywordDispList = productSearchByKeywordDispList
         End If

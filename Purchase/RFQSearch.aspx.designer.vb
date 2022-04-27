@@ -86,6 +86,15 @@ Partial Public Class RFQSearch
     Protected WithEvents SearchItemId As Global.System.Web.UI.HtmlControls.HtmlInputHidden
     
     '''<summary>
+    '''SearchMode コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents SearchMode As Global.System.Web.UI.HtmlControls.HtmlInputHidden
+    
+    '''<summary>
     '''RFQNumber コントロール。
     '''</summary>
     '''<remarks>
@@ -347,13 +356,13 @@ Partial Public Class RFQSearch
     Protected WithEvents Priority As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
-    '''ValidityQuotation コントロール。
+    '''ValidQuotation コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents ValidityQuotation As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents ValidQuotation As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
     '''Search コントロール。

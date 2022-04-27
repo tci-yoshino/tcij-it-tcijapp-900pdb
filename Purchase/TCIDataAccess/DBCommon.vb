@@ -368,7 +368,7 @@ Namespace TCIDataAccess
             Dim st_isNullSQL As String = String.Empty
             Dim st_ReturnSQL As String = String.Empty
 
-            If ItemName = "rth.Purpose" Then
+            If ItemName = "Purpose" Then
                 For Each Purpose As ListItem In ListItems
                     If Purpose.Value = "ALL" And Purpose.Selected Then
                         Exit For
@@ -377,6 +377,7 @@ Namespace TCIDataAccess
                     If Purpose.Selected Then
                         If i_Count = 0 Then
                             st_inClauseSQL = ItemName & " IN("
+                        Else
                             'Purposeの二つ目以降の項目にOR条件を設定する
                             StrComma = ", "
                         End If
@@ -388,14 +389,16 @@ Namespace TCIDataAccess
                 Next
             Else
                 For Each Territory As ListItem In ListItems
-                    If Territory.Value = Common.DIRECT And Territory.Selected Then
-                        st_isNullSQL = ItemName & " IS NULL"
-                        Exit For
-                    End If
                     'CheckboxListのチェックON判定
-                    If Territory.Selected Then
+                    If Territory.Selected = False Then
+                        Continue For
+                    End If
+                    If Territory.Value = Common.DIRECT Then
+                        st_isNullSQL = ItemName & " IS NULL"
+                    Else
                         If i_Count = 0 Then
                             st_inClauseSQL = ItemName & " IN("
+                        Else
                             'Territoryの二つ目以降の項目にOR条件を設定する
                             StrComma = ", "
                         End If

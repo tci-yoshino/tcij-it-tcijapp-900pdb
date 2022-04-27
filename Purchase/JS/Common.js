@@ -45,7 +45,7 @@ function clearForm(formname){
   var len = targetForm.elements.length;
 
   for(i = 0; i < len; i++) {
-    if(targetForm.elements[i].type == "text" || targetForm.elements[i].type == "textarea" || targetForm.elements[i].type == "password"){
+    if(targetForm.elements[i].type === "text" || targetForm.elements[i].type === "textarea" || targetForm.elements[i].type === "password"){
       if(targetForm.elements[i].readOnly) continue;
       targetForm.elements[i].value = "";
     }
@@ -102,10 +102,10 @@ function ListSort(hidden_sort_type, hidden_sort_field) {
             continue;
         }
         // 値比較
-        if (ths[i].id == sort_field) {
-            if (sort_type == 'asc') {
+        if (ths[i].id === sort_field) {
+            if (sort_type === 'asc') {
                 ths[i].classList.add('asc')
-            } else if (sort_type == 'desc') {
+            } else if (sort_type === 'desc') {
                 ths[i].classList.add('desc')
             } else {
                 ths[i].classList.add('asc')
@@ -115,7 +115,7 @@ function ListSort(hidden_sort_type, hidden_sort_field) {
         // マウスリーブ
         ths[i].onmouseleave = event => {
             let element = event.target;
-            if (element.id == sort_field) {
+            if (element.id === sort_field) {
                 if (element.classList.contains('asc')) {
                     element.classList.replace('asc', 'desc');
                 } else if (element.classList.contains('desc')) {
@@ -156,6 +156,7 @@ function ListSort(hidden_sort_type, hidden_sort_field) {
                 hidden_sort_type.value = 'asc';
             }
             hidden_sort_field.value = element.id;
+            setAction('');
             document.forms["PageForm"].submit();
         };
     };

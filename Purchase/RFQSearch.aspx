@@ -13,56 +13,64 @@
             <!--
             window.onload = function () {
                 colorful.set();
-                navi('rfq_search');
                 document.SearchForm.RFQNumber.focus();
 
                 //Advanced Search⇔Basic Search切り替え処理
                 var ModeChange = document.getElementById("ModeChange_link");
                 ModeChange.onclick = function () {
-                    var ModeChange = document.getElementById('ModeChange_link');
-
-                    if (ModeChange.onclick && ModeChange.textContent == "* Advanced Search") {
-                        document.getElementById('ModeChange_link').innerText = "* Basic Search";
-                        document.getElementById('Title').innerHTML = "<h3>* Advanced Search</h3>";
-                        document.getElementById("ProductName_line").style.visibility = "visible";
-                        document.getElementById("SAPSupplier_line").style.visibility = "visible";
-                        document.getElementById("SupplierCountry_line").style.visibility = "visible";
-                        document.getElementById("SupplierItemName_line").style.visibility = "visible";
-                        document.getElementById("RFQCreatedDate_line").style.visibility = "visible";
-                        document.getElementById("RFQQuotedDate_line").style.visibility = "visible";
-                        document.getElementById("RFQPriority_line").style.visibility = "visible";
-                        document.getElementById("ValidityQuotation_line").style.visibility = "visible";
-
+                    if (SearchMode.value === "Basic") {
+                        SearchMode.value = "Advanced"
                     } else {
-                        document.getElementById('ModeChange_link').innerText = "* Advanced Search";
-                        document.getElementById('Title').innerHTML = "<h3>Basic Search</h3>";
-                        document.getElementById("ProductName_line").style.visibility = "collapse";
-                        document.getElementById("SAPSupplier_line").style.visibility = "collapse";
-                        document.getElementById("SupplierCountry_line").style.visibility = "collapse";
-                        document.getElementById("SupplierItemName_line").style.visibility = "collapse";
-                        document.getElementById("RFQCreatedDate_line").style.visibility = "collapse";
-                        document.getElementById("RFQQuotedDate_line").style.visibility = "collapse";
-                        document.getElementById("RFQPriority_line").style.visibility = "collapse";
-                        document.getElementById("ValidityQuotation_line").style.visibility = "collapse";
-                        //Advanced Search画面で表示したテキストボックス・プルダウンリスト・チェックボックスの初期化
-                        document.getElementById("ProductName_line").innerHTML = "<tr id=\"ProductName_line\" style=\"visibility: visible;\"><th>Product Name: </th><td><input name=\"ProductName\" type=\"text\" maxlength=\"255\" id=\"ProductName\" style=\"width:10em;\"><span id=\"ProductNameNotes\"> (Partial text match)</span></td></tr>";
-                        document.getElementById("SAPSupplier_line").innerHTML = "<tr id=\"SAPSupplier_line\" style=\"visibility: visible;\"><th>SAP Supplier Code : </th><td><input name=\"S4SupplierCode\" type=\"text\" maxlength=\"10\" id=\"S4SupplierCode1\" style=\"width:10em;\"></td></tr>";
-                        document.getElementById("SupplierCountryCode").value = "";
-                        var SupplierCountryCodeSelect = document.getElementById("SupplierCountryCode");
-                        SupplierCountryCodeSelect.selectedIndex = -1;
-                        document.getElementById("SupplierItemName_line").innerHTML = "<tr id=\"SupplierItemName_line\" style=\"visibility: visible;\"><th>Supplier Item Name : </th><td><input name=\"SupplierItemName\" type=\"text\" maxlength=\"255\" id=\"SupplierItemName1\" style=\"width:10em;\"></td></tr>";
-                        document.getElementById("RFQCreatedDate_line").innerHTML = "<tr id=\"RFQCreatedDate_line\" style=\"visibility: visible;\"><th>RFQ Created Date : </th><td>From <input name=\"RFQCreatedDateFrom\" type=\"text\" maxlength=\"10\" id=\"RFQCreatedDateFrom\" style=\"width:10em;\"> To <input name=\"RFQCreatedDateTo\" type=\"text\" maxlength=\"10\" id=\"RFQCreatedDateTo\" style=\"width:10em;\"> (YYYY-MM-DD)</td>";
-                        document.getElementById("RFQQuotedDate_line").innerHTML = "<tr id=\"RFQQuotedDate_line\" style=\"visibility: visible;\"><th>RFQ Quoted Date : </th><td>From <input name=\"RFQQuotedDateFrom\" type=\"text\" maxlength=\"10\" id=\"RFQQuotedDateFrom\" style=\"width:10em;\"> To <input name=\"RFQQuotedDateTo\" type=\"text\" maxlength=\"10\" id=\"RFQQuotedDateTo\" style=\"width:10em;\"> (YYYY-MM-DD)</td>";
-                        var PrioritySelect = document.getElementById("Priority");
-                        PrioritySelect.selectedIndex = -1;
-                        var PrioritySelect = document.getElementById("ValidityQuotation");
-                        ValidityQuotation.selectedIndex = -1;
-                        document.getElementById("PurposeList").checked = false;
+                        SearchMode.value = "Basic"
                     }
+                    modeChange();
                 }
+                modeChange();
                 changeRowColor('<%=SearchResultList.ListClientID%>');
             }
+            function modeChange() {
+                let SearchMode = document.getElementById('SearchMode');
 
+                if (SearchMode.value === "Basic") {
+                    document.getElementById('ModeChange_link').innerText = "* Basic Search";
+                    document.getElementById('Title').innerHTML = "<h3>* Advanced Search</h3>";
+                    document.getElementById("ProductName_line").style.visibility = "visible";
+                    document.getElementById("SAPSupplier_line").style.visibility = "visible";
+                    document.getElementById("SupplierCountry_line").style.visibility = "visible";
+                    document.getElementById("SupplierItemName_line").style.visibility = "visible";
+                    document.getElementById("RFQCreatedDate_line").style.visibility = "visible";
+                    document.getElementById("RFQQuotedDate_line").style.visibility = "visible";
+                    document.getElementById("RFQPriority_line").style.visibility = "visible";
+                    document.getElementById("ValidQuotation_line").style.visibility = "visible";
+
+                } else {
+                    document.getElementById('ModeChange_link').innerText = "* Advanced Search";
+                    document.getElementById('Title').innerHTML = "<h3>Basic Search</h3>";
+                    document.getElementById("ProductName_line").style.visibility = "collapse";
+                    document.getElementById("SAPSupplier_line").style.visibility = "collapse";
+                    document.getElementById("SupplierCountry_line").style.visibility = "collapse";
+                    document.getElementById("SupplierItemName_line").style.visibility = "collapse";
+                    document.getElementById("RFQCreatedDate_line").style.visibility = "collapse";
+                    document.getElementById("RFQQuotedDate_line").style.visibility = "collapse";
+                    document.getElementById("RFQPriority_line").style.visibility = "collapse";
+                    document.getElementById("ValidQuotation_line").style.visibility = "collapse";
+                    //Advanced Search画面で表示したテキストボックス・プルダウンリスト・チェックボックスの初期化
+                    document.getElementById("ProductName").value = "";
+                    document.getElementById("S4SupplierCode").value = "";
+                    document.getElementById("SupplierCountryCode").value = "";
+                    var SupplierCountryCodeSelect = document.getElementById("SupplierCountryCode");
+                    SupplierCountryCodeSelect.selectedIndex = -1;
+                    document.getElementById("SupplierItemName").value = "";
+                    document.getElementById("RFQCreatedDateFrom").value = "";
+                    document.getElementById("RFQCreatedDateTo").value = "";
+                    document.getElementById("RFQQuotedDateFrom").value = "";
+                    document.getElementById("RFQQuotedDateTo").value = "";
+                    var PrioritySelect = document.getElementById("Priority");
+                    PrioritySelect.selectedIndex = -1;
+                    var PrioritySelect = document.getElementById("ValidQuotation");
+                    ValidQuotation.selectedIndex = -1;
+                }
+            }
             function disableSubmit(form) {
                 var elements = form.elements;
                 for (var i = 0; i < elements.length; i++) {
@@ -92,6 +100,8 @@
                 return false;
             }
             function opneMultipleListWindow(SearchItemId, ScreenName, SearchWord) {
+                setAction('')
+
                 document.SearchForm.SearchItemId.value = SearchItemId
                 document.SearchForm.ScreenName.value = ScreenName
                 document.SearchForm.SearchWord.value = SearchWord
@@ -164,11 +174,11 @@
         <!-- Header End -->
         <div id="content">
             <div class="tabs" style="text-align: right">
-                <a href="#" id="ModeChange_link" runat="server">* Advanced Search</a>
+                <a href="#" id="ModeChange_link" runat="server"></a>
             </div>
             
             <div id ="Title">
-                <h3>Basic Search</h3> 
+                <h3></h3> 
             </div>
             
             <div class="main">
@@ -180,6 +190,7 @@
                     <input type="hidden" id ="ScreenName" runat="server" value="" />
                     <input type="hidden" id ="SearchWord" runat="server" value="" />
                     <input type="hidden" id ="SearchItemId" runat="server" value="" />
+                    <input type="hidden" id ="SearchMode" runat="server" value="" />
                     <table style= " margin-bottom: 0px;">
                         <tr>
                             <th>RFQ Reference Number : </th>
@@ -332,10 +343,10 @@
                                 </asp:DropDownList>
                             </td>
                         </tr>
-                        <tr id ="ValidityQuotation_line" style="visibility: collapse;">
-                            <th>Validity Quotation : </th>
+                        <tr id ="ValidQuotation_line" style="visibility: collapse;">
+                            <th>ValidQuotation : </th>
                             <td>
-                                <asp:DropDownList ID="ValidityQuotation" runat="server">
+                                <asp:DropDownList ID="ValidQuotation" runat="server">
                                     <asp:ListItem></asp:ListItem>
                                     <asp:ListItem>Valid Price</asp:ListItem>
                                     <asp:ListItem>Inalid Price</asp:ListItem>

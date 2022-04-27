@@ -52,7 +52,7 @@
                         </table>
                         <asp:Button runat="server" ID="Search" Text="Search" OnClientClick="setAction('Search');" />
                         <!-- <input type="button" value="Clear" onclick="clearForm('SearchForm');" /> -->
-                        <asp:Button runat="server" ID="Clear" Text="Clear" OnClientClick="setAction('Clear');" />
+                        <asp:Button runat="server" ID="Clear" Text="Clear" OnClientClick="setAction('');" />
                 </div>
                 <hr />
 

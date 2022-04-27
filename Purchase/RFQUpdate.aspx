@@ -74,7 +74,7 @@
                             <asp:HyperLink ID="RFQListByProductID" runat="server" Text=""></asp:HyperLink>
                             <span class="indent">
                                 <span class="message">Code Extension : </span>
-                                    <asp:DropDownList ID="CodeExtensionList" runat="server" Width="8em" Height="20px">
+                                    <asp:DropDownList ID="CodeExtensionList" runat="server" Width="8em" Height="20px" AutoPostBack="True">
                                         <asp:ListItem></asp:ListItem>
                                 </asp:DropDownList>
                             </span>
@@ -695,7 +695,7 @@
                     <asp:Label ID="EnqUserStatus" runat="server" Text="" Style="display: none"></asp:Label>
                     <asp:Label ID="QuoUserStatus" runat="server" Text="" Style="display: none"></asp:Label>
                     <asp:Label ID="POInterfaceMsg" runat="server" Text="" Style="display: none"></asp:Label>
-
+                    <asp:Label ID="POInterfaceConfirmMsg" runat="server" Text="" Style="display: none"></asp:Label>
                 </div>
                 <% End If%>
             </div>
@@ -755,6 +755,11 @@
             }
 
             function POInterfaceClient(lin) {
+                var confirmMsg = document.getElementById("POInterfaceConfirmMsg").innerHTML;
+                if (confirmMsg.length > 0) {
+                    var msg = confirmMsg.replace(/<br>/g, "\n");
+                    if (!confirm(msg)) return false;
+                }
                 if (document.getElementById("ProductWarning").innerText != "") {
                     var warning1 = insert_flg(document.getElementById("ProductWarning").innerText, '\n', 40);
                     //if (confirm("Product Warning:\n" + warning1 + "\n Do you still wants to create the interface?")) {
@@ -786,7 +791,7 @@
                 if (document.getElementById("EnqUserStatus").innerText == "Success" && document.getElementById("EnqUserStatus").innerText != "") {
                     if (document.getElementById("QuoUserStatus").innerText == "Warning") {
                         var POIMsg = document.getElementById("POInterfaceMsg").innerText
-                        if (confirm(POIMsg)) {
+                        if (confirm(POIMsg.replace("<br>","\n"))) {
                             return true
                         }
                         else {
@@ -798,7 +803,7 @@
                 if (document.getElementById("EnqUserStatus").innerText == "Warning" && document.getElementById("EnqUserStatus").innerText != "") {
                     if (document.getElementById("QuoUserStatus").innerText == "Success") {
                         var POIMsg = document.getElementById("POInterfaceMsg").innerText
-                        if (confirm(POIMsg)) {
+                        if (confirm(POIMsg.replace("<br>", "\n"))) {
                             return true
                         }
                         else {
@@ -807,7 +812,7 @@
                     }
                     if (document.getElementById("QuoUserStatus").innerText == "Warning") {
                         var POIMsg = document.getElementById("POInterfaceMsg").innerText
-                        if (confirm(POIMsg)) {
+                        if (confirm(POIMsg.replace("<br>", "\n"))) {
                             return true
                         }
                         else {

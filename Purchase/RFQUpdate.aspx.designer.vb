@@ -1542,4 +1542,13 @@ Partial Public Class RFQUpdate
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents POInterfaceMsg As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''POInterfaceConfirmMsg コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents POInterfaceConfirmMsg As Global.System.Web.UI.WebControls.Label
 End Class

@@ -101,6 +101,7 @@ Namespace TCIDataAccess.Join
                         Dim dc_Data As New v_UserAll
                         SetProperty(DBReader("QuoUserID"), dc_Data.UserID)
                         SetProperty(DBReader("QuoUserName"), dc_Data.Name)
+                        Me.Add(dc_Data)
                     End While
                     DBReader.Close()
                 End Using
@@ -149,6 +150,7 @@ Namespace TCIDataAccess.Join
                         Dim dc_Data As New v_UserAll
                         SetProperty(DBReader("EnqUserID"), dc_Data.UserID)
                         SetProperty(DBReader("EnqUserName"), dc_Data.Name)
+                        Me.Add(dc_Data)
                     End While
                     DBReader.Close()
                 End Using

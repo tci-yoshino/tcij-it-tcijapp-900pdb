@@ -43,7 +43,7 @@ Partial Public Class RFQIssue
         ' ロールの取得
         st_Role = Session(SESSION_ROLE_CODE).ToString
         Dim st_ProductID As String = String.Empty
-        Dim st_ProductNumber As String = String.Empty
+        '        Dim st_ProductNumber As String = String.Empty
         Dim st_SupplierCode As String = String.Empty
         If IsPostBack = False Then
             ' 初期遷移の場合
@@ -810,7 +810,7 @@ Partial Public Class RFQIssue
             ProductName.Text = String.Empty
         End If
 
-        Dim st_ProductNumber As String = ProductNumber.Text
+        st_ProductNumber = ProductNumber.Text
         CodeExtensionList.Items.Clear()
         If Not String.IsNullOrWhiteSpace(st_ProductNumber) Then
             ' Code Extensionのドロップダウンリストに値を設定するメソッドを呼び出す

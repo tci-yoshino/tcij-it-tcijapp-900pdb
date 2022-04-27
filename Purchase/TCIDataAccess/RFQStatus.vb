@@ -283,6 +283,8 @@ Namespace TCIDataAccess
             Value.AppendLine("    [SortOrder]")
             Value.AppendLine("FROM")
             Value.AppendLine("    [RFQStatus]")
+            Value.AppendLine("ORDER BY")
+            Value.AppendLine("    [SortOrder]")
 
             Using DBConn As New SqlConnection(DB_CONNECT_STRING)
                 Using DBCommand As SqlCommand = DBConn.CreateCommand()
@@ -300,25 +302,6 @@ Namespace TCIDataAccess
                 End Using
             End Using
 
-        End Sub
-
-        ''' <summary>
-        ''' RFQStatusドロップダウンリスト設定
-        ''' </summary>
-        ''' <param name="Combo">ドロップダウンリスト</param>
-        ''' <param name="st_FirstItemText">先頭項目名</param>
-        ''' <remarks></remarks>
-        Public Sub SetRFQStatusDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal st_FirstItemText As String)
-            Combo.Items.Clear()
-            Me.Load()
-
-            If Not String.IsNullOrEmpty(st_FirstItemText) Then
-                Combo.Items.Add(New ListItem(st_FirstItemText, st_FirstItemText))
-            End If
-
-            For Each RFQStatus As RFQStatus In Me
-                Combo.Items.Add(New ListItem(RFQStatus.Text, RFQStatus.RFQStatusCode))
-            Next
         End Sub
 
 #End Region 'User-Defined Methods of List End

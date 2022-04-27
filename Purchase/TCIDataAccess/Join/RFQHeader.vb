@@ -549,7 +549,7 @@ Namespace TCIDataAccess.Join
             Value.AppendLine("        s_Country scry")
             Value.AppendLine("        ON ")
             Value.AppendLine("        rfh.SupplierCountryCode = scry.CountryCode")
-            If Cond.ValidityQuotation = "Valid Price" Then
+            If Cond.ValidQuotation = "Valid Price" Then
                 Value.AppendLine("    INNER JOIN ")
                 Value.AppendLine("        ( SELECT ProductID,UnitPrice,RFQNumber")
                 Value.AppendLine("        FROM v_RFQLine")
@@ -557,7 +557,7 @@ Namespace TCIDataAccess.Join
                 Value.AppendLine("        ON")
                 Value.AppendLine("        rfh.RFQNumber =  vRL.RFQNumber")
             End If
-            If Cond.ValidityQuotation = "Inalid Price" Then
+            If Cond.ValidQuotation = "Inalid Price" Then
                 Value.AppendLine("    INNER JOIN ")
                 Value.AppendLine("        ( SELECT ProductID,UnitPrice,RFQNumber")
                 Value.AppendLine("        FROM v_RFQLine")
@@ -592,12 +592,9 @@ Namespace TCIDataAccess.Join
             Dim WhereClause As String = ""
             WhereClause = AddMultipleListItemWhereClauseSQL(WhereClause,CreateRFQInClauseSQL("RFQNumber", Cond.RFQNumber))
 
-            'WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.ProductNumber = @ProductNumber", Cond.ProductNumber)
             WhereClause = AddMultipleListItemWhereClauseSQL(WhereClause,CreateRFQInClauseSQL("ProductNumber", Cond.ProductNumber))
             WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.ProductName LIKE '%' + @ProductName + '%' ", Cond.ProductName)
-            'WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.SupplierCode = @SupplierCode", Cond.SupplierCode)
             WhereClause = AddMultipleListItemWhereClauseSQL(WhereClause,CreateRFQInClauseSQL("SupplierCode", Cond.SupplierCode))
-            'WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.S4SupplierCode = @S4SupplierCode", Cond.S4SupplierCode)
             WhereClause = AddMultipleListItemWhereClauseSQL(WhereClause,CreateRFQInClauseSQL("S4SupplierCode", Cond.S4SupplierCode))
             WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.SupplierName LIKE '%' + @SupplierName + '%' ", Cond.SupplierName)
             WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.SupplierCountryCode = @SupplierCountryCode", Cond.SupplierCountryCode)
@@ -616,20 +613,20 @@ Namespace TCIDataAccess.Join
             WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.QuoLocationCode = @QuoLocationCode", Cond.QuoLocationCode)
             WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.QuoUserID = @QuoUserID", Cond.QuoUserID)
             WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.QuoStorageLocation = @QuoStorageLocation", Cond.QuoStorageLocation)
-            WhereClause = AddMultipleListItemWhereClauseSQL(WhereClause, CreateMultipleSelectionInClauseSQL("rth.Purpose", Cond.Purpose))
-            WhereClause = AddMultipleListItemWhereClauseSQL(WhereClause, CreateMultipleSelectionInClauseSQL("vTertry.TerritoryCode ", Cond.Territory))
+            WhereClause = AddMultipleListItemWhereClauseSQL(WhereClause, CreateMultipleSelectionInClauseSQL("Purpose", Cond.Purpose))
+            WhereClause = AddMultipleListItemWhereClauseSQL(WhereClause, CreateMultipleSelectionInClauseSQL("TerritoryCode", Cond.Territory))
             WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.Priority = @Priority", Cond.Priority)
-            'ValidityQuotationの入力判定
-            If Not String.IsNullOrEmpty(Cond.ValidityQuotation) Then
-                If Cond.ValidityQuotation = "Valid Price" Then
-                    WhereClause = AddRFQWhereClauseSQL(WhereClause, " vRL.UnitPrice IS NOT NULL ", "True")
-                Else
-                    WhereClause = AddRFQWhereClauseSQL(WhereClause, " vRL.RFQNumber IS NOT NULL", "True")
+            'ValidQuotationの入力判定
+            If Not String.IsNullOrEmpty(Cond.ValidQuotation) Then
+                If Cond.ValidQuotation = "Valid Price" Then
+                    WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.ValidQuotation = @ValidQuotation", "1")
+                Else IF Cond.ValidQuotation = "Inalid Price" Then
+                    WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.ValidQuotation = @ValidQuotation", "0")
                 End If
             End If
             '権限ロールに従い極秘品を除外する
             If Common.CheckSessionRole(Cond.s_RoleCode) = False Then
-                WhereClause = WhereClause & " AND rfh.isCONFIDENTIAL  = 0 "
+                WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.isCONFIDENTIAL = @isCONFIDENTIAL", "0")
             End If
 
             Return WhereClause
@@ -743,8 +740,8 @@ Namespace TCIDataAccess.Join
 
         ''' <summary> LastRFQStatusChangeDateTo </summary>
         Public LastRFQStatusChangeDateTo As String = String.Empty
-        ''' <summary> ValidityQuotation </summary>
-        Public ValidityQuotation As String = String.Empty
+        ''' <summary> ValidQuotation </summary>
+        Public ValidQuotation As String = String.Empty
             
 
         

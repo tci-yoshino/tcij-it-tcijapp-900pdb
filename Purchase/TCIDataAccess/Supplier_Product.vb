@@ -458,28 +458,14 @@ Namespace TCIDataAccess
 
                 'ValidQuotationでのソート
             ElseIf String.Equals(st_HiddenSortField, st_SupplierProductListID + "_" + "ValidQuotationHeader") Then
-
+                sb_SQL.AppendLine("ORDER BY ")
+                sb_SQL.AppendLine("    RH.[Validquotation] ")
                 If st_HiddenSortType = "asc" Then
-                    sb_SQL.AppendLine("ORDER BY ")
-                    sb_SQL.AppendLine("  CASE ")
-                    sb_SQL.AppendLine("    WHEN RH.[Validquotation] = 'Y' THEN 3 ")
-                    sb_SQL.AppendLine("    WHEN RH.[Validquotation] = 'N' THEN 2 ")
-                    sb_SQL.AppendLine("    ELSE 1 ")
-                    sb_SQL.AppendLine("  END ")
+                    sb_SQL.AppendLine(" ASC ")
                 ElseIf st_HiddenSortType = "desc" Then
-                    sb_SQL.AppendLine("ORDER BY ")
-                    sb_SQL.AppendLine("  CASE ")
-                    sb_SQL.AppendLine("    WHEN RH.[Validquotation] = 'Y' THEN 1 ")
-                    sb_SQL.AppendLine("    WHEN RH.[Validquotation] = 'N' THEN 2 ")
-                    sb_SQL.AppendLine("    ELSE 3 ")
-                    sb_SQL.AppendLine("  END ")
+                    sb_SQL.AppendLine(" DESC ")
                 Else
-                    sb_SQL.AppendLine("ORDER BY ")
-                    sb_SQL.AppendLine("  CASE ")
-                    sb_SQL.AppendLine("    WHEN RH.[Validquotation] = 'Y' THEN 3 ")
-                    sb_SQL.AppendLine("    WHEN RH.[Validquotation] = 'N' THEN 2 ")
-                    sb_SQL.AppendLine("    ELSE 1 ")
-                    sb_SQL.AppendLine("  END ")
+                    sb_SQL.AppendLine(" ASC ")
                 End If
             End If
 

@@ -11,131 +11,95 @@ Option Strict On
 Option Explicit On
 
 
-Partial Public Class RequestedTask
+Partial Public Class ProductInfoRegulation
     
     '''<summary>
-    '''HeaderMenu コントロール。
+    '''Head1 コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents HeaderMenu As Global.Purchase.Header
+    Protected WithEvents Head1 As Global.System.Web.UI.HtmlControls.HtmlHead
     
     '''<summary>
-    '''SwitchForm コントロール。
+    '''ProductInfoForm コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents SwitchForm As Global.System.Web.UI.HtmlControls.HtmlForm
+    Protected WithEvents ProductInfoForm As Global.System.Web.UI.HtmlControls.HtmlForm
     
     '''<summary>
-    '''UserID コントロール。
+    '''H1 コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents UserID As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents H1 As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''RFQPriority コントロール。
+    '''lblMsg コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents RFQPriority As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents lblMsg As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
-    '''RFQStatus コントロール。
+    '''btnSaveTop コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents RFQStatus As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents btnSaveTop As Global.System.Web.UI.WebControls.Button
     
     '''<summary>
-    '''Orderby コントロール。
+    '''Div1 コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents Orderby As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents Div1 As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''Switch コントロール。
+    '''ltvEhsHeader コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents Switch As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents ltvEhsHeader As Global.System.Web.UI.WebControls.ListView
     
     '''<summary>
-    '''HiddenSelectedButton コントロール。
+    '''btnSaveBottom コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents HiddenSelectedButton As Global.System.Web.UI.WebControls.HiddenField
+    Protected WithEvents btnSaveBottom As Global.System.Web.UI.WebControls.Button
     
     '''<summary>
-    '''HiddenUserID コントロール。
+    '''hidLastUpdateDate コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents HiddenUserID As Global.System.Web.UI.WebControls.HiddenField
+    Protected WithEvents hidLastUpdateDate As Global.System.Web.UI.WebControls.HiddenField
     
     '''<summary>
-    '''HiddenRFQPriority コントロール。
+    '''Action コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents HiddenRFQPriority As Global.System.Web.UI.WebControls.HiddenField
-    
-    '''<summary>
-    '''HiddenRFQStatus コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents HiddenRFQStatus As Global.System.Web.UI.WebControls.HiddenField
-    
-    '''<summary>
-    '''HiddenOrderby コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents HiddenOrderby As Global.System.Web.UI.WebControls.HiddenField
-    
-    '''<summary>
-    '''RFQList コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents RFQList As Global.System.Web.UI.WebControls.ListView
-    
-    '''<summary>
-    '''SrcRFQ コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents SrcRFQ As Global.System.Web.UI.WebControls.SqlDataSource
+    Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
 End Class

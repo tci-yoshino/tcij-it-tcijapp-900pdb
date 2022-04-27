@@ -159,18 +159,15 @@ Namespace TCIDataAccess.Join
 
             '権限ロールに従い極秘品を除外する
             If Common.CheckSessionRole(st_RoleCode) = False Then
-                If (String.IsNullOrEmpty(Me.Name)) Or (String.IsNullOrEmpty(Me.ProductNumber)) Then
-                    sb_SQL.AppendLine("  And ")
-                End If
-
-                sb_SQL.AppendLine("Not EXISTS (")
-                sb_SQL.AppendLine("    SELECT 1")
-                sb_SQL.AppendLine("    FROM")
-                sb_SQL.AppendLine("        [v_CONFIDENTIAL] As C")
-                sb_SQL.AppendLine("    WHERE")
-                sb_SQL.AppendLine("        C.[isCONFIDENTIAL] = 1 AND ")
-                sb_SQL.AppendLine("        C.[ProductID] = T.[ProductID]")
-                sb_SQL.AppendLine(")")
+                sb_SQL.AppendLine("  AND ")
+                sb_SQL.AppendLine("    Not EXISTS (")
+                sb_SQL.AppendLine("        SELECT 1")
+                sb_SQL.AppendLine("            FROM")
+                sb_SQL.AppendLine("                [v_CONFIDENTIAL] As C")
+                sb_SQL.AppendLine("            WHERE")
+                sb_SQL.AppendLine("                C.[isCONFIDENTIAL] = 1 AND ")
+                sb_SQL.AppendLine("                C.[ProductID] = P.[ProductID]")
+                sb_SQL.AppendLine("        )")
             End If
 
             sb_SQL.AppendLine("ORDER BY ")

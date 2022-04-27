@@ -4,8 +4,6 @@ Imports System.Reflection
 Imports DocumentFormat.OpenXml
 Imports DocumentFormat.OpenXml.Packaging
 Imports DocumentFormat.OpenXml.Spreadsheet
-Imports Purchase.TCIDataAccess
-Imports Purchase.TCIDataAccess.Join
 Imports Ap = DocumentFormat.OpenXml.ExtendedProperties
 Imports Vt = DocumentFormat.OpenXml.VariantTypes
 Imports X14 = DocumentFormat.OpenXml.Office2010.Excel
@@ -69,11 +67,9 @@ Public Class Report_SupplierProduct
             Dim sheetdata As SheetData = wspart.Worksheet.Descendants(Of SheetData)().FirstOrDefault()
             Dim i_Row As Integer = TABLE_START_ROW    '注意: 行番号は常に持ち回る
 
-            i_Row = AppendRow(sheetdata, 1, i_Row, TypeCode.String, "Supplier Product", CellStyle._9PT_BOLD_NONE_NONE, True, 17.25)
-
             ' データ取得
-            Dim supplierProduct As Supplier_Product = New Supplier_Product
-            Dim productListBySupplierDisp As List(Of ProductListBySupplierDisp) = New List(Of ProductListBySupplierDisp)
+            Dim supplierProduct As TCIDataAccess.Supplier_Product = New TCIDataAccess.Supplier_Product
+            Dim productListBySupplierDisp As List(Of TCIDataAccess.Join.ProductListBySupplierDisp) = New List(Of TCIDataAccess.Join.ProductListBySupplierDisp)
             productListBySupplierDisp = supplierProduct.GetProductListBySupplierList(st_SupplierCode, st_RoleCode, st_ValidFilter, _
                                                                                      st_SupplierProductListID, st_HiddenSortField, st_HiddenSortType)
             i_Row = CreateSupplierProductExport(sheetdata, st_SupplierCode, st_SupplierName, st_Territory, productListBySupplierDisp, i_Row)
@@ -98,7 +94,7 @@ Public Class Report_SupplierProduct
     ''' <param name="i_Row">出力行番号</param>
     ''' <returns>出力を終えた後の行番号</returns>
     Public Function CreateSupplierProductExport(ByVal sheetdata As SheetData, ByVal st_SupplierCode As String, ByVal st_SupplierName As String, ByVal st_Territory As String, _
-                                                ByVal dc_SupplierProductList As List(Of ProductListBySupplierDisp), ByVal i_Row As Integer) As Integer
+                                                ByVal dc_SupplierProductList As List(Of TCIDataAccess.Join.ProductListBySupplierDisp), ByVal i_Row As Integer) As Integer
 
         'ProposalDeptCode のリスト作成
         Dim ProposalDeptList As New List(Of String)
@@ -110,11 +106,11 @@ Public Class Report_SupplierProduct
         Dim i_Col As Integer = TABLE_START_COL
 
         'ヘッダー部出力 ----------------------
-        i_Row = AddHeaderRow(sheetdata, dt_Table, i_Col, i_Row, CellStyle._9PT_NONE_NONE_LIGHT_TURQUOISE, CellStyle._9PT_NONE_NONE_LIGHT_GREEN)
+        i_Row = AddHeaderRow(sheetdata, dt_Table, i_Col, i_Row, CellStyle._9PT_NONE_NONE_NONE, CellStyle._9PT_BOLD_NONE_NONE)
 
         'データ部出力 ------------------------
         Dim i_TotalByRow As Integer = 0
-        For Each dc_SupplierProduct As  ProductListBySupplierDisp In dc_SupplierProductList
+        For Each dc_SupplierProduct As  TCIDataAccess.Join.ProductListBySupplierDisp In dc_SupplierProductList
 
             Dim newRow As New Row
             dim i_DataCol = DATA_START_COL
@@ -124,46 +120,46 @@ Public Class Report_SupplierProduct
                 If i_DataCol = 1 Then
                     newRow.CustomHeight = True
                     newRow.Height = 24.0
-                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, st_SupplierCode, CellStyle._9PT_NONE_NONE_LIGHT_TURQUOISE))
+                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, st_SupplierCode, CellStyle._9PT_NONE_NONE_NONE))
                 End If
                 If i_DataCol = 2 Then
                     newRow.CustomHeight = True
                     newRow.Height = 24.0
-                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, st_SupplierName, CellStyle._9PT_NONE_NONE_LIGHT_TURQUOISE))
+                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, st_SupplierName, CellStyle._9PT_NONE_NONE_NONE))
                 End If
                 If i_DataCol = 3 Then
                     newRow.CustomHeight = True
                     newRow.Height = 24.0
-                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, st_Territory, CellStyle._9PT_NONE_NONE_LIGHT_TURQUOISE))
+                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, st_Territory, CellStyle._9PT_NONE_NONE_NONE))
                 End If
                 If String.Equals(dt_Row("PropertyNumber"), "ProductNumber") Then
                     newRow.CustomHeight = True
                     newRow.Height = 24.0
-                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, dc_SupplierProduct.ProductNumber, CellStyle._9PT_NONE_NONE_LIGHT_TURQUOISE))
+                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, dc_SupplierProduct.ProductNumber, CellStyle._9PT_NONE_NONE_NONE))
                 ElseIf String.Equals(dt_Row("PropertyNumber"), "CASNumber") Then
                     newRow.CustomHeight = True
                     newRow.Height = 24.0
-                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, dc_SupplierProduct.CASNumber, CellStyle._9PT_NONE_NONE_LIGHT_TURQUOISE))
+                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, dc_SupplierProduct.CASNumber, CellStyle._9PT_NONE_NONE_NONE))
                 ElseIf String.Equals(dt_Row("PropertyNumber"), "ProductName") Then
                     newRow.CustomHeight = True
                     newRow.Height = 24.0
-                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, dc_SupplierProduct.ProductName, CellStyle._9PT_NONE_NONE_LIGHT_TURQUOISE))
+                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, dc_SupplierProduct.ProductName, CellStyle._9PT_NONE_NONE_NONE))
                 ElseIf String.Equals(dt_Row("PropertyNumber"), "Supplier Item Number") Then
                     newRow.CustomHeight = True
                     newRow.Height = 24.0
-                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, dc_SupplierProduct.SupplierItemNumber, CellStyle._9PT_NONE_NONE_LIGHT_TURQUOISE))
+                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, dc_SupplierProduct.SupplierItemNumber, CellStyle._9PT_NONE_NONE_NONE))
                 ElseIf String.Equals(dt_Row("PropertyNumber"), "Note") Then
                     newRow.CustomHeight = True
                     newRow.Height = 24.0
-                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, dc_SupplierProduct.Note, CellStyle._9PT_NONE_NONE_LIGHT_TURQUOISE))
+                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, dc_SupplierProduct.Note, CellStyle._9PT_NONE_NONE_NONE))
                 ElseIf String.Equals(dt_Row("PropertyNumber"), "ValidQuotation") Then
                     newRow.CustomHeight = True
                     newRow.Height = 24.0
-                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, dc_SupplierProduct.ValidQuotation, CellStyle._9PT_NONE_NONE_LIGHT_TURQUOISE))
+                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, dc_SupplierProduct.ValidQuotation, CellStyle._9PT_NONE_NONE_NONE))
                 ElseIf String.Equals(dt_Row("PropertyNumber"), "UpdateDate") Then
                     newRow.CustomHeight = True
                     newRow.Height = 24.0
-                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, dc_SupplierProduct.UpdateDate, CellStyle._9PT_NONE_NONE_LIGHT_TURQUOISE))
+                    newRow.Append(NewCell(i_DataCol, i_Row, TypeCode.String, dc_SupplierProduct.UpdateDate, CellStyle._9PT_NONE_NONE_NONE))
                 End If
                 i_DataCol += 1
             Next

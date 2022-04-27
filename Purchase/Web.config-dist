@@ -10,7 +10,7 @@
     <add key="LIST_ONEPAGE_ROW_RFQSearch" value="10"/>
     <add key="LIST_ONEPAGE_ROW_RFQSearchByProduct" value="10"/>
     <add key="LIST_ONEPAGE_ROW_ProductSearchByStructure" value="40"/>
-    <add key="MAX_ROW_ProductSearchByKeyword" value="100"/>
+    <add key="LIST_ONEPAGE_ROW_ProductSearchByKeyword" value="100"/>
     <add key="ReportTemplate_RFQSearch" value="D:\tcijapp\Purchase\Purchase\App_Data\RFQSearch.xlsx"/>
     <add key="ReportTemplate_SupplierProduct" value="D:\tcijapp\Purchase\Purchase\App_Data\SupplierProduct.xlsx"/>
     <add key="FileName_StructureDB" value="D:\tcijapp\Purchase\Structure\structure.db" />

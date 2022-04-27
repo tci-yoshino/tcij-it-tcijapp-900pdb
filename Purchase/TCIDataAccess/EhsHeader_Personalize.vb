@@ -277,32 +277,37 @@ Namespace TCIDataAccess
         '''' <summary>
         '''' データベースのデータを削除する
         '''' </summary>
-        'Public Sub Delete()
+        Public Sub Delete()
 
-        '    Using DBConn As New SqlConnection(DB_CONNECT_STRING)
-        '        DBConn.Open()
-        '        Using DBCommand As SqlCommand = DBConn.CreateCommand()
-        '            Delete(DBCommand)
-        '        End Using
-        '    End Using
+            Using DBConn As New SqlConnection(DB_CONNECT_STRING)
+                DBConn.Open()
+                Using DBCommand As SqlCommand = DBConn.CreateCommand()
+                    Delete(DBCommand)
+                End Using
+            End Using
 
-        'End Sub
+        End Sub
 
-        '''' <summary>
-        '''' データベースのデータを削除する (Facade 専用)
-        '''' </summary>
-        '''' <param name="DBCommand">SqlCommand</param>
-        'Public Sub Delete(ByVal DBCommand As SqlCommand)
+        ''' <summary>
+        ''' データベースのデータを削除する (Facade 専用)
+        ''' </summary>
+        ''' <param name="DBCommand">SqlCommand</param>
+        Public Sub Delete(ByVal DBCommand As SqlCommand)
 
-        '    'データベースのデータを削除する SQL 文字列を生成する
-        '    Dim Value As New StringBuilder()
-        '    Value.AppendLine("DELETE FROM [EhsHeader_Personalize]")
+            'データベースのデータを削除する SQL 文字列を生成する
+            Dim Value As New StringBuilder()
+            Value.AppendLine("DELETE FROM [EhsHeader_Personalize]")
+            Value.AppendLine("WHERE ")
+            Value.AppendLine("    [UserID] = @UserID")
+            Value.AppendLine("    AND [Item] = @Item")
 
-        '    DBCommand.CommandText = Value.ToString()
-        '    DBCommand.Parameters.Clear()
-        '    DBCommand.ExecuteNonQuery()
+            DBCommand.CommandText = Value.ToString()
+            DBCommand.Parameters.Clear()
+            DBCommand.Parameters.AddWithValue("UserID", _UserID)
+            DBCommand.Parameters.AddWithValue("Item", _Item)
+            DBCommand.ExecuteNonQuery()
 
-        'End Sub
+        End Sub
 
 #End Region 'User-Defined Methods End
 

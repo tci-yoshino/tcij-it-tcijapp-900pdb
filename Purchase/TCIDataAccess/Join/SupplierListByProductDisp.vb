@@ -199,14 +199,15 @@ Namespace TCIDataAccess.Join
             Dim i As Integer = 0
             StrComma = ""
             i = 0
-            For Each Territory As ListItem In cbl_TerritoryList.Items
+            For Each TerritoryItem As ListItem In cbl_TerritoryList.Items
                 'CheckboxListのチェックON判定
-                If Territory.Selected Then
+                If TerritoryItem.Selected Then
                     If i = 0 Then
                         Value.Append("  AND VT.[TerritoryName] IN( ")
                     End If
-                    Territory.Value = Territory.Value.Replace("-", "").Replace(" ", "")
-                    Value.Append(StrComma + "@" + Territory.Value)
+                    Dim TerritoryValue As String = TerritoryItem.Text
+                    TerritoryValue = TerritoryValue.Replace("-", "").Replace(" ", "")
+                    Value.Append(StrComma + "@" + TerritoryValue)
                     'Purposeの二つ目以降の項目にOR条件を設定する
                     StrComma = ", "
                     i = i + 1

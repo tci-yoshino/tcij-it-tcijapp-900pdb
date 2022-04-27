@@ -40,10 +40,7 @@ Partial Public Class SupplierListByProduct
             HiddenSortField.Value = "SupplierCode"
 
             'Territoryコンボリスト情報取得・表示
-            Common.SetTerritoryDropDownList(TerritoryList, True)
-            'TerritoryChkList.Load()
-            'TerritoryList.DataSource = TerritoryChkList
-            'TerritoryList.DataBind()
+            Common.SetTerritoryDropDownList(TerritoryList)
 
             '初期表示時はProductNumberでソートを設定する
             HiddenSortType.Value = "asc"

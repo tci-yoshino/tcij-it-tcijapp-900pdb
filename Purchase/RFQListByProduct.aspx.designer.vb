@@ -104,6 +104,51 @@ Partial Public Class RFQListByProduct
     Protected WithEvents ProductWarning As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
+    '''HeaderEhs コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents HeaderEhs As Global.Purchase.HeaderEhs
+    
+    '''<summary>
+    '''ValidQuotation コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents ValidQuotation As Global.System.Web.UI.WebControls.DropDownList
+    
+    '''<summary>
+    '''Search コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Search As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
+    '''Release コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Release As Global.System.Web.UI.WebControls.Button
+    
+    '''<summary>
+    '''Action コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Action As Global.System.Web.UI.HtmlControls.HtmlInputHidden
+    
+    '''<summary>
     '''RFQHeaderList コントロール。
     '''</summary>
     '''<remarks>

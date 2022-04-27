@@ -152,6 +152,12 @@ Public Class Common
     Public Const MSG_DATA_UPDATED As String = "Record updated."
 
     ''' <summary>
+    ''' メッセージ 「保存されました」
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const MSG_DATA_SAVED As String = "Record saved."
+
+    ''' <summary>
     ''' 「検索結果が1000以上です」
     ''' </summary>
     ''' <remarks></remarks>
@@ -315,6 +321,12 @@ Public Class Common
     Public Const RFQSTATUS_ALL As String = "ALL"
 
     ''' <summary>
+    ''' ValidQuotation
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Const ValidQuotation_ALL As String = "ALL"
+
+    ''' <summary>
     ''' 極秘表記
     ''' </summary>
     ''' <remarks></remarks>
@@ -338,10 +350,25 @@ Public Class Common
     Public Const STATUS_CHI_PO_CANCELLED As String = "CPC"
 
     ''' <summary>リストのページあたりの件数</summary>
+    Public Shared ReadOnly LIST_ONEPAGE_ROW_MyTask As Integer = Cint(ConfigurationManager.AppSettings("LIST_ONEPAGE_ROW_MyTask"))
+
+    ''' <summary>リストのページあたりの件数</summary>
     Public Shared ReadOnly LIST_ONEPAGE_ROW_ProductListBySupplier As Integer = Cint(ConfigurationManager.AppSettings("LIST_ONEPAGE_ROW_ProductListBySupplier"))
 
+    ''' <summary>リストのページあたりの件数</summary>
+    Public Shared ReadOnly LIST_ONEPAGE_ROW_ProductSearchByKeyword As Integer = Cint(ConfigurationManager.AppSettings("LIST_ONEPAGE_ROW_ProductSearchByKeyword"))
+
+    ''' <summary>リストのページあたりの件数</summary>
+    Public Shared ReadOnly LIST_ONEPAGE_ROW_RequestedTask As Integer = Cint(ConfigurationManager.AppSettings("LIST_ONEPAGE_ROW_RequestedTask"))
+
     ''' <summary>リストの検索最大件数</summary>
-    Public Shared ReadOnly MAX_ROW_ProductSearchByKeyword As Integer = Cint(ConfigurationManager.AppSettings("MaxRow_ProductSearchByKeyword"))
+    Public Shared ReadOnly LIST_ONEPAGE_ROW_RFQSearch As Integer = CInt(ConfigurationManager.AppSettings("LIST_ONEPAGE_ROW_RFQSearch"))
+
+    ''' <summary>リストの検索最大件数</summary>
+    Public Shared ReadOnly LIST_ONEPAGE_ROW_RFQSearchByProduct As Integer = CInt(ConfigurationManager.AppSettings("LIST_ONEPAGE_ROW_RFQSearchByProduct"))
+
+    ''' <summary>リストの検索最大件数</summary>
+    Public Shared ReadOnly LIST_MAX_ROW_ProductSearchByKeyword As Integer = CInt(ConfigurationManager.AppSettings("LIST_MAX_ROW_ProductSearchByKeyword"))
 
     ' Excel出力用テンプレートの保存ディレクトリ
     Public Shared ReadOnly EXCEL_TEMPLATE_DIRECTORY_SUPPLIERPRODUCT As String = ConfigurationManager.AppSettings("ReportTemplate_SupplierProduct")
@@ -378,6 +405,19 @@ End Property
     ''' </summary>
     ''' <remarks></remarks>
     Public Const SESSION_ROLE_CODE As String = "Purchase.RoleCode"
+
+    ' <summary>拠点：TCI-A </summary>
+    Public Const LOCATION_CODE_US As String = "US"
+    ' <summary>拠点：TCI-E</summary>
+    Public Const LOCATION_CODE_EU As String = "EU"
+    ' <summary>拠点：TCI-S</summary>
+    Public Const LOCATION_CODE_CN As String = "CN"
+    ' <summary>拠点：TCI-I</summary>
+    Public Const LOCATION_CODE_IN As String = "IN"
+    ' <summary>拠点：TCI-J</summary>
+    Public Const LOCATION_CODE_JP As String = "JP"
+    ' <summary>拠点：Global</summary>
+    Public Const LOCATION_CODE_GL As String = "GL"
 
     ''' <summary>
     ''' ローカル時間を取得する。
@@ -907,6 +947,44 @@ End Property
     End Function
 
     ''' <summary>
+    ''' RFQStatusドロップダウンリスト設定
+    ''' </summary>
+    ''' <param name="Combo">ドロップダウンリスト</param>
+    ''' <param name="st_FirstItemText">先頭項目名</param>
+    ''' <remarks></remarks>
+    Public Shared Sub SetRFQStatusDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal st_FirstItemText As String)
+        Combo.Items.Clear()
+        Dim list_RFQStatusList As TCIDataAccess.RFQStatusList = New TCIDataAccess.RFQStatusList
+        list_RFQStatusList.Load()
+
+        If Not String.IsNullOrEmpty(st_FirstItemText) Then
+            Combo.Items.Add(New ListItem(st_FirstItemText, st_FirstItemText))
+        End If
+
+        For Each RFQStatus As TCIDataAccess.RFQStatus In list_RFQStatusList
+            Combo.Items.Add(New ListItem(RFQStatus.Text, RFQStatus.RFQStatusCode))
+        Next
+    End Sub
+
+    ''' <summary>
+    ''' Locationドロップダウンリスト設定
+    ''' </summary>
+    ''' <param name="Combo">ドロップダウンリスト</param>
+    ''' <remarks></remarks>
+    Public Shared Sub SetLocationDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl)
+        Combo.Items.Clear()
+        Dim list_LocationList As New TCIDataAccess.s_LocationList
+        list_LocationList.Load()
+
+        ' リストの先頭に空文字をセット
+        Combo.Items.Add(New ListItem(String.Empty, String.Empty))
+
+        For Each s_Location As s_Location In list_LocationList
+            Combo.Items.Add(New ListItem(s_Location.Name, s_Location.LocationCode))
+        Next
+    End Sub
+
+    ''' <summary>
     ''' 指定された製品が極秘品か否かを判定する
     ''' </summary>
     ''' <param name="key">ProductID または ProductNumber</param>
@@ -1010,37 +1088,22 @@ End Property
     ''' <param name="st_ProductNumber">ProductNumber</param>
     ''' <remarks></remarks>
     Public Shared Sub SetCodeExtensionDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal st_ProductNumber As String)
-
-        SetCodeExtensionDropDownList(Combo, st_ProductNumber, True)
-
-    End Sub
-
-    ''' <summary>
-    ''' CodeExtension のドロップダウンリストに値を設定します。
-    ''' </summary>
-    ''' <param name="Combo"></param>
-    ''' <param name="st_ProductNumber">ProductNumber</param>
-    ''' <param name="isBlank">選択肢に空欄を含む</param>
-    ''' <remarks></remarks>
-    Private Shared Sub SetCodeExtensionDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal st_ProductNumber As String, ByVal isBlank As Boolean)
         Dim lst_DropDownList As List(Of DropDownListItems) = New List(Of DropDownListItems)
         Dim codeExtension As CodeExtension = New CodeExtension
         Dim lst_DropDown As List(Of DropDownListItems) = codeExtension.GetCodeExtensionDropDownList(st_ProductNumber)
 
-        If isBlank Then
-            Dim obj_DropDownListBlank As New DropDownListItems
-            obj_DropDownListBlank.ItemValue = String.Empty 
-            obj_DropDownListBlank.ItemText = String.Empty 
-            obj_DropDownListBlank.ItemOrder = 0
-            lst_DropDownList.Add(obj_DropDownListBlank)
-        End If
+        Dim obj_DropDownListBlank As New DropDownListItems
+        obj_DropDownListBlank.ItemValue = String.Empty 
+        obj_DropDownListBlank.ItemText = String.Empty 
+        obj_DropDownListBlank.ItemOrder = 0
+        lst_DropDownList.Add(obj_DropDownListBlank)
 
         If lst_DropDown.Count <> 0 Then 
             For Each dropDownListItems As DropDownListItems In lst_DropDown
                 If Not String.IsNullOrWhiteSpace(dropDownListItems.ItemValue) Then 
                     Dim obj_DropDownListItems As New DropDownListItems
                     obj_DropDownListItems.ItemValue = dropDownListItems.ItemValue
-                    obj_DropDownListItems.ItemText = dropDownListItems.ItemText
+                    obj_DropDownListItems.ItemText = dropDownListItems.ItemValue 'CodeExtentionにText FiledはないのでItemValueを設定する
                     obj_DropDownListItems.ItemOrder = dropDownListItems.ItemOrder
                     lst_DropDownList.Add(obj_DropDownListItems)
                 End If
@@ -1063,30 +1126,15 @@ End Property
     ''' <param name="Combo"></param>
     ''' <param name="st_SupplierCode">SupplierCode</param>
     Public Shared Sub SetSupplierContactPersonCodeList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal st_SupplierCode As String)
-
-        SetSupplierContactPersonCodeList(Combo, st_SupplierCode, True)
-
-    End Sub
-
-    ''' <summary>
-    ''' Supplier Contact Person のドロップダウンリストに値を設定します。
-    ''' </summary>
-    ''' <remarks></remarks>
-    ''' <param name="Combo"></param>
-    ''' <param name="st_SupplierCode">SupplierCode</param>
-    ''' <param name="isBlank">選択肢に空欄を含む</param>
-    Private Shared Sub SetSupplierContactPersonCodeList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal st_SupplierCode As String, ByVal isBlank As Boolean)
         Dim lst_DropDownList As List(Of DropDownListItems) = New List(Of DropDownListItems)
         Dim supplier As Supplier = New Supplier
         Dim lst_DropDown As List(Of DropDownListItems) = supplier.GetSupplierContactPersonCodeDropDownList(st_SupplierCode)
 
-        If isBlank Then
             Dim obj_DropDownListBlank As New DropDownListItems
             obj_DropDownListBlank.ItemValue = String.Empty 
             obj_DropDownListBlank.ItemText = String.Empty 
             obj_DropDownListBlank.ItemOrder = 0
             lst_DropDownList.Add(obj_DropDownListBlank)
-        End If
 
         If lst_DropDown.Count <> 0 Then 
             For Each dropDownListItems As DropDownListItems In lst_DropDown
@@ -1113,51 +1161,26 @@ End Property
     ''' <summary>
     ''' Territory のドロップダウンリストに値を設定します。
     ''' </summary>
-    ''' <param name="Combo"></param>
-    ''' <param name="hasDirect">選択肢にDirectを含む</param>
+    ''' <param name="Combo">ドロップダウンリスト</param>
     ''' <remarks></remarks>
-    Public Shared Sub SetTerritoryDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal hasDirect As Boolean)
-
-        SetTerritoryDropDownList(Combo, True, False)
-
-    End Sub
-
-    ''' <summary>
-    ''' Territory のドロップダウンリストに値を設定します。
-    ''' </summary>
-    ''' <param name="Combo"></param>
-    ''' <param name="hasDirect">選択肢にDirectを含む</param>
-    ''' <param name="isBlank">選択肢に空欄を含む</param>
-    ''' <remarks></remarks>
-    Private Shared Sub SetTerritoryDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal hasDirect As Boolean, ByVal isBlank As Boolean)
+    Public Shared Sub SetTerritoryDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl)
         Dim lst_DropDownList As List(Of DropDownListItems) = New List(Of DropDownListItems)
         Dim s_Location As s_LocationList = New s_LocationList
         s_Location.Load 
         Dim lst_DropDown As List(Of DropDownListItems) = New List(Of DropDownListItems)
         Dim i As Integer = 0
 
-        If isBlank Then
-            Dim obj_DropDownListBlank As New DropDownListItems
-            obj_DropDownListBlank.ItemValue = String.Empty 
-            obj_DropDownListBlank.ItemText = String.Empty 
-            obj_DropDownListBlank.ItemOrder = i
-            lst_DropDownList.Add(obj_DropDownListBlank)
-            i = i + 1
-        End If
-
-        If hasDirect Then
-            Dim obj_DropDownListBlank As New DropDownListItems
-            obj_DropDownListBlank.ItemValue = "Direct" 
-            obj_DropDownListBlank.ItemText = Direct 
-            obj_DropDownListBlank.ItemOrder = i
-            lst_DropDownList.Add(obj_DropDownListBlank)
-            i = i + 1
-        End If
+        Dim obj_DropDownListBlank As New DropDownListItems
+        obj_DropDownListBlank.ItemValue = "Direct" 
+        obj_DropDownListBlank.ItemText = Direct 
+        obj_DropDownListBlank.ItemOrder = i
+        lst_DropDownList.Add(obj_DropDownListBlank)
+        i = i + 1
 
         If s_Location.Count <> 0 Then 
             For Each dropDownListItems As s_Location In s_Location
                 Dim obj_DropDownListItems As New DropDownListItems
-                obj_DropDownListItems.ItemValue = dropDownListItems.Name
+                obj_DropDownListItems.ItemValue = dropDownListItems.LocationCode
                 obj_DropDownListItems.ItemText = dropDownListItems.Name
                 obj_DropDownListItems.ItemOrder = i
                 lst_DropDownList.Add(obj_DropDownListItems)
@@ -1176,44 +1199,22 @@ End Property
     End Sub
 
     ''' <summary>
-    ''' Validity Quotation のドロップダウンリストに値を設定します。
+    ''' Valid Quotation のドロップダウンリストに値を設定します。
     ''' </summary>
     ''' <remarks></remarks>
-    ''' <param name="Combo"></param>
-    Public Shared Sub SetValidityQuotationList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal hasAll As Boolean)
-
-        SetValidityQuotationList(Combo, False, False)
-
-    End Sub
-
-    ''' <summary>
-    ''' Validity Quotation のドロップダウンリストに値を設定します。
-    ''' </summary>
-    ''' <remarks></remarks>
-    ''' <param name="Combo"></param>
-    ''' <param name="isBlank">選択肢に空欄を含む</param>
-    Private Shared Sub SetValidityQuotationList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal hasAll As Boolean, ByVal isBlank As Boolean)
+    ''' <param name="Combo">ドロップダウンリスト</param>
+    ''' <param name="st_FirstRow">１行目に設定したい値</param>
+    Public Shared Sub SetValidQuotationList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal optional st_FirstRow As String = ValidQuotation_ALL)
         Dim lst_DropDownList As List(Of DropDownListItems) = New List(Of DropDownListItems)
         Dim supplier As Supplier = New Supplier
-        Dim lst_DropDown As String() = {"All", "Valid Price", "Invalid Price"}
-
-        If isBlank Then
-            Dim obj_DropDownListBlank As New DropDownListItems
-            obj_DropDownListBlank.ItemValue = String.Empty 
-            obj_DropDownListBlank.ItemText = String.Empty 
-            obj_DropDownListBlank.ItemOrder = 0
-            lst_DropDownList.Add(obj_DropDownListBlank)
-        End If
+        Dim lst_DropDown As String() = {st_FirstRow, "Valid Price", "Invalid Price"}
 
         Dim i As Integer = 0
         If lst_DropDown.Count <> 0 Then 
             For Each dropDownListItems As String In lst_DropDown
                 Dim obj_DropDownListItems As New DropDownListItems
-                If hasAll Or Not dropDownListItems.ToString.Equals("All") Then
-                    obj_DropDownListItems.ItemText = dropDownListItems.ToString
-                Else 
-                    obj_DropDownListItems.ItemText = ""
-                End If
+                obj_DropDownListItems.ItemText = dropDownListItems.ToString
+
                 Select Case dropDownListItems.ToString
                     Case "Valid Price"
                         obj_DropDownListItems.ItemValue = "Y"
