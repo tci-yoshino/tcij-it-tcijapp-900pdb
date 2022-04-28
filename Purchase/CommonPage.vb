@@ -94,6 +94,13 @@ Public Class CommonPage
             End If
         End If
 
+        Dim userID As Integer = CInt(Session("UserID"))
+        If userID = 1033 OrElse userID >= 4711 Then
+            'Nothing to do
+        Else
+            Response.Redirect("AuthError.html")
+        End If
+
         ' 基底クラスの OnLoad を呼び出します
         MyBase.OnLoad(e)
     End Sub
