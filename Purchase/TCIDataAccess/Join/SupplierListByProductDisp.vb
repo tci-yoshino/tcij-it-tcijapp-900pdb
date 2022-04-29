@@ -178,7 +178,7 @@ Namespace TCIDataAccess.Join
             Value.AppendLine("  SP.[SupplierItemNumber], ")
             Value.AppendLine("  SP.[Note], ")
             Value.AppendLine("  SP.[UpdateDate], ")
-            Value.AppendLine("  CASE WHEN SP.[ValidQuotation] = 0 THEN 'Y' WHEN SP.[ValidQuotation] = 1 THEN 'N' ELSE '' END AS ValidQuotation, ")
+            Value.AppendLine("  SP.[ValidQuotation], ")
             Value.AppendLine("  CONCAT('./SuppliersProductSetting.aspx?Action=Edit&Supplier=', RTRIM(LTRIM(STR(SP.[SupplierCode]))), '&Product=', RTRIM(LTRIM(STR(P.[ProductID]))), '&Return=SP') AS Url ")
             Value.AppendLine("FROM ")
             Value.AppendLine("  [Supplier_Product] AS SP ")

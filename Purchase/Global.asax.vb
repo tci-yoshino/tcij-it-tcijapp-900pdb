@@ -43,7 +43,7 @@ Public Class Global_asax
             ex.InnerException IsNot Nothing Then
             ex = ex.InnerException
         End If
-
+        Debug.WriteLine(ex.ToString)
         Try
             b_IsDebug = CBool(appSetting.GetValue("Debug", GetType(String)))
         Catch
@@ -54,7 +54,7 @@ Public Class Global_asax
         If TypeOf ex Is Web.HttpRequestValidationException Then
             Response.Redirect("./FormError.html", True)
         Else
-            Server.Transfer("./SystemError.aspx")
+            ' Server.Transfer("./SystemError.aspx")
         End If
 
     End Sub

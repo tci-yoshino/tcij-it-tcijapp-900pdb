@@ -90,11 +90,6 @@ Public Class RFQSearch
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click
         Msg.Text = String.Empty
-        ' 検索条件が一つも設定されていない場合、処理を中断しエラーメッセージを表示する。
-        If IsAllConditionsNotSet() Then
-            Msg.Text = ERR_NO_MATCH_FOUND
-            Exit Sub
-        End If
 
         '[入力データを1Byte形式に変換する]------------------------------------------------------
         RFQNumber.Text = Trim(StrConv(RFQNumber.Text,VbStrConv.Narrow))
@@ -107,6 +102,12 @@ Public Class RFQSearch
         RFQQuotedDateTo.Text = Trim(StrConv(RFQQuotedDateTo.Text, VbStrConv.Narrow))
         LastRFQStatusChangeDateFrom.Text = Trim(StrConv(LastRFQStatusChangeDateFrom.Text, VbStrConv.Narrow))
         LastRFQStatusChangeDateTo.Text = Trim(StrConv(LastRFQStatusChangeDateTo.Text, VbStrConv.Narrow))
+
+        ' 検索条件が一つも設定されていない場合、処理を中断しエラーメッセージを表示する。
+        If IsAllConditionsNotSet() Then
+            Msg.Text = ERR_NO_MATCH_FOUND
+            Exit Sub
+        End If
 
         Msg.Text = CheckBeforeSearch()
         
@@ -358,6 +359,10 @@ Public Class RFQSearch
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
+        If Not String.IsNullOrEmpty(ProductName.Text)
+            bl_IsAllConditionsNotSet = False
+            Return bl_IsAllConditionsNotSet
+        End If
         If Not String.IsNullOrEmpty(SupplierCode.Text)
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
@@ -431,6 +436,10 @@ Public Class RFQSearch
             Return bl_IsAllConditionsNotSet
         End If
         If IsCheckedMultipleSelectionItems(TerritoryList.Items)
+            bl_IsAllConditionsNotSet = False
+            Return bl_IsAllConditionsNotSet
+        End If
+        If Not String.IsNullOrEmpty(Priority.SelectedValue)
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
@@ -514,6 +523,7 @@ Public Class RFQSearch
         cond.QuoStorageLocation = QuoStorageLocation.SelectedValue
         cond.Purpose = PurposeList.Items
         cond.Territory = TerritoryList.Items
+        cond.Priority = Priority.SelectedValue
         cond.ValidQuotation = ValidQuotation.SelectedValue
 
     End Sub

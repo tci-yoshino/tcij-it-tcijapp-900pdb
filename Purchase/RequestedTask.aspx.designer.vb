@@ -77,6 +77,24 @@ Partial Public Class RequestedTask
     Protected WithEvents Switch As Global.System.Web.UI.WebControls.Button
     
     '''<summary>
+    '''Action コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Action As Global.System.Web.UI.WebControls.HiddenField
+    
+    '''<summary>
+    '''Msg コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Msg As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
     '''HiddenSelectedButton コントロール。
     '''</summary>
     '''<remarks>
@@ -122,6 +140,24 @@ Partial Public Class RequestedTask
     Protected WithEvents HiddenOrderby As Global.System.Web.UI.WebControls.HiddenField
     
     '''<summary>
+    '''RFQPagerCountTop コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents RFQPagerCountTop As Global.System.Web.UI.WebControls.DataPager
+    
+    '''<summary>
+    '''RFQPagerLinkTop コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents RFQPagerLinkTop As Global.System.Web.UI.WebControls.DataPager
+    
+    '''<summary>
     '''RFQList コントロール。
     '''</summary>
     '''<remarks>
@@ -129,6 +165,24 @@ Partial Public Class RequestedTask
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents RFQList As Global.System.Web.UI.WebControls.ListView
+    
+    '''<summary>
+    '''RFQPagerLinkBottom コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents RFQPagerLinkBottom As Global.System.Web.UI.WebControls.DataPager
+    
+    '''<summary>
+    '''RFQPagerCountBottom コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents RFQPagerCountBottom As Global.System.Web.UI.WebControls.DataPager
     
     '''<summary>
     '''SrcRFQ コントロール。

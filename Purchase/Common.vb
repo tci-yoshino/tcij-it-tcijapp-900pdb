@@ -15,12 +15,6 @@ Public Class Common
     Public Shared ReadOnly DB_CONNECT_STRING As String = ConfigurationManager.ConnectionStrings("DatabaseConnect").ConnectionString
 
     ''' <summary>
-    ''' RFQSearch (Excel) テンプレート 
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public Shared ReadOnly REPORT_TEMPLATE_RFQSEARCH As String = ConfigurationManager.AppSettings("ReportTemplate_RFQSearch")
-
-    ''' <summary>
     ''' 拠点コードがダイレクトであることを表す文字列
     ''' </summary>
     ''' <remarks></remarks>
@@ -349,29 +343,11 @@ Public Class Common
     Public Const STATUS_PAR_PO_CANCELLED As String = "PPC"
     Public Const STATUS_CHI_PO_CANCELLED As String = "CPC"
 
-    ''' <summary>リストのページあたりの件数</summary>
-    Public Shared ReadOnly LIST_ONEPAGE_ROW_MyTask As Integer = Cint(ConfigurationManager.AppSettings("LIST_ONEPAGE_ROW_MyTask"))
-
-    ''' <summary>リストのページあたりの件数</summary>
-    Public Shared ReadOnly LIST_ONEPAGE_ROW_ProductListBySupplier As Integer = Cint(ConfigurationManager.AppSettings("LIST_ONEPAGE_ROW_ProductListBySupplier"))
-
-    ''' <summary>リストのページあたりの件数</summary>
-    Public Shared ReadOnly LIST_ONEPAGE_ROW_ProductSearchByKeyword As Integer = Cint(ConfigurationManager.AppSettings("LIST_ONEPAGE_ROW_ProductSearchByKeyword"))
-
-    ''' <summary>リストのページあたりの件数</summary>
-    Public Shared ReadOnly LIST_ONEPAGE_ROW_RequestedTask As Integer = Cint(ConfigurationManager.AppSettings("LIST_ONEPAGE_ROW_RequestedTask"))
-
-    ''' <summary>リストの検索最大件数</summary>
-    Public Shared ReadOnly LIST_ONEPAGE_ROW_RFQSearch As Integer = CInt(ConfigurationManager.AppSettings("LIST_ONEPAGE_ROW_RFQSearch"))
-
-    ''' <summary>リストの検索最大件数</summary>
-    Public Shared ReadOnly LIST_ONEPAGE_ROW_RFQSearchByProduct As Integer = CInt(ConfigurationManager.AppSettings("LIST_ONEPAGE_ROW_RFQSearchByProduct"))
-
-    ''' <summary>リストの検索最大件数</summary>
-    Public Shared ReadOnly LIST_MAX_ROW_ProductSearchByKeyword As Integer = CInt(ConfigurationManager.AppSettings("LIST_MAX_ROW_ProductSearchByKeyword"))
-
     ' Excel出力用テンプレートの保存ディレクトリ
+    ' SupplierProduct
     Public Shared ReadOnly EXCEL_TEMPLATE_DIRECTORY_SUPPLIERPRODUCT As String = ConfigurationManager.AppSettings("ReportTemplate_SupplierProduct")
+    ' RFQSearch
+    Public Shared ReadOnly REPORT_TEMPLATE_RFQSEARCH As String = ConfigurationManager.AppSettings("ReportTemplate_RFQSearch")
 
     ' Valid_Filter
     Public Const VALID_FILTER_VALID As String = "Valid Price"
@@ -390,7 +366,7 @@ Public Class Common
     Public Const IMG_URL_FORMAT As String = "/Image.aspx?RegistryNumber={0}&Conf=Y&Key={1:yyMMddHHmmss}"
 
     ''' <summary>
-    ''' Web.configに設定された各画面毎の低数値をリストのページあたりの件数を設定する共通処理
+    ''' Web.configに設定された各画面毎の定数値をリストのページあたりの件数を設定する共通処理
     ''' </summary>
     ''' <param name ="name">プログラム名（Request.Url.ToString()の形式で値を設定）</param>
     ''' <remarks></remarks>

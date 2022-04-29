@@ -35,6 +35,10 @@
     </head>
 
     <body>
+        <!-- Header -->
+        <commonUC:Header ID="HeaderMenu" runat="server" />
+        <!-- Header End -->
+
         <form id="PageForm" runat="server" method="post">
             <!-- Main Content Area -->
             <div id="content">
@@ -72,34 +76,35 @@
                     <asp:HiddenField ID="HiddenSelectedValidityFilter" runat="server" Value ="ALL"/>
                     <asp:HiddenField ID="HiddenSortType" runat="server" Value =""/>
                     <asp:HiddenField ID="HiddenSortField" runat="server" Value =""/>
+
+                    <div class="pagingHead" >
+                        <asp:DataPager ID="SupplierProductPagerCountTop" runat="server" PagedControlID="SupplierProductList">
+                            <Fields>
+                                <asp:TemplatePagerField>
+                                    <PagerTemplate>
+                                        Page
+                                        <asp:Label runat="server" ID="CurrentPageLabel" Text="<%# IIf(Container.TotalRowCount > 0, CInt(Container.StartRowIndex / Container.PageSize) + 1, 0) %>" />
+                                        of
+                                        <asp:Label runat="server" ID="TotalPagesLabel" Text="<%# Math.Ceiling(System.Convert.ToDouble(Container.TotalRowCount) / Container.PageSize) %>" />
+                                        (
+                                        <asp:Label runat="server" ID="TotalItemsLabel" Text="<%# Container.TotalRowCount%>" /> 
+                                        records)
+                                    </PagerTemplate>
+                                </asp:TemplatePagerField>
+                            </Fields>
+                        </asp:DataPager>
+                    </div>
+
+                    <div class="paging">
+                        <asp:DataPager ID="SupplierProductPagerLinkTop" runat="server" PagedControlID="SupplierProductList">
+                            <Fields>
+                                <asp:NumericPagerField ButtonCount="10" CurrentPageLabelCssClass="current" NumericButtonCssClass="numeric" PreviousPageText="&laquo; Previous" NextPageText="Next &raquo;" />
+                            </Fields>
+                        </asp:DataPager>
+                    </div>
+                        
                     <asp:ListView ID="SupplierProductList" runat="server" >
                         <LayoutTemplate>
-                            <div class="pagingHead" >
-                                <asp:DataPager ID="SupplierProductPagerCountTop" runat="server">
-                                    <Fields>
-                                        <asp:TemplatePagerField>
-                                            <PagerTemplate>
-                                                Page
-                                                <asp:Label runat="server" ID="CurrentPageLabel" Text="<%# IIf(Container.TotalRowCount > 0, CInt(Container.StartRowIndex / Container.PageSize) + 1, 0) %>" />
-                                                of
-                                                <asp:Label runat="server" ID="TotalPagesLabel" Text="<%# Math.Ceiling(System.Convert.ToDouble(Container.TotalRowCount) / Container.PageSize) %>" />
-                                                (
-                                                <asp:Label runat="server" ID="TotalItemsLabel" Text="<%# Container.TotalRowCount%>" /> 
-                                                records)
-                                            </PagerTemplate>
-                                        </asp:TemplatePagerField>
-                                    </Fields>
-                                </asp:DataPager>
-                            </div>
-
-                            <div class="paging">
-                                <asp:DataPager ID="SupplierProductPagerLinkTop" runat="server">
-                                    <Fields>
-                                        <asp:NumericPagerField ButtonCount="10" CurrentPageLabelCssClass="current" NumericButtonCssClass="numeric" PreviousPageText="&laquo; Previous" NextPageText="Next &raquo;" />
-                                    </Fields>
-                                </asp:DataPager>
-                            </div>
-                        
                             <div ID="Div1" runat="server">
                                 <div ID="itemPlaceholder2" runat="server">
                                 </div>
@@ -111,41 +116,16 @@
                                     <th style="width:10%">CAS Number</th>
                                     <th style="width:20%">Product Name</th>
                                     <th style="width:10%">Supplier Item Number</th>
-                                    <th style="width:10%">Note</th>
-                                    <th id ="ValidQuotationHeader" class="sortField" style="width:15%">Valid Quotation</th>
-                                    <th id ="UpdateDateHeader" class="sortField" style="width:10%">Update Date</th>
-                                    <th style="width:5%">Edit</th>
-                                    <th style="width:5%">Delete</th>
+                                    <th style="width:20%">Note</th>
+                                    <th id ="ValidQuotationHeader" class="sortField" style="width:10%">Valid Quotation</th>
+                                    <th id ="UpdateDateHeader" class="sortField" style="width:7%">Update Date</th>
+                                    <th style="width:4%">Edit</th>
+                                    <th style="width:4%">Delete</th>
                                 </tr>
                                 <tr ID="itemPlaceholder" runat="server">
                                 </tr>
                             </table>
 
-                            <div class="paging">
-                                <asp:DataPager ID="SupplierProductPagerLinkBottom" runat="server">
-                                    <Fields>
-                                        <asp:NumericPagerField ButtonCount="10" CurrentPageLabelCssClass="current" NumericButtonCssClass="numeric" PreviousPageText="&laquo; Previous" NextPageText="Next &raquo;" />
-                                    </Fields>
-                                </asp:DataPager>
-                            </div>
-                        
-                            <div class="pagingHead">
-                                <asp:DataPager ID="SupplierProductPagerCountBottom" runat="server">    
-                                    <Fields>
-                                        <asp:TemplatePagerField>              
-                                            <PagerTemplate>
-                                                Page
-                                                <asp:Label runat="server" ID="CurrentPageLabel" Text="<%# IIf(Container.TotalRowCount > 0, CInt(Container.StartRowIndex / Container.PageSize) + 1, 0) %>" />
-                                                of
-                                                <asp:Label runat="server" ID="TotalPagesLabel" Text="<%# Math.Ceiling(System.Convert.ToDouble(Container.TotalRowCount) / Container.PageSize) %>" />
-                                                (
-                                                <asp:Label runat="server" ID="TotalItemsLabel" Text="<%# Container.TotalRowCount%>" /> 
-                                                records)
-                                            </PagerTemplate>
-                                        </asp:TemplatePagerField>
-                                    </Fields>
-                                </asp:DataPager>
-                            </div>
                         </LayoutTemplate>
 
                         <EmptyDataTemplate>
@@ -166,6 +146,33 @@
                             </tr>
                         </ItemTemplate>
                     </asp:ListView>
+
+                    <div class="paging">
+                        <asp:DataPager ID="SupplierProductPagerLinkBottom" runat="server" PagedControlID="SupplierProductList">
+                            <Fields>
+                                <asp:NumericPagerField ButtonCount="10" CurrentPageLabelCssClass="current" NumericButtonCssClass="numeric" PreviousPageText="&laquo; Previous" NextPageText="Next &raquo;" />
+                            </Fields>
+                        </asp:DataPager>
+                    </div>
+                        
+                    <div class="pagingHead">
+                        <asp:DataPager ID="SupplierProductPagerCountBottom" runat="server" PagedControlID="SupplierProductList">    
+                            <Fields>
+                                <asp:TemplatePagerField>              
+                                    <PagerTemplate>
+                                        Page
+                                        <asp:Label runat="server" ID="CurrentPageLabel" Text="<%# IIf(Container.TotalRowCount > 0, CInt(Container.StartRowIndex / Container.PageSize) + 1, 0) %>" />
+                                        of
+                                        <asp:Label runat="server" ID="TotalPagesLabel" Text="<%# Math.Ceiling(System.Convert.ToDouble(Container.TotalRowCount) / Container.PageSize) %>" />
+                                        (
+                                        <asp:Label runat="server" ID="TotalItemsLabel" Text="<%# Container.TotalRowCount%>" /> 
+                                        records)
+                                    </PagerTemplate>
+                                </asp:TemplatePagerField>
+                            </Fields>
+                        </asp:DataPager>
+                    </div>
+
                 </div>
             </div>
             <!-- Main Content Area END -->

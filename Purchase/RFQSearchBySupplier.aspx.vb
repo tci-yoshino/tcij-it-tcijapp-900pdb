@@ -1,4 +1,6 @@
 ﻿Option Explicit On
+Option Strict On
+Option Infer Off
 
 Imports System.Data.SqlClient
 Imports Purchase.Common

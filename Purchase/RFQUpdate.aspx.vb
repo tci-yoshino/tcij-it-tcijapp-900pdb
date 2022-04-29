@@ -74,8 +74,8 @@ Partial Public Class RFQUpdate
         Public Shared N As String = "0"
     End Class
     Protected Class BOOLMMSTAInvalidationValue
-        Public Shared Y As String = "1"
-        Public Shared N As String = "0"
+        Public Shared Y As String = "True"
+        Public Shared N As String = "False"
     End Class
 
 
@@ -272,7 +272,6 @@ Partial Public Class RFQUpdate
             & "ShippingHandlingCurrencyCode = @ShippingHandlingCurrencyCode, PaymentTermCode = @PaymentTermCode," _
             & "Comment = @Comment, Priority = @Priority , PurposeCode = @PurposeCode , UpdatedBy = @UpdatedBy,EnqStorageLocation=@EnqStorageLocation,QuoStorageLocation=@QuoStorageLocation,SupplierContactPersonSel=@SupplierContactPersonSel, UpdateDate = GETDATE()" & RFQStatusCode & st_QuotedDate _
             & ",SupplierOfferValidTo = @SupplierOfferValidTo , MMSTAInvalidation = @MMSTAInvalidation" _
-            & ",CodeExtensionCode = @CodeExtensionCode" _
             & " Where RFQNumber = @RFQNumber "
             DBCommand.Parameters.Add("@EnqLocationCode", SqlDbType.VarChar).Value = st_EnqLocationCode
             DBCommand.Parameters.Add("@QuoLocationCode", SqlDbType.VarChar).Value = st_QuoLocationCode
@@ -298,11 +297,10 @@ Partial Public Class RFQUpdate
             DBCommand.Parameters.Add("@RFQNumber", SqlDbType.Int).Value = Integer.Parse(st_RFQNumber)
             DBCommand.Parameters.Add("@SupplierContactPersonSel", SqlDbType.NVarChar).Value = SupplierContactPersonCodeList.SelectedValue
             DBCommand.Parameters.Add("@SupplierOfferValidTo", SqlDbType.NVarChar).Value = txtVaildTo.Text
-            DBCommand.Parameters.Add("@CodeExtensionCode", SqlDbType.NVarChar).Value = Me.CodeExtensionList.SelectedValue
 
             If Session("Purchase.MMSTAInvalidationEditable") = BOOLMMSTAInvalidationEditable.Y Then
                 If MMSTAInvalidation.Checked = True Then
-                    DBCommand.Parameters.Add("@MMSTAInvalidation", SqlDbType.Bit).Value = 0
+                    DBCommand.Parameters.Add("@MMSTAInvalidation", SqlDbType.Bit).Value = 1
                 Else
                     DBCommand.Parameters.Add("@MMSTAInvalidation", SqlDbType.Bit).Value = 0
                 End If
@@ -524,7 +522,8 @@ Partial Public Class RFQUpdate
             RFQNumber.Text = st_RFQNumber
             CurrentRFQStatus.Text = da_vRFQHeader.Status.ToString
             CASNumber.Text = da_vRFQHeader.CASNumber.ToString
-            RFQListByProductID.NavigateUrl = "./RFQListByProduct.aspx?ProductID=" + da_vRFQHeader.ProductID.ToString
+            RFQListByProductID.NavigateUrl = "#"
+            RFQListByProductID.Attributes.Add("onclick", "window.open(""" & "./RFQListByProduct.aspx?ProductID=" + da_vRFQHeader.ProductID.ToString & """, ""_blank"", ""noopener"").forcus();return false;")
             RFQListByProductID.Text = CutShort(da_vRFQHeader.ProductNumber.ToString)
             CodeExtensionList.SelectedValue = da_vRFQHeader.CodeExtensionCode.ToString
             ProductName.Text = CutShort(da_vRFQHeader.ProductName.ToString)
@@ -2586,10 +2585,10 @@ Partial Public Class RFQUpdate
             Connection.Close()
             DBAdapter.SelectCommand = DBCommand
             DBAdapter.Fill(DS, "s_MaterialPlant")
-            DBAdapter.Fill(DS, "s_PlantMaterialStatus")
+
             If DS.Tables("s_MaterialPlant").Rows.Count > 0 Then
                 EnqUserPlantStatus.Text = DS.Tables("s_MaterialPlant").Rows(0)("MaterialStatus").ToString
-                EnqUserPlantDescriptions.Text = DS.Tables("s_PlantMaterialStatus").Rows(0)("Text").ToString
+                EnqUserPlantDescriptions.Text = DS.Tables("s_MaterialPlant").Rows(0)("Text").ToString
             Else
                 EnqUserPlantStatus.Text = String.Empty
                 EnqUserPlantDescriptions.Text = String.Empty
@@ -2667,7 +2666,7 @@ Partial Public Class RFQUpdate
             DBAdapter.Fill(DS, "s_MaterialPlant")
             If DS.Tables("s_MaterialPlant").Rows.Count > 0 Then
                 QuoUserPlantStatus.Text = DS.Tables("s_MaterialPlant").Rows(0)("MaterialStatus").ToString
-                QuoUserPlantDescriptions.Text = DS.Tables("s_PlantMaterialStatus").Rows(0)("Text").ToString
+                QuoUserPlantDescriptions.Text = DS.Tables("s_MaterialPlant").Rows(0)("Text").ToString
             Else
                 QuoUserPlantStatus.Text = String.Empty
                 QuoUserPlantDescriptions.Text = String.Empty
@@ -2686,7 +2685,7 @@ Partial Public Class RFQUpdate
 
         Dim EnqCountry As String = Nothing
         Dim QuoCountry As String = Nothing
-        Dim DomestiocFlag As String
+        Dim DomesticFlag As String
 
 
         Dim sb_SQL As New Text.StringBuilder
@@ -2698,12 +2697,12 @@ Partial Public Class RFQUpdate
         sb_SQL.Append("FROM ")
         sb_SQL.Append("  StorageLocation ")
         sb_SQL.Append("WHERE ")
-        sb_SQL.Append("  Storage = @StorageLOcationCode")
+        sb_SQL.Append("  Storage = @StorageLOcationText")
 
         DBCommand = Connection.CreateCommand
         DBCommand.CommandText = sb_SQL.ToString
         DBCommand.Parameters.Clear()
-        DBCommand.Parameters.Add("@StorageLOcationCode", SqlDbType.VarChar).Value = Me.EnqLocation.SelectedValue 'EnqLocationCode.Value
+        DBCommand.Parameters.Add("@StorageLOcationText", SqlDbType.VarChar).Value = Me.StorageLocation.SelectedValue 'EnqLocationCode.Value
         Connection.Open()
         DBCommand.ExecuteNonQuery()
         Connection.Close()
@@ -2717,7 +2716,7 @@ Partial Public Class RFQUpdate
         DBCommand = Connection.CreateCommand
         DBCommand.CommandText = sb_SQL.ToString
         DBCommand.Parameters.Clear()
-        DBCommand.Parameters.Add("@StorageLOcationCode", SqlDbType.VarChar).Value = Me.QuoLocation.SelectedValue ' EnqLocationCode.Value
+        DBCommand.Parameters.Add("@StorageLOcationText", SqlDbType.VarChar).Value = Me.StorageLocation2.SelectedValue ' EnqLocationCode.Value
         Connection.Open()
         DBCommand.ExecuteNonQuery()
         Connection.Close()
@@ -2728,9 +2727,9 @@ Partial Public Class RFQUpdate
         End If
 
         If EnqCountry IsNot Nothing AndAlso EnqCountry = QuoCountry Then
-            DomestiocFlag = "1"
+            DomesticFlag = "1"
         Else
-            DomestiocFlag = "0"
+            DomesticFlag = "0"
         End If
 
         sb_SQL.Clear()
@@ -2739,14 +2738,14 @@ Partial Public Class RFQUpdate
         sb_SQL.Append("FROM ")
         sb_SQL.Append("  MMSTAValidation ")
         sb_SQL.Append("WHERE ")
-        sb_SQL.Append("  MaterialStatus = @PlantStatus  AND DomestiocFlag = @DomestiocFlag")
+        sb_SQL.Append("  Validation = @PlantStatus  AND DomesticFlag = @DomesticFlag")
 
         DBCommand = Connection.CreateCommand
         DBCommand.CommandText = sb_SQL.ToString
         DBCommand.Parameters.Clear()
 
         DBCommand.Parameters.Add("@PlantStatus", SqlDbType.VarChar).Value = EnqUserPlantStatus.Text
-        DBCommand.Parameters.Add("@DomestiocFlag", SqlDbType.VarChar).Value = DomestiocFlag
+        DBCommand.Parameters.Add("@DomesticFlag", SqlDbType.VarChar).Value = DomesticFlag
         Connection.Open()
         DBCommand.ExecuteNonQuery()
         Connection.Close()
@@ -2769,8 +2768,8 @@ Partial Public Class RFQUpdate
         Dim DBCommand As SqlClient.SqlCommand
         Dim DBAdapter As New SqlClient.SqlDataAdapter()
 
-        Dim QuoCountry As String
-        Dim DomestiocFlag As String
+        Dim QuoCountry As String = String.Empty
+        Dim DomesticFlag As String
 
         Dim sb_SQL As New Text.StringBuilder
 
@@ -2781,12 +2780,12 @@ Partial Public Class RFQUpdate
         sb_SQL.Append("FROM ")
         sb_SQL.Append("  StorageLocation ")
         sb_SQL.Append("WHERE ")
-        sb_SQL.Append("  Storage = @StorageLOcationCode")
+        sb_SQL.Append("  Storage = @StorageLOcationText")
 
         DBCommand = Connection.CreateCommand
         DBCommand.CommandText = sb_SQL.ToString
         DBCommand.Parameters.Clear()
-        DBCommand.Parameters.Add("@StorageLOcationCode", SqlDbType.VarChar).Value = Me.EnqLocation.SelectedValue 'EnqLocationCode.Value
+        DBCommand.Parameters.Add("@StorageLOcationText", SqlDbType.VarChar).Value = Me.StorageLocation2.SelectedValue 'EnqLocationCode.Value
         Connection.Open()
         DBCommand.ExecuteNonQuery()
         Connection.Close()
@@ -2797,9 +2796,9 @@ Partial Public Class RFQUpdate
         End If
         Dim SupCountry As String = SuplierCountryShort.Text
         If SupCountry = QuoCountry Then
-            DomestiocFlag = "1"
+            DomesticFlag = "1"
         Else
-            DomestiocFlag = "0"
+            DomesticFlag = "0"
         End If
 
         sb_SQL.Clear()
@@ -2808,13 +2807,13 @@ Partial Public Class RFQUpdate
         sb_SQL.Append("FROM ")
         sb_SQL.Append("   MMSTAValidation ")
         sb_SQL.Append("WHERE ")
-        sb_SQL.Append("  MaterialStatus = @PlantStatus  AND DomestiocFlag = @DomestiocFlag")
+        sb_SQL.Append("  Validation = @PlantStatus  AND DomesticFlag = @DomesticFlag")
 
         DBCommand = Connection.CreateCommand
         DBCommand.CommandText = sb_SQL.ToString
         DBCommand.Parameters.Clear()
         DBCommand.Parameters.Add("@PlantStatus", SqlDbType.VarChar).Value = QuoUserPlantStatus.Text
-        DBCommand.Parameters.Add("@DomestiocFlag", SqlDbType.VarChar).Value = DomestiocFlag
+        DBCommand.Parameters.Add("@DomesticFlag", SqlDbType.VarChar).Value = DomesticFlag
         Connection.Open()
         DBCommand.ExecuteNonQuery()
         Connection.Close()
@@ -2874,9 +2873,9 @@ Partial Public Class RFQUpdate
         POInterfaceConfirmMsg.Text = ""
         If Not message.Equals(String.Empty) AndAlso messageTypes.ContainsKey(messageType) Then
             If messageTypes(messageType) = "Error" Then
-                POInterfaceMsg.Text = message.Replace("[Enq-Location]", EnqLocation.SelectedValue).Replace("[Quo-Location]", QuoLocation.SelectedValue)
+                POInterfaceMsg.Text = message.Replace("[Enq-Location]", EnqLocation.SelectedItem.Text).Replace("[Quo-Location]", QuoLocation.SelectedItem.Text)
             Else
-                POInterfaceConfirmMsg.Text = message.Replace("[Enq-Location]", EnqLocation.SelectedValue).Replace("[Quo-Location]", QuoLocation.SelectedValue)
+                POInterfaceConfirmMsg.Text = message.Replace("[Enq-Location]", EnqLocation.SelectedItem.Text).Replace("[Quo-Location]", QuoLocation.SelectedItem.Text)
             End If
         End If
     End Sub

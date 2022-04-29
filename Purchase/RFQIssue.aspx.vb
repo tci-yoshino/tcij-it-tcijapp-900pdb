@@ -1,7 +1,10 @@
-﻿Imports System.Data.SqlClient
+﻿Option Explicit On
+Option Strict On
+Option Infer Off
+
+Imports System.Data.SqlClient
 Imports Purchase.Common
 Imports Purchase.TCIDataAccess
-'Imports Purchase.TCIDataAccess.Join
 
 Partial Public Class RFQIssue
     Inherits CommonPage
@@ -45,19 +48,20 @@ Partial Public Class RFQIssue
         Dim st_ProductID As String = String.Empty
         '        Dim st_ProductNumber As String = String.Empty
         Dim st_SupplierCode As String = String.Empty
+
         If IsPostBack = False Then
             ' 初期遷移の場合
             If String.IsNullOrWhiteSpace(Request.QueryString("ProductID")) = False Then
                 st_ProductID = Request.QueryString("ProductID")
                 Dim rFQIssueDisp As Join.RFQIssueDisp = New Join.RFQIssueDisp
-                st_ProductNumber = rFQIssueDisp.GetProductNumber(Integer.Parse(st_ProductID))
+                st_ProductNumber = rFQIssueDisp.GetProductNumber(Cint(st_ProductID))
             End If
             If String.IsNullOrWhiteSpace(Request.QueryString("SupplierCode")) = False Then
                 st_SupplierCode = Request.QueryString("SupplierCode")
             End If
             Call SetPostBackUrl()
 
-            If CheckPram() = False Then
+            If CheckPram(st_ProductID, st_SupplierCode) = False Then
                 Msg.Text = ERR_INVALID_PARAMETER
                 '画面上の入力項目を隠す。
                 bol_Parameter = False
@@ -72,7 +76,7 @@ Partial Public Class RFQIssue
             ElseIf String.IsNullOrWhiteSpace(Request.Form("ProductID")) = False Then
                 st_ProductID = Request.Form("ProductID")
                 Dim rFQIssueDisp As Join.RFQIssueDisp = New Join.RFQIssueDisp
-                st_ProductNumber = rFQIssueDisp.GetProductNumber(Integer.Parse(st_ProductID))
+                st_ProductNumber = rFQIssueDisp.GetProductNumber(Cint(st_ProductID))
             End If
             If String.IsNullOrWhiteSpace(Request.Form("SupplierCode")) = False Then
                 st_SupplierCode = Request.Form("SupplierCode")
@@ -139,7 +143,7 @@ Partial Public Class RFQIssue
         f_RFQIssue.RFQLineList = SetRFQLineInfo(i_RFQNumber, bol_EnqQuantity1, bol_EnqQuantity2, bol_EnqQuantity3, bol_EnqQuantity4)
         i_InsCount = f_RFQIssue.Save()
 
-        Response.Redirect("RFQUpdate.aspx?RFQNumber=" & i_RFQNumber, False)
+        Response.Redirect("RFQUpdate.aspx?RFQNumber=" & i_InsCount, False)
 
     End Sub
 
@@ -152,12 +156,12 @@ Partial Public Class RFQIssue
         Dim i As Integer = 0
 
         RFQHeaderInfo.EnqLocationCode = EnqLocation.SelectedValue
-        RFQHeaderInfo.EnqUserID = EnqUser.SelectedValue
+        RFQHeaderInfo.EnqUserID = CInt(EnqUser.SelectedValue)
         RFQHeaderInfo.QuoLocationCode = QuoLocation.SelectedValue
-        RFQHeaderInfo.QuoUserID = If(String.IsNullOrWhiteSpace(QuoUser.SelectedValue) = True, Nothing, QuoUser.SelectedValue)
+        RFQHeaderInfo.QuoUserID = CInt(If(String.IsNullOrWhiteSpace(QuoUser.SelectedValue) = True, Nothing, QuoUser.SelectedValue))
         RFQHeaderInfo.ProductID = productID
-        RFQHeaderInfo.SupplierCode = SupplierCode.Text
-        RFQHeaderInfo.MakerCode = If(String.IsNullOrWhiteSpace(MakerCode.Text) = True, Nothing, MakerCode.Text)
+        RFQHeaderInfo.SupplierCode = CInt(SupplierCode.Text)
+        RFQHeaderInfo.MakerCode = CInt(If(String.IsNullOrWhiteSpace(MakerCode.Text) = True, Nothing, MakerCode.Text))
         RFQHeaderInfo.PurposeCode = Purpose.SelectedValue
         RFQHeaderInfo.RequiredPurity = If(String.IsNullOrWhiteSpace(RequiredPurity.Text) = True, Nothing, RequiredPurity.Text)
         RFQHeaderInfo.RequiredQMMethod = If(String.IsNullOrWhiteSpace(RequiredQMMethod.Text) = True, Nothing, RequiredQMMethod.Text)
@@ -165,12 +169,12 @@ Partial Public Class RFQIssue
         RFQHeaderInfo.SupplierContactPerson = If(String.IsNullOrWhiteSpace(SupplierContactPerson.Text) = True, Nothing, SupplierContactPerson.Text)
         RFQHeaderInfo.SupplierItemName = If(String.IsNullOrWhiteSpace(SupplierItemName.Text) = True, Nothing, SupplierItemName.Text)
         RFQHeaderInfo.Comment = If(String.IsNullOrWhiteSpace(Comment.Text) = True, Nothing, Comment.Text)
-        RFQHeaderInfo.RFQStatusCode = IIf(Integer.TryParse(QuoUser.SelectedValue, i) = True, "A", "N")
+        RFQHeaderInfo.RFQStatusCode = Cstr(IIf(Integer.TryParse(QuoUser.SelectedValue, i) = True, "A", "N"))
         RFQHeaderInfo.Priority = If(String.IsNullOrWhiteSpace(Priority.SelectedValue) = True, Nothing, Priority.SelectedValue)
-        RFQHeaderInfo.CreatedBy = Integer.Parse(Session("UserID"))
-        RFQHeaderInfo.UpdatedBy = Integer.Parse(Session("UserID"))
+        RFQHeaderInfo.CreatedBy = CInt(Session("UserID").ToString)
+        RFQHeaderInfo.UpdatedBy = CInt(Session("UserID").ToString)
         RFQHeaderInfo.SupplierContactPersonSel = SupplierContactPersonCodeList.SelectedValue
-        RFQHeaderInfo.SAPMakerCode = If(String.IsNullOrWhiteSpace(SAPMakerCode.Text) = True, Nothing, SAPMakerCode.Text)
+        RFQHeaderInfo.SAPMakerCode = If(String.IsNullOrWhiteSpace(SAPMakerCode.Text) = True, Nothing, Cint(SAPMakerCode.Text))
         RFQHeaderInfo.CodeExtensionCode = CodeExtensionList.SelectedValue
 
         Return RFQHeaderInfo
@@ -187,10 +191,10 @@ Partial Public Class RFQIssue
         If enqQuantity1 = True Then
             Dim RFQLineInfo As TCIDataAccess.RFQLine = New TCIDataAccess.RFQLine 
             RFQLineInfo.RFQNumber = RFQNumber
-            RFQLineInfo.EnqQuantity = EnqQuantity_1.Text
+            RFQLineInfo.EnqQuantity = CDec(EnqQuantity_1.Text)
             RFQLineInfo.EnqUnitCode = EnqUnit_1.SelectedValue
-            RFQLineInfo.EnqPiece = EnqPiece_1.Text
-            RFQLineInfo.SupplierItemNumber = IIf(SupplierItemNumber_1.Text = "", System.DBNull.Value, SupplierItemNumber_1.Text)
+            RFQLineInfo.EnqPiece = CInt(EnqPiece_1.Text)
+            RFQLineInfo.SupplierItemNumber = Cstr(IIf(String.IsNullOrEmpty(SupplierItemNumber_1.Text), Nothing, SupplierItemNumber_1.Text))
 
             RFQLineListInfo.Add(RFQLineInfo)
         End If
@@ -198,10 +202,10 @@ Partial Public Class RFQIssue
         If enqQuantity2 = True Then
             Dim RFQLineInfo As TCIDataAccess.RFQLine = New TCIDataAccess.RFQLine 
             RFQLineInfo.RFQNumber = RFQNumber
-            RFQLineInfo.EnqQuantity = EnqQuantity_2.Text
+            RFQLineInfo.EnqQuantity = Cdec(EnqQuantity_2.Text)
             RFQLineInfo.EnqUnitCode = EnqUnit_2.SelectedValue
-            RFQLineInfo.EnqPiece = EnqPiece_2.Text
-            RFQLineInfo.SupplierItemNumber = IIf(SupplierItemNumber_2.Text = "", System.DBNull.Value, SupplierItemNumber_2.Text)
+            RFQLineInfo.EnqPiece = Cint(EnqPiece_2.Text)
+            RFQLineInfo.SupplierItemNumber = Cstr(IIf(String.IsNullOrEmpty(SupplierItemNumber_2.Text), Nothing, SupplierItemNumber_2.Text))
 
             RFQLineListInfo.Add(RFQLineInfo)
         End If
@@ -209,10 +213,10 @@ Partial Public Class RFQIssue
         If enqQuantity3 = True Then
             Dim RFQLineInfo As TCIDataAccess.RFQLine = New TCIDataAccess.RFQLine 
             RFQLineInfo.RFQNumber = RFQNumber
-            RFQLineInfo.EnqQuantity = EnqQuantity_3.Text
+            RFQLineInfo.EnqQuantity = Cdec(EnqQuantity_3.Text)
             RFQLineInfo.EnqUnitCode = EnqUnit_3.SelectedValue
-            RFQLineInfo.EnqPiece = EnqPiece_3.Text
-            RFQLineInfo.SupplierItemNumber = IIf(SupplierItemNumber_3.Text = "", System.DBNull.Value, SupplierItemNumber_3.Text)
+            RFQLineInfo.EnqPiece = Cint(EnqPiece_3.Text)
+            RFQLineInfo.SupplierItemNumber = Cstr(IIf(String.IsNullOrEmpty(SupplierItemNumber_3.Text), Nothing, SupplierItemNumber_3.Text))
 
             RFQLineListInfo.Add(RFQLineInfo)
         End If
@@ -220,10 +224,10 @@ Partial Public Class RFQIssue
         If enqQuantity4 = True Then
             Dim RFQLineInfo As TCIDataAccess.RFQLine = New TCIDataAccess.RFQLine 
             RFQLineInfo.RFQNumber = RFQNumber
-            RFQLineInfo.EnqQuantity = EnqQuantity_4.Text
+            RFQLineInfo.EnqQuantity = Cdec(EnqQuantity_4.Text)
             RFQLineInfo.EnqUnitCode = EnqUnit_4.SelectedValue
-            RFQLineInfo.EnqPiece = EnqPiece_4.Text
-            RFQLineInfo.SupplierItemNumber = IIf(SupplierItemNumber_4.Text = "", System.DBNull.Value, SupplierItemNumber_4.Text)
+            RFQLineInfo.EnqPiece = Cint(EnqPiece_4.Text)
+            RFQLineInfo.SupplierItemNumber = Cstr(IIf(String.IsNullOrEmpty(SupplierItemNumber_4.Text), Nothing, SupplierItemNumber_4.Text))
 
             RFQLineListInfo.Add(RFQLineInfo)
         End If
@@ -236,22 +240,19 @@ Partial Public Class RFQIssue
         'ボタンクリック時にPostBackするActionを追記する。
         Issue.PostBackUrl = "~/RFQIssue.aspx?Action=Issue"
     End Sub
-    Private Function CheckPram() As Boolean
+    Private Function CheckPram(ByVal st_ProductID As String, ByVal st_SupplierCode As String) As Boolean
         '他画面から取得するパラメータのチェック
-        Dim st_ProductID As String = ""
-        Dim st_SupplierCode As String = ""
         Dim DBReader As SqlDataReader
         Dim sb_Sql As New StringBuilder
 
-        If Request.QueryString("ProductID") <> "" Or Request.Form("ProductID") <> "" Then
-            st_ProductID = IIf(Request.QueryString("ProductID") <> "", Request.QueryString("ProductID"), Request.Form("ProductID"))
+        If Not String.IsNullOrEmpty(st_ProductID) Then
             If IsNumeric(st_ProductID) Then
                 Dim product As Product = New Product
-                product.Load(Integer.Parse(st_ProductID))
+                product.Load(CInt(st_ProductID))
 
                 ProductNumber.Text = product.ProductNumber
                 CASNumber.Text = product.CASNumber
-                ProductName.Text = IIf(product.QuoName.Trim = String.Empty, product.Name, product.QuoName)
+                ProductName.Text = Cstr(IIf(String.IsNullOrEmpty(product.QuoName.Trim), product.Name, product.QuoName))
                 ProductNumber.ReadOnly = True
                 ProductNumber.CssClass = "readonly"
                 ProductSelect.Visible = False
@@ -259,11 +260,11 @@ Partial Public Class RFQIssue
                 Return False
             End If
         End If
-        If Request.QueryString("SupplierCode") <> "" Or Request.Form("SupplierCode") <> "" Then
-            st_SupplierCode = IIf(Request.QueryString("SupplierCode") <> "", Request.QueryString("SupplierCode"), Request.Form("SupplierCode"))
+
+        If Not String.IsNullOrEmpty(st_SupplierCode) Then
             If IsNumeric(st_SupplierCode) Then
                 DBCommand.CommandText = CreateSql_SelectQuoLocation()
-                DBCommand.Parameters.Add("SupplierCode", SqlDbType.Int).Value = Integer.Parse(st_SupplierCode)
+                DBCommand.Parameters.Add("SupplierCode", SqlDbType.Int).Value = Cint(st_SupplierCode)
                 DBReader = DBCommand.ExecuteReader()
                 DBCommand.Dispose()
                 If DBReader.HasRows = True Then
@@ -302,7 +303,7 @@ Partial Public Class RFQIssue
         SetControl_EnqUser()
         isAdmin.Text = Session("Purchase.isAdmin").ToString
         userId.Text = Session("UserID").ToString
-        If Session("Purchase.isAdmin") = False Then
+        If Boolean.Parse(Session("Purchase.isAdmin").ToString) = False Then
             '            Dim flg As Boolean = False
             '            For index = 0 To EnqUser.Items.Count
             '                If index = EnqUser.Items.Count Then
@@ -525,7 +526,7 @@ Partial Public Class RFQIssue
         Dim Bo_UnLine As Boolean = False
 
         enqQuantity1 = IsAllInputOfRFQList(EnqQuantity_1.Text, EnqUnit_1.SelectedValue, EnqPiece_1.Text)
-        Dim bo_UnLine_1 = IsAllNullOfRFQList(EnqQuantity_1.Text, EnqUnit_1.SelectedValue, EnqPiece_1.Text)
+        Dim bo_UnLine_1 As Boolean = IsAllNullOfRFQList(EnqQuantity_1.Text, EnqUnit_1.SelectedValue, EnqPiece_1.Text)
         If enqQuantity1 = False And bo_UnLine_1 = False Then
             Bo_UnLine = True
         End If
@@ -534,7 +535,7 @@ Partial Public Class RFQIssue
         End If
 
         enqQuantity2 = IsAllInputOfRFQList(EnqQuantity_2.Text, EnqUnit_2.SelectedValue, EnqPiece_2.Text)
-        Dim bo_UnLine_2 = IsAllNullOfRFQList(EnqQuantity_2.Text, EnqUnit_2.SelectedValue, EnqPiece_2.Text)
+        Dim bo_UnLine_2 As Boolean = IsAllNullOfRFQList(EnqQuantity_2.Text, EnqUnit_2.SelectedValue, EnqPiece_2.Text)
         If enqQuantity2 = False And bo_UnLine_2 = False Then
             Bo_UnLine = True
         End If
@@ -543,7 +544,7 @@ Partial Public Class RFQIssue
         End If
 
         enqQuantity3 = IsAllInputOfRFQList(EnqQuantity_3.Text, EnqUnit_3.SelectedValue, EnqPiece_3.Text)
-        Dim bo_UnLine_3 = IsAllNullOfRFQList(EnqQuantity_3.Text, EnqUnit_3.SelectedValue, EnqPiece_3.Text)
+        Dim bo_UnLine_3 As Boolean = IsAllNullOfRFQList(EnqQuantity_3.Text, EnqUnit_3.SelectedValue, EnqPiece_3.Text)
         If enqQuantity3 = False And bo_UnLine_3 = False Then
             Bo_UnLine = True
         End If
@@ -552,7 +553,7 @@ Partial Public Class RFQIssue
         End If
 
         enqQuantity4 = IsAllInputOfRFQList(EnqQuantity_4.Text, EnqUnit_4.SelectedValue, EnqPiece_4.Text)
-        Dim bo_UnLine_4 = IsAllNullOfRFQList(EnqQuantity_4.Text, EnqUnit_4.SelectedValue, EnqPiece_4.Text)
+        Dim bo_UnLine_4 As Boolean = IsAllNullOfRFQList(EnqQuantity_4.Text, EnqUnit_4.SelectedValue, EnqPiece_4.Text)
         If enqQuantity4 = False And bo_UnLine_4 = False Then
             Bo_UnLine = True
         End If
@@ -595,7 +596,7 @@ Partial Public Class RFQIssue
 
         If DBReader.HasRows = True Then
             While DBReader.Read
-                ReturnProductID = DBReader("ProductID").ToString
+                ReturnProductID = Cint(DBReader("ProductID").ToString)
             End While
         Else
             Msg.Text = ERR_INCORRECT_PRODUCTNUMBER
@@ -615,7 +616,7 @@ Partial Public Class RFQIssue
                 Msg.Text = ERR_INCORRECT_MAKERCODE
                 Return False
             Else
-                Dim supplierDt = GetDataTable("select S4SupplierCode from supplier where SupplierCode=" + MakerCode.Text)
+                Dim supplierDt As DataTable = GetDataTable("select S4SupplierCode from supplier where SupplierCode=" + MakerCode.Text)
                 If supplierDt.Rows.Count > 0 Then
                     SAPMakerCode.Text = supplierDt.Rows(0)("S4SupplierCode").ToString
                 Else
@@ -798,7 +799,7 @@ Partial Public Class RFQIssue
         Dim rFQIssueDisp As Join.RFQIssueDisp = New Join.RFQIssueDisp
         Dim productNumberInfo As List(Of Join.RFQIssueDispProductInfo) = New List(Of Join.RFQIssueDispProductInfo)
         If Not String.IsNullOrWhiteSpace(ProductNumber.Text) Then
-            productNumberInfo = rFQIssueDisp.GetProductInfo(ProductNumber.Text, Session(SESSION_ROLE_CODE))
+            productNumberInfo = rFQIssueDisp.GetProductInfo(ProductNumber.Text, Session(SESSION_ROLE_CODE).ToString)
             If productNumberInfo.Count <> 0 Then
                 For Each productInfo As Join.RFQIssueDispProductInfo In productNumberInfo
                     CASNumber.Text = productInfo.CASNumber
@@ -840,7 +841,7 @@ Partial Public Class RFQIssue
         Dim rFQIssueDisp As Join.RFQIssueDisp = New Join.RFQIssueDisp
         Dim supplierCodeInfo As List(Of Join.RFQIssueDispSupplierInfo) = New List(Of Join.RFQIssueDispSupplierInfo)
         If Not String.IsNullOrWhiteSpace(SupplierCode.Text) Then
-            supplierCodeInfo = rFQIssueDisp.GetSupplierInfo(SupplierCode.Text, Session(SESSION_ROLE_CODE))
+            supplierCodeInfo = rFQIssueDisp.GetSupplierInfo(SupplierCode.Text, Session(SESSION_ROLE_CODE).ToString)
 
             If supplierCodeInfo.Count <> 0 Then
                 For Each supplierInfo As Join.RFQIssueDispSupplierInfo In supplierCodeInfo
@@ -879,7 +880,7 @@ Partial Public Class RFQIssue
         Dim rFQIssueDisp As Join.RFQIssueDisp = New Join.RFQIssueDisp
         Dim makerCodeInfo As List(Of Join.RFQIssueDispMakerInfo) = New List(Of Join.RFQIssueDispMakerInfo)
         If Not String.IsNullOrWhiteSpace(MakerCode.Text) Then
-            makerCodeInfo = rFQIssueDisp.GetMakerInfo(MakerCode.Text, Session(SESSION_ROLE_CODE))
+            makerCodeInfo = rFQIssueDisp.GetMakerInfo(MakerCode.Text, Session(SESSION_ROLE_CODE).ToString)
 
             If makerCodeInfo.Count <> 0 Then
                 For Each makerInfo As Join.RFQIssueDispMakerInfo In makerCodeInfo

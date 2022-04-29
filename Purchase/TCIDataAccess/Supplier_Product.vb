@@ -389,7 +389,7 @@ Namespace TCIDataAccess
             sb_SQL.AppendLine("  CASE WHEN NOT P.[QuoName] IS NULL THEN P.[QuoName] ELSE P.[Name] END AS ProductName, ")
             sb_SQL.AppendLine("  SP.[SupplierItemNumber], ")
             sb_SQL.AppendLine("  SP.[Note], ")
-            sb_SQL.AppendLine("  CASE WHEN RH.[ValidQuotation] = 0 THEN 'Y' WHEN RH.[ValidQuotation] = 1 THEN 'N' ELSE '' END AS ValidQuotation, ")
+            sb_SQL.AppendLine("  SP.[ValidQuotation], ")
             sb_SQL.AppendLine("  SP.[UpdateDate], ")
             sb_SQL.AppendLine("  CONCAT('./SuppliersProductSetting.aspx?Action=Edit&Supplier=', @SupplierCode, '&Product=', RTRIM(LTRIM(STR(P.[ProductID])))) AS Url, ")
             sb_SQL.AppendLine("  ISNULL(C.[isCONFIDENTIAL], 0) AS isCONFIDENTIAL ")
@@ -398,7 +398,6 @@ Namespace TCIDataAccess
             sb_SQL.AppendLine("  [Supplier_Product] AS SP")
             sb_SQL.AppendLine("    LEFT OUTER JOIN [Product] AS P ON SP.[ProductID] = P.[ProductID] ")
             sb_SQL.AppendLine("    LEFT OUTER JOIN [v_CONFIDENTIAL] AS C ON C.[ProductID] = SP.[ProductID]")
-            sb_SQL.AppendLine("    LEFT OUTER JOIN [v_RFQHeader] AS RH ON SP.[SupplierCode] = RH.[SupplierCode] And SP.[ProductID] = RH.[ProductID] ")
 
             sb_SQL.AppendLine("WHERE ")
             sb_SQL.AppendLine("  SP.[SupplierCode] = @SupplierCode ")
@@ -409,9 +408,9 @@ Namespace TCIDataAccess
             End If
 
             If StringValidator.Equals(st_ValidFilter, Common.VALID_FILTER_VALID) Then
-                sb_SQL.AppendLine("  AND [ValidQuotation] = 'Y'")
+                sb_SQL.AppendLine("  AND SP.[ValidQuotation] = 'Y'")
             ElseIf StringValidator.Equals(st_ValidFilter, Common.VALID_FILTER_INVALID) Then
-                sb_SQL.AppendLine("  AND [ValidQuotation] = 'N'")
+                sb_SQL.AppendLine("  AND SP.[ValidQuotation] = 'N'")
             End If
 
             'ProductType、Productnumberでのソート（ListView内のテーブル要素内thのID取得時に、ASPXの仕様上自動で”Listview.ID+要素のID”となるのでListViewのIDも記載）
@@ -433,7 +432,7 @@ Namespace TCIDataAccess
                     sb_SQL.AppendLine("    WHEN P.[NumberType] = 'NEW' THEN 2 ")
                     sb_SQL.AppendLine("    ELSE 3 ")
                     sb_SQL.AppendLine("  END, ")
-                    sb_SQL.AppendLine("  P.[ProductNumber] DESC ")
+                    sb_SQL.AppendLine("  P.[ProductNumber] ASC ")
                 Else
                     sb_SQL.AppendLine("ORDER BY ")
                     sb_SQL.AppendLine("  CASE ")
@@ -459,7 +458,7 @@ Namespace TCIDataAccess
                 'ValidQuotationでのソート
             ElseIf String.Equals(st_HiddenSortField, st_SupplierProductListID + "_" + "ValidQuotationHeader") Then
                 sb_SQL.AppendLine("ORDER BY ")
-                sb_SQL.AppendLine("    RH.[Validquotation] ")
+                sb_SQL.AppendLine("    SP.[Validquotation] ")
                 If st_HiddenSortType = "asc" Then
                     sb_SQL.AppendLine(" ASC ")
                 ElseIf st_HiddenSortType = "desc" Then

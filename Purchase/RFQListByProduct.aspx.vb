@@ -14,6 +14,8 @@ Partial Public Class RFQListByProduct
 
     Protected st_ProductID As String
     Protected i_DataNum As Integer = 0 ' 0 の場合は Supplier Data が無いと判断し、 Data not found. を表示する。
+    Private st_ProductNumber As String
+
     ''' <summary>
     ''' このページのロードイベントです。
     ''' </summary>
@@ -38,15 +40,15 @@ Partial Public Class RFQListByProduct
             ' Valid Quotation ドロップダウンリスト設定
             Common.SetValidQuotationList(ValidQuotation, "All")
 
-            ' EHSHeader 設定
-            HeaderEhs.UserID = Integer.Parse(Session("UserID").ToString)
-            HeaderEhs.LocationCode = Session("LocationCode").ToString
-            HeaderEhs.ProductNumber = ProductNumber.Text
-            HeaderEhs.GetEhsHeader
-
             '' 一覧検索
             st_ProductID = st_ProductID.Trim()
             ShowList()
+
+            ' EHSHeader 設定
+            HeaderEhs.UserID = Integer.Parse(Session("UserID").ToString)
+            HeaderEhs.LocationCode = Session("LocationCode").ToString
+            HeaderEhs.ProductNumber = st_ProductNumber
+            HeaderEhs.GetEhsHeader
 
         End If
 
@@ -169,6 +171,7 @@ Partial Public Class RFQListByProduct
             If reader.Read() Then
                 i_DataNum = 1
                 ProductNumber.Text = reader("ProductNumber").ToString()
+                st_ProductNumber = reader("ProductNumber").ToString()
                 If Not IsDBNull(reader("QuoName")) Then
                     QuoName.Text = reader("QuoName").ToString()
                 Else

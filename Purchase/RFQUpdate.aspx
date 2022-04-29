@@ -13,7 +13,7 @@
             var SupplierCode = (document.getElementById('Hidden_SupplierCode').value).replace(/\s|　/g, "");
             var SupplierCode = encodeURIComponent(SupplierCode);
             if (SupplierCode !== "") {
-                location.assign('./RFQListBySupplier.aspx?SupplierCode=' + SupplierCode);
+                window.open('./RFQListBySupplier.aspx?SupplierCode=' + SupplierCode, "_blank", "noopener").focus();
                 return false;
             }
         }
@@ -72,6 +72,7 @@
                         <th class="auto-style1">Product Number <span class="required">*</span> : </th>
                         <td>
                             <asp:HyperLink ID="RFQListByProductID" runat="server" Text=""></asp:HyperLink>
+                            
                             <span class="indent">
                                 <span class="message">Code Extension : </span>
                                     <asp:DropDownList ID="CodeExtensionList" runat="server" Width="8em" Height="20px" AutoPostBack="True">
@@ -135,7 +136,7 @@
                             <asp:TextBox ID="MakerCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
                             <asp:ImageButton ID="MakerSelect" runat="server" ImageUrl="./Image/Search.gif"
                                 CssClass="magnify" OnClientClick="return MakerSelect_onclick()" />
-                            <asp:LinkButton runat="server" ID="MakerInfo" Text="Supplier Information" />
+                            <asp:LinkButton runat="server" ID="MakerInfo" Text="Supplier Info" />
                         </td>
                     </tr>
                     <tr>
@@ -300,7 +301,7 @@
                         <th>Comment : </th>
                         <td>
                             <asp:TextBox ID="Comment" runat="server" Columns="50" Rows="3" TextMode="MultiLine"></asp:TextBox></td>
-                        <td>MMSTA Invalidation<asp:CheckBox ID="MMSTAInvalidation" runat="server" Width="7em" ReadOnly="true" AutoPostBack="True"></asp:CheckBox>
+                        <td><asp:CheckBox ID="MMSTAInvalidation" runat="server" ReadOnly="true" AutoPostBack="True" Text="MMSTA Invalidation"></asp:CheckBox>
                         </td>
                     </tr>
                     <tr>

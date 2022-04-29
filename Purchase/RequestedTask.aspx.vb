@@ -1,4 +1,8 @@
-﻿Imports Purchase.Common
+﻿Option Explicit On
+Option Strict On
+Option Infer Off
+
+Imports Purchase.Common
 
 Partial Public Class RequestedTask
     Inherits CommonPage
@@ -6,25 +10,24 @@ Partial Public Class RequestedTask
     Protected st_Action As String = String.Empty ' aspx 側で読むため、Protected にする
     Private st_UserID As String = String.Empty
 
-    Dim RequestedTaskDate = New TCIDataAccess.Join.RequestedTaskDispList
+    Const SWITCH_ACTION As String = "Switch"
+
+    Dim RequestedTaskDate As TCIDataAccess.Join.RequestedTaskDispList = New TCIDataAccess.Join.RequestedTaskDispList
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        ' パラメータ UserID 取得
+        Msg.Text = ""
+        '' パラメータ UserID 取得
         If IsPostBack = True Then
             '' 選択された User を退避
             st_UserID = UserID.SelectedValue
         Else
-            '' 初期表示時は呼び元から渡された UserID を格納
-            If Request.RequestType = "POST" Then
-                st_UserID = IIf(Request.Form("UserID") = Nothing, "", Request.Form("UserID"))
-            ElseIf Request.RequestType = "GET" Then
-                st_UserID = IIf(Request.QueryString("UserID") = Nothing, "", Request.QueryString("UserID"))
-            End If
+            st_UserID = Session("UserID").ToString
         End If
 
+        '' 初期表示時は呼び元から渡された UserID を格納
         If String.IsNullOrEmpty(st_UserID) Then
-            '' 呼び元もしくは自画面から UserID が取得出来ない場合はログインユーザをセッションから格納
-            st_UserID = Session("UserID")
+            Msg.Text = Common.ERR_INVALID_PARAMETER
+            Exit Sub
         End If
 
         ' セッション変数 PrivilegeLevel が  'P' の場合は 
@@ -33,7 +36,9 @@ Partial Public Class RequestedTask
         Dim ds As DataSet = New DataSet
         ds.Tables.Add("UserID")
 
-        If Session("Purchase.PrivilegeLevel") = "P" Then
+        SetPageSize()
+
+        If Session("Purchase.PrivilegeLevel").ToString = "P" Then
             Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
 
                 ' 拠点チェック
@@ -50,7 +55,7 @@ Partial Public Class RequestedTask
 
                 ' 同拠点ならばデータ取得
                 If b_hasrows Then
-                    st_query = vUser.CreateUserSelectSQL(Session("Purchase.PrivilegeLevel"))
+                    st_query = vUser.CreateUserSelectSQL(Session("Purchase.PrivilegeLevel").ToString)
                     command.CommandText = st_query
 
                     Dim adapter As New SqlClient.SqlDataAdapter()
@@ -63,10 +68,10 @@ Partial Public Class RequestedTask
                     UserID.DataBind()
                 End If
             End Using
-        ElseIf Session("Purchase.PrivilegeLevel") = "A" Then
+        ElseIf Session("Purchase.PrivilegeLevel").ToString = "A" Then
             Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
                 Dim vUser As New TCIDataAccess.v_User()
-                Dim st_query As String = vUser.CreateUserSelectSQL(Session("Purchase.PrivilegeLevel"))
+                Dim st_query As String = vUser.CreateUserSelectSQL(Session("Purchase.PrivilegeLevel").ToString)
                 Dim adapter As New SqlClient.SqlDataAdapter()
                 Dim command As New SqlClient.SqlCommand(st_query, connection)
                 adapter.SelectCommand = command
@@ -93,7 +98,7 @@ Partial Public Class RequestedTask
             SetRFQOrderByDropDownList(Orderby)
             Orderby.SelectedValue = "REM"
 
-            ' 初期表示
+            ' 一覧初期表示
             ShowList()
         End If
 
@@ -102,8 +107,23 @@ Partial Public Class RequestedTask
     ''' Switchボタン押下時処理  
     ''' </summary>
     Protected Sub Switch_Click() Handles Switch.Click
+        ' パラメータ取得
+        If String.IsNullOrEmpty(Request.Form("Action")) Then
+            st_Action = Request.QueryString("Action")
+        Else
+            st_Action = Request.Form("Action")
+        End If
+
+        ' Action チェック
+        If IsPostBack And ((String.IsNullOrEmpty(st_Action)) Or st_Action <> SWITCH_ACTION) Then
+            Msg.Text = Common.ERR_INVALID_PARAMETER
+            st_Action = ""
+            Exit Sub
+        End If
+
         ' 一覧を表示する（Switchボタン押下）
         ShowList()
+
     End Sub
 
     ''' <summary>
@@ -114,7 +134,10 @@ Partial Public Class RequestedTask
     ''' </remarks>
     Protected Sub RFQList_PagePropertiesChanged(ByVal sender As Object, ByVal e As EventArgs) Handles RFQList.PagePropertiesChanged
         ' 一覧を表示する（ページャー押下時）
-        ShowList()
+        if IsPostBack Then
+            ShowList()
+        End If
+        SetPageSize()
     End Sub
 
     Protected Sub SrcRFQ_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcRFQ.Selecting
@@ -125,23 +148,23 @@ Partial Public Class RequestedTask
     ''' 検索結果一覧を表示  
     ''' </summary>
     Protected Sub ShowList()
-        '' 一覧の取得
+        ' 前回の SQL パラメータを削除
+        SrcRFQ.SelectParameters.Clear()
+
+        ' SQL パラメータ設定
+        SrcRFQ.SelectParameters.Add("UserID", st_UserID)
+
+        ' RFQ データ取得用 SQLDataSource の設定
         Dim dc_RequestedTaskList As New TCIDataAccess.Join.RequestedTaskDispList
         RFQList.DataSource = Nothing 
-        dc_RequestedTaskList.Load(st_UserID, RFQPriority.SelectedValue, RFQStatus.SelectedValue, Orderby.SelectedValue, Session(SESSION_ROLE_CODE).ToString)
+        dc_RequestedTaskList.Load(Cint(st_UserID), RFQPriority.SelectedValue, RFQStatus.SelectedValue, Orderby.SelectedValue, Session(SESSION_ROLE_CODE).ToString)
         RequestedTaskDate = dc_RequestedTaskList
         RFQList.DataSource = RequestedTaskDate
         RFQList.DataBind()
 
         If dc_RequestedTaskList.Count > 0 Then
             '' 一覧の取得件数が0以上なら以下の処理を実行
-            If String.IsNullOrEmpty(HiddenUserID.Value) And 
-                String.IsNullOrEmpty(HiddenRFQPriority.Value) And 
-                String.IsNullOrEmpty(HiddenRFQStatus.Value) And 
-                String.IsNullOrEmpty(HiddenOrderby.Value) Then
-                '' 初期表示時は１頁の表示件数をセット
-                SetPageSize
-            ElseIf Not HiddenUserID.Value.Equals(st_UserID) Or 
+            If Not HiddenUserID.Value.Equals(st_UserID) Or 
                     Not HiddenRFQPriority.Value.Equals(RFQPriority.SelectedValue) Or 
                     Not HiddenRFQStatus.Value.Equals(RFQStatus.SelectedValue) Or 
                     Not HiddenOrderby.Value.Equals(Orderby.SelectedValue) Then
@@ -162,7 +185,7 @@ Partial Public Class RequestedTask
 
     ' ユーザ選択プルダウンを前回選択したユーザに設定する
     Private Sub SetCtrl_UserIDSelected(ByVal sender As Object, ByVal e As System.EventArgs) Handles UserID.DataBound
-        Dim ddl As DropDownList = sender
+        Dim ddl As DropDownList = CType(sender, DropDownList)
 
         For Each item As ListItem In ddl.Items
             If item.Value = st_UserID Then
@@ -175,48 +198,17 @@ Partial Public Class RequestedTask
 
     Private Sub SetPageSize()
 
-        'ページャーの1ページ辺りの表示件数に定数の値を設定
-        Dim PgrRFQPagerCountTop As DataPager
-        PgrRFQPagerCountTop = RFQList.FindControl("RFQPagerCountTop")
-
-        Dim PgrRFQPagerLinkTop As DataPager
-        PgrRFQPagerLinkTop = RFQList.FindControl("RFQPagerLinkTop")
-
-        Dim PgrRFQPagerLinkBottom As DataPager
-        PgrRFQPagerLinkBottom = RFQList.FindControl("RFQPagerLinkBottom")
-
-        Dim PgrRFQPagerCountBottom As DataPager
-        PgrRFQPagerCountBottom = RFQList.FindControl("RFQPagerCountBottom")
-
-        If PgrRFQPagerCountTop.StartRowIndex = 0 Then
-            PgrRFQPagerCountTop.PageSize = Common.LIST_ONEPAGE_ROW_RequestedTask
-            PgrRFQPagerLinkTop.PageSize = Common.LIST_ONEPAGE_ROW_RequestedTask
-            PgrRFQPagerLinkBottom.PageSize = Common.LIST_ONEPAGE_ROW_RequestedTask
-            PgrRFQPagerCountBottom.PageSize = Common.LIST_ONEPAGE_ROW_RequestedTask
-        End If
+        RFQPagerCountTop.PageSize = Common.LIST_ONEPAGE_ROW(Request.Url.ToString())
+        RFQPagerLinkTop.PageSize = Common.LIST_ONEPAGE_ROW(Request.Url.ToString())
+        RFQPagerLinkBottom.PageSize = Common.LIST_ONEPAGE_ROW(Request.Url.ToString())
+        RFQPagerCountBottom.PageSize = Common.LIST_ONEPAGE_ROW(Request.Url.ToString())
 
     End Sub
 
     Private Sub ReSetPager()
 
-        'ページャーを初期化
-        Dim PgrRFQPagerCountTop As DataPager
-        PgrRFQPagerCountTop = RFQList.FindControl("RFQPagerCountTop")
-
-        Dim PgRFQPagerLinkTop As DataPager
-        PgRFQPagerLinkTop = RFQList.FindControl("RFQPagerLinkTop")
-
-        Dim PgrRFQPagerLinkBottom As DataPager
-        PgrRFQPagerLinkBottom = RFQList.FindControl("RFQPagerLinkBottom")
-
-        Dim PgrRFQPagerCountBottom As DataPager
-        PgrRFQPagerCountBottom = RFQList.FindControl("RFQPagerCountBottom")
-
-        '' ページャーが複数ある場合でも同一リスト内なら１つリセットすれば全体がリセットされる
-        'ResetPageTemplatePagerField(PgrRFQPagerCountTop)
-        ResetPageNumericPagerField(PgRFQPagerLinkTop)
-        'ResetPageNumericPagerField(PgrRFQPagerLinkBottom)
-        'ResetPageTemplatePagerField(PgrRFQPagerCountBottom)
+        ResetPageNumericPagerField(RFQPagerLinkTop)
+        ResetPageNumericPagerField(RFQPagerLinkBottom)
 
     End Sub
 

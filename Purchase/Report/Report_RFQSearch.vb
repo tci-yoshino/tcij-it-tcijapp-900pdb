@@ -80,7 +80,7 @@ Public Class Report_RFQSearch
         'Excel出力
         _Response.Clear()
         _Response.ContentType = EXCEL_CONTENTTYPE
-        _Response.AppendHeader(EXCEL_APPEND_HEADER_NAME, String.Format(EXCEL_APPEND_HEADER_VALUE, "RFQSearch.xlsx"))
+        _Response.AppendHeader(EXCEL_APPEND_HEADER_NAME, String.Format(EXCEL_APPEND_HEADER_VALUE, "RFQList.xlsx"))
         _Response.BinaryWrite(outmemory.ToArray)
         _Response.End()
 

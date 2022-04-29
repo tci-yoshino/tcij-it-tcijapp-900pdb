@@ -30,7 +30,7 @@
                     <asp:ListView ID="ltvEhsHeader" runat="server" 
                         onitemdatabound="ltvEhsHeader_ItemDataBound">
                         <LayoutTemplate>
-                            <table ID="itemPlaceholderContainer" runat="server">
+                            <table ID="itemPlaceholderContainer" style="Width:34%" runat="server">
                                 <tr >
                                     <th style="Width:8%">Branch</th>
                                     <th style="Width:6%">ON/OFF</th>

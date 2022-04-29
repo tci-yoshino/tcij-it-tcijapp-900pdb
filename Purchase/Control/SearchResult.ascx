@@ -45,7 +45,7 @@
                 <tr>
                     <th>Product Number / Name</th>
                     <td colspan="5">
-                        <asp:HyperLink ID="ProductNumberLink" runat="server" NavigateUrl='<%#Eval("ProductNumber","../RFQListByProduct.aspx?ProductID={0}")%>' Text='<%#Eval("ProductNumber")%>' />
+                        <asp:HyperLink ID="ProductNumberLink" runat="server" NavigateUrl='<%#Eval("ProductID","../RFQListByProduct.aspx?ProductID={0}")%>' Text='<%#Eval("ProductNumber")%>' />
                         <span class="indent">
                             <asp:Label ID="CodeExtensionCode" runat="server" Text='<%#Eval("CodeExtensionCode")%>'></asp:Label>
                         </span>

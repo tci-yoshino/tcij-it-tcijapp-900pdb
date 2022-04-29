@@ -14,6 +14,7 @@ Namespace TCIDataAccess.Join
         Protected _RFQNumber As Integer = 0
         Protected _Priority As String = String.Empty
         Protected _QuotedDate As datetime
+        Protected _ProductID As Integer = 0
         Protected _ProductNumber As String = String.Empty
         Protected _ProductName As String = String.Empty
         Protected _SupplierCode As Integer = 0
@@ -56,6 +57,17 @@ Namespace TCIDataAccess.Join
             End Get
             Set(ByVal value As String)
                 _Status = value
+            End Set
+        End Property
+        ''' <summary> 
+        ''' ProductID を設定、または取得する 
+        ''' </summary> 
+        Public Property ProductID() As Integer
+            Get
+                Return _ProductID
+            End Get
+            Set(ByVal value As Integer)
+                _ProductID = value
             End Set
         End Property
         ''' <summary> 
@@ -460,6 +472,7 @@ Namespace TCIDataAccess.Join
                         SetProperty(DBReader("RFQNumber"), dc_Data.RFQNumber)
                         SetProperty(DBReader("Priority"), dc_Data.Priority)
                         SetProperty(DBReader("QuotedDate"), dc_Data.QuotedDate)
+                        SetProperty(DBReader("ProductID"), dc_Data.ProductID)
                         SetProperty(DBReader("ProductNumber"), dc_Data.ProductNumber)
                         SetProperty(DBReader("ProductName"), dc_Data.ProductName)
                         SetProperty(DBReader("SupplierCode"), dc_Data.SupplierCode)
@@ -505,6 +518,7 @@ Namespace TCIDataAccess.Join
             Value.AppendLine("    rfh.[RFQNumber],")
             Value.AppendLine("    ISNULL(rfh.[Priority], '') AS Priority,")
             Value.AppendLine("    rfh.[QuotedDate],")
+            Value.AppendLine("    rfh.[ProductID],")
             Value.AppendLine("    rfh.[ProductNumber],")
             Value.AppendLine("    rfh.[ProductName],")
             Value.AppendLine("    rfh.[SupplierCode],")
@@ -618,15 +632,15 @@ Namespace TCIDataAccess.Join
             WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.Priority = @Priority", Cond.Priority)
             'ValidQuotationの入力判定
             If Not String.IsNullOrEmpty(Cond.ValidQuotation) Then
-                If Cond.ValidQuotation = "Valid Price" Then
-                    WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.ValidQuotation = @ValidQuotation", "1")
-                Else IF Cond.ValidQuotation = "Inalid Price" Then
-                    WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.ValidQuotation = @ValidQuotation", "0")
+                If Cond.ValidQuotation = "Y" Then
+                    WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.ValidQuotation = 1", "1")
+                Else IF Cond.ValidQuotation = "N" Then
+                    WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.ValidQuotation = 0", "0")
                 End If
             End If
             '権限ロールに従い極秘品を除外する
             If Common.CheckSessionRole(Cond.s_RoleCode) = False Then
-                WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.isCONFIDENTIAL = @isCONFIDENTIAL", "0")
+                WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.isCONFIDENTIAL = 0", "0")
             End If
 
             Return WhereClause

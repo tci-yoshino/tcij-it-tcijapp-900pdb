@@ -178,8 +178,8 @@ function setFormAction(button_type) {
                         </tr>
                         <tr>
                             <th>Supplier Name / Country</th>
-                            <td colspan="4">
-                                <span class="placedright"><asp:HyperLink ID="SupplierCode" runat="server" NavigateUrl='<%#Eval("SupplierCode","./RFQListBySupplier.aspx?SupplierCode={0}")%>' Text='<%#Eval("SupplierCode")%>' /></span>
+                            <td colspan="3">
+                                <span><asp:HyperLink ID="SupplierCode" runat="server" NavigateUrl='<%#Eval("SupplierCode","./RFQListBySupplier.aspx?SupplierCode={0}")%>' Text='<%#Eval("SupplierCode")%>' /></span>
                                 <!-- １段下に改行されて表示される現象の対策のため他項目より前に記述する -->
                                 <span class="placedright"><asp:HyperLink ID="SupplierInfoLink" runat="server" NavigateUrl='<%#Eval("SupplierInfo")%>' Target="_blank"><asp:Label ID="SupplierInfo" runat="server" Text='<%#If(IsDBNull(Eval("SupplierInfo")), "", "Supplier Information")%>'></asp:Label></asp:HyperLink></span>
                                 <asp:Label ID="SupplierName" runat="server" Text='<%#Eval("SupplierName")%>'></asp:Label>
@@ -225,7 +225,7 @@ function setFormAction(button_type) {
                                     <th id="Th7"  runat="server" style="width:10%">Packing</th>
                                     <th id="Th8"  runat="server" style="width:10%">Purity/Method</th>
                                     <th id="Th9" runat="server" style="width:10%">Supplier Offer No</th>
-                                    <th id="Th13" runat="server" style="width:10%">Supplier Item No</th>
+                                    <th id="Th13" runat="server" style="width:10%">Supplier Item Number</th>
                                     <th id="Th11" runat="server" style="width:14%">Reason for "No Offer"</th>
                                     <th id="Th10" runat="server" style="width:5%">PO</th>
                                     <th id="Th12" runat="server" style="width:5%">Interface</th>

@@ -110,114 +110,74 @@ Namespace TCIDataAccess.Join
                     'SQL 生成
                     Dim strSql As StringBuilder = New StringBuilder
                     strSql.AppendLine("SELECT")
-                    strSql.AppendLine("  P.ProductID,")
-                    strSql.AppendLine("  P.CASNumber,")
-                    strSql.AppendLine("  P.ProductNumber,")
-                    strSql.AppendLine("  P.NumberType,")
-                    strSql.AppendLine("  CASE WHEN NOT P.QuoName IS NULL THEN P.QuoName ELSE P.Name END AS ProductName,")
-                    strSql.AppendLine("  SP.SupplierItemNumber,")
-                    strSql.AppendLine("  SP.Note,")
-                    strSql.AppendLine("  SP.UpdateDate,")
-                    strSql.AppendLine("  './SuppliersProductSetting.aspx?Action=Edit&Supplier= @SupplierCode &Product='+RTRIM(LTRIM(STR(P.ProductID))) AS Url,")
-                    strSql.AppendLine("  ISNULL(C.isCONFIDENTIAL, 0) AS isCONFIDENTIAL,")
-                    strSql.AppendLine("  ValidQuotation")
-
-                    strSql.AppendLine("FROM")
-                    strSql.AppendLine("  Supplier_Product AS SP")
-                    strSql.AppendLine("    LEFT OUTER JOIN Product AS P ON SP.ProductID = P.ProductID")
-                    strSql.AppendLine("    LEFT OUTER JOIN v_CONFIDENTIAL AS C ON C.ProductID = SP.ProductID")
-
-                    'ValidQuotation取得処理
-                    strSql.AppendLine("  LEFT OUTER JOIN ")
-                    strSql.AppendLine("     (")
-                    strSql.AppendLine("     SELECT")
-                    strSql.AppendLine("     VQ.ProductID")
-                    strSql.AppendLine("     ,VQ.SupplierCode")
-                    strSql.AppendLine("     ,CASE VQ.result")
-                    strSql.AppendLine("     WHEN 0 THEN ''")
-                    strSql.AppendLine("     WHEN 1 THEN 'N'")
-                    strSql.AppendLine("     WHEN 2 THEN 'Y'")
-                    strSql.AppendLine("     END AS ValidQuotation")
-                    strSql.AppendLine("     FROM")
-                    strSql.AppendLine("         (")
-                    strSql.AppendLine("         SELECT")
-                    strSql.AppendLine("         A.ProductID")
-                    strSql.AppendLine("         ,A.SupplierCode")
-                    strSql.AppendLine("         ,MAX(A.result) AS result")
-                    strSql.AppendLine("         FROM")
-                    strSql.AppendLine("             (")
-                    strSql.AppendLine("             SELECT")
-                    strSql.AppendLine("             H.ProductID")
-                    strSql.AppendLine("             ,H.SupplierCode")
-                    strSql.AppendLine("             ,CASE")
-                    strSql.AppendLine("             WHEN H.SupplierCode IS NULL THEN 0")
-                    strSql.AppendLine("             ELSE    CASE")
-                    strSql.AppendLine("             WHEN IsNull(L.UnitPrice, 0) > 0 THEN 2")
-                    strSql.AppendLine("             ELSE 1")
-                    strSql.AppendLine("             END")
-                    strSql.AppendLine("             END AS result")
-                    strSql.AppendLine("             FROM")
-                    strSql.AppendLine("             dbo.v_RFQHeader H LEFT OUTER JOIN dbo.v_RFQLine L ON H.RFQNumber = L.RFQNumber")
-                    strSql.AppendLine("             ) A")
-                    strSql.AppendLine("     GROUP BY A.ProductID, A.SupplierCode")
-                    strSql.AppendLine("     ) VQ")
-                    strSql.AppendLine("  ) RH ON SP.SupplierCode = RH.SupplierCode AND SP.ProductID = RH.ProductID")
-                    strSql.AppendLine("WHERE")
-                    strSql.AppendLine("  SP.SupplierCode =@SupplierCode")
+                    strSql.AppendLine("  P.[ProductID], ")
+                    strSql.AppendLine("  P.[CASNumber], ")
+                    strSql.AppendLine("  P.[ProductNumber], ")
+                    strSql.AppendLine("  P.[NumberType], ")
+                    strSql.AppendLine("  CASE WHEN NOT P.[QuoName] IS NULL THEN P.[QuoName] ELSE P.[Name] END AS ProductName, ")
+                    strSql.AppendLine("  SP.[SupplierItemNumber], ")
+                    strSql.AppendLine("  SP.[Note], ")
+                    strSql.AppendLine("  SP.[UpdateDate], ")
+                    strSql.AppendLine("  './SuppliersProductSetting.aspx?Action=Edit&Supplier= @SupplierCode &Product='+RTRIM(LTRIM(STR(P.[ProductID]))) AS Url, ")
+                    strSql.AppendLine("  ISNULL(C.[isCONFIDENTIAL], 0) AS isCONFIDENTIAL, ")
+                    strSql.AppendLine("  SP.[ValidQuotation] ")
+                    strSql.AppendLine("FROM ")
+                    strSql.AppendLine("  [Supplier_Product] AS SP ")
+                    strSql.AppendLine("    LEFT OUTER JOIN [Product] AS P ON SP.[ProductID] = P.[ProductID] ")
+                    strSql.AppendLine("    LEFT OUTER JOIN [v_CONFIDENTIAL] AS C ON C.[ProductID] = SP.[ProductID] ")
+                    strSql.AppendLine("WHERE ")
+                    strSql.AppendLine("  SP.[SupplierCode] =@SupplierCode")
 
                     '権限ロールに従い極秘品を除外する
                     If SessionRole = False Then
-                        strSql.AppendLine("  AND C.isCONFIDENTIAL = 0")
+                        strSql.AppendLine("  AND C.[isCONFIDENTIAL] = 0")
                     End If
 
                     If FilterType = "Valid Price" Then
-                        strSql.AppendLine("  AND ValidQuotation = 'Y'")
+                        strSql.AppendLine("  AND SP.[ValidQuotation] = 'Y'")
 
                     ElseIf FilterType = "Invalid Price" Then
-                        strSql.AppendLine("  AND ValidQuotation = 'N'")
+                        strSql.AppendLine("  AND SP.[ValidQuotation] = 'N'")
 
                     End If
-
 
                     If SorfField = "SupplierProductList_ProductNumHeader" Or String.IsNullOrEmpty(SorfField) Then
                         If SortType = "asc" Then
                             strSql.AppendLine("ORDER BY")
                             strSql.AppendLine("  CASE")
                             strSql.AppendLine("  WHEN")
-                            strSql.AppendLine("  P.NumberType = 'CAS' THEN 1")
+                            strSql.AppendLine("  P.[NumberType] = 'CAS' THEN 1")
                             strSql.AppendLine("  WHEN")
-                            strSql.AppendLine("  P.NumberType = 'TCI' THEN 2")
+                            strSql.AppendLine("  P.[NumberType] = 'NEW' THEN 2")
                             strSql.AppendLine("  ELSE 3")
                             strSql.AppendLine("  END,")
-                            strSql.AppendLine("  P.ProductNumber ASC")
+                            strSql.AppendLine("  P.[ProductNumber] ASC")
                         ElseIf SortType = "desc" Then
                             strSql.AppendLine("ORDER BY")
                             strSql.AppendLine("  CASE")
                             strSql.AppendLine("  WHEN")
-                            strSql.AppendLine("  P.NumberType = 'NEW' THEN 1")
+                            strSql.AppendLine("  P.[NumberType] = 'TCI' THEN 1")
                             strSql.AppendLine("  WHEN")
-                            strSql.AppendLine("  P.NumberType = 'TCI' THEN 2")
+                            strSql.AppendLine("  P.[NumberType] = 'NEW' THEN 2")
                             strSql.AppendLine("  ELSE 3")
                             strSql.AppendLine("  END,")
-                            strSql.AppendLine("   P.ProductNumber DESC")
+                            strSql.AppendLine("   P.[ProductNumber] ASC")
                         Else
                             strSql.AppendLine("ORDER BY")
                             strSql.AppendLine("  CASE")
                             strSql.AppendLine("  WHEN")
-                            strSql.AppendLine("  P.NumberType = 'CAS THEN 1")
+                            strSql.AppendLine("  P.[NumberType] = 'CAS THEN 1")
                             strSql.AppendLine("  WHEN")
-                            strSql.AppendLine("  P.NumberType = 'TCI' THEN 2")
+                            strSql.AppendLine("  P.[NumberType] = 'NEW' THEN 2")
                             strSql.AppendLine("  ELSE 3")
                             strSql.AppendLine("  END,")
-                            strSql.AppendLine("  P.ProductNumber ASC")
+                            strSql.AppendLine("  P.[ProductNumber] ASC")
                         End If
-
-
 
                         'UpdateDateでのソート
                     ElseIf SorfField = "SupplierProductList_UpdateDateHeader" Then
                         strSql.AppendLine("ORDER BY")
-                        strSql.AppendLine("  SP.UpdateDate")
+                        strSql.AppendLine("  SP.[UpdateDate]")
                         If SortType = "asc" Then
                             strSql.AppendLine("  ASC")
                         ElseIf SortType = "desc" Then
@@ -229,7 +189,7 @@ Namespace TCIDataAccess.Join
                         'ValidQuotationでのソート
                     ElseIf SorfField = "SupplierProductList_ValidQuotationHeader" Then
                         strSql.AppendLine("ORDER BY")
-                        strSql.AppendLine("RH.Validquotation ")
+                        strSql.AppendLine("SP.[Validquotation] ")
                         If SortType = "asc" Then
                             strSql.AppendLine("  ASC")
 

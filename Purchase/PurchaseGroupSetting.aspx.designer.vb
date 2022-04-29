@@ -14,6 +14,15 @@ Option Explicit On
 Partial Public Class PurchaseGroupSetting
     
     '''<summary>
+    '''HeaderMenu コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents HeaderMenu As Global.Purchase.Header
+    
+    '''<summary>
     '''CountryForm コントロール。
     '''</summary>
     '''<remarks>

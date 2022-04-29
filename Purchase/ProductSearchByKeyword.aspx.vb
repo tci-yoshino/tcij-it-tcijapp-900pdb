@@ -81,18 +81,19 @@ Partial Public Class ProductSearchByKeyword
         Dim ds_ProductSearchByKeywordDispList As List(Of ProductSearchByKeywordDisp) = New List(Of ProductSearchByKeywordDisp) 
         Dim i_RFQCount As Integer = productSearchByKeywordDispList.Count
 
+        dim maxRow As Integer = Common.LIST_ONEPAGE_ROW(Request.Url.ToString())
         If i_RFQCount = 0 Then
             '検索結果が0件ならエラーメッセージを表示する
             Msg.Text = Common.ERR_NO_MATCH_FOUND
             UnDsp_ProductList()
             Exit Sub
 
-        ElseIf i_RFQCount > common.LIST_ONEPAGE_ROW_ProductSearchByKeyword Then
+        ElseIf i_RFQCount > Common.LIST_ONEPAGE_ROW(Request.Url.ToString()) Then
             '検索結果が100件以上ならエラーメッセージを表示する
             Dim ary_Msg As ArrayList = New ArrayList
-            ary_Msg.Add(Common.LIST_ONEPAGE_ROW_ProductSearchByKeyword.ToString)
+            ary_Msg.Add(maxRow.ToString)
             Msg.Text = common.CreateMSG(Common.MSG_RESULT_OVER_LIMIT, ary_Msg)
-            ds_ProductSearchByKeywordDispList = productSearchByKeywordDispList.GetRange(0, Common.LIST_ONEPAGE_ROW_ProductSearchByKeyword)
+            ds_ProductSearchByKeywordDispList = productSearchByKeywordDispList.GetRange(0, maxRow)
         Else
             ds_ProductSearchByKeywordDispList = productSearchByKeywordDispList
         End If

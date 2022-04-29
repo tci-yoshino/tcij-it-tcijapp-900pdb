@@ -111,10 +111,36 @@
     <Content Include="Image\Arrow.gif" />
     <Content Include="Image\Check.gif" />
     <Content Include="Image\Logo.gif" />
+    <Content Include="Image\NoImage.gif" />
     <Content Include="Image\Search.gif" />
     <Content Include="IsuseError.html" />
     <Content Include="JFYISearch.aspx" />
+    <Content Include="jsme\05B63F17C4ECC632F0004998FE93F0D9.cache.png" />
+    <Content Include="jsme\19EAD0764F7F427003927B3F5216C70A.cache.html" />
+    <Content Include="jsme\1D783AB345CB96BC1B6BE003273C6D80.cache.html" />
+    <Content Include="jsme\30002A3FEC68E9491C0C28500BD46863.cache.html" />
+    <Content Include="jsme\396F806CD63ABD414BFBB9D57429F05B.cache.png" />
+    <Content Include="jsme\40BAF81124143A595056A9CCA0E9DBBA.cache.png" />
+    <Content Include="jsme\41AF53366184B00254EEAAB9B2C0B5C0.cache.html" />
+    <Content Include="jsme\45376725C0EC68B28D7FC268FB26C80F.cache.html" />
+    <Content Include="jsme\454401113E6BDC04A9B5E3201809D643.cache.html" />
+    <Content Include="jsme\456A21FD610E737447A2148E80BC7987.cache.html" />
+    <Content Include="jsme\4841BDE9DC293BA35F7762B4D8EFD236.cache.png" />
+    <Content Include="jsme\621671105F8E6A63AE752D8F1F5EADEA.cache.html" />
+    <Content Include="jsme\6311507003F5E75309A7D29FA39A1930.cache.html" />
+    <Content Include="jsme\6B0EF660A8F12FB06C5FF5A993E5446E.cache.html" />
+    <Content Include="jsme\9229956457343B5BB16050B4600C7046.cache.html" />
+    <Content Include="jsme\98F02456F5F350D24DC3967924BA2343.cache.html" />
+    <Content Include="jsme\9949F790BF40D5925069DB5022CFE3F3.cache.html" />
+    <Content Include="jsme\9ED3849A3341B1B9CB55C3171048FF99.cache.html" />
+    <Content Include="jsme\BAAF2FD522AA6A7D7749AE2F2721430D.cache.html" />
+    <Content Include="jsme\BDFC2BF26991B71907C5DCDA167AEAE9.cache.html" />
     <Content Include="jsme\clear.cache.gif" />
+    <Content Include="jsme\DAF16E4B91F2CC7F559069DCB675C72E.cache.html" />
+    <Content Include="jsme\DF7764EEC1903CD03C9545B354D8D8E4.cache.png" />
+    <Content Include="jsme\ECA3541082DC79AC4218A49C5BA9C428.cache.html" />
+    <Content Include="jsme\ED8E21FC2B3B1886BACA437F06FDC9E9.cache.html" />
+    <Content Include="jsme\FD0A2E6F0BA8E9B9B0B0C10CD8BFC26E.cache.html" />
     <Content Include="jsme\gwt\chrome\chrome.css" />
     <Content Include="jsme\gwt\chrome\chrome_rtl.css" />
     <Content Include="jsme\gwt\chrome\images\button\menu-button-arrow-disabled.png" />
@@ -635,7 +661,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Handling rules.pdf" />
-    <Content Include="App_Data\RFQSearch.xlsx" />
+    <Content Include="Evaluated suppliers %282017%29.xlsm" />
+    <Content Include="App_Data\RFQList.xlsx" />
+    <Content Include="App_Data\SupplierProduct.xlsx" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>

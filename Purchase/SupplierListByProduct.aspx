@@ -69,6 +69,10 @@
     </head>
 
     <body>
+        <!-- Header -->
+        <commonUC:Header ID="HeaderMenu" runat="server" />
+        <!-- Header End -->
+
         <form id="PageForm" runat="server"  method="post">
             <!-- Main Content Area -->
             <div id="content">
