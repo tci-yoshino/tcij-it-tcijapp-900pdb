@@ -2738,7 +2738,7 @@ Partial Public Class RFQUpdate
         sb_SQL.Append("FROM ")
         sb_SQL.Append("  MMSTAValidation ")
         sb_SQL.Append("WHERE ")
-        sb_SQL.Append("  Validation = @PlantStatus  AND DomesticFlag = @DomesticFlag")
+        sb_SQL.Append("  MaterialStatus = @PlantStatus  AND DomesticFlag = @DomesticFlag")
 
         DBCommand = Connection.CreateCommand
         DBCommand.CommandText = sb_SQL.ToString
@@ -2807,7 +2807,7 @@ Partial Public Class RFQUpdate
         sb_SQL.Append("FROM ")
         sb_SQL.Append("   MMSTAValidation ")
         sb_SQL.Append("WHERE ")
-        sb_SQL.Append("  Validation = @PlantStatus  AND DomesticFlag = @DomesticFlag")
+        sb_SQL.Append("  MaterialStatus = @PlantStatus  AND DomesticFlag = @DomesticFlag")
 
         DBCommand = Connection.CreateCommand
         DBCommand.CommandText = sb_SQL.ToString
