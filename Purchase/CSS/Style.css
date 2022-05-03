@@ -591,5 +591,12 @@ div.purpose table td{
     list-style: none;
 }
 #ehs ul li {
+    list-style-type: disc;
 }
 
+#ehstitle hr {
+    margin: 0 0 10px 0;
+    height: 1px;
+    border: solid 1px #2651a5;
+    text-align: left;
+}

@@ -31,16 +31,6 @@ Partial Public Class ProductInfoRegulation
             action = "Save"
         End If
 
-        '権限処理結果取得
-        'Saveボタンの活性・非活性
-        If CBool(Session("Purchase.isAdmin")) = True Then
-            btnSaveTop.Enabled = True
-            btnSaveBottom.Enabled = True
-        Else
-            btnSaveTop.Enabled = False
-            btnSaveBottom.Enabled = False
-        End If
-
     End Sub
 
     ''' <summary>

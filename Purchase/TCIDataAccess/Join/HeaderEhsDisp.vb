@@ -143,7 +143,7 @@ Namespace TCIDataAccess.Join
             sb_SQL.AppendLine("  INNER JOIN [s_EhsHeader] AS SEH ON EHP.Item = SEH.Item")
             sb_SQL.AppendLine("WHERE ")
             sb_SQL.AppendLine("    EHP.[UserID] = @userID ")
-            sb_SQL.AppendLine("AND SEH.[locationCode] = @locationCode ")
+            'sb_SQL.AppendLine("AND SEH.[locationCode] = @locationCode ")
             sb_SQL.AppendLine("ORDER BY ")
             sb_SQL.AppendLine("    CASE SEH.[LocationCode] ")
             sb_SQL.AppendLine("      WHEN @gl THEN 0 ")

@@ -158,10 +158,18 @@ Partial Public Class RFQIssue
         RFQHeaderInfo.EnqLocationCode = EnqLocation.SelectedValue
         RFQHeaderInfo.EnqUserID = CInt(EnqUser.SelectedValue)
         RFQHeaderInfo.QuoLocationCode = QuoLocation.SelectedValue
-        RFQHeaderInfo.QuoUserID = CInt(If(String.IsNullOrWhiteSpace(QuoUser.SelectedValue) = True, Nothing, QuoUser.SelectedValue))
+        If String.IsNullOrWhiteSpace(QuoUser.SelectedValue) = True Then
+            RFQHeaderInfo.QuoUserID = Nothing
+        Else
+            RFQHeaderInfo.QuoUserID = CInt(QuoUser.SelectedValue)
+        End If
         RFQHeaderInfo.ProductID = productID
         RFQHeaderInfo.SupplierCode = CInt(SupplierCode.Text)
-        RFQHeaderInfo.MakerCode = CInt(If(String.IsNullOrWhiteSpace(MakerCode.Text) = True, Nothing, MakerCode.Text))
+        If String.IsNullOrWhiteSpace(MakerCode.Text) = True Then
+            RFQHeaderInfo.MakerCode = Nothing
+        Else
+            RFQHeaderInfo.MakerCode = CInt(MakerCode.Text)
+        End If
         RFQHeaderInfo.PurposeCode = Purpose.SelectedValue
         RFQHeaderInfo.RequiredPurity = If(String.IsNullOrWhiteSpace(RequiredPurity.Text) = True, Nothing, RequiredPurity.Text)
         RFQHeaderInfo.RequiredQMMethod = If(String.IsNullOrWhiteSpace(RequiredQMMethod.Text) = True, Nothing, RequiredQMMethod.Text)
@@ -174,7 +182,11 @@ Partial Public Class RFQIssue
         RFQHeaderInfo.CreatedBy = CInt(Session("UserID").ToString)
         RFQHeaderInfo.UpdatedBy = CInt(Session("UserID").ToString)
         RFQHeaderInfo.SupplierContactPersonSel = SupplierContactPersonCodeList.SelectedValue
-        RFQHeaderInfo.SAPMakerCode = If(String.IsNullOrWhiteSpace(SAPMakerCode.Text) = True, Nothing, Cint(SAPMakerCode.Text))
+        If String.IsNullOrWhiteSpace(SAPMakerCode.Text) = True Then
+            RFQHeaderInfo.SAPMakerCode = Nothing
+        Else
+            RFQHeaderInfo.SAPMakerCode = CInt(SAPMakerCode.Text)
+        End If
         RFQHeaderInfo.CodeExtensionCode = CodeExtensionList.SelectedValue
 
         Return RFQHeaderInfo

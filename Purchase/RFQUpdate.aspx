@@ -10,7 +10,7 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
     <script type="text/javascript">
         function RFQListByProductSupplier() {
-            var SupplierCode = (document.getElementById('Hidden_SupplierCode').value).replace(/\s|　/g, "");
+            var SupplierCode = (document.getElementById('SupplierCode').value).replace(/\s|　/g, "");
             var SupplierCode = encodeURIComponent(SupplierCode);
             if (SupplierCode !== "") {
                 window.open('./RFQListBySupplier.aspx?SupplierCode=' + SupplierCode, "_blank", "noopener").focus();
@@ -99,7 +99,8 @@
                                 ImageUrl="./Image/Search.gif" CssClass="magnify"
                                 OnClientClick="return SupplierSelect_onclick()" />
                             <asp:LinkButton runat="server" ID="SupplierInfo" Text="Supplier Info" />
-                            <asp:HyperLink ID="SupplierRFQList" runat="server" Text="  Supplier RFQ List" onclick="return RFQListByProductSupplier()"></asp:HyperLink>
+                            &nbsp;&nbsp;
+                            <a href="#" onclick="return RFQListByProductSupplier()">Supplier RFQ List</a>
                         </td>
                     </tr>
                     <tr>

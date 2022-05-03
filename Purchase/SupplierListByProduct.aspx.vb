@@ -36,16 +36,13 @@ Partial Public Class SupplierListByProduct
             If Not String.IsNullOrEmpty(cmnProduct.Name.ToString) Then ProductName.Text = cmnProduct.Name.ToString
             If Not String.IsNullOrEmpty(cmnProduct.QuoName.ToString) Then ProductName.Text = cmnProduct.QuoName.ToString
 
-            HiddenSortType.Value = "asc"
-            HiddenSortField.Value = "SupplierCode"
-
             'Territoryコンボリスト情報取得・表示
             Common.SetTerritoryDropDownList(TerritoryList)
 
-            '初期表示時はProductNumberでソートを設定する
+            '初期表示時はSupplierCodeの昇順でソートを設定する
             HiddenSortType.Value = "asc"
             'Listview内のthにを付与するとASPXにて「ListViewのID_thに設定したID」を付与されるため、明示的にListViewのIDを付与する
-            HiddenSortField.Value = SupplierProductList.ID + "_ProductNumHeader"
+            HiddenSortField.Value = SupplierProductList.ID + "_SupplierCodeHeader"
 
             'Hidden項目を設定する
             ProductID.Value = Request.QueryString("ProductID")

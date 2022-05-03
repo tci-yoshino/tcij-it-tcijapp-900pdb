@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="./CSS/Style.css" type="text/css" media="screen,print" />
 <!-- HeaderEhs -->
 <div id="ehs">
+    <strong >EHS Reference :</strong>
     <asp:ListView ID="ehsList" runat="server">
         <LayoutTemplate>
             <ul id="itemPlaceholderContainer" runat="server">

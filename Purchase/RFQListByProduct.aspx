@@ -60,18 +60,22 @@ function setFormAction(button_type) {
             </p>
             <table align="left">
                 <tr>
-                    <td><a href="#" onclick="popup('./ProductSetting.aspx?Comment=1&Action=Edit&ProductID=<%Response.Write(st_ProductID)%>')"><strong>Product Warning : </strong></a></td>
+                    <td>
+                        <a href="#" onclick="popup('./ProductSetting.aspx?Comment=1&Action=Edit&ProductID=<%Response.Write(st_ProductID)%>')">
+                            <strong>Product Warning : </strong>
+                        </a>
+                    </td>
+                    <td>
+                        <asp:Label ID="ProductWarning" runat="server" Text=""></asp:Label>
+                    </td>
                 </tr>
             </table>
-            <table >
-                <tr>
-                    <td><asp:Label ID="ProductWarning" runat="server" Text=""></asp:Label></td>
-                </tr>
-            </table> 
         </div>
 
-        <hr />
-
+        <div id="ehstitle">
+            <hr />
+        </div>
+        <br >
         <commonUC:HeaderEhs ID="HeaderEhs" runat="server" />
 
         <div class="cond-left">

@@ -158,15 +158,6 @@ Partial Public Class RFQUpdate
     Protected WithEvents SupplierInfo As Global.System.Web.UI.WebControls.LinkButton
     
     '''<summary>
-    '''SupplierRFQList コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents SupplierRFQList As Global.System.Web.UI.WebControls.HyperLink
-    
-    '''<summary>
     '''R3SupplierCode コントロール。
     '''</summary>
     '''<remarks>
