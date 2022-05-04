@@ -95,8 +95,8 @@ Partial Public Class MyTask
             RFQPriority.SelectedValue = PRIORITY_ALL
 
             'RFQStatusドロップダウンリスト設定
-            SetRFQStatusDropDownList(RFQStatus, RFQSTATUS_ALL)
-            RFQStatus.SelectedValue = PRIORITY_ALL
+            SetRFQStatusDropDownList(RFQStatus)
+            RFQStatus.SelectedValue = Common.RFQSTATUS_ALL
 
             'Orderbyドロップダウンリスト設定
             SetRFQOrderByDropDownList(Orderby)

@@ -112,12 +112,15 @@ Partial Public Class RFQUpdate
             Catch ex As KeyNotFoundException
                 'RFQNumber 不正
             End Try
+
             Call SetReadOnlyItems()
         End If
-
+        Me.Msg.Text = String.Empty
         Call EnqUserPlantSpmatlStatus()
         Call QuoUserPlantSpmatlStatus()
 
+        POInterfaceMsg.Text = String.Empty
+        POInterfaceConfirmMsg.Text = String.Empty
         If MMSTAInvalidation.Checked = False Then
             Dim encResult As String = String.Empty
             Dim quoResult As String = String.Empty
@@ -591,6 +594,9 @@ Partial Public Class RFQUpdate
 
             ' EnqLocationの設定
             SDS_RFQUpdate_EnqLocation.SelectCommand = String.Format("SELECT LocationCode, Name FROM s_Location ORDER BY Name")
+            EnqLocation.DataBind()
+            QuoLocation.DataBind()
+
             EnqLocation.SelectedValue = da_vRFQHeader.EnqLocationCode.ToString
             'by wjh
             If da_vRFQHeader.EnqUserID.ToString.Length > 0 Then
@@ -1491,6 +1497,13 @@ Partial Public Class RFQUpdate
     Public Function POInterfaceFunction(ByVal RFQNumber As String, ByVal RFQLineNumber As String, ByVal index As String) As String
         Msg.Text = String.Empty
 
+        If Not String.IsNullOrEmpty(POInterfaceMsg.Text) Then
+            Msg.Text = POInterfaceMsg.Text
+            Msg.Text = Replace(Msg.Text, "[Enq-Location]", EnqUserStatus.Text)
+            Msg.Text = Replace(Msg.Text, "[Quo-Location]", EnqUserStatus.Text)
+            Return String.Empty
+        End If
+
         Dim ExecuteSql As String = ""
         '获取主表信息
         Dim DS As DataSet = New DataSet
@@ -1933,55 +1946,6 @@ Partial Public Class RFQUpdate
             End If
         End If
 
-        If EnqUserStatus.Text = "Success" Then
-            If QuoUserStatus.Text = "Forbidden" Then
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
-            End If
-            If QuoUserStatus.Text = "Need application " Then
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
-            End If
-        ElseIf EnqUserStatus.Text = "Warning" Then
-            If QuoUserStatus.Text = "Forbidden" Then
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
-            End If
-            If QuoUserStatus.Text = "Need application " Then
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
-            End If
-        ElseIf EnqUserStatus.Text = "Forbidden" Then
-            If QuoUserStatus.Text = "Success" Then
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
-            End If
-            If QuoUserStatus.Text = "Warning" Then
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
-            End If
-            If QuoUserStatus.Text = "Forbidden" Then
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
-            End If
-            If QuoUserStatus.Text = "Need application " Then
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
-            End If
-        ElseIf EnqUserStatus.Text = "Need application " Then
-            If QuoUserStatus.Text = "Success" Then
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
-            End If
-            If QuoUserStatus.Text = "Warning" Then
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
-            End If
-            If QuoUserStatus.Text = "Forbidden" Then
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
-            End If
-            If QuoUserStatus.Text = "Need application " Then
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Quo-Location]", EnqUserStatus.Text)
-                Msg.Text = Replace(POInterfaceMsg.Text, "[Enq-Location]", EnqUserStatus.Text)
-            End If
-        End If
 
         Dim DataTable As System.Data.DataTable = Purchase.Common.GetDataTable("select * from  POInterface where RFQLineNumber=" + RFQLineNumber, "POInterface")
         Dim sql As String = String.Empty
@@ -2205,8 +2169,8 @@ Partial Public Class RFQUpdate
         DBCommand.ExecuteNonQuery()
         DBCommand.Dispose()
         DBConn.Close()
-        If MMSTAInvalidation.Checked = False Then
-            MMSTAInvalidation.Checked = True
+        If MMSTAInvalidation.Checked = True Then
+            MMSTAInvalidation.Checked = False
         End If
         Return DS2.Tables("RFQLine").Rows(0).Item("QuoUnitCode").ToString
     End Function
@@ -2735,7 +2699,14 @@ Partial Public Class RFQUpdate
         If DS.Tables("StorageLocation").Rows.Count > 0 Then
             QuoCountry = DS.Tables("StorageLocation").Rows(0)("CountryCode").ToString
         End If
-        Dim SupCountry As String = SuplierCountryShort.Text
+        Dim SupCountry As String = String.Empty
+
+        If (Not String.IsNullOrWhiteSpace(Me.SupplierCode.Text)) And IsNumeric(SupplierCode.Text) Then
+            Dim tdaSupplier As New TCIDataAccess.Supplier()
+            tdaSupplier.Load(Me.SupplierCode.Text)
+            SupCountry = tdaSupplier.CountryCode
+        End If
+
         If SupCountry = QuoCountry Then
             DomesticFlag = "1"
         Else
@@ -2825,4 +2796,5 @@ Partial Public Class RFQUpdate
         Call EnqUserPlantSpmatlStatus()
         Call QuoUserPlantSpmatlStatus()
     End Sub
+
 End Class

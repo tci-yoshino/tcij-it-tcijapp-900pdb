@@ -120,7 +120,10 @@ Namespace TCIDataAccess.Join
             Dim sb_SQL As StringBuilder = New StringBuilder
 
             sb_SQL.AppendLine("SELECT ")
-            sb_SQL.AppendLine("  P.[ProductNumber], P.[CASNumber], P.[Name], P.[ProductID] ")
+            sb_SQL.AppendLine("  P.[ProductNumber], ")
+            sb_SQL.AppendLine("  P.[CASNumber], ")
+            sb_SQL.AppendLine("  CASE WHEN NOT P.[QuoName] IS NULL THEN P.[QuoName] ELSE P.[Name] END AS Name, ")
+            sb_SQL.AppendLine("  P.[ProductID] ")
             sb_SQL.AppendLine("FROM ")
             sb_SQL.AppendLine("  [Product] AS P")
 

@@ -38,8 +38,8 @@ Public Class Report_SupplierProduct
     ''' Excel ダウンロード
     ''' </summary>
     ''' <remarks></remarks>
-    Public Sub DownloadExcel(ByVal st_SupplierCode As String, ByVal st_SupplierName As String, ByVal st_Territory As String, _
-                             ByVal st_RoleCode As String, ByVal st_ValidFilter As String, ByVal st_SupplierProductListID As String, _
+    Public Sub DownloadExcel(ByVal st_SupplierCode As String, ByVal st_SupplierName As String, ByVal st_Territory As String, ByVal st_RoleCode As String, 
+                             ByVal st_ValidFilter As String, ByVal st_SupplierProductListID As String, ByVal st_LocationCode As String,
                              ByVal st_HiddenSortField As String, ByVal st_HiddenSortType As String)
 
         Dim outmemory As New System.IO.MemoryStream
@@ -70,8 +70,8 @@ Public Class Report_SupplierProduct
             ' データ取得
             Dim supplierProduct As TCIDataAccess.Supplier_Product = New TCIDataAccess.Supplier_Product
             Dim productListBySupplierDisp As List(Of TCIDataAccess.Join.ProductListBySupplierDisp) = New List(Of TCIDataAccess.Join.ProductListBySupplierDisp)
-            productListBySupplierDisp = supplierProduct.GetProductListBySupplierList(st_SupplierCode, st_RoleCode, st_ValidFilter, _
-                                                                                     st_SupplierProductListID, st_HiddenSortField, st_HiddenSortType)
+            productListBySupplierDisp = supplierProduct.GetProductListBySupplierDownLoadList(st_SupplierCode, st_RoleCode, st_ValidFilter, st_SupplierProductListID, 
+                                                                                     st_LocationCode, st_HiddenSortField, st_HiddenSortType)
             i_Row = CreateSupplierProductExport(sheetdata, st_SupplierCode, st_SupplierName, st_Territory, productListBySupplierDisp, i_Row)
             i_Row = AppendRow(sheetdata, i_Row)
 

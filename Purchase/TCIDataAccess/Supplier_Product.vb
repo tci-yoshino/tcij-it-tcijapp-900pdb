@@ -374,7 +374,7 @@ Namespace TCIDataAccess
 
         End Sub
 
-        Public Function GetProductListBySupplierList(ByVal st_SupplierCode As String, ByVal st_RoleCode As String, ByVal st_ValidFilter As String, _
+        Public Function GetProductListBySupplierList(ByVal st_SupplierCode As String, ByVal st_RoleCode As String, ByVal st_ValidFilter As String, 
                                                      ByVal st_SupplierProductListID As String, ByVal st_HiddenSortField As String, ByVal st_HiddenSortType As String) _
                                                      As List(Of ProductListBySupplierDisp)
             Dim productListBySupplierList As List(Of ProductListBySupplierDisp) = New List(Of ProductListBySupplierDisp)
@@ -494,6 +494,131 @@ Namespace TCIDataAccess
 
                         'DBCommon.SetProperty(DBReader("NumberType"), dc_ProductListBySupplierDisp.NumberType)
                         'DBCommon.SetProperty(DBReader("isCONFIDENTIAL"), dc_ProductListBySupplierDisp.isCONFIDENTIAL)
+
+                        productListBySupplierList.Add(dc_ProductListBySupplierDisp)
+
+                    End While
+
+                    DBConn.Close
+
+                End Using
+            End Using
+
+            Return productListBySupplierList
+        End Function
+        Public Function GetProductListBySupplierDownLoadList(ByVal st_SupplierCode As String, ByVal st_RoleCode As String, ByVal st_ValidFilter As String, 
+                                                     ByVal st_SupplierProductListID As String, ByVal st_LocationCode As String,
+                                                     ByVal st_HiddenSortField As String, ByVal st_HiddenSortType As String) As List(Of ProductListBySupplierDisp)
+            Dim productListBySupplierList As List(Of ProductListBySupplierDisp) = New List(Of ProductListBySupplierDisp)
+
+            Dim sb_SQL As StringBuilder = New StringBuilder
+
+            sb_SQL.AppendLine("SELECT")
+            sb_SQL.AppendLine("  P.[ProductID], ")
+            sb_SQL.AppendLine("  P.[CASNumber], ")
+            sb_SQL.AppendLine("  P.[ProductNumber], ")
+            sb_SQL.AppendLine("  P.[NumberType], ")
+            sb_SQL.AppendLine("  CASE WHEN NOT P.[QuoName] IS NULL THEN P.[QuoName] ELSE P.[Name] END AS ProductName, ")
+            sb_SQL.AppendLine("  SP.[SupplierItemNumber], ")
+            sb_SQL.AppendLine("  SP.[Note], ")
+            sb_SQL.AppendLine("  SP.[ValidQuotation], ")
+            sb_SQL.AppendLine("  SP.[UpdateDate] ")
+
+            sb_SQL.AppendLine("FROM")
+            sb_SQL.AppendLine("  [Supplier_Product] AS SP")
+            sb_SQL.AppendLine("    LEFT OUTER JOIN [Product] AS P ON SP.[ProductID] = P.[ProductID] ")
+            sb_SQL.AppendLine("    LEFT OUTER JOIN [v_CONFIDENTIAL] AS C ON C.[ProductID] = SP.[ProductID]")
+
+            sb_SQL.AppendLine("WHERE ")
+            sb_SQL.AppendLine("  SP.[SupplierCode] = @SupplierCode ")
+
+            '権限ロールに従い極秘品を除外する
+            If Common.CheckSessionRole(st_RoleCode) = False Then
+                sb_SQL.AppendLine("  AND C.[isCONFIDENTIAL] = 0 ")
+            End If
+
+            If StringValidator.Equals(st_ValidFilter, Common.VALID_FILTER_VALID) Then
+                sb_SQL.AppendLine("  AND SP.[ValidQuotation] = 'Y'")
+            ElseIf StringValidator.Equals(st_ValidFilter, Common.VALID_FILTER_INVALID) Then
+                sb_SQL.AppendLine("  AND SP.[ValidQuotation] = 'N'")
+            End If
+
+            'ProductType、Productnumberでのソート（ListView内のテーブル要素内thのID取得時に、ASPXの仕様上自動で”Listview.ID+要素のID”となるのでListViewのIDも記載）
+            If String.Equals(st_HiddenSortField, st_SupplierProductListID + "_" + "ProductNumHeader") Or
+                String.IsNullOrEmpty(st_HiddenSortField) Then
+
+                If st_HiddenSortType = "asc" Then
+                    sb_SQL.AppendLine("ORDER BY ")
+                    sb_SQL.AppendLine("  CASE ")
+                    sb_SQL.AppendLine("    WHEN P.[NumberType] = 'CAS' THEN 1 ")
+                    sb_SQL.AppendLine("    WHEN P.[NumberType] = 'NEW' THEN 2 ")
+                    sb_SQL.AppendLine("    ELSE 3 ")
+                    sb_SQL.AppendLine("  END, ")
+                    sb_SQL.AppendLine("  P.[ProductNumber] ASC ")
+                ElseIf st_HiddenSortType = "desc" Then
+                    sb_SQL.AppendLine("ORDER BY ")
+                    sb_SQL.AppendLine("  CASE ")
+                    sb_SQL.AppendLine("    WHEN P.[NumberType] = 'TCI' THEN 1 ")
+                    sb_SQL.AppendLine("    WHEN P.[NumberType] = 'NEW' THEN 2 ")
+                    sb_SQL.AppendLine("    ELSE 3 ")
+                    sb_SQL.AppendLine("  END, ")
+                    sb_SQL.AppendLine("  P.[ProductNumber] ASC ")
+                Else
+                    sb_SQL.AppendLine("ORDER BY ")
+                    sb_SQL.AppendLine("  CASE ")
+                    sb_SQL.AppendLine("    WHEN P.[NumberType] = 'CAS' THEN 1 ")
+                    sb_SQL.AppendLine("    WHEN P.[NumberType] = 'NEW' THEN 2 ")
+                    sb_SQL.AppendLine("    ELSE 3 ")
+                    sb_SQL.AppendLine("  END, ")
+                    sb_SQL.AppendLine("  P.[ProductNumber] ASC ")
+                End If
+
+                'UpdateDateでのソート
+            ElseIf String.Equals(st_HiddenSortField, st_SupplierProductListID + "_" + "UpdateDateHeader") Then
+                sb_SQL.AppendLine("ORDER BY ")
+                sb_SQL.AppendLine("  SP.[UpdateDate] ")
+                If st_HiddenSortType = "asc" Then
+                    sb_SQL.AppendLine(" ASC ")
+                ElseIf st_HiddenSortType = "desc" Then
+                    sb_SQL.AppendLine(" DESC ")
+                Else
+                    sb_SQL.AppendLine(" ASC ")
+                End If
+
+                'ValidQuotationでのソート
+            ElseIf String.Equals(st_HiddenSortField, st_SupplierProductListID + "_" + "ValidQuotationHeader") Then
+                sb_SQL.AppendLine("ORDER BY ")
+                sb_SQL.AppendLine("    SP.[Validquotation] ")
+                If st_HiddenSortType = "asc" Then
+                    sb_SQL.AppendLine(" ASC ")
+                ElseIf st_HiddenSortType = "desc" Then
+                    sb_SQL.AppendLine(" DESC ")
+                Else
+                    sb_SQL.AppendLine(" ASC ")
+                End If
+            End If
+
+            Using DBConn As New SqlConnection(Common.DB_CONNECT_STRING)
+                Using DBCommand As SqlCommand = DBConn.CreateCommand()
+                    DBCommand.Parameters.Clear()
+                    DBCommand.Parameters.AddWithValue("SupplierCode", CInt(st_SupplierCode))
+                    DBCommand.CommandText = sb_SQL.ToString()
+
+                    ' 実行
+                    DBConn.Open()
+                    Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
+
+                    While DBReader.Read
+
+                        Dim dc_ProductListBySupplierDisp As ProductListBySupplierDisp = New ProductListBySupplierDisp
+
+                        DBCommon.SetProperty(DBReader("ProductNumber"), dc_ProductListBySupplierDisp.ProductNumber)
+                        DBCommon.SetProperty(DBReader("CASNumber"), dc_ProductListBySupplierDisp.CASNumber)
+                        DBCommon.SetProperty(DBReader("ProductName"), dc_ProductListBySupplierDisp.ProductName)
+                        DBCommon.SetProperty(DBReader("SupplierItemNumber"), dc_ProductListBySupplierDisp.SupplierItemNumber)
+                        DBCommon.SetProperty(DBReader("Note"), dc_ProductListBySupplierDisp.Note)
+                        DBCommon.SetProperty(DBReader("ValidQuotation"), dc_ProductListBySupplierDisp.ValidQuotation)
+                        DBCommon.SetProperty(common.GetLocalTime(st_LocationCode, Cdate(DBReader("UpdateDate")), True, False), dc_ProductListBySupplierDisp.UpdateDate)
 
                         productListBySupplierList.Add(dc_ProductListBySupplierDisp)
 

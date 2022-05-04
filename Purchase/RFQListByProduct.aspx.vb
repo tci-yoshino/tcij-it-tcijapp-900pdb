@@ -36,9 +36,10 @@ Partial Public Class RFQListByProduct
             Exit Sub
         End If
 
-        If Not IsPostBack Then 
+        If Not IsPostBack Then
             ' Valid Quotation ドロップダウンリスト設定
-            Common.SetValidQuotationList(ValidQuotation, "All")
+            Common.SetValidQuotationList(ValidQuotation, Common.ValidQuotation_ALL)
+            ValidQuotation.SelectedValue = Common.ValidQuotation_ALL
 
             '' 一覧検索
             st_ProductID = st_ProductID.Trim()
@@ -48,17 +49,10 @@ Partial Public Class RFQListByProduct
             HeaderEhs.UserID = Integer.Parse(Session("UserID").ToString)
             HeaderEhs.LocationCode = Session("LocationCode").ToString
             HeaderEhs.ProductNumber = st_ProductNumber
-            HeaderEhs.GetEhsHeader
+            HeaderEhs.GetEhsHeader()
 
         End If
 
-    End Sub
-
-    Private Sub ShowList
-        ' 製品情報検索
-        SearchProduct(st_ProductID)
-        ' 見積情報検索
-        SearchRFQHeader(st_ProductID)
     End Sub
 
     ''' <summary>
@@ -77,12 +71,15 @@ Partial Public Class RFQListByProduct
 
         End If
 
-        '[ProductListを表示]-----------------------------------------------------
-        RFQHeaderList.Visible = True
-
         '' 一覧検索
         st_ProductID = st_ProductID.Trim()
         ShowList()
+
+        '[ProductListを表示]-----------------------------------------------------
+        RFQHeaderList.Visible = True
+        ReSetPager()
+
+        'HiddenValidQuotation.Value = String.Empty
 
     End Sub
 
@@ -94,47 +91,66 @@ Partial Public Class RFQListByProduct
     Protected Sub Release_Click(sender As Object, e As EventArgs) Handles Release.Click
         'メッセージクリア
         Msg.Text = String.Empty
+        '[Search実行可能確認]----------------------------------------------------------
+        If Not String.Equals(Action.Value, "Release") Then
+            Msg.Text = Common.ERR_INVALID_PARAMETER
+            Exit Sub
+
+        End If
+
         'Valid Quotation クリア
-        ValidQuotation.SelectedIndex = 0
+        ValidQuotation.SelectedValue = Common.ValidQuotation_ALL
 
         '' 一覧検索
         st_ProductID = st_ProductID.Trim()
         ShowList()
 
+        '[ProductListを表示]-----------------------------------------------------
+        RFQHeaderList.Visible = True
+        ReSetPager()
+
+        HiddenValidQuotation.Value = String.Empty
+
+    End Sub
+
+    Private Sub ShowList()
+        ' 製品情報検索
+        SearchProduct(st_ProductID)
+        ' 見積情報検索
+        SearchRFQHeader(st_ProductID)
+
+        SetPageSize()
+
+        HiddenValidQuotation.Value = Me.ValidQuotation.SelectedValue
+
+    End Sub
+
+    Private Sub SetPageSize()
+
+        RFQPagerCountTop.PageSize = Common.LIST_ONEPAGE_ROW(Request.Url.ToString())
+        RFQPagerLinkTop.PageSize = Common.LIST_ONEPAGE_ROW(Request.Url.ToString())
+        RFQPagerLinkBottom.PageSize = Common.LIST_ONEPAGE_ROW(Request.Url.ToString())
+        RFQPagerCountBottom.PageSize = Common.LIST_ONEPAGE_ROW(Request.Url.ToString())
+
     End Sub
 
     Private Sub ReSetPager()
 
-        'ページャーを初期化
-        Dim PgrRFQPagerCountTop As DataPager
-        PgrRFQPagerCountTop = CType(RFQHeaderList.FindControl("RFQPagerCountTop"), DataPager)
-
-        Dim PgRFQPagerLinkTop As DataPager
-        PgRFQPagerLinkTop = CType(RFQHeaderList.FindControl("RFQPagerLinkTop"), DataPager)
-
-        Dim PgrRFQPagerLinkBottom As DataPager
-        PgrRFQPagerLinkBottom = CType(RFQHeaderList.FindControl("RFQPagerLinkBottom"), DataPager)
-
-        Dim PgrRFQPagerCountBottom As DataPager
-        PgrRFQPagerCountBottom = CType(RFQHeaderList.FindControl("RFQPagerCountBottom"), DataPager)
-
-        'ResetPageTemplatePagerField(PgrRFQPagerCountTop)
-        ResetPageNumericPagerField(PgRFQPagerLinkTop)
-        'ResetPageNumericPagerField(PgrRFQPagerLinkBottom)
-        'ResetPageTemplatePagerField(PgrRFQPagerCountBottom)
+        ResetPageNumericPagerField(RFQPagerLinkTop)
+        ResetPageNumericPagerField(RFQPagerLinkBottom)
 
     End Sub
 
     ''' <summary>
     ''' ページを初期化します。
     ''' </summary>
-    private Sub ResetPageNumericPagerField(ByVal dp As DataPager)
+    Private Sub ResetPageNumericPagerField(ByVal dp As DataPager)
         If Not IsNothing(dp) And Not dp.StartRowIndex = 0 Then
-            Dim numericPF As NumericPagerField = Ctype(dp.Fields(0), NumericPagerField)
+            Dim numericPF As NumericPagerField = CType(dp.Fields(0), NumericPagerField)
             If Not IsNothing(numericPF) Then
-　　　　　　　　'' 引数に0をセット
+                '' 引数に0をセット
                 Dim args As CommandEventArgs = New CommandEventArgs("0", "")
-　　　　　　　　'' イベント発生
+                '' イベント発生
                 numericPF.HandleEvent(args)
             End If
         End If
@@ -147,8 +163,15 @@ Partial Public Class RFQListByProduct
     ''' 
     ''' </remarks>
     Protected Sub RFQHeaderList_PagePropertiesChanged(ByVal sender As Object, ByVal e As EventArgs) Handles RFQHeaderList.PagePropertiesChanged
-        ' 一覧を表示する（ページャー押下時）
-        ShowList()
+
+        If Not String.Equals(Action.Value, "Search") And Not String.Equals(Action.Value, "Release") Then
+            ' 一覧を表示する（ページャー押下時）
+            st_ProductID = st_ProductID.Trim()
+            ShowList()
+        End If
+
+        Me.Action.Value = String.Empty
+
     End Sub
 
     ''' <summary>
@@ -195,11 +218,6 @@ Partial Public Class RFQListByProduct
     Private Sub SearchRFQHeader(ByVal st_ProductID As String)
         Dim rFQListByProduct As TCIDataAccess.Join.RFQListByProductDisp = New TCIDataAccess.Join.RFQListByProductDisp
         rFQListByProduct.ValidityQuotation = Me.ValidQuotation.SelectedValue
-
-        If String.Equals(Action.Value, "Release") Then 
-            '' 条件変更時はページャーをリセット
-            ReSetPager
-        End If
 
         SrcRFQHeader.SelectCommand = rFQListByProduct.CreateRFQHeaderSelectSQL()
         SrcRFQHeader.SelectParameters.Clear()

@@ -112,13 +112,13 @@
 
                             <table class="table" ID="itemPlaceholderContainer" runat="server" border="0" style="">
                                 <tr>
-                                    <th id ="ProductNumHeader" style="width:15%" class="sortField" >Product Number</th>
+                                    <th id ="ProductNumHeader" style="width:13%" class="sortField" >Product Number</th>
                                     <th style="width:10%">CAS Number</th>
                                     <th style="width:20%">Product Name</th>
                                     <th style="width:10%">Supplier Item Number</th>
                                     <th style="width:20%">Note</th>
                                     <th id ="ValidQuotationHeader" class="sortField" style="width:10%">Valid Quotation</th>
-                                    <th id ="UpdateDateHeader" class="sortField" style="width:7%">Update Date</th>
+                                    <th id ="UpdateDateHeader" class="sortField" style="width:9%">Update Date</th>
                                     <th style="width:4%">Edit</th>
                                     <th style="width:4%">Delete</th>
                                 </tr>

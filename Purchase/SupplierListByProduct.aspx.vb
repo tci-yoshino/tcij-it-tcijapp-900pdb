@@ -1,4 +1,8 @@
-﻿Imports Purchase.Common
+﻿Option Explicit On
+Option Strict On
+Option Infer Off
+
+Imports Purchase.Common
 Imports Purchase.TCIDataAccess
 
 Partial Public Class SupplierListByProduct
@@ -7,6 +11,10 @@ Partial Public Class SupplierListByProduct
     '変数定義
     Public Url As String = ""
     Public AddUrl As String = ""
+    Protected i_ProductID As Integer = 0
+    Protected st_localeUpdateDateFrom As String = String.Empty
+    Protected st_localeUpdateDateTo As String = String.Empty
+    Protected st_LocationCode As String  = String.Empty
 
     ''' <summary>
     ''' ページロードイベント
@@ -17,9 +25,11 @@ Partial Public Class SupplierListByProduct
         Dim SrcSupplierProduct As TCIDataAccess.Join.SupplierListByProductDispList = New TCIDataAccess.Join.SupplierListByProductDispList
         Dim TerritoryChkList As TCIDataAccess.s_LocationList = New TCIDataAccess.s_LocationList
         Dim cmnProduct As TCIDataAccess.Product = New TCIDataAccess.Product
+        st_LocationCode = Session("LocationCode").ToString
 
-        '初期表示判定
-        If IsPostBack = False Then                                          '--初期表示の場合
+        If IsPostBack = False Then
+            '' 初期表示
+            Msg.Text = String.Empty
             'プロダクトID判定
             If String.IsNullOrEmpty(Request.QueryString("ProductID")) Then  '--空の場合
                 SupplierProductList.DataSource = String.Empty
@@ -28,11 +38,10 @@ Partial Public Class SupplierListByProduct
                 Exit Sub
             End If
 
-            Dim st_ProductID As String = Request.QueryString("ProductID").ToString
-
             '呼出元情報によるヘッダ情報取得・設定
-            cmnProduct.Load(st_ProductID)
-            ProductNumber.Text = cmnProduct.ProductNumber.ToString
+            i_ProductID = Cint(Request.QueryString("ProductID"))
+            cmnProduct.Load(i_ProductID)
+            Me.ProductNumber.Text = cmnProduct.ProductNumber.ToString
             If Not String.IsNullOrEmpty(cmnProduct.Name.ToString) Then ProductName.Text = cmnProduct.Name.ToString
             If Not String.IsNullOrEmpty(cmnProduct.QuoName.ToString) Then ProductName.Text = cmnProduct.QuoName.ToString
 
@@ -49,23 +58,22 @@ Partial Public Class SupplierListByProduct
             SupplierCode.Value = String.Empty
 
             'リスト情報初期表示
-            SrcSupplierProduct.Load(Request.QueryString("ProductID"), TerritoryList, UpdateDateFrom.Text, UpdateDateTo.Text, _
+            st_localeUpdateDateFrom = If(String.IsNullOrEmpty(UpdateDateFrom.Text), "", GetDatabaseTime(st_LocationCode, UpdateDateFrom.Text)).ToString 
+            st_localeUpdateDateTo = If(String.IsNullOrEmpty(UpdateDateTo.Text), "", GetDatabaseTime(st_LocationCode, UpdateDateTo.Text)).ToString
+
+            SrcSupplierProduct.Load(i_ProductID, TerritoryList, st_localeUpdateDateFrom, st_localeUpdateDateTo,
                                     HiddenSortField, HiddenSortType, SupplierProductList.ID)
             SupplierProductList.DataSource = SrcSupplierProduct
             SupplierProductList.DataBind()
         Else
-            Msg.Text = String.Empty
-            'Update Date バリデーションチェック処理
+            '' ポストバック
+            '' Update Date バリデーションチェック処理
             If Not String.IsNullOrEmpty(UpdateDateFrom.Text) OrElse Not String.IsNullOrEmpty(UpdateDateTo.Text) Then
                 If Not UpdateDateValidateCheck() Then
                     Exit Sub
                 End If
             End If
-            'リスト情報初期表示
-            SrcSupplierProduct.Load(Request.Form("ProductID"), TerritoryList, UpdateDateFrom.Text, UpdateDateTo.Text, _
-                                    HiddenSortField, HiddenSortType, SupplierProductList.ID)
-            SupplierProductList.DataSource = SrcSupplierProduct
-            SupplierProductList.DataBind()
+
         End If
 
     End Sub
@@ -80,8 +88,8 @@ Partial Public Class SupplierListByProduct
         If Request.Form("Action") = "Delete" Then
             '[指定レコード削除]-----------------------------------------------------------------
             Dim FacadeSupplierListByProduct As FacadeSupplierListByProduct = New FacadeSupplierListByProduct
-            FacadeSupplierListByProduct.SupplierCode = Request.Form("SupplierCode")
-            FacadeSupplierListByProduct.ProductID = Request.QueryString("ProductID")
+            FacadeSupplierListByProduct.SupplierCode = Cint(Request.Form("SupplierCode"))
+            FacadeSupplierListByProduct.ProductID = Cint(Request.QueryString("ProductID"))
             FacadeSupplierListByProduct.Delete
             ' リダイレクト
             Url = "./SupplierListByProduct.aspx?ProductID=" & ProductID.Value.ToString
@@ -100,6 +108,7 @@ Partial Public Class SupplierListByProduct
     Protected Sub Search_Click(sender As Object, e As EventArgs) Handles Search.Click
         Dim SrcSupplierProduct As TCIDataAccess.Join.SupplierListByProductDispList = New TCIDataAccess.Join.SupplierListByProductDispList
 
+        ' メッセージクリア
         Msg.Text = String.Empty
         'Update Date バリデーションチェック処理
         If Not String.IsNullOrEmpty(UpdateDateFrom.Text) OrElse Not String.IsNullOrEmpty(UpdateDateTo.Text) Then
@@ -107,11 +116,17 @@ Partial Public Class SupplierListByProduct
                 Exit Sub
             End If
         End If
-        'リスト情報取得
-        SrcSupplierProduct.Load(Request.QueryString("ProductID"), TerritoryList, UpdateDateFrom.Text, UpdateDateTo.Text, _
+
+        'リスト情報表示
+        i_ProductID = Cint(Request.Form("ProductID"))
+        st_localeUpdateDateFrom = If(String.IsNullOrEmpty(UpdateDateFrom.Text), "", GetDatabaseTime(st_LocationCode, UpdateDateFrom.Text)).ToString
+        st_localeUpdateDateTo = If(String.IsNullOrEmpty(UpdateDateTo.Text), "", GetDatabaseTime(st_LocationCode, UpdateDateTo.Text)).ToString
+
+        SrcSupplierProduct.Load(i_ProductID, TerritoryList, st_localeUpdateDateFrom, st_localeUpdateDateTo,
                                 HiddenSortField, HiddenSortType, SupplierProductList.ID)
         SupplierProductList.DataSource = SrcSupplierProduct
         SupplierProductList.DataBind()
+
     End Sub
 
     ''' <summary>
@@ -120,19 +135,32 @@ Partial Public Class SupplierListByProduct
     ''' <param name="sender"></param>
     ''' <param name="e"></param>
     Protected Sub Release_Click(sender As Object, e As EventArgs) Handles Release.Click
-        'メッセージクリア
+        Dim SrcSupplierProduct As TCIDataAccess.Join.SupplierListByProductDispList = New TCIDataAccess.Join.SupplierListByProductDispList
+
+        ' メッセージクリア
         Msg.Text = String.Empty
-        '条件して項目：Territoryコンボ内CheckBox全クリア
+        ' Territoryコンボ内CheckBox全クリア
         For Each TerritoryItem As ListItem In TerritoryList.Items
             TerritoryItem.Selected = False
         Next
-        '条件指定項目：UpdateDate(From,To)クリア
+        ' UpdateDate(From,To)クリア
         UpdateDateFrom.Text = String.Empty
         UpdateDateTo.Text = String.Empty
-        '初期表示時はProductNumberでソートを設定する
+
+        ' 初期表示時はProductNumberでソートを設定する
         HiddenSortType.Value = "asc"
         'Listview内のthにを付与するとASPXにて「ListViewのID_thに設定したID」を付与されるため、明示的にListViewのIDを付与する
         HiddenSortField.Value = SupplierProductList.ID + "_SupplierCodeHeader"
+
+        'リスト情報表示
+        i_ProductID = Cint(Request.Form("ProductID"))
+        st_localeUpdateDateFrom = If(String.IsNullOrEmpty(UpdateDateFrom.Text), "", GetDatabaseTime(st_LocationCode, UpdateDateFrom.Text)).ToString
+        st_localeUpdateDateTo = If(String.IsNullOrEmpty(UpdateDateTo.Text), "", GetDatabaseTime(st_LocationCode, UpdateDateTo.Text)).ToString
+
+        SrcSupplierProduct.Load(i_ProductID, TerritoryList, st_localeUpdateDateFrom, st_localeUpdateDateTo,
+                                HiddenSortField, HiddenSortType, SupplierProductList.ID)
+        SupplierProductList.DataSource = SrcSupplierProduct
+        SupplierProductList.DataBind()
 
     End Sub
 

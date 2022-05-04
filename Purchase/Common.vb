@@ -924,22 +924,20 @@ End Property
 
     ''' <summary>
     ''' RFQStatusドロップダウンリスト設定
+    ''' 選択肢の最終行に"ALL"を追加
     ''' </summary>
     ''' <param name="Combo">ドロップダウンリスト</param>
-    ''' <param name="st_FirstItemText">先頭項目名</param>
     ''' <remarks></remarks>
-    Public Shared Sub SetRFQStatusDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal st_FirstItemText As String)
+    Public Shared Sub SetRFQStatusDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl)
         Combo.Items.Clear()
         Dim list_RFQStatusList As TCIDataAccess.RFQStatusList = New TCIDataAccess.RFQStatusList
         list_RFQStatusList.Load()
 
-        If Not String.IsNullOrEmpty(st_FirstItemText) Then
-            Combo.Items.Add(New ListItem(st_FirstItemText, st_FirstItemText))
-        End If
-
         For Each RFQStatus As TCIDataAccess.RFQStatus In list_RFQStatusList
             Combo.Items.Add(New ListItem(RFQStatus.Text, RFQStatus.RFQStatusCode))
         Next
+
+        Combo.Items.Add(New ListItem(Common.RFQSTATUS_ALL, Common.RFQSTATUS_ALL))
     End Sub
 
     ''' <summary>
@@ -1176,33 +1174,21 @@ End Property
 
     ''' <summary>
     ''' Valid Quotation のドロップダウンリストに値を設定します。
+    ''' 追加する選択肢（"ALL"の場合先頭、""空文字列の場合最後に追加)
     ''' </summary>
     ''' <remarks></remarks>
     ''' <param name="Combo">ドロップダウンリスト</param>
-    ''' <param name="st_FirstRow">１行目に設定したい値</param>
-    Public Shared Sub SetValidQuotationList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal optional st_FirstRow As String = ValidQuotation_ALL)
+    ''' <param name="st_AddRow">追加する選択肢（"ALL"の場合先頭、""空文字列の場合最後に追加)</param>
+    Public Shared Sub SetValidQuotationList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal Optional st_AddRow As String = ValidQuotation_ALL)
         Dim lst_DropDownList As List(Of DropDownListItems) = New List(Of DropDownListItems)
-        Dim supplier As Supplier = New Supplier
-        Dim lst_DropDown As String() = {st_FirstRow, "Valid Price", "Invalid Price"}
-
-        Dim i As Integer = 0
-        If lst_DropDown.Count <> 0 Then 
-            For Each dropDownListItems As String In lst_DropDown
-                Dim obj_DropDownListItems As New DropDownListItems
-                obj_DropDownListItems.ItemText = dropDownListItems.ToString
-
-                Select Case dropDownListItems.ToString
-                    Case "Valid Price"
-                        obj_DropDownListItems.ItemValue = "Y"
-                    Case "Invalid Price"
-                        obj_DropDownListItems.ItemValue = "N"
-                    Case Else
-                        obj_DropDownListItems.ItemValue = ""
-                End Select
-                obj_DropDownListItems.ItemOrder = i
-                lst_DropDownList.Add(obj_DropDownListItems)
-                i += 1
-            Next
+        Dim order As Integer = 0
+        If st_AddRow = String.Empty Then
+            lst_DropDownList.Add(New DropDownListItems() With {.ItemOrder = order, .ItemText = st_AddRow, .ItemValue = st_AddRow}) : order += 1
+        End If
+        lst_DropDownList.Add(New DropDownListItems() With {.ItemOrder = order, .ItemText = "Valid Price", .ItemValue = "Y"}) : order += 1
+        lst_DropDownList.Add(New DropDownListItems() With {.ItemOrder = order, .ItemText = "Invalid Price", .ItemValue = "N"}) : order += 1
+        If st_AddRow = ValidQuotation_ALL Then
+            lst_DropDownList.Add(New DropDownListItems() With {.ItemOrder = order, .ItemText = st_AddRow, .ItemValue = st_AddRow}) : order += 1
         End If
 
         If lst_DropDownList.Count <> 0 Then 

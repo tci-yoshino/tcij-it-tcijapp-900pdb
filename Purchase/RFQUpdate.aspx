@@ -111,7 +111,6 @@
                     <tr>
                         <th>Supplier Name / Country : </th>
                         <td>
-                            <asp:TextBox ID="Hidden_SupplierCode" runat="server" AutoPostBack="true" Style="display: none;"></asp:TextBox>
                             <asp:TextBox ID="SupplierName" runat="server" Width="21em" ReadOnly="true" CssClass="readonly"></asp:TextBox>
                             <asp:TextBox ID="SupplierCountry" runat="server" Width="4em" ReadOnly="true" CssClass="readonly"></asp:TextBox>
                         </td>

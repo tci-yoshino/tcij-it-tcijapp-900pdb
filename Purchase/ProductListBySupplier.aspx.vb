@@ -44,12 +44,12 @@ Partial Public Class ProductListBySupplier
 
             ' 画面表示項目ををセット
             Dim productListBySupplierDispList As ProductListBySupplierDispList = New ProductListBySupplierDispList
-            productListBySupplierDispList.Load(st_SupplierCode, Session(SESSION_ROLE_CODE).ToString, HiddenSelectedValidityFilter.Value,
+            productListBySupplierDispList.Load(st_SupplierCode, Session(SESSION_ROLE_CODE).ToString, HiddenSelectedValidityFilter.Value, _
                                                SupplierProductList.ID, HiddenSortField.Value, HiddenSortType.Value)
             SupplierCode.Text = st_SupplierCode
-            If Not String.IsNullOrEmpty(productListBySupplierDispList.SupplierName.ToString) Then SupplierName.Text =
+            If Not String.IsNullOrEmpty(productListBySupplierDispList.SupplierName.ToString) Then SupplierName.Text = _
                 productListBySupplierDispList.SupplierName.ToString
-            If Not String.IsNullOrEmpty(productListBySupplierDispList.Territory.ToString) Then Territory.Text =
+            If Not String.IsNullOrEmpty(productListBySupplierDispList.Territory.ToString) Then Territory.Text = _
                 productListBySupplierDispList.Territory.ToString
 
             SupplierProductList.DataSource = productListBySupplierDispList.ProductListBySupplierList
@@ -59,8 +59,8 @@ Partial Public Class ProductListBySupplier
 
         Else
             Dim productListBySupplierDispList As ProductListBySupplierDispList = New ProductListBySupplierDispList
-            SupplierProductList.DataSource = Nothing
-            productListBySupplierDispList.Load(SupplierCode.Text, Session(SESSION_ROLE_CODE).ToString, HiddenSelectedValidityFilter.Value,
+            SupplierProductList.DataSource = Nothing 
+            productListBySupplierDispList.Load(SupplierCode.Text, Session(SESSION_ROLE_CODE).ToString, HiddenSelectedValidityFilter.Value, _
                                                SupplierProductList.ID, HiddenSortField.Value, HiddenSortType.Value)
             SupplierProductList.DataSource = productListBySupplierDispList.ProductListBySupplierList
             SupplierProductList.DataBind()
@@ -110,8 +110,8 @@ Partial Public Class ProductListBySupplier
     ''' </remarks>
     Protected Sub ExcelExportBtn_Click(sender As Object, e As EventArgs) Handles ExcelExportBtn.Click
         Dim rept As New Report_SupplierProduct(Response)
-        rept.DownloadExcel(SupplierCode.Text, SupplierName.Text, Territory.Text, Session(SESSION_ROLE_CODE).ToString, HiddenSelectedValidityFilter.Value,
-                           SupplierProductList.ID, HiddenSortField.Value, HiddenSortType.Value)
+        rept.DownloadExcel(SupplierCode.Text, SupplierName.Text, Territory.Text, Session(SESSION_ROLE_CODE).ToString, HiddenSelectedValidityFilter.Value, 
+                           SupplierProductList.ID, Session("LocationCode").ToString, HiddenSortField.Value, HiddenSortType.Value)
 
     End Sub
 
@@ -122,7 +122,7 @@ Partial Public Class ProductListBySupplier
     ''' 
     ''' </remarks>
     Protected Sub SupplierProductList_PagePropertiesChanged(ByVal sender As Object, ByVal e As EventArgs) Handles SupplierProductList.PagePropertiesChanged
-        If IsPostBack Then
+        if IsPostBack Then
             ShowList()
         End If
         SetPageSize()
@@ -130,7 +130,8 @@ Partial Public Class ProductListBySupplier
 
     Protected Sub ShowList()
         Dim productListBySupplierDispList As ProductListBySupplierDispList = New ProductListBySupplierDispList
-        productListBySupplierDispList.Load(SupplierCode.Text, Session(SESSION_ROLE_CODE).ToString, HiddenSelectedValidityFilter.Value, SupplierProductList.ID, HiddenSortField.Value, HiddenSortType.Value)
+        productListBySupplierDispList.Load(SupplierCode.Text, Session(SESSION_ROLE_CODE).ToString, HiddenSelectedValidityFilter.Value,
+                                           SupplierProductList.ID, HiddenSortField.Value, HiddenSortType.Value)
         SupplierProductList.DataSource = productListBySupplierDispList.ProductListBySupplierList
         SupplierProductList.DataBind()
 
@@ -143,7 +144,7 @@ Partial Public Class ProductListBySupplier
     ''' ページャーを１ページ目に移動
     ''' </remarks>
     Protected Sub HiddenSortTypeAndSortField_ValueChanged(sender As Object, e As EventArgs) Handles HiddenSortType.ValueChanged, HiddenSortField.ValueChanged
-        If IsPostBack Then
+        if IsPostBack Then
             ShowList()
         End If
         SetPageSize()
@@ -169,13 +170,13 @@ Partial Public Class ProductListBySupplier
     ''' <summary>
     ''' ページを初期化します。
     ''' </summary>
-    Private Sub ResetPageNumericPagerField(ByVal dp As DataPager)
+    private Sub ResetPageNumericPagerField(ByVal dp As DataPager)
         If Not IsNothing(dp) And Not dp.StartRowIndex = 0 Then
-            Dim numericPF As NumericPagerField = CType(dp.Fields(0), NumericPagerField)
+            Dim numericPF As NumericPagerField = Ctype(dp.Fields(0), NumericPagerField)
             If Not IsNothing(numericPF) Then
-                '' 引数に0をセット
+　　　　　　　　'' 引数に0をセット
                 Dim args As CommandEventArgs = New CommandEventArgs("0", "")
-                '' イベント発生
+　　　　　　　　'' イベント発生
                 numericPF.HandleEvent(args)
             End If
         End If

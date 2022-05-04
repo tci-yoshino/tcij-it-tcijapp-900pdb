@@ -1,4 +1,8 @@
-﻿Imports System.Data.SqlClient
+﻿Option Explicit On
+Option Strict On
+Option Infer Off
+
+Imports System.Data.SqlClient
 
 Namespace TCIDataAccess.Join
 
@@ -247,7 +251,7 @@ Namespace TCIDataAccess.Join
         ''' データベースからデータを読み込む。
         ''' </summary>
         ''' <param name="st_SupplierCode">SupplierCode</param>
-        Public Sub Load(ByVal st_SupplierCode As String, ByVal st_RoleCode As String, ByVal st_ValidFilter As String, _
+        Public Sub Load(ByVal st_SupplierCode As String, ByVal st_RoleCode As String, ByVal st_ValidFilter As String, 
                         ByVal st_SupplierProductListID As String, ByVal st_HiddenSortField As String, ByVal st_HiddenSortType As String)
             Dim productListBySupplierDisp As List(Of ProductListBySupplierDisp) = New List(Of ProductListBySupplierDisp)
 
@@ -275,8 +279,8 @@ Namespace TCIDataAccess.Join
 
             ' 一覧情報取得
             Dim supplierProduct As Supplier_Product = New Supplier_Product
-            productListBySupplierDisp = supplierProduct.GetProductListBySupplierList(st_SupplierCode, st_RoleCode, st_ValidFilter, _
-                                                                                     st_SupplierProductListID, st_HiddenSortField, st_HiddenSortType)
+            productListBySupplierDisp = supplierProduct.GetProductListBySupplierList(st_SupplierCode, st_RoleCode, st_ValidFilter, st_SupplierProductListID, 
+                                                                                     st_HiddenSortField, st_HiddenSortType)
 
             Me.ProductListBySupplierList = productListBySupplierDisp
         End Sub

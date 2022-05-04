@@ -41,11 +41,11 @@ Public Class RFQSearch
 
             'ドロップダウンリストの設定
             'StatusFrom
-            SetRFQStatusDropDownList(StatusFrom,"")
-            StatusFrom.Items.Insert(0,New ListItem(String.Empty, String.Empty))
+            SetRFQStatusDropDownList(StatusFrom)
+            StatusFrom.SelectedValue = Common.RFQSTATUS_ALL
             'StatusTo
-            SetRFQStatusDropDownList(StatusTo,"")
-            StatusTo.Items.Insert(0,New ListItem(String.Empty, String.Empty))
+            SetRFQStatusDropDownList(StatusTo)
+            StatusTo.SelectedValue = Common.RFQSTATUS_ALL
             'Priority
             SetPriorityDropDownList(Priority, "SEARCH")
             'SupplierCountryCode
@@ -60,6 +60,7 @@ Public Class RFQSearch
 
             'ValidQuotation
             SetValidQuotationList(ValidQuotation, String.Empty)
+            ValidQuotation.SelectedValue = String.Empty
 
         End If
     End Sub
@@ -146,8 +147,8 @@ Public Class RFQSearch
     Protected Sub Release_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Release.Click
         Msg.Text = String.Empty
         SupplierCountryCode.SelectedIndex = 0
-        StatusFrom.SelectedIndex = 0
-        StatusTo.SelectedIndex = 0
+        StatusFrom.SelectedValue = Common.RFQSTATUS_ALL
+        StatusTo.SelectedValue = Common.RFQSTATUS_ALL
         EnqLocationCode.SelectedIndex = 0
         EnqUserID.Items.Clear()
         EnqStorageLocation.Items.Clear()
@@ -351,99 +352,99 @@ Public Class RFQSearch
     ''' <returns>True:全ての検索条件未設定,False:いずれかの検索条件が設定済</returns>
     Private function IsAllConditionsNotSet() As Boolean
         Dim bl_IsAllConditionsNotSet As Boolean = True
-        If Not String.IsNullOrEmpty(RFQNumber.Text)
+        If Not String.IsNullOrEmpty(RFQNumber.Text) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(ProductNumber.Text)
+        If Not String.IsNullOrEmpty(ProductNumber.Text)Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(ProductName.Text)
+        If Not String.IsNullOrEmpty(ProductName.Text) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(SupplierCode.Text)
+        If Not String.IsNullOrEmpty(SupplierCode.Text) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(S4SupplierCode.Text)
+        If Not String.IsNullOrEmpty(S4SupplierCode.Text)Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(SupplierName.Text)
+        If Not String.IsNullOrEmpty(SupplierName.Text) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(SupplierCountryCode.SelectedValue)
+        If Not String.IsNullOrEmpty(SupplierCountryCode.SelectedValue)Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(SupplierItemName.Text)
+        If Not String.IsNullOrEmpty(SupplierItemName.Text) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(StatusFrom.SelectedValue)
+        If Not String.IsNullOrEmpty(StatusFrom.SelectedValue) And StatusFrom.SelectedValue <> Common.RFQSTATUS_ALL Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(StatusTo.SelectedValue)
+        If Not String.IsNullOrEmpty(StatusTo.SelectedValue) And StatusTo.SelectedValue <> Common.RFQSTATUS_ALL Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(RFQCreatedDateFrom.Text)
+        If Not String.IsNullOrEmpty(RFQCreatedDateFrom.Text) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(RFQCreatedDateTo.Text)
+        If Not String.IsNullOrEmpty(RFQCreatedDateTo.Text)Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(RFQQuotedDateFrom.Text)
+        If Not String.IsNullOrEmpty(RFQQuotedDateFrom.Text) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(RFQQuotedDateTo.Text)
+        If Not String.IsNullOrEmpty(RFQQuotedDateTo.Text) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(LastRFQStatusChangeDateFrom.Text)
+        If Not String.IsNullOrEmpty(LastRFQStatusChangeDateFrom.Text) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(LastRFQStatusChangeDateTo.Text)
+        If Not String.IsNullOrEmpty(LastRFQStatusChangeDateTo.Text) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(EnqLocationCode.SelectedValue)
+        If Not String.IsNullOrEmpty(EnqLocationCode.SelectedValue)Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(EnqUserID.SelectedValue)
+        If Not String.IsNullOrEmpty(EnqUserID.SelectedValue) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(QuoLocationCode.SelectedValue)
+        If Not String.IsNullOrEmpty(QuoLocationCode.SelectedValue) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(QuoUserID.SelectedValue)
+        If Not String.IsNullOrEmpty(QuoUserID.SelectedValue) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If IsCheckedMultipleSelectionItems(PurposeList.Items)
+        If IsCheckedMultipleSelectionItems(PurposeList.Items) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If IsCheckedMultipleSelectionItems(TerritoryList.Items)
+        If IsCheckedMultipleSelectionItems(TerritoryList.Items) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(Priority.SelectedValue)
+        If Not String.IsNullOrEmpty(Priority.SelectedValue)Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(ValidQuotation.SelectedValue)
+        If Not String.IsNullOrEmpty(ValidQuotation.SelectedValue) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
@@ -489,11 +490,11 @@ Public Class RFQSearch
         cond.SupplierCountryCode = SupplierCountryCode.SelectedValue
         cond.SupplierItemName = SupplierItemName.Text
         Dim RFQStatus As TCIDataAccess.RFQStatus = New TCIDataAccess.RFQStatus
-        If Not String.IsNullOrEmpty(StatusFrom.SelectedValue) Then
+        If Not String.IsNullOrEmpty(StatusFrom.SelectedValue) And StatusFrom.SelectedValue <> Common.RFQSTATUS_ALL Then
             RFQStatus.Load(StatusFrom.SelectedValue)
             cond.StatusFrom = RFQStatus.SortOrder.ToString
         End If
-        If Not String.IsNullOrEmpty(StatusTo.SelectedValue) Then
+        If Not String.IsNullOrEmpty(StatusTo.SelectedValue) And StatusFrom.SelectedValue <> Common.RFQSTATUS_ALL Then
             RFQStatus.Load(StatusTo.SelectedValue.ToString())
             cond.StatusTo = RFQStatus.SortOrder.ToString
         End If

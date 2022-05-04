@@ -134,7 +134,7 @@
                         <tr>
                             <th style="width: 17%">Product Number / Name</th>
                             <td style="width: 33%">
-                                <asp:HyperLink ID="ProductPage" runat="server" NavigateUrl='<%# "./RFQListByProduct.aspx?ProductID=" & Eval("ProductID") %>'>
+                                <asp:HyperLink ID="ProductPage" runat="server" NavigateUrl='<%# "./RFQListByProduct.aspx?ProductID=" & Eval("ProductID") %>' target="_blank">
                                     <asp:Label ID="ProductNumber" runat="server" Text='<%# Eval("ProductNumber") %>'></asp:Label>
                                 </asp:HyperLink>
                                 <span class="indent">
@@ -153,7 +153,7 @@
                         <tr>
                             <th>Supplier Code / Name</th>
                             <td>
-                                <asp:HyperLink ID="SupplierPage" runat="server" NavigateUrl='<%# "./RFQListBySupplier.aspx?SupplierCode=" & Eval("SupplierCode") %>'>
+                                <asp:HyperLink ID="SupplierPage" runat="server" NavigateUrl='<%# "./RFQListBySupplier.aspx?SupplierCode=" & Eval("SupplierCode") %>' Target="_blank">
                                     <asp:Label ID="SupplierCode" runat="server" Text='<%# Eval("SupplierCode") %>'></asp:Label>
                                 </asp:HyperLink>
                                 <span class="indent"><asp:Label ID="SupplierName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("SupplierName").ToString())%>'></asp:Label></span>

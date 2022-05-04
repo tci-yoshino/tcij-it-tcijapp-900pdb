@@ -7,6 +7,7 @@
     <add key="LIST_ONEPAGE_ROW_MyTask" value="50"/>
     <add key="LIST_ONEPAGE_ROW_ProductListBySupplier" value="200"/>
     <add key="LIST_ONEPAGE_ROW_RequestedTask" value="50"/>
+    <add key="LIST_ONEPAGE_ROW_RFQListByProduct" value="10"/>
     <add key="LIST_ONEPAGE_ROW_RFQSearch" value="10"/>
     <add key="LIST_ONEPAGE_ROW_RFQSearchByProduct" value="10"/>
     <add key="LIST_ONEPAGE_ROW_ProductSearchByStructure" value="40"/>
