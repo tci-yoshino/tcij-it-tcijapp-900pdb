@@ -182,40 +182,5 @@ Partial Public Class ProductListBySupplier
         End If
     End Sub
 
-    ''' <summary>
-    ''' 画面表示しているDatapagerのページを1ページ目にセットする
-    ''' </summary>
-    ''' <remarks>
-    ''' 画面上部のSupplierProductPagerCountTop、SupplierProductPagerLinkTop、
-    ''' 画面下部のSupplierProductPagerCountBottom、SupplierProductPagerLinkBottomに対し最初のページを設定する
-    ''' </remarks>
-    'Protected Sub ResetPagerIndex(ByVal count As Integer, Optional databind As Boolean = False)
-    '    '各Pagerに1ページ目を設定する
-    '    Dim PgrSupplierProductPagerCountTop As DataPager
-    '    PgrSupplierProductPagerCountTop = CType(SupplierProductList.FindControl("SupplierProductPagerCountTop"), DataPager)
-
-    '    Dim PgrSupplierProductPagerLinkTop As DataPager
-    '    PgrSupplierProductPagerLinkTop = CType(SupplierProductList.FindControl("SupplierProductPagerLinkTop"), DataPager)
-
-    '    Dim PgrSupplierProductPagerCountBottom As DataPager
-    '    PgrSupplierProductPagerCountBottom = CType(SupplierProductList.FindControl("SupplierProductPagerCountBottom"), DataPager)
-
-    '    Dim PgrSupplierProductPagerLinkBottom As DataPager
-    '    PgrSupplierProductPagerLinkBottom = CType(SupplierProductList.FindControl("SupplierProductPagerLinkBottom"), DataPager)
-
-    '    If count <> 0 Then
-    '        PgrSupplierProductPagerCountTop.PageSize = Common.LIST_ONEPAGE_ROW(Request.Url.ToString())
-    '        PgrSupplierProductPagerLinkTop.PageSize = Common.LIST_ONEPAGE_ROW(Request.Url.ToString())
-    '        PgrSupplierProductPagerCountBottom.PageSize = Common.LIST_ONEPAGE_ROW(Request.Url.ToString())
-    '        PgrSupplierProductPagerLinkBottom.PageSize = Common.LIST_ONEPAGE_ROW(Request.Url.ToString())
-
-    '        PgrSupplierProductPagerCountTop.SetPageProperties(0, PgrSupplierProductPagerCountTop.MaximumRows, databind)
-    '        PgrSupplierProductPagerLinkTop.SetPageProperties(0, PgrSupplierProductPagerLinkTop.MaximumRows, databind)
-    '        PgrSupplierProductPagerCountBottom.SetPageProperties(0, PgrSupplierProductPagerCountBottom.MaximumRows, databind)
-    '        PgrSupplierProductPagerLinkBottom.SetPageProperties(0, PgrSupplierProductPagerLinkBottom.MaximumRows, databind)
-    '    End If
-
-    'End Sub
-
 End Class
 

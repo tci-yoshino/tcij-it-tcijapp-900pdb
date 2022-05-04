@@ -22,12 +22,6 @@ Partial Public Class RequestedTask
             st_UserID = UserID.SelectedValue
         Else
             st_UserID = Session("UserID").ToString
-            ''' 初期表示時は呼び元から渡された UserID を格納
-            'If Request.RequestType = "POST" Then
-            '    st_UserID = Cstr(IIf(Request.Form("UserID") = Nothing, "", Request.Form("UserID")))
-            'ElseIf Request.RequestType = "GET" Then
-            '    st_UserID = Cstr(IIf(Request.QueryString("UserID") = Nothing, "", Request.QueryString("UserID")))
-            'End If
         End If
 
         '' 初期表示時は呼び元から渡された UserID を格納
