@@ -77,8 +77,8 @@ Partial Public Class RFQListByProduct
 
         '[ProductListを表示]-----------------------------------------------------
         RFQHeaderList.Visible = True
-        ReSetPager()
 
+        Action.Value = String.Empty
         'HiddenValidQuotation.Value = String.Empty
 
     End Sub
@@ -107,8 +107,8 @@ Partial Public Class RFQListByProduct
 
         '[ProductListを表示]-----------------------------------------------------
         RFQHeaderList.Visible = True
-        ReSetPager()
 
+        Action.Value = String.Empty
         HiddenValidQuotation.Value = String.Empty
 
     End Sub
@@ -119,41 +119,8 @@ Partial Public Class RFQListByProduct
         ' 見積情報検索
         SearchRFQHeader(st_ProductID)
 
-        SetPageSize()
-
         HiddenValidQuotation.Value = Me.ValidQuotation.SelectedValue
 
-    End Sub
-
-    Private Sub SetPageSize()
-
-        RFQPagerCountTop.PageSize = Common.LIST_ONEPAGE_ROW(Request.Url.ToString())
-        RFQPagerLinkTop.PageSize = Common.LIST_ONEPAGE_ROW(Request.Url.ToString())
-        RFQPagerLinkBottom.PageSize = Common.LIST_ONEPAGE_ROW(Request.Url.ToString())
-        RFQPagerCountBottom.PageSize = Common.LIST_ONEPAGE_ROW(Request.Url.ToString())
-
-    End Sub
-
-    Private Sub ReSetPager()
-
-        ResetPageNumericPagerField(RFQPagerLinkTop)
-        ResetPageNumericPagerField(RFQPagerLinkBottom)
-
-    End Sub
-
-    ''' <summary>
-    ''' ページを初期化します。
-    ''' </summary>
-    Private Sub ResetPageNumericPagerField(ByVal dp As DataPager)
-        If Not IsNothing(dp) And Not dp.StartRowIndex = 0 Then
-            Dim numericPF As NumericPagerField = CType(dp.Fields(0), NumericPagerField)
-            If Not IsNothing(numericPF) Then
-                '' 引数に0をセット
-                Dim args As CommandEventArgs = New CommandEventArgs("0", "")
-                '' イベント発生
-                numericPF.HandleEvent(args)
-            End If
-        End If
     End Sub
 
     ''' <summary>

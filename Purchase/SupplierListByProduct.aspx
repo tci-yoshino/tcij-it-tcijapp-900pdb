@@ -23,7 +23,12 @@
             // 画面ボタンアクション時判定処理
             function setFormAction(button_type) {
                 if (button_type == "Delete") {
-                    document.getElementById("Action").value = "Delete";
+                    setAction('Delete');
+                } else if (button_type == "Search") {
+                    setAction('Search');
+                } else if (button_type == "Release") {
+                    setAction('Release');
+                    clearForm('SearchForm');
                 } else {
                     document.getElementById("Action").value = "";
                 }
@@ -115,8 +120,8 @@
                             <asp:Label ID="Label1" runat="server" Text="">(YYYY-MM-DD)</asp:Label>
                         </span>
                     </b>
-                    <asp:Button ID="Search" runat="server" Text="Search"  OnClientClick ="setFormAction();" />&nbsp;
-                    <asp:Button ID="Release" runat="server" Text="Release" OnClientClick ="clearForm('SearchForm');" />
+                    <asp:Button ID="Search" runat="server" Text="Search"  OnClientClick ="setFormAction('Search');" />&nbsp;
+                    <asp:Button ID="Release" runat="server" Text="Release" OnClientClick ="setFormAction('Release');" />
                 </div>
                 <div id="divTerritory" class="territory">
                     <table border="0" cellpadding="1" cellspacing="0">

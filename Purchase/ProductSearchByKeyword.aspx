@@ -95,12 +95,12 @@
                                 </td>
                                 <td>
                                     <asp:HyperLink runat="server"  ID="Setting"
-                                        NavigateUrl='<%#"./ProductSetting.aspx?Action=Edit&ProductID=" & Eval("ProductID") %>'>Product Setting</asp:HyperLink>
+                                        NavigateUrl='<%#"./ProductSetting.aspx?Action=Edit&ProductID=" & Eval("ProductID") %>' Target="_blank">Product Setting</asp:HyperLink>
 
                                 </td>
                                 <td>
                                     <asp:HyperLink runat="server"  ID="RFQList"
-                                        NavigateUrl='<%#"./RFQListByProduct.aspx?ProductID=" & Eval("ProductID") %>'>Product RFQ List</asp:HyperLink>
+                                        NavigateUrl='<%#"./RFQListByProduct.aspx?ProductID=" & Eval("ProductID") %>' Target="_blank">Product RFQ List</asp:HyperLink>
 
                                 </td>
                             </tr>

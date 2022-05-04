@@ -170,7 +170,7 @@ Partial Public Class ProductSearchByStructure
 
         'Structure.db検索コマンドライン生成
         Dim st_Command As String = String.Format(
-                "/c C:\ProgramData\Oracle\Java\javapath\java -jar {0}misearch.jar -db {1} -simisearch -smi {2} -nhits {3} -jme 2>&1",
+                "/c java -jar {0}misearch.jar -db {1} -simisearch -smi {2} -nhits {3} -jme 2>&1",
                 Common.FILE_PATH_MISEARCH,
                 Common.FILE_NAME_STRUCTUREDB,
                 search_smiles.Value,

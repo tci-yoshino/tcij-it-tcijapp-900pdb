@@ -119,6 +119,30 @@ Partial Public Class RFQUpdate
         Call EnqUserPlantSpmatlStatus()
         Call QuoUserPlantSpmatlStatus()
 
+        'ログインユーザ＝RFQUser の場合、Priority 編集可
+        Dim st_ENQUser As String = String.Empty
+        st_ENQUser = EnqUser.SelectedValue
+        If String.IsNullOrEmpty(st_ENQUser) Then
+            '画面初期表示時のみ SelectedValue で値が取得できないため、直接データ参照する
+            st_ENQUser = ViewState(OLD_ENQUSER_ID)
+        End If
+        Dim st_QuoUser As String = String.Empty
+        st_QuoUser = QuoUser.SelectedValue
+        If String.IsNullOrEmpty(st_QuoUser) Then
+            '画面初期表示時のみ SelectedValue で値が取得できないため、直接データ参照する
+            st_QuoUser = ViewState(OLD_QUOUSER_ID)
+        End If
+
+        If (Session("UserID").ToString = st_ENQUser) Then
+            Priority.Enabled = True
+            Priority.Visible = True
+            LabelPriority.Visible = False
+        Else
+            Priority.Enabled = False
+            Priority.Visible = False
+            LabelPriority.Visible = True
+        End If
+
         POInterfaceMsg.Text = String.Empty
         POInterfaceConfirmMsg.Text = String.Empty
         If MMSTAInvalidation.Checked = False Then
@@ -184,7 +208,10 @@ Partial Public Class RFQUpdate
         '    End If
         'End If
         '変更前 Quo-User のコレポンチェック (False = 未処理コレポン有り)
-        If ViewState(OLD_QUOUSER_ID) <> QuoUser.SelectedValue Then
+        ' 以下の場合はチェックをスキップ
+        ' ・変更前のQuo-Userが未設定(Null)の場合
+        ' ・変更前後でQuo-Userが同じ場合（変更が無い場合）
+        If (Not String.IsNullOrEmpty(ViewState(OLD_QUOUSER_ID))) AndAlso ViewState(OLD_QUOUSER_ID) <> QuoUser.SelectedValue Then
             If CheckUntreatedCorrespondence(RFQNumber.Text, ViewState(OLD_QUOUSER_ID)) = False Then
                 Msg.Text = ERR_UNTREATED_CORRESPONDENCE
                 Exit Sub
@@ -514,6 +541,8 @@ Partial Public Class RFQUpdate
             End If
             SetPurposeDropDownList(SrcPurpose)
             Common.SetCodeExtensionDropDownList(CodeExtensionList, da_vRFQHeader.ProductNumber)
+            Me.Priority.Items.Clear()
+            Common.SetPriorityDropDownList(Me.Priority, Common.PRIORITY_FOR_EDIT)
 
             'Hidden
             QuotedDate.Value = da_vRFQHeader.QuotedDate.ToString
@@ -854,29 +883,7 @@ Partial Public Class RFQUpdate
             DS.Clear()
         End If
 
-        'ログインユーザ＝RFQUser の場合、Priority 編集可
-        Dim st_ENQUser As String = String.Empty
-        st_ENQUser = EnqUser.SelectedValue
-        If String.IsNullOrEmpty(st_ENQUser) Then
-            '画面初期表示時のみ SelectedValue で値が取得できないため、直接データ参照する
-            st_ENQUser = ViewState(OLD_ENQUSER_ID)
-        End If
-        Dim st_QuoUser As String = String.Empty
-        st_QuoUser = QuoUser.SelectedValue
-        If String.IsNullOrEmpty(st_QuoUser) Then
-            '画面初期表示時のみ SelectedValue で値が取得できないため、直接データ参照する
-            st_QuoUser = ViewState(OLD_QUOUSER_ID)
-        End If
 
-        If (Session("UserID").ToString = st_ENQUser) Then
-            Priority.Enabled = True
-            Priority.Visible = True
-            LabelPriority.Visible = False
-        Else
-            Priority.Enabled = False
-            Priority.Visible = False
-            LabelPriority.Visible = True
-        End If
 
         If Hi_RFQStatusCode.Value = STATUS_CLOSED Then
             'ListPurpose.Visible = False

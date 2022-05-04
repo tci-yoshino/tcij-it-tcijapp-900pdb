@@ -95,38 +95,66 @@ function setFormAction(button_type) {
 
         <br >
         <div class="list">
-            <div class="pagingHead" >
-                <asp:DataPager ID="RFQPagerCountTop" runat="server" PagedControlID="RFQHeaderList">    
-                    <Fields>
-                        <asp:TemplatePagerField>              
-                            <PagerTemplate>
-                            Page
-                            <asp:Label runat="server" ID="CurrentPageLabel" 
-                            Text="<%# IIf(Container.TotalRowCount>0,  (Container.StartRowIndex / Container.PageSize) + 1 , 0) %>" />
-                            of
-                            <asp:Label runat="server" ID="TotalPagesLabel" 
-                            Text="<%# Math.Ceiling (System.Convert.ToDouble(Container.TotalRowCount) / Container.PageSize) %>" />
-                            (<asp:Label runat="server" ID="TotalItemsLabel" Text="<%# Container.TotalRowCount%>" /> records)
-                            </PagerTemplate>
-                        </asp:TemplatePagerField>
-                    </Fields>
-                </asp:DataPager>
-            </div>   
-                     
-            <div class="paging">
-                <asp:DataPager ID="RFQPagerLinkTop" runat="server"  PagedControlID="RFQHeaderList">
-                    <Fields>
-                        <asp:NumericPagerField ButtonCount="10" CurrentPageLabelCssClass="current" NumericButtonCssClass="numeric" PreviousPageText="&laquo; Previous" NextPageText="Next &raquo;" />
-                    </Fields>
-                </asp:DataPager>
-            </div>
-
             <asp:ListView ID="RFQHeaderList" runat="server" DataSourceID="SrcRFQHeader">
                 <LayoutTemplate>
+
+                    <div class="pagingHead">
+                        <asp:DataPager ID="RFQPagerCountTop" runat="server" PageSize="10">    
+                            <Fields>
+                                <asp:TemplatePagerField>              
+                                    <PagerTemplate>
+                                    Page
+                                    <asp:Label runat="server" ID="CurrentPageLabel" 
+                                    Text="<%# IIf(Container.TotalRowCount>0,  (Container.StartRowIndex / Container.PageSize) + 1 , 0) %>" />
+                                    of
+                                    <asp:Label runat="server" ID="TotalPagesLabel" 
+                                    Text="<%# Math.Ceiling (System.Convert.ToDouble(Container.TotalRowCount) / Container.PageSize) %>" />
+                                    (<asp:Label runat="server" ID="TotalItemsLabel" Text="<%# Container.TotalRowCount%>" /> records)
+                                    </PagerTemplate>
+                                </asp:TemplatePagerField>
+                            </Fields>
+                        </asp:DataPager>
+                    </div>   
+                     
+                    <div class="paging">
+                        <asp:DataPager ID="RFQPagerLinkTop" runat="server" PageSize="10">
+                            <Fields>
+                                <asp:NumericPagerField ButtonCount="10" CurrentPageLabelCssClass="current" NumericButtonCssClass="numeric" PreviousPageText="&laquo; Previous" NextPageText="Next &raquo;" />
+                            </Fields>
+                        </asp:DataPager>
+                    </div>
+
                     <div ID="itemPlaceholderContainer" runat="server">
                         <div ID="itemPlaceholder" runat="server">
                         </div>
                     </div>
+
+                    <div class="paging">
+                        <asp:DataPager ID="RFQPagerLinkBottom" runat="server" PageSize="10">
+                            <Fields>
+                                <asp:NumericPagerField ButtonCount="10" CurrentPageLabelCssClass="current" NumericButtonCssClass="numeric" PreviousPageText="&laquo; Previous" NextPageText="Next &raquo;" />
+                            </Fields>
+                        </asp:DataPager>
+                    </div>                    
+                    
+                    <div class="pagingHead">
+                        <asp:DataPager ID="RFQPagerCountBottom" runat="server" PageSize="10">    
+                            <Fields>
+                                <asp:TemplatePagerField>              
+                                    <PagerTemplate>
+                                    Page
+                                    <asp:Label runat="server" ID="CurrentPageLabel" 
+                                    Text="<%# IIf(Container.TotalRowCount>0,  (Container.StartRowIndex / Container.PageSize) + 1 , 0) %>" />
+                                    of
+                                    <asp:Label runat="server" ID="TotalPagesLabel" 
+                                    Text="<%# Math.Ceiling (System.Convert.ToDouble(Container.TotalRowCount) / Container.PageSize) %>" />
+                                    (<asp:Label runat="server" ID="TotalItemsLabel" Text="<%# Container.TotalRowCount%>" /> records)
+                                    </PagerTemplate>
+                                </asp:TemplatePagerField>
+                            </Fields>
+                        </asp:DataPager>
+                    </div>
+
                 </LayoutTemplate>
 
                 <EmptyDataTemplate>
@@ -158,7 +186,7 @@ function setFormAction(button_type) {
                         <tr>
                             <th>Supplier Name / Country</th>
                             <td colspan="3">
-                                <span><asp:HyperLink ID="SupplierCode" runat="server" NavigateUrl='<%#Eval("SupplierCode","./RFQListBySupplier.aspx?SupplierCode={0}")%>' Text='<%#Eval("SupplierCode")%>' /></span>
+                                <span><asp:HyperLink ID="SupplierCode" runat="server" NavigateUrl='<%#Eval("SupplierCode","./RFQListBySupplier.aspx?SupplierCode={0}")%>' Text='<%#Eval("SupplierCode")%>' target="_blank" /></span>
                                 <!-- １段下に改行されて表示される現象の対策のため他項目より前に記述する -->
                                 <span class="placedright"><asp:HyperLink ID="SupplierInfoLink" runat="server" NavigateUrl='<%#Eval("SupplierInfo")%>' Target="_blank"><asp:Label ID="SupplierInfo" runat="server" Text='<%#If(IsDBNull(Eval("SupplierInfo")), "", "Supplier Information")%>'></asp:Label></asp:HyperLink></span>
                                 <asp:Label ID="SupplierName" runat="server" Text='<%#Eval("SupplierName")%>'></asp:Label>
@@ -235,33 +263,6 @@ function setFormAction(button_type) {
                     <asp:SqlDataSource ID="SrcRFQLine" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
                 </ItemTemplate>
             </asp:ListView>
-
-            <div class="paging">
-                <asp:DataPager ID="RFQPagerLinkBottom" runat="server"  PagedControlID="RFQHeaderList">
-                    <Fields>
-                        <asp:NumericPagerField ButtonCount="10" CurrentPageLabelCssClass="current" NumericButtonCssClass="numeric" PreviousPageText="&laquo; Previous" NextPageText="Next &raquo;" />
-                    </Fields>
-                </asp:DataPager>
-            </div>                    
-                    
-            <div class="pagingHead">
-                <asp:DataPager ID="RFQPagerCountBottom" runat="server"  PagedControlID="RFQHeaderList">    
-                    <Fields>
-                        <asp:TemplatePagerField>              
-                            <PagerTemplate>
-                            Page
-                            <asp:Label runat="server" ID="CurrentPageLabel" 
-                            Text="<%# IIf(Container.TotalRowCount>0,  (Container.StartRowIndex / Container.PageSize) + 1 , 0) %>" />
-                            of
-                            <asp:Label runat="server" ID="TotalPagesLabel" 
-                            Text="<%# Math.Ceiling (System.Convert.ToDouble(Container.TotalRowCount) / Container.PageSize) %>" />
-                            (<asp:Label runat="server" ID="TotalItemsLabel" Text="<%# Container.TotalRowCount%>" /> records)
-                            </PagerTemplate>
-                        </asp:TemplatePagerField>
-                    </Fields>
-                </asp:DataPager>
-
-            </div>
         </div>
     </div><!-- Main Content Area END -->
     <% End If%>

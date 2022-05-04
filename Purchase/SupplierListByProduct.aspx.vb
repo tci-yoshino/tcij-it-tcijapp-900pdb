@@ -74,6 +74,19 @@ Partial Public Class SupplierListByProduct
                 End If
             End If
 
+            If String.IsNullOrEmpty(Action.Value) Then
+                '' ソート時
+                i_ProductID = Cint(ProductID.Value)
+                st_localeUpdateDateFrom = If(String.IsNullOrEmpty(UpdateDateFrom.Text), "", GetDatabaseTime(st_LocationCode, UpdateDateFrom.Text)).ToString 
+                st_localeUpdateDateTo = If(String.IsNullOrEmpty(UpdateDateTo.Text), "", GetDatabaseTime(st_LocationCode, UpdateDateTo.Text)).ToString
+
+                'リスト情報表示
+                SrcSupplierProduct.Load(i_ProductID, TerritoryList, UpdateDateFrom.Text, UpdateDateTo.Text, _
+                                        HiddenSortField, HiddenSortType, SupplierProductList.ID)
+                SupplierProductList.DataSource = SrcSupplierProduct
+                SupplierProductList.DataBind()
+            End If
+
         End If
 
     End Sub
@@ -110,6 +123,13 @@ Partial Public Class SupplierListByProduct
 
         ' メッセージクリア
         Msg.Text = String.Empty
+
+        '[Search実行可能確認]----------------------------------------------------------
+        If Not String.Equals(Action.Value, "Search") Then
+            Msg.Text = Common.ERR_INVALID_PARAMETER
+            Exit Sub
+        End If
+
         'Update Date バリデーションチェック処理
         If Not String.IsNullOrEmpty(UpdateDateFrom.Text) OrElse Not String.IsNullOrEmpty(UpdateDateTo.Text) Then
             If Not UpdateDateValidateCheck() Then
@@ -139,6 +159,13 @@ Partial Public Class SupplierListByProduct
 
         ' メッセージクリア
         Msg.Text = String.Empty
+
+        '[Release実行可能確認]----------------------------------------------------------
+        If Not String.Equals(Action.Value, "Release") Then
+            Msg.Text = Common.ERR_INVALID_PARAMETER
+            Exit Sub
+        End If
+
         ' Territoryコンボ内CheckBox全クリア
         For Each TerritoryItem As ListItem In TerritoryList.Items
             TerritoryItem.Selected = False
