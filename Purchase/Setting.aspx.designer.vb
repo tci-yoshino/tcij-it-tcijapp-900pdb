@@ -77,15 +77,6 @@ Partial Public Class Setting
     Protected WithEvents ReminderListli As Global.System.Web.UI.HtmlControls.HtmlGenericControl
     
     '''<summary>
-    '''UserListli コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents UserListli As Global.System.Web.UI.HtmlControls.HtmlGenericControl
-    
-    '''<summary>
     '''ProductInfoRegulationLi1 コントロール。
     '''</summary>
     '''<remarks>

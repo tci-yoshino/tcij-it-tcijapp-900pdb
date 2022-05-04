@@ -4,7 +4,7 @@ Imports System.Web
 Imports Purchase.Common
 
 Public Class Setting
-    Inherits System.Web.UI.Page
+    Inherits CommonPage
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         CountryListli.Visible = False
@@ -12,7 +12,6 @@ Public Class Setting
         ProductSearchli.Visible = False
         PurchaseGroupli.Visible = False
         ReminderListli.Visible = False
-        UserListli.Visible = False
         ProductInfoRegulationLi1.Visible = False
 
         Dim c As String
@@ -32,8 +31,6 @@ ScriptName in('CountryList','SupplierSearch','ProductSearch','PurchaseGroup','Re
                     PurchaseGroupli.Visible = True
                 ElseIf c = "ReminderList" Then
                     ReminderListli.Visible = True
-                ElseIf c = "UserList" Then
-                    UserListli.Visible = True
                 ElseIf c = "ProductInfoRegulation" Then
                     ProductInfoRegulationLi1.Visible = True
                 End If
