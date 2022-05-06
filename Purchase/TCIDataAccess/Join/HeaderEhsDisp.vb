@@ -110,22 +110,19 @@ Namespace TCIDataAccess.Join
 
                     ' 実行
                     DBConn.Open()
-                    Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                        Dim dc_EhsHeaderList As List(Of s_EhsHeader) = New List(Of s_EhsHeader)
+                        While DBReader.Read
 
-                    Dim dc_EhsHeaderList As List(Of s_EhsHeader) = New List(Of s_EhsHeader)
-                    While DBReader.Read
+                            Dim dc_EhsHeader As s_EhsHeader = New s_EhsHeader
+                            DBCommon.SetProperty(DBReader("ITEM"), dc_EhsHeader.Item)
 
-                        Dim dc_EhsHeader As s_EhsHeader = New s_EhsHeader
-                        DBCommon.SetProperty(DBReader("ITEM"), dc_EhsHeader.Item)
+                            dc_EhsHeaderList.Add(dc_EhsHeader)
 
-                        dc_EhsHeaderList.Add(dc_EhsHeader)
+                        End While
 
-                    End While
-
-                    Me.EhsHeaderList = dc_EhsHeaderList
-
-                    DBConn.Close
-
+                        Me.EhsHeaderList = dc_EhsHeaderList
+                    End Using
                 End Using
             End Using
 
@@ -189,22 +186,19 @@ Namespace TCIDataAccess.Join
 
                     ' 実行
                     DBConn.Open()
-                    Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                        Dim dc_EhsHeaderList As List(Of s_EhsHeader) = New List(Of s_EhsHeader)
+                        While DBReader.Read
 
-                    Dim dc_EhsHeaderList As List(Of s_EhsHeader) = New List(Of s_EhsHeader)
-                    While DBReader.Read
+                            Dim dc_EhsHeader As s_EhsHeader = New s_EhsHeader
+                            DBCommon.SetProperty(DBReader("Item"), dc_EhsHeader.Item)
+                            DBCommon.SetProperty(DBReader("Text"), dc_EhsHeader.Text)
+                            dc_EhsHeaderList.Add(dc_EhsHeader)
 
-                        Dim dc_EhsHeader As s_EhsHeader = New s_EhsHeader
-                        DBCommon.SetProperty(DBReader("Item"), dc_EhsHeader.Item)
-                        DBCommon.SetProperty(DBReader("Text"), dc_EhsHeader.Text)
-                        dc_EhsHeaderList.Add(dc_EhsHeader)
+                        End While
 
-                    End While
-
-                    ehsHeaderListForPersonalize = dc_EhsHeaderList
-
-                    DBConn.Close
-
+                        ehsHeaderListForPersonalize = dc_EhsHeaderList
+                    End Using
                 End Using
             End Using
 
@@ -242,20 +236,15 @@ Namespace TCIDataAccess.Join
 
                     ' 実行
                     DBConn.Open()
-                    Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                        While DBReader.Read
+                            Dim dc_EhsHeader As s_EhsHeader = New s_EhsHeader
+                            DBCommon.SetProperty(DBReader("Item"), dc_EhsHeader.Item)
+                            DBCommon.SetProperty(DBReader("Text"), dc_EhsHeader.Text)
 
-                    While DBReader.Read
-
-                        Dim dc_EhsHeader As s_EhsHeader = New s_EhsHeader
-                        DBCommon.SetProperty(DBReader("Item"), dc_EhsHeader.Item)
-                        DBCommon.SetProperty(DBReader("Text"), dc_EhsHeader.Text)
-
-                        ehsHeaderListForLocation.Add(dc_EhsHeader)
-
-                    End While
-
-                    DBConn.Close
-
+                            ehsHeaderListForLocation.Add(dc_EhsHeader)
+                        End While
+                    End Using
                 End Using
             End Using
 

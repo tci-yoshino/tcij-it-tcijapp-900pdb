@@ -392,13 +392,13 @@ Namespace TCIDataAccess.Join
                     DBCommand.CommandText = sb_SQL.ToString()
                     DBCommand.Parameters.Clear()
                     '生成したSQL文に入力項目を反映
-                    SetParamInClauseSQL(DBCommand,"RFQNumber",Cond.RFQNumber)
-                    SetParamInClauseSQL(DBCommand,"ProductNumber",Cond.ProductNumber)
+                    SetParamInClauseSQL(DBCommand, "RFQNumber", Cond.RFQNumber)
+                    SetParamInClauseSQL(DBCommand, "ProductNumber", Cond.ProductNumber)
                     If Not String.IsNullOrEmpty(Cond.ProductName) Then
                         DBCommand.Parameters.AddWithValue("ProductName", StrConv(Cond.ProductName, VbStrConv.Narrow))
                     End If
-                    SetParamInClauseSQL(DBCommand,"SupplierCode",Cond.SupplierCode)
-                    SetParamInClauseSQL(DBCommand,"S4SupplierCode",Cond.S4SupplierCode)
+                    SetParamInClauseSQL(DBCommand, "SupplierCode", Cond.SupplierCode)
+                    SetParamInClauseSQL(DBCommand, "S4SupplierCode", Cond.S4SupplierCode)
                     If Not String.IsNullOrEmpty(Cond.SupplierName) Then
                         DBCommand.Parameters.AddWithValue("SupplierName", StrConv(Cond.SupplierName, VbStrConv.Narrow))
                     End If
@@ -450,59 +450,59 @@ Namespace TCIDataAccess.Join
                     If Not String.IsNullOrEmpty(Cond.QuoStorageLocation) Then
                         DBCommand.Parameters.AddWithValue("QuoStorageLocation", Cond.QuoStorageLocation)
                     End If
-                    SetPramMultipleSelectionInClauseSQL(DBCommand,"Purpose",Cond.Purpose)
-                    SetPramMultipleSelectionInClauseSQL(DBCommand,"TerritoryCode",Cond.Territory)
+                    SetPramMultipleSelectionInClauseSQL(DBCommand, "Purpose", Cond.Purpose)
+                    SetPramMultipleSelectionInClauseSQL(DBCommand, "TerritoryCode", Cond.Territory)
                     If Not String.IsNullOrEmpty(Cond.Priority) Then
                         DBCommand.Parameters.AddWithValue("Priority", Cond.Priority)
                     End If
 
                     DBConn.Open()
-                    Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                        While DBReader.Read()
+                            i_TotalCount += 1
+                            If i_TotalCount <= SkipRecord Then
+                                'SkipRecord まで読み飛ばし
+                                Continue While
+                            End If
+                            If PageSize > 0 AndAlso Me.Count >= PageSize Then
+                                '格納件数 (ページサイズ) を超えたら読み飛ばし
+                                Continue While
+                            End If
 
-                    While DBReader.Read()
-                        i_TotalCount += 1
-                        If i_TotalCount <= SkipRecord Then
-                            'SkipRecord まで読み飛ばし
-                            Continue While
-                        End If
-                        If PageSize > 0 AndAlso Me.Count >= PageSize Then
-                            '格納件数 (ページサイズ) を超えたら読み飛ばし
-                            Continue While
-                        End If
+                            Dim dc_Data As New RFQHeader
+                            SetProperty(DBReader("StatusChangeDate"), dc_Data.StatusChangeDate)
+                            SetProperty(DBReader("Status"), dc_Data.Status)
+                            SetProperty(DBReader("RFQNumber"), dc_Data.RFQNumber)
+                            SetProperty(DBReader("Priority"), dc_Data.Priority)
+                            SetProperty(DBReader("QuotedDate"), dc_Data.QuotedDate)
+                            SetProperty(DBReader("ProductID"), dc_Data.ProductID)
+                            SetProperty(DBReader("ProductNumber"), dc_Data.ProductNumber)
+                            SetProperty(DBReader("ProductName"), dc_Data.ProductName)
+                            SetProperty(DBReader("SupplierCode"), dc_Data.SupplierCode)
+                            SetProperty(DBReader("SupplierName"), dc_Data.SupplierName)
+                            SetProperty(DBReader("SupplierInfo"), dc_Data.SupplierInfo)
+                            SetProperty(DBReader("MakerCountryCode"), dc_Data.MakerCountryCode)
+                            SetProperty(DBReader("MakerCountryName"), dc_Data.MakerCountryName)
+                            SetProperty(DBReader("Purpose"), dc_Data.Purpose)
+                            SetProperty(DBReader("MakerName"), dc_Data.MakerName)
+                            SetProperty(DBReader("MakerInfo"), dc_Data.MakerInfo)
+                            SetProperty(DBReader("SupplierCountryCode"), dc_Data.SupplierCountryCode)
+                            SetProperty(DBReader("SupplierCountryName"), dc_Data.SupplierCountryName)
+                            SetProperty(DBReader("SupplierItemName"), dc_Data.SupplierItemName)
+                            SetProperty(DBReader("ShippingHandlingCurrencyCode"), dc_Data.ShippingHandlingCurrencyCode)
+                            SetProperty(DBReader("ShippingHandlingFee"), dc_Data.ShippingHandlingFee)
+                            SetProperty(DBReader("EnqUserName"), dc_Data.EnqUserName)
+                            SetProperty(DBReader("EnqLocationName"), dc_Data.EnqLocationName)
+                            SetProperty(DBReader("QuoUserName"), dc_Data.QuoUserName)
+                            SetProperty(DBReader("QuoLocationName"), dc_Data.QuoLocationName)
+                            SetProperty(DBReader("Comment"), dc_Data.Comment)
+                            SetProperty(DBReader("isCONFIDENTIAL"), dc_Data.isCONFIDENTIAL)
+                            SetProperty(DBReader("CodeExtensionCode"), dc_Data.CodeExtensionCode)
 
-                        Dim dc_Data As New RFQHeader
-                        SetProperty(DBReader("StatusChangeDate"), dc_Data.StatusChangeDate)
-                        SetProperty(DBReader("Status"), dc_Data.Status)
-                        SetProperty(DBReader("RFQNumber"), dc_Data.RFQNumber)
-                        SetProperty(DBReader("Priority"), dc_Data.Priority)
-                        SetProperty(DBReader("QuotedDate"), dc_Data.QuotedDate)
-                        SetProperty(DBReader("ProductID"), dc_Data.ProductID)
-                        SetProperty(DBReader("ProductNumber"), dc_Data.ProductNumber)
-                        SetProperty(DBReader("ProductName"), dc_Data.ProductName)
-                        SetProperty(DBReader("SupplierCode"), dc_Data.SupplierCode)
-                        SetProperty(DBReader("SupplierName"), dc_Data.SupplierName)
-                        SetProperty(DBReader("SupplierInfo"), dc_Data.SupplierInfo)
-                        SetProperty(DBReader("MakerCountryCode"), dc_Data.MakerCountryCode)
-                        SetProperty(DBReader("MakerCountryName"), dc_Data.MakerCountryName)
-                        SetProperty(DBReader("Purpose"), dc_Data.Purpose)
-                        SetProperty(DBReader("MakerName"), dc_Data.MakerName)
-                        SetProperty(DBReader("MakerInfo"), dc_Data.MakerInfo)
-                        SetProperty(DBReader("SupplierCountryCode"), dc_Data.SupplierCountryCode)
-                        SetProperty(DBReader("SupplierCountryName"), dc_Data.SupplierCountryName)
-                        SetProperty(DBReader("SupplierItemName"), dc_Data.SupplierItemName)
-                        SetProperty(DBReader("ShippingHandlingCurrencyCode"), dc_Data.ShippingHandlingCurrencyCode)
-                        SetProperty(DBReader("ShippingHandlingFee"), dc_Data.ShippingHandlingFee)
-                        SetProperty(DBReader("EnqUserName"), dc_Data.EnqUserName)
-                        SetProperty(DBReader("EnqLocationName"), dc_Data.EnqLocationName)
-                        SetProperty(DBReader("QuoUserName"), dc_Data.QuoUserName)
-                        SetProperty(DBReader("QuoLocationName"), dc_Data.QuoLocationName)
-                        SetProperty(DBReader("Comment"), dc_Data.Comment)
-                        SetProperty(DBReader("isCONFIDENTIAL"), dc_Data.isCONFIDENTIAL)
-                        SetProperty(DBReader("CodeExtensionCode"), dc_Data.CodeExtensionCode)
+                            Me.Add(dc_Data)
+                        End While
+                    End Using
 
-                        Me.Add(dc_Data)
-                    End While
-                    DBReader.Close()
                 End Using
             End Using
 

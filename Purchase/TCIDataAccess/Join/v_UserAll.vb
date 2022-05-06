@@ -96,14 +96,14 @@ Namespace TCIDataAccess.Join
                     DBCommand.CommandText = sb_SQL.ToString
                     DBCommand.Parameters.AddWithValue("QuoLocationCode", QuoLocationCode)
                     DBConn.Open()
-                    Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
-                    While DBReader.Read()
-                        Dim dc_Data As New v_UserAll
-                        SetProperty(DBReader("QuoUserID"), dc_Data.UserID)
-                        SetProperty(DBReader("QuoUserName"), dc_Data.Name)
-                        Me.Add(dc_Data)
-                    End While
-                    DBReader.Close()
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                        While DBReader.Read()
+                            Dim dc_Data As New v_UserAll
+                            SetProperty(DBReader("QuoUserID"), dc_Data.UserID)
+                            SetProperty(DBReader("QuoUserName"), dc_Data.Name)
+                            Me.Add(dc_Data)
+                        End While
+                    End Using
                 End Using
             End Using
 
@@ -145,14 +145,14 @@ Namespace TCIDataAccess.Join
                     DBCommand.CommandText = sb_SQL.ToString
                     DBCommand.Parameters.AddWithValue("EnqLocationCode", EnqLocationCode)
                     DBConn.Open()
-                    Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
-                    While DBReader.Read()
-                        Dim dc_Data As New v_UserAll
-                        SetProperty(DBReader("EnqUserID"), dc_Data.UserID)
-                        SetProperty(DBReader("EnqUserName"), dc_Data.Name)
-                        Me.Add(dc_Data)
-                    End While
-                    DBReader.Close()
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                        While DBReader.Read()
+                            Dim dc_Data As New v_UserAll
+                            SetProperty(DBReader("EnqUserID"), dc_Data.UserID)
+                            SetProperty(DBReader("EnqUserName"), dc_Data.Name)
+                            Me.Add(dc_Data)
+                        End While
+                    End Using
                 End Using
             End Using
 

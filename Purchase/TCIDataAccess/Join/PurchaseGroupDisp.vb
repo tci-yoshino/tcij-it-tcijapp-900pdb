@@ -175,32 +175,33 @@ Namespace TCIDataAccess.Join
             Value.AppendLine("ORDER BY ")
             Value.AppendLine("  VU.[LocationName], VU.[isDisabled], VU.[SurName], VU.[GivenName] ")
 
-            Dim DBConn As SqlConnection = New SqlConnection(DBCommon.DB_CONNECT_STRING)
-            Dim DBCommand As SqlCommand = DBConn.CreateCommand
-            DBCommand.CommandText = Value.ToString
-            DBCommand.Parameters.Clear()
-            DBCommand.Parameters.AddWithValue("LocationCode", st_LocationCode)
+            Using DBConn As SqlConnection = New SqlConnection(DBCommon.DB_CONNECT_STRING)
+                Using DBCommand As SqlCommand = DBConn.CreateCommand
+                    DBCommand.CommandText = Value.ToString
+                    DBCommand.Parameters.Clear()
+                    DBCommand.Parameters.AddWithValue("LocationCode", st_LocationCode)
 
-            DBConn.Open()
-            Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
-
-            While DBReader.Read
-                Dim dc_PurchaseGroup As PurchaseGroupDisp = New PurchaseGroupDisp
-                DBCommon.SetProperty(DBReader("UserID"), dc_PurchaseGroup.UserID)
-                DBCommon.SetProperty(DBReader("LocationName"), dc_PurchaseGroup.LocationName)
-                DBCommon.SetProperty(DBReader("AccountName"), dc_PurchaseGroup.AccountName)
-                DBCommon.SetProperty(DBReader("SurName"), dc_PurchaseGroup.SurName)
-                DBCommon.SetProperty(DBReader("GivenName"), dc_PurchaseGroup.GivenName)
-                DBCommon.SetProperty(DBReader("R3PurchasingGroup"), dc_PurchaseGroup.R3PurchasingGroup)
-                DBCommon.SetProperty(DBReader("PrivilegeLevel"), dc_PurchaseGroup.PrivilegeLevel)
-                DBCommon.SetProperty(DBReader("isAdmin"), dc_PurchaseGroup.isAdmin)
-                DBCommon.SetProperty(DBReader("isDisabled"), dc_PurchaseGroup.isDisabled)
-                DBCommon.SetProperty(DBReader("RFQCorrespondenceEditable"), dc_PurchaseGroup.RFQCorrespondenceEditable)
-                DBCommon.SetProperty(DBReader("MMSTAInvalidationEditable"), dc_PurchaseGroup.MMSTAInvalidationEditable)
-                DBCommon.SetProperty(DBReader("URL"), dc_PurchaseGroup.URL)
-                Me.Add(dc_PurchaseGroup)
-            End While
-            DBReader.Close()
+                    DBConn.Open()
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                        While DBReader.Read
+                            Dim dc_PurchaseGroup As PurchaseGroupDisp = New PurchaseGroupDisp
+                            DBCommon.SetProperty(DBReader("UserID"), dc_PurchaseGroup.UserID)
+                            DBCommon.SetProperty(DBReader("LocationName"), dc_PurchaseGroup.LocationName)
+                            DBCommon.SetProperty(DBReader("AccountName"), dc_PurchaseGroup.AccountName)
+                            DBCommon.SetProperty(DBReader("SurName"), dc_PurchaseGroup.SurName)
+                            DBCommon.SetProperty(DBReader("GivenName"), dc_PurchaseGroup.GivenName)
+                            DBCommon.SetProperty(DBReader("R3PurchasingGroup"), dc_PurchaseGroup.R3PurchasingGroup)
+                            DBCommon.SetProperty(DBReader("PrivilegeLevel"), dc_PurchaseGroup.PrivilegeLevel)
+                            DBCommon.SetProperty(DBReader("isAdmin"), dc_PurchaseGroup.isAdmin)
+                            DBCommon.SetProperty(DBReader("isDisabled"), dc_PurchaseGroup.isDisabled)
+                            DBCommon.SetProperty(DBReader("RFQCorrespondenceEditable"), dc_PurchaseGroup.RFQCorrespondenceEditable)
+                            DBCommon.SetProperty(DBReader("MMSTAInvalidationEditable"), dc_PurchaseGroup.MMSTAInvalidationEditable)
+                            DBCommon.SetProperty(DBReader("URL"), dc_PurchaseGroup.URL)
+                            Me.Add(dc_PurchaseGroup)
+                        End While
+                    End Using
+                End Using
+            End Using
         End Sub
 
     End Class

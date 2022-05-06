@@ -269,57 +269,54 @@ Namespace TCIDataAccess.Join
                     Value.AppendLine("ORDER BY SP.[SupplierCode] ASC")
             End Select
 
-            Dim DBConn As SqlConnection = New SqlConnection(DBCommon.DB_CONNECT_STRING)
-            Dim DBCommand As SqlCommand = DBConn.CreateCommand
-            DBCommand.CommandText = Value.ToString
-            DBCommand.Parameters.Clear()
+            Using DBConn As SqlConnection = New SqlConnection(DBCommon.DB_CONNECT_STRING)
+                Using DBCommand As SqlCommand = DBConn.CreateCommand
+                    DBCommand.CommandText = Value.ToString
+                    DBCommand.Parameters.Clear()
 
-            '絞り込み条件：ProductIDバインド変数設定
-            DBCommand.Parameters.AddWithValue("ProductID", i_ProductID.ToString)
+                    '絞り込み条件：ProductIDバインド変数設定
+                    DBCommand.Parameters.AddWithValue("ProductID", i_ProductID.ToString)
 
-            '絞り込み条件：Territory指定判定
-            'CheckboxListのチェックされた項目のみバインド変数に値を設定する
-            For Each TerritoryItem As ListItem In cbl_TerritoryList.Items
-                'CheckboxListチェックON判定
-                If TerritoryItem.Selected = True Then
-                    Dim TerritoryValue As String = TerritoryItem.Text
-                    TerritoryValue = TerritoryValue.Replace("-", "").Replace(" ", "")
-                    DBCommand.Parameters.AddWithValue(TerritoryValue, TerritoryItem.Text)
-                End If
-            Next
+                    '絞り込み条件：Territory指定判定
+                    'CheckboxListのチェックされた項目のみバインド変数に値を設定する
+                    For Each TerritoryItem As ListItem In cbl_TerritoryList.Items
+                        'CheckboxListチェックON判定
+                        If TerritoryItem.Selected = True Then
+                            Dim TerritoryValue As String = TerritoryItem.Text
+                            TerritoryValue = TerritoryValue.Replace("-", "").Replace(" ", "")
+                            DBCommand.Parameters.AddWithValue(TerritoryValue, TerritoryItem.Text)
+                        End If
+                    Next
 
-            '絞り込み条件：Update Date(From) バインド変数設定
-            If Not String.IsNullOrEmpty(st_UpdateDateFrom.ToString) Then
-                DBCommand.Parameters.AddWithValue("UpdateDateFrom", st_UpdateDateFrom.ToString)
-            End If
+                    '絞り込み条件：Update Date(From) バインド変数設定
+                    If Not String.IsNullOrEmpty(st_UpdateDateFrom.ToString) Then
+                        DBCommand.Parameters.AddWithValue("UpdateDateFrom", st_UpdateDateFrom.ToString)
+                    End If
 
-            '絞り込み条件：Update Date(To) バインド変数設定
-            If Not String.IsNullOrEmpty(st_UpdateDateTo.ToString) Then
-                DBCommand.Parameters.AddWithValue("UpdateDateTo", st_UpdateDateTo.ToString)
-            End If
+                    '絞り込み条件：Update Date(To) バインド変数設定
+                    If Not String.IsNullOrEmpty(st_UpdateDateTo.ToString) Then
+                        DBCommand.Parameters.AddWithValue("UpdateDateTo", st_UpdateDateTo.ToString)
+                    End If
 
-            DBConn.Open()
-            Dim DBReader As SqlDataReader = DBCommand.ExecuteReader
+                    DBConn.Open()
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader
+                        While DBReader.Read
+                            Dim dc_SupplierListByProduct As SupplierListByProductDisp = New SupplierListByProductDisp
+                            DBCommon.SetProperty(DBReader("SupplierCode"), dc_SupplierListByProduct.SupplierCode)
+                            DBCommon.SetProperty(DBReader("SupplierName"), dc_SupplierListByProduct.SupplierName)
+                            DBCommon.SetProperty(DBReader("Country"), dc_SupplierListByProduct.Country)
+                            DBCommon.SetProperty(DBReader("Territory"), dc_SupplierListByProduct.Territory)
+                            DBCommon.SetProperty(DBReader("SupplierItemNumber"), dc_SupplierListByProduct.SupplierItemNumber)
+                            DBCommon.SetProperty(DBReader("Note"), dc_SupplierListByProduct.Note)
+                            DBCommon.SetProperty(DBReader("UpdateDate"), dc_SupplierListByProduct.UpdateDate)
+                            DBCommon.SetProperty(DBReader("ValidQuotation"), dc_SupplierListByProduct.ValidQuotation)
+                            DBCommon.SetProperty(DBReader("Url"), dc_SupplierListByProduct.Url)
 
-            While DBReader.Read
-
-                Dim dc_SupplierListByProduct As SupplierListByProductDisp = New SupplierListByProductDisp
-                DBCommon.SetProperty(DBReader("SupplierCode"), dc_SupplierListByProduct.SupplierCode)
-                DBCommon.SetProperty(DBReader("SupplierName"), dc_SupplierListByProduct.SupplierName)
-                DBCommon.SetProperty(DBReader("Country"), dc_SupplierListByProduct.Country)
-                DBCommon.SetProperty(DBReader("Territory"), dc_SupplierListByProduct.Territory)
-                DBCommon.SetProperty(DBReader("SupplierItemNumber"), dc_SupplierListByProduct.SupplierItemNumber)
-                DBCommon.SetProperty(DBReader("Note"), dc_SupplierListByProduct.Note)
-                DBCommon.SetProperty(DBReader("UpdateDate"), dc_SupplierListByProduct.UpdateDate)
-                DBCommon.SetProperty(DBReader("ValidQuotation"), dc_SupplierListByProduct.ValidQuotation)
-                DBCommon.SetProperty(DBReader("Url"), dc_SupplierListByProduct.Url)
-
-                Me.Add(dc_SupplierListByProduct)
-
-            End While
-
-            DBReader.Close()
-
+                            Me.Add(dc_SupplierListByProduct)
+                        End While
+                    End Using
+                End Using
+            End Using
         End Sub
 
     End Class

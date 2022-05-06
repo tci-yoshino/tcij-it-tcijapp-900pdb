@@ -166,23 +166,18 @@ Namespace TCIDataAccess.Join
 
                     ' 実行
                     DBConn.Open()
-                    Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                        While DBReader.Read
+                            Dim dc_DspProductNameSearch As ProductSearchDisp = New ProductSearchDisp
 
-                    While DBReader.Read
+                            DBCommon.SetProperty(DBReader("ProductNumber"), dc_DspProductNameSearch.ProductNumber)
+                            DBCommon.SetProperty(DBReader("CASNumber"), dc_DspProductNameSearch.CASNumber)
+                            DBCommon.SetProperty(DBReader("Name"), dc_DspProductNameSearch.Name)
+                            DBCommon.SetProperty(DBReader("ProductID"), dc_DspProductNameSearch.ProductID)
 
-                        Dim dc_DspProductNameSearch As ProductSearchDisp = New ProductSearchDisp
-
-                        DBCommon.SetProperty(DBReader("ProductNumber"), dc_DspProductNameSearch.ProductNumber)
-                        DBCommon.SetProperty(DBReader("CASNumber"), dc_DspProductNameSearch.CASNumber)
-                        DBCommon.SetProperty(DBReader("Name"), dc_DspProductNameSearch.Name)
-                        DBCommon.SetProperty(DBReader("ProductID"), dc_DspProductNameSearch.ProductID)
-
-                        Me.Add(dc_DspProductNameSearch)
-
-                    End While
-
-                    DBConn.Close
-
+                            Me.Add(dc_DspProductNameSearch)
+                        End While
+                    End Using
                 End Using
             End Using
 
@@ -215,10 +210,8 @@ Namespace TCIDataAccess.Join
                     ' 実行
                     DBConn.Open()
                     Dim i_Count As Integer = Convert.ToInt32(DBCommand.ExecuteScalar())
-                    DBConn.Close
 
                     Return i_Count
-
                 End Using
             End Using
 

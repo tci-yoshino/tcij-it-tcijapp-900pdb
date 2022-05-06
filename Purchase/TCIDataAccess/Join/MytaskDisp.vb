@@ -341,39 +341,40 @@ Namespace TCIDataAccess.Join
             Value.AppendLine("OPTION (RECOMPILE)")
 
 
-            Dim DBConn As SqlConnection = New SqlConnection(DBCommon.DB_CONNECT_STRING)
-            Dim DBCommand As SqlCommand = DBConn.CreateCommand
-            DBCommand.CommandText = Value.ToString
-            DBCommand.Parameters.Clear()
-            DBCommand.Parameters.AddWithValue("UserID", userID)
+            Using DBConn As SqlConnection = New SqlConnection(DBCommon.DB_CONNECT_STRING)
+                Using DBCommand As SqlCommand = DBConn.CreateCommand
+                    DBCommand.CommandText = Value.ToString
+                    DBCommand.Parameters.Clear()
+                    DBCommand.Parameters.AddWithValue("UserID", userID)
 
-            DBConn.Open()
-            Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
-
-            While DBReader.Read
-                Dim dc_Date As MyTaskDisp = New MyTaskDisp
-                DBCommon.SetProperty(DBReader("RFQNumber"), dc_Date.RFQNumber)
-                DBCommon.SetProperty(DBReader("Priority"), dc_Date.Priority)
-                DBCommon.SetProperty(DBReader("CreateDate"), dc_Date.CreateDate)
-                DBCommon.SetProperty(DBReader("StatusChangeDate"), dc_Date.StatusChangeDate)
-                DBCommon.SetProperty(DBReader("Status"), dc_Date.Status)
-                DBCommon.SetProperty(DBReader("StatusCode"), dc_Date.StatusCode)
-                DBCommon.SetProperty(DBReader("ProductNumber"), dc_Date.ProductNumber)
-                DBCommon.SetProperty(DBReader("ProductName"), dc_Date.ProductName)
-                DBCommon.SetProperty(DBReader("Purpose"), dc_Date.Purpose)
-                DBCommon.SetProperty(DBReader("QuoUserName"), dc_Date.QuoUserName)
-                DBCommon.SetProperty(DBReader("QuoLocationName"), dc_Date.QuoLocationName)
-                DBCommon.SetProperty(DBReader("EnqUserName"), dc_Date.EnqUserName)
-                DBCommon.SetProperty(DBReader("EnqLocationName"), dc_Date.EnqLocationName)
-                DBCommon.SetProperty(DBReader("SupplierName"), dc_Date.SupplierName)
-                DBCommon.SetProperty(DBReader("RFQCorrespondence"), dc_Date.RFQCorrespondence)
-                DBCommon.SetProperty(DBReader("MakerName"), dc_Date.MakerName)
-                DBCommon.SetProperty(DBReader("isCONFIDENTIAL"), dc_Date.isCONFIDENTIAL)
-                DBCommon.SetProperty(DBReader("ProductID"), dc_Date.ProductID)
-                DBCommon.SetProperty(DBReader("SupplierCode"), dc_Date.SupplierCode)
-                Me.Add(dc_Date)
-            End While
-            DBReader.Close()
+                    DBConn.Open()
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                        While DBReader.Read
+                            Dim dc_Date As MyTaskDisp = New MyTaskDisp
+                            DBCommon.SetProperty(DBReader("RFQNumber"), dc_Date.RFQNumber)
+                            DBCommon.SetProperty(DBReader("Priority"), dc_Date.Priority)
+                            DBCommon.SetProperty(DBReader("CreateDate"), dc_Date.CreateDate)
+                            DBCommon.SetProperty(DBReader("StatusChangeDate"), dc_Date.StatusChangeDate)
+                            DBCommon.SetProperty(DBReader("Status"), dc_Date.Status)
+                            DBCommon.SetProperty(DBReader("StatusCode"), dc_Date.StatusCode)
+                            DBCommon.SetProperty(DBReader("ProductNumber"), dc_Date.ProductNumber)
+                            DBCommon.SetProperty(DBReader("ProductName"), dc_Date.ProductName)
+                            DBCommon.SetProperty(DBReader("Purpose"), dc_Date.Purpose)
+                            DBCommon.SetProperty(DBReader("QuoUserName"), dc_Date.QuoUserName)
+                            DBCommon.SetProperty(DBReader("QuoLocationName"), dc_Date.QuoLocationName)
+                            DBCommon.SetProperty(DBReader("EnqUserName"), dc_Date.EnqUserName)
+                            DBCommon.SetProperty(DBReader("EnqLocationName"), dc_Date.EnqLocationName)
+                            DBCommon.SetProperty(DBReader("SupplierName"), dc_Date.SupplierName)
+                            DBCommon.SetProperty(DBReader("RFQCorrespondence"), dc_Date.RFQCorrespondence)
+                            DBCommon.SetProperty(DBReader("MakerName"), dc_Date.MakerName)
+                            DBCommon.SetProperty(DBReader("isCONFIDENTIAL"), dc_Date.isCONFIDENTIAL)
+                            DBCommon.SetProperty(DBReader("ProductID"), dc_Date.ProductID)
+                            DBCommon.SetProperty(DBReader("SupplierCode"), dc_Date.SupplierCode)
+                            Me.Add(dc_Date)
+                        End While
+                    End Using
+                End Using
+            End Using
         End Sub
     End Class
 End Namespace

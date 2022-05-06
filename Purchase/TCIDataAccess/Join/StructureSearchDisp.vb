@@ -115,44 +115,44 @@ Namespace TCIDataAccess.Join
                 sbValue.AppendLine("  )")
             End If
 
-            Dim DBConn As SqlConnection = New SqlConnection(DBCommon.DB_CONNECT_STRING)
-            Dim DBCommand As SqlCommand = DBConn.CreateCommand
-            DBCommand.CommandText = sbValue.ToString
-            DBCommand.Parameters.Clear()
+            Using DBConn As SqlConnection = New SqlConnection(DBCommon.DB_CONNECT_STRING)
+                Using DBCommand As SqlCommand = DBConn.CreateCommand
+                    DBCommand.CommandText = sbValue.ToString
+                    DBCommand.Parameters.Clear()
 
-            '絞り込み条件：ProductIDバインド変数設定
-            DBCommand.Parameters.AddWithValue("RegistryNumber", st_RegistryNumber.ToString)
+                    '絞り込み条件：ProductIDバインド変数設定
+                    DBCommand.Parameters.AddWithValue("RegistryNumber", st_RegistryNumber.ToString)
 
-            DBConn.Open()
-            Using DBReader As SqlDataReader = DBCommand.ExecuteReader
+                    DBConn.Open()
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader
+                        bln_Result = False
+                        If DBReader.Read Then
+                            Dim _pStructure As Byte() = {}
+                            Dim _Similarity As String = String.Empty
+                            Dim _ProductNumber As String = String.Empty
+                            Dim _CASNumber As String = String.Empty
+                            Dim _ProductName As String = String.Empty
+                            Dim _ProductID As String = String.Empty
 
-                bln_Result = False
-                If DBReader.Read Then
-                    Dim _pStructure As Byte() = {}
-                    Dim _Similarity As String = String.Empty
-                    Dim _ProductNumber As String = String.Empty
-                    Dim _CASNumber As String = String.Empty
-                    Dim _ProductName As String = String.Empty
-                    Dim _ProductID As String = String.Empty
+                            Dim dc_StructureSearch As StructureSearchDisp = New StructureSearchDisp
+                            DBCommon.SetProperty(DBReader("ProductNumber"), _ProductNumber)
+                            DBCommon.SetProperty(DBReader("CASNumber"), _CASNumber)
+                            DBCommon.SetProperty(DBReader("ProductName"), _ProductName)
+                            DBCommon.SetProperty(DBReader("ProductID"), _ProductID)
 
-                    Dim dc_StructureSearch As StructureSearchDisp = New StructureSearchDisp
-                    DBCommon.SetProperty(DBReader("ProductNumber"), _ProductNumber)
-                    DBCommon.SetProperty(DBReader("CASNumber"), _CASNumber)
-                    DBCommon.SetProperty(DBReader("ProductName"), _ProductName)
-                    DBCommon.SetProperty(DBReader("ProductID"), _ProductID)
+                            dc_StructureSearch.pStructure = _pStructure
+                            dc_StructureSearch.Similarity = _Similarity
+                            dc_StructureSearch.ProductNumber = _ProductNumber
+                            dc_StructureSearch.CASNumber = _CASNumber
+                            dc_StructureSearch.ProductName = _ProductName
+                            dc_StructureSearch.ProductID = _ProductID
 
-                    dc_StructureSearch.pStructure = _pStructure
-                    dc_StructureSearch.Similarity = _Similarity
-                    dc_StructureSearch.ProductNumber = _ProductNumber
-                    dc_StructureSearch.CASNumber = _CASNumber
-                    dc_StructureSearch.ProductName = _ProductName
-                    dc_StructureSearch.ProductID = _ProductID
-
-                    Me.Add(dc_StructureSearch)
-                    bln_Result = True
-                End If
+                            Me.Add(dc_StructureSearch)
+                            bln_Result = True
+                        End If
+                    End Using
+                End Using
             End Using
-
         End Sub
 
     End Class

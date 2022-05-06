@@ -152,26 +152,21 @@ Namespace TCIDataAccess.Join
 
                     ' 実行
                     DBConn.Open()
-                    Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                        While DBReader.Read
+                            Dim dc_RFQListByProducttHeader As RFQListByProducttHeader = New RFQListByProducttHeader
 
-                    While DBReader.Read
+                            DBCommon.SetProperty(DBReader("ProductNumber"), dc_RFQListByProducttHeader.ProductNumber)
+                            DBCommon.SetProperty(DBReader("QuoName"), dc_RFQListByProducttHeader.QuoName)
+                            DBCommon.SetProperty(DBReader("Name"), dc_RFQListByProducttHeader.Name)
+                            DBCommon.SetProperty(DBReader("CASNumber"), dc_RFQListByProducttHeader.CASNumber)
+                            DBCommon.SetProperty(DBReader("MolecularFormula"), dc_RFQListByProducttHeader.MolecularFormula)
+                            DBCommon.SetProperty(DBReader("ProductWarning"), dc_RFQListByProducttHeader.ProductWarning)
+                            DBCommon.SetProperty(DBReader("BUoM"), dc_RFQListByProducttHeader.BUoM)
 
-                        Dim dc_RFQListByProducttHeader As RFQListByProducttHeader = New RFQListByProducttHeader
-
-                        DBCommon.SetProperty(DBReader("ProductNumber"), dc_RFQListByProducttHeader.ProductNumber)
-                        DBCommon.SetProperty(DBReader("QuoName"), dc_RFQListByProducttHeader.QuoName)
-                        DBCommon.SetProperty(DBReader("Name"), dc_RFQListByProducttHeader.Name)
-                        DBCommon.SetProperty(DBReader("CASNumber"), dc_RFQListByProducttHeader.CASNumber)
-                        DBCommon.SetProperty(DBReader("MolecularFormula"), dc_RFQListByProducttHeader.MolecularFormula)
-                        DBCommon.SetProperty(DBReader("ProductWarning"), dc_RFQListByProducttHeader.ProductWarning)
-                        DBCommon.SetProperty(DBReader("BUoM"), dc_RFQListByProducttHeader.BUoM)
-
-                        productHeader.Add(dc_RFQListByProducttHeader)
-
-                    End While
-
-                    DBConn.Close
-
+                            productHeader.Add(dc_RFQListByProducttHeader)
+                        End While
+                    End Using
                 End Using
             End Using
 
@@ -241,50 +236,45 @@ Namespace TCIDataAccess.Join
 
                     ' 実行
                     DBConn.Open()
-                    Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                        While DBReader.Read
+                            Dim dc_RFQListHeader As RFQListByProductRFQListHeader = New RFQListByProductRFQListHeader
 
-                    While DBReader.Read
+                            DBCommon.SetProperty(DBReader("StatusChangeDate"), dc_RFQListHeader.StatusChangeDate)
+                            DBCommon.SetProperty(DBReader("Status"), dc_RFQListHeader.Status)
+                            DBCommon.SetProperty(DBReader("RFQNumber"), dc_RFQListHeader.RFQNumber)
+                            DBCommon.SetProperty(DBReader("Priority"), dc_RFQListHeader.Priority)
+                            DBCommon.SetProperty(DBReader("QuotedDate"), dc_RFQListHeader.QuotedDate)
+                            DBCommon.SetProperty(DBReader("ProductNumber"), dc_RFQListHeader.ProductNumber)
+                            DBCommon.SetProperty(DBReader("CodeExtension"), dc_RFQListHeader.CodeExtension)
+                            DBCommon.SetProperty(DBReader("ProductName"), dc_RFQListHeader.ProductName)
+                            DBCommon.SetProperty(DBReader("SupplierCode"), dc_RFQListHeader.SupplierCode)
+                            DBCommon.SetProperty(DBReader("SupplierName"), dc_RFQListHeader.SupplierName)
+                            DBCommon.SetProperty(DBReader("SupplierInfo"), dc_RFQListHeader.SupplierInfo)
+                            DBCommon.SetProperty(DBReader("MakerCountryCode"), dc_RFQListHeader.MakerCountryCode)
+                            DBCommon.SetProperty(DBReader("MakerCountryName"), dc_RFQListHeader.MakerCountryName)
+                            DBCommon.SetProperty(DBReader("Purpose"), dc_RFQListHeader.Purpose)
+                            DBCommon.SetProperty(DBReader("MakerName"), dc_RFQListHeader.MakerName)
+                            DBCommon.SetProperty(DBReader("MakerInfo"), dc_RFQListHeader.MakerInfo)
+                            DBCommon.SetProperty(DBReader("SupplierCountryCode"), dc_RFQListHeader.SupplierCountryCode)
+                            DBCommon.SetProperty(DBReader("SupplierCountryName"), dc_RFQListHeader.SupplierCountryName)
+                            DBCommon.SetProperty(DBReader("SupplierItemName"), dc_RFQListHeader.SupplierItemName)
+                            DBCommon.SetProperty(DBReader("ShippingHandlingCurrencyCode"), dc_RFQListHeader.ShippingHandlingCurrencyCode)
+                            DBCommon.SetProperty(DBReader("ShippingHandlingFee"), dc_RFQListHeader.ShippingHandlingFee)
+                            DBCommon.SetProperty(DBReader("EnqUserName"), dc_RFQListHeader.EnqUserName)
+                            DBCommon.SetProperty(DBReader("EnqLocationName"), dc_RFQListHeader.EnqLocationName)
+                            DBCommon.SetProperty(DBReader("QuoUserName"), dc_RFQListHeader.QuoUserName)
+                            DBCommon.SetProperty(DBReader("QuoLocationName"), dc_RFQListHeader.QuoLocationName)
+                            DBCommon.SetProperty(DBReader("Comment"), dc_RFQListHeader.Comment)
+                            DBCommon.SetProperty(DBReader("isCONFIDENTIAL"), dc_RFQListHeader.isCONFIDENTIAL)
 
-                        Dim dc_RFQListHeader As RFQListByProductRFQListHeader = New RFQListByProductRFQListHeader
+                            Me.RFQNumber = dc_RFQListHeader.RFQNumber
+                            GetRFQLine()
+                            dc_RFQListHeader.RFQLineList = Me.RFQLine
 
-                        DBCommon.SetProperty(DBReader("StatusChangeDate"), dc_RFQListHeader.StatusChangeDate)
-                        DBCommon.SetProperty(DBReader("Status"), dc_RFQListHeader.Status)
-                        DBCommon.SetProperty(DBReader("RFQNumber"), dc_RFQListHeader.RFQNumber)
-                        DBCommon.SetProperty(DBReader("Priority"), dc_RFQListHeader.Priority)
-                        DBCommon.SetProperty(DBReader("QuotedDate"), dc_RFQListHeader.QuotedDate)
-                        DBCommon.SetProperty(DBReader("ProductNumber"), dc_RFQListHeader.ProductNumber)
-                        DBCommon.SetProperty(DBReader("CodeExtension"), dc_RFQListHeader.CodeExtension)
-                        DBCommon.SetProperty(DBReader("ProductName"), dc_RFQListHeader.ProductName)
-                        DBCommon.SetProperty(DBReader("SupplierCode"), dc_RFQListHeader.SupplierCode)
-                        DBCommon.SetProperty(DBReader("SupplierName"), dc_RFQListHeader.SupplierName)
-                        DBCommon.SetProperty(DBReader("SupplierInfo"), dc_RFQListHeader.SupplierInfo)
-                        DBCommon.SetProperty(DBReader("MakerCountryCode"), dc_RFQListHeader.MakerCountryCode)
-                        DBCommon.SetProperty(DBReader("MakerCountryName"), dc_RFQListHeader.MakerCountryName)
-                        DBCommon.SetProperty(DBReader("Purpose"), dc_RFQListHeader.Purpose)
-                        DBCommon.SetProperty(DBReader("MakerName"), dc_RFQListHeader.MakerName)
-                        DBCommon.SetProperty(DBReader("MakerInfo"), dc_RFQListHeader.MakerInfo)
-                        DBCommon.SetProperty(DBReader("SupplierCountryCode"), dc_RFQListHeader.SupplierCountryCode)
-                        DBCommon.SetProperty(DBReader("SupplierCountryName"), dc_RFQListHeader.SupplierCountryName)
-                        DBCommon.SetProperty(DBReader("SupplierItemName"), dc_RFQListHeader.SupplierItemName)
-                        DBCommon.SetProperty(DBReader("ShippingHandlingCurrencyCode"), dc_RFQListHeader.ShippingHandlingCurrencyCode)
-                        DBCommon.SetProperty(DBReader("ShippingHandlingFee"), dc_RFQListHeader.ShippingHandlingFee)
-                        DBCommon.SetProperty(DBReader("EnqUserName"), dc_RFQListHeader.EnqUserName)
-                        DBCommon.SetProperty(DBReader("EnqLocationName"), dc_RFQListHeader.EnqLocationName)
-                        DBCommon.SetProperty(DBReader("QuoUserName"), dc_RFQListHeader.QuoUserName)
-                        DBCommon.SetProperty(DBReader("QuoLocationName"), dc_RFQListHeader.QuoLocationName)
-                        DBCommon.SetProperty(DBReader("Comment"), dc_RFQListHeader.Comment)
-                        DBCommon.SetProperty(DBReader("isCONFIDENTIAL"), dc_RFQListHeader.isCONFIDENTIAL)
-
-                        me.RFQNumber = dc_RFQListHeader.RFQNumber
-                        GetRFQLine()
-                        dc_RFQListHeader.RFQLineList = me.RFQLine
-
-                        Me.RFQListHeader.Add(dc_RFQListHeader)
-
-                    End While
-
-                    DBConn.Close
-
+                            Me.RFQListHeader.Add(dc_RFQListHeader)
+                        End While
+                    End Using
                 End Using
             End Using
 
@@ -410,37 +400,32 @@ Namespace TCIDataAccess.Join
 
                     ' 実行
                     DBConn.Open()
-                    Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                        While DBReader.Read
+                            Dim dc_RFQListByProductRFQList As RFQListByProductRFQLine = New RFQListByProductRFQLine
 
-                    While DBReader.Read
+                            DBCommon.SetProperty(DBReader("RFQNumber"), dc_RFQListByProductRFQList.RFQNumber)
+                            DBCommon.SetProperty(DBReader("RFQLineNumber"), dc_RFQListByProductRFQList.RFQLineNumber)
+                            DBCommon.SetProperty(DBReader("EnqQuantity"), dc_RFQListByProductRFQList.EnqQuantity)
+                            DBCommon.SetProperty(DBReader("EnqUnitCode"), dc_RFQListByProductRFQList.EnqUnitCode)
+                            DBCommon.SetProperty(DBReader("EnqPiece"), dc_RFQListByProductRFQList.EnqPiece)
+                            DBCommon.SetProperty(DBReader("CurrencyCode"), dc_RFQListByProductRFQList.CurrencyCode)
+                            DBCommon.SetProperty(DBReader("UnitPrice"), dc_RFQListByProductRFQList.UnitPrice)
+                            DBCommon.SetProperty(DBReader("QuoPer"), dc_RFQListByProductRFQList.QuoPer)
+                            DBCommon.SetProperty(DBReader("QuoUnitCode"), dc_RFQListByProductRFQList.QuoUnitCode)
+                            DBCommon.SetProperty(DBReader("LeadTime"), dc_RFQListByProductRFQList.LeadTime)
+                            DBCommon.SetProperty(DBReader("Packing"), dc_RFQListByProductRFQList.Packing)
+                            DBCommon.SetProperty(DBReader("Purity"), dc_RFQListByProductRFQList.Purity)
+                            DBCommon.SetProperty(DBReader("QMMethod"), dc_RFQListByProductRFQList.QMMethod)
+                            DBCommon.SetProperty(DBReader("SupplierOfferNo"), dc_RFQListByProductRFQList.SupplierOfferNo)
+                            DBCommon.SetProperty(DBReader("SupplierItemNumber"), dc_RFQListByProductRFQList.SupplierItemNumber)
+                            DBCommon.SetProperty(DBReader("NoOfferReason"), dc_RFQListByProductRFQList.NoOfferReason)
+                            DBCommon.SetProperty(DBReader("PO"), dc_RFQListByProductRFQList.PO)
+                            DBCommon.SetProperty(DBReader("Priority"), dc_RFQListByProductRFQList.Priority)
 
-                        Dim dc_RFQListByProductRFQList As RFQListByProductRFQLine = New RFQListByProductRFQLine
-
-                        DBCommon.SetProperty(DBReader("RFQNumber"), dc_RFQListByProductRFQList.RFQNumber)
-                        DBCommon.SetProperty(DBReader("RFQLineNumber"), dc_RFQListByProductRFQList.RFQLineNumber)
-                        DBCommon.SetProperty(DBReader("EnqQuantity"), dc_RFQListByProductRFQList.EnqQuantity)
-                        DBCommon.SetProperty(DBReader("EnqUnitCode"), dc_RFQListByProductRFQList.EnqUnitCode)
-                        DBCommon.SetProperty(DBReader("EnqPiece"), dc_RFQListByProductRFQList.EnqPiece)
-                        DBCommon.SetProperty(DBReader("CurrencyCode"), dc_RFQListByProductRFQList.CurrencyCode)
-                        DBCommon.SetProperty(DBReader("UnitPrice"), dc_RFQListByProductRFQList.UnitPrice)
-                        DBCommon.SetProperty(DBReader("QuoPer"), dc_RFQListByProductRFQList.QuoPer)
-                        DBCommon.SetProperty(DBReader("QuoUnitCode"), dc_RFQListByProductRFQList.QuoUnitCode)
-                        DBCommon.SetProperty(DBReader("LeadTime"), dc_RFQListByProductRFQList.LeadTime)
-                        DBCommon.SetProperty(DBReader("Packing"), dc_RFQListByProductRFQList.Packing)
-                        DBCommon.SetProperty(DBReader("Purity"), dc_RFQListByProductRFQList.Purity)
-                        DBCommon.SetProperty(DBReader("QMMethod"), dc_RFQListByProductRFQList.QMMethod)
-                        DBCommon.SetProperty(DBReader("SupplierOfferNo"), dc_RFQListByProductRFQList.SupplierOfferNo)
-                        DBCommon.SetProperty(DBReader("SupplierItemNumber"), dc_RFQListByProductRFQList.SupplierItemNumber)
-                        DBCommon.SetProperty(DBReader("NoOfferReason"), dc_RFQListByProductRFQList.NoOfferReason)
-                        DBCommon.SetProperty(DBReader("PO"), dc_RFQListByProductRFQList.PO)
-                        DBCommon.SetProperty(DBReader("Priority"), dc_RFQListByProductRFQList.Priority)
-
-                        Me.RFQLine.Add(dc_RFQListByProductRFQList)
-
-                    End While
-
-                    DBConn.Close
-
+                            Me.RFQLine.Add(dc_RFQListByProductRFQList)
+                        End While
+                    End Using
                 End Using
             End Using
 

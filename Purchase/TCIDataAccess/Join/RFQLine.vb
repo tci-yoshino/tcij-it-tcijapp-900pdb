@@ -363,32 +363,32 @@ Namespace TCIDataAccess.Join
                     DBCommand.CommandText = Value.ToString()
                     DBCommand.Parameters.AddWithValue("RFQNumber", RFQLineNumber)
                     DBConn.Open()
-                    Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
-                    While DBReader.Read()
-                        Dim dc_Data As New RFQLine
-                        SetProperty(DBReader("RFQNumber"), dc_Data.RFQNumber)
-                        SetProperty(DBReader("RFQLineNumber"), dc_Data.RFQLineNumber)
-                        SetProperty(DBReader("EnqQuantity"), dc_Data.EnqQuantity)
-                        SetProperty(DBReader("EnqUnitCode"), dc_Data.EnqUnitCode)
-                        SetProperty(DBReader("EnqPiece"), dc_Data.EnqPiece)
-                        SetProperty(DBReader("CurrencyCode"), dc_Data.CurrencyCode)
-                        SetProperty(DBReader("UnitPrice"), dc_Data.UnitPrice)
-                        SetProperty(DBReader("QuoPer"), dc_Data.QuoPer)
-                        SetProperty(DBReader("QuoUnitCode"), dc_Data.QuoUnitCode)
-                        SetProperty(DBReader("LeadTime"), dc_Data.LeadTime)
-                        SetProperty(DBReader("Packing"), dc_Data.Packing)
-                        SetProperty(DBReader("Purity"), dc_Data.Purity)
-                        SetProperty(DBReader("QMMethod"), dc_Data.QMMethod)
-                        SetProperty(DBReader("SupplierOfferNo"), dc_Data.SupplierOfferNo)
-                        SetProperty(DBReader("SupplierItemNumber"), dc_Data.SupplierItemNumber)
-                        SetProperty(DBReader("NoOfferReason"), dc_Data.NoOfferReason)
-                        SetProperty(DBReader("PO"), dc_Data.PO)
-                        SetProperty(DBReader("Priority"), dc_Data.Priority)
-                        SetProperty(DBReader("OutputStatusInterface"), dc_Data.OutputStatusInterface)
-                        
-                        Me.Add(dc_Data)
-                    End While
-                    DBReader.Close()
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                        While DBReader.Read()
+                            Dim dc_Data As New RFQLine
+                            SetProperty(DBReader("RFQNumber"), dc_Data.RFQNumber)
+                            SetProperty(DBReader("RFQLineNumber"), dc_Data.RFQLineNumber)
+                            SetProperty(DBReader("EnqQuantity"), dc_Data.EnqQuantity)
+                            SetProperty(DBReader("EnqUnitCode"), dc_Data.EnqUnitCode)
+                            SetProperty(DBReader("EnqPiece"), dc_Data.EnqPiece)
+                            SetProperty(DBReader("CurrencyCode"), dc_Data.CurrencyCode)
+                            SetProperty(DBReader("UnitPrice"), dc_Data.UnitPrice)
+                            SetProperty(DBReader("QuoPer"), dc_Data.QuoPer)
+                            SetProperty(DBReader("QuoUnitCode"), dc_Data.QuoUnitCode)
+                            SetProperty(DBReader("LeadTime"), dc_Data.LeadTime)
+                            SetProperty(DBReader("Packing"), dc_Data.Packing)
+                            SetProperty(DBReader("Purity"), dc_Data.Purity)
+                            SetProperty(DBReader("QMMethod"), dc_Data.QMMethod)
+                            SetProperty(DBReader("SupplierOfferNo"), dc_Data.SupplierOfferNo)
+                            SetProperty(DBReader("SupplierItemNumber"), dc_Data.SupplierItemNumber)
+                            SetProperty(DBReader("NoOfferReason"), dc_Data.NoOfferReason)
+                            SetProperty(DBReader("PO"), dc_Data.PO)
+                            SetProperty(DBReader("Priority"), dc_Data.Priority)
+                            SetProperty(DBReader("OutputStatusInterface"), dc_Data.OutputStatusInterface)
+
+                            Me.Add(dc_Data)
+                        End While
+                    End Using
                 End Using
             End Using
 

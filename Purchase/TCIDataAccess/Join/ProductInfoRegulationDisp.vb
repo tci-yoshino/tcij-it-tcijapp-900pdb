@@ -124,42 +124,43 @@ Namespace TCIDataAccess.Join
             Value.AppendLine("    CASE WHEN EH.LocationCode = @GL THEN 0 ELSE 1 END,")
             Value.AppendLine("    BS.SortOrder,")
             Value.AppendLine("    EH.SortOrder")
-            Dim DBConn As SqlConnection = New SqlConnection(DBCommon.DB_CONNECT_STRING)
-            Dim DBCommand As SqlCommand = DBConn.CreateCommand
-            DBCommand.CommandText = Value.ToString
-            DBCommand.Parameters.Clear()
-            DBCommand.Parameters.AddWithValue("UserID", userID)
-            DBCommand.Parameters.AddWithValue("LocationCode", locationCode)
 
+            Using DBConn As SqlConnection = New SqlConnection(DBCommon.DB_CONNECT_STRING)
+                Using DBCommand As SqlCommand = DBConn.CreateCommand
 
-            DBCommand.Parameters.AddWithValue("GL", Common.LOCATION_CODE_GL)
-            DBConn.Open()
-            Dim DBReader As SqlDataReader = DBCommand.ExecuteReader
+                    DBCommand.CommandText = Value.ToString
+                    DBCommand.Parameters.Clear()
+                    DBCommand.Parameters.AddWithValue("UserID", userID)
+                    DBCommand.Parameters.AddWithValue("LocationCode", locationCode)
 
-            While DBReader.Read
-                Dim _LocationName As String = String.Empty
-                Dim _LocationCode As String = String.Empty
-                Dim _Item As String = String.Empty
-                Dim _Text As String = String.Empty
-                Dim _isOutputTransferOrder As Integer = 0
-                Dim _isOutputPriceRevision As Integer = 0
-                Dim _userID As Integer = 0
-                Dim dc_ProductInfoRegulationList As ProductInfoRegulationDisp = New ProductInfoRegulationDisp
-                DBCommon.SetProperty(DBReader("LocationName"), _LocationName)
-                DBCommon.SetProperty(DBReader("LocationCode"), _LocationCode)
-                DBCommon.SetProperty(DBReader("Item"), _Item)
-                DBCommon.SetProperty(DBReader("Text"), _Text)
-                DBCommon.SetProperty(DBReader("UserID"), _userID)
-                dc_ProductInfoRegulationList.LocationName = _LocationName
-                dc_ProductInfoRegulationList.LocationCode = _LocationCode
-                dc_ProductInfoRegulationList.Item = _Item
-                dc_ProductInfoRegulationList.Text = _Text
-                dc_ProductInfoRegulationList.UserID = _userID
-                Me.Add(dc_ProductInfoRegulationList)
+                    DBCommand.Parameters.AddWithValue("GL", Common.LOCATION_CODE_GL)
+                    DBConn.Open()
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader
+                        While DBReader.Read
+                            Dim _LocationName As String = String.Empty
+                            Dim _LocationCode As String = String.Empty
+                            Dim _Item As String = String.Empty
+                            Dim _Text As String = String.Empty
+                            Dim _isOutputTransferOrder As Integer = 0
+                            Dim _isOutputPriceRevision As Integer = 0
+                            Dim _userID As Integer = 0
+                            Dim dc_ProductInfoRegulationList As ProductInfoRegulationDisp = New ProductInfoRegulationDisp
+                            DBCommon.SetProperty(DBReader("LocationName"), _LocationName)
+                            DBCommon.SetProperty(DBReader("LocationCode"), _LocationCode)
+                            DBCommon.SetProperty(DBReader("Item"), _Item)
+                            DBCommon.SetProperty(DBReader("Text"), _Text)
+                            DBCommon.SetProperty(DBReader("UserID"), _userID)
+                            dc_ProductInfoRegulationList.LocationName = _LocationName
+                            dc_ProductInfoRegulationList.LocationCode = _LocationCode
+                            dc_ProductInfoRegulationList.Item = _Item
+                            dc_ProductInfoRegulationList.Text = _Text
+                            dc_ProductInfoRegulationList.UserID = _userID
+                            Me.Add(dc_ProductInfoRegulationList)
+                        End While
+                    End Using
+                End Using
+            End Using
 
-            End While
-
-            DBReader.Close()
         End Sub
 
 

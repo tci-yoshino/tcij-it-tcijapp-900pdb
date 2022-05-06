@@ -14,32 +14,33 @@ Namespace TCIDataAccess
         ''' <param name="updateList"></param>
         Public Shared Sub Save(ByVal registerList As EhsHeader_PersonalizeList, ByVal deleteList As EhsHeader_PersonalizeList, ByVal updateList As s_EhsHeaderList)
             Dim sb_SQL As StringBuilder = New StringBuilder
-            Dim DBConn As SqlConnection = New SqlConnection(DBCommon.DB_CONNECT_STRING)
-            DBConn.Open()
-            Dim DBTran As SqlTransaction = DBConn.BeginTransaction
-            Try
-                Dim DBCommand As SqlCommand = DBConn.CreateCommand
-                DBCommand.Transaction = DBTran
-                'EhsHeader_PersonalizeをDBに登録する(ON/OFFチェックボックスでチェックしたデータ)
-                For Each item As EhsHeader_Personalize In registerList
-                    item.Save(DBCommand)
-                Next
-                'EhsHeader_PersonalizeをDBに削除する(ON/OFFチェックボックスでチェックを外したデータ)
-                For Each item As EhsHeader_Personalize In deleteList
-                    item.Delete(DBCommand)
-                Next
+            Using DBConn As SqlConnection = New SqlConnection(DBCommon.DB_CONNECT_STRING)
+                DBConn.Open()
+                Using DBTran As SqlTransaction = DBConn.BeginTransaction
+                    Try
+                        Using DBCommand As SqlCommand = DBConn.CreateCommand
+                            DBCommand.Transaction = DBTran
+                            'EhsHeader_PersonalizeをDBに登録する(ON/OFFチェックボックスでチェックしたデータ)
+                            For Each item As EhsHeader_Personalize In registerList
+                                item.Save(DBCommand)
+                            Next
+                            'EhsHeader_PersonalizeをDBに削除する(ON/OFFチェックボックスでチェックを外したデータ)
+                            For Each item As EhsHeader_Personalize In deleteList
+                                item.Delete(DBCommand)
+                            Next
 
-                DBTran.Commit()
-            Catch ex As Exception
-                DBTran.Rollback()
-                Throw
-            Finally
-                If (Not (DBTran) Is Nothing) Then
-                    DBTran.Dispose()
-                End If
-
-            End Try
-
+                            DBTran.Commit()
+                        End Using
+                    Catch ex As Exception
+                        DBTran.Rollback()
+                        Throw
+                    Finally
+                        If (Not (DBTran) Is Nothing) Then
+                            DBTran.Dispose()
+                        End If
+                    End Try
+                End Using
+            End Using
         End Sub
     End Class
 End Namespace

@@ -96,30 +96,30 @@ Namespace TCIDataAccess.Join
             Value.AppendLine("    END,")
             Value.AppendLine("    [LocationCode], ")
             Value.AppendLine("    [SortOrder]")
-            Dim DBConn As SqlConnection = New SqlConnection(DBCommon.DB_CONNECT_STRING)
-            Dim DBCommand As SqlCommand = DBConn.CreateCommand
-            DBCommand.CommandText = Value.ToString
-            DBCommand.Parameters.AddWithValue("userID", userID)
-            DBCommand.Parameters.AddWithValue("gl", Common.LOCATION_CODE_GL)
-            DBCommand.Parameters.AddWithValue("jp", Common.LOCATION_CODE_JP)
-            DBCommand.Parameters.AddWithValue("us", Common.LOCATION_CODE_US)
-            DBCommand.Parameters.AddWithValue("eu", Common.LOCATION_CODE_EU)
-            DBCommand.Parameters.AddWithValue("cn", Common.LOCATION_CODE_CN)
-            DBCommand.Parameters.AddWithValue("in", Common.LOCATION_CODE_IN)
-            DBCommand.Parameters.AddWithValue("locationCode", locationCode)
-            DBConn.Open()
-            Dim DBReader As SqlDataReader = DBCommand.ExecuteReader
+            Using DBConn As SqlConnection = New SqlConnection(DBCommon.DB_CONNECT_STRING)
+                Using DBCommand As SqlCommand = DBConn.CreateCommand
+                    DBCommand.CommandText = Value.ToString
+                    DBCommand.Parameters.AddWithValue("userID", userID)
+                    DBCommand.Parameters.AddWithValue("gl", Common.LOCATION_CODE_GL)
+                    DBCommand.Parameters.AddWithValue("jp", Common.LOCATION_CODE_JP)
+                    DBCommand.Parameters.AddWithValue("us", Common.LOCATION_CODE_US)
+                    DBCommand.Parameters.AddWithValue("eu", Common.LOCATION_CODE_EU)
+                    DBCommand.Parameters.AddWithValue("cn", Common.LOCATION_CODE_CN)
+                    DBCommand.Parameters.AddWithValue("in", Common.LOCATION_CODE_IN)
+                    DBCommand.Parameters.AddWithValue("locationCode", locationCode)
+                    DBConn.Open()
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader
+                        While DBReader.Read
+                            Dim _Item As String = String.Empty
+                            Dim ehsHeader_Personalize_Sort As EhsHeader_Personalize_Sort = New EhsHeader_Personalize_Sort
+                            DBCommon.SetProperty(DBReader("Item"), _Item)
+                            ehsHeader_Personalize_Sort.Item = _Item
+                            Me.Add(ehsHeader_Personalize_Sort)
 
-            While DBReader.Read
-                Dim _Item As String = String.Empty
-                Dim ehsHeader_Personalize_Sort As EhsHeader_Personalize_Sort = New EhsHeader_Personalize_Sort
-                DBCommon.SetProperty(DBReader("Item"), _Item)
-                ehsHeader_Personalize_Sort.Item = _Item
-                Me.Add(ehsHeader_Personalize_Sort)
-
-            End While
-
-            DBReader.Close()
+                        End While
+                    End Using
+                End Using
+            End Using
         End Sub
     End Class
 End Namespace

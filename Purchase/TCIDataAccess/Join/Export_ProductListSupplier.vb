@@ -203,19 +203,19 @@ Namespace TCIDataAccess.Join
                     DBCommand.CommandText = strSql.ToString
 
                     DBConn.Open()
-                    Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
-                    While DBReader.Read()
-                        Dim dc_Data As New Export_ProductListBySupplier
-                        SetProperty(DBReader("ProductNumber"), dc_Data.ProductNumber)
-                        SetProperty(DBReader("ProductName"), dc_Data.ProductName)
-                        SetProperty(DBReader("SupplierItemNumber"), dc_Data.SupplierItemNumber)
-                        SetProperty(DBReader("Note"), dc_Data.Note)
-                        SetProperty(DBReader("UpdateDate"), dc_Data.UpdateDate)
-                        SetProperty(DBReader("ValidQuotation"), dc_Data.ValidQuotation)
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                        While DBReader.Read()
+                            Dim dc_Data As New Export_ProductListBySupplier
+                            SetProperty(DBReader("ProductNumber"), dc_Data.ProductNumber)
+                            SetProperty(DBReader("ProductName"), dc_Data.ProductName)
+                            SetProperty(DBReader("SupplierItemNumber"), dc_Data.SupplierItemNumber)
+                            SetProperty(DBReader("Note"), dc_Data.Note)
+                            SetProperty(DBReader("UpdateDate"), dc_Data.UpdateDate)
+                            SetProperty(DBReader("ValidQuotation"), dc_Data.ValidQuotation)
 
-                        Me.Add(dc_Data)
-                    End While
-                    DBReader.Close()
+                            Me.Add(dc_Data)
+                        End While
+                    End Using
                 End Using
             End Using
 

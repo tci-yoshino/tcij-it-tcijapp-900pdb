@@ -66,7 +66,7 @@ Namespace TCIDataAccess.Join
         Public Sub New()
 
         End Sub
-         ''' <summary>
+        ''' <summary>
         ''' データベースからデータを読み込む。
         ''' </summary>
         Public Sub Load()
@@ -89,17 +89,16 @@ Namespace TCIDataAccess.Join
                 Using DBCommand As SqlCommand = DBConn.CreateCommand()
                     DBCommand.CommandText = Value.ToString()
                     DBConn.Open()
-                    Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
-                    While DBReader.Read()
-                        Dim dc_Data As New v_Country
-                        SetProperty(DBReader("CountryCode"), dc_Data.CountryCode)
-                        SetProperty(DBReader("CountryName"), dc_Data.CountryName)
-                        Me.Add(dc_Data)
-                    End While
-                    DBReader.Close()
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                        While DBReader.Read()
+                            Dim dc_Data As New v_Country
+                            SetProperty(DBReader("CountryCode"), dc_Data.CountryCode)
+                            SetProperty(DBReader("CountryName"), dc_Data.CountryName)
+                            Me.Add(dc_Data)
+                        End While
+                    End Using
                 End Using
             End Using
-
         End Sub
         ''' <summary>
         ''' v_Countryドロップダウンリスト設定
