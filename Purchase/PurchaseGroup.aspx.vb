@@ -33,31 +33,14 @@ Partial Public Class PurchaseGroup
 
     Dim str_ExcelLine As ExcelLineType
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        Dim purchaseGroupDisp As TCIDataAccess.Join.PurchaseGroupList = New TCIDataAccess.Join.PurchaseGroupList
+
+        dim st_LocationCode As String = Session("LocationCode").ToString
+
         If IsPostBack = False Then
-            Dim st_SQL As String = String.Empty
-            st_SQL &= "SELECT "
-            st_SQL &= " UserID, "
-            st_SQL &= " LocationName, "
-            st_SQL &= " AccountName, "
-            st_SQL &= " SurName, "
-            st_SQL &= " GivenName, "
-            st_SQL &= " R3PurchasingGroup, "
-            st_SQL &= " PrivilegeLevel, "
-            st_SQL &= " isAdmin, "
-            st_SQL &= " isDisabled, "
-            st_SQL &= " CASE RFQCorrespondenceEditable WHEN 1 THEN 'Y' "
-            st_SQL &= " ELSE '' END AS RFQCorrespondenceEditable, "
-            st_SQL &= " CASE MMSTAInvalidationEditable WHEN 1 THEN 'Y' "
-            st_SQL &= " ELSE '' END AS MMSTAInvalidationEditable, "
-            st_SQL &= " 'PurchaseGroupSetting.aspx?Action=Edit&UserID=' + Cast(UserID AS varchar) AS URL "
-            st_SQL &= "FROM "
-            st_SQL &= " v_UserAll where isDisabled=0 and LocationCode='" + Common.SafeSqlLiteral(Session("LocationCode").ToString) + "'"
-            st_SQL &= "ORDER BY "
-            st_SQL &= " LocationName, "
-            st_SQL &= " isDisabled, "
-            st_SQL &= " SurName, "
-            st_SQL &= " GivenName"
-            SrcUser.SelectCommand = st_SQL
+            purchaseGroupDisp.Load(st_LocationCode)
+            UserList.DataSource = purchaseGroupDisp
+            UserList.DataBind
         End If
     End Sub
     Public Function GetStorageLocations(ByVal userid As String) As String

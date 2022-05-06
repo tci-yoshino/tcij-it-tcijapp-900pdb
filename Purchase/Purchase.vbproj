@@ -584,6 +584,7 @@
     <Compile Include="TCIDataAccess\Join\ProductInfoRegulationDisp.vb" />
     <Compile Include="TCIDataAccess\Join\ProductSearchByKeywordDisp.vb" />
     <Compile Include="TCIDataAccess\Join\ProductSearchDisp.vb" />
+    <Compile Include="TCIDataAccess\Join\PurchaseGroupDisp.vb" />
     <Compile Include="TCIDataAccess\Join\RFQHeader.vb" />
     <Compile Include="TCIDataAccess\Join\MyTaskDisp.vb" />
     <Compile Include="TCIDataAccess\Join\ProductListBySupplierDisp.vb" />

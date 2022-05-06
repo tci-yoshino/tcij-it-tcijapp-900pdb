@@ -1,4 +1,8 @@
-﻿Namespace TCIDataAccess.Join
+﻿Option Explicit On
+Option Strict On
+Option Infer Off
+
+Namespace TCIDataAccess.Join
     ''' <summary> 
     ''' ProductSearchDisp データクラス 
     ''' </summary> 

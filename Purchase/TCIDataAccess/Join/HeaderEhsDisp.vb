@@ -1,4 +1,8 @@
-﻿Imports System.Data.SqlClient
+﻿Option Explicit On
+Option Strict On
+Option Infer Off
+
+Imports System.Data.SqlClient
 
 Namespace TCIDataAccess.Join
 
@@ -98,7 +102,7 @@ Namespace TCIDataAccess.Join
             Using DBConn As New SqlConnection(Common.DB_CONNECT_STRING)
                 Using DBCommand As SqlCommand = DBConn.CreateCommand()
                     DBCommand.Parameters.Clear()
-                    If Not String.IsNullOrEmpty(Me.UserID) Then
+                    If Me.UserID <> 0 Then
                         DBCommand.Parameters.AddWithValue("userID", Me.UserID)
                     End If
 
@@ -174,10 +178,10 @@ Namespace TCIDataAccess.Join
                     DBCommand.Parameters.AddWithValue("eu", Common.LOCATION_EU)
                     DBCommand.Parameters.AddWithValue("cn", Common.LOCATION_CN)
                     DBCommand.Parameters.AddWithValue("in", Common.LOCATION_IN)
-                    If Not String.IsNullOrEmpty(Me.UserID) Then
+                    If Me.UserID <> 0 Then
                         DBCommand.Parameters.AddWithValue("userID", Me.UserID)
                     End If
-                    If Not String.IsNullOrEmpty(Me.UserID) Then
+                    If Not String.IsNullOrEmpty(Me.LocationCode) Then
                         DBCommand.Parameters.AddWithValue("locationCode", Me.LocationCode)
                     End If
 

@@ -54,12 +54,6 @@
 
             <h3>RFQ</h3>
             <div class="list">
-                <%--ページング時の押下ボタンフラグ保持用にHiddenField作成--%>
-                <asp:HiddenField ID="HiddenSelectedButton" runat="server" Value="" />
-                <asp:HiddenField ID="HiddenUserID" runat="server" Value="" />
-                <asp:HiddenField ID="HiddenRFQPriority" runat="server" Value="" />
-                <asp:HiddenField ID="HiddenRFQStatus" runat="server" Value="" />
-                <asp:HiddenField ID="HiddenOrderby" runat="server" Value="" />
 
                 <div class="pagingHead">
                     <asp:DataPager ID="RFQPagerCountTop" runat="server" PagedControlID="RFQList">
@@ -90,10 +84,10 @@
 
                 <asp:ListView ID="RFQList" runat="server">
                     <LayoutTemplate>
-                        <table id="itemPlaceholderContainer" runat="server" border="0" style="">
-                            <tr id="itemPlaceholder" runat="server">
-                            </tr>
-                        </table>
+                        <div id="itemPlaceholderContainer" runat="server">
+                            <div id="itemPlaceholder" runat="server">
+                            </div>
+                        </div>
                     </LayoutTemplate>
 
                     <EmptyDataTemplate>
@@ -101,72 +95,74 @@
                     </EmptyDataTemplate>
 
                     <ItemTemplate>
-                        <tr>
-                            <th class="subhead" colspan="2">
-                                <!-- １段下に改行されて表示される現象の対策のため「RFQ Reference Number」の前に記述する -->
-                                <span class="placedright">
-                                    <asp:Label ID="Priority_Title_RFQ" runat="server" Text="Priority : " Visible='<%#IIf(Eval("Priority") = "", False, True) %>' CssClass='<%#IIf(Eval("Priority") = "B", "priorityB", "priorityA") %>'></asp:Label><asp:Label ID="Priority_RFQ" runat="server" Text='<%# Eval("Priority") %>' CssClass='<%#IIf(Eval("Priority") = "B", "priorityB", "priorityA") %>'></asp:Label>
-                                </span>
-                                RFQ Reference Number :
-                                <asp:HyperLink ID="RFQUpdate" runat="server" NavigateUrl='<%# "./RFQUpdate.aspx?RFQNumber=" & Eval("RFQNumber") %>'>
-                                    <asp:Label ID="RFQNumber" runat="server" Text='<%# Eval("RFQNumber") %>'></asp:Label>
-                                </asp:HyperLink>
-                                <span class="indent"><em>
-                                    <asp:Label ID="RFQCorrespondence" runat="server" Text='<%# Eval("RFQCorrespondence") %>'></asp:Label></em></span>
-                            </th>
-                            <th class="subhead" colspan="3">
-                                <asp:Label ID="RFQCreateDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("CreateDate"), True, False)%>'></asp:Label>
-                                <span class="indent">
-                                    <asp:Label ID="Label1" runat="server" Text='Create'></asp:Label>
-                                </span>
-                                <span style="margin-left: 2.5em">
-                                    <asp:Label ID="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:Label>
-                                </span>
-                                <span class="indent">
-                                    <asp:Label ID="RFQStatus" runat="server" Text='<%# Eval("Status") %>'></asp:Label>
-                                </span>
-                                <span class="indent">
-                                    <asp:Label ID="RFQConfidential" runat="server" Text='<%#IIf(Eval("isCONFIDENTIAL") = True, Purchase.Common.CONFIDENTIAL, "") %>' CssClass="confidential"></asp:Label>
-                                </span>
-                            </th>
-                            <th class="subhead" style="text-align: right">
-                                <asp:Button ID="RFQCancelAssign" runat="server" Text="Cancel Assignment" Visible="False" />
-                                <asp:HiddenField ID="StatusCode" runat="server" Value='<%# Eval("StatusCode") %>' />
-                            </th>
-                        </tr>
-                        <tr>
-                            <th style="width: 17%">Product Number / Name</th>
-                            <td style="width: 33%">
-                                <asp:HyperLink ID="ProductPage" runat="server" NavigateUrl='<%# "./RFQListByProduct.aspx?ProductID=" & Eval("ProductID") %>' Target="_blank">
-                                    <asp:Label ID="ProductNumber" runat="server" Text='<%# Eval("ProductNumber") %>'></asp:Label>
-                                </asp:HyperLink>
-                                <span class="indent">
-                                    <asp:Label ID="ProductName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("ProductName").ToString())%>'></asp:Label>
-                                </span>
-                            </td>
-                            <th style="width: 10%">Purpose</th>
-                            <td style="width: 12%">
-                                <asp:Label ID="Purpose" runat="server" Text='<%# Eval("Purpose") %>'></asp:Label>
-                            </td>
-                            <th style="width: 10%">Enq-User</th>
-                            <td style="width: 18%">
-                                <asp:Label ID="EnqUser" runat="server" Text='<%# Eval("EnqUserName") %>'></asp:Label>
-                                <span class="indent">(<asp:Label ID="EnqLocation" runat="server" Text='<%# Eval("EnqLocationName") %>'></asp:Label>)</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Supplier Code / Name</th>
-                            <td>
-                                <asp:HyperLink ID="SupplierPage" runat="server" NavigateUrl='<%# "./RFQListBySupplier.aspx?SupplierCode=" & Eval("SupplierCode") %>' Target="_blank">
-                                    <asp:Label ID="SupplierCode" runat="server" Text='<%# Eval("SupplierCode") %>'></asp:Label>
-                                </asp:HyperLink>
-                                <span class="indent"><asp:Label ID="SupplierName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("SupplierName").ToString())%>'></asp:Label></span>
-                            </td>
-                            <th>Maker Name</th>
-                            <td colspan="3">
-                                <asp:Label ID="MakerName" runat="server" Text='<%# Eval("MakerName") %>'></asp:Label>
-                            </td>
-                        </tr>
+                        <table>
+                            <tr>
+                                <th class="subhead" colspan="2">
+                                    <!-- １段下に改行されて表示される現象の対策のため「RFQ Reference Number」の前に記述する -->
+                                    <span class="placedright">
+                                        <asp:Label ID="Priority_Title_RFQ" runat="server" Text="Priority : " Visible='<%#IIf(Eval("Priority") = "", False, True) %>' CssClass='<%#IIf(Eval("Priority") = "B", "priorityB", "priorityA") %>'></asp:Label><asp:Label ID="Priority_RFQ" runat="server" Text='<%# Eval("Priority") %>' CssClass='<%#IIf(Eval("Priority") = "B", "priorityB", "priorityA") %>'></asp:Label>
+                                    </span>
+                                    RFQ Reference Number :
+                                    <asp:HyperLink ID="RFQUpdate" runat="server" NavigateUrl='<%# "./RFQUpdate.aspx?RFQNumber=" & Eval("RFQNumber") %>'>
+                                        <asp:Label ID="RFQNumber" runat="server" Text='<%# Eval("RFQNumber") %>'></asp:Label>
+                                    </asp:HyperLink>
+                                    <span class="indent"><em>
+                                        <asp:Label ID="RFQCorrespondence" runat="server" Text='<%# Eval("RFQCorrespondence") %>'></asp:Label></em></span>
+                                </th>
+                                <th class="subhead" colspan="3">
+                                    <asp:Label ID="RFQCreateDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("CreateDate"), True, False)%>'></asp:Label>
+                                    <span class="indent">
+                                        <asp:Label ID="Label1" runat="server" Text='Create'></asp:Label>
+                                    </span>
+                                    <span style="margin-left: 2.5em">
+                                        <asp:Label ID="RFQStatusChangeDate" runat="server" Text='<%#Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("StatusChangeDate"), True, False)%>'></asp:Label>
+                                    </span>
+                                    <span class="indent">
+                                        <asp:Label ID="RFQStatus" runat="server" Text='<%# Eval("Status") %>'></asp:Label>
+                                    </span>
+                                    <span class="indent">
+                                        <asp:Label ID="RFQConfidential" runat="server" Text='<%#IIf(Eval("isCONFIDENTIAL") = True, Purchase.Common.CONFIDENTIAL, "") %>' CssClass="confidential"></asp:Label>
+                                    </span>
+                                </th>
+                                <th class="subhead" style="text-align: right">
+                                    <asp:Button ID="RFQCancelAssign" runat="server" Text="Cancel Assignment" Visible="False" />
+                                    <asp:HiddenField ID="StatusCode" runat="server" Value='<%# Eval("StatusCode") %>' />
+                                </th>
+                            </tr>
+                            <tr>
+                                <th style="width: 17%">Product Number / Name</th>
+                                <td style="width: 33%">
+                                    <asp:HyperLink ID="ProductPage" runat="server" NavigateUrl='<%# "./RFQListByProduct.aspx?ProductID=" & Eval("ProductID") %>' Target="_blank">
+                                        <asp:Label ID="ProductNumber" runat="server" Text='<%# Eval("ProductNumber") %>'></asp:Label>
+                                    </asp:HyperLink>
+                                    <span class="indent">
+                                        <asp:Label ID="ProductName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("ProductName").ToString())%>'></asp:Label>
+                                    </span>
+                                </td>
+                                <th style="width: 10%">Purpose</th>
+                                <td style="width: 12%">
+                                    <asp:Label ID="Purpose" runat="server" Text='<%# Eval("Purpose") %>'></asp:Label>
+                                </td>
+                                <th style="width: 10%">Enq-User</th>
+                                <td style="width: 18%">
+                                    <asp:Label ID="EnqUser" runat="server" Text='<%# Eval("EnqUserName") %>'></asp:Label>
+                                    <span class="indent">(<asp:Label ID="EnqLocation" runat="server" Text='<%# Eval("EnqLocationName") %>'></asp:Label>)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Supplier Code / Name</th>
+                                <td>
+                                    <asp:HyperLink ID="SupplierPage" runat="server" NavigateUrl='<%# "./RFQListBySupplier.aspx?SupplierCode=" & Eval("SupplierCode") %>' Target="_blank">
+                                        <asp:Label ID="SupplierCode" runat="server" Text='<%# Eval("SupplierCode") %>'></asp:Label>
+                                    </asp:HyperLink>
+                                    <span class="indent"><asp:Label ID="SupplierName" runat="server" Text='<%#Purchase.Common.CutShort(Eval("SupplierName").ToString())%>'></asp:Label></span>
+                                </td>
+                                <th>Maker Name</th>
+                                <td colspan="3">
+                                    <asp:Label ID="MakerName" runat="server" Text='<%# Eval("MakerName") %>'></asp:Label>
+                                </td>
+                            </tr>
+                        </table>
                     </ItemTemplate>
                 </asp:ListView>
 

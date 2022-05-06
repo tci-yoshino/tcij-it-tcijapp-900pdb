@@ -1,4 +1,8 @@
-﻿Imports System.Collections.Generic
+﻿Option Explicit On
+Option Strict On
+Option Infer Off
+
+Imports System.Collections.Generic
 Imports System.Data.SqlClient
 
 Namespace TCIDataAccess.Join

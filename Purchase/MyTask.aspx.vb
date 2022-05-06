@@ -8,13 +8,15 @@ Partial Public Class MyTask
     Inherits CommonPage
 
     Protected st_Action As String = String.Empty ' aspx 側で読むため、Protected にする
+    Protected lst_MyTask As List(Of TCIDataAccess.Join.MyTaskDisp)
     Private st_UserID As String = String.Empty
 
     Const SWITCH_ACTION As String = "Switch"
     Const RFQ_PO_ACTION As String = "Cancel"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        Msg.Text = ""
+        Msg.Text = String.Empty
+
         '' パラメータ UserID 取得
         If IsPostBack = True Then
             '' 選択された User を退避
@@ -39,8 +41,6 @@ Partial Public Class MyTask
         ' セッション変数 PrivilegeLevel が 'A' の場合は v_UserAll からデータ取得。
         Dim ds As DataSet = New DataSet
         ds.Tables.Add("UserID")
-
-        SetPageSize()
 
         If Session("Purchase.PrivilegeLevel").ToString = "P" Then
             Using connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
@@ -102,8 +102,13 @@ Partial Public Class MyTask
             SetRFQOrderByDropDownList(Orderby)
             Orderby.SelectedValue = "REM"
 
-            ' 一覧初期表示
+            ' 一覧取得（初期表示）
+            SetPageSize()
+
             ShowList()
+            RFQList.DataSource = lst_MyTask
+            RFQList.DataBind()
+
         End If
 
     End Sub
@@ -112,6 +117,9 @@ Partial Public Class MyTask
     ''' Switchボタン押下時処理  
     ''' </summary>
     Protected Sub Switch_Click() Handles Switch.Click
+        Msg.Text = String.Empty
+        RFQList.Visible = False
+
         ' パラメータ取得
         If String.IsNullOrEmpty(Request.Form("Action")) Then
             st_Action = Request.QueryString("Action")
@@ -126,8 +134,17 @@ Partial Public Class MyTask
             Exit Sub
         End If
 
-        ' 一覧を表示する（Switchボタン押下）
+        ' 一覧取得（Switch押下時）
+        SetPageSize()
+        ReSetPager()
+
         ShowList()
+        RFQList.DataSource = lst_MyTask
+        RFQList.DataBind()
+
+        RFQList.Visible = True
+
+        Action.Value = String.Empty
 
     End Sub
 
@@ -138,11 +155,20 @@ Partial Public Class MyTask
     ''' 
     ''' </remarks>
     Protected Sub RFQList_PagePropertiesChanged(ByVal sender As Object, ByVal e As EventArgs) Handles RFQList.PagePropertiesChanged
-        ' 一覧を表示する（初期表示、ページャー押下時）
-        if IsPostBack Then
-            ShowList()
-        End If
+        Msg.Text = String.Empty
+        RFQList.Visible = False
+
         SetPageSize()
+
+        if IsPostBack And Not st_Action.Equals(SWITCH_ACTION) Then
+            ' 一覧取得（ページャー押下時）
+            ShowList()
+            RFQList.DataSource = lst_MyTask
+            RFQList.DataBind()
+        End If
+
+        RFQList.Visible = True
+
     End Sub
 
     Protected Sub SrcRFQ_Selecting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.SqlDataSourceSelectingEventArgs) Handles SrcRFQ.Selecting
@@ -166,27 +192,7 @@ Partial Public Class MyTask
         Dim dc_MyTaskList As New TCIDataAccess.Join.MyTaskDispList
         RFQList.DataSource = Nothing 
         dc_MyTaskList.Load(Cint(st_UserID), RFQPriority.SelectedValue, RFQStatus.SelectedValue, Orderby.SelectedValue, Session(SESSION_ROLE_CODE).ToString)
-        RFQList.DataSource = dc_MyTaskList
-        RFQList.DataBind()
-
-        If dc_MyTaskList.Count > 0 Then
-            '' 一覧の取得件数が0以上なら以下の処理を実行
-            If Not HiddenUserID.Value.Equals(st_UserID) Or 
-                    Not HiddenRFQPriority.Value.Equals(RFQPriority.SelectedValue) Or 
-                    Not HiddenRFQStatus.Value.Equals(RFQStatus.SelectedValue) Or 
-                    Not HiddenOrderby.Value.Equals(Orderby.SelectedValue) Then
-                '' 条件変更時はページャーをリセット
-                ReSetPager
-            Else 
-                ''ページング遷移時は何もしない
-            End If
-        End If
-
-        '' 検索条件を退避
-        HiddenUserID.Value = st_UserID
-        HiddenRFQPriority.Value = RFQPriority.SelectedValue
-        HiddenRFQStatus.Value = RFQStatus.SelectedValue
-        HiddenOrderby.Value = Orderby.SelectedValue
+        lst_MyTask = dc_MyTaskList
 
     End Sub
 
@@ -265,7 +271,12 @@ Partial Public Class MyTask
         connection.Close()
 
         '[RFQList再表示]----------------------------------------------------------------
+        SetPageSize()
+
         ShowList()
+        RFQList.DataSource = lst_MyTask
+        RFQList.DataBind()
+
     End Sub
 
     Protected Sub SetRFQCancelAssign(ByVal sender As Object, ByVal e As ListViewItemEventArgs) Handles RFQList.ItemDataBound

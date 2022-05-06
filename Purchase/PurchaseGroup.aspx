@@ -18,7 +18,7 @@
             <h3>User</h3>
             <div class="list">
                 <p class="attention"></p>
-                <asp:ListView ID="UserList" runat="server" DataSourceID="SrcUser" DataKeyNames="UserID">
+                <asp:ListView ID="UserList" runat="server">
                     <LayoutTemplate>
                         <table id="itemPlaceholderContainer" runat="server" border="0" style="">
                             <tr runat="server" style="">
@@ -64,8 +64,6 @@
                 </asp:ListView>
             </div>
         </div>
-        <asp:SqlDataSource ID="SrcUser" runat="server"
-            ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
     </form>
 </body>
 </html>

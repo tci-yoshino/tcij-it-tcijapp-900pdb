@@ -39,13 +39,4 @@ Partial Public Class PurchaseGroup
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents UserList As Global.System.Web.UI.WebControls.ListView
-    
-    '''<summary>
-    '''SrcUser コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents SrcUser As Global.System.Web.UI.WebControls.SqlDataSource
 End Class

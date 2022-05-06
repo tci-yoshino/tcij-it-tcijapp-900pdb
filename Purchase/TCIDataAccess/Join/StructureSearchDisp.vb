@@ -1,4 +1,8 @@
-﻿Imports System
+﻿Option Explicit On
+Option Strict On
+Option Infer Off
+
+Imports System
 Imports System.Collections.Generic
 Imports System.Linq
 Imports System.Web

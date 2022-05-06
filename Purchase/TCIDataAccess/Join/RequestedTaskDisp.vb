@@ -1,4 +1,8 @@
-﻿Imports System
+﻿Option Explicit On
+Option Strict On
+Option Infer Off
+
+Imports System
 Imports System.Collections.Generic
 Imports System.Linq
 Imports System.Web
@@ -131,11 +135,11 @@ Namespace TCIDataAccess.Join
                 _RFQCorres = value
             End Set
         End Property
-        Public Property SupplierCode() As String
+        Public Property SupplierCode() As Integer
             Get
                 Return _SupplierCode
             End Get
-            Set(ByVal value As String)
+            Set(ByVal value As Integer)
                 _SupplierCode = value
             End Set
         End Property

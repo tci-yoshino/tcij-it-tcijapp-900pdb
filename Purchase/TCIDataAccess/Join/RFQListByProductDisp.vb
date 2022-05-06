@@ -1,4 +1,8 @@
-﻿Imports System.Data.SqlClient
+﻿Option Explicit On
+Option Strict On
+Option Infer Off
+
+Imports System.Data.SqlClient
 
 Namespace TCIDataAccess.Join
 
@@ -141,7 +145,7 @@ Namespace TCIDataAccess.Join
             Using DBConn As New SqlConnection(Common.DB_CONNECT_STRING)
                 Using DBCommand As SqlCommand = DBConn.CreateCommand()
                     DBCommand.Parameters.Clear()
-                    If Not String.IsNullOrEmpty(Me.ProductID) Then
+                    If Me.ProductID <> 0 Then
                         DBCommand.Parameters.AddWithValue("ProductID", Me.ProductID)
                     End If
                     DBCommand.CommandText = CreateProductHeaderSelectSQL()
@@ -230,7 +234,7 @@ Namespace TCIDataAccess.Join
             Using DBConn As New SqlConnection(Common.DB_CONNECT_STRING)
                 Using DBCommand As SqlCommand = DBConn.CreateCommand()
                     DBCommand.Parameters.Clear()
-                    If Not String.IsNullOrEmpty(Me.ProductID) Then
+                    If Me.ProductID <> 0 Then
                         DBCommand.Parameters.AddWithValue("ProductID", Me.ProductID)
                     End If
                     DBCommand.CommandText = sb_SQL.ToString()
@@ -399,7 +403,7 @@ Namespace TCIDataAccess.Join
             Using DBConn As New SqlConnection(Common.DB_CONNECT_STRING)
                 Using DBCommand As SqlCommand = DBConn.CreateCommand()
                     DBCommand.Parameters.Clear()
-                    If Not String.IsNullOrEmpty(Me.RFQNumber) Then
+                    If Me.RFQNumber <> 0 Then
                         DBCommand.Parameters.AddWithValue("RFQNumber", Me.RFQNumber)
                     End If
                     DBCommand.CommandText = sb_SQL.ToString()
@@ -604,7 +608,7 @@ Namespace TCIDataAccess.Join
 
         Protected _StatusChangeDate As String = String.Empty
         Protected _Status As String = String.Empty
-        Protected _RFQNumber As String = String.Empty
+        Protected _RFQNumber As Integer = 0
         Protected _Priority As String = String.Empty
         Protected _QuotedDate  As DateTime = New DateTime(0)
         Protected _ProductNumber As String = String.Empty
@@ -658,11 +662,11 @@ Namespace TCIDataAccess.Join
         ''' <summary> 
         ''' RFQNumber を設定、または取得する 
         ''' </summary> 
-        Public Property RFQNumber() As String
+        Public Property RFQNumber() As Integer
             Get
                 Return _RFQNumber
             End Get
-            Set(ByVal value As String)
+            Set(ByVal value As Integer)
                 _RFQNumber = value
             End Set
         End Property
@@ -682,11 +686,11 @@ Namespace TCIDataAccess.Join
         ''' <summary> 
         ''' QuotedDate を設定、または取得する 
         ''' </summary> 
-        Public Property QuotedDate() As String
+        Public Property QuotedDate() As DateTime
             Get
                 Return _QuotedDate
             End Get
-            Set(ByVal value As String)
+            Set(ByVal value As DateTime)
                 _QuotedDate = value
             End Set
         End Property
