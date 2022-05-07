@@ -576,6 +576,7 @@
     <Compile Include="TCIDataAccess\EhsHeader_Personalize.vb" />
     <Compile Include="TCIDataAccess\FacadeEhsHeader.vb" />
     <Compile Include="TCIDataAccess\FacadeProductListBySupplier.vb" />
+    <Compile Include="TCIDataAccess\FacadePurchaseGroupSetting.vb" />
     <Compile Include="TCIDataAccess\FacadeRFQIssue.vb" />
     <Compile Include="TCIDataAccess\FacadeSupplierListByProduct.vb" />
     <Compile Include="TCIDataAccess\Join\EhsHeader_Personalize_Sort.vb" />
@@ -585,6 +586,7 @@
     <Compile Include="TCIDataAccess\Join\ProductSearchByKeywordDisp.vb" />
     <Compile Include="TCIDataAccess\Join\ProductSearchDisp.vb" />
     <Compile Include="TCIDataAccess\Join\PurchaseGroupDisp.vb" />
+    <Compile Include="TCIDataAccess\Join\PurchaseGroupSettingDisp.vb" />
     <Compile Include="TCIDataAccess\Join\RFQHeader.vb" />
     <Compile Include="TCIDataAccess\Join\MyTaskDisp.vb" />
     <Compile Include="TCIDataAccess\Join\ProductListBySupplierDisp.vb" />

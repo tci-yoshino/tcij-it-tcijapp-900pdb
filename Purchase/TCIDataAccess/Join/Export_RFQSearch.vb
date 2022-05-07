@@ -657,13 +657,13 @@ Namespace TCIDataAccess.Join
         ''' </summary>
         ''' <param name="Cond">検索条件</param>
         ''' <remarks></remarks>
-        Public Sub Load(ByVal cond As TCIDataAccess.join.KeywordSearchConditionParameter)
+        Public Sub Load(ByVal Cond As TCIDataAccess.join.KeywordSearchConditionParameter)
             Dim Value As New StringBuilder()
             ' セッションのロケーションコードを設定
-            s_LocationCode = cond.s_LocationCode
+            s_LocationCode = Cond.s_LocationCode
 
             '画面で入力された値のWhere句の生成
-            Dim WhereClause As String = RFQHeaderList.CreateRFQHeaderWhereClauseSQL(cond)
+            Dim WhereClause As String = RFQHeaderList.CreateRFQHeaderWhereClauseSQL(Cond)
 
             'SQL文字列の作成
             Value.AppendLine("SELECT")
@@ -727,7 +727,7 @@ Namespace TCIDataAccess.Join
             Value.AppendLine("        s_Country scry")
             Value.AppendLine("        ON")
             Value.AppendLine("        rfh.SupplierCountryCode = scry.CountryCode")
-            If Cond.ValidQuotation = "Valid Price" Then
+            If Cond.ValidityQuotation = "Valid Price" Then
 
                 Value.AppendLine("    INNER JOIN ")
                 Value.AppendLine("        (SELECT")
@@ -746,7 +746,7 @@ Namespace TCIDataAccess.Join
                 Value.AppendLine("        ON")
                 Value.AppendLine("        rfh.[RFQNumber] =  vRL.[RFQNumber]")
             End If
-            If Cond.ValidQuotation = "Inalid Price" Then
+            If Cond.ValidityQuotation = "Inalid Price" Then
                 Value.AppendLine("    INNER JOIN ")
                 Value.AppendLine("        (SELECT")
                 Value.AppendLine("            [ProductID],")

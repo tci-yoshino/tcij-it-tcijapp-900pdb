@@ -306,6 +306,7 @@ Public Class Common
     ''' </summary>
     ''' <remarks></remarks>
     Public Const PRIORITY_FOR_SEARCH As String = "Search"
+    Public Const PRIORITY_FOR_RFQ_SEARCH As String = "RfqSearch"
     Public Const PRIORITY_FOR_EDIT As String = "Edit"
 
     ''' <summary>
@@ -853,6 +854,11 @@ End Property
             Combo.Items.Add(PRIORITY_B)
             Combo.Items.Add(PRIORITY_AB)
             Combo.Items.Add(PRIORITY_ALL)
+        ElseIf (Type = PRIORITY_FOR_RFQ_SEARCH) Then
+            Combo.Items.Add(New ListItem())
+            Combo.Items.Add(PRIORITY_A)
+            Combo.Items.Add(PRIORITY_B)
+            Combo.Items.Add(PRIORITY_AB)
         Else
             Combo.Items.Add(PRIORITY_A)
             Combo.Items.Add(PRIORITY_B)

@@ -2657,7 +2657,7 @@ Partial Public Class RFQUpdate
         DBCommand.Parameters.Clear()
 
         DBCommand.Parameters.Add("@PlantStatus", SqlDbType.VarChar).Value = EnqUserPlantStatus.Text
-        DBCommand.Parameters.Add("@DomesticFlag", SqlDbType.VarChar).Value = DomesticFlag
+        DBCommand.Parameters.Add("@DomesticFlag", SqlDbType.Bit).Value = CInt(DomesticFlag)
         Connection.Open()
         DBCommand.ExecuteNonQuery()
         Connection.Close()
@@ -2732,7 +2732,7 @@ Partial Public Class RFQUpdate
         DBCommand.CommandText = sb_SQL.ToString
         DBCommand.Parameters.Clear()
         DBCommand.Parameters.Add("@PlantStatus", SqlDbType.VarChar).Value = QuoUserPlantStatus.Text
-        DBCommand.Parameters.Add("@DomesticFlag", SqlDbType.VarChar).Value = DomesticFlag
+        DBCommand.Parameters.Add("@DomesticFlag", SqlDbType.Bit).Value = CInt(DomesticFlag)
         Connection.Open()
         DBCommand.ExecuteNonQuery()
         Connection.Close()

@@ -37,7 +37,7 @@ Partial Public Class RFQListByProduct
         End If
 
         If Not IsPostBack Then
-            ' Valid Quotation ドロップダウンリスト設定
+            ' Validity Quotation ドロップダウンリスト設定
             Common.SetValidQuotationList(ValidQuotation, Common.ValidQuotation_ALL)
             ValidQuotation.SelectedValue = Common.ValidQuotation_ALL
 
@@ -98,7 +98,7 @@ Partial Public Class RFQListByProduct
 
         End If
 
-        'Valid Quotation クリア
+        'Validity Quotation クリア
         ValidQuotation.SelectedValue = Common.ValidQuotation_ALL
 
         '' 一覧検索

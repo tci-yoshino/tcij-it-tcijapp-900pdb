@@ -91,6 +91,16 @@ Namespace TCIDataAccess.Join
             sbValue.AppendLine("Where")
             sbValue.AppendLine("    [s_NewProduct].[RegistryNumber] = @RegistryNumber AND ")
             sbValue.AppendLine("    [Product].[NumberType] = 'TCI'")
+            If rollCode = Purchase.Common.ROLE_WRITE_P OrElse rollCode = Purchase.Common.ROLE_READ_P Then
+                sbValue.AppendLine("  AND NOT EXISTS (")
+                sbValue.AppendLine("    SELECT 1")
+                sbValue.AppendLine("    FROM")
+                sbValue.AppendLine("      v_CONFIDENTIAL AS C")
+                sbValue.AppendLine("    WHERE")
+                sbValue.AppendLine("      C.[isCONFIDENTIAL] = 1")
+                sbValue.AppendLine("      AND C.[ProductID] = [Product].[ProductID]")
+                sbValue.AppendLine("  )")
+            End If
             sbValue.AppendLine("union")
             sbValue.AppendLine("Select ")
             sbValue.AppendLine("    [Product].[ProductNumber],")
@@ -111,7 +121,7 @@ Namespace TCIDataAccess.Join
                 sbValue.AppendLine("      v_CONFIDENTIAL AS C")
                 sbValue.AppendLine("    WHERE")
                 sbValue.AppendLine("      C.[isCONFIDENTIAL] = 1")
-                sbValue.AppendLine("      AND C.[ProductID] = P.[ProductID]")
+                sbValue.AppendLine("      AND C.[ProductID] = [Product].[ProductID]")
                 sbValue.AppendLine("  )")
             End If
 

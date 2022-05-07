@@ -133,7 +133,7 @@ Public Class Report_RFQSearch
                 ElseIf dt_Row("PropertyNumber") = "Last Status Change Date" Then
                     newRow.CustomHeight = True
                     newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, Common.GetLocalTime(dc_RFQSearchList.s_LocationCode,dc_RFQSearch.StatusChangeDate, True, False), CellStyle._9PT_NONE_NONE_NONE))
+                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, Common.GetLocalTime(dc_RFQSearchList.s_LocationCode, dc_RFQSearch.StatusChangeDate, True, False), CellStyle._9PT_NONE_NONE_NONE))
                 ElseIf dt_Row("PropertyNumber") = "Product Number" Then
                     newRow.CustomHeight = True
                     newRow.Height = 24.0
@@ -226,7 +226,11 @@ Public Class Report_RFQSearch
                 ElseIf dt_Row("PropertyNumber") = "Enq-Quantity" Then
                     newRow.CustomHeight = True
                     newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.EnqQuantity & Space(1) & dc_RFQSearch.EnqUnitCode & Space(1) & dc_RFQSearch.EnqPiece, CellStyle._9PT_NONE_NONE_NONE))
+                    Dim EnqQuantity As String = String.Empty
+                    If dc_RFQSearch.EnqQuantity <> decimal.Zero Then
+                        EnqQuantity = String.Format("{0:G29}", dc_RFQSearch.EnqQuantity) & Space(1) & dc_RFQSearch.EnqUnitCode & Space(1) & "x" & Space(1) & dc_RFQSearch.EnqPiece
+                    End If
+                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, EnqQuantity, CellStyle._9PT_NONE_NONE_NONE))
                 ElseIf dt_Row("PropertyNumber") = "Currency" Then
                     newRow.CustomHeight = True
                     newRow.Height = 24.0
@@ -238,7 +242,7 @@ Public Class Report_RFQSearch
                 ElseIf dt_Row("PropertyNumber") = "Quo-Quantity" Then
                     newRow.CustomHeight = True
                     newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.QuoPer & space(1) & dc_RFQSearch.QuoUnitCode, CellStyle._9PT_NONE_NONE_NONE))
+                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, String.Format("{0:G29}", dc_RFQSearch.QuoPer) & Space(1) & dc_RFQSearch.QuoUnitCode, CellStyle._9PT_NONE_NONE_NONE))
                 ElseIf dt_Row("PropertyNumber") = "Lead Time" Then
                     newRow.CustomHeight = True
                     newRow.Height = 24.0
@@ -266,8 +270,11 @@ Public Class Report_RFQSearch
                 ElseIf dt_Row("PropertyNumber") = "PO" Then
                     newRow.CustomHeight = True
                     newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.PO, CellStyle._9PT_NONE_NONE_NONE))
-                
+                    Dim PO As String = String.Empty
+                    If Not String.IsNullOrEmpty(dc_RFQSearch.PO) Then
+                        PO = "X"
+                    End If
+                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, PO, CellStyle._9PT_NONE_NONE_NONE))
                 ElseIf dt_Row("PropertyNumber") = "Created Date" Then
                     newRow.CustomHeight = True
                     newRow.Height = 24.0

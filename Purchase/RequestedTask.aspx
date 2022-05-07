@@ -20,11 +20,6 @@
             <div class="main switch">
                 <table style="margin-bottom: 0">
                     <tr>
-                        <th>User : </th>
-                        <td>
-                            <asp:DropDownList ID="UserID" runat="server">
-                            </asp:DropDownList>
-                        </td>
                         <th>RFQ Priority : </th>
                         <td>
                             <asp:DropDownList ID="RFQPriority" runat="server">
@@ -35,7 +30,8 @@
                             <asp:DropDownList ID="RFQStatus" runat="server">
                             </asp:DropDownList>
                         </td>
-                        <td>Order by:
+                        <th>Order by : </th>
+                        <td>
                             <asp:DropDownList ID="Orderby" runat="server">
                             </asp:DropDownList>
                         </td>
@@ -44,7 +40,7 @@
                         </td>
                     </tr>
                 </table>
-                <asp:HiddenField ID="Action" runat="server" Value="Switch" />
+                <asp:HiddenField ID="Action" runat="server" Value="" />
             </div>
 
             <div class="main">
@@ -56,10 +52,6 @@
             <div class="list">
                 <%--ページング時の押下ボタンフラグ保持用にHiddenField作成--%>
                 <asp:HiddenField ID="HiddenSelectedButton" runat="server" Value="" />
-                <asp:HiddenField ID="HiddenUserID" runat="server" Value="" />
-                <asp:HiddenField ID="HiddenRFQPriority" runat="server" Value="" />
-                <asp:HiddenField ID="HiddenRFQStatus" runat="server" Value="" />
-                <asp:HiddenField ID="HiddenOrderby" runat="server" Value="" />
 
                 <div class="pagingHead">
                     <asp:DataPager ID="RFQPagerCountTop" runat="server" PagedControlID="RFQList">
@@ -199,7 +191,6 @@
         </form>
     </div>
     <!-- Main Content Area END -->
-    <asp:SqlDataSource ID="SrcRFQ" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
     <!-- Footer -->
     <!--#include virtual="./Footer.html" -->
     <!-- Footer END -->

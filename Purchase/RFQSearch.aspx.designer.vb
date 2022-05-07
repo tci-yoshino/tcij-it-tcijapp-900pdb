@@ -329,6 +329,15 @@ Partial Public Class RFQSearch
     Protected WithEvents QuoStorageLocation As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
+    '''Priority コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents Priority As Global.System.Web.UI.WebControls.DropDownList
+    
+    '''<summary>
     '''Purpose コントロール。
     '''</summary>
     '''<remarks>
@@ -347,22 +356,13 @@ Partial Public Class RFQSearch
     Protected WithEvents SelTerritory As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
-    '''Priority コントロール。
+    '''ValidityQuotation コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents Priority As Global.System.Web.UI.WebControls.DropDownList
-    
-    '''<summary>
-    '''ValidQuotation コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents ValidQuotation As Global.System.Web.UI.WebControls.DropDownList
+    Protected WithEvents ValidityQuotation As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
     '''Search コントロール。
@@ -374,13 +374,13 @@ Partial Public Class RFQSearch
     Protected WithEvents Search As Global.System.Web.UI.WebControls.Button
     
     '''<summary>
-    '''Release コントロール。
+    '''Clear コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents Release As Global.System.Web.UI.WebControls.Button
+    Protected WithEvents Clear As Global.System.Web.UI.WebControls.Button
     
     '''<summary>
     '''Download コントロール。

@@ -41,7 +41,7 @@
                     document.getElementById("RFQCreatedDate_line").style.visibility = "visible";
                     document.getElementById("RFQQuotedDate_line").style.visibility = "visible";
                     document.getElementById("RFQPriority_line").style.visibility = "visible";
-                    document.getElementById("ValidQuotation_line").style.visibility = "visible";
+                    document.getElementById("ValidityQuotation_line").style.visibility = "visible";
 
                 } else {
                     document.getElementById('ModeChange_link').innerText = "* Advanced Search";
@@ -53,7 +53,7 @@
                     document.getElementById("RFQCreatedDate_line").style.visibility = "collapse";
                     document.getElementById("RFQQuotedDate_line").style.visibility = "collapse";
                     document.getElementById("RFQPriority_line").style.visibility = "collapse";
-                    document.getElementById("ValidQuotation_line").style.visibility = "collapse";
+                    document.getElementById("ValidityQuotation_line").style.visibility = "collapse";
                     //Advanced Search画面で表示したテキストボックス・プルダウンリスト・チェックボックスの初期化
                     document.getElementById("ProductName").value = "";
                     document.getElementById("S4SupplierCode").value = "";
@@ -67,8 +67,8 @@
                     document.getElementById("RFQQuotedDateTo").value = "";
                     var PrioritySelect = document.getElementById("Priority");
                     PrioritySelect.selectedIndex = -1;
-                    var PrioritySelect = document.getElementById("ValidQuotation");
-                    ValidQuotation.selectedIndex = -1;
+                    var PrioritySelect = document.getElementById("ValidityQuotation");
+                    ValidityQuotation.selectedIndex = -1;
                 }
             }
             function disableSubmit(form) {
@@ -319,6 +319,13 @@
                                 </asp:DropDownList>
                             </td>
                         </tr>
+                        <tr id ="RFQPriority_line" style="visibility: collapse;">
+                            <th>RFQ Priority : </th>
+                            <td>
+                                <asp:DropDownList ID="Priority" runat="server">
+                                </asp:DropDownList>
+                            </td>
+                        </tr>
                         <tr>
                             <th>Purpose : </th>
                             <td id="PurposeDropDown">
@@ -335,18 +342,10 @@
                                 </asp:DropDownList>
                             </td>
                         </tr>
- 
-                        <tr id ="RFQPriority_line" style="visibility: collapse;">
-                            <th>RFQ Priority : </th>
+                        <tr id ="ValidityQuotation_line" style="visibility: collapse;">
+                            <th>Validity Quotation : </th>
                             <td>
-                                <asp:DropDownList ID="Priority" runat="server">
-                                </asp:DropDownList>
-                            </td>
-                        </tr>
-                        <tr id ="ValidQuotation_line" style="visibility: collapse;">
-                            <th>ValidQuotation : </th>
-                            <td>
-                                <asp:DropDownList ID="ValidQuotation" runat="server">
+                                <asp:DropDownList ID="ValidityQuotation" runat="server">
                                     <asp:ListItem></asp:ListItem>
                                     <asp:ListItem>Valid Price</asp:ListItem>
                                     <asp:ListItem>Inalid Price</asp:ListItem>
@@ -357,7 +356,7 @@
 
                     <div class="btns" style="text-align: left">
                         <asp:Button ID="Search" runat="server" Text="Search" OnClientClick="setAction('Search');"/>&nbsp;
-                        <asp:Button ID="Release" runat="server" Text="Release" OnClientClick ="clearForm('SearchForm');" />&nbsp;
+                        <asp:Button ID="Clear" runat="server" Text="Clear" OnClientClick ="clearForm('SearchForm');" />&nbsp;
                         <asp:Button ID="Download" runat="server" Text="Download" OnClientClick="setAction('Download');"/>&nbsp;
                     </div>
 
@@ -396,6 +395,10 @@
             </div>
 
         </div>
+
+        <!-- Footer -->
+        <!--#include virtual="./Footer.html" -->
+        <!-- Footer END -->
     </body>
 
 </html>

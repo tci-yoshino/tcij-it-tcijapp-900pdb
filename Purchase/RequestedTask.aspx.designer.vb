@@ -32,15 +32,6 @@ Partial Public Class RequestedTask
     Protected WithEvents SwitchForm As Global.System.Web.UI.HtmlControls.HtmlForm
     
     '''<summary>
-    '''UserID コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents UserID As Global.System.Web.UI.WebControls.DropDownList
-    
-    '''<summary>
     '''RFQPriority コントロール。
     '''</summary>
     '''<remarks>
@@ -104,42 +95,6 @@ Partial Public Class RequestedTask
     Protected WithEvents HiddenSelectedButton As Global.System.Web.UI.WebControls.HiddenField
     
     '''<summary>
-    '''HiddenUserID コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents HiddenUserID As Global.System.Web.UI.WebControls.HiddenField
-    
-    '''<summary>
-    '''HiddenRFQPriority コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents HiddenRFQPriority As Global.System.Web.UI.WebControls.HiddenField
-    
-    '''<summary>
-    '''HiddenRFQStatus コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents HiddenRFQStatus As Global.System.Web.UI.WebControls.HiddenField
-    
-    '''<summary>
-    '''HiddenOrderby コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents HiddenOrderby As Global.System.Web.UI.WebControls.HiddenField
-    
-    '''<summary>
     '''RFQPagerCountTop コントロール。
     '''</summary>
     '''<remarks>
@@ -183,13 +138,4 @@ Partial Public Class RequestedTask
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents RFQPagerCountBottom As Global.System.Web.UI.WebControls.DataPager
-    
-    '''<summary>
-    '''SrcRFQ コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents SrcRFQ As Global.System.Web.UI.WebControls.SqlDataSource
 End Class

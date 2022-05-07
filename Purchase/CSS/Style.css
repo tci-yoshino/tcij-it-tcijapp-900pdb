@@ -475,6 +475,10 @@ tr.attention td {
 
 /* Structureイメージ用Style */
 .structure-img{
+    display: block; 
+    margin-left: auto;  /* 【ポイント】*/
+    margin-right: auto; /* 【ポイント】*/
+
     width:150px;
     border-collapse: separate;
     border-spacing: 2px;

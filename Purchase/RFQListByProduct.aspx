@@ -80,7 +80,7 @@ function setFormAction(button_type) {
         <hr />
 
         <div class="cond-right">
-            <b>Valid Quotation : </b>
+            <b>Validity Quotation : </b>
             <span >
                 <asp:DropDownList runat="server" ID="ValidQuotation" CssClass="filterdata">
                     <asp:ListItem></asp:ListItem>

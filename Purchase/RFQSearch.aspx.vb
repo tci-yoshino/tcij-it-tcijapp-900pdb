@@ -47,7 +47,7 @@ Public Class RFQSearch
             SetRFQStatusDropDownList(StatusTo)
             StatusTo.SelectedValue = Common.RFQSTATUS_ALL
             'Priority
-            SetPriorityDropDownList(Priority, "SEARCH")
+            SetPriorityDropDownList(Priority, PRIORITY_FOR_RFQ_SEARCH)
             'SupplierCountryCode
             Dim v_CountryList As TCIDataAccess.Join.v_CountryList = New TCIDataAccess.Join.v_CountryList
             v_CountryList.Setv_CountryDropDownList(SupplierCountryCode)
@@ -58,9 +58,9 @@ Public Class RFQSearch
             'Territory
             SetTerritoryDropDownList(TerritoryList)
 
-            'ValidQuotation
-            SetValidQuotationList(ValidQuotation, String.Empty)
-            ValidQuotation.SelectedValue = String.Empty
+            'ValidityQuotation
+            SetValidQuotationList(ValidityQuotation, String.Empty)
+            ValidityQuotation.SelectedValue = String.Empty
 
         End If
     End Sub
@@ -144,7 +144,7 @@ Public Class RFQSearch
         Msg.Text = SetListData(e.NewCurrentPageIndex, e.NewSkipRecord)
     End Sub
     'Clearボタン押下時、テキストボックス・ドロップダウンリスト・チェックボックスをクリアまたは未選択の状態にする
-    Protected Sub Release_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Release.Click
+    Protected Sub Clear_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Clear.Click
         Msg.Text = String.Empty
         SupplierCountryCode.SelectedIndex = 0
         StatusFrom.SelectedValue = Common.RFQSTATUS_ALL
@@ -155,11 +155,10 @@ Public Class RFQSearch
         QuoLocationCode.SelectedIndex = 0
         QuoUserID.Items.Clear()
         QuoStorageLocation.Items.Clear()
+        Priority.SelectedIndex = 0
         PurposeList.SelectedIndex = -1
         TerritoryList.SelectedIndex = -1
-        Priority.SelectedIndex = 0
-        ValidQuotation.SelectedIndex = 0
-        ResultArea.Visible = False
+        ValidityQuotation.SelectedIndex = 0
     End Sub
 
     ''' <summary>
@@ -432,6 +431,10 @@ Public Class RFQSearch
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
+        If Not String.IsNullOrEmpty(Priority.SelectedValue) Then
+            bl_IsAllConditionsNotSet = False
+            Return bl_IsAllConditionsNotSet
+        End If
         If IsCheckedMultipleSelectionItems(PurposeList.Items) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
@@ -440,11 +443,7 @@ Public Class RFQSearch
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(Priority.SelectedValue)Then
-            bl_IsAllConditionsNotSet = False
-            Return bl_IsAllConditionsNotSet
-        End If
-        If Not String.IsNullOrEmpty(ValidQuotation.SelectedValue) Then
+        If Not String.IsNullOrEmpty(ValidityQuotation.SelectedValue) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
@@ -522,10 +521,10 @@ Public Class RFQSearch
         cond.QuoLocationCode = QuoLocationCode.SelectedValue
         cond.QuoUserID = QuoUserID.SelectedValue
         cond.QuoStorageLocation = QuoStorageLocation.SelectedValue
+        cond.Priority = Priority.SelectedValue
         cond.Purpose = PurposeList.Items
         cond.Territory = TerritoryList.Items
-        cond.Priority = Priority.SelectedValue
-        cond.ValidQuotation = ValidQuotation.SelectedValue
+        cond.ValidityQuotation = ValidityQuotation.SelectedValue
 
     End Sub
 

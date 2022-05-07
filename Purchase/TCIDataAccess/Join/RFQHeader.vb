@@ -567,7 +567,7 @@ Namespace TCIDataAccess.Join
             Value.AppendLine("        s_Country scry")
             Value.AppendLine("        ON ")
             Value.AppendLine("        rfh.SupplierCountryCode = scry.CountryCode")
-            If Cond.ValidQuotation = "Valid Price" Then
+            If Cond.ValidityQuotation = "Valid Price" Then
                 Value.AppendLine("    INNER JOIN ")
                 Value.AppendLine("        ( SELECT ProductID,UnitPrice,RFQNumber")
                 Value.AppendLine("        FROM v_RFQLine")
@@ -575,7 +575,7 @@ Namespace TCIDataAccess.Join
                 Value.AppendLine("        ON")
                 Value.AppendLine("        rfh.RFQNumber =  vRL.RFQNumber")
             End If
-            If Cond.ValidQuotation = "Inalid Price" Then
+            If Cond.ValidityQuotation = "Inalid Price" Then
                 Value.AppendLine("    INNER JOIN ")
                 Value.AppendLine("        ( SELECT ProductID,UnitPrice,RFQNumber")
                 Value.AppendLine("        FROM v_RFQLine")
@@ -593,7 +593,7 @@ Namespace TCIDataAccess.Join
             '画面で入力された値のWhere句の生成
             Value.AppendLine("WHERE")
 
-            Dim WhereClause As String = CreateRFQHeaderWhereClauseSQL(cond)
+            Dim WhereClause As String = CreateRFQHeaderWhereClauseSQL(Cond)
             Value.AppendLine(WhereClause)
 
             Return Value
@@ -635,10 +635,10 @@ Namespace TCIDataAccess.Join
             WhereClause = AddMultipleListItemWhereClauseSQL(WhereClause, CreateMultipleSelectionInClauseSQL("TerritoryCode", Cond.Territory))
             WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.Priority = @Priority", Cond.Priority)
             'ValidQuotationの入力判定
-            If Not String.IsNullOrEmpty(Cond.ValidQuotation) Then
-                If Cond.ValidQuotation = "Y" Then
+            If Not String.IsNullOrEmpty(Cond.ValidityQuotation) Then
+                If Cond.ValidityQuotation = "Y" Then
                     WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.ValidQuotation = 1", "1")
-                Else IF Cond.ValidQuotation = "N" Then
+                ElseIf Cond.ValidityQuotation = "N" Then
                     WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.ValidQuotation = 0", "0")
                 End If
             End If
@@ -758,11 +758,9 @@ Namespace TCIDataAccess.Join
 
         ''' <summary> LastRFQStatusChangeDateTo </summary>
         Public LastRFQStatusChangeDateTo As String = String.Empty
-        ''' <summary> ValidQuotation </summary>
-        Public ValidQuotation As String = String.Empty
-            
+        ''' <summary> ValidityQuotation </summary>
+        Public ValidityQuotation As String = String.Empty
 
-        
     End Class
 
 End Namespace

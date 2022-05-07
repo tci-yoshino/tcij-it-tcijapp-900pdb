@@ -128,6 +128,9 @@ Partial Public Class ProductListBySupplier
         SetPageSize()
     End Sub
 
+    ''' <summary>
+    ''' 一覧表示
+    ''' </summary>
     Protected Sub ShowList()
         Dim productListBySupplierDispList As ProductListBySupplierDispList = New ProductListBySupplierDispList
         productListBySupplierDispList.Load(SupplierCode.Text, Session(SESSION_ROLE_CODE).ToString, HiddenSelectedValidityFilter.Value,
@@ -151,6 +154,9 @@ Partial Public Class ProductListBySupplier
         ReSetPager
     End Sub
 
+    ''' <summary>
+    ''' ページサイズ設定
+    ''' </summary>
     Private Sub SetPageSize()
 
         SupplierProductPagerCountTop.PageSize = Common.LIST_ONEPAGE_ROW(Request.Url.ToString())
@@ -160,6 +166,9 @@ Partial Public Class ProductListBySupplier
 
     End Sub
 
+    ''' <summary>
+    ''' ページリセット
+    ''' </summary>
     Private Sub ReSetPager()
 
         ResetPageNumericPagerField(SupplierProductPagerLinkTop)
