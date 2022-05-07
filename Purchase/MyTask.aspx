@@ -44,7 +44,7 @@
                         </td>
                     </tr>
                 </table>
-                <asp:HiddenField ID="Action" runat="server" Value="Switch" />
+                <asp:HiddenField ID="Action" runat="server" Value="" />
             </div>
 
             <div class="main">

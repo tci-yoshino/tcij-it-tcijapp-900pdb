@@ -10,6 +10,9 @@ Partial Public Class MyTask
     Protected st_Action As String = String.Empty ' aspx 側で読むため、Protected にする
     Protected lst_MyTask As List(Of TCIDataAccess.Join.MyTaskDisp)
     Private st_UserID As String = String.Empty
+    Private st_RFQPriority As String = String.Empty
+    Private st_RFQStatus As String = String.Empty
+    Private st_Orderby As String = String.Empty
 
     Const SWITCH_ACTION As String = "Switch"
     Const RFQ_PO_ACTION As String = "Cancel"
@@ -19,27 +22,43 @@ Partial Public Class MyTask
 
         '' パラメータ UserID 取得
         If IsPostBack = True Then
-            '' 選択された User を退避
-            st_UserID = UserID.SelectedValue
+            If Not String.IsNullOrEmpty(Request.Form("Action")) AndAlso Request.Form("Action").ToString = MyTask.SWITCH_ACTION Then
+                '' 選択された User を退避
+                Me.st_UserID = Me.UserID.SelectedValue
+                Me.st_RFQPriority = Me.RFQPriority.SelectedValue
+                Me.st_RFQStatus = Me.RFQStatus.SelectedValue
+                Me.st_Orderby = Me.Orderby.SelectedValue
+            Else
+                Me.st_UserID = ViewState("st_UserID").ToString
+                Me.st_RFQPriority = ViewState("st_RFQPriority").ToString
+                Me.st_RFQStatus = ViewState("st_RFQStatus").ToString
+                Me.st_Orderby = ViewState("st_Orderby").ToString
+
+                Me.UserID.SelectedValue = ViewState("st_UserID").ToString()
+                Me.RFQPriority.SelectedValue = ViewState("st_RFQPriority").ToString()
+                Me.RFQStatus.SelectedValue = ViewState("st_RFQStatus").ToString()
+                Me.Orderby.SelectedValue = ViewState("st_Orderby").ToString()
+            End If
         Else
-            st_UserID = Session("UserID").ToString
-            '' 初期表示時は呼び元から渡された UserID を格納
-            'If Request.RequestType = "POST" Then
-            '    st_UserID = Cstr(IIf(Request.Form("UserID") = Nothing, "", Request.Form("UserID")))
-            'ElseIf Request.RequestType = "GET" Then
-            '    st_UserID = Cstr(IIf(Request.QueryString("UserID") = Nothing, "", Request.QueryString("UserID")))
-            'End If
-        End If
+            ' 初期表示時は呼び元から渡された UserID を格納
+            If Request.RequestType = "POST" Then
+                st_UserID = CStr(IIf(Request.Form("UserID") = Nothing, "", Request.Form("UserID")))
+            ElseIf Request.RequestType = "GET" Then
+                st_UserID = CStr(IIf(Request.QueryString("UserID") = Nothing, "", Request.QueryString("UserID")))
+            End If
 
-        '' 初期表示時は呼び元から渡された UserID を格納
-        If String.IsNullOrEmpty(st_UserID) Then
-            Msg.Text = Common.ERR_INVALID_PARAMETER
-            Exit Sub
-        End If
+            ' 初期表示時は呼び元から渡された UserID を格納
+            If Not String.IsNullOrEmpty(st_UserID) AndAlso Not Integer.TryParse(st_UserID, Nothing) Then
+                Msg.Text = Common.ERR_INVALID_PARAMETER
+                Exit Sub
+            End If
 
-        If String.IsNullOrEmpty(st_UserID) Then
-            '' 呼び元もしくは自画面から UserID が取得出来ない場合はログインユーザをセッションから格納
-            st_UserID = Session("UserID").ToString
+            If String.IsNullOrEmpty(st_UserID) Then
+                '' 呼び元もしくは自画面から UserID が取得出来ない場合はログインユーザをセッションから格納
+                st_UserID = Session("UserID").ToString
+            End If
+
+            ViewState("st_UserID") = Session("UserID").ToString
         End If
 
         ' セッション変数 PrivilegeLevel が  'P' の場合は 
@@ -108,6 +127,10 @@ Partial Public Class MyTask
             SetRFQOrderByDropDownList(Orderby)
             Orderby.SelectedValue = "REM"
 
+            ViewState("st_RFQPriority") = RFQPriority.SelectedValue.ToString
+            ViewState("st_RFQStatus") = RFQStatus.SelectedValue.ToString
+            ViewState("st_Orderby") = Orderby.SelectedValue.ToString
+
             ' 一覧取得（初期表示）
             SetPageSize()
 
@@ -148,6 +171,11 @@ Partial Public Class MyTask
         RFQList.DataSource = lst_MyTask
         RFQList.DataBind()
 
+        ViewState("st_UserID") = Me.st_UserID
+        ViewState("st_RFQPriority") = Me.st_RFQPriority
+        ViewState("st_RFQStatus") = Me.st_RFQStatus
+        ViewState("st_Orderby") = Me.st_Orderby
+
         RFQList.Visible = True
 
         Action.Value = String.Empty
@@ -166,7 +194,7 @@ Partial Public Class MyTask
 
         SetPageSize()
 
-        if IsPostBack And Not st_Action.Equals(SWITCH_ACTION) Then
+        If IsPostBack And Not st_Action.Equals(SWITCH_ACTION) Then
             ' 一覧取得（ページャー押下時）
             ShowList()
             RFQList.DataSource = lst_MyTask
@@ -196,8 +224,8 @@ Partial Public Class MyTask
 
         ' RFQ データ取得用 SQLDataSource の設定
         Dim dc_MyTaskList As New TCIDataAccess.Join.MyTaskDispList
-        RFQList.DataSource = Nothing 
-        dc_MyTaskList.Load(Cint(st_UserID), RFQPriority.SelectedValue, RFQStatus.SelectedValue, Orderby.SelectedValue, Session(SESSION_ROLE_CODE).ToString)
+        RFQList.DataSource = Nothing
+        dc_MyTaskList.Load(CInt(st_UserID), st_RFQPriority, st_RFQStatus, st_Orderby, Session(SESSION_ROLE_CODE).ToString)
         lst_MyTask = dc_MyTaskList
 
     End Sub

@@ -508,6 +508,138 @@ Namespace TCIDataAccess.Join
 
             Return i_TotalCount
         End Function
+
+        ''' <summary>
+        ''' データ読込み
+        ''' </summary>
+        ''' <param name="Cond">検索条件</param>
+        ''' <returns>総データ件数</returns>
+        ''' <remarks></remarks>
+        Public Function Load(ByVal Cond As KeywordSearchConditionParameter) As Integer
+            Dim i_TotalCount As Integer = 0
+            Dim sb_SQL As New StringBuilder()
+            Dim sb_Cond As New StringBuilder()
+
+            'SQL文の生成
+            sb_SQL = CreateRFQSelectClauseSQL() 
+            sb_SQL = CreateRFQHeaderBaseSQL(sb_SQL, Cond) 
+            sb_SQL = CreateRFQOrderByClauseSQL(sb_SQL)
+
+            Using DBConn As New SqlConnection(DBCommon.DB_CONNECT_STRING)
+                Using DBCommand As SqlCommand = DBConn.CreateCommand()
+                    Dim Params As SqlParameterCollection = DBCommand.Parameters
+                    DBCommand.CommandText = sb_SQL.ToString()
+                    DBCommand.Parameters.Clear()
+                    '生成したSQL文に入力項目を反映
+                    SetParamInClauseSQL(DBCommand, "RFQNumber", Cond.RFQNumber)
+                    SetParamInClauseSQL(DBCommand, "ProductNumber", Cond.ProductNumber)
+                    If Not String.IsNullOrEmpty(Cond.ProductName) Then
+                        DBCommand.Parameters.AddWithValue("ProductName", StrConv(Cond.ProductName, VbStrConv.Narrow))
+                    End If
+                    SetParamInClauseSQL(DBCommand, "SupplierCode", Cond.SupplierCode)
+                    SetParamInClauseSQL(DBCommand, "S4SupplierCode", Cond.S4SupplierCode)
+                    If Not String.IsNullOrEmpty(Cond.SupplierName) Then
+                        DBCommand.Parameters.AddWithValue("SupplierName", StrConv(Cond.SupplierName, VbStrConv.Narrow))
+                    End If
+                    If Not String.IsNullOrEmpty(Cond.SupplierItemName) Then
+                        DBCommand.Parameters.AddWithValue("SupplierItemName", StrConv(Cond.SupplierItemName, VbStrConv.Narrow))
+                    End If
+                    If Not String.IsNullOrEmpty(Cond.SupplierCountryCode) Then
+                        DBCommand.Parameters.AddWithValue("SupplierCountryCode", Cond.SupplierCountryCode)
+                    End If
+                    If Not String.IsNullOrEmpty(Cond.StatusFrom) Then
+                        DBCommand.Parameters.AddWithValue("StatusFrom", Cond.StatusFrom)
+                    End If
+                    If Not String.IsNullOrEmpty(Cond.StatusTo) Then
+                        DBCommand.Parameters.AddWithValue("StatusTo", Cond.StatusTo)
+                    End If
+                    If Not String.IsNullOrEmpty(Cond.RFQCreatedDateFrom) Then
+                        DBCommand.Parameters.AddWithValue("RFQCreatedDateFrom", GetDatabaseTime(Cond.s_LocationCode, Cond.RFQCreatedDateFrom))
+                    End If
+                    If Not String.IsNullOrEmpty(Cond.RFQCreatedDateTo) Then
+                        DBCommand.Parameters.AddWithValue("RFQCreatedDateTo", GetDatabaseTime(Cond.s_LocationCode, Cond.RFQCreatedDateTo))
+                    End If
+                    If Not String.IsNullOrEmpty(Cond.RFQQuotedDateFrom) Then
+                        DBCommand.Parameters.AddWithValue("RFQQuotedDateFrom", GetDatabaseTime(Cond.s_LocationCode, Cond.RFQQuotedDateFrom))
+                    End If
+                    If Not String.IsNullOrEmpty(Cond.RFQQuotedDateTo) Then
+                        DBCommand.Parameters.AddWithValue("RFQQuotedDateTo", GetDatabaseTime(Cond.s_LocationCode, Cond.RFQQuotedDateTo))
+                    End If
+                    If Not String.IsNullOrEmpty(Cond.LastRFQStatusChangeDateFrom) Then
+                        DBCommand.Parameters.AddWithValue("LastRFQStatusChangeDateFrom", GetDatabaseTime(Cond.s_LocationCode, Cond.LastRFQStatusChangeDateFrom))
+                    End If
+                    If Not String.IsNullOrEmpty(Cond.LastRFQStatusChangeDateTo) Then
+                        DBCommand.Parameters.AddWithValue("LastRFQStatusChangeDateTo", GetDatabaseTime(Cond.s_LocationCode, Cond.LastRFQStatusChangeDateTo))
+                    End If
+                    If Not String.IsNullOrEmpty(Cond.EnqLocationCode) Then
+                        DBCommand.Parameters.AddWithValue("EnqLocationCode", Cond.EnqLocationCode)
+                    End If
+                    If Not String.IsNullOrEmpty(Cond.EnqUserID) Then
+                        DBCommand.Parameters.AddWithValue("EnqUserID", Cond.EnqUserID)
+                    End If
+                    If Not String.IsNullOrEmpty(Cond.EnqStorageLocation) Then
+                        DBCommand.Parameters.AddWithValue("EnqStorageLocation", Cond.EnqStorageLocation)
+                    End If
+                    If Not String.IsNullOrEmpty(Cond.QuoLocationCode) Then
+                        DBCommand.Parameters.AddWithValue("QuoLocationCode", Cond.QuoLocationCode)
+                    End If
+                    If Not String.IsNullOrEmpty(Cond.QuoUserID) Then
+                        DBCommand.Parameters.AddWithValue("QuoUserID", Cond.QuoUserID)
+                    End If
+                    If Not String.IsNullOrEmpty(Cond.QuoStorageLocation) Then
+                        DBCommand.Parameters.AddWithValue("QuoStorageLocation", Cond.QuoStorageLocation)
+                    End If
+                    SetPramMultipleSelectionInClauseSQL(DBCommand, "Purpose", Cond.Purpose)
+                    SetPramMultipleSelectionInClauseSQL(DBCommand, "TerritoryCode", Cond.Territory)
+                    If Not String.IsNullOrEmpty(Cond.Priority) Then
+                        DBCommand.Parameters.AddWithValue("Priority", Cond.Priority)
+                    End If
+
+                    DBConn.Open()
+                    Using DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                        While DBReader.Read()
+                            i_TotalCount += 1
+
+                            Dim dc_Data As New RFQHeader
+                            SetProperty(DBReader("StatusChangeDate"), dc_Data.StatusChangeDate)
+                            SetProperty(DBReader("Status"), dc_Data.Status)
+                            SetProperty(DBReader("RFQNumber"), dc_Data.RFQNumber)
+                            SetProperty(DBReader("Priority"), dc_Data.Priority)
+                            SetProperty(DBReader("QuotedDate"), dc_Data.QuotedDate)
+                            SetProperty(DBReader("ProductID"), dc_Data.ProductID)
+                            SetProperty(DBReader("ProductNumber"), dc_Data.ProductNumber)
+                            SetProperty(DBReader("ProductName"), dc_Data.ProductName)
+                            SetProperty(DBReader("SupplierCode"), dc_Data.SupplierCode)
+                            SetProperty(DBReader("SupplierName"), dc_Data.SupplierName)
+                            SetProperty(DBReader("SupplierInfo"), dc_Data.SupplierInfo)
+                            SetProperty(DBReader("MakerCountryCode"), dc_Data.MakerCountryCode)
+                            SetProperty(DBReader("MakerCountryName"), dc_Data.MakerCountryName)
+                            SetProperty(DBReader("Purpose"), dc_Data.Purpose)
+                            SetProperty(DBReader("MakerName"), dc_Data.MakerName)
+                            SetProperty(DBReader("MakerInfo"), dc_Data.MakerInfo)
+                            SetProperty(DBReader("SupplierCountryCode"), dc_Data.SupplierCountryCode)
+                            SetProperty(DBReader("SupplierCountryName"), dc_Data.SupplierCountryName)
+                            SetProperty(DBReader("SupplierItemName"), dc_Data.SupplierItemName)
+                            SetProperty(DBReader("ShippingHandlingCurrencyCode"), dc_Data.ShippingHandlingCurrencyCode)
+                            SetProperty(DBReader("ShippingHandlingFee"), dc_Data.ShippingHandlingFee)
+                            SetProperty(DBReader("EnqUserName"), dc_Data.EnqUserName)
+                            SetProperty(DBReader("EnqLocationName"), dc_Data.EnqLocationName)
+                            SetProperty(DBReader("QuoUserName"), dc_Data.QuoUserName)
+                            SetProperty(DBReader("QuoLocationName"), dc_Data.QuoLocationName)
+                            SetProperty(DBReader("Comment"), dc_Data.Comment)
+                            SetProperty(DBReader("isCONFIDENTIAL"), dc_Data.isCONFIDENTIAL)
+                            SetProperty(DBReader("CodeExtensionCode"), dc_Data.CodeExtensionCode)
+
+                            Me.Add(dc_Data)
+                        End While
+                    End Using
+
+                End Using
+            End Using
+
+            Return i_TotalCount
+        End Function
+
         ''' <summary>
         ''' RFQHeader検索SQL文字列のSELECT句を生成します。
         ''' </summary>
@@ -633,7 +765,14 @@ Namespace TCIDataAccess.Join
             WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.QuoStorageLocation = @QuoStorageLocation", Cond.QuoStorageLocation)
             WhereClause = AddMultipleListItemWhereClauseSQL(WhereClause, CreateMultipleSelectionInClauseSQL("Purpose", Cond.Purpose))
             WhereClause = AddMultipleListItemWhereClauseSQL(WhereClause, CreateMultipleSelectionInClauseSQL("TerritoryCode", Cond.Territory))
-            WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.Priority = @Priority", Cond.Priority)
+            'WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.Priority = @Priority", Cond.Priority)
+            If Not String.IsNullOrEmpty(Cond.Priority ) Then
+                If Cond.Priority = "AB" Then
+                    WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.Priority IN('A','B')", "AB")
+                Else
+                    WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.Priority = @Priority", Cond.Priority)
+                End If
+            End If
             'ValidQuotationの入力判定
             If Not String.IsNullOrEmpty(Cond.ValidityQuotation) Then
                 If Cond.ValidityQuotation = "Y" Then

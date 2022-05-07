@@ -608,6 +608,9 @@ Partial Public Class RFQUpdate
 
             Specification.Text = da_vRFQHeader.Specification.ToString
 
+            SetSupplierContactPersonCodeList()
+            SupplierContactPersonCodeList.SelectedValue = da_vRFQHeader.SupplierContactPersonSel
+
             If CBool(da_vRFQHeader.isCONFIDENTIAL) Then
                 SDS_RFQUpdate_EnqUser.SelectCommand = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') " _
                                              & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1}) ORDER BY [Name]" _
@@ -1481,7 +1484,7 @@ Partial Public Class RFQUpdate
         'If tmpdt.Rows.Count > 0 Then
         '    SupplierContactPerson.Text = tmpdt.Rows(0)("SupplierContactperson")
         'End If
-        If SupplierContactPersonCodeList.SelectedValue.Length > 0 And SupplierContactPersonCodeList.SelectedValue.IndexOf("-") > -1 Then
+        If SupplierContactPersonCodeList.SelectedValue.Length > 0 AndAlso SupplierContactPersonCodeList.SelectedValue.IndexOf("-") > -1 Then
             SupplierContactPerson.Text = SupplierContactPersonCodeList.SelectedValue.Split("-")(0).ToString
         End If
     End Sub
@@ -2316,8 +2319,16 @@ Partial Public Class RFQUpdate
     End Sub
 
     Protected Sub SupplierCode_TextChanged(sender As Object, e As EventArgs) Handles SupplierCode.TextChanged
-        Dim sql As String
         ' 20200402 追加SupplierCode.text为空判断 start
+        SetSupplierContactPersonCodeList()
+        If SupplierContactPersonCodeList.SelectedValue.Length > 0 AndAlso SupplierContactPersonCodeList.SelectedValue.IndexOf("-") > -1 Then
+            SupplierContactPerson.Text = SupplierContactPersonCodeList.SelectedValue.Split("-")(0).ToString
+        End If
+        ' 20200402 追加SupplierCode.text为空判断 end
+    End Sub
+
+    Private Sub SetSupplierContactPersonCodeList()
+        Dim sql As String
         If SupplierCode.Text.Trim().Length > 0 Then
             'If IsNumeric(SupplierCode.Text) Then
 
@@ -2350,9 +2361,11 @@ Partial Public Class RFQUpdate
             sql += "select (SupplierEmailID10+'-'+ ISNULL(SupplierContactperson10,'')) as supplierInfo,ISNULL(SupplierContactperson10,'') as SupplierContactperson,SupplierEmailID10 as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + " and SupplierEmailID10 <>'' and SupplierEmailID10 is not null and SupplierEmailID10 <>'000'"
             sql += ") as A where supplierInfo is not null"
             SDS_SupplierContactPersonCodeList.SelectCommand = sql
+            SupplierContactPersonCodeList.DataBind()
+
         End If
-        ' 20200402 追加SupplierCode.text为空判断 end
     End Sub
+
 
     Public Function RFQCheck(ByVal RFQNumber As String, ByVal i As String) As Boolean
         Dim Ret As Boolean = True

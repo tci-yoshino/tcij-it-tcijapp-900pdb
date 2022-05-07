@@ -8,6 +8,10 @@ Partial Public Class RequestedTask
     Inherits CommonPage
 
     Protected st_Action As String = String.Empty ' aspx 側で読むため、Protected にする
+    Protected st_RFQPriority As String = String.Empty
+    Protected st_RFQStatus As String = String.Empty
+    Protected st_Orderby As String = String.Empty
+
     Protected lst_RequestedTask As List(Of TCIDataAccess.Join.RequestedTaskDisp)
 
     Const SWITCH_ACTION As String = "Switch"
@@ -18,15 +22,25 @@ Partial Public Class RequestedTask
         If Not IsPostBack Then
             ' RFQPriorityドロップダウンリスト設定
             SetPriorityDropDownList(RFQPriority, PRIORITY_FOR_SEARCH)
-            RFQPriority.SelectedValue = PRIORITY_ALL
+            st_RFQPriority = PRIORITY_ALL
+            RFQPriority.DataBind()
+            RFQPriority.SelectedValue = st_RFQPriority
 
             ' RFQStatusドロップダウンリスト設定
             SetRFQStatusDropDownList(RFQStatus)
-            RFQStatus.SelectedValue = RFQSTATUS_ALL
+            st_RFQStatus = RFQSTATUS_ALL
+            RFQStatus.DataBind()
+            RFQStatus.SelectedValue = st_RFQStatus
 
             ' Orderbyドロップダウンリスト設定
             SetRFQOrderByDropDownList(Orderby)
-            Orderby.SelectedValue = "REM"
+            Orderby.DataBind()
+            st_Orderby = "REM"
+            Orderby.SelectedValue = st_Orderby
+
+            ViewState("st_RFQPriority") = st_RFQPriority
+            ViewState("st_RFQStatus") = st_RFQStatus
+            ViewState("st_Orderby") = st_Orderby
 
             ' 一覧取得（初期表示）
             SetPageSize()
@@ -34,7 +48,21 @@ Partial Public Class RequestedTask
             ShowList()
             RFQList.DataSource = lst_RequestedTask
             RFQList.DataBind()
-
+        Else
+            ' パラメータ取得
+            If String.IsNullOrEmpty(Request.Form("Action")) Then
+                st_Action = Request.QueryString("Action")
+            Else
+                st_Action = Request.Form("Action")
+            End If
+            If st_Action <> SWITCH_ACTION Then
+                st_RFQPriority = ViewState("st_RFQPriority").ToString
+                st_RFQStatus = ViewState("st_RFQStatus").ToString
+                st_Orderby = ViewState("st_Orderby").ToString
+                RFQPriority.SelectedValue = st_RFQPriority
+                RFQStatus.SelectedValue = st_RFQStatus
+                Orderby.SelectedValue = st_Orderby
+            End If
         End If
 
     End Sub
@@ -59,6 +87,10 @@ Partial Public Class RequestedTask
             Exit Sub
         End If
 
+        st_RFQPriority = RFQPriority.SelectedValue
+        st_RFQStatus = RFQStatus.SelectedValue
+        st_Orderby = Orderby.SelectedValue
+
         ' 一覧取得（Switch押下時）
         SetPageSize()
         ReSetPager()
@@ -66,6 +98,10 @@ Partial Public Class RequestedTask
         ShowList()
         RFQList.DataSource = lst_RequestedTask
         RFQList.DataBind()
+
+        ViewState("st_RFQPriority") = st_RFQPriority
+        ViewState("st_RFQStatus") = st_RFQStatus
+        ViewState("st_Orderby") = st_Orderby
 
         RFQList.Visible = True
 
@@ -104,8 +140,8 @@ Partial Public Class RequestedTask
         Dim dc_RequestedTaskList As New TCIDataAccess.Join.RequestedTaskDispList
         RFQList.DataSource = Nothing
 
-        dc_RequestedTaskList.Load(Cint(Session("UserID").ToString), RFQPriority.SelectedValue, RFQStatus.SelectedValue, 
-                                  Orderby.SelectedValue, Session(SESSION_ROLE_CODE).ToString)
+        dc_RequestedTaskList.Load(CInt(Session("UserID").ToString), st_RFQPriority, st_RFQStatus,
+                                  st_Orderby, Session(SESSION_ROLE_CODE).ToString)
 
         lst_RequestedTask = dc_RequestedTaskList
 

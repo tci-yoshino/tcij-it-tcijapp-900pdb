@@ -272,11 +272,11 @@ Public Class RFQSearch
         Dim RFQHeaderList As New TCIDataAccess.Join.RFQHeaderList()
         Dim i_TotalDataCount As Integer = RFQHeaderList.Load(SkipRecord, SearchResultList.PageSize, cond)
 
-        If i_TotalDataCount > 1000 Then
-            st_ErrMsg = Common.MSG_RESULT_OVER_1000
-            ResultArea.Visible = False
-            Return st_ErrMsg
-        End If
+        'If i_TotalDataCount > 1000 Then
+        '    st_ErrMsg = Common.MSG_RESULT_OVER_1000
+        '    ResultArea.Visible = False
+        '    Return st_ErrMsg
+        'End If
 
         If CurrentPageIndex > 0 AndAlso i_TotalDataCount > 0 AndAlso RFQHeaderList.Count = 0 Then
             '表示対象のページがない場合、1つ前のページを表示
@@ -592,9 +592,9 @@ Public Class RFQSearch
 
         '日付の入力値チェック
         'DBに格納されているデータは半角のため、画面で全角文字列で入力されていた場合、文字列を半角文字列に変換
-        Dim RFQCreatedDate As String = CheckDate(RFQCreatedDateFrom.Text, RFQCreatedDateTo.Text, "RFQ Created Date")
-        Dim RFQQuotedDate As String = CheckDate(RFQQuotedDateFrom.Text, RFQQuotedDateTo.Text, "RFQ Quoted Date")
-        Dim LastRFQStatusChangeDate As String = CheckDate(LastRFQStatusChangeDateFrom.Text, LastRFQStatusChangeDateTo.Text, "Last RFQ Status Change Date")
+        Dim RFQCreatedDate As String = CheckDate(RFQCreatedDateFrom.Text, RFQCreatedDateTo.Text, "Created Date")
+        Dim RFQQuotedDate As String = CheckDate(RFQQuotedDateFrom.Text, RFQQuotedDateTo.Text, "Quoted Date")
+        Dim LastRFQStatusChangeDate As String = CheckDate(LastRFQStatusChangeDateFrom.Text, LastRFQStatusChangeDateTo.Text, "Last Status Change Date")
 
         '日付の入力値チェック時にエラーとなった場合、画面に表示するエラーメッセージを設定
         'RFQ Created Date

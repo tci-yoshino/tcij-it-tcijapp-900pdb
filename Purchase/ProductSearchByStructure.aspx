@@ -87,7 +87,7 @@
                             <td><asp:HyperLink ID="Setting" runat="server"
                                         NavigateUrl='<%#"./ProductSetting.aspx?Action=Edit&ProductID=" & Eval("ProductID") %>' Target="_blank" >Product Setting</asp:HyperLink></td>
                             <td><asp:HyperLink ID="RFQList" runat="server"
-                                        NavigateUrl='<%#"./RFQListByProduct.aspx?ProductID=" & Eval("ProductID") %>' Target="_blank" >RFQ List</asp:HyperLink></td>
+                                        NavigateUrl='<%#"./RFQListByProduct.aspx?ProductID=" & Eval("ProductID") %>' Target="_blank" >Product RFQ List</asp:HyperLink></td>
                         </tr>
                     </ItemTemplate>
                     <EmptyDataTemplate>

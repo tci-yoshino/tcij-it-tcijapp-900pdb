@@ -850,24 +850,6 @@ Partial Public Class RFQIssue
     ''' <remarks>UpdatePanelコントロールによるAjaxの非同期ポストバックで実行されます。</remarks>
     Protected Sub SupplierCode_TextChanged(ByVal sender As Object, e As EventArgs) Handles SupplierCode.TextChanged
 
-        Dim rFQIssueDisp As Join.RFQIssueDisp = New Join.RFQIssueDisp
-        Dim supplierCodeInfo As List(Of Join.RFQIssueDispSupplierInfo) = New List(Of Join.RFQIssueDispSupplierInfo)
-        If Not String.IsNullOrWhiteSpace(SupplierCode.Text) Then
-            supplierCodeInfo = rFQIssueDisp.GetSupplierInfo(SupplierCode.Text, Session(SESSION_ROLE_CODE).ToString)
-
-            If supplierCodeInfo.Count <> 0 Then
-                For Each supplierInfo As Join.RFQIssueDispSupplierInfo In supplierCodeInfo
-                    R3SupplierCode.Text = supplierInfo.R3SupplierCode
-                    SupplierName.Text = supplierInfo.Name
-                    SupplierCountry.Text = supplierInfo.CountryName
-                Next
-            End If
-        Else
-            R3SupplierCode.Text = String.Empty
-            SupplierName.Text = String.Empty
-            SupplierCountry.Text = String.Empty
-        End If
-
         Dim st_SupplierCode As String = SupplierCode.Text
         SupplierContactPersonCodeList.Items.Clear()
         If Not String.IsNullOrWhiteSpace(st_SupplierCode) Then
@@ -877,34 +859,6 @@ Partial Public Class RFQIssue
             Else
                 Msg.Text = ERR_INCORRECT_SUPPLIERCODE
             End If
-        End If
-
-    End Sub
-
-    ''' <summary>
-    '''  MakerCode 変更時イベント
-    ''' </summary>
-    ''' <param name="sender">ASP.NETの既定値</param>
-    ''' <param name="e">ASP.NETの既定値</param>
-    ''' <remarks>UpdatePanelコントロールによるAjaxの非同期ポストバックで実行されます。</remarks>
-    Protected Sub MakerCode_TextChanged(ByVal sender As Object, e As EventArgs) Handles MakerCode.TextChanged
-
-        Dim rFQIssueDisp As Join.RFQIssueDisp = New Join.RFQIssueDisp
-        Dim makerCodeInfo As List(Of Join.RFQIssueDispMakerInfo) = New List(Of Join.RFQIssueDispMakerInfo)
-        If Not String.IsNullOrWhiteSpace(MakerCode.Text) Then
-            makerCodeInfo = rFQIssueDisp.GetMakerInfo(MakerCode.Text, Session(SESSION_ROLE_CODE).ToString)
-
-            If makerCodeInfo.Count <> 0 Then
-                For Each makerInfo As Join.RFQIssueDispMakerInfo In makerCodeInfo
-                    SAPMakerCode.Text = makerInfo.S4SupplierCode
-                    MakerName.Text = makerInfo.Name
-                    MakerCountry.Text = makerInfo.CountryName
-                Next
-            End If
-        Else
-            SAPMakerCode.Text = String.Empty
-            MakerName.Text = String.Empty
-            MakerCountry.Text = String.Empty
         End If
 
     End Sub

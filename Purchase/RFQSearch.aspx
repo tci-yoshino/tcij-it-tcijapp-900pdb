@@ -254,7 +254,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>RFQ Current Status : </th>
+                            <th>Current Status : </th>
                             <td>From
                                 <asp:DropDownList ID="StatusFrom" runat="server">
                                 </asp:DropDownList>
@@ -265,7 +265,7 @@
                             </td>
                         </tr>
                         <tr id="RFQCreatedDate_line" style="visibility: collapse;">
-                            <th>RFQ Created Date : </th>
+                            <th>Created Date : </th>
                             <td>From
                                 <asp:TextBox ID="RFQCreatedDateFrom" runat="server" Width="10em" MaxLength="10"></asp:TextBox>
                                 To
@@ -274,7 +274,7 @@
                             </td>
                         </tr>
                         <tr id ="RFQQuotedDate_line" style="visibility: collapse;">
-                            <th>RFQ Quoted Date : </th>
+                            <th>Quoted Date : </th>
                             <td>From
                                 <asp:TextBox ID="RFQQuotedDateFrom" runat="server" Width="10em" MaxLength="10"></asp:TextBox>
                                 To
@@ -283,7 +283,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>Last RFQ Status Change Date : </th>
+                            <th>Last Status Change Date : </th>
                             <td>From
                                 <asp:TextBox ID="LastRFQStatusChangeDateFrom" runat="server" Width="10em" MaxLength="10"></asp:TextBox>
                                 To
@@ -320,7 +320,7 @@
                             </td>
                         </tr>
                         <tr id ="RFQPriority_line" style="visibility: collapse;">
-                            <th>RFQ Priority : </th>
+                            <th>Priority : </th>
                             <td>
                                 <asp:DropDownList ID="Priority" runat="server">
                                 </asp:DropDownList>

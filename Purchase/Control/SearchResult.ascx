@@ -45,7 +45,7 @@
                 <tr>
                     <th>Product Number / Name</th>
                     <td colspan="5">
-                        <asp:HyperLink ID="ProductNumberLink" runat="server" NavigateUrl='<%#Eval("ProductID","../RFQListByProduct.aspx?ProductID={0}")%>' Text='<%#Eval("ProductNumber")%>' />
+                        <asp:HyperLink ID="ProductNumberLink" runat="server" NavigateUrl='<%#Eval("ProductID","../RFQListByProduct.aspx?ProductID={0}")%>' Text='<%#Eval("ProductNumber")%>' target="_blank" />
                         <span class="indent">
                             <asp:Label ID="CodeExtensionCode" runat="server" Text='<%#Eval("CodeExtensionCode")%>'></asp:Label>
                         </span>
@@ -63,7 +63,7 @@
                                 <asp:Label ID="SupplierInfo" runat="server" Text='<%#If(String.IsNullOrEmpty(Eval("SupplierInfo")), "", "Supplier Information")%>'></asp:Label>
                             </asp:HyperLink>
                         </span>
-                        <asp:HyperLink ID="SupplierCodeLink" runat="server" NavigateUrl='<%#Eval("SupplierCode","../RFQListBySupplier.aspx?SupplierCode={0}")%>' Text='<%#Eval("SupplierCode")%>' />
+                        <asp:HyperLink ID="SupplierCodeLink" runat="server" NavigateUrl='<%#Eval("SupplierCode","../RFQListBySupplier.aspx?SupplierCode={0}")%>' Text='<%#Eval("SupplierCode")%>' target="_blank" />
                         
                         <asp:Label ID="lst_SupplierName" runat="server" Text='<%#Eval("SupplierName")%>'></asp:Label>
                         <span class="indent">(<asp:Label ID="SupplierCountry" runat="server" Text='<%#Eval("SupplierCountryName")%>'></asp:Label>)</span>
