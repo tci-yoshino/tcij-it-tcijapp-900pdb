@@ -12,7 +12,7 @@
     <add key="LIST_ONEPAGE_ROW_ProductSearchByKeyword" value="100"/>
     <add key="ReportTemplate_RFQSearch" value="D:\tcijapp\Purchase\Purchase\App_Data\RFQList.xlsx"/>
     <add key="ReportTemplate_SupplierProduct" value="D:\tcijapp\Purchase\Purchase\App_Data\SupplierProduct.xlsx"/>
-    <add key="FileName_StructureDB" value="D:\tcijapp\Purchase\Structure\structure.db" />
+    <add key="FileName_StructureDB" value="F:\NPMS\Structure\Structure.db" />
     <add key="FilePath_Misearch" value="D:\tcijapp\Purchase\Class\" />
     <add key="NPMSURL" value="http://tcijapp/NPMS" />
   </appSettings>
@@ -110,11 +110,11 @@
       </dependentAssembly>
     </assemblyBinding>
   </runtime>
-    <system.webServer>
-        <defaultDocument>
-            <files>
-                <add value="Default.html" />
-            </files>
-        </defaultDocument>
-    </system.webServer>
+  <system.webServer>
+    <defaultDocument>
+      <files>
+        <add value="MyTask.aspx" />
+      </files>
+    </defaultDocument>
+  </system.webServer>
 </configuration>
