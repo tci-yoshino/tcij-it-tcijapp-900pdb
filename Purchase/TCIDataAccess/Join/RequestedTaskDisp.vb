@@ -188,7 +188,7 @@ Namespace TCIDataAccess.Join
             Value.AppendLine("SELECT")
             Value.AppendLine("    RH.[RFQNumber], ")
             Value.AppendLine("    CASE WHEN RH.[Priority] IS NULL THEN 1 ELSE 0  END AS PrioritySort,")
-            Value.AppendLine("    ISNULL(RH.[Priority], '') AS Priority,")
+            Value.AppendLine("    ISNULL(RH.[Priority], '') AS [Priority],")
             Value.AppendLine("    RH.[CreateDate],")
             Value.AppendLine("    RH.[StatusChangeDate],")
             Value.AppendLine("    RH.[Status],")
