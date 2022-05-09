@@ -35,7 +35,8 @@
                             <asp:DropDownList ID="RFQStatus" runat="server">
                             </asp:DropDownList>
                         </td>
-                        <td>Order by:
+                        <th>Order by : </th>
+                        <td>
                             <asp:DropDownList ID="Orderby" runat="server">
                             </asp:DropDownList>
                         </td>
