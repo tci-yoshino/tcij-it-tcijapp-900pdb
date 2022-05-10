@@ -545,7 +545,7 @@ Partial Public Class RFQUpdate
             Common.SetPriorityDropDownList(Me.Priority, Common.PRIORITY_FOR_EDIT)
 
             'Hidden
-            QuotedDate.Value = da_vRFQHeader.QuotedDate.ToString
+            QuotedDate.Value = TCIDataAccess.DBCommon.ConvertDefaultDateTimeToNull(da_vRFQHeader.QuotedDate).ToString
             UpdateDate.Value = GetUpdateDate("v_RFQHeader", "RFQNumber", st_RFQNumber)
             EnqLocationCode.Value = da_vRFQHeader.EnqLocationCode
             QuoLocationCode.Value = da_vRFQHeader.QuoLocationCode
