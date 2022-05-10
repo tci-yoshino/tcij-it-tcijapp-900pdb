@@ -180,9 +180,45 @@ Namespace TCIDataAccess
 
 #Region "User-Defined Methods"
 
-        ''' <summary>
-        ''' データベースのデータを削除する
-        ''' </summary>
+        ''' <summary> 
+        ''' データベースへデータを書き込む。(Facade 専用)
+        ''' </summary> 
+        ''' <param name="DBCommand">SqlCommand</param>
+        ''' <returns>IDENTITY で自動的に挿入された ID 値。更新または IDENTITY 列が無い場合は 0 が返る。</returns> 
+        Public Function Entry(ByVal DBCommand As SqlCommand) As Integer
+
+            Dim i_ID As Integer = 0
+            DBCommand.CommandText = CreateEntrySQL()
+            DBCommand.Parameters.Clear()
+            DBCommand.Parameters.AddWithValue("UserID", _UserID)
+            DBCommand.Parameters.AddWithValue("Storage", _Storage)
+            Dim ob_ID As Object = DBCommand.ExecuteScalar()
+            If Not IsDBNull(ob_ID) Then
+                i_ID = CInt(ob_ID)
+            End If
+            Return i_ID
+
+        End Function
+
+        ''' <summary> 
+        ''' データベースへデータを削除する SQL 文字列を生成する。
+        ''' </summary> 
+        ''' <returns>生成した SQL 文字列</returns> 
+        Private Function CreateEntrySQL() As String
+
+            Dim Value As New StringBuilder()
+            Value.AppendLine("INSERT [StorageByPurchasingUser] (")
+            Value.AppendLine("    [UserID],")
+            Value.AppendLine("    [Storage]")
+            Value.AppendLine(")")
+            Value.AppendLine("Values(")
+            Value.AppendLine("    @UserID,")
+            Value.AppendLine("    @Storage")
+            Value.AppendLine(")")
+            Return Value.ToString()
+
+        End Function
+
         Public Sub Delete()
 
             Using DBConn As New SqlConnection(DB_CONNECT_STRING)
@@ -210,6 +246,37 @@ Namespace TCIDataAccess
 
         End Sub
 
+        ''' <summary>
+        ''' データベースのデータを削除する (Facade 専用)
+        ''' </summary>
+        ''' <param name="DBCommand">SqlCommand</param>
+        ''' <param name="i_UserID">UserID</param>
+        Public Function Delete(ByVal DBCommand As SqlCommand, ByVal i_UserID As Integer) As Integer
+
+            Dim i_ID As Integer = 0
+            DBCommand.CommandText = CreateDeleteSQL()
+            DBCommand.Parameters.Clear()
+            DBCommand.Parameters.AddWithValue("UserID", i_UserID)
+            Dim ob_ID As Object = dbCommand.ExecuteNonQuery()
+            If Not IsDBNull(ob_ID) Then
+                i_ID = CInt(ob_ID)
+            End If
+            Return i_ID
+
+        End Function
+
+        ''' <summary> 
+        ''' データベースへデータを削除する SQL 文字列を生成する。
+        ''' </summary> 
+        ''' <returns>生成した SQL 文字列</returns> 
+        Private Function CreateDeleteSQL() As String
+
+            Dim Value As New StringBuilder()
+            Value.AppendLine("DELETE FROM [StorageByPurchasingUser] ")
+            Value.AppendLine("WHERE [UserID] = @UserID")
+            Return Value.ToString()
+
+        End Function
 #End Region 'User-Defined Methods End
 
     End Class

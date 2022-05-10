@@ -1,14 +1,18 @@
 ﻿Option Explicit On
 Option Infer Off
 Option Strict On
+
 Imports System.Data.SqlClient
 Imports Purchase.Common
 Partial Public Class PurchaseGroupSetting
     Inherits CommonPage
+
     Const SAVE_ACTION As String = "Save"
     Const EDIT_ACTION As String = "Edit"
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Msg.Text = String.Empty
+
         If IsPostBack = False Then
             Mode.Value = Common.GetHttpAction(Request)
             UserID.Value = Common.GetHttpQuery(Request, "UserID")
@@ -16,97 +20,81 @@ Partial Public Class PurchaseGroupSetting
                 Msg.Text = Common.ERR_INVALID_PARAMETER
                 Exit Sub
             End If
-            Dim st_SQL As String = String.Empty
-            st_SQL &= "SELECT "
-            st_SQL &= " UserID, "
-            st_SQL &= " LocationName, "
-            st_SQL &= " AccountName, "
-            st_SQL &= " CASE RFQCorrespondenceEditable WHEN 1 THEN 'Y' "
-            st_SQL &= " ELSE '' END AS RFQCorrespondenceEditable, "
-            st_SQL &= " CASE MMSTAInvalidationEditable WHEN 1 THEN 'Y' "
-            st_SQL &= " ELSE '' END AS MMSTAInvalidationEditable, "
-            st_SQL &= "[Name], "
-            st_SQL &= "R3PurchasingGroup "
-            st_SQL &= "FROM "
-            st_SQL &= " v_UserAll "
-            st_SQL &= "WHERE "
-            st_SQL &= "UserID = "
-            st_SQL &= UserID.Value
-            Using DBConn As New SqlConnection(Common.DB_CONNECT_STRING)
-                Dim DBCommand As SqlCommand = DBConn.CreateCommand()
-                DBCommand.CommandText = st_SQL
-                DBConn.Open()
-                Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
-                If DBReader.Read = True Then
-                    Location.Text = CStr(DBReader("LocationName"))
-                    Name.Text = CStr(DBReader("Name"))
-                    R3PurchasingGroup.Text = DBReader("R3PurchasingGroup").ToString()
-                    Dim SLocationByPUser As DataTable = GetDataTable("select * from StorageByPurchasingUser where UserID=" + UserID.Value)
-                    For i As Integer = 0 To SLocationByPUser.Rows.Count - 1
-                        If SLocationByPUser.Rows(i)("Storage").ToString = "AL10" Then
-                            AL10.Checked = True
-                        End If
-                        If SLocationByPUser.Rows(i)("Storage").ToString = "AL11" Then
-                            AL11.Checked = True
-                        End If
-                        If SLocationByPUser.Rows(i)("Storage").ToString = "AL20" Then
-                            AL20.Checked = True
-                        End If
-                        If SLocationByPUser.Rows(i)("Storage").ToString = "AL40" Then
-                            AL40.Checked = True
-                        End If
-                        If SLocationByPUser.Rows(i)("Storage").ToString = "AL50" Then
-                            AL50.Checked = True
-                        End If
-                        If SLocationByPUser.Rows(i)("Storage").ToString = "CL10" Then
-                            CL10.Checked = True
-                        End If
-                        'If SLocationByPUser.Rows(i)("Storage").ToString = "CL20" Then
-                        '    CL20.Checked = True
-                        'End If
-                        'If SLocationByPUser.Rows(i)("Storage").ToString = "CL30" Then
-                        '    CL30.Checked = True
-                        'End If
-                        If SLocationByPUser.Rows(i)("Storage").ToString = "CL40" Then
-                            CL40.Checked = True
-                        End If
-                        If SLocationByPUser.Rows(i)("Storage").ToString = "CL70" Then
-                            CL70.Checked = True
-                        End If
-                        If SLocationByPUser.Rows(i)("Storage").ToString = "EL10" Then
-                            EL10.Checked = True
-                        End If
-                        If SLocationByPUser.Rows(i)("Storage").ToString = "EL20" Then
-                            EL20.Checked = True
-                        End If
-                        If SLocationByPUser.Rows(i)("Storage").ToString = "HL10" Then
-                            HL10.Checked = True
-                        End If
-                        If SLocationByPUser.Rows(i)("Storage").ToString = "HL30" Then
-                            HL30.Checked = True
-                        End If
-                        If SLocationByPUser.Rows(i)("Storage").ToString = "HL50" Then
-                            HL50.Checked = True
-                        End If
-                        If SLocationByPUser.Rows(i)("Storage").ToString = "NL10" Then
-                            NL10.Checked = True
-                        End If
-                        If SLocationByPUser.Rows(i)("Storage").ToString = "NL20" Then
-                            NL20.Checked = True
-                        End If
-                    Next
-                Else
-                    Msg.Text = Common.MSG_NO_DATA_FOUND
-                    Exit Sub
-                End If
-                If DBReader("RFQCorrespondenceEditable").ToString = "Y" Then
-                    RFQCorrespondenceEditable.Checked = True
-                End If
-                If DBReader("MMSTAInvalidationEditable").ToString = "Y" Then
-                    MMSTAInvalidationEditable.Checked = True
-                End If
-                DBReader.Close()
-            End Using
+
+            Dim dc_PurchaseGroupSettingDispList As TCIDataAccess.Join.PurchaseGroupSettingDispList = New TCIDataAccess.Join.PurchaseGroupSettingDispList
+            dc_PurchaseGroupSettingDispList.Load(Cint(UserID.Value))
+
+            If dc_PurchaseGroupSettingDispList.Count <> 0  Then
+                R3PurchasingGroup.Text = dc_PurchaseGroupSettingDispList(0).R3PurchasingGroup
+                Me.Location.Text = dc_PurchaseGroupSettingDispList(0).LocationName
+                Name.Text = dc_PurchaseGroupSettingDispList(0).Name
+
+                For Each storagePUser As TCIDataAccess.StorageByPurchasingUser In dc_PurchaseGroupSettingDispList(0).StorageByPurchasingUserList
+                    If storagePUser.Storage = "AL10" Then
+                        AL10.Checked = True
+                    End If
+                    If storagePUser.Storage = "AL11" Then
+                        AL11.Checked = True
+                    End If
+                    If storagePUser.Storage = "AL20" Then
+                        AL20.Checked = True
+                    End If
+                    If storagePUser.Storage = "AL40" Then
+                        AL40.Checked = True
+                    End If
+                    If storagePUser.Storage = "AL50" Then
+                        AL50.Checked = True
+                    End If
+                    If storagePUser.Storage = "CL10" Then
+                        CL10.Checked = True
+                    End If
+                    'If storagePUser.Storage = "CL20" Then
+                    '    CL20.Checked = True
+                    'End If
+                    'If storagePUser.Storage = "CL30" Then
+                    '    CL30.Checked = True
+                    'End If
+                    If storagePUser.Storage = "CL40" Then
+                        CL40.Checked = True
+                    End If
+                    If storagePUser.Storage = "CL70" Then
+                        CL70.Checked = True
+                    End If
+                    If storagePUser.Storage = "EL10" Then
+                        EL10.Checked = True
+                    End If
+                    If storagePUser.Storage = "EL20" Then
+                        EL20.Checked = True
+                    End If
+                    If storagePUser.Storage = "HL10" Then
+                        HL10.Checked = True
+                    End If
+                    If storagePUser.Storage = "HL30" Then
+                        HL30.Checked = True
+                    End If
+                    If storagePUser.Storage = "HL50" Then
+                        HL50.Checked = True
+                    End If
+                    If storagePUser.Storage = "NL10" Then
+                        NL10.Checked = True
+                    End If
+                    If storagePUser.Storage = "NL20" Then
+                        NL20.Checked = True
+                    End If
+                Next
+            Else
+                Msg.Text = Common.MSG_NO_DATA_FOUND
+                Exit Sub
+            End If
+
+            If dc_PurchaseGroupSettingDispList(0).RFQCorrespondenceEditable = "Y" Then
+                RFQCorrespondenceEditable.Checked = True
+            End If
+
+            If dc_PurchaseGroupSettingDispList(0).MMSTAInvalidationEditable = "Y" Then
+                MMSTAInvalidationEditable.Checked = True
+            End If
+
         End If
 
     End Sub
@@ -127,88 +115,87 @@ Partial Public Class PurchaseGroupSetting
             Msg.Text = "User ID" & Common.ERR_DOES_NOT_EXIST
             Exit Sub
         End If
-        Dim st_SQL As String = String.Empty
+
         If Common.GetHttpQuery(Request, "Mode") = EDIT_ACTION Then
             If Common.ExistenceConfirmation("PurchasingUser", "UserID", UserID.Value) = False Then    '[入力UserIDのPurchasingUser存在有無]
                 Msg.Text = Common.ERR_DELETED_BY_ANOTHER_USER
                 Exit Sub
             End If
-            st_SQL &= "UPDATE PurchasingUser SET "
-            st_SQL &= "R3PurchasingGroup='" + R3PurchasingGroup.Text + "'"
+
+            Dim st_R3PurchasingGroup As String = String.Empty
+            st_R3PurchasingGroup = R3PurchasingGroup.Text
+
+            Dim bl_RFQCorrespondenceEditable As Boolean = False
             If RFQCorrespondenceEditable.Checked = True Then
-                st_SQL &= ", RFQCorrespondenceEditable = 1 "
-            Else
-                st_SQL &= ", RFQCorrespondenceEditable = '' "
+                bl_RFQCorrespondenceEditable = True
             End If
+
+            Dim bl_MMSTAInvalidationEditable As Boolean = False
             If MMSTAInvalidationEditable.Checked = True Then
-                st_SQL &= ", MMSTAInvalidationEditable = 1 "
-            Else
-                st_SQL &= ", MMSTAInvalidationEditable = '' "
+                bl_MMSTAInvalidationEditable = True
             End If
-            st_SQL &= "WHERE UserID='" & UserID.Value & "'; "
-            '1.先删除后添加
-            st_SQL &= "delete StorageByPurchasingUser where UserID=" + UserID.Value + "; "
-            If AL10.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL10.ID.ToString + "'); "
+
+            Dim StorageList As List(Of String) = New List(Of String)
+            If AL10.Checked.Equals(True) Then
+                StorageList.Add(AL10.ID.ToString)
             End If
             If AL11.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL11.ID.ToString + "'); "
+                StorageList.Add(AL11.ID.ToString)
             End If
             If AL20.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL20.ID.ToString + "'); "
+                StorageList.Add(AL20.ID.ToString)
             End If
             If AL40.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL40.ID.ToString + "'); "
+                StorageList.Add(AL40.ID.ToString)
             End If
             If AL50.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + AL50.ID.ToString + "'); "
+                StorageList.Add(AL50.ID.ToString)
             End If
             If CL10.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL10.ID.ToString + "'); "
+                StorageList.Add(CL10.ID.ToString)
             End If
             'If CL20.Checked = True Then
-            '    st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL20.ID.ToString + "'); "
+                'StorageList.Add(CL20.ID.ToString)
             'End If
             'If CL30.Checked = True Then
-            '    st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL30.ID.ToString + "'); "
+                'StorageList.Add(CL30.ID.ToString)
             'End If
             If CL40.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL40.ID.ToString + "'); "
+                StorageList.Add(CL40.ID.ToString)
             End If
             If CL70.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + CL70.ID.ToString + "'); "
+                StorageList.Add(CL70.ID.ToString)
             End If
             If EL10.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + EL10.ID.ToString + "'); "
+                StorageList.Add(EL10.ID.ToString)
             End If
             If EL20.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + EL20.ID.ToString + "'); "
+                StorageList.Add(EL20.ID.ToString)
             End If
             If HL10.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + HL10.ID.ToString + "'); "
+                StorageList.Add(HL10.ID.ToString)
             End If
             If HL30.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + HL30.ID.ToString + "'); "
+                StorageList.Add(HL30.ID.ToString)
             End If
             If HL50.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + HL50.ID.ToString + "'); "
+                StorageList.Add(HL50.ID.ToString)
             End If
             If NL10.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + NL10.ID.ToString + "'); "
+                StorageList.Add(NL10.ID.ToString)
             End If
             If NL20.Checked = True Then
-                st_SQL &= "insert into StorageByPurchasingUser (UserID,Storage) values(" + UserID.Value + ",'" + NL20.ID.ToString + "'); "
+                StorageList.Add(NL20.ID.ToString)
             End If
+
+            '' 
+            TCIDataAccess.FacadePurchaseGroupSetting.Save(CInt(UserID.Value), CInt(Session("UserID")), st_R3PurchasingGroup,
+                                                          bl_RFQCorrespondenceEditable, bl_MMSTAInvalidationEditable, StorageList)
         Else
             Msg.Text = Common.ERR_INVALID_PARAMETER
             Exit Sub
         End If
-        Using DBConn As New SqlConnection(Common.DB_CONNECT_STRING)
-            Dim DBCommand As SqlCommand = DBConn.CreateCommand()
-            DBCommand.CommandText = st_SQL
-            DBConn.Open()
-            DBCommand.ExecuteNonQuery()
-        End Using
+
         Response.Redirect("PurchaseGroup.aspx")
     End Sub
 End Class

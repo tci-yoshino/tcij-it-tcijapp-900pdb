@@ -2110,64 +2110,6 @@ Partial Public Class RFQUpdate
             sql += ",'" + parameter(i) + "'"
         Next
         sql += ");"
-        Dim f As String = parameter(6).Substring(1, 1)
-        If f <> "9" Then
-            '判断purpose是否在条件之内在的话修改sql重新添加
-            If parameter(19) = "10" Or parameter(19) = "12" Or parameter(19) = "30" Or parameter(19) = "33" Then
-                sql += "    INSERT INTO POInterface "
-                sql += "(Id,RFQLineNumber,RFQNumber"
-                'For i = 1 To 39
-                '    sql += ",Field" + Trim(i) + ""
-                'Next
-
-                sql += ",Pattern"
-                sql += ",SupplyingPlant"
-                sql += ",ReceivingPlant"
-                sql += ",PurOrgShipping"
-                sql += ",PurOrgReceving"
-                sql += ",MaterialNumber"
-                sql += ",Vendor"
-                sql += ",Price"
-                sql += ",PriceUnit"
-                sql += ",OrderPriceUnit"
-                sql += ",Currency"
-                sql += ",RFQReferenceNumber"
-                sql += ",SupplierContactPersonCode"
-                sql += ",MakerCode"
-                sql += ",SupplierItemName"
-                sql += ",PaymentTerms"
-                sql += ",HandlingFee"
-                sql += ",ShipmentCost"
-                sql += ",Purpose"
-                sql += ",Priority"
-                sql += ",EnqUser"
-                sql += ",QuoUser"
-                sql += ",EnqQuantity"
-                sql += ",LeadTime"
-                sql += ",SupplierItemNumber"
-                sql += ",Incoterms"
-                sql += ",TermsDelivery"
-                sql += ",PurityMethod"
-                sql += ",Packing"
-                sql += ",SupplyingOfferVaildDateFrom"
-                sql += ",SupplyingOfferVaildDateTo"
-                sql += ",SupplyingPlantReminding1"
-                sql += ",SupplyingPlantReminding2"
-                sql += ",SupplyingPlantReminding3"
-                sql += ",ReceivingOfferVaildDateFrom"
-                sql += ",ReceivingOfferVaildDateTo"
-                sql += ",SupplyingStorageLocation"
-                sql += ",ReceivingStorageLocation"
-                sql += ",SupplierOfferNo"
-
-                sql += ")"
-                sql += " VALUES(" + (MaxId + 1).ToString + "," + RFQLineNumber + "," + RFQNumber + ""
-                For i = 1 To 39
-                    sql += ",'" + parameter(i) + "'"
-                Next
-                sql += ");"
-            End If
-        End If
 
         DBConn.Open()
         DBCommand = DBConn.CreateCommand()

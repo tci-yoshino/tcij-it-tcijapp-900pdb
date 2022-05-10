@@ -378,6 +378,51 @@ Namespace TCIDataAccess
 
 #Region "User-Defined Methods"
 
+        ''' <summary> 
+        ''' データベースへデータを書き込む。(Facade 専用)
+        ''' </summary> 
+        ''' <param name="DBCommand">SqlCommand</param>
+        ''' <returns>IDENTITY で自動的に挿入された ID 値。更新または IDENTITY 列が無い場合は 0 が返る。</returns> 
+        Public Function Save(ByVal DBCommand As SqlCommand, ByVal i_UserID As Integer, ByVal st_UpdatedBy As Integer, ByVal st_R3PurchasingGroup As String,
+                             ByVal bl_RFQCorrespondenceEditable As Boolean, ByVal bl_MMSTAInvalidationEditable As Boolean) As Integer
+
+            Dim i_ID As Integer = 0
+            DBCommand.CommandText = CreateSaveForUserIDSQL()
+            DBCommand.Parameters.Clear()
+            DBCommand.Parameters.AddWithValue("UserID", i_UserID)
+            DBCommand.Parameters.AddWithValue("R3PurchasingGroup", st_R3PurchasingGroup)
+            DBCommand.Parameters.AddWithValue("UpdatedBy", st_UpdatedBy)
+            DBCommand.Parameters.AddWithValue("RFQCorrespondenceEditable", bl_RFQCorrespondenceEditable)
+            DBCommand.Parameters.AddWithValue("MMSTAInvalidationEditable", bl_MMSTAInvalidationEditable)
+            Dim ob_ID As Object = DBCommand.ExecuteScalar()
+            If Not IsDBNull(ob_ID) Then
+                i_ID = CInt(ob_ID)
+            End If
+            Return i_ID
+
+        End Function
+
+        ''' <summary> 
+        ''' データベースへデータを書き込む SQL 文字列を生成する。
+        ''' </summary> 
+        ''' <returns>生成した SQL 文字列</returns> 
+        Private Function CreateSaveForUserIDSQL() As String
+
+            Dim Value As New StringBuilder()
+            Value.AppendLine("UPDATE")
+            Value.AppendLine("    [PurchasingUser]")
+            Value.AppendLine("SET")
+            Value.AppendLine("    [R3PurchasingGroup] = @R3PurchasingGroup,")
+            Value.AppendLine("    [UpdatedBy] = @UpdatedBy,")
+            Value.AppendLine("    [UpdateDate] = GETDATE(),")
+            Value.AppendLine("    [RFQCorrespondenceEditable] = @RFQCorrespondenceEditable,")
+            Value.AppendLine("    [MMSTAInvalidationEditable] = @MMSTAInvalidationEditable")
+            Value.AppendLine("WHERE ")
+            Value.AppendLine("    [UserID] = @UserID")
+            Return Value.ToString()
+
+        End Function
+
         '''' <summary>
         '''' データベースのデータを削除する
         '''' </summary>
