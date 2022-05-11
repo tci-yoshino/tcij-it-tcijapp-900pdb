@@ -12,8 +12,8 @@
   DTS:LocaleID="1041"
   DTS:ObjectName="SupplierProductsImport"
   DTS:PackageType="5"
-  DTS:VersionBuild="15"
-  DTS:VersionGUID="{C3B06DB5-79A6-4E71-99A2-3DB897AC4F84}">
+  DTS:VersionBuild="16"
+  DTS:VersionGUID="{9D34B828-B890-48BF-99F7-CC678BAFF1F4}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Configurations>
@@ -38,7 +38,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="CommandTimeout">
       <DTS:VariableValue
-        DTS:DataType="3">0</DTS:VariableValue>
+        DTS:DataType="3">300</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -1057,7 +1057,7 @@ Partial Public Class ScriptMain
             sqlStr.AppendLine("        LR.SupplierCode")
             sqlStr.AppendLine("        ,LR.ProductID")
             sqlStr.AppendLine("        ,LR.RFQNumber")
-            sqlStr.AppendLine("        ,(SELECT CASE WHEN MAX(ISNULL(RL.UnitPrice, 0)) = 0 THEN 'N' ELSE 'Y' END FROM RFQLine AS RL WHERE RL.RFQNumber = LR.RFQNumber) AS ValidQuotation")
+            sqlStr.AppendLine("        ,(SELECT CASE WHEN MAX(ISNULL(RL.UnitPrice, 0)) > 0 THEN 'Y' ELSE 'N' END FROM RFQLine AS RL WHERE RL.RFQNumber = LR.RFQNumber) AS ValidQuotation")
             sqlStr.AppendLine("    FROM")
             sqlStr.AppendLine("        LatestRFQ AS LR")
             sqlStr.AppendLine(")")
@@ -1400,16 +1400,16 @@ End Class]]></ProjectItem>
                 Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="UTF-16" standalone="yes"?>
 <c:Project xmlns:c="http://schemas.microsoft.com/codeprojectml/2010/08/main" xmlns:msb="http://schemas.microsoft.com/developer/msbuild/2003" runtimeVersion="3.0" schemaVersion="1.0">
 	<msb:PropertyGroup>
-		<msb:Language>msBuild</msb:Language>
 		<msb:CodeName>ST_c6a0e916a17548cda2fa280f8fcbd7cf</msb:CodeName>
+		<msb:Language>msBuild</msb:Language>
 		<msb:DisplayName>ST_c6a0e916a17548cda2fa280f8fcbd7cf</msb:DisplayName>
 		<msb:ProjectId>{A13E120D-30CD-4551-A0C8-AEFA6996BE8B}</msb:ProjectId>
 	</msb:PropertyGroup>
 	<msb:ItemGroup>
 		<msb:Project Include="ST_c6a0e916a17548cda2fa280f8fcbd7cf.vbproj"/>
 		<msb:File Include="My Project\AssemblyInfo.vb"/>
-		<msb:File Include="ScriptMain.vb"/>
 		<msb:File Include="My Project\Resources.resx"/>
+		<msb:File Include="ScriptMain.vb"/>
 		<msb:File Include="My Project\Resources.Designer.vb"/>
 		<msb:File Include="My Project\Settings.settings"/>
 		<msb:File Include="My Project\Settings.Designer.vb"/>
@@ -1600,7 +1600,7 @@ End Namespace]]></ProjectItem>
               <BinaryItem
                 Name="ST_c6a0e916a17548cda2fa280f8fcbd7cf.dll">TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAgAAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1v
-ZGUuDQ0KJAAAAAAAAABQRQAATAEDAC8BYGIAAAAAAAAAAOAAIiALAVAAADoAAAAIAAAAAAAAhlgA
+ZGUuDQ0KJAAAAAAAAABQRQAATAEDABake2IAAAAAAAAAAOAAIiALAVAAADoAAAAIAAAAAAAAhlgA
 AAAgAAAAYAAAAAAAEAAgAAAAAgAABAAAAAAAAAAGAAAAAAAAAACgAAAAAgAAAAAAAAMAYIUAABAA
 ABAAAAAAEAAAEAAAAAAAABAAAAAAAAAAAAAAADRYAABPAAAAAGAAAEgEAAAAAAAAAAAAAAAAAAAA
 AAAAAIAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -1795,7 +1795,7 @@ ACAAIAAgACAATABSAC4AUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAACsgACAAIAAgACAAIAAgACAA
 LABMAFIALgBQAHIAbwBkAHUAYwB0AEkARAAAKyAAIAAgACAAIAAgACAAIAAsAEwAUgAuAFIARgBR
 AE4AdQBtAGIAZQByAACBMyAAIAAgACAAIAAgACAAIAAsACgAUwBFAEwARQBDAFQAIABDAEEAUwBF
 ACAAVwBIAEUATgAgAE0AQQBYACgASQBTAE4AVQBMAEwAKABSAEwALgBVAG4AaQB0AFAAcgBpAGMA
-ZQAsACAAMAApACkAIAA9ACAAMAAgAFQASABFAE4AIAAnAE4AJwAgAEUATABTAEUAIAAnAFkAJwAg
+ZQAsACAAMAApACkAIAA+ACAAMAAgAFQASABFAE4AIAAnAFkAJwAgAEUATABTAEUAIAAnAE4AJwAg
 AEUATgBEACAARgBSAE8ATQAgAFIARgBRAEwAaQBuAGUAIABBAFMAIABSAEwAIABXAEgARQBSAEUA
 IABSAEwALgBSAEYAUQBOAHUAbQBiAGUAcgAgAD0AIABMAFIALgBSAEYAUQBOAHUAbQBiAGUAcgAp
 ACAAQQBTACAAVgBhAGwAaQBkAFEAdQBvAHQAYQB0AGkAbwBuAAEvIAAgACAAIAAgACAAIAAgAEwA
@@ -1839,7 +1839,7 @@ AE4ARAAgAFMALgBTADQAUwB1AHAAcABsAGkAZQByAEMAbwBkAGUAIAA9ACAAUAAuAFAAbABhAG4A
 dABDAG8AZABlAAAfLABMAGEAdABlAHMAdABSAEYAUQAgAEEAUwAgACgAAEkgACAAIAAgACAAIAAg
 ACAALABNAEEAWAAoAFIARgBRAE4AdQBtAGIAZQByACkAIABBAFMAIABSAEYAUQBOAHUAbQBiAGUA
 cgAAHSAAIAAgACAAIAAgACAAIABBAGwAbABSAEYAUQAAGSAAIAAgACAARwBSAE8AVQBQACAAQgBZ
-AAAA02Nvj8x700C3bu9J2MIG2gAEIAEBCAMgAAEFIAEBEREEIAEBDgQgAQECBSACAQ4OBSABARFF
+AAAA6O1Sw15W8UmsjXl9/3UhvQAEIAEBCAMgAAEFIAEBEREEIAEBDgQgAQECBSACAQ4OBSABARFF
 ByAEAQ4ODg4GFRIkARIMBhUSJAESCAYVEiQBEmUGFRIkARIgBCAAEwAHAAESbRGAqQUgABKArQcg
 AgEOEoCtBAABHBwEAAEBHAIGDiYHDBKAkRKAlRKAmRKAnRKAkRKAkRKAlRKAoRKAmRKAnRKAnRKA
 kQUgABKAvQUgABKAwQYgARKAxRwDIAAcAyAADgQAAQgcBiABEoCRDgUgABKAmQMgAAgGAAEBEoCd
@@ -2123,6 +2123,26 @@ Partial Friend NotInheritable Class MySettings
     End Property
 End Class]]></ProjectItem>
           <ProjectItem
+            Name="Project"
+            Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="UTF-16" standalone="yes"?>
+<c:Project xmlns:c="http://schemas.microsoft.com/codeprojectml/2010/08/main" xmlns:msb="http://schemas.microsoft.com/developer/msbuild/2003" runtimeVersion="3.0" schemaVersion="1.0">
+	<msb:PropertyGroup>
+		<msb:Language>msBuild</msb:Language>
+		<msb:CodeName>ST_c2556a18122e4daf82612f7023c963f2</msb:CodeName>
+		<msb:DisplayName>ST_c2556a18122e4daf82612f7023c963f2</msb:DisplayName>
+		<msb:ProjectId>{A4D6C5A6-E9DD-4564-AF98-95331784C5B0}</msb:ProjectId>
+	</msb:PropertyGroup>
+	<msb:ItemGroup>
+		<msb:Project Include="ST_c2556a18122e4daf82612f7023c963f2.vbproj"/>
+		<msb:File Include="My Project\AssemblyInfo.vb"/>
+		<msb:File Include="ScriptMain.vb"/>
+		<msb:File Include="My Project\Resources.resx"/>
+		<msb:File Include="My Project\Resources.Designer.vb"/>
+		<msb:File Include="My Project\Settings.settings"/>
+		<msb:File Include="My Project\Settings.Designer.vb"/>
+	</msb:ItemGroup>
+</c:Project>]]></ProjectItem>
+          <ProjectItem
             Name="ST_c2556a18122e4daf82612f7023c963f2.vbproj"
             Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
@@ -2237,26 +2257,6 @@ End Class]]></ProjectItem>
     </VisualStudio>
   </ProjectExtensions>
 </Project>]]></ProjectItem>
-          <ProjectItem
-            Name="Project"
-            Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="UTF-16" standalone="yes"?>
-<c:Project xmlns:c="http://schemas.microsoft.com/codeprojectml/2010/08/main" xmlns:msb="http://schemas.microsoft.com/developer/msbuild/2003" runtimeVersion="3.0" schemaVersion="1.0">
-	<msb:PropertyGroup>
-		<msb:Language>msBuild</msb:Language>
-		<msb:CodeName>ST_c2556a18122e4daf82612f7023c963f2</msb:CodeName>
-		<msb:DisplayName>ST_c2556a18122e4daf82612f7023c963f2</msb:DisplayName>
-		<msb:ProjectId>{A4D6C5A6-E9DD-4564-AF98-95331784C5B0}</msb:ProjectId>
-	</msb:PropertyGroup>
-	<msb:ItemGroup>
-		<msb:Project Include="ST_c2556a18122e4daf82612f7023c963f2.vbproj"/>
-		<msb:File Include="My Project\AssemblyInfo.vb"/>
-		<msb:File Include="ScriptMain.vb"/>
-		<msb:File Include="My Project\Resources.resx"/>
-		<msb:File Include="My Project\Resources.Designer.vb"/>
-		<msb:File Include="My Project\Settings.settings"/>
-		<msb:File Include="My Project\Settings.Designer.vb"/>
-	</msb:ItemGroup>
-</c:Project>]]></ProjectItem>
           <ProjectItem
             Name="My Project\Resources.resx"
             Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
@@ -2662,13 +2662,13 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</BinaryItem>
           Id="Package\エラーメール送信"
           TopLeft="453,231.833332181805" />
         <NodeLayout
-          Size="191,42"
-          Id="Package\シーケンス コンテナー\仕入先製品データ作成"
-          TopLeft="53,116.666665655043" />
-        <NodeLayout
           Size="167,42"
           Id="Package\シーケンス コンテナー\開始日時 (StartTime) 設定"
           TopLeft="63,32.999999354283" />
+        <NodeLayout
+          Size="191,42"
+          Id="Package\シーケンス コンテナー\仕入先製品データ作成"
+          TopLeft="53,116.666665655043" />
         <EdgeLayout
           Id="Package\シーケンス コンテナー.PrecedenceConstraints[制約]"
           TopLeft="147.5,74.999999354283">
