@@ -208,8 +208,8 @@ Namespace TCIDataAccess.Join
             'SQL文字列の作成
             Value.AppendLine("SELECT")
             Value.AppendLine("    RH.[RFQNumber],")
-            Value.AppendLine("    CASE WHEN RH.[Priority] IS NULL THEN 1 ELSE 0  END AS PrioritySort,")
-            Value.AppendLine("    ISNULL(RH.[Priority], '') AS Priority,")
+            Value.AppendLine("    CASE WHEN RH.[Priority] IS NULL THEN 1 ELSE 0 END AS PrioritySort,")
+            Value.AppendLine("    ISNULL(RH.[Priority], '') AS [Priority],")
             Value.AppendLine("    RH.[CreateDate],")
             Value.AppendLine("    RH.[StatusSortOrder],")
             Value.AppendLine("    RH.[StatusChangeDate], ")
@@ -231,11 +231,11 @@ Namespace TCIDataAccess.Join
             Value.AppendLine("FROM")
             Value.AppendLine("    [v_RFQHeader] AS RH")
             Value.AppendLine("LEFT OUTER JOIN")
-            Value.AppendLine("    [v_RFQReminder] AS RR ON RH.[RFQNumber] = RR.[RFQNumber] AND @UserID = RR.[RcptUserID]")
+            Value.AppendLine("    [v_RFQReminder] AS RR ON RR.[RFQNumber] = RH.[RFQNumber] AND RR.[RcptUserID] = RH.[QuoUserID]")
             Value.AppendLine("WHERE")
             Value.AppendLine("    RH.[QuoUserID] = @UserID AND")
             Value.AppendLine("    RH.[EnqUserID] != @UserID AND")
-            Value.AppendLine("    RH.[StatusCode] NOT IN('Q','C')")
+            Value.AppendLine("    RH.[StatusCode] NOT IN ('Q', 'C')")
             Select Case RFQPriority
                 Case "A"
                     Value.AppendLine("  AND RH.[Priority] = 'A'")
@@ -244,22 +244,10 @@ Namespace TCIDataAccess.Join
                 Case "AB"
                     Value.AppendLine("  AND RH.[Priority] IN('A','B')")
             End Select
-            Select Case RFQStatus
-                Case "N"
-                    Value.AppendLine("  AND RH.[Status] = 'Create'")
-                Case "A"
-                    Value.AppendLine("  AND RH.[Status] = 'Assigned'")
-                Case "E"
-                    Value.AppendLine("  AND RH.[Status] = 'Enquired'")
-                Case "PQ"
-                    Value.AppendLine("  AND RH.[Status] = 'Partly-quoted'")
-                Case "Q"
-                    Value.AppendLine("  AND RH.[Status] = 'Quoted'")
-                Case "II"
-                    Value.AppendLine("  AND RH.[Status] = 'Interface Issued'")
-                Case "C"
-                    Value.AppendLine("  AND RH.[Status] = 'Closed'")
-            End Select
+
+            If String.IsNullOrEmpty(RFQStatus) = False AndAlso RFQStatus.ToUpper <> "ALL" Then
+                Value.AppendLine(String.Format("    AND RH.[StatusCode] = '{0}'", Common.SafeSqlLiteral(RFQStatus)))
+            End If
 
             '権限ロールに従い極秘品を除外する
             If SESSION_ROLE_CODE = Common.ROLE_WRITE_P OrElse SESSION_ROLE_CODE = Common.ROLE_READ_P Then
@@ -291,36 +279,24 @@ Namespace TCIDataAccess.Join
             Value.AppendLine("FROM")
             Value.AppendLine("    [v_RFQHeader] AS RH")
             Value.AppendLine("LEFT OUTER JOIN")
-            Value.AppendLine("    [v_RFQReminder] AS RR ON RH.[RFQNumber] = RR.[RFQNumber] AND @UserID = RR.[RcptUserID]")
+            Value.AppendLine("    [v_RFQReminder] AS RR ON RR.[RFQNumber] = RH.[RFQNumber] AND RR.[RcptUserID] = RH.[QuoUserID]")
             Value.AppendLine("WHERE")
-            Value.AppendLine("    RH.[QuoUserID] = @UserID AND")
-            Value.AppendLine("    RH.[EnqUserID] != @UserID AND")
-            Value.AppendLine("    RH.[StatusCode] IN('Q','C') AND")
-            Value.AppendLine("    RR.[RFQHistoryNumber] IS NOT NULL")
+            Value.AppendLine("    RH.[QuoUserID] = @UserID")
+            Value.AppendLine("    AND RH.[EnqUserID] != @UserID")
+            Value.AppendLine("    AND RH.[StatusCode] IN ('Q', 'C')")
+            Value.AppendLine("    AND RR.[RFQHistoryNumber] IS NOT NULL")
             Select Case RFQPriority
                 Case "A"
                     Value.AppendLine("    AND RH.[Priority] = 'A'")
                 Case "B"
                     Value.AppendLine("    AND RH.[Priority] = 'B'")
                 Case "AB"
-                    Value.AppendLine("    AND RH.[Priority] IN('A','B')")
+                    Value.AppendLine("    AND RH.[Priority] IN ('A', 'B')")
             End Select
-            Select Case RFQStatus
-                Case "N"
-                    Value.AppendLine("    AND RH.[Status] = 'Create'")
-                Case "A"
-                    Value.AppendLine("    AND RH.[Status] = 'Assigned'")
-                Case "E"
-                    Value.AppendLine("    AND RH.[Status] = 'Enquired'")
-                Case "PQ"
-                    Value.AppendLine("    AND RH.[Status] = 'Partly-quoted'")
-                Case "Q"
-                    Value.AppendLine("    AND RH.[Status] = 'Quoted'")
-                Case "II"
-                    Value.AppendLine("    AND RH.[Status] = 'Interface Issued'")
-                Case "C"
-                    Value.AppendLine("    AND RH.[Status] = 'Closed'")
-            End Select
+
+            If String.IsNullOrEmpty(RFQStatus) = False AndAlso RFQStatus.ToUpper <> "ALL" Then
+                Value.AppendLine(String.Format("    AND RH.[StatusCode] = '{0}'", Common.SafeSqlLiteral(RFQStatus)))
+            End If
 
             If SESSION_ROLE_CODE = Common.ROLE_WRITE_P OrElse SESSION_ROLE_CODE = Common.ROLE_READ_P Then
                 Value.AppendLine("    AND RH.[isCONFIDENTIAL] = 0")
@@ -345,7 +321,8 @@ Namespace TCIDataAccess.Join
                 Using DBCommand As SqlCommand = DBConn.CreateCommand
                     DBCommand.CommandText = Value.ToString
                     DBCommand.Parameters.Clear()
-                    DBCommand.Parameters.AddWithValue("UserID", userID)
+                    DBCommand.Parameters.Add("UserID", SqlDbType.Int)
+                    DBCommand.Parameters("UserID").Value = userID
 
                     DBConn.Open()
                     Using DBReader As SqlDataReader = DBCommand.ExecuteReader()

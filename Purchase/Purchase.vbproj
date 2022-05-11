@@ -588,7 +588,7 @@
     <Compile Include="TCIDataAccess\Join\PurchaseGroupDisp.vb" />
     <Compile Include="TCIDataAccess\Join\PurchaseGroupSettingDisp.vb" />
     <Compile Include="TCIDataAccess\Join\RFQHeader.vb" />
-    <Compile Include="TCIDataAccess\Join\MyTaskDisp.vb" />
+    <Compile Include="TCIDataAccess\Join\MytaskDisp.vb" />
     <Compile Include="TCIDataAccess\Join\ProductListBySupplierDisp.vb" />
     <Compile Include="TCIDataAccess\Join\RequestedTaskDisp.vb" />
     <Compile Include="TCIDataAccess\Join\RFQIssueDisp.vb" />

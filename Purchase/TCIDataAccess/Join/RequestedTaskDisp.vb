@@ -186,8 +186,8 @@ Namespace TCIDataAccess.Join
             Dim Value As StringBuilder = New StringBuilder
             'SQL文字列の作成
             Value.AppendLine("SELECT")
-            Value.AppendLine("    RH.[RFQNumber], ")
-            Value.AppendLine("    CASE WHEN RH.[Priority] IS NULL THEN 1 ELSE 0  END AS PrioritySort,")
+            Value.AppendLine("    RH.[RFQNumber],")
+            Value.AppendLine("    CASE WHEN RH.[Priority] IS NULL THEN 1 ELSE 0 END AS PrioritySort,")
             Value.AppendLine("    ISNULL(RH.[Priority], '') AS [Priority],")
             Value.AppendLine("    RH.[CreateDate],")
             Value.AppendLine("    RH.[StatusChangeDate],")
@@ -200,39 +200,27 @@ Namespace TCIDataAccess.Join
             Value.AppendLine("    RH.[QuoLocationName],")
             Value.AppendLine("    RH.[SupplierName],")
             Value.AppendLine("    RH.[MakerName],")
-            Value.AppendLine("    RR.[RFQCorres] As RFQCorrespondence,")
+            Value.AppendLine("    RR.[RFQCorres] AS RFQCorrespondence,")
             Value.AppendLine("    RH.[isCONFIDENTIAL],")
             Value.AppendLine("    RH.[SupplierCode]")
             Value.AppendLine("FROM")
-            Value.AppendLine("    [v_RFQHeader] AS RH LEFT")
-            Value.AppendLine("    OUTER JOIN v_RFQReminder AS RR ON RH.[RFQNumber] = RR.[RFQNumber] AND RR.[RcptUserID] = @UserID")
+            Value.AppendLine("    [v_RFQHeader] AS RH")
+            Value.AppendLine("LEFT OUTER JOIN")
+            Value.AppendLine("    [v_RFQReminder] AS RR ON RR.[RFQNumber] = RH.[RFQNumber] AND RR.[RcptUserID] = RH.[EnqUserID]")
             Value.AppendLine("WHERE")
-            Value.AppendLine("    [EnqUserID] = @UserID AND")
-            Value.AppendLine("    NOT (RH.[StatusCode] = 'C' AND RR.[RFQHistoryNumber] IS NULL)")
+            Value.AppendLine("    RH.[EnqUserID] = @UserID")
+            Value.AppendLine("    AND NOT (RH.[StatusCode] = 'C' AND RR.[RFQHistoryNumber] IS NULL)")
             Select Case RFQPriority
                 Case "A"
                     Value.AppendLine("    AND RH.[Priority] = 'A'")
                 Case "B"
                     Value.AppendLine("    AND RH.[Priority] = 'B'")
                 Case "AB"
-                    Value.AppendLine("    AND RH.[Priority] IN('A','B')")
+                    Value.AppendLine("    AND RH.[Priority] IN ('A', 'B')")
             End Select
-            Select Case RFQStatus
-                Case "N"
-                    Value.AppendLine("    AND RH.[Status] = 'Create'")
-                Case "A"
-                    Value.AppendLine("    AND RH.[Status] = 'Assigned'")
-                Case "E"
-                    Value.AppendLine("    AND RH.[Status] = 'Enquired'")
-                Case "PQ"
-                    Value.AppendLine("    AND RH.[Status] = 'Partly-quoted'")
-                Case "Q"
-                    Value.AppendLine("    AND RH.[Status] = 'Quoted'")
-                Case "II"
-                    Value.AppendLine("    AND RH.[Status] = 'Interface Issued'")
-                Case "C"
-                    Value.AppendLine("    AND RH.[Status] = 'Closed'")
-            End Select
+            If String.IsNullOrEmpty(RFQStatus) = False AndAlso RFQStatus.ToUpper <> "ALL" Then
+                Value.AppendLine(String.Format("    AND RH.[StatusCode] = '{0}'", Common.SafeSqlLiteral(RFQStatus)))
+            End If
             '権限ロールに従い極秘品を除外する
             If SESSION_ROLE_CODE = Common.ROLE_WRITE_P OrElse SESSION_ROLE_CODE = Common.ROLE_READ_P Then
                 Value.AppendLine("    AND RH.isCONFIDENTIAL = 0")
@@ -255,7 +243,8 @@ Namespace TCIDataAccess.Join
                 Using DBCommand As SqlCommand = DBConn.CreateCommand
                     DBCommand.CommandText = Value.ToString
                     DBCommand.Parameters.Clear()
-                    DBCommand.Parameters.AddWithValue("UserID", userID)
+                    DBCommand.Parameters.Add("UserID", SqlDbType.Int)
+                    DBCommand.Parameters("UserID").Value = userID
 
                     DBConn.Open()
                     Using DBReader As SqlDataReader = DBCommand.ExecuteReader
