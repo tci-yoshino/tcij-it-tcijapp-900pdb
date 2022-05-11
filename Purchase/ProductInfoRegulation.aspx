@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head id="Head1" runat="server">
-    <title>Inventory Management System</title>
+    <title>Purchase DB</title>
     <script type="text/javascript" src="./JS/Common.js"></script>
     <link rel="stylesheet" href="./CSS/Style.css" type="text/css" media="screen,print" />
 </head>
