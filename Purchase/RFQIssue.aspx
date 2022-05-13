@@ -173,7 +173,6 @@
                                 <th>Priority : </th>
                                 <td>
                                     <asp:DropDownList ID="Priority" runat="server">
-                                        <asp:ListItem></asp:ListItem>
                                     </asp:DropDownList>
                                 </td>
                             </tr>

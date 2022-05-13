@@ -290,6 +290,9 @@ Partial Public Class SearchResult
                 pageList.Add(New ListItem(i.ToString(), i.ToString(), (Not i.Equals(Me.CurrentPageIndex + 1))))
             Next
 
+            Me.PagerTopVisible = True
+            Me.PagerBottomVisible = True
+
             PagerTopNumber.DataSource = pageList
             PagerTopNumber.DataBind()
             PagerBottomNumber.DataSource = pageList
@@ -307,6 +310,10 @@ Partial Public Class SearchResult
             PrevPagerEnable = ((CurrentPageIndex + 1) > PageInBlock)
             '次へリンク
             NextPagerEnable = Math.Truncate(i_MaxPageCount / PageInBlock) * PageInBlock > ( Me.CurrentPageIndex + 1)
+        Else
+            Me.PagerTopVisible = False
+            Me.PagerBottomVisible = False
+
         End If
         
         SearchResultBind(DataSource, PrevPagerEnable, NextPagerEnable)
