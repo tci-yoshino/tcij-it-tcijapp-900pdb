@@ -1,17 +1,30 @@
 ﻿<%@ Control Language="vb" AutoEventWireup="false" CodeBehind="SearchResult.ascx.vb" Inherits="Purchase.SearchResult" %>
 <!-- Search Result -->
 <div class="list">
-    <asp:Panel ID="PagerTop" runat="server" CssClass="paging" Visible="false">
-        <asp:LinkButton ID="PagerTopPrev" Text="&laquo; Prev" runat="server" CommandName="Prev"></asp:LinkButton><span class="indent"></span>
-        <asp:ListView ID="PagerTopNumber" runat="server">
-            <LayoutTemplate>
-                <div ID="itemPlaceholder" runat="server"></div>
-            </LayoutTemplate>
-            <ItemTemplate>
-                <asp:LinkButton ID="PagerNumber" Text='<%#Eval("Text") %>' runat="server" CommandName='<%#Eval("Value") %>' CssClass='<%#iif(Eval("enabled"),"","current") %>'></asp:LinkButton><span class="indent"></span>
-            </ItemTemplate>
-        </asp:ListView>
-        <asp:LinkButton ID="PagerTopNext" Text="Next &raquo;" runat="server" CommandName="Next"></asp:LinkButton>
+
+    <asp:Panel ID="PagerTop" runat="server" Visible="false">
+        <div class="pagingHead">
+                Page
+            <asp:Label runat="server" ID="CurrentPageLabelTop"
+                Text="" />
+                of
+            <asp:Label runat="server" ID="TotalPagesLabelTop"
+                Text="" />
+                (<asp:Label runat="server" ID="TotalItemsLabelTop" Text="" />
+                records)
+        </div>
+        <div class="paging">
+            <asp:LinkButton ID="PagerTopPrev" Text="&laquo; Previous" runat="server" CommandName="Prev"></asp:LinkButton><span class="indent"></span>
+            <asp:ListView ID="PagerTopNumber" runat="server">
+                <LayoutTemplate>
+                    <div ID="itemPlaceholder" runat="server"></div>
+                </LayoutTemplate>
+                <ItemTemplate>
+                    <asp:LinkButton ID="PagerNumber" Text='<%#Eval("Text") %>' runat="server" CommandName='<%#Eval("Value") %>' CssClass='<%#iif(Eval("enabled"),"","current") %>'></asp:LinkButton><span class="indent"></span>
+                </ItemTemplate>
+            </asp:ListView>
+            <asp:LinkButton ID="PagerTopNext" Text="Next &raquo;" runat="server" CommandName="Next"></asp:LinkButton>
+        </div>
     </asp:Panel>
     
     <asp:ListView ID="ListSearchResult" runat="server">
@@ -159,17 +172,29 @@
         </ItemTemplate>
     </asp:ListView>
     
-    <asp:Panel ID="PagerBottom" runat="server" CssClass="paging" Visible="false">
-        <asp:LinkButton ID="PagerBottomPrev" Text="&laquo; Prev" runat="server" CommandName="Prev"></asp:LinkButton><span class="indent"></span>
-        <asp:ListView ID="PagerBottomNumber" runat="server">
-            <LayoutTemplate>
-                <div ID="itemPlaceholder" runat="server"></div>
-            </LayoutTemplate>
-            <ItemTemplate>
-                <asp:LinkButton ID="PagerNumber" Text='<%#Eval("Text") %>' runat="server" CommandName='<%#Eval("Value") %>' CssClass='<%#iif(Eval("enabled"),"","current") %>'></asp:LinkButton><span class="indent"></span>
-            </ItemTemplate>
-        </asp:ListView>
-        <asp:LinkButton ID="PagerBottomNext" Text="Next &raquo;" runat="server" CommandName="Next"></asp:LinkButton>
+    <asp:Panel ID="PagerBottom" runat="server" Visible="false">
+        <div class="paging">
+            <asp:LinkButton ID="PagerBottomPrev" Text="&laquo; Previous" runat="server" CommandName="Prev"></asp:LinkButton><span class="indent"></span>
+            <asp:ListView ID="PagerBottomNumber" runat="server">
+                <LayoutTemplate>
+                    <div ID="itemPlaceholder" runat="server"></div>
+                </LayoutTemplate>
+                <ItemTemplate>
+                    <asp:LinkButton ID="PagerNumber" Text='<%#Eval("Text") %>' runat="server" CommandName='<%#Eval("Value") %>' CssClass='<%#iif(Eval("enabled"),"","current") %>'></asp:LinkButton><span class="indent"></span>
+                </ItemTemplate>
+            </asp:ListView>
+            <asp:LinkButton ID="PagerBottomNext" Text="Next &raquo;" runat="server" CommandName="Next"></asp:LinkButton>
+        </div>
+        <div class="pagingHead">
+                Page
+            <asp:Label runat="server" ID="CurrentPageLabelBottom"
+                Text="" />
+                of
+            <asp:Label runat="server" ID="TotalPagesLabelBottom"
+                Text="" />
+                (<asp:Label runat="server" ID="TotalItemsLabelBottom" Text="" />
+                records)
+        </div>
     </asp:Panel>
     
 </div>

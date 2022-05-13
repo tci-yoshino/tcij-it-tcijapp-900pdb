@@ -23,6 +23,33 @@ Partial Public Class SearchResult
     Protected WithEvents PagerTop As Global.System.Web.UI.WebControls.Panel
     
     '''<summary>
+    '''CurrentPageLabelTop コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents CurrentPageLabelTop As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''TotalPagesLabelTop コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents TotalPagesLabelTop As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''TotalItemsLabelTop コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents TotalItemsLabelTop As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
     '''PagerTopPrev コントロール。
     '''</summary>
     '''<remarks>
@@ -93,4 +120,31 @@ Partial Public Class SearchResult
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents PagerBottomNext As Global.System.Web.UI.WebControls.LinkButton
+    
+    '''<summary>
+    '''CurrentPageLabelBottom コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents CurrentPageLabelBottom As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''TotalPagesLabelBottom コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents TotalPagesLabelBottom As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''TotalItemsLabelBottom コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents TotalItemsLabelBottom As Global.System.Web.UI.WebControls.Label
 End Class

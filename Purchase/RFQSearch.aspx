@@ -26,7 +26,6 @@
                     modeChange();
                 }
                 modeChange();
-                changeRowColor('<%=SearchResultList.ListClientID%>');
             }
             function modeChange() {
                 let SearchMode = document.getElementById('SearchMode');

@@ -398,7 +398,17 @@ Namespace TCIDataAccess.Join
                         DBCommand.Parameters.AddWithValue("ProductName", StrConv(Cond.ProductName, VbStrConv.Narrow))
                     End If
                     SetParamInClauseSQL(DBCommand, "SupplierCode", Cond.SupplierCode)
-                    SetParamInClauseSQL(DBCommand, "S4SupplierCode", Cond.S4SupplierCode)
+                    Dim S4SupplierCodeList As List(Of String) = New List(Of String)
+                    If Cond.S4SupplierCode IsNot Nothing and Cond.S4SupplierCode.Count <> 0 And Not String.IsNullOrEmpty(Cond.S4SupplierCode(0)) Then
+                        Dim i_S4SupplierCodes As Integer() = Array.ConvertAll(Of String, Integer)(Cond.S4SupplierCode, AddressOf Integer.Parse)
+                        For Each i_S4SupplierCode As Integer In i_S4SupplierCodes
+                            If i_S4SupplierCode <> Nothing Then
+                                Dim str_S4SupplierCode As String = String.Format("{0:D10}", i_S4SupplierCode)
+                                S4SupplierCodeList.Add(str_S4SupplierCode)
+                            End If
+                        Next
+                    End If
+                    SetParamInClauseSQL(DBCommand, "S4SupplierCode", S4SupplierCodeList.ToArray)
                     If Not String.IsNullOrEmpty(Cond.SupplierName) Then
                         DBCommand.Parameters.AddWithValue("SupplierName", StrConv(Cond.SupplierName, VbStrConv.Narrow))
                     End If

@@ -598,3 +598,16 @@ div.purpose table td{
     border: solid 1px #2651a5;
     text-align: left;
 }
+/* Search Resultコントロール用 */
+#SearchResultList_PagerTop div.paging a.current {
+     pointer-events: none;
+     text-decoration: none;
+     color: inherit;
+     font-weight: bold;
+}
+#SearchResultList_PagerBottom div.paging a.current {
+     pointer-events: none;
+     text-decoration: none;
+     color: inherit;
+     font-weight: bold;
+}

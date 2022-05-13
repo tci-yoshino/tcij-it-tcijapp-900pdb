@@ -18,6 +18,8 @@ Public Class RFQSearch
     '検索最小日付
     Const MinDate As String = "1900-01-01"
 
+    Const SPRIT_CHAR As String = "|"
+
     ''' <summary> 他画面から戻った場合の遷移前の表示ページインデックス </summary>
     Private _CurrentPageIndexAtReturn As Integer = 0
 
@@ -41,11 +43,9 @@ Public Class RFQSearch
 
             'ドロップダウンリストの設定
             'StatusFrom
-            SetRFQStatusDropDownList(StatusFrom)
-            StatusFrom.SelectedValue = Common.RFQSTATUS_ALL
+            SetRFQStatusDropDownList(StatusFrom, String.Empty)
             'StatusTo
-            SetRFQStatusDropDownList(StatusTo)
-            StatusTo.SelectedValue = Common.RFQSTATUS_ALL
+            SetRFQStatusDropDownList(StatusTo, String.Empty)
             'Priority
             SetPriorityDropDownList(Priority, PRIORITY_FOR_RFQ_SEARCH)
             'SupplierCountryCode
@@ -147,8 +147,8 @@ Public Class RFQSearch
     Protected Sub Clear_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Clear.Click
         Msg.Text = String.Empty
         SupplierCountryCode.SelectedIndex = 0
-        StatusFrom.SelectedValue = Common.RFQSTATUS_ALL
-        StatusTo.SelectedValue = Common.RFQSTATUS_ALL
+        StatusFrom.SelectedValue = String.Empty
+        StatusTo.SelectedValue = String.Empty
         EnqLocationCode.SelectedIndex = 0
         EnqUserID.Items.Clear()
         EnqStorageLocation.Items.Clear()
@@ -383,11 +383,11 @@ Public Class RFQSearch
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(StatusFrom.SelectedValue) And StatusFrom.SelectedValue <> Common.RFQSTATUS_ALL Then
+        If Not String.IsNullOrEmpty(StatusFrom.SelectedValue) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
-        If Not String.IsNullOrEmpty(StatusTo.SelectedValue) And StatusTo.SelectedValue <> Common.RFQSTATUS_ALL Then
+        If Not String.IsNullOrEmpty(StatusTo.SelectedValue) Then
             bl_IsAllConditionsNotSet = False
             Return bl_IsAllConditionsNotSet
         End If
@@ -489,11 +489,11 @@ Public Class RFQSearch
         cond.SupplierCountryCode = SupplierCountryCode.SelectedValue
         cond.SupplierItemName = SupplierItemName.Text
         Dim RFQStatus As TCIDataAccess.RFQStatus = New TCIDataAccess.RFQStatus
-        If Not String.IsNullOrEmpty(StatusFrom.SelectedValue) And StatusFrom.SelectedValue <> Common.RFQSTATUS_ALL Then
+        If Not String.IsNullOrEmpty(StatusFrom.SelectedValue) Then
             RFQStatus.Load(StatusFrom.SelectedValue)
             cond.StatusFrom = RFQStatus.SortOrder.ToString
         End If
-        If Not String.IsNullOrEmpty(StatusTo.SelectedValue) And StatusFrom.SelectedValue <> Common.RFQSTATUS_ALL Then
+        If Not String.IsNullOrEmpty(StatusTo.SelectedValue) Then
             RFQStatus.Load(StatusTo.SelectedValue.ToString())
             cond.StatusTo = RFQStatus.SortOrder.ToString
         End If
@@ -549,15 +549,9 @@ Public Class RFQSearch
     ''' <param name="MultipleItem">複数値項目のテキストボックス</param>
     ''' <returns></returns>
     Private Function SplitMultipleListItems(Byval MultipleItem As System.Web.UI.WebControls.TextBox) As String()
-        Dim ar_MultipleItem() As String = Split(MultipleItem.Text, "|")
-        Dim i_Count As Integer = 0
-        Dim ar_ResultMultipleItem(ar_MultipleItem.Length) As String
+        Dim ar_MultipleItem As String() = Split(MultipleItem.Text, SPRIT_CHAR)
 
-        For Each st_RFQNumber As String In ar_MultipleItem
-            ar_ResultMultipleItem(i_Count) = st_RFQNumber
-            i_Count = i_Count + 1
-        Next
-        Return ar_ResultMultipleItem
+        Return ar_MultipleItem
     End Function
 
     ''' <summary>

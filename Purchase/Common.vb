@@ -930,20 +930,28 @@ End Property
 
     ''' <summary>
     ''' RFQStatusドロップダウンリスト設定
-    ''' 選択肢の最終行に"ALL"を追加
+    ''' 追加する選択肢（""空文字列の場合先頭、"ALL"の場合最後に追加)
     ''' </summary>
     ''' <param name="Combo">ドロップダウンリスト</param>
     ''' <remarks></remarks>
-    Public Shared Sub SetRFQStatusDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl)
+    Public Shared Sub SetRFQStatusDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl,ByVal Optional st_AddRow As String = RFQSTATUS_ALL)
         Combo.Items.Clear()
         Dim list_RFQStatusList As TCIDataAccess.RFQStatusList = New TCIDataAccess.RFQStatusList
         list_RFQStatusList.Load()
+        
+        ' ALLでない場合先頭に第２引数の値をセット
+        IF st_AddRow <> RFQSTATUS_ALL Then
+            Combo.Items.Add(New ListItem(st_AddRow, String.Empty))
+        End If
 
         For Each RFQStatus As TCIDataAccess.RFQStatus In list_RFQStatusList
             Combo.Items.Add(New ListItem(RFQStatus.Text, RFQStatus.RFQStatusCode))
         Next
 
-        Combo.Items.Add(New ListItem(Common.RFQSTATUS_ALL, Common.RFQSTATUS_ALL))
+        ' ALLの場合最後に「ALL」をセット
+        IF st_AddRow = RFQSTATUS_ALL Then
+            Combo.Items.Add(New ListItem(Common.RFQSTATUS_ALL, Common.RFQSTATUS_ALL))
+        End If
     End Sub
 
     ''' <summary>

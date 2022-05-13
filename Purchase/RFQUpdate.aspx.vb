@@ -2574,9 +2574,9 @@ Partial Public Class RFQUpdate
         DBCommand.ExecuteNonQuery()
         Connection.Close()
         DBAdapter.SelectCommand = DBCommand
-        DBAdapter.Fill(DS, "StorageLocation")
-        If DS.Tables("StorageLocation").Rows.Count > 0 Then
-            EnqCountry = DS.Tables("StorageLocation").Rows(0)("CountryCode").ToString
+        DBAdapter.Fill(DS, "EnqStorageLocation")
+        If DS.Tables("EnqStorageLocation").Rows.Count > 0 Then
+            EnqCountry = DS.Tables("EnqStorageLocation").Rows(0)("CountryCode").ToString
         End If
 
         'Quo-User の CountryCode 取得
@@ -2588,9 +2588,9 @@ Partial Public Class RFQUpdate
         DBCommand.ExecuteNonQuery()
         Connection.Close()
         DBAdapter.SelectCommand = DBCommand
-        DBAdapter.Fill(DS, "StorageLocation")
-        If DS.Tables("StorageLocation").Rows.Count > 0 Then
-            QuoCountry = DS.Tables("StorageLocation").Rows(0)("CountryCode").ToString
+        DBAdapter.Fill(DS, "QuoStorageLocation")
+        If DS.Tables("QuoStorageLocation").Rows.Count > 0 Then
+            QuoCountry = DS.Tables("QuoStorageLocation").Rows(0)("CountryCode").ToString
         End If
 
         If EnqCountry IsNot Nothing AndAlso EnqCountry = QuoCountry Then

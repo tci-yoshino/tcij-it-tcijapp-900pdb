@@ -102,6 +102,23 @@ Partial Public Class SearchResult
     End Property
 
     ''' <summary>
+    ''' ページブロックサイズ　プロパティ（デフォルト:10）
+    ''' </summary>
+    Public Property PageInBlock() As Integer
+        Get
+            Dim i_PageInBlock As Integer = 10
+            If ViewState("PageInBlock") IsNot Nothing Then
+                i_PageInBlock = DirectCast(ViewState("PageInBlock"), Integer)
+                If i_PageInBlock = 0 Then i_PageInBlock = 10
+            End If
+            Return i_PageInBlock
+        End Get
+        Set(ByVal value As Integer)
+            ViewState("PageInBlock") = value
+        End Set
+    End Property
+
+    ''' <summary>
     ''' カレントページインデックス　プロパティ（デフォルト:0）
     ''' </summary>
     Public Property CurrentPageIndex() As Integer
@@ -161,10 +178,12 @@ Partial Public Class SearchResult
     Protected Sub Pager_Command(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.CommandEventArgs) _
                                 Handles PagerTopPrev.Command, PagerTopNext.Command, PagerBottomPrev.Command, PagerBottomNext.Command
         Dim i_NewCurrentPageIndex As Integer = Me.CurrentPageIndex
-        If e.CommandName.Equals("Prev") Then          '前ページへ
-            If i_NewCurrentPageIndex > 0 Then i_NewCurrentPageIndex -= 1
+        If e.CommandName.Equals("Prev") Then       '前ページへ
+            If CInt(Math.Truncate(i_NewCurrentPageIndex / PageInBlock)) > 0 Then
+                i_NewCurrentPageIndex = CInt(Math.Truncate(i_NewCurrentPageIndex / PageInBlock)) * PageInBlock - 1
+            End If
         ElseIf e.CommandName.Equals("Next") Then   '次ページへ
-            i_NewCurrentPageIndex += 1
+            i_NewCurrentPageIndex = (CInt(Math.Truncate(i_NewCurrentPageIndex / PageInBlock)) + 1) * PageInBlock
         End If
         Dim i_NewSkipRecord As Integer = Me.PageSize * i_NewCurrentPageIndex
 
@@ -224,17 +243,24 @@ Partial Public Class SearchResult
         PagerTop.Visible = PagerTopVisible
         PagerBottom.Visible = PagerBottomVisible
 
-        If PrevPagerEnable OrElse NextPagerEnable Then
+        if PagerTopVisible Then
             '前へリンク
             PagerTopPrev.Enabled = PrevPagerEnable
-            PagerBottomPrev.Enabled = PrevPagerEnable
+            PagerTopPrev.Visible = PrevPagerEnable
             '次へリンク
             PagerTopNext.Enabled = NextPagerEnable
-            PagerBottomNext.Enabled = NextPagerEnable
-        Else
-            PagerTop.Visible = False
-            PagerBottom.Visible = False
+            PagerTopNext.Visible = NextPagerEnable
         End If
+
+        If PagerBottomVisible Then
+            '前へリンク
+            PagerBottomPrev.Enabled = PrevPagerEnable
+            PagerBottomPrev.Visible = PrevPagerEnable
+            '次へリンク
+            PagerBottomNext.Enabled = NextPagerEnable
+            PagerBottomNext.Visible = NextPagerEnable
+        End If
+
 
     End Sub
     ''' <summary>
@@ -255,29 +281,34 @@ Partial Public Class SearchResult
         Dim PrevPagerEnable As Boolean = False
         Dim NextPagerEnable As Boolean = False
 
-        If i_MaxPageCount > 1 Then
+        If i_MaxPageCount > 0 Then
             Dim pageList As New ListItemCollection
-            'カレントページを含む10ページ分のリンク設定
-            Dim i_MaxPageInBlock As Integer = 10
-            Dim i_StartPage As Integer = Convert.ToInt32(Math.Floor(Me.CurrentPageIndex / Convert.ToDouble(i_MaxPageInBlock))) * i_MaxPageInBlock + 1
+            'カレントページを含むページブロック数分のリンク設定
+            Dim i_StartPage As Integer = Convert.ToInt32(Math.Floor(Me.CurrentPageIndex / Convert.ToDouble(PageInBlock))) * PageInBlock + 1
 
-            For i As Integer = i_StartPage To Math.Min(i_StartPage + i_MaxPageInBlock - 1, i_MaxPageCount)
+            For i As Integer = i_StartPage To Math.Min(i_StartPage + PageInBlock - 1, i_MaxPageCount)
                 pageList.Add(New ListItem(i.ToString(), i.ToString(), (Not i.Equals(Me.CurrentPageIndex + 1))))
             Next
-            If i_MaxPageCount > (i_StartPage + i_MaxPageInBlock - 1) Then
-                pageList.Add(New ListItem("…", (i_StartPage + i_MaxPageInBlock).ToString()))
-            End If
+
             PagerTopNumber.DataSource = pageList
             PagerTopNumber.DataBind()
             PagerBottomNumber.DataSource = pageList
             PagerBottomNumber.DataBind()
 
-            '前へリンク
-            PrevPagerEnable = ((Me.CurrentPageIndex) > 0)
-            '次へリンク
-            NextPagerEnable = ((Me.CurrentPageIndex + 1) < i_MaxPageCount)
-        End If
+            ' Page設定
+            CurrentPageLabelTop.Text = IIf(TotalDataCount > 0, CurrentPageIndex + 1, 0).ToString
+            CurrentPageLabelBottom.Text = CurrentPageLabelTop.Text 
+            TotalPagesLabelTop.Text = Math.Ceiling(System.Convert.ToDouble(TotalDataCount) / PageSize).ToString
+            TotalPagesLabelBottom.Text = TotalPagesLabelTop.Text
+            TotalItemsLabelTop.Text = TotalDataCount.ToString
+            TotalItemsLabelBottom.Text = TotalItemsLabelTop.Text
 
+            '前へリンク
+            PrevPagerEnable = ((CurrentPageIndex + 1) > PageInBlock)
+            '次へリンク
+            NextPagerEnable = Math.Truncate(i_MaxPageCount / PageInBlock) * PageInBlock > ( Me.CurrentPageIndex + 1)
+        End If
+        
         SearchResultBind(DataSource, PrevPagerEnable, NextPagerEnable)
     End Sub
 

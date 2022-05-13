@@ -46,7 +46,7 @@ function setFormAction(button_type) {
         <div class="tabs">
             <a href="./RFQIssue.aspx?ProductID=<%=st_ProductID %>">RFQ Issue</a>            
             | <a href="#" onclick="popup('./ProductSetting.aspx?Action=Edit&ProductID=<%=st_ProductID %>')">Product Setting</a>
-            | <a href="#" onclick="popup('./SupplierListByProduct.aspx?ProductID=<%=st_ProductID %>')">Supplier List</a>
+            | <a href="./SupplierListByProduct.aspx?ProductID=<%=st_ProductID %>" target="_blank">Supplier List</a>
         </div>
 
         <h3><asp:Label ID="ProductNumber" runat="server" Text=''></asp:Label><span class="indent"><asp:Label ID="QuoName" runat="server" Text=''></asp:Label></span></h3>

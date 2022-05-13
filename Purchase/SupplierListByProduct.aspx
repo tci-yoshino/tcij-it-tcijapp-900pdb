@@ -169,7 +169,7 @@
                         <ItemTemplate>
                             <tr>
                                 <td><asp:HyperLink ID="SupplierCode" runat="server" NavigateUrl='<%#Eval("SupplierCode","./SupplierSetting.aspx?Action=Edit&Code={0}")%>' Text = '<%#Eval("SupplierCode")%>' /></td>
-                                <td><asp:HyperLink ID="SupplierName" runat="server" NavigateUrl='<%#Eval("SupplierName", "./SupplierSetting.aspx?Action=Edit&Code={0}")%>' Text = '<%#Eval("SupplierName")%>' /></td>
+                                <td><asp:HyperLink ID="SupplierName" runat="server" NavigateUrl='<%#Eval("SupplierCode", "./SupplierSetting.aspx?Action=Edit&Code={0}")%>' Text = '<%#Eval("SupplierName")%>' /></td>
                                 <td><asp:Label ID="Country" runat="server" Text='<%# Eval("Country") %>' /></td>
                                 <td><asp:Label ID="Territory" runat="server" Text='<%# Eval("Territory") %>' /></td>
                                 <td><asp:Label ID="SupplierItemNumber" runat="server" Text='<%# Eval("SupplierItemNumber") %>' /></td>

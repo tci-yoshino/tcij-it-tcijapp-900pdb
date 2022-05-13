@@ -332,7 +332,7 @@ Namespace TCIDataAccess
         ''' <remarks></remarks>
         Public Sub SetPurposeDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl)
             Combo.Items.Clear()
-            Combo.Items.Add("All")
+            Combo.Items.Add("ALL")
             Me.Load()
 
             For Each Purpose As Purpose In Me

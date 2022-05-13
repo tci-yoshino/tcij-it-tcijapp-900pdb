@@ -127,6 +127,10 @@ Partial Public Class MyTask
             SetRFQOrderByDropDownList(Orderby)
             Orderby.SelectedValue = "REM"
 
+            st_RFQPriority = RFQPriority.SelectedValue.ToString
+            st_RFQStatus = RFQStatus.SelectedValue.ToString
+            st_Orderby = Orderby.SelectedValue.ToString
+
             ViewState("st_RFQPriority") = RFQPriority.SelectedValue.ToString
             ViewState("st_RFQStatus") = RFQStatus.SelectedValue.ToString
             ViewState("st_Orderby") = Orderby.SelectedValue.ToString
