@@ -2,9 +2,9 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml" style="overflow-y: hidden;">
-    <head runat="server">
-        <title><%=ScreenName%></title>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Purchase DB</title>
         <link rel="stylesheet" href="./CSS/Style.css" type="text/css" media="screen,print" />
         <script type="text/javascript" src="./JS/Common.js"></script>
         <script type="text/javascript" src="./JS/Colorful.js"></script>
@@ -93,525 +93,531 @@
 
             };
         </script>
-    </head>
-    
-    <body>
-        <h3 id="ScreenName"><%=ScreenName%></h3>
-        <p class="attention">
-            <asp:Label ID="Msg" runat="server"></asp:Label>
-        </p>
-        <form id="MultipleListForm" runat="server">
-            <input type="hidden" id ="Action" runat="server" value="" />
-            <div style="height:400px;overflow-y:scroll;">
-                <table id="SearchWordTable">
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord1" runat="server" Width="10em" MaxLength="<%#MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord2" runat="server" Width="10em" MaxLength="<%#MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord3" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord4" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord5" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord6" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord7" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord8" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord9" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord10" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord11" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord12" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord13" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord14" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord15" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord16" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord17" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord18" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord19" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord20" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord21" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord22" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord23" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord24" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord25" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord26" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord27" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord28" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord29" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord30" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord31" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord32" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord33" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord34" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord35" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord36" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord37" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord38" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord39" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord40" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord41" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord42" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord43" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord44" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord45" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord46" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord47" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord48" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord49" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord50" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord51" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord52" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord53" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord54" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord55" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord56" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord57" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord58" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord59" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord60" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord61" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord62" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord63" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord64" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord65" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord66" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord67" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord68" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord69" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord70" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord71" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord72" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord73" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord74" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord75" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord76" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord77" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord78" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord79" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord80" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord81" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord82" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord83" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord84" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord85" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord86" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord87" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord88" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord89" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord90" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord91" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord92" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord93" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord94" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord95" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord96" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord97" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord98" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord99" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <asp:TextBox ID="SearchWord100" runat="server" Width="10em" MaxLength="<%# MaxLength%>"></asp:TextBox>
-                        </td>
-                    </tr>
+</head>
+<body>
+    <!-- Main Content Area -->
+    <div id="content">
+		<div class="tabs"></div>
 
-                </table>
-            </div>
-            <div class="btns" style="text-align: left">
+        <h3><%=ScreenName%> :</h3>
+
+        <div class="main">
+            <p class="attention"><asp:Label ID="Msg" runat="server"></asp:Label></p>
+
+            <form id="MultipleListForm" runat="server">
+                <input type="hidden" id ="Action" runat="server" value="" />
+
+                <div id="multiplelist">
+                    <table id="SearchWordTable">
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord1" runat="server" MaxLength="<%#MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord2" runat="server" MaxLength="<%#MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord3" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord4" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord5" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord6" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord7" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord8" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord9" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord10" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord11" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord12" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord13" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord14" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord15" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord16" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord17" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord18" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord19" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord20" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord21" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord22" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord23" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord24" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord25" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord26" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord27" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord28" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord29" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord30" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord31" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord32" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord33" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord34" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord35" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord36" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord37" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord38" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord39" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord40" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord41" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord42" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord43" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord44" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord45" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord46" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord47" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord48" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord49" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord50" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord51" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord52" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord53" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord54" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord55" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord56" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord57" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord58" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord59" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord60" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord61" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord62" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord63" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord64" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord65" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord66" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord67" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord68" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord69" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord70" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord71" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord72" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord73" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord74" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord75" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord76" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord77" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord78" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord79" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord80" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord81" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord82" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord83" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord84" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord85" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord86" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord87" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord88" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord89" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord90" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord91" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord92" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord93" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord94" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord95" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord96" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord97" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord98" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord99" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <asp:TextBox ID="SearchWord100" runat="server" MaxLength="<%# MaxLength%>"></asp:TextBox>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <p class="format" style="margin-bottom:10px">(You can specify a value for up to 100 lines)</p>
+
                 <asp:Button ID="ok" runat="server" Text="OK"/>
                 <asp:Button ID="cancel" runat="server" Text="Cancel"/>
-            </div>
+            </form>
+        </div>
+    </div><!-- Main Content Area END -->
 
-        </form>
-    </body>
+</body>
 </html>

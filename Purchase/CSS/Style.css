@@ -611,3 +611,29 @@ div.purpose table td{
      color: inherit;
      font-weight: bold;
 }
+
+#multiplelist {
+    height: 365px;
+    width: 50ex;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    margin-bottom: 0;
+}
+
+#multiplelist td {
+    margin: 0 0 0 2px;
+    padding: 0;
+}
+
+#multiplelist input[type=text] {
+    width: 20em;
+    height: 20px;
+    border: 1px solid #808080;
+    border-radius: 0;
+}
+
+#multiplelist input[type=text]:focus {
+    border: 1px solid #000;
+    outline: 1px solid #000;
+    border-radius: 0;
+}
