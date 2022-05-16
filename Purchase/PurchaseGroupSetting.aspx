@@ -43,7 +43,7 @@
                                 ReadOnly="True" CssClass="readonly" TabIndex="2"></asp:TextBox></td>
                     </tr>
                     <tr>
-                        <th>StorageLocationIDs : </th>
+                        <th>Storage Locations : </th>
                         <td>
                             <asp:Panel ID="StorageLocationIDsPanel" runat="server">
                                 <asp:CheckBox ID="AL10" Text="AL10" runat="server" />
@@ -78,6 +78,7 @@
                         <th>MMSTA Invalidation Editable :</th>
                         <td>
                             <asp:CheckBox ID="MMSTAInvalidationEditable" runat="server" />
+                            <span>(The User need to close &amp; reopen browser to reflect change)</span>
                         </td>
                     </tr>
 

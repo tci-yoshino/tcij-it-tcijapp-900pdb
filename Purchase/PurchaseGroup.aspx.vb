@@ -47,10 +47,10 @@ Partial Public Class PurchaseGroup
         Dim ret As String = ""
         Dim SLocationByPUser As DataTable = GetDataTable("select * from StorageByPurchasingUser where UserID=" + userid)
         For i As Integer = 0 To SLocationByPUser.Rows.Count - 1
-            ret += SLocationByPUser.Rows(i)("Storage").ToString + ","
+            ret += SLocationByPUser.Rows(i)("Storage").ToString + ", "
         Next
         If ret.Length > 0 Then
-            ret = ret.Substring(0, ret.Length - 1)
+            ret = ret.Substring(0, ret.Length - 2)
         End If
         Return ret
     End Function
