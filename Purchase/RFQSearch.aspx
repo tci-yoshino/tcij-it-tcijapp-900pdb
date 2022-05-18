@@ -136,16 +136,16 @@
                 });
 
                 // Purpose 選択値の相関制御
-                $('#PurposeList_0').click(function () {
-                    if ($('#PurposeList_0').is(':checked') == true) {
-                        $("[id^='PurposeList']").removeProp('checked');
-                        $("[id^='PurposeList']").prop('disabled', 'disabled');
-                        $('#PurposeList_0').removeProp('disabled');
-                        $("#PurposeList_0").prop('checked', 'checked');
-                    } else {
-                        $("[id^='PurposeList']").removeProp('disabled');
-                    }
-                });
+//                $('#PurposeList_0').click(function () {
+//                    if ($('#PurposeList_0').is(':checked') == true) {
+//                        $("[id^='PurposeList']").removeProp('checked');
+//                        $("[id^='PurposeList']").prop('disabled', 'disabled');
+//                        $('#PurposeList_0').removeProp('disabled');
+//                        $("#PurposeList_0").prop('checked', 'checked');
+//                    } else {
+//                        $("[id^='PurposeList']").removeProp('disabled');
+//                    }
+//                });
 
                 // Territory リスト表示制御
                 $('#Territory').click(function () {
@@ -163,7 +163,19 @@
                     $('#divTerritory').fadeOut();
                 });
             });
-            //-->
+            $(document).ready(function () {
+                $("input[type='text']:not('.MultipleTarget')").on("keydown", function (e) {
+                    if (e.keyCode != 13) return true;
+                    $("#Search").trigger("click");
+                    return false;
+                });
+                $("input[type='text'].MultipleTarget").on("keydown", function (e) {
+                    if (e.keyCode != 13) return true;
+                    $("#Search").trigger("click");
+                    return false;
+                });
+            });
+        //-->
         </script>
     </head>
     
@@ -195,7 +207,7 @@
                             <th>RFQ Reference Number : </th>
                             <td>
                                 <%-- (RFQNumberの桁数 10 + パイプライン区切り 1) * RFQNumberの入力可能数 100 = 1100 --%>
-                                <asp:TextBox ID="RFQNumber" runat="server" Width="10em" MaxLength="1100"></asp:TextBox>
+                                <asp:TextBox ID="RFQNumber" class="MultipleTarget" runat="server" Width="10em" MaxLength="1100"></asp:TextBox>
                                 <asp:Button ID="RFQReferenceNumberBtn" runat="server" Text="Multiple List" OnClientClick="return RFQReferenceNumberBtn_onclick()"/>
                             </td>
                         </tr>
@@ -203,7 +215,7 @@
                             <th>Product Number : </th>
                             <td>
                                 <%-- (ProductNumberの桁数 32 + パイプライン区切り 1) * ProductNumberの入力可能数 100 = 3300 --%>
-                                <asp:TextBox ID="ProductNumber" runat="server" Width="10em" MaxLength="3300"></asp:TextBox>
+                                <asp:TextBox ID="ProductNumber" class="MultipleTarget" runat="server" Width="10em" MaxLength="3300"></asp:TextBox>
                                 <asp:Button ID="ProductNumberBtn" runat="server" Text="Multiple List" OnClientClick="return ProductNumberBtn_onclick()"/>
                             </td>
                         </tr>
@@ -218,7 +230,7 @@
                             <th>Supplier Code : </th>
                             <td>
                                 <%-- (SupplierCodeの桁数 10 + パイプライン区切り 1) * SupplierCodeの入力可能数 100 = 1100 --%>
-                                <asp:TextBox ID="SupplierCode" runat="server" Width="10em" MaxLength="1100"></asp:TextBox>
+                                <asp:TextBox ID="SupplierCode" class="MultipleTarget" runat="server" Width="10em" MaxLength="1100"></asp:TextBox>
                                 <asp:Button ID="SupplierCodeBtn" runat="server" Text="Multiple List" OnClientClick="return SupplierCodeBtn_onclick()"/>
                             </td>
                         </tr>
@@ -226,7 +238,7 @@
                             <th>SAP Supplier Code : </th>
                             <td>
                                 <%-- (S4SupplierCodeの桁数 10 + パイプライン区切り 1) * S4SupplierCodeの入力可能数 100 = 1100 --%>
-                                <asp:TextBox ID="S4SupplierCode" runat="server" Width="10em" MaxLength="1100"></asp:TextBox>
+                                <asp:TextBox ID="S4SupplierCode" class="MultipleTarget" runat="server" Width="10em" MaxLength="1100"></asp:TextBox>
                                 <asp:Button ID="S4SupplierCodeBtn" runat="server" Text="Multiple List" OnClientClick="return S4SupplierCodeBtn_onclick()"/>
                             </td>
                         </tr>

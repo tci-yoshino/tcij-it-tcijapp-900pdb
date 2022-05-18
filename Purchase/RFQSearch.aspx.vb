@@ -54,7 +54,7 @@ Public Class RFQSearch
             
             'Purpose
             Dim PL_PurposeList As TCIDataAccess.PurposeList = New TCIDataAccess.PurposeList
-            PL_PurposeList.SetPurposeDropDownList(PurposeList)
+            PL_PurposeList.SetPurposeDropDownList(PurposeList, False)
             'Territory
             SetTerritoryDropDownList(TerritoryList)
 

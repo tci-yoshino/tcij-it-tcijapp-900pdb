@@ -957,8 +957,9 @@ Namespace TCIDataAccess.Join
                         DBCommand.Parameters.AddWithValue("QuoStorageLocation", Cond.QuoStorageLocation)
                     End If
                     SetPramMultipleSelectionInClauseSQL(DBCommand, "Purpose", Cond.Purpose)
-                    SetPramMultipleSelectionInClauseSQL(DBCommand, "EnqLocationName", Cond.Territory)
-                    SetPramMultipleSelectionInClauseSQL(DBCommand, "QuoLocationName", Cond.Territory)
+                    SetPramMultipleSelectionInClauseSQL(DBCommand, "TerritoryCode", Cond.Territory)
+                    'SetPramMultipleSelectionInClauseSQL(DBCommand, "EnqLocationName", Cond.Territory)
+                    'SetPramMultipleSelectionInClauseSQL(DBCommand, "QuoLocationName", Cond.Territory)
                     If Not String.IsNullOrEmpty(Cond.Priority) Then
                         DBCommand.Parameters.AddWithValue("Priority", Cond.Priority)
                     End If

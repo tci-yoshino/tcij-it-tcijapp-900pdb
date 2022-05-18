@@ -237,9 +237,8 @@
                     <tr>
                         <th>Specification : </th>
                         <td>
-                            <asp:TextBox ID="Specification" runat="server" Columns="50" Rows="3" TextMode="MultiLine"></asp:TextBox><td>
-                                <div align="center" valign="bottom" style="margin-left: 0px">Plant-sp.matl status</div>
-                            </td>
+                            <asp:TextBox ID="Specification" runat="server" Columns="50" Rows="3" TextMode="MultiLine"></asp:TextBox>
+                                <div style="text-align:center;vertical-align:bottom;margin-left: 0px">Plant-sp.matl status</div>
                         </td>
                     </tr>
                     <tr>

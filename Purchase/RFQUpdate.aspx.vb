@@ -2115,10 +2115,20 @@ Partial Public Class RFQUpdate
         DBCommand = DBConn.CreateCommand()
         DBCommand.CommandText = sql
         DBCommand.ExecuteNonQuery()
-        DBCommand.Dispose()
+
         '更新RfqLine的OutputStatus
-        DBCommand.CommandText = "update  RfqLine set OutputStatus='1' where RFQLineNumber=" + RFQLineNumber + ";Update RFQHeader set RFQStatusCode='II' where RFQNumber=" + RFQNumber
+        DBCommand.CommandText = "
+            Update RfqLine   set OutputStatus='1' where RFQLineNumber=@RFQLineNumber;
+            Update RFQHeader set RFQStatusCode='II', CodeExtensionCode=@CodeExtensionCode, MMSTAInvalidation=@MMSTAInvalidation where RFQNumber=@RFQNumber;
+            Update RFQHeader Set MMSTAInvalidation=0 where RFQNumber=@RFQNumber and MMSTAInvalidation=1;"
+        DBCommand.Parameters.Clear()
+        DBCommand.Parameters.AddWithValue("RFQLineNumber", RFQLineNumber)
+        DBCommand.Parameters.AddWithValue("RFQNumber", RFQNumber)
+        DBCommand.Parameters.AddWithValue("CodeExtensionCode", Me.CodeExtensionList.SelectedValue)
+        DBCommand.Parameters.AddWithValue("MMSTAInvalidation", If(Me.MMSTAInvalidation.Checked, 1, 0))
+
         DBCommand.ExecuteNonQuery()
+
         DBCommand.Dispose()
         DBConn.Close()
         If MMSTAInvalidation.Checked = True Then
@@ -2128,7 +2138,7 @@ Partial Public Class RFQUpdate
     End Function
     Public Function CheckIsClickPoInterface(ByVal RFQNumber As String) As Boolean
         Dim isAbleClickPoInterface As Boolean = False
-        Dim purposeDt As DataTable = GetDataTable("select *  from Purpose where PurposeCode in (select PurposeCode from  RFQHeader where RFQNumber=" + RFQNumber + ") and IsVisiable='1'", "Purpose")
+        Dim purposeDt As DataTable = GetDataTable("Select *  from Purpose where PurposeCode In (Select PurposeCode from  RFQHeader where RFQNumber=" + RFQNumber + ") And IsVisiable ='1'", "Purpose")
         If purposeDt.Rows.Count > 0 Then
             isAbleClickPoInterface = True
         End If
@@ -2544,6 +2554,14 @@ Partial Public Class RFQUpdate
     ''' EnqUserMMSTAValidationステータスを取得
     ''' </summary> 
     Private Function EnqMMSTAValidationSearch() As String
+        'Enq-User と Quo-User の Storage Location が同一の場合は EnqResult = S (Success) と判定
+        If (Not String.IsNullOrEmpty(Me.StorageLocation.SelectedValue)) AndAlso Me.StorageLocation.SelectedValue = Me.StorageLocation2.SelectedValue Then
+            Return "S"
+        End If
+        'Enq-User の Plant-sp.matl Status がブランクの場合は EnqResult = S と判定
+        If String.IsNullOrEmpty(Me.EnqUserPlantStatus.Text) Then
+            Return "S"
+        End If
 
         Dim DS As DataSet = New DataSet
         Dim Connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
@@ -2630,6 +2648,11 @@ Partial Public Class RFQUpdate
     ''' QuoUserMMSTAValidationステータスを取得
     ''' </summary> 
     Private Function QuoMMSTAValidationSearch() As String
+        'Quo-User の Plant-sp.matl Status がブランクの場合は QuoResult = S と判定
+        If String.IsNullOrEmpty(Me.QuoUserPlantStatus.Text) Then
+            Return "S"
+        End If
+
         Dim DS As DataSet = New DataSet
         Dim Connection As New SqlClient.SqlConnection(Common.DB_CONNECT_STRING)
         Dim DBCommand As SqlClient.SqlCommand
@@ -2743,13 +2766,12 @@ Partial Public Class RFQUpdate
             messageType = DS.Tables("MMSTAValidationMessage").Rows(0)("MessageType").ToString
         End If
 
-        Debug.Print(message)
         POInterfaceConfirmMsg.Text = ""
         If Not message.Equals(String.Empty) AndAlso messageTypes.ContainsKey(messageType) Then
             If messageTypes(messageType) = "Error" Then
-                POInterfaceMsg.Text = message.Replace("[Enq-Location]", EnqLocation.SelectedItem.Text).Replace("[Quo-Location]", QuoLocation.SelectedItem.Text)
+                POInterfaceMsg.Text = message.Replace("[Enq-Location]", Me.StorageLocation.SelectedValue).Replace("[Quo-Location]", Me.StorageLocation2.SelectedValue)
             Else
-                POInterfaceConfirmMsg.Text = message.Replace("[Enq-Location]", EnqLocation.SelectedItem.Text).Replace("[Quo-Location]", QuoLocation.SelectedItem.Text)
+                POInterfaceConfirmMsg.Text = message.Replace("[Enq-Location]", Me.StorageLocation.SelectedValue).Replace("[Quo-Location]", Me.StorageLocation2.SelectedValue)
             End If
         End If
     End Sub

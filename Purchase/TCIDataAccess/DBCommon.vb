@@ -376,7 +376,7 @@ Namespace TCIDataAccess
                     'CheckboxListのチェックON判定
                     If Purpose.Selected Then
                         If i_Count = 0 Then
-                            st_inClauseSQL = ItemName & " IN("
+                            st_inClauseSQL = "rfh." & ItemName & " IN("
                         Else
                             'Purposeの二つ目以降の項目にOR条件を設定する
                             StrComma = ", "

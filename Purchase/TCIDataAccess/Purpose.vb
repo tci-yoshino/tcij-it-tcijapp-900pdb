@@ -330,9 +330,11 @@ Namespace TCIDataAccess
         ''' </summary>
         ''' <param name="Combo">ドロップダウンリスト</param>
         ''' <remarks></remarks>
-        Public Sub SetPurposeDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl)
+        Public Sub SetPurposeDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl, Optional HasAll As Boolean = True)
             Combo.Items.Clear()
-            Combo.Items.Add("ALL")
+            If HasAll Then
+                Combo.Items.Add("ALL")
+            End If
             Me.Load()
 
             For Each Purpose As Purpose In Me
