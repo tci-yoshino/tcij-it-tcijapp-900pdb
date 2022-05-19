@@ -48,7 +48,7 @@ a:hover {
 
 hr {
     margin: 0 0 10px 0;
-    height: 1px;
+    height: 0;
     border: solid 1px #2651a5;
 }
 
@@ -175,6 +175,31 @@ pre {
 #subNavi a.current {
     color: #333631;
     font-weight: bold;
+}
+
+/* HeaderEhs Rules */
+#ehs ul li
+{
+    display:inline-block; 
+    width:240px;
+    background:Ghostwhite;
+    vertical-align:top
+}
+
+#ehs li
+{
+    margin:0.3em;  
+    padding:0;  
+}
+
+#ehs li .name
+{
+    font-weight: bold;
+}
+
+#ehs li .value
+{
+    color: Navy;
 }
 
 /* Main Content Area Rules */
