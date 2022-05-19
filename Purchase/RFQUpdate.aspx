@@ -72,17 +72,15 @@
                         <th class="auto-style1">Product Number <span class="required">*</span> : </th>
                         <td>
                             <asp:HyperLink ID="RFQListByProductID" runat="server" Text=""></asp:HyperLink>
-                            
-                            <span class="indent">
-                                <span class="message">Code Extension : </span>
-                                    <asp:DropDownList ID="CodeExtensionList" runat="server" Width="8em" Height="20px" AutoPostBack="True">
-                                        <asp:ListItem></asp:ListItem>
+                            <span class="indent"><strong>Code Extension : </strong>
+                                <asp:DropDownList ID="CodeExtensionList" runat="server" Width="8em" Height="20px" AutoPostBack="True">
+                                    <asp:ListItem></asp:ListItem>
                                 </asp:DropDownList>
                             </span>
                         </td>
                     </tr>
                     <tr>
-                        <th>CAS : </th>
+                        <th>CAS Number : </th>
                         <td>
                             <asp:Label ID="CASNumber" runat="server" Text=""></asp:Label></td>
                     </tr>
@@ -99,8 +97,9 @@
                                 ImageUrl="./Image/Search.gif" CssClass="magnify"
                                 OnClientClick="return SupplierSelect_onclick()" />
                             <asp:LinkButton runat="server" ID="SupplierInfo" Text="Supplier Info" />
-                            &nbsp;&nbsp;
-                            <a href="#" onclick="return RFQListByProductSupplier()">Supplier RFQ List</a>
+                            <span class="indent">
+                                <a href="#" onclick="return RFQListByProductSupplier()">Supplier RFQ List</a>
+                            </span>
                         </td>
                     </tr>
                     <tr>
@@ -197,7 +196,7 @@
                 <table>
                     <tr>
                         <th>Purpose : </th>
-                        <td>
+                        <td colspan="2">
                             <asp:Label ID="Purpose" runat="server" Text=""></asp:Label>
                             <asp:DropDownList ID="ListPurpose" runat="server" DataSourceID="SrcPurpose" DataTextField="Text" DataValueField="PurposeCode" AutoPostBack="True" AppendDataBoundItems="true">
                                 <asp:ListItem></asp:ListItem>
@@ -208,38 +207,37 @@
                     </tr>
                     <tr>
                         <th>Priority : </th>
-                        <td>
+                        <td colspan="2">
                             <asp:DropDownList ID="Priority" runat="server"></asp:DropDownList>
                             <asp:Label ID="LabelPriority" runat="server"></asp:Label>
                         </td>
                     </tr>
                     <tr>
                         <th>Required Purity : </th>
-                        <td>
+                        <td colspan="2">
                             <asp:Label ID="RequiredPurity" runat="server" Text=""></asp:Label></td>
                     </tr>
                     <tr>
                         <th>Required QM Method : </th>
-                        <td>
+                        <td colspan="2">
                             <asp:Label ID="RequiredQMMethod" runat="server" Text=""></asp:Label></td>
                     </tr>
                     <tr>
                         <th>Required Specification : </th>
-                        <td>
+                        <td colspan="2">
                             <asp:Label ID="RequiredSpecification" runat="server" Text=""></asp:Label></td>
                     </tr>
                     <tr>
                         <th>Spec Sheet : </th>
-                        <td>
-                            <asp:CheckBox ID="SpecSheet" runat="server"
-                                Text="yes" /></td>
+                        <td colspan="2">
+                            <asp:CheckBox ID="SpecSheet" runat="server" Text="Yes" /></td>
                     </tr>
                     <tr>
                         <th>Specification : </th>
                         <td>
-                            <asp:TextBox ID="Specification" runat="server" Columns="50" Rows="3" TextMode="MultiLine"></asp:TextBox>
-                                <div style="text-align:center;vertical-align:bottom;margin-left: 0px">Plant-sp.matl status</div>
+                            <asp:TextBox ID="Specification" runat="server" Columns="40" Rows="4" TextMode="MultiLine"></asp:TextBox>
                         </td>
+                        <th style="text-align:center; vertical-align:bottom">Plant-sp.matl Status</th>
                     </tr>
                     <tr>
                         <th>Enq-User <span class="required">*</span> : </th>
@@ -261,8 +259,8 @@
                             <asp:SqlDataSource ID="SDS_RFQUpdate_EnqStorageLocation" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
                         </td>
                         <td>
-                            <asp:TextBox ID="EnqUserPlantStatus" runat="server" Width="4em" ReadOnly="true" CssClass="readonly"></asp:TextBox>
-                            <asp:TextBox ID="EnqUserPlantDescriptions" runat="server" Width="8em" ReadOnly="true" CssClass="readonly"></asp:TextBox>
+                            <asp:TextBox ID="EnqUserPlantStatus" runat="server" Width="2em" ReadOnly="true" CssClass="readonly"></asp:TextBox>
+                            <asp:TextBox ID="EnqUserPlantDescriptions" runat="server" Width="12em" ReadOnly="true" CssClass="readonly"></asp:TextBox>
                         </td>
                     </tr>
                     <tr>
@@ -292,20 +290,20 @@
                             <asp:SqlDataSource ID="SDS_RFQUpdate_QuoStorageLocation" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
                         </td>
                         <td>
-                            <asp:TextBox ID="QuoUserPlantStatus" runat="server" Width="4em" ReadOnly="true" CssClass="readonly"></asp:TextBox>
-                            <asp:TextBox ID="QuoUserPlantDescriptions" runat="server" Width="8em" ReadOnly="true" CssClass="readonly"></asp:TextBox>
+                            <asp:TextBox ID="QuoUserPlantStatus" runat="server" Width="2em" ReadOnly="true" CssClass="readonly"></asp:TextBox>
+                            <asp:TextBox ID="QuoUserPlantDescriptions" runat="server" Width="12em" ReadOnly="true" CssClass="readonly"></asp:TextBox>
                         </td>
                     </tr>
                     <tr>
                         <th>Comment : </th>
                         <td>
-                            <asp:TextBox ID="Comment" runat="server" Columns="50" Rows="3" TextMode="MultiLine"></asp:TextBox></td>
-                        <td><asp:CheckBox ID="MMSTAInvalidation" runat="server" ReadOnly="true" AutoPostBack="True" Text="MMSTA Invalidation"></asp:CheckBox>
-                        </td>
+                            <asp:TextBox ID="Comment" runat="server" Columns="40" Rows="4" TextMode="MultiLine"></asp:TextBox></td>
+                        <td style="text-align:center">
+                            <asp:CheckBox ID="MMSTAInvalidation" runat="server" ReadOnly="true" AutoPostBack="True" Text="MMSTA Invalidation"></asp:CheckBox></td>
                     </tr>
                     <tr>
                         <th>BUoM : </th>
-                        <td>
+                        <td colspan="2">
                             <asp:Label ID="labBUoM" runat="server" Text=""></asp:Label></td>
                     </tr>
                 </table>
