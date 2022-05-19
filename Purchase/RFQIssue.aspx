@@ -61,7 +61,7 @@
                                     <asp:ImageButton ID="ProductSelect" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" 
                                         OnClientClick="return ProductSelect_onclick()" />
                                     <span class="indent">
-                                        <span class="message">Code Extension :</span>
+                                        <strong>Code Extension : </strong>
                                         <asp:DropDownList ID="CodeExtensionList" runat="server" Width="8em" Height="20px">
                                             <asp:ListItem></asp:ListItem>
                                         </asp:DropDownList>
@@ -209,15 +209,13 @@
                                 </td>
                             </tr>
                             <tr>
-　                            <th>Supplier Contact Person : </th>
-                              <td>
-                                  <span>
-                                      <asp:TextBox ID="SupplierContactPerson" runat="server" Width="10em" MaxLength="255"></asp:TextBox>
-                                      <asp:DropDownList ID="SupplierContactPersonCodeList" runat="server" Width="16em" Height="20px" >
+                                <th>Supplier Contact Person : </th>
+                                <td>
+                                    <asp:TextBox ID="SupplierContactPerson" runat="server" Width="10em" MaxLength="255"></asp:TextBox>
+                                    <asp:DropDownList ID="SupplierContactPersonCodeList" runat="server" Width="16em" Height="20px" >
                                         <asp:ListItem></asp:ListItem>
-                                      </asp:DropDownList>
-                                  </span>
-                              </td>
+                                    </asp:DropDownList>
+                                </td>
                             </tr>
 				        </table>
 
@@ -235,7 +233,7 @@
                                         <asp:DropDownList ID="EnqUnit_1" runat="server" 
                                             AppendDataBoundItems="True" DataSourceID="SDS_RFQIssue_Qua" DataTextField="UnitCode" DataValueField="UnitCode">
                                             <asp:ListItem></asp:ListItem>
-                                        </asp:DropDownList>x 
+                                        </asp:DropDownList> x 
                                         <asp:TextBox ID="EnqPiece_1" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox>
                                         <asp:SqlDataSource ID="SDS_RFQIssue_Qua" runat="server" 
                                             ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>" 
@@ -254,7 +252,7 @@
                                             DataSourceID="SDS_RFQIssue_Qua" DataTextField="UnitCode" 
                                             DataValueField="UnitCode">
                                             <asp:ListItem></asp:ListItem>
-                                        </asp:DropDownList>x 
+                                        </asp:DropDownList> x 
                                         <asp:TextBox ID="EnqPiece_2" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox>
                                     </td>
                                     <td>
@@ -269,7 +267,7 @@
                                             DataSourceID="SDS_RFQIssue_Qua" DataTextField="UnitCode" 
                                             DataValueField="UnitCode">
                                             <asp:ListItem></asp:ListItem>
-                                        </asp:DropDownList>x 
+                                        </asp:DropDownList> x 
                                         <asp:TextBox ID="EnqPiece_3" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox>
                                     </td>
                                     <td>
@@ -284,7 +282,7 @@
                                             DataSourceID="SDS_RFQIssue_Qua" DataTextField="UnitCode" 
                                             DataValueField="UnitCode">
                                             <asp:ListItem></asp:ListItem>
-                                        </asp:DropDownList>x 
+                                        </asp:DropDownList> x 
                                         <asp:TextBox ID="EnqPiece_4" runat="server" Width="5em" MaxLength="5" CssClass="number"></asp:TextBox>
                                     </td>
                                     <td>
