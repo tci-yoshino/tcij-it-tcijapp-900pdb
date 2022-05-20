@@ -933,10 +933,10 @@ Namespace TCIDataAccess.Join
                         DBCommand.Parameters.AddWithValue("RFQQuotedDateTo", GetDatabaseTime(Cond.s_LocationCode, Cond.RFQQuotedDateTo))
                     End If
                     If Not String.IsNullOrEmpty(Cond.LastRFQStatusChangeDateFrom) Then
-                        DBCommand.Parameters.AddWithValue("LastRFQStatusChangeDateFrom", GetDatabaseTime(Cond.s_LocationCode, Cond.LastRFQStatusChangeDateFrom))
+                        DBCommand.Parameters.AddWithValue("LastRFQStatusChangeDateFrom", GetDatabaseTime(Cond.s_LocationCode, Cond.LastRFQStatusChangeDateFrom & " 00:00:00"))
                     End If
                     If Not String.IsNullOrEmpty(Cond.LastRFQStatusChangeDateTo) Then
-                        DBCommand.Parameters.AddWithValue("LastRFQStatusChangeDateTo", GetDatabaseTime(Cond.s_LocationCode, Cond.LastRFQStatusChangeDateTo))
+                        DBCommand.Parameters.AddWithValue("LastRFQStatusChangeDateTo", GetDatabaseTime(Cond.s_LocationCode, Cond.LastRFQStatusChangeDateTo & " 23:59:59"))
                     End If
                     If Not String.IsNullOrEmpty(Cond.EnqLocationCode) Then
                         DBCommand.Parameters.AddWithValue("EnqLocationCode", Cond.EnqLocationCode)

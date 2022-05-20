@@ -71,8 +71,9 @@ Partial Public Class RFQListByProduct
 
         End If
 
-        '' 一覧検索
+        ' 一覧取得（Switch押下時）
         st_ProductID = st_ProductID.Trim()
+        ReSetPager()
         ShowList()
 
         '[ProductListを表示]-----------------------------------------------------
@@ -101,8 +102,9 @@ Partial Public Class RFQListByProduct
         'Validity Quotation クリア
         ValidQuotation.SelectedValue = Common.ValidQuotation_ALL
 
-        '' 一覧検索
+        ' 一覧取得（Switch押下時）
         st_ProductID = st_ProductID.Trim()
+        ReSetPager()
         ShowList()
 
         '[ProductListを表示]-----------------------------------------------------
@@ -130,6 +132,8 @@ Partial Public Class RFQListByProduct
     ''' 
     ''' </remarks>
     Protected Sub RFQHeaderList_PagePropertiesChanged(ByVal sender As Object, ByVal e As EventArgs) Handles RFQHeaderList.PagePropertiesChanged
+        Msg.Text = String.Empty
+        RFQHeaderList.Visible = False
 
         If Not String.Equals(Action.Value, "Search") And Not String.Equals(Action.Value, "Release") Then
             ' 一覧を表示する（ページャー押下時）
@@ -137,8 +141,9 @@ Partial Public Class RFQListByProduct
             ShowList()
         End If
 
-        Me.Action.Value = String.Empty
+        RFQHeaderList.Visible = True
 
+        Me.Action.Value = String.Empty
     End Sub
 
     ''' <summary>
@@ -229,5 +234,27 @@ Partial Public Class RFQListByProduct
         End If
         Return ret
     End Function
+
+    Private Sub ReSetPager()
+
+        ResetPageNumericPagerField(RFQPagerLinkTop)
+        ResetPageNumericPagerField(RFQPagerLinkBottom)
+
+    End Sub
+
+    ''' <summary>
+    ''' ページを初期化します。
+    ''' </summary>
+    private Sub ResetPageNumericPagerField(ByVal dp As DataPager)
+        If Not IsNothing(dp) And Not dp.StartRowIndex = 0 Then
+            Dim numericPF As NumericPagerField = Ctype(dp.Fields(0), NumericPagerField)
+            If Not IsNothing(numericPF) Then
+　　　　　　　　'' 引数に0をセット
+                Dim args As CommandEventArgs = New CommandEventArgs("0", "")
+　　　　　　　　'' イベント発生
+                numericPF.HandleEvent(args)
+            End If
+        End If
+    End Sub
 
 End Class

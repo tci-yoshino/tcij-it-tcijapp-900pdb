@@ -67,7 +67,7 @@
 
                 <div class="list">
                  
-                    <asp:Button ID ="ExcelExportBtn" runat="server" Text="Download"/>
+                    <asp:Button ID ="ExcelExportBtn" runat="server" Text="Download" OnClientClick="setAction('Download');" />
                     <asp:HiddenField ID="hidSourceID" runat="server" />
                     <input type="hidden" runat="server" id="ProductID" />
                     <input type="hidden" runat="server" id="Action" value="" />

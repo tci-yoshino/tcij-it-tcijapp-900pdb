@@ -109,7 +109,7 @@ Namespace TCIDataAccess.Join
             sbValue.AppendLine("    [Product].[ProductID]")
             sbValue.AppendLine("From s_NewProduct")
             sbValue.AppendLine("    Inner Join Product On")
-            sbValue.AppendLine("        [s_NewProduct].[ProductNumber] = [Product].[ProductNumber]")
+            sbValue.AppendLine("        [s_NewProduct].[RegistryNumber] = [Product].[ProductNumber]")
             sbValue.AppendLine("Where")
             sbValue.AppendLine("    [s_NewProduct].[RegistryNumber] = @RegistryNumber AND ")
             sbValue.AppendLine("    Product.NumberType = 'NEW'")

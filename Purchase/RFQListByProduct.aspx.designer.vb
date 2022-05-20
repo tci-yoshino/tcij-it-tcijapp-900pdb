@@ -158,6 +158,24 @@ Partial Public Class RFQListByProduct
     Protected WithEvents HiddenValidQuotation As Global.System.Web.UI.WebControls.HiddenField
     
     '''<summary>
+    '''RFQPagerCountTop コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents RFQPagerCountTop As Global.System.Web.UI.WebControls.DataPager
+    
+    '''<summary>
+    '''RFQPagerLinkTop コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents RFQPagerLinkTop As Global.System.Web.UI.WebControls.DataPager
+    
+    '''<summary>
     '''RFQHeaderList コントロール。
     '''</summary>
     '''<remarks>
@@ -165,6 +183,24 @@ Partial Public Class RFQListByProduct
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents RFQHeaderList As Global.System.Web.UI.WebControls.ListView
+    
+    '''<summary>
+    '''RFQPagerLinkBottom コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents RFQPagerLinkBottom As Global.System.Web.UI.WebControls.DataPager
+    
+    '''<summary>
+    '''RFQPagerCountBottom コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents RFQPagerCountBottom As Global.System.Web.UI.WebControls.DataPager
     
     '''<summary>
     '''SrcRFQHeader コントロール。

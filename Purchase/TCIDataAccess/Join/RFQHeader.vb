@@ -437,10 +437,10 @@ Namespace TCIDataAccess.Join
                         DBCommand.Parameters.AddWithValue("RFQQuotedDateTo", GetDatabaseTime(Cond.s_LocationCode, Cond.RFQQuotedDateTo))
                     End If
                     If Not String.IsNullOrEmpty(Cond.LastRFQStatusChangeDateFrom) Then
-                        DBCommand.Parameters.AddWithValue("LastRFQStatusChangeDateFrom", GetDatabaseTime(Cond.s_LocationCode, Cond.LastRFQStatusChangeDateFrom))
+                        DBCommand.Parameters.AddWithValue("LastRFQStatusChangeDateFrom", GetDatabaseTime(Cond.s_LocationCode, Cond.LastRFQStatusChangeDateFrom & " 00:00:00"))
                     End If
                     If Not String.IsNullOrEmpty(Cond.LastRFQStatusChangeDateTo) Then
-                        DBCommand.Parameters.AddWithValue("LastRFQStatusChangeDateTo", GetDatabaseTime(Cond.s_LocationCode, Cond.LastRFQStatusChangeDateTo))
+                        DBCommand.Parameters.AddWithValue("LastRFQStatusChangeDateTo", GetDatabaseTime(Cond.s_LocationCode, Cond.LastRFQStatusChangeDateTo & " 23:59:59"))
                     End If
                     If Not String.IsNullOrEmpty(Cond.EnqLocationCode) Then
                         DBCommand.Parameters.AddWithValue("EnqLocationCode", Cond.EnqLocationCode)
@@ -758,7 +758,7 @@ Namespace TCIDataAccess.Join
             WhereClause = AddMultipleListItemWhereClauseSQL(WhereClause,CreateRFQInClauseSQL("S4SupplierCode", Cond.S4SupplierCode))
             WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.SupplierName LIKE '%' + @SupplierName + '%' ", Cond.SupplierName)
             WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.SupplierCountryCode = @SupplierCountryCode", Cond.SupplierCountryCode)
-            WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.SupplierItemName = @SupplierItemName", Cond.SupplierItemName)
+            WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.SupplierItemName LIKE '%' + @SupplierItemName + '%' ", Cond.SupplierItemName)
             WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.StatusSortOrder >= @StatusFrom", Cond.StatusFrom)
             WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.StatusSortOrder <= @StatusTo", Cond.StatusTo)
             WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.CreateDate >= @RFQCreatedDateFrom", Cond.RFQCreatedDateFrom)

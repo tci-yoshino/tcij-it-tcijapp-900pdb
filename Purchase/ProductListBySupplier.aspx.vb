@@ -113,6 +113,7 @@ Partial Public Class ProductListBySupplier
         rept.DownloadExcel(SupplierCode.Text, SupplierName.Text, Territory.Text, Session(SESSION_ROLE_CODE).ToString, HiddenSelectedValidityFilter.Value, 
                            SupplierProductList.ID, Session("LocationCode").ToString, HiddenSortField.Value, HiddenSortType.Value)
 
+        Action.Value = String.Empty
     End Sub
 
     ''' <summary>
