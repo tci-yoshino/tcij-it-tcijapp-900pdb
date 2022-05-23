@@ -67,7 +67,7 @@
         </div>
 
         <br />
-        <hr style="height:0" />
+        <hr />
         
         <div class="main switch">
             <table style="margin-bottom:5px">
@@ -176,11 +176,11 @@
                             <td><asp:Label ID="Purpose" runat="server" Text='<%#Eval("Purpose")%>'></asp:Label></td>
                         </tr>
                         <tr>
-                            <th>Maker Name / Country</th>
+                            <th>Maker Code / Name / Country</th>
                             <td colspan="3">
                                 <!-- １段下に改行されて表示される現象の対策のため他項目より前に記述する -->
                                 <span class="placedright"><asp:HyperLink ID="MakerInfoLink" runat="server" NavigateUrl='<%#Eval("MakerInfo")%>' Target="_blank"><asp:Label ID="MakerInfo" runat="server" Text='<%#If(IsDBNull(Eval("MakerInfo")), "", "Supplier Information")%>'></asp:Label></asp:HyperLink></span>
-                                <asp:Label ID="MakerName" runat="server" Text='<%#Eval("MakerName")%>'></asp:Label><span class="indent">(<asp:Label ID="MakerCountry" runat="server" Text='<%#Eval("MakerCountryName")%>'></asp:Label>)</span>
+                                <asp:HyperLink ID="MakerRFQLink" runat="server" NavigateUrl='<%#Eval("MakerRFQLink")%>' Target="_blank"><asp:Label ID="MakerCode" runat="server" Text='<%#Eval("MakerCode")%>'></asp:Label></asp:HyperLink><span class="indent"><asp:Label ID="MakerName" runat="server" Text='<%#Eval("MakerName")%>'></asp:Label></span><span class="indent">(<asp:Label ID="MakerCountry" runat="server" Text='<%#Eval("MakerCountryName")%>'></asp:Label>)</span>
                             </td>
                             <th>Supplier Item Name</th>
                             <td><asp:Label ID="SupplierItemName" runat="server" Text='<%#Eval("SupplierItemName")%>'></asp:Label></td>
