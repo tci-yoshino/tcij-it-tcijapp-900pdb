@@ -113,7 +113,7 @@ function ListSort(hidden_sort_type, hidden_sort_field) {
         }
 
         // マウスリーブ
-        ths[i].onmouseleave = event => {
+        ths[i].onmouseleave = function(event){
             let element = event.target;
             if (element.id === sort_field) {
                 if (element.classList.contains('asc')) {
@@ -129,7 +129,7 @@ function ListSort(hidden_sort_type, hidden_sort_field) {
         };
 
         // マウスオーバー
-        ths[i].onmouseover = event => {
+        ths[i].onmouseover = function (event) {
             let element = event.target;
             if (element.classList.contains('asc')) {
                 element.classList.replace('asc', 'desc');
@@ -140,13 +140,13 @@ function ListSort(hidden_sort_type, hidden_sort_field) {
             }
             let sort_field = hidden_sort_field.value;
             Array.from(element.parentNode.children)
-                .filter(e => e !== element)
-                .filter(e => e.id !== sort_field)
-                .forEach(e => e.classList.remove('asc', 'desc'));
+                .filter(function (e) { e !== element })
+                .filter(function (e) { e.id !== sort_field })
+                .forEach(function (e) { e.classList.remove('asc', 'desc') });
         };
 
         // クリック時
-        ths[i].onclick = event => {
+        ths[i].onclick = function (event) {
             let element = event.target;
             if (element.classList.contains('asc')) {
                 hidden_sort_type.value = 'asc';
