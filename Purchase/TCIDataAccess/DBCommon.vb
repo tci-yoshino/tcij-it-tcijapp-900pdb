@@ -243,7 +243,31 @@ Namespace TCIDataAccess
         ''' <param name="SQL">Whereに追加するSQL文</param>
         ''' <returns>WhereClause：RFQHeader検索用WHERE句</returns>
         ''' <remarks></remarks>
-        Public Shared Function AddMultipleListItemWhereClauseSQL(ByVal WhereClause As String, ByVal SQL As String) As String
+        Public Shared Function AddMultipleListItemWhereClauseSQL(ByVal WhereClause As String, ByVal SQL As String, Optional ByVal AddAND As Boolean = True) As String
+            ' SQLが設定されていなければ、特に何もせずWhereClauseを返却する
+            If String.IsNullOrEmpty(SQL) Then
+                Return WhereClause
+            End If
+
+            ' AND を先に付ける必要があるか確認
+            If String.IsNullOrEmpty(WhereClause) Or AddAND = False Then
+                WhereClause = WhereClause & SQL
+            Else
+                WhereClause = WhereClause & " AND " & SQL
+            End If
+
+            Return WhereClause
+
+        End Function
+        ''' <summary>
+        ''' SQL文のWHERE句を追加
+        ''' この関数で生成するWhere句はテキストボックス・ドロップダウンリストで入力された文字列のみです。
+        ''' </summary>
+        ''' <param name="WhereClause">検索SQL文のWhere句の変数</param>
+        ''' <param name="SQL">Whereに追加するSQL文</param>
+        ''' <returns>WhereClause：RFQHeader検索用WHERE句</returns>
+        ''' <remarks></remarks>
+        Public Shared Function OrMultipleListItemWhereClauseSQL(ByVal WhereClause As String, ByVal SQL As String) As String
             ' SQLが設定されていなければ、特に何もせずWhereClauseを返却する
             If String.IsNullOrEmpty(SQL) Then
                 Return WhereClause
@@ -251,9 +275,9 @@ Namespace TCIDataAccess
 
             ' AND を先に付ける必要があるか確認
             If String.IsNullOrEmpty(WhereClause) Then
-                    WhereClause = SQL
-                Else 
-                    WhereClause = WhereClause & " AND " & SQL
+                WhereClause = SQL
+            Else
+                WhereClause = WhereClause & " OR " & SQL
             End If
 
             Return WhereClause
@@ -268,7 +292,32 @@ Namespace TCIDataAccess
         ''' <param name="ItemValue">画面で入力または選択された値</param>
         ''' <returns>WhereClause：RFQHeader検索用WHERE句</returns>
         ''' <remarks></remarks>
-        Public Shared Function AddRFQWhereClauseSQL(ByVal WhereClause As String, ByVal ItemName As String, ByVal ItemValue As String) As String
+        Public Shared Function AddRFQWhereClauseSQL(ByVal WhereClause As String, ByVal ItemName As String, ByVal ItemValue As String, Optional ByVal AddAND As Boolean = True) As String
+            ' ItemNameが設定されていなければ、特に何もせずWhereClauseを返却する
+            If String.IsNullOrEmpty(ItemValue) Then
+                Return WhereClause
+            End If
+
+            ' AND を先に付ける必要があるか確認
+            If String.IsNullOrEmpty(WhereClause) Or AddAND = False Then
+                WhereClause = WhereClause & ItemName
+            Else
+                WhereClause = WhereClause & " AND " & ItemName
+            End If
+
+            Return WhereClause
+
+        End Function
+        ''' <summary>
+        ''' SQL文のWHERE句を追加
+        ''' この関数で生成するWhere句はテキストボックス・ドロップダウンリストで入力された文字列のみです。
+        ''' </summary>
+        ''' <param name="WhereClause">検索SQL文のWhere句の変数</param>
+        ''' <param name="ItemName">検索項目名</param>
+        ''' <param name="ItemValue">画面で入力または選択された値</param>
+        ''' <returns>WhereClause：RFQHeader検索用WHERE句</returns>
+        ''' <remarks></remarks>
+        Public Shared Function OrRFQWhereClauseSQL(ByVal WhereClause As String, ByVal ItemName As String, ByVal ItemValue As String) As String
             ' ItemNameが設定されていなければ、特に何もせずWhereClauseを返却する
             If String.IsNullOrEmpty(ItemValue) Then
                 Return WhereClause
@@ -276,9 +325,9 @@ Namespace TCIDataAccess
 
             ' AND を先に付ける必要があるか確認
             If String.IsNullOrEmpty(WhereClause) Then
-                    WhereClause = ItemName
-                Else 
-                    WhereClause = WhereClause & " AND " & ItemName
+                WhereClause = ItemName
+            Else
+                WhereClause = WhereClause & " OR " & ItemName
             End If
 
             Return WhereClause
@@ -296,7 +345,7 @@ Namespace TCIDataAccess
 
             '値が複数設定される可能性がある項目のIDのセット
             Dim st_ItemID As String = ItemName & i_Count
-           
+
             Dim st_inClauseSQL As String = ""
 
             '値が複数設定される可能性がある項目のループ処理
@@ -332,12 +381,12 @@ Namespace TCIDataAccess
         ''' <param name="ItemName">複数入力の可能性がある項目名</param>
         ''' <param name="ItemValues">複数入力の可能性がある項目の値</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetParamInClauseSQL(ByRef DBCommand As SqlCommand,ByVal ItemName As String, ByVal ItemValues() As String)
+        Public Shared Sub SetParamInClauseSQL(ByRef DBCommand As SqlCommand, ByVal ItemName As String, ByVal ItemValues() As String)
             Dim i_Count As Integer = 0
 
             '値が複数設定される可能性がある項目のIDのセット
             Dim st_ItemID As String = ItemName & i_Count
-           
+
             '値が複数設定される可能性がある項目のループ処理
             For Each ItemValue As String In ItemValues
                 'DBに格納されているデータは半角のため、画面で全角文字列で入力されていた場合、文字列を半角文字列に変換
@@ -359,7 +408,7 @@ Namespace TCIDataAccess
         ''' <param name="ListItems">複数選択可能なドロップダウンリスト</param>
         ''' <returns>st_inClauseSQL：SQL文のIN句</returns>
         ''' <remarks></remarks>
-        Public Shared Function CreateMultipleSelectionInClauseSQL(ByVal ItemName As String,ByVal ListItems As ListItemCollection) As String
+        Public Shared Function CreateMultipleSelectionInClauseSQL(ByVal ItemName As String, ByVal ListItems As ListItemCollection) As String
             'Territory条件
             Dim StrComma As String = String.Empty
             Dim i_Count As Integer = 0
@@ -403,7 +452,7 @@ Namespace TCIDataAccess
                             StrComma = ", "
                         End If
                         st_inClauseSQL = st_inClauseSQL + StrComma + "@" + st_ItemID
-                        
+
                         i_Count = i_Count + 1
                         st_ItemID = ItemName & i_Count
                     End If
@@ -414,11 +463,11 @@ Namespace TCIDataAccess
             If Not String.IsNullOrEmpty(st_inClauseSQL) Then
                 st_inClauseSQL = st_inClauseSQL & ")"
             End If
-            If Not String.IsNullOrEmpty(st_isNullSQL) And Not String.IsNullOrEmpty(st_inClauseSQL )  Then
+            If Not String.IsNullOrEmpty(st_isNullSQL) And Not String.IsNullOrEmpty(st_inClauseSQL) Then
                 st_ReturnSQL = "(" & st_isNullSQL & " OR " & st_inClauseSQL & ")"
-            Else If Not String.IsNullOrEmpty(st_isNullSQL) Then
+            ElseIf Not String.IsNullOrEmpty(st_isNullSQL) Then
                 st_ReturnSQL = st_isNullSQL
-            Else If Not String.IsNullOrEmpty(st_inClauseSQL) Then
+            ElseIf Not String.IsNullOrEmpty(st_inClauseSQL) Then
                 st_ReturnSQL = st_inClauseSQL
             End If
 
@@ -432,7 +481,7 @@ Namespace TCIDataAccess
         ''' <param name="ItemName">複数選択可能なドロップダウンリスト項目名</param>
         ''' <param name="ListItems">複数選択可能なドロップダウンリスト</param>
         ''' <remarks></remarks>
-        Public Shared Sub SetPramMultipleSelectionInClauseSQL(ByRef DBCommand As SqlCommand,ByVal ItemName As String,ByVal ListItems As ListItemCollection)
+        Public Shared Sub SetPramMultipleSelectionInClauseSQL(ByRef DBCommand As SqlCommand, ByVal ItemName As String, ByVal ListItems As ListItemCollection)
             'Territory条件
             Dim i_Count As Integer = 0
             Dim st_ItemID As String = ItemName & i_Count
@@ -452,7 +501,7 @@ Namespace TCIDataAccess
             Else
                 For Each Territory As ListItem In ListItems
                     'CheckboxListのチェックON判定
-                    If Territory.Selected Then
+                    If Territory.Selected AndAlso Territory.Value <> "Direct" Then 'DirectはSQL生成時に IS NULL として生成済みのため除外する。
                         DBCommand.Parameters.AddWithValue(st_ItemID, Territory.Value)
                         i_Count = i_Count + 1
                         st_ItemID = ItemName & i_Count

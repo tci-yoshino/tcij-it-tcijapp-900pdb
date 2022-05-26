@@ -157,7 +157,7 @@ function setFormAction(button_type) {
                             </td>
                         </tr>
                         <tr>
-                            <th>Supplier Name / Country</th>
+                            <th>Supplier Code / Supplier Name / Country</th>
                             <td colspan="3">
                                 <span><asp:HyperLink ID="SupplierCode" runat="server" NavigateUrl='<%#Eval("SupplierCode","./RFQListBySupplier.aspx?SupplierCode={0}")%>' Text='<%#Eval("SupplierCode")%>' target="_blank" /></span>
                                 <!-- １段下に改行されて表示される現象の対策のため他項目より前に記述する -->
@@ -169,11 +169,13 @@ function setFormAction(button_type) {
                             <td><asp:Label ID="Purpose" runat="server" Text='<%#Eval("Purpose")%>'></asp:Label></td>
                         </tr>
                         <tr>
-                            <th>Maker Name / Country</th>
+                            <th>Maker Code / Maker Name / Country</th>
                             <td colspan="3">
+                                <span><asp:HyperLink ID="MakerCode" runat="server" NavigateUrl='<%#Eval("MakerCode","./RFQListBySupplier.aspx?SupplierCode={0}")%>' Text='<%#Eval("MakerCode")%>' target="_blank" /></span>
                                 <!-- １段下に改行されて表示される現象の対策のため他項目より前に記述する -->
                                 <span class="placedright"><asp:HyperLink ID="MakerInfoLink" runat="server" NavigateUrl='<%#Eval("MakerInfo")%>' Target="_blank"><asp:Label ID="MakerInfo" runat="server" Text='<%#If(IsDBNull(Eval("MakerInfo")), "", "Supplier Information")%>'></asp:Label></asp:HyperLink></span>
-                                <asp:Label ID="MakerName" runat="server" Text='<%#Eval("MakerName")%>'></asp:Label><span class="indent">(<asp:Label ID="MakerCountry" runat="server" Text='<%#Eval("MakerCountryName")%>'></asp:Label>)</span>
+                                <asp:Label ID="MakerName" runat="server" Text='<%#Eval("MakerName")%>'></asp:Label>
+                                <span class="indent">(<asp:Label ID="MakerCountry" runat="server" Text='<%#Eval("MakerCountryName")%>'></asp:Label>)</span>
                             </td>
                             <th>Supplier Item Name</th>
                             <td><asp:Label ID="SupplierItemName" runat="server" Text='<%#Eval("SupplierItemName")%>'></asp:Label></td>

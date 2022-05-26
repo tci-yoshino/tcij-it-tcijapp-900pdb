@@ -371,12 +371,25 @@ Public Class Common
     ''' </summary>
     ''' <param name ="name">プログラム名（Request.Url.ToString()の形式で値を設定）</param>
     ''' <remarks></remarks>
-    Public Shared ReadOnly Property LIST_ONEPAGE_ROW(name as String)  As Integer
-    Get
-        name =System.IO.Path.GetFileNameWithoutExtension(name)
-        Return Integer.Parse(System.Configuration.ConfigurationManager.AppSettings("LIST_ONEPAGE_ROW_" + name))
-    End Get
-End Property
+    Public Shared ReadOnly Property LIST_ONEPAGE_ROW(name As String) As Integer
+        Get
+            name = System.IO.Path.GetFileNameWithoutExtension(name)
+            Return Integer.Parse(System.Configuration.ConfigurationManager.AppSettings("LIST_ONEPAGE_ROW_" + name))
+        End Get
+    End Property
+    ''' <summary>
+    ''' RFQSearch画面のDownload実行時のSQL Command Timeout(秒)を指定する。
+    ''' </summary>
+    ''' <remarks>Web.Configに存在しない場合はNothingを返す</remarks>
+    Public Shared ReadOnly Property SQL_COMMAND_TIMEOUT_RFQSearch_Download As Integer?
+        Get
+            Dim timeout As Integer? = Nothing
+            If ConfigurationManager.AppSettings("SQL_COMMAND_TIMEOUT_RFQSearch_Download") IsNot Nothing Then
+                timeout = CInt(ConfigurationManager.AppSettings("SQL_COMMAND_TIMEOUT_RFQSearch_Download"))
+            End If
+            Return timeout
+        End Get
+    End Property
     ''' <summary>
     ''' セッション情報
     ''' </summary>

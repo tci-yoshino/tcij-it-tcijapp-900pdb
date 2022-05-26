@@ -45,7 +45,7 @@ Public Class Report_RFQSearch
     ''' </summary>
     ''' <param name="Cond">検索条件</param>
     ''' <remarks></remarks>
-    Public Sub DownloadExcel(ByVal cond As TCIDataAccess.join.KeywordSearchConditionParameter)
+    Public Sub DownloadExcel(ByVal cond As TCIDataAccess.Join.KeywordSearchConditionParameter)
 
         Dim outmemory As New System.IO.MemoryStream
 
@@ -69,9 +69,8 @@ Public Class Report_RFQSearch
             Dim wspart As WorksheetPart = CType(wbpart.GetPartById(sheet.Id), WorksheetPart)
             Dim sheetdata As SheetData = wspart.Worksheet.Descendants(Of SheetData)().FirstOrDefault()
             Dim i_Row As Integer = TABLE_START_ROW    '注意: 行番号は常に持ち回る
-
             Dim dc_RFQSearch As New TCIDataAccess.Join.ReportOverviewRFQSearchList
-            dc_RFQSearch.Load(cond)
+            dc_RFQSearch.Load(cond, Common.SQL_COMMAND_TIMEOUT_RFQSearch_Download)
             i_Row = CreateRFQSearchExport(sheetdata, dc_RFQSearch, i_Row)
             i_Row = AppendRow(sheetdata, i_Row)
 
@@ -97,9 +96,6 @@ Public Class Report_RFQSearch
                                                    ByVal dc_RFQSearchList As TCIDataAccess.Join.ReportOverviewRFQSearchList,
                                                    ByVal i_Row As Integer) As Integer
 
-        'ProposalDeptCode のリスト作成
-        Dim ProposalDeptList As New List(Of String)
-
         '出力用テーブル作成
         Dim dt_Table As New DataTable
         CreateTableData(dt_Table)
@@ -111,205 +107,109 @@ Public Class Report_RFQSearch
 
         'データ部出力 ------------------------
         Dim i_TotalByRow As Integer = 0
+        Debug.WriteLine("Rows add start : " & Now())
         For Each dc_RFQSearch As TCIDataAccess.Join.ReportOverviewRFQSearch In dc_RFQSearchList
+            Dim newRow As New Row With {.CustomHeight = True, .Height = 24.0}
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.RFQNumber, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.Priority, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.Status, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, Common.GetLocalTime(dc_RFQSearchList.s_LocationCode, dc_RFQSearch.StatusChangeDate, True, False), CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.ProductNumber, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.CASNumber, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.ProductName, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.SupplierCode, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.S4SupplierCode, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.SupplierName, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.SupplierCountryName, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.Purpose, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.MakerCode, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.S4MakerCode, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.MakerName, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.MakerCountryName, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.SupplierItemName, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.ShippingHandlingCurrencyCode & Space(1) & dc_RFQSearch.ShippingHandlingFee, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.EnqUserName, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.EnqLocationName, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.EnqStorageLocation, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.QuoUserName, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.QuoLocationName, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.QuoStorageLocation, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.Comment, CellStyle._9PT_NONE_NONE_NONE))
+            'RFQLine
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.LineNo, CellStyle._9PT_NONE_NONE_NONE))
+            Dim EnqQuantity As String = String.Empty
+            If dc_RFQSearch.EnqQuantity <> Decimal.Zero Then
+                EnqQuantity = String.Format("{0:G29}", dc_RFQSearch.EnqQuantity) & Space(1) & dc_RFQSearch.EnqUnitCode & Space(1) & "x" & Space(1) & dc_RFQSearch.EnqPiece
+            End If
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, EnqQuantity, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.CurrencyCode, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.UnitPrice, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, String.Format("{0:G29}", dc_RFQSearch.QuoPer) & Space(1) & dc_RFQSearch.QuoUnitCode, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.LeadTime, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.Packing, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.Purity, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.SupplierOfferNo, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.SupplierItemNumber, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.NoOfferReason, CellStyle._9PT_NONE_NONE_NONE))
+            Dim PO As String = String.Empty
+            If Not String.IsNullOrEmpty(dc_RFQSearch.PO) Then
+                PO = "X"
+            End If
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, PO, CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, Common.GetLocalTime(dc_RFQSearchList.s_LocationCode, dc_RFQSearch.StatusChangeDateN, True, False), CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, Common.GetLocalTime(dc_RFQSearchList.s_LocationCode, dc_RFQSearch.StatusChangeDateA, True, False), CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, Common.GetLocalTime(dc_RFQSearchList.s_LocationCode, dc_RFQSearch.StatusChangeDateE, True, False), CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, Common.GetLocalTime(dc_RFQSearchList.s_LocationCode, dc_RFQSearch.StatusChangeDatePQ, True, False), CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, Common.GetLocalTime(dc_RFQSearchList.s_LocationCode, dc_RFQSearch.StatusChangeDateQ, True, False), CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, Common.GetLocalTime(dc_RFQSearchList.s_LocationCode, dc_RFQSearch.StatusChangeDateII, True, False), CellStyle._9PT_NONE_NONE_NONE))
+            i_Col += 1
+            newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, Common.GetLocalTime(dc_RFQSearchList.s_LocationCode, dc_RFQSearch.StatusChangeDateV, True, False), CellStyle._9PT_NONE_NONE_NONE))
 
-            Dim newRow As New Row
-            i_Col = TABLE_START_COL
-
-            For Each dt_Row In dt_Table.Rows
-
-                If dt_Row("PropertyNumber") = "RFQ Reference Number" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.RFQNumber, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Priority" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.Priority, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Current Status" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.Status, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Last Status Change Date" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, Common.GetLocalTime(dc_RFQSearchList.s_LocationCode, dc_RFQSearch.StatusChangeDate, True, False), CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Product Number" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.ProductNumber, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "CAS Number" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.CASNumber, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Product Name" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.ProductName, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Supplier Code" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.SupplierCode, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "SAP Supplier Code" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.S4SupplierCode, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Supplier Name" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.SupplierName, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Supplier Country" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.SupplierCountryName, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Purpose" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.Purpose, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Maker Code" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.MakerCode, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "SAP Maker Code" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.S4MakerCode, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Maker Name" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.MakerName, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Maker Country" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.MakerCountryName, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Supplier Item Name" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.SupplierItemName, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Handling Fee / Shipment Cost" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.ShippingHandlingCurrencyCode & Space(1) & dc_RFQSearch.ShippingHandlingFee, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Enq-User" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.EnqUserName, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Enq-Location" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.EnqLocationName, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Enq-Storage Location" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.EnqStorageLocation, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Quo-User" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.QuoUserName, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Quo-Location" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.QuoLocationName, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Quo-Storage Location" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.QuoStorageLocation, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Comment" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.Comment, CellStyle._9PT_NONE_NONE_NONE))
-                'RFQLine
-                ElseIf dt_Row("PropertyNumber") = "Line No." Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.LineNo, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Enq-Quantity" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    Dim EnqQuantity As String = String.Empty
-                    If dc_RFQSearch.EnqQuantity <> decimal.Zero Then
-                        EnqQuantity = String.Format("{0:G29}", dc_RFQSearch.EnqQuantity) & Space(1) & dc_RFQSearch.EnqUnitCode & Space(1) & "x" & Space(1) & dc_RFQSearch.EnqPiece
-                    End If
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, EnqQuantity, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Currency" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.CurrencyCode, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Price" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.UnitPrice, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Quo-Quantity" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, String.Format("{0:G29}", dc_RFQSearch.QuoPer) & Space(1) & dc_RFQSearch.QuoUnitCode, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Lead Time" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.LeadTime, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Packing" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.Packing, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Purity / Method" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.Purity, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Supplier Offer No." Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.SupplierOfferNo, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Supplier Item No." Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.SupplierItemNumber, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Reason for ""No Offer""" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.NoOfferReason, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "PO" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    Dim PO As String = String.Empty
-                    If Not String.IsNullOrEmpty(dc_RFQSearch.PO) Then
-                        PO = "X"
-                    End If
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, PO, CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Created Date" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, Common.GetLocalTime(dc_RFQSearchList.s_LocationCode,dc_RFQSearch.StatusChangeDateN, True, False), CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Assigned Date" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, Common.GetLocalTime(dc_RFQSearchList.s_LocationCode,dc_RFQSearch.StatusChangeDateA, True, False), CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Enquired Date" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, Common.GetLocalTime(dc_RFQSearchList.s_LocationCode,dc_RFQSearch.StatusChangeDateE, True, False), CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Partly-Quoted Date" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, Common.GetLocalTime(dc_RFQSearchList.s_LocationCode,dc_RFQSearch.StatusChangeDatePQ, True, False), CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Quoted Date" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, Common.GetLocalTime(dc_RFQSearchList.s_LocationCode,dc_RFQSearch.StatusChangeDateQ, True, False), CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Interface Date" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, Common.GetLocalTime(dc_RFQSearchList.s_LocationCode,dc_RFQSearch.StatusChangeDateII, True, False), CellStyle._9PT_NONE_NONE_NONE))
-                ElseIf dt_Row("PropertyNumber") = "Closed Date" Then
-                    newRow.CustomHeight = True
-                    newRow.Height = 24.0
-                    newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, Common.GetLocalTime(dc_RFQSearchList.s_LocationCode,dc_RFQSearch.StatusChangeDateV, True, False), CellStyle._9PT_NONE_NONE_NONE))
-                End If
-
-                i_Col += 1
-            Next
             i_Row = AppendRow(sheetdata, newRow, i_Row)
         Next
-
+        Debug.WriteLine("Rows add End   : " & Now())
         Return i_Row
 
     End Function

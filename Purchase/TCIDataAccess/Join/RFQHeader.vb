@@ -27,6 +27,7 @@ Namespace TCIDataAccess.Join
         Protected _MakerCountryCode As String = String.Empty
         Protected _MakerCountryName As String = String.Empty
         Protected _Purpose As String = String.Empty
+        Protected _MakerCode As String = String.Empty
         Protected _MakerName As String = String.Empty
         Protected _MakerInfo As String = String.Empty
         Protected _SupplierCountryCode As String = String.Empty
@@ -193,6 +194,17 @@ Namespace TCIDataAccess.Join
             End Get
             Set(ByVal value As String)
                 _Purpose = value
+            End Set
+        End Property
+        ''' <summary> 
+        ''' MakerCode を設定、または取得する 
+        ''' </summary> 
+        Public Property MakerCode() As String
+            Get
+                Return _MakerCode
+            End Get
+            Set(ByVal value As String)
+                _MakerCode = value
             End Set
         End Property
         ''' <summary> 
@@ -418,6 +430,24 @@ Namespace TCIDataAccess.Join
                     If Not String.IsNullOrEmpty(Cond.SupplierCountryCode) Then
                         DBCommand.Parameters.AddWithValue("SupplierCountryCode", Cond.SupplierCountryCode)
                     End If
+                    SetParamInClauseSQL(DBCommand, "MakerCode", Cond.SupplierCode)
+                    Dim S4MakerCodeList As List(Of String) = New List(Of String)
+                    If Cond.S4SupplierCode IsNot Nothing and Cond.S4SupplierCode.Count <> 0 And Not String.IsNullOrEmpty(Cond.S4SupplierCode(0)) Then
+                        Dim i_S4MakerCodes As Integer() = Array.ConvertAll(Of String, Integer)(Cond.S4SupplierCode, AddressOf Integer.Parse)
+                        For Each i_S4MakerCode As Integer In i_S4MakerCodes
+                            If i_S4MakerCode <> Nothing Then
+                                Dim str_S4MakerCode As String = String.Format("{0:D10}", i_S4MakerCode)
+                                S4SupplierCodeList.Add(str_S4MakerCode)
+                            End If
+                        Next
+                    End If
+                    SetParamInClauseSQL(DBCommand, "S4MakerCode", S4SupplierCodeList.ToArray)
+                    If Not String.IsNullOrEmpty(Cond.SupplierName) Then
+                        DBCommand.Parameters.AddWithValue("MakerName", StrConv(Cond.SupplierName, VbStrConv.Narrow))
+                    End If
+                    If Not String.IsNullOrEmpty(Cond.SupplierCountryCode) Then
+                        DBCommand.Parameters.AddWithValue("MakerCountryCode", Cond.SupplierCountryCode)
+                    End If
                     If Not String.IsNullOrEmpty(Cond.StatusFrom) Then
                         DBCommand.Parameters.AddWithValue("StatusFrom", Cond.StatusFrom)
                     End If
@@ -462,7 +492,7 @@ Namespace TCIDataAccess.Join
                     End If
                     SetPramMultipleSelectionInClauseSQL(DBCommand, "Purpose", Cond.Purpose)
                     SetPramMultipleSelectionInClauseSQL(DBCommand, "TerritoryCode", Cond.Territory)
-                    If Not String.IsNullOrEmpty(Cond.Priority) Then
+                    If Not String.IsNullOrEmpty(Cond.Priority) AndAlso Cond.Priority <> "AB" Then ' AB は SQL 生成時に IN('A','B') で生成済みのため除外。
                         DBCommand.Parameters.AddWithValue("Priority", Cond.Priority)
                     End If
 
@@ -494,6 +524,7 @@ Namespace TCIDataAccess.Join
                             SetProperty(DBReader("MakerCountryCode"), dc_Data.MakerCountryCode)
                             SetProperty(DBReader("MakerCountryName"), dc_Data.MakerCountryName)
                             SetProperty(DBReader("Purpose"), dc_Data.Purpose)
+                            SetProperty(DBReader("MakerCode"), dc_Data.MakerCode)
                             SetProperty(DBReader("MakerName"), dc_Data.MakerName)
                             SetProperty(DBReader("MakerInfo"), dc_Data.MakerInfo)
                             SetProperty(DBReader("SupplierCountryCode"), dc_Data.SupplierCountryCode)
@@ -673,6 +704,7 @@ Namespace TCIDataAccess.Join
             Value.AppendLine("    rfh.[MakerCountryCode],")
             Value.AppendLine("    mcry.[Name] AS MakerCountryName,")
             Value.AppendLine("    rfh.[Purpose],")
+            Value.AppendLine("    rfh.[MakerCode],")
             Value.AppendLine("    rfh.[MakerName],")
             Value.AppendLine("    rfh.[MakerInfo],")
             Value.AppendLine("    rfh.[SupplierCountryCode],")
@@ -701,14 +733,16 @@ Namespace TCIDataAccess.Join
             'ベースとなるSQL文字列の作成
             Value.AppendLine("FROM")
             Value.AppendLine("    v_RFQHeader rfh")
-            Value.AppendLine("    LEFT JOIN")
-            Value.AppendLine("        s_Country mcry")
-            Value.AppendLine("        ON ")
-            Value.AppendLine("        rfh.MakerCountryCode = mcry.CountryCode")
-            Value.AppendLine("    LEFT JOIN")
+
+            Value.AppendLine("    INNER JOIN")
             Value.AppendLine("        s_Country scry")
             Value.AppendLine("        ON ")
             Value.AppendLine("        rfh.SupplierCountryCode = scry.CountryCode")
+            Value.AppendLine("    LEFT OUTER JOIN")
+            Value.AppendLine("        s_Country mcry")
+            Value.AppendLine("        ON ")
+            Value.AppendLine("        rfh.MakerCountryCode = mcry.CountryCode")
+
             If Cond.ValidityQuotation = "Valid Price" Then
                 Value.AppendLine("    INNER JOIN ")
                 Value.AppendLine("        ( SELECT ProductID,UnitPrice,RFQNumber")
@@ -754,10 +788,47 @@ Namespace TCIDataAccess.Join
 
             WhereClause = AddMultipleListItemWhereClauseSQL(WhereClause,CreateRFQInClauseSQL("ProductNumber", Cond.ProductNumber))
             WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.ProductName LIKE '%' + @ProductName + '%' ", Cond.ProductName)
-            WhereClause = AddMultipleListItemWhereClauseSQL(WhereClause,CreateRFQInClauseSQL("SupplierCode", Cond.SupplierCode))
-            WhereClause = AddMultipleListItemWhereClauseSQL(WhereClause,CreateRFQInClauseSQL("S4SupplierCode", Cond.S4SupplierCode))
-            WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.SupplierName LIKE '%' + @SupplierName + '%' ", Cond.SupplierName)
-            WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.SupplierCountryCode = @SupplierCountryCode", Cond.SupplierCountryCode)
+
+            If Cond.SupplierCode.Count <> 0 And Not String.IsNullOrEmpty(Cond.SupplierCode(0)) Then 
+                If Not String.IsNullOrEmpty(WhereClause) Then
+                    WhereClause = WhereClause & " AND "
+                End If
+                WhereClause = WhereClause & " ("
+                WhereClause = AddMultipleListItemWhereClauseSQL(WhereClause,CreateRFQInClauseSQL("SupplierCode", Cond.SupplierCode), False)
+                WhereClause = OrMultipleListItemWhereClauseSQL(WhereClause,CreateRFQInClauseSQL("MakerCode", Cond.SupplierCode))
+                WhereClause = WhereClause & ")"
+            End If
+
+            If Cond.S4SupplierCode.Count <> 0 And Not String.IsNullOrEmpty(Cond.S4SupplierCode(0)) Then 
+                If Not String.IsNullOrEmpty(WhereClause) Then
+                    WhereClause = WhereClause & " AND "
+                End If
+                WhereClause = WhereClause & " ("
+                WhereClause = AddMultipleListItemWhereClauseSQL(WhereClause,CreateRFQInClauseSQL("S4SupplierCode", Cond.S4SupplierCode), False)
+                WhereClause = OrMultipleListItemWhereClauseSQL(WhereClause,CreateRFQInClauseSQL("S4MakerCode", Cond.S4SupplierCode))
+                WhereClause = WhereClause & ")"
+            End If
+
+            If Not String.IsNullOrEmpty(Cond.SupplierName) Then
+                If Not String.IsNullOrEmpty(WhereClause) Then
+                    WhereClause = WhereClause & " AND "
+                End If
+                WhereClause = WhereClause & " ("
+                WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.SupplierName LIKE '%' + @SupplierName + '%' ", Cond.SupplierName, False)
+                WhereClause = OrRFQWhereClauseSQL(WhereClause, "rfh.MakerName LIKE '%' + @SupplierName + '%' ", Cond.SupplierName)
+                WhereClause = WhereClause & ")"
+            End If
+
+            If Not String.IsNullOrEmpty(Cond.SupplierCountryCode) Then
+                If Not String.IsNullOrEmpty(WhereClause) Then
+                    WhereClause = WhereClause & " AND "
+                End If
+                WhereClause = WhereClause & " ("
+                WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.SupplierCountryCode = @SupplierCountryCode", Cond.SupplierCountryCode, False)
+                WhereClause = OrRFQWhereClauseSQL(WhereClause, "rfh.MakerCountryCode = @SupplierCountryCode", Cond.SupplierCountryCode)
+                WhereClause = WhereClause & ")"
+            End If
+
             WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.SupplierItemName LIKE '%' + @SupplierItemName + '%' ", Cond.SupplierItemName)
             WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.StatusSortOrder >= @StatusFrom", Cond.StatusFrom)
             WhereClause = AddRFQWhereClauseSQL(WhereClause, "rfh.StatusSortOrder <= @StatusTo", Cond.StatusTo)

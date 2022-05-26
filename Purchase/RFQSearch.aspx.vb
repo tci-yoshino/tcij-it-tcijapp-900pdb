@@ -272,6 +272,7 @@ Public Class RFQSearch
         Dim RFQHeaderList As New TCIDataAccess.Join.RFQHeaderList()
         Dim i_TotalDataCount As Integer = RFQHeaderList.Load(SkipRecord, SearchResultList.PageSize, cond)
 
+        'TODO:検索上限をコメントアウト
         'If i_TotalDataCount > 1000 Then
         '    st_ErrMsg = Common.MSG_RESULT_OVER_1000
         '    ResultArea.Visible = False

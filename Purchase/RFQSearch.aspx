@@ -135,18 +135,6 @@
                     $('#divPurpose').fadeOut();
                 });
 
-                // Purpose 選択値の相関制御
-//                $('#PurposeList_0').click(function () {
-//                    if ($('#PurposeList_0').is(':checked') == true) {
-//                        $("[id^='PurposeList']").removeProp('checked');
-//                        $("[id^='PurposeList']").prop('disabled', 'disabled');
-//                        $('#PurposeList_0').removeProp('disabled');
-//                        $("#PurposeList_0").prop('checked', 'checked');
-//                    } else {
-//                        $("[id^='PurposeList']").removeProp('disabled');
-//                    }
-//                });
-
                 // Territory リスト表示制御
                 $('#Territory').click(function () {
                     var offsetTop = $(this).offset().top;

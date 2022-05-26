@@ -193,6 +193,7 @@ Namespace TCIDataAccess.Join
             sb_SQL.AppendLine("	 RFH.[MakerCountryCode], ")
             sb_SQL.AppendLine("	 MCRY.[Name] AS MakerCountryName, ")
             sb_SQL.AppendLine("	 RFH.[Purpose], ")
+            sb_SQL.AppendLine("	 RFH.[MakerCode], ")
             sb_SQL.AppendLine("	 RFH.[MakerName], ")
             sb_SQL.AppendLine("	 RFH.[MakerInfo], ")
             sb_SQL.AppendLine("	 RFH.[SupplierCountryCode], ")
@@ -254,6 +255,7 @@ Namespace TCIDataAccess.Join
                             DBCommon.SetProperty(DBReader("MakerCountryCode"), dc_RFQListHeader.MakerCountryCode)
                             DBCommon.SetProperty(DBReader("MakerCountryName"), dc_RFQListHeader.MakerCountryName)
                             DBCommon.SetProperty(DBReader("Purpose"), dc_RFQListHeader.Purpose)
+                            DBCommon.SetProperty(DBReader("MakerCode"), dc_RFQListHeader.MakerCode)
                             DBCommon.SetProperty(DBReader("MakerName"), dc_RFQListHeader.MakerName)
                             DBCommon.SetProperty(DBReader("MakerInfo"), dc_RFQListHeader.MakerInfo)
                             DBCommon.SetProperty(DBReader("SupplierCountryCode"), dc_RFQListHeader.SupplierCountryCode)
@@ -305,6 +307,7 @@ Namespace TCIDataAccess.Join
             sb_SQL.AppendLine("    RFH.[MakerCountryCode], ")
             sb_SQL.AppendLine("    MCRY.[Name] AS MakerCountryName, ")
             sb_SQL.AppendLine("    RFH.[Purpose], ")
+            sb_SQL.AppendLine("    RFH.[MakerCode], ")
             sb_SQL.AppendLine("    RFH.[MakerName], ")
             sb_SQL.AppendLine("    RFH.[MakerInfo], ")
             sb_SQL.AppendLine("    RFH.[SupplierCountryCode], ")
@@ -605,6 +608,7 @@ Namespace TCIDataAccess.Join
         Protected _MakerCountryCode As String = String.Empty
         Protected _MakerCountryName As String = String.Empty
         Protected _Purpose As String = String.Empty
+        Protected _MakerCode As String = String.Empty
         Protected _MakerName As String = String.Empty
         Protected _MakerInfo As String = String.Empty
         Protected _SupplierCountryCode As String = String.Empty
@@ -785,6 +789,18 @@ Namespace TCIDataAccess.Join
             End Get
             Set(ByVal value As String)
                 _Purpose = value
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' MakerCode を設定、または取得する 
+        ''' </summary> 
+        Public Property MakerCode() As String
+            Get
+                Return _MakerCode
+            End Get
+            Set(ByVal value As String)
+                _MakerCode = value
             End Set
         End Property
 

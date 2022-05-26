@@ -12,6 +12,7 @@
     <add key="LIST_ONEPAGE_ROW_ProductSearchByKeyword" value="100"/>
     <add key="ReportTemplate_RFQSearch" value="D:\tcijapp\Purchase\Purchase\App_Data\RFQList.xlsx"/>
     <add key="ReportTemplate_SupplierProduct" value="D:\tcijapp\Purchase\Purchase\App_Data\SupplierProduct.xlsx"/>
+    <add key="SQL_COMMAND_TIMEOUT_RFQSearch_Download" value="300"/>
     <add key="FileName_StructureDB" value="F:\NPMS\Structure\Structure.db" />
     <add key="FilePath_Misearch" value="D:\tcijapp\Purchase\Class\" />
     <add key="NPMSURL" value="http://tcijapp/NPMS" />

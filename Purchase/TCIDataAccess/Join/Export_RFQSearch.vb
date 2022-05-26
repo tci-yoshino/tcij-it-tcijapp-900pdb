@@ -657,7 +657,8 @@ Namespace TCIDataAccess.Join
         ''' </summary>
         ''' <param name="Cond">検索条件</param>
         ''' <remarks></remarks>
-        Public Sub Load(ByVal Cond As TCIDataAccess.join.KeywordSearchConditionParameter)
+        Public Sub Load(ByVal Cond As TCIDataAccess.Join.KeywordSearchConditionParameter, Optional ByRef sqlCommandTimeout As Integer? = Nothing)
+            Debug.WriteLine("RFQSearch Download DBRead Start : " & Now.ToString)
             Dim Value As New StringBuilder()
             ' セッションのロケーションコードを設定
             s_LocationCode = Cond.s_LocationCode
@@ -719,14 +720,14 @@ Namespace TCIDataAccess.Join
             Value.AppendLine("    RHstryC.StatusChangeDate AS StatusChangeDateV")
             Value.AppendLine("FROM")
             Value.AppendLine("    [v_RFQHeader] rfh")
-            Value.AppendLine("    LEFT JOIN")
-            Value.AppendLine("        [s_Country] mcry")
-            Value.AppendLine("        ON")
-            Value.AppendLine("        rfh.[MakerCountryCode] = mcry.[CountryCode]")
-            Value.AppendLine("    LEFT JOIN")
+            Value.AppendLine("    INNER JOIN")
             Value.AppendLine("        s_Country scry")
-            Value.AppendLine("        ON")
+            Value.AppendLine("        ON ")
             Value.AppendLine("        rfh.SupplierCountryCode = scry.CountryCode")
+            Value.AppendLine("    LEFT OUTER JOIN")
+            Value.AppendLine("        s_Country mcry")
+            Value.AppendLine("        ON ")
+            Value.AppendLine("        rfh.MakerCountryCode = mcry.CountryCode")
             If Cond.ValidityQuotation = "Valid Price" Then
 
                 Value.AppendLine("    INNER JOIN ")
@@ -884,7 +885,7 @@ Namespace TCIDataAccess.Join
             Value.AppendLine("        ) RHstryC")
             Value.AppendLine("        ON")
             Value.AppendLine("        rfh.RFQNumber = RHstryC.RFQNumber")
-            
+
             Value.AppendLine("WHERE ")
             Value.AppendLine(WhereClause)
             Value.AppendLine("ORDER BY")
@@ -895,6 +896,10 @@ Namespace TCIDataAccess.Join
 
             Using DBConn As New SqlConnection(Common.DB_CONNECT_STRING)
                 Using DBCommand As SqlCommand = DBConn.CreateCommand()
+                    If sqlCommandTimeout IsNot Nothing Then
+                        DBCommand.CommandTimeout = CInt(sqlCommandTimeout)
+                        Debug.WriteLine("TCIDataAccess.Join.ReportOverviewRFQSearchList.Load() : Timeout = " & CInt(sqlCommandTimeout))
+                    End If
                     DBCommand.CommandText = Value.ToString
                     DBCommand.Parameters.Clear()
                     '生成したSQL文に入力項目を反映
@@ -913,6 +918,14 @@ Namespace TCIDataAccess.Join
                     End If
                     If Not String.IsNullOrEmpty(Cond.SupplierCountryCode) Then
                         DBCommand.Parameters.AddWithValue("SupplierCountryCode", Cond.SupplierCountryCode)
+                    End If
+                    SetParamInClauseSQL(DBCommand, "MakerCode", Cond.SupplierCode)
+                    SetParamInClauseSQL(DBCommand, "S4MakerCode", Cond.S4SupplierCode)
+                    If Not String.IsNullOrEmpty(Cond.SupplierName) Then
+                        DBCommand.Parameters.AddWithValue("MakerName", StrConv(Cond.SupplierName, VbStrConv.Narrow))
+                    End If
+                    If Not String.IsNullOrEmpty(Cond.SupplierCountryCode) Then
+                        DBCommand.Parameters.AddWithValue("MakerCountryCode", Cond.SupplierCountryCode)
                     End If
                     If Not String.IsNullOrEmpty(Cond.StatusFrom) Then
                         DBCommand.Parameters.AddWithValue("StatusFrom", Cond.StatusFrom)
@@ -960,12 +973,14 @@ Namespace TCIDataAccess.Join
                     SetPramMultipleSelectionInClauseSQL(DBCommand, "TerritoryCode", Cond.Territory)
                     'SetPramMultipleSelectionInClauseSQL(DBCommand, "EnqLocationName", Cond.Territory)
                     'SetPramMultipleSelectionInClauseSQL(DBCommand, "QuoLocationName", Cond.Territory)
-                    If Not String.IsNullOrEmpty(Cond.Priority) Then
+                    If Not String.IsNullOrEmpty(Cond.Priority) AndAlso Cond.Priority <> "AB" Then ' AB は SQL 生成時に IN('A','B') で生成済みのため除外。
                         DBCommand.Parameters.AddWithValue("Priority", Cond.Priority)
                     End If
 
                     DBConn.Open()
+                    Debug.WriteLine("RFQSearch Download DBCommand Start : " & Now.ToString)
                     Using DBReader As SqlDataReader = DBCommand.ExecuteReader()
+                        Debug.WriteLine("RFQSearch Download DBCommand End : " & Now.ToString)
                         While DBReader.Read()
                             Dim dc_Data As New ReportOverviewRFQSearch
                             'RFQHeader
@@ -1023,8 +1038,9 @@ Namespace TCIDataAccess.Join
                     End Using
                 End Using
             End Using
-
+            Debug.WriteLine("RFQSearch Download DBRead End : " & Now.ToString)
         End Sub
+
     End Class
 
 End Namespace
