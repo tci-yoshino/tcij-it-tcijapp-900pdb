@@ -95,7 +95,7 @@
                                 <asp:Label ID="MakerInfo" runat="server" Text='<%#If(String.IsNullOrEmpty(Eval("MakerInfo")), "", "Supplier Information")%>'></asp:Label>
                             </asp:HyperLink>
                         </span>
-                        <asp:HyperLink ID="MakerCodeLink" runat="server" NavigateUrl='<%#Eval("SupplierCode","../RFQListBySupplier.aspx?SupplierCode={0}")%>' Text='<%#Eval("MakerCode")%>' target="_blank" />
+                        <asp:HyperLink ID="MakerCodeLink" runat="server" NavigateUrl='<%#Eval("MakerCode", "../RFQListBySupplier.aspx?SupplierCode={0}")%>' Text='<%#Eval("MakerCode")%>' target="_blank" />
                         
                         <asp:Label ID="MakerName" runat="server" Text='<%#Eval("MakerName")%>'></asp:Label>
                         <span class="indent">(<asp:Label ID="MakerCountry" runat="server" Text='<%#Eval("MakerCountryName")%>'></asp:Label>)</span>

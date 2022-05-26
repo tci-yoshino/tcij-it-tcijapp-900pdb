@@ -100,7 +100,6 @@ Public Class Report_RFQSearch
         Dim dt_Table As New DataTable
         CreateTableData(dt_Table)
 
-        Dim i_Col As Integer = TABLE_START_COL
 
         'ヘッダー部出力 ----------------------
         i_Row = AddHeaderRow(sheetdata, dt_Table, TABLE_START_COL, i_Row, CellStyle._9PT_NONE_NONE_NONE, CellStyle._9PT_BOLD_NONE_NONE)
@@ -109,6 +108,8 @@ Public Class Report_RFQSearch
         Dim i_TotalByRow As Integer = 0
         Debug.WriteLine("Rows add start : " & Now())
         For Each dc_RFQSearch As TCIDataAccess.Join.ReportOverviewRFQSearch In dc_RFQSearchList
+            Dim i_Col As Integer = TABLE_START_COL
+
             Dim newRow As New Row With {.CustomHeight = True, .Height = 24.0}
             newRow.Append(NewCell(i_Col, i_Row, TypeCode.String, dc_RFQSearch.RFQNumber, CellStyle._9PT_NONE_NONE_NONE))
             i_Col += 1
