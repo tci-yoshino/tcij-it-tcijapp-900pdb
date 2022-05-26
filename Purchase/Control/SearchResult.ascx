@@ -87,7 +87,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>Maker Name / Country</th>
+                    <th>Maker Code / Name / Country</th>
                     <td colspan="3">
                         <!-- １段下に改行されて表示される現象の対策のため他項目より前に記述する -->
                         <span class="placedright">
@@ -95,6 +95,8 @@
                                 <asp:Label ID="MakerInfo" runat="server" Text='<%#If(String.IsNullOrEmpty(Eval("MakerInfo")), "", "Supplier Information")%>'></asp:Label>
                             </asp:HyperLink>
                         </span>
+                        <asp:HyperLink ID="MakerCodeLink" runat="server" NavigateUrl='<%#Eval("SupplierCode","../RFQListBySupplier.aspx?SupplierCode={0}")%>' Text='<%#Eval("MakerCode")%>' target="_blank" />
+                        
                         <asp:Label ID="MakerName" runat="server" Text='<%#Eval("MakerName")%>'></asp:Label>
                         <span class="indent">(<asp:Label ID="MakerCountry" runat="server" Text='<%#Eval("MakerCountryName")%>'></asp:Label>)</span>
                     </td>
