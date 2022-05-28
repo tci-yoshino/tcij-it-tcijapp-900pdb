@@ -275,7 +275,7 @@ Public Class Common
     ''' エラーメッセージ 「○○件を越えました。条件を変更するかStructure Search画面に遷移して下さい。」
     ''' </summary>
     ''' <remarks></remarks>
-    Public Const MSG_RESULT_OVER_LIMIT As String = "The result is over {0}hits as the limit.<br />Please change the criteria or go to Structure Search."
+    Public Const MSG_RESULT_OVER_LIMIT As String = "Search results exceeded {0} records (Display limit: {0} results only).<br />Please change your search criteria or try Structure search."
 
 
     ''  拠点情報
