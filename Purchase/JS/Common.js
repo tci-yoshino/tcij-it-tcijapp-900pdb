@@ -85,7 +85,7 @@ function outCell(){
 }
 
 function setAction(action) {
-    const hiddenElem = document.getElementById('Action');
+    var hiddenElem = document.getElementById('Action');
     if (!hiddenElem) { console.error('id="Action" element does not exist. in ' + window.location.href.split('/').pop()); return false; }
     hiddenElem.value = action;
     return true;
@@ -96,7 +96,7 @@ function ListSort(hidden_sort_type, hidden_sort_field) {
     var sort_type = hidden_sort_type.value;
     var sort_field = hidden_sort_field.value;
 
-    let ths = document.getElementsByTagName("th");
+    var ths = document.getElementsByTagName("th");
     for (var i = 0; i < ths.length; i++) {
         if (!ths[i].classList.contains('sortField')) {
             continue;
@@ -114,7 +114,7 @@ function ListSort(hidden_sort_type, hidden_sort_field) {
 
         // マウスリーブ
         ths[i].onmouseleave = function(event){
-            let element = event.target;
+            var element = event.target;
             if (element.id === sort_field) {
                 if (element.classList.contains('asc')) {
                     element.classList.replace('asc', 'desc');
@@ -130,7 +130,7 @@ function ListSort(hidden_sort_type, hidden_sort_field) {
 
         // マウスオーバー
         ths[i].onmouseover = function (event) {
-            let element = event.target;
+            var element = event.target;
             if (element.classList.contains('asc')) {
                 element.classList.replace('asc', 'desc');
             } else if (element.classList.contains('desc')) {
@@ -138,7 +138,7 @@ function ListSort(hidden_sort_type, hidden_sort_field) {
             } else {
                 element.classList.add('asc');
             }
-            let sort_field = hidden_sort_field.value;
+            var sort_field = hidden_sort_field.value;
             Array.from(element.parentNode.children)
                 .filter(function (e) { e !== element })
                 .filter(function (e) { e.id !== sort_field })
@@ -147,7 +147,7 @@ function ListSort(hidden_sort_type, hidden_sort_field) {
 
         // クリック時
         ths[i].onclick = function (event) {
-            let element = event.target;
+            var element = event.target;
             if (element.classList.contains('asc')) {
                 hidden_sort_type.value = 'asc';
             } else if (element.classList.contains('desc')) {

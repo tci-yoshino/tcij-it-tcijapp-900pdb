@@ -23,7 +23,7 @@
 
             // 画面表示時・ポストバック時の処理
             $(document).on('ready', function () {
-                let selectedValue = $('#HiddenSelectedValidityFilter').val();
+                var selectedValue = $('#HiddenSelectedValidityFilter').val();
                 $('#SelValidity').val(selectedValue);
             })
 

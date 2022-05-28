@@ -437,11 +437,11 @@ Namespace TCIDataAccess.Join
                         For Each i_S4MakerCode As Integer In i_S4MakerCodes
                             If i_S4MakerCode <> Nothing Then
                                 Dim str_S4MakerCode As String = String.Format("{0:D10}", i_S4MakerCode)
-                                S4SupplierCodeList.Add(str_S4MakerCode)
+                                S4MakerCodeList.Add(str_S4MakerCode)
                             End If
                         Next
                     End If
-                    SetParamInClauseSQL(DBCommand, "S4MakerCode", S4SupplierCodeList.ToArray)
+                    SetParamInClauseSQL(DBCommand, "S4MakerCode", S4MakerCodeList.ToArray)
                     If Not String.IsNullOrEmpty(Cond.SupplierName) Then
                         DBCommand.Parameters.AddWithValue("MakerName", StrConv(Cond.SupplierName, VbStrConv.Narrow))
                     End If
