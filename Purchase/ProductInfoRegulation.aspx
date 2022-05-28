@@ -1,7 +1,8 @@
 ﻿<%@ Page Language="vb" AutoEventWireup="true" CodeBehind="ProductInfoRegulation.aspx.vb" Inherits="Purchase.ProductInfoRegulation" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns="http://www.w3.org/1999/xhtml" >
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
     <title>Purchase DB</title>
     <script type="text/javascript" src="./JS/Common.js"></script>
@@ -13,71 +14,63 @@
     <!-- Header End -->
     <form id="ProductInfoForm" runat="server">
         <div id="content">
-            <div class="main">
-                <h3 id="H1" runat="server">Product Info & Regulation</h3>
-                <p class="attention">
-                    <asp:Label runat="server" ID="lblMsg"></asp:Label>
-                </p> 
-                <table>
-                    <tr>
-                        <td>
-                            <asp:Button ID="btnSaveTop" runat="server" Text="Save" CssClass="savebutton"
-                                    OnClientClick="SetAction('Save')" onclick="btnSave_Click" />
-                        </td>
-                    </tr>
-                </table>
-                <div id="Div1" class="list" runat="server">
-                    <asp:ListView ID="ltvEhsHeader" runat="server" 
-                        onitemdatabound="ltvEhsHeader_ItemDataBound">
-                        <LayoutTemplate>
-                            <table ID="itemPlaceholderContainer" style="Width:34%" runat="server">
-                                <tr >
-                                    <th style="Width:8%">Branch</th>
-                                    <th style="Width:6%">ON/OFF</th>
-                                    <th class="textnowrap" style="Width:20%">Product Info & Regulation</th>
-                                </tr>
-                                <tr ID="itemPlaceholder" runat="server">
-                                </tr>
-                                <tr >
-                                    <td colspan="5" class="nobgcolor"><hr /></td>
-                                </tr>    
-                            </table>
-                        </LayoutTemplate>
-                        <ItemTemplate>
-                            <tr runat="server" id="trRowSeparator">
-                                <td colspan="5" class="nobgcolor">
+            <h3>Product Info &amp; Regulation</h3>
+
+            <div class="list">
+                <p class="message"><asp:Label runat="server" ID="lblMsg"></asp:Label></p>
+
+                <div class="btns" style="text-align:left">
+                    <asp:Button ID="btnSaveTop" runat="server" Text="Save" OnClientClick="SetAction('Save')" OnClick="btnSave_Click" />
+                </div>
+
+                <asp:ListView ID="ltvEhsHeader" runat="server" OnItemDataBound="ltvEhsHeader_ItemDataBound">
+                    <LayoutTemplate>
+                        <table id="itemPlaceholderContainer" style="width:60%" runat="server">
+                            <tr>
+                                <th style="width:15%">Location</th>
+                                <th style="width:10%">ON/OFF</th>
+                                <th>Product Info &amp; Regulation</th>
+                            </tr>
+                            <tr id="itemPlaceholder" runat="server">
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="divider">
                                     <hr />
                                 </td>
                             </tr>
-                            <tr id="trItem" runat="server" class='<%# iif(Container.DataItemIndex / 2=0,"zebra","") %>'>
+                        </table>
+                    </LayoutTemplate>
+                    <ItemTemplate>
+                        <tr runat="server" id="trRowSeparator">
+                            <td colspan="3" class="divider">
+                                <hr />
+                            </td>
+                        </tr>
+                        <tr id="trItem" runat="server" class='<%# iif(Container.DataItemIndex / 2=0,"zebra","") %>'>
 
-                                <td runat="server" ID="tdBranch" class="nobgcolor">
-                                    <asp:Label ID="lblLocationName" runat="server" Text='<%#Eval("LocationName")%>' />
-                                    <asp:HiddenField runat="server" ID="hidLocationCode" Value='<%#Eval("LocationCode")%>' />
-                                </td>
-                                <td runat="server" ID="tdOnOrOff">
-                                    <asp:CheckBox ID="chkOnOrOff" runat="server" />
-                                    <asp:HiddenField ID="hidOnOrOff" runat="server" />
-                                </td>
-                                <td class="textnowrap" runat="server" ID="tdText">
-                                    <asp:Label ID="lblText" runat="server" Text='<%#Eval("Text")%>' />
-                                    <asp:HiddenField runat="server" ID="hidItem" Value='<%#Eval("Item")%>' />
-                                </td>
-                            </tr>
-                        </ItemTemplate>
-                    </asp:ListView>
+                            <td runat="server" id="tdBranch" class="nobgcolor">
+                                <asp:Label ID="lblLocationName" runat="server" Text='<%#Eval("LocationName")%>' />
+                                <asp:HiddenField runat="server" ID="hidLocationCode" Value='<%#Eval("LocationCode")%>' />
+                            </td>
+                            <td runat="server" id="tdOnOrOff">
+                                <asp:CheckBox ID="chkOnOrOff" runat="server" />
+                                <asp:HiddenField ID="hidOnOrOff" runat="server" />
+                            </td>
+                            <td class="textnowrap" runat="server" id="tdText">
+                                <asp:Label ID="lblText" runat="server" Text='<%#Eval("Text")%>' />
+                                <asp:HiddenField runat="server" ID="hidItem" Value='<%#Eval("Item")%>' />
+                            </td>
+                        </tr>
+                    </ItemTemplate>
+                </asp:ListView>
+
+                <div class="btns" style="text-align:left">
+                    <asp:Button ID="btnSaveBottom" runat="server" Text="Save" OnClientClick="SetAction('Save');" OnClick="btnSave_Click" />
                 </div>
-                <table>
-                    <tr>
-                        <td>
-                            <asp:Button ID="btnSaveBottom" runat="server" Text="Save" CssClass="savebutton" 
-                                    OnClientClick="SetAction('Save');" onclick="btnSave_Click" />
-                        </td>
-                    </tr>
-                </table>
+
             </div>
         </div>
-        <asp:HiddenField runat="server" ID="hidLastUpdateDate" Value=''/>
+        <asp:HiddenField runat="server" ID="hidLastUpdateDate" Value='' />
         <asp:HiddenField ID="Action" runat="server" />
     </form>
 </body>

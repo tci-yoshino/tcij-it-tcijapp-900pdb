@@ -345,6 +345,23 @@ pre {
     padding: 0 0 5px 1em;
 }
 
+.list td.nobgcolor {
+    background-color: transparent;
+}
+
+.list td.divider {
+    padding: 0;
+    background-color: transparent;
+}
+
+.list td.divider>hr {
+    margin: 0;
+    height: 1px;
+    border-width: 1px 0 0 0;
+    border-style: solid;
+    border-color: #2651a5;
+}
+
 .switch {
     text-align: right;
     border: none;
