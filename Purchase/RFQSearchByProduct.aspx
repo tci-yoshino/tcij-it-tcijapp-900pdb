@@ -10,11 +10,9 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
     <script type="text/javascript">
     <!--
-
 window.onload = function() {
-   colorful.set();
-   navi('product');
-   document.SearchForm.Code.focus();
+    colorful.set();
+    document.SearchForm.Code.focus();
 }
     -->
     </script>
