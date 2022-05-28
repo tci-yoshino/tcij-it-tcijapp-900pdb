@@ -1,9 +1,8 @@
 ﻿<%@ Control Language="vb" AutoEventWireup="true" CodeBehind="HeaderEhs.ascx.vb" Inherits="Purchase.HeaderEhs" %>
 
-<link rel="stylesheet" href="./CSS/Style.css" type="text/css" media="screen,print" />
 <!-- HeaderEhs -->
 <div id="ehs">
-    <strong >EHS Reference :</strong>
+    <p><strong>EHS Reference :</strong></p>
     <asp:ListView ID="ehsList" runat="server">
         <LayoutTemplate>
             <ul id="itemPlaceholderContainer" runat="server">
@@ -15,7 +14,7 @@
         </EmptyDataTemplate>
         <ItemTemplate>
             <li>
-                <strong><asp:Label ID="itemName" runat="server" Text='<%# Eval("itemName") + " : " %>' /></strong>
+                <span class="name"><asp:Label ID="itemName" runat="server" Text='<%# Eval("itemName") + " : " %>' /></span>
                 <span class="value"><asp:Label ID="ItemValue" runat="server" Text='<%# Eval("ItemValue") %>' /></span>
             </li>
         </ItemTemplate>

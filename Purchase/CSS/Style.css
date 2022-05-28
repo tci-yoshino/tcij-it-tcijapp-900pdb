@@ -180,16 +180,16 @@ pre {
 /* HeaderEhs Rules */
 #ehs ul li
 {
-    display:inline-block; 
-    width:240px;
-    background:Ghostwhite;
-    vertical-align:top
+    display: inline-block; 
+    width: 240px;
+    background: #f8f8ff;
+    vertical-align: top;
 }
 
 #ehs li
 {
-    margin:0.3em;  
-    padding:0;  
+    margin: 0.3em;  
+    padding: 0;  
 }
 
 #ehs li .name
@@ -199,7 +199,7 @@ pre {
 
 #ehs li .value
 {
-    color: Navy;
+    color: #000080;
 }
 
 /* Main Content Area Rules */
@@ -629,17 +629,6 @@ div.purpose table td{
     border-top-color: #2b428f;
 }
 
-#ehs ul {
-    column-count: 4;
-    list-style: none;
-}
-
-#ehstitle hr {
-    margin: 0 0 10px 0;
-    height: 1px;
-    border: solid 1px #2651a5;
-    text-align: left;
-}
 /* Search Resultコントロール用 */
 #SearchResultList_PagerTop div.paging a.current {
      pointer-events: none;

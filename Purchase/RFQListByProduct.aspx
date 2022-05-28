@@ -10,10 +10,6 @@
     <script type="text/javascript" src="./JS/Colorful.js"></script>
     <script type="text/javascript">
 
-window.onload = function() {
-   navi('product');
-}
-
 // 画面ボタンアクション時判定処理
 function setFormAction(button_type) {
     if (button_type == "Search") {
@@ -58,42 +54,37 @@ function setFormAction(button_type) {
                 <strong class="indent">Molecular Formula : </strong><asp:Label ID="MolecularFormula" runat="server" Text=''></asp:Label>
                 <strong class="indent">BUoM : </strong><asp:Label ID="labBUoM" runat="server" Text=''></asp:Label>
             </p>
-            <table align="left">
+            <table style="margin:0 0 3px 1px">
                 <tr>
-                    <td>
-                        <a href="#" onclick="popup('./ProductSetting.aspx?Comment=1&Action=Edit&ProductID=<%Response.Write(st_ProductID)%>')">
-                            <strong>Product Warning : </strong>
-                        </a>
-                    </td>
-                    <td>
-                        <asp:Label ID="ProductWarning" runat="server" Text=""></asp:Label>
-                    </td>
+                    <th><a href="#" onclick="popup('./ProductSetting.aspx?Comment=1&Action=Edit&ProductID=<%Response.Write(st_ProductID)%>')">Product Warning : </a></th>
+                    <td><asp:Label ID="ProductWarning" runat="server" Text=""></asp:Label></td>
                 </tr>
             </table>
-        </div>
-
-        <br >
-        <p>
+            
             <commonUC:HeaderEhs ID="HeaderEhs" runat="server" />
-        </p>
+        </div>
 
         <hr />
 
-        <div class="cond-right">
-            <b>Validity Quotation : </b>
-            <span >
-                <asp:DropDownList runat="server" ID="ValidQuotation" CssClass="filterdata">
-                    <asp:ListItem></asp:ListItem>
-                </asp:DropDownList>
-            </span> 
-            <asp:Button ID="Search" runat="server" Text="Search"  OnClientClick ="setFormAction('Search');" />
-            <asp:Button ID="Release" runat="server" Text="Release" OnClientClick ="setFormAction('Release');" />
+        <div class="main switch">
+            <table style="margin-bottom:5px">
+                <tr>
+                    <th>Validity Quotation : </th>
+                    <td>
+                        <asp:DropDownList runat="server" ID="ValidQuotation" CssClass="filterdata">
+                            <asp:ListItem></asp:ListItem>
+                        </asp:DropDownList>
+                    </td>
+                    <td>
+                        <asp:Button ID="Search" runat="server" Text="Search"  OnClientClick ="setFormAction('Search');" />
+                        <asp:Button ID="Release" runat="server" Text="Release" OnClientClick ="setFormAction('Release');" />
+                    </td>
+                </tr>
+            </table>
+            <input type="hidden" runat="server" id="Action" value="" />
+            <asp:HiddenField ID="HiddenValidQuotation" runat="server" Value ="" />
         </div>
 
-        <input type="hidden" runat="server" id="Action" value="" />
-        <asp:HiddenField ID="HiddenValidQuotation" runat="server" Value =""/>
-
-        <br >
         <div class="list">
 
             <div class="pagingHead">
@@ -159,10 +150,10 @@ function setFormAction(button_type) {
                         <tr>
                             <th>Supplier Code / Supplier Name / Country</th>
                             <td colspan="3">
-                                <span><asp:HyperLink ID="SupplierCode" runat="server" NavigateUrl='<%#Eval("SupplierCode","./RFQListBySupplier.aspx?SupplierCode={0}")%>' Text='<%#Eval("SupplierCode")%>' target="_blank" /></span>
                                 <!-- １段下に改行されて表示される現象の対策のため他項目より前に記述する -->
                                 <span class="placedright"><asp:HyperLink ID="SupplierInfoLink" runat="server" NavigateUrl='<%#Eval("SupplierInfo")%>' Target="_blank"><asp:Label ID="SupplierInfo" runat="server" Text='<%#If(IsDBNull(Eval("SupplierInfo")), "", "Supplier Information")%>'></asp:Label></asp:HyperLink></span>
-                                <asp:Label ID="SupplierName" runat="server" Text='<%#Eval("SupplierName")%>'></asp:Label>
+                                <asp:HyperLink ID="SupplierCode" runat="server" NavigateUrl='<%#Eval("SupplierCode","./RFQListBySupplier.aspx?SupplierCode={0}")%>' Text='<%#Eval("SupplierCode")%>' target="_blank" />
+                                <span class="indent"><asp:Label ID="SupplierName" runat="server" Text='<%#Eval("SupplierName")%>'></asp:Label></span>
                                 <span class="indent">(<asp:Label ID="SupplierCountry" runat="server" Text='<%#Eval("SupplierCountryName")%>'></asp:Label>)</span>
                             </td>
                             <th>Purpose</th>
@@ -171,10 +162,10 @@ function setFormAction(button_type) {
                         <tr>
                             <th>Maker Code / Maker Name / Country</th>
                             <td colspan="3">
-                                <span><asp:HyperLink ID="MakerCode" runat="server" NavigateUrl='<%#Eval("MakerCode","./RFQListBySupplier.aspx?SupplierCode={0}")%>' Text='<%#Eval("MakerCode")%>' target="_blank" /></span>
                                 <!-- １段下に改行されて表示される現象の対策のため他項目より前に記述する -->
                                 <span class="placedright"><asp:HyperLink ID="MakerInfoLink" runat="server" NavigateUrl='<%#Eval("MakerInfo")%>' Target="_blank"><asp:Label ID="MakerInfo" runat="server" Text='<%#If(IsDBNull(Eval("MakerInfo")), "", "Supplier Information")%>'></asp:Label></asp:HyperLink></span>
-                                <asp:Label ID="MakerName" runat="server" Text='<%#Eval("MakerName")%>'></asp:Label>
+                                <asp:HyperLink ID="MakerCode" runat="server" NavigateUrl='<%#Eval("MakerCode","./RFQListBySupplier.aspx?SupplierCode={0}")%>' Text='<%#Eval("MakerCode")%>' target="_blank" />
+                                <span class="indent"><asp:Label ID="MakerName" runat="server" Text='<%#Eval("MakerName")%>'></asp:Label></span>
                                 <span class="indent">(<asp:Label ID="MakerCountry" runat="server" Text='<%#Eval("MakerCountryName")%>'></asp:Label>)</span>
                             </td>
                             <th>Supplier Item Name</th>
