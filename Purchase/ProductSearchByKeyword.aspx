@@ -12,7 +12,6 @@
         <script type="text/javascript">
             window.onload = function() {
                colorful.set();
-               navi('product_search');
                document.SearchForm.ProductNumber.focus();
             }
         </script>
@@ -24,7 +23,6 @@
         <!-- Header End -->
         <!-- Main Content Area -->
         <div id="content">
-            <h3>Product Search By Keyword</h3>
 
             <form runat="server" id="SearchForm" >
                 <div class="main">
@@ -46,7 +44,7 @@
                                     <asp:HiddenField runat="server" ID="st_ProductName" />
                                 </th>
                                 <td>
-                                    <asp:TextBox runat="server" ID="ProductName" Width="20em" />(Partial text match)
+                                    <asp:TextBox runat="server" ID="ProductName" Width="20em" /> (Partial text match)
                                 </td>
                             </tr>
                         </table>

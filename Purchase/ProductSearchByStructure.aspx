@@ -60,26 +60,28 @@
                     <asp:HiddenField runat="server" ID="search_type" />
                     <asp:HiddenField runat="server" ID="search_jme" />
                 </div>
-            </div>
+
+            <hr />
+
             <div class="list">
                 <asp:ListView ID="StructureList" runat="server" >
                     <LayoutTemplate>
-        <table id="itemPlaceholderContainer" runat="server">
+                        <table id="itemPlaceholderContainer" runat="server">
                             <tr id="Tr1" runat="server">
-                                <th id="Th1" runat="server" style="width:10%;" >Structure</th>
-                                <th id="Th2" runat="server" style="width:5%">Similarity</th>
-                                <th id="Th3" runat="server" style="width:10%">Product Number</th>
-                                <th id="Th4" runat="server" style="width:10%">CAS Number</th>
-                                <th id="Th5" runat="server" style="width:40%">Product Name</th>
-                                <th id="Th6" runat="server" style="width:5%"></th>
-                                <th id="Th7" runat="server" style="width:5%"></th>
+                                <th id="Th1" runat="server" style="width:15%">Structure</th>
+                                <th id="Th2" runat="server">Similarity</th>
+                                <th id="Th3" runat="server">Product Number</th>
+                                <th id="Th4" runat="server">CAS Number</th>
+                                <th id="Th5" runat="server">Product Name</th>
+                                <th id="Th6" runat="server"></th>
+                                <th id="Th7" runat="server"></th>
                             </tr>
                             <tr id="itemPlaceholder" runat="server"></tr>
                         </table>
                     </LayoutTemplate>
                     <ItemTemplate>
                         <tr id="TrSearchResult" runat="server" class='<%#IIf((Container.DataItemIndex Mod 2) = 0, "", "zebra") %>' onclick=''>
-                            <td><asp:Image ID="pStructure" runat="server" CssClass="structure-img" src='<%# Eval("pStructure") %>' onerror="this.src='./Image/NoImage.gif'"  /></td>
+                            <td><asp:Image ID="pStructure" runat="server" src='<%# Eval("pStructure") %>' onerror="this.src='./Image/NoImage.gif'" Width="200px" /></td>
                             <td class="number percent"><asp:Label ID="Similariry" runat="server" Text='<%# Eval("Similarity") %>' /></td>
                             <td><asp:Label ID="ProductNumber" runat="server" Text='<%# Eval("ProductNumber") %>' /></td>
                             <td><asp:Label ID="CASNumber" runat="server" Text='<%# Eval("CASNumber") %>' /></td>
@@ -94,6 +96,8 @@
                         <h3 style="font-style:italic"><% =Purchase.Common.ERR_NO_MATCH_FOUND%></h3>
                     </EmptyDataTemplate>
                 </asp:ListView>
+            </div>
+                
             </div>
             <!-- Main Content Area END -->
             <asp:SqlDataSource ID="SrcStructure" runat="server" ConnectionString="<%$ ConnectionStrings:DatabaseConnect %>"></asp:SqlDataSource>
