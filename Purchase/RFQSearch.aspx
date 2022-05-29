@@ -31,8 +31,8 @@
                 let SearchMode = document.getElementById('SearchMode');
 
                 if (SearchMode.value === "Basic") {
-                    document.getElementById('ModeChange_link').innerText = "* Basic Search";
-                    document.getElementById('Title').innerHTML = "<h3>* Advanced Search</h3>";
+                    document.getElementById('ModeChange_link').innerText = "« Basic Search";
+                    document.getElementById('Title').innerHTML = "Advanced Search";
                     document.getElementById("ProductName_line").style.visibility = "visible";
                     document.getElementById("SAPSupplier_line").style.visibility = "visible";
                     document.getElementById("SupplierCountry_line").style.visibility = "visible";
@@ -43,8 +43,8 @@
                     document.getElementById("ValidityQuotation_line").style.visibility = "visible";
 
                 } else {
-                    document.getElementById('ModeChange_link').innerText = "* Advanced Search";
-                    document.getElementById('Title').innerHTML = "<h3>Basic Search</h3>";
+                    document.getElementById('ModeChange_link').innerText = "» Advanced Search";
+                    document.getElementById('Title').innerHTML = "Basic Search";
                     document.getElementById("ProductName_line").style.visibility = "collapse";
                     document.getElementById("SAPSupplier_line").style.visibility = "collapse";
                     document.getElementById("SupplierCountry_line").style.visibility = "collapse";
@@ -79,26 +79,26 @@
                 }
             }
             function RFQReferenceNumberBtn_onclick(Postback) {
-                opneMultipleListWindow("RFQNumber", "RFQ Reference Number", document.SearchForm.RFQNumber.value)
+                openMultipleListWindow("RFQNumber", "RFQ Reference Number", document.SearchForm.RFQNumber.value)
 
                 return false;
             }
             function ProductNumberBtn_onclick(Postback) {
-                opneMultipleListWindow("ProductNumber", "Product Number", document.SearchForm.ProductNumber.value)
+                openMultipleListWindow("ProductNumber", "Product Number", document.SearchForm.ProductNumber.value)
 
                 return false;
             }
             function SupplierCodeBtn_onclick(Postback) {
-                opneMultipleListWindow("SupplierCode", "Supplier Code", document.SearchForm.SupplierCode.value)
+                openMultipleListWindow("SupplierCode", "Supplier Code", document.SearchForm.SupplierCode.value)
 
                 return false;
             }
             function S4SupplierCodeBtn_onclick(Postback) {
-                opneMultipleListWindow("S4SupplierCode", "SAP Supplier Code", document.SearchForm.S4SupplierCode.value)
+                openMultipleListWindow("S4SupplierCode", "SAP Supplier Code", document.SearchForm.S4SupplierCode.value)
 
                 return false;
             }
-            function opneMultipleListWindow(SearchItemId, ScreenName, SearchWord) {
+            function openMultipleListWindow(SearchItemId, ScreenName, SearchWord) {
                 setAction('')
 
                 document.SearchForm.SearchItemId.value = SearchItemId
@@ -172,12 +172,10 @@
         <commonUC:Header ID="HeaderMenu" runat="server" />
         <!-- Header End -->
         <div id="content">
-            <div class="tabs" style="text-align: right">
-                <a href="#" id="ModeChange_link" runat="server"></a>
-            </div>
+            <div class="tabs"></div>
             
-            <div id ="Title">
-                <h3></h3> 
+            <div>
+                <h3><span id="Title"></span><span class="indent"><a href="#" id="ModeChange_link" runat="server"></a></span></h3>
             </div>
             
             <div class="main">
@@ -190,7 +188,7 @@
                     <input type="hidden" id ="SearchWord" runat="server" value="" />
                     <input type="hidden" id ="SearchItemId" runat="server" value="" />
                     <input type="hidden" id ="SearchMode" runat="server" value="" />
-                    <table style= " margin-bottom: 0px;">
+                    <table>
                         <tr>
                             <th>RFQ Reference Number : </th>
                             <td>
@@ -208,7 +206,7 @@
                             </td>
                         </tr>
                         <tr id ="ProductName_line" style="visibility: collapse;">
-                            <th>Product Name: </th>
+                            <th>Product Name : </th>
                             <td>
                                 <asp:TextBox ID="ProductName" runat="server" Width="10em" MaxLength="255"></asp:TextBox>
                                 <span id ="ProductNameNotes">(Partial text match)</span>
@@ -250,14 +248,15 @@
                             <th>Supplier Item Name : </th>
                             <td>
                                 <asp:TextBox ID="SupplierItemName" runat="server" Width="10em" MaxLength="255"></asp:TextBox>
+                                <span>(Partial text match)</span>
                             </td>
                         </tr>
                         <tr>
                             <th>Current Status : </th>
-                            <td>From
+                            <td>from
                                 <asp:DropDownList ID="StatusFrom" runat="server">
                                 </asp:DropDownList>
-                                To
+                                to
                                 <asp:DropDownList ID="StatusTo" runat="server">
                                     <asp:ListItem></asp:ListItem>
                                 </asp:DropDownList>
@@ -265,28 +264,28 @@
                         </tr>
                         <tr id="RFQCreatedDate_line" style="visibility: collapse;">
                             <th>Created Date : </th>
-                            <td>From
-                                <asp:TextBox ID="RFQCreatedDateFrom" runat="server" Width="10em" MaxLength="10"></asp:TextBox>
-                                To
-                                <asp:TextBox ID="RFQCreatedDateTo" runat="server" Width="10em" MaxLength="10"></asp:TextBox>
+                            <td>from
+                                <asp:TextBox ID="RFQCreatedDateFrom" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
+                                to
+                                <asp:TextBox ID="RFQCreatedDateTo" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
                                 <span class="format">(YYYY-MM-DD)</span>
                             </td>
                         </tr>
                         <tr id ="RFQQuotedDate_line" style="visibility: collapse;">
                             <th>Quoted Date : </th>
-                            <td>From
-                                <asp:TextBox ID="RFQQuotedDateFrom" runat="server" Width="10em" MaxLength="10"></asp:TextBox>
-                                To
-                                <asp:TextBox ID="RFQQuotedDateTo" runat="server" Width="10em" MaxLength="10"></asp:TextBox>
+                            <td>from
+                                <asp:TextBox ID="RFQQuotedDateFrom" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
+                                to
+                                <asp:TextBox ID="RFQQuotedDateTo" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
                                 <span class="format">(YYYY-MM-DD)</span>
                             </td>
                         </tr>
                         <tr>
                             <th>Last Status Change Date : </th>
-                            <td>From
-                                <asp:TextBox ID="LastRFQStatusChangeDateFrom" runat="server" Width="10em" MaxLength="10"></asp:TextBox>
-                                To
-                                <asp:TextBox ID="LastRFQStatusChangeDateTo" runat="server" Width="10em" MaxLength="10"></asp:TextBox>
+                            <td>from
+                                <asp:TextBox ID="LastRFQStatusChangeDateFrom" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
+                                to
+                                <asp:TextBox ID="LastRFQStatusChangeDateTo" runat="server" Width="7em" MaxLength="10"></asp:TextBox>
                                 <span class="format">(YYYY-MM-DD)</span>
                             </td>
                         </tr>
@@ -353,10 +352,12 @@
                         </tr>
                     </table>
 
-                    <div class="btns" style="text-align: left">
-                        <asp:Button ID="Search" runat="server" Text="Search" OnClientClick="setAction('Search');"/>&nbsp;
-                        <asp:Button ID="Clear" runat="server" Text="Clear" OnClientClick ="clearForm('SearchForm');" />&nbsp;
-                        <asp:Button ID="Download" runat="server" Text="Download" OnClientClick="setAction('Download');"/>&nbsp;
+                    <div style="width:500px; margin-bottom:3.5em">
+                        <div style="float:left">
+                            <asp:Button ID="Search" runat="server" Text="Search" OnClientClick="setAction('Search');"/>
+                            <asp:Button ID="Clear" runat="server" Text="Clear" OnClientClick ="clearForm('SearchForm');" />
+                        </div>
+                        <div style="float:right"><asp:Button ID="Download" runat="server" Text="Download" OnClientClick="setAction('Download');"/></div>
                     </div>
 
                     <div id="divPurpose" class="purpose">
@@ -385,6 +386,8 @@
                             </tr>
                         </table>
                     </div>
+
+                    <hr />
 
                             <asp:Panel ID="ResultArea" runat="server" Visible="false">
                                 <commonUC:SearchResult ID="SearchResultList" runat="server" CssClass="search" EnableSelectRow="true" />

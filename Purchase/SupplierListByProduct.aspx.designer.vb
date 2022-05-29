@@ -86,15 +86,6 @@ Partial Public Class SupplierListByProduct
     Protected WithEvents UpdateDateTo As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''Label1 コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents Label1 As Global.System.Web.UI.WebControls.Label
-    
-    '''<summary>
     '''Search コントロール。
     '''</summary>
     '''<remarks>

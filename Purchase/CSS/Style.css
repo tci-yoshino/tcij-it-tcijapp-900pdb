@@ -370,6 +370,7 @@ pre {
 }
 
 .switch th {
+    vertical-align: middle;
     padding: 0 5px;
 }
 
@@ -513,10 +514,6 @@ tr.attention td {
     padding: 0 15px;
     text-decoration: none;
     color: #2651a5;
-}
-
-.cond-right {
-    text-align: right;
 }
 
 /* DropDown CheckBox */

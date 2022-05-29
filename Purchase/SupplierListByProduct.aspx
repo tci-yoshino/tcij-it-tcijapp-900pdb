@@ -34,26 +34,6 @@
                 }
             }
             $(function () {
-                // リサイズしたときの処理
-                $(window).on('resize', function () {
-                    scrollset();
-                });
-                function scrollset() {
-                    var winHeight = window.innerHeight ? window.innerHeight : $(window).height();
-                    var height1 = $('div#FixedHeaderInfo').outerHeight(true);
-                    var height2 = $('div#FixedHeaderInfo2').outerHeight(true);
-                    var height3 = $('div#FixedHeaderInfo3').outerHeight(true);
-                    var height4 = $('div#FixedHeaderInfo4').outerHeight(true);
-                    // divのスクロールバーは出るがブラウザのスクロールバーは出ない値に設定
-                    var divScrollHeight = winHeight - height1 - height2 - height3 - height4 - 80;
-                    if (divScrollHeight <= 0) {
-                        $('.list').css({ 'height': '' });
-                        $('.list').css({ 'overflow-y': '' });
-                    } else {
-                        $('.list').css({ 'height': divScrollHeight });
-                        $('.list').css({ 'overflow-y': 'scroll' });
-                    }
-                }
                 // Territory リスト表示制御
                 $('#Territory').click(function () {
                     var offsetTop = $(this).offset().top;
@@ -98,30 +78,32 @@
                         </tr>
                     </table>
                 </div>
+
                 <hr />
 
-                <div class="cond-right">
-                    <b>Territory : </b>
-                    <span id="Territory">
-                        <asp:DropDownList runat="server" ID="SelTerritory" CssClass="filterdata">
-                            <asp:ListItem>(see the list.)</asp:ListItem>
-                        </asp:DropDownList>&nbsp;
-                    </span> 
-                    <b>UpdateDate : From</b>
-                    <span>
-                        <asp:TextBox ID="UpdateDateFrom" runat="server" Text="" Width="9em" MaxLength="10"></asp:TextBox>
-                    </span>
-                    <b>To</b>
-                    <span>
-                        <asp:TextBox ID="UpdateDateTo" runat="server" Text="" Width="9em" MaxLength="10"></asp:TextBox>
-                    </span>
-                    <b>
-                    <span class="indent">
-                            <asp:Label ID="Label1" runat="server" Text="">(YYYY-MM-DD)</asp:Label>
-                        </span>
-                    </b>
-                    <asp:Button ID="Search" runat="server" Text="Search"  OnClientClick ="setFormAction('Search');" />&nbsp;
-                    <asp:Button ID="Release" runat="server" Text="Release" OnClientClick ="setFormAction('Release');" />
+                <div class="main switch">
+                    <table style="margin-bottom:5px">
+                        <tr>
+                            <th>Territory : </th>
+                            <td>
+                                <span id="Territory">
+                                    <asp:DropDownList runat="server" ID="SelTerritory" CssClass="filterdata">
+                                        <asp:ListItem>(see the list.)</asp:ListItem>
+                                    </asp:DropDownList>&nbsp;
+                                </span>
+                            </td>
+                            <th>Update Date : </th>
+                            <td>
+                                from <asp:TextBox ID="UpdateDateFrom" runat="server" Text="" Width="7em" MaxLength="10"></asp:TextBox>
+                                to <asp:TextBox ID="UpdateDateTo" runat="server" Text="" Width="7em" MaxLength="10"></asp:TextBox>
+                                <span class="format">(YYYY-MM-DD)</span>
+                            </td>
+                            <td>
+                                <asp:Button ID="Search" runat="server" Text="Search"  OnClientClick ="setFormAction('Search');" />
+                                <asp:Button ID="Release" runat="server" Text="Release" OnClientClick ="setFormAction('Release');" />
+                            </td>
+                        </tr>
+                    </table>
                 </div>
                 <div id="divTerritory" class="territory">
                     <table border="0" cellpadding="1" cellspacing="0">
@@ -146,14 +128,14 @@
                         <LayoutTemplate>
                             <table ID="itemPlaceholderContainer" class ="table" runat="server" border="0" style="">
                                 <tr>
-                                    <th id ="SupplierCodeHeader" class="sortField" style="width:15%">Supplier Code</th>
-                                    <th style="width:15%">Supplier Name</th>
-                                    <th id ="CountryHeader" class="sortField" style="width:5%">Country</th>
-                                    <th style="width:10%">Territory</th>
-                                    <th style="width:15%">Supplier Item Number</th>
+                                    <th id ="SupplierCodeHeader" class="sortField" style="width:10%">Supplier Code</th>
+                                    <th style="width:23%">Supplier Name</th>
+                                    <th id ="CountryHeader" class="sortField" style="width:10%">Country</th>
+                                    <th style="width:7%">Territory</th>
+                                    <th style="width:10%">Supplier Item Number</th>
                                     <th style="width:10%">Note</th>
                                     <th id ="UpdateDateHeader" class="sortField" style="width:10%">Update Date</th>
-                                    <th id ="ValidQuotationHeader" class="sortField" style="width:15%">Valid Quotation</th>
+                                    <th id ="ValidQuotationHeader" class="sortField" style="width:10%">Valid Quotation</th>
                                     <th style="width:5%">Edit</th>
                                     <th style="width:5%">Delete</th>
                                 </tr>
