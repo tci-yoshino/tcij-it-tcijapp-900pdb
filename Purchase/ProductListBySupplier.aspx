@@ -58,16 +58,24 @@
                             <td><asp:Label ID="SupplierName" runat="server" Text=""></asp:Label></td>
                         </tr>
                         <tr>
-                            <th>Terrirtory : </th>
+                            <th>Territory : </th>
                             <td><asp:Label ID="Territory" runat="server" Text=""></asp:Label></td>
                         </tr>
                     </table>
                 </div>
+
                 <hr />
+                
+                <div class="main switch">
+                    <table style="margin-bottom:5px">
+                        <tr>
+                            <td><asp:Button ID ="ExcelExportBtn" runat="server" Text="Download" OnClientClick="setAction('Download');" /></td>
+                        </tr>
+                    </table>
+                </div>
 
                 <div class="list">
                  
-                    <asp:Button ID ="ExcelExportBtn" runat="server" Text="Download" OnClientClick="setAction('Download');" />
                     <asp:HiddenField ID="hidSourceID" runat="server" />
                     <input type="hidden" runat="server" id="ProductID" />
                     <input type="hidden" runat="server" id="Action" value="" />
@@ -95,7 +103,7 @@
                         </asp:DataPager>
                     </div>
 
-                    <div class="paging">
+                    <div class="paging" style="margin-bottom:1em">
                         <asp:DataPager ID="SupplierProductPagerLinkTop" runat="server" PagedControlID="SupplierProductList">
                             <Fields>
                                 <asp:NumericPagerField ButtonCount="10" CurrentPageLabelCssClass="current" NumericButtonCssClass="numeric" PreviousPageText="&laquo; Previous" NextPageText="Next &raquo;" />
@@ -112,15 +120,15 @@
 
                             <table class="table" ID="itemPlaceholderContainer" runat="server" border="0" style="">
                                 <tr>
-                                    <th id ="ProductNumHeader" style="width:13%" class="sortField" >Product Number</th>
+                                    <th id ="ProductNumHeader" style="width:12%" class="sortField" >Product Number</th>
                                     <th style="width:10%">CAS Number</th>
-                                    <th style="width:20%">Product Name</th>
-                                    <th style="width:10%">Supplier Item Number</th>
-                                    <th style="width:20%">Note</th>
+                                    <th style="width:23%">Product Name</th>
+                                    <th style="width:15%">Supplier Item Number</th>
+                                    <th style="width:10%">Note</th>
                                     <th id ="ValidQuotationHeader" class="sortField" style="width:10%">Valid Quotation</th>
-                                    <th id ="UpdateDateHeader" class="sortField" style="width:9%">Update Date</th>
-                                    <th style="width:4%">Edit</th>
-                                    <th style="width:4%">Delete</th>
+                                    <th id ="UpdateDateHeader" class="sortField" style="width:10%">Update Date</th>
+                                    <th style="width:5%">Edit</th>
+                                    <th style="width:5%">Delete</th>
                                 </tr>
                                 <tr ID="itemPlaceholder" runat="server">
                                 </tr>
