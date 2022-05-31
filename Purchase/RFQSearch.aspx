@@ -352,7 +352,7 @@
                         </tr>
                     </table>
 
-                    <div style="width:500px; margin-bottom:3.5em">
+                    <div style="width:100%; margin-bottom:3.5em">
                         <div style="float:left">
                             <asp:Button ID="Search" runat="server" Text="Search" OnClientClick="setAction('Search');"/>
                             <asp:Button ID="Clear" runat="server" Text="Clear" OnClientClick ="clearForm('SearchForm');" />
