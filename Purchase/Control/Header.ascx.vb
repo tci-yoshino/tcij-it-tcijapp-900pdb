@@ -120,7 +120,7 @@ Partial Public Class Header
         For Each menu As MenuItem In Me._menuList
             If Not current = menu.MainMenuName Then
                 ' メインメニューは重複排除し追加
-                mainMenuItem = New Menu() With {.CSS = "main", .MenuName = menu.MainMenuName, .PageName = menu.PageName, .IsSelected = False}
+                mainMenuItem = New Menu() With {.CSS = "", .MenuName = menu.MainMenuName, .PageName = menu.PageName, .IsSelected = False}
                 displayMainMenuList.Add(mainMenuItem)
                 current = menu.MainMenuName
             End If
