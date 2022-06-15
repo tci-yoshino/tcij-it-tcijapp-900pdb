@@ -94,9 +94,7 @@
                                         <asp:Label runat="server" ID="CurrentPageLabel" Text="<%# IIf(Container.TotalRowCount > 0, CInt(Container.StartRowIndex / Container.PageSize) + 1, 0) %>" />
                                         of
                                         <asp:Label runat="server" ID="TotalPagesLabel" Text="<%# Math.Ceiling(System.Convert.ToDouble(Container.TotalRowCount) / Container.PageSize) %>" />
-                                        (
-                                        <asp:Label runat="server" ID="TotalItemsLabel" Text="<%# Container.TotalRowCount%>" /> 
-                                        records)
+                                        (<asp:Label runat="server" ID="TotalItemsLabel" Text="<%# Container.TotalRowCount%>" /> records)
                                     </PagerTemplate>
                                 </asp:TemplatePagerField>
                             </Fields>
@@ -172,9 +170,7 @@
                                         <asp:Label runat="server" ID="CurrentPageLabel" Text="<%# IIf(Container.TotalRowCount > 0, CInt(Container.StartRowIndex / Container.PageSize) + 1, 0) %>" />
                                         of
                                         <asp:Label runat="server" ID="TotalPagesLabel" Text="<%# Math.Ceiling(System.Convert.ToDouble(Container.TotalRowCount) / Container.PageSize) %>" />
-                                        (
-                                        <asp:Label runat="server" ID="TotalItemsLabel" Text="<%# Container.TotalRowCount%>" /> 
-                                        records)
+                                        (<asp:Label runat="server" ID="TotalItemsLabel" Text="<%# Container.TotalRowCount%>" /> records)
                                     </PagerTemplate>
                                 </asp:TemplatePagerField>
                             </Fields>

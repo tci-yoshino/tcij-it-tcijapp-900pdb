@@ -446,7 +446,7 @@ Namespace TCIDataAccess
                 'ValidQuotationでのソート
             ElseIf String.Equals(st_HiddenSortField, st_SupplierProductListID + "_" + "ValidQuotationHeader") Then
                 sb_SQL.AppendLine("ORDER BY ")
-                sb_SQL.AppendLine("    SP.[Validquotation] ")
+                sb_SQL.AppendLine("    SP.[ValidQuotation] ")
                 If st_HiddenSortType = "asc" Then
                     sb_SQL.AppendLine(" ASC ")
                 ElseIf st_HiddenSortType = "desc" Then
@@ -516,7 +516,7 @@ Namespace TCIDataAccess
 
             sb_SQL.AppendLine("FROM")
             sb_SQL.AppendLine("  [Supplier_Product] AS SP")
-            sb_SQL.AppendLine("    INNER [Product] AS P ON SP.[ProductID] = P.[ProductID] ")
+            sb_SQL.AppendLine("    INNER JOIN [Product] AS P ON SP.[ProductID] = P.[ProductID] ")
             sb_SQL.AppendLine("    LEFT OUTER JOIN [v_CONFIDENTIAL] AS C ON C.[ProductID] = SP.[ProductID]")
 
             sb_SQL.AppendLine("WHERE ")
