@@ -396,7 +396,7 @@ Namespace TCIDataAccess
 
             sb_SQL.AppendLine("FROM")
             sb_SQL.AppendLine("  [Supplier_Product] AS SP")
-            sb_SQL.AppendLine("    LEFT OUTER JOIN [Product] AS P ON SP.[ProductID] = P.[ProductID] ")
+            sb_SQL.AppendLine("    INNER JOIN [Product] AS P ON SP.[ProductID] = P.[ProductID] ")
             sb_SQL.AppendLine("    LEFT OUTER JOIN [v_CONFIDENTIAL] AS C ON C.[ProductID] = SP.[ProductID]")
 
             sb_SQL.AppendLine("WHERE ")
@@ -419,27 +419,15 @@ Namespace TCIDataAccess
 
                 If st_HiddenSortType = "asc" Then
                     sb_SQL.AppendLine("ORDER BY ")
-                    sb_SQL.AppendLine("  CASE ")
-                    sb_SQL.AppendLine("    WHEN P.[NumberType] = 'CAS' THEN 1 ")
-                    sb_SQL.AppendLine("    WHEN P.[NumberType] = 'NEW' THEN 2 ")
-                    sb_SQL.AppendLine("    ELSE 3 ")
-                    sb_SQL.AppendLine("  END, ")
+                    sb_SQL.AppendLine("  P.[NumberType] ASC,")
                     sb_SQL.AppendLine("  P.[ProductNumber] ASC ")
                 ElseIf st_HiddenSortType = "desc" Then
                     sb_SQL.AppendLine("ORDER BY ")
-                    sb_SQL.AppendLine("  CASE ")
-                    sb_SQL.AppendLine("    WHEN P.[NumberType] = 'TCI' THEN 1 ")
-                    sb_SQL.AppendLine("    WHEN P.[NumberType] = 'NEW' THEN 2 ")
-                    sb_SQL.AppendLine("    ELSE 3 ")
-                    sb_SQL.AppendLine("  END, ")
+                    sb_SQL.AppendLine("  P.[NumberType] DESC,")
                     sb_SQL.AppendLine("  P.[ProductNumber] ASC ")
                 Else
                     sb_SQL.AppendLine("ORDER BY ")
-                    sb_SQL.AppendLine("  CASE ")
-                    sb_SQL.AppendLine("    WHEN P.[NumberType] = 'CAS' THEN 1 ")
-                    sb_SQL.AppendLine("    WHEN P.[NumberType] = 'NEW' THEN 2 ")
-                    sb_SQL.AppendLine("    ELSE 3 ")
-                    sb_SQL.AppendLine("  END, ")
+                    sb_SQL.AppendLine("  P.[NumberType] ASC,")
                     sb_SQL.AppendLine("  P.[ProductNumber] ASC ")
                 End If
 
@@ -471,8 +459,10 @@ Namespace TCIDataAccess
             Using DBConn As New SqlConnection(Common.DB_CONNECT_STRING)
                 Using DBCommand As SqlCommand = DBConn.CreateCommand()
                     DBCommand.Parameters.Clear()
-                    DBCommand.Parameters.AddWithValue("SupplierCode", CInt(st_SupplierCode))
+                    DBCommand.Parameters.Add("SupplierCode", SqlDbType.Int)
+                    DBCommand.Parameters("SupplierCode").Value = CInt(st_SupplierCode)
                     DBCommand.CommandText = sb_SQL.ToString()
+                    DBCommand.CommandTimeout = 180
 
                     ' 実行
                     DBConn.Open()
@@ -526,7 +516,7 @@ Namespace TCIDataAccess
 
             sb_SQL.AppendLine("FROM")
             sb_SQL.AppendLine("  [Supplier_Product] AS SP")
-            sb_SQL.AppendLine("    LEFT OUTER JOIN [Product] AS P ON SP.[ProductID] = P.[ProductID] ")
+            sb_SQL.AppendLine("    INNER [Product] AS P ON SP.[ProductID] = P.[ProductID] ")
             sb_SQL.AppendLine("    LEFT OUTER JOIN [v_CONFIDENTIAL] AS C ON C.[ProductID] = SP.[ProductID]")
 
             sb_SQL.AppendLine("WHERE ")
@@ -549,27 +539,15 @@ Namespace TCIDataAccess
 
                 If st_HiddenSortType = "asc" Then
                     sb_SQL.AppendLine("ORDER BY ")
-                    sb_SQL.AppendLine("  CASE ")
-                    sb_SQL.AppendLine("    WHEN P.[NumberType] = 'CAS' THEN 1 ")
-                    sb_SQL.AppendLine("    WHEN P.[NumberType] = 'NEW' THEN 2 ")
-                    sb_SQL.AppendLine("    ELSE 3 ")
-                    sb_SQL.AppendLine("  END, ")
+                    sb_SQL.AppendLine("  P.[NumberType] ASC,")
                     sb_SQL.AppendLine("  P.[ProductNumber] ASC ")
                 ElseIf st_HiddenSortType = "desc" Then
                     sb_SQL.AppendLine("ORDER BY ")
-                    sb_SQL.AppendLine("  CASE ")
-                    sb_SQL.AppendLine("    WHEN P.[NumberType] = 'TCI' THEN 1 ")
-                    sb_SQL.AppendLine("    WHEN P.[NumberType] = 'NEW' THEN 2 ")
-                    sb_SQL.AppendLine("    ELSE 3 ")
-                    sb_SQL.AppendLine("  END, ")
+                    sb_SQL.AppendLine("  P.[NumberType] DESC,")
                     sb_SQL.AppendLine("  P.[ProductNumber] ASC ")
                 Else
                     sb_SQL.AppendLine("ORDER BY ")
-                    sb_SQL.AppendLine("  CASE ")
-                    sb_SQL.AppendLine("    WHEN P.[NumberType] = 'CAS' THEN 1 ")
-                    sb_SQL.AppendLine("    WHEN P.[NumberType] = 'NEW' THEN 2 ")
-                    sb_SQL.AppendLine("    ELSE 3 ")
-                    sb_SQL.AppendLine("  END, ")
+                    sb_SQL.AppendLine("  P.[NumberType] ASC,")
                     sb_SQL.AppendLine("  P.[ProductNumber] ASC ")
                 End If
 
@@ -588,7 +566,7 @@ Namespace TCIDataAccess
                 'ValidQuotationでのソート
             ElseIf String.Equals(st_HiddenSortField, st_SupplierProductListID + "_" + "ValidQuotationHeader") Then
                 sb_SQL.AppendLine("ORDER BY ")
-                sb_SQL.AppendLine("    SP.[Validquotation] ")
+                sb_SQL.AppendLine("    SP.[ValidQuotation] ")
                 If st_HiddenSortType = "asc" Then
                     sb_SQL.AppendLine(" ASC ")
                 ElseIf st_HiddenSortType = "desc" Then
@@ -601,8 +579,10 @@ Namespace TCIDataAccess
             Using DBConn As New SqlConnection(Common.DB_CONNECT_STRING)
                 Using DBCommand As SqlCommand = DBConn.CreateCommand()
                     DBCommand.Parameters.Clear()
-                    DBCommand.Parameters.AddWithValue("SupplierCode", CInt(st_SupplierCode))
+                    DBCommand.Parameters.Add("SupplierCode", SqlDbType.Int)
+                    DBCommand.Parameters("SupplierCode").Value = CInt(st_SupplierCode)
                     DBCommand.CommandText = sb_SQL.ToString()
+                    DBCommand.CommandTimeout = 180
 
                     ' 実行
                     DBConn.Open()
