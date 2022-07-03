@@ -29,6 +29,9 @@
     </script>
 </head>
 <body onload="ChangeCursorStyle('default')">
+        <!-- Header -->
+        <commonUC:Header ID="HeaderMenu" runat="server" />
+        <!-- Header End -->
 
         <form id="ExcelImportForm" runat="server">
     <!-- Main Content Area -->
