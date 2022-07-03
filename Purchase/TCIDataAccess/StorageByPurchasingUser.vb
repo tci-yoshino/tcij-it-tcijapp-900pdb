@@ -59,7 +59,10 @@ Namespace TCIDataAccess
         ''' <summary>
         ''' データベースからデータを読み込む。
         ''' </summary>
-        Public Sub Load()
+        ''' <param name="UserID">UserID</param>
+        ''' <param name="Storage">Storage</param>
+        Public Sub Load(ByVal UserID As Integer, _
+                        ByVal Storage As String)
 
             'データベースからデータを読み込む SQL 文字列を生成する。
             Dim Value As New StringBuilder()
@@ -68,10 +71,15 @@ Namespace TCIDataAccess
             Value.AppendLine("    [Storage]")
             Value.AppendLine("FROM")
             Value.AppendLine("    [StorageByPurchasingUser]")
+            Value.AppendLine("WHERE")
+            Value.AppendLine("    [UserID] = @UserID")
+            Value.AppendLine("    AND [Storage] = @Storage")
 
             Using DBConn As New SqlConnection(DB_CONNECT_STRING)
                 Using DBCommand As SqlCommand = DBConn.CreateCommand()
                     DBCommand.CommandText = Value.ToString()
+                    DBCommand.Parameters.AddWithValue("UserID", UserID)
+                    DBCommand.Parameters.AddWithValue("Storage", Storage)
                     DBConn.Open()
                     Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
                     While DBReader.Read()
@@ -132,6 +140,9 @@ Namespace TCIDataAccess
             Value.AppendLine("        COUNT(*)")
             Value.AppendLine("    FROM")
             Value.AppendLine("        [StorageByPurchasingUser]")
+            Value.AppendLine("    WHERE")
+            Value.AppendLine("        [UserID] = @UserID")
+            Value.AppendLine("        AND [Storage] = @Storage")
             Value.AppendLine("    ) = 0")
             Value.AppendLine("        INSERT [StorageByPurchasingUser] (")
             Value.AppendLine("            [UserID],")
@@ -147,84 +158,60 @@ Namespace TCIDataAccess
             Value.AppendLine("        SET")
             Value.AppendLine("            [UserID] = @UserID,")
             Value.AppendLine("            [Storage] = @Storage")
+            Value.AppendLine("        WHERE ")
+            Value.AppendLine("            [UserID] = @UserID")
+            Value.AppendLine("            AND [Storage] = @Storage")
             Value.AppendLine(";")
             Value.AppendLine("SELECT SCOPE_IDENTITY();")
             Return Value.ToString()
 
         End Function
 
-        '''' <summary> 
-        '''' データの存在チェックを行う。
-        '''' </summary> 
-        '''' <returns>存在する場合は True、しない場合は False を返す</returns> 
-        'Public Shared Function IsExists() As Boolean
+        ''' <summary> 
+        ''' データの存在チェックを行う。
+        ''' </summary> 
+        ''' <returns>存在する場合は True、しない場合は False を返す</returns> 
+        ''' <param name="UserID">UserID</param>
+        ''' <param name="Storage">Storage</param>
+        Public Shared Function IsExists(ByVal UserID As Integer, _
+                                        ByVal Storage As String) As Boolean
 
-        '    ' データの存在チェックを行う SQL 文字列を生成する。
-        '    Dim Value As New StringBuilder()
-        '    Value.AppendLine("SELECT")
-        '    Value.AppendLine("    COUNT(*)")
-        '    Value.AppendLine("FROM")
-        '    Value.AppendLine("    [StorageByPurchasingUser]")
+            ' データの存在チェックを行う SQL 文字列を生成する。
+            Dim Value As New StringBuilder()
+            Value.AppendLine("SELECT")
+            Value.AppendLine("    COUNT(*)")
+            Value.AppendLine("FROM")
+            Value.AppendLine("    [StorageByPurchasingUser]")
+            Value.AppendLine("WHERE")
+            Value.AppendLine("    [UserID] = @UserID")
+            Value.AppendLine("    AND [Storage] = @Storage")
 
-        '    Using DBConn As New SqlConnection(DB_CONNECT_STRING)
-        '        Using DBCommand As SqlCommand = DBConn.CreateCommand()
-        '            DBCommand.CommandText = Value.ToString()
-        '            DBCommand.Parameters.Clear()
-        '            DBConn.Open()
-        '            Dim i_Count As Integer = Convert.ToInt32(DBCommand.ExecuteScalar())
-        '            Return i_Count > 0
-        '        End Using
-        '    End Using
+            Using DBConn As New SqlConnection(DB_CONNECT_STRING)
+                Using DBCommand As SqlCommand = DBConn.CreateCommand()
+                    DBCommand.CommandText = Value.ToString()
+                    DBCommand.Parameters.Clear()
+                    DBCommand.Parameters.AddWithValue("UserID", UserID)
+                    DBCommand.Parameters.AddWithValue("Storage", Storage)
+                    DBConn.Open()
+                    Dim i_Count As Integer = Convert.ToInt32(DBCommand.ExecuteScalar())
+                    Return i_Count > 0
+                End Using
+            End Using
 
-        'End Function
+        End Function
 
 #Region "User-Defined Methods"
 
-        ''' <summary> 
-        ''' データベースへデータを書き込む。(Facade 専用)
-        ''' </summary> 
-        ''' <param name="DBCommand">SqlCommand</param>
-        ''' <returns>IDENTITY で自動的に挿入された ID 値。更新または IDENTITY 列が無い場合は 0 が返る。</returns> 
-        Public Function Entry(ByVal DBCommand As SqlCommand) As Integer
-
-            Dim i_ID As Integer = 0
-            DBCommand.CommandText = CreateEntrySQL()
-            DBCommand.Parameters.Clear()
-            DBCommand.Parameters.AddWithValue("UserID", _UserID)
-            DBCommand.Parameters.AddWithValue("Storage", _Storage)
-            Dim ob_ID As Object = DBCommand.ExecuteScalar()
-            If Not IsDBNull(ob_ID) Then
-                i_ID = CInt(ob_ID)
-            End If
-            Return i_ID
-
-        End Function
-
-        ''' <summary> 
-        ''' データベースへデータを削除する SQL 文字列を生成する。
-        ''' </summary> 
-        ''' <returns>生成した SQL 文字列</returns> 
-        Private Function CreateEntrySQL() As String
-
-            Dim Value As New StringBuilder()
-            Value.AppendLine("INSERT [StorageByPurchasingUser] (")
-            Value.AppendLine("    [UserID],")
-            Value.AppendLine("    [Storage]")
-            Value.AppendLine(")")
-            Value.AppendLine("Values(")
-            Value.AppendLine("    @UserID,")
-            Value.AppendLine("    @Storage")
-            Value.AppendLine(")")
-            Return Value.ToString()
-
-        End Function
-
-        Public Sub Delete()
+        ''' <summary>
+        ''' データベースのデータを削除する
+        ''' </summary>
+        ''' <param name="UserID">UserID</param>
+        Public Sub Delete(ByVal UserID As Integer)
 
             Using DBConn As New SqlConnection(DB_CONNECT_STRING)
                 DBConn.Open()
                 Using DBCommand As SqlCommand = DBConn.CreateCommand()
-                    Delete(DBCommand)
+                    Delete(DBCommand, UserID)
                 End Using
             End Using
 
@@ -234,49 +221,23 @@ Namespace TCIDataAccess
         ''' データベースのデータを削除する (Facade 専用)
         ''' </summary>
         ''' <param name="DBCommand">SqlCommand</param>
-        Public Sub Delete(ByVal DBCommand As SqlCommand)
+        ''' <param name="UserID">UserID</param>
+        Public Sub Delete(ByVal DBCommand As SqlCommand,
+                          ByVal UserID As Integer)
 
             'データベースのデータを削除する SQL 文字列を生成する
             Dim Value As New StringBuilder()
             Value.AppendLine("DELETE FROM [StorageByPurchasingUser]")
+            Value.AppendLine("WHERE")
+            Value.AppendLine("    [UserID] = @UserID")
 
             DBCommand.CommandText = Value.ToString()
             DBCommand.Parameters.Clear()
+            DBCommand.Parameters.AddWithValue("UserID", UserID)
             DBCommand.ExecuteNonQuery()
 
         End Sub
 
-        ''' <summary>
-        ''' データベースのデータを削除する (Facade 専用)
-        ''' </summary>
-        ''' <param name="DBCommand">SqlCommand</param>
-        ''' <param name="i_UserID">UserID</param>
-        Public Function Delete(ByVal DBCommand As SqlCommand, ByVal i_UserID As Integer) As Integer
-
-            Dim i_ID As Integer = 0
-            DBCommand.CommandText = CreateDeleteSQL()
-            DBCommand.Parameters.Clear()
-            DBCommand.Parameters.AddWithValue("UserID", i_UserID)
-            Dim ob_ID As Object = dbCommand.ExecuteNonQuery()
-            If Not IsDBNull(ob_ID) Then
-                i_ID = CInt(ob_ID)
-            End If
-            Return i_ID
-
-        End Function
-
-        ''' <summary> 
-        ''' データベースへデータを削除する SQL 文字列を生成する。
-        ''' </summary> 
-        ''' <returns>生成した SQL 文字列</returns> 
-        Private Function CreateDeleteSQL() As String
-
-            Dim Value As New StringBuilder()
-            Value.AppendLine("DELETE FROM [StorageByPurchasingUser] ")
-            Value.AppendLine("WHERE [UserID] = @UserID")
-            Return Value.ToString()
-
-        End Function
 #End Region 'User-Defined Methods End
 
     End Class
@@ -300,42 +261,11 @@ Namespace TCIDataAccess
 
 #Region "User-Defined Methods of List"
 
-        '''' <summary>
-        '''' データベースから全てのデータを読み込む
-        '''' </summary>
-        'Public Sub Load()
-
-        '    'データベースから全てのデータを読み込む SQL 文字列を生成する
-        '    Dim Value As New StringBuilder()
-        '    Value.AppendLine("SELECT")
-        '    Value.AppendLine("    [UserID],")
-        '    Value.AppendLine("    [Storage]")
-        '    Value.AppendLine("FROM")
-        '    Value.AppendLine("    [StorageByPurchasingUser]")
-
-        '    Using DBConn As New SqlConnection(DB_CONNECT_STRING)
-        '        Using DBCommand As SqlCommand = DBConn.CreateCommand()
-        '            DBCommand.CommandText = Value.ToString()
-        '            DBConn.Open()
-        '            Dim DBReader As SqlDataReader = DBCommand.ExecuteReader()
-        '            While DBReader.Read()
-        '                Dim dc_StorageByPurchasingUser As New StorageByPurchasingUser()
-        '                SetProperty(DBReader("UserID"), dc_StorageByPurchasingUser.UserID)
-        '                SetProperty(DBReader("Storage"), dc_StorageByPurchasingUser.Storage)
-        '                Me.Add(dc_StorageByPurchasingUser)
-        '            End While
-        '            DBReader.Close()
-        '        End Using
-        '    End Using
-
-        'End Sub
-
         ''' <summary>
-        ''' データベースからUserIDに紐づくのデータを読み込む
+        ''' データベースからデータを読み込む
         ''' </summary>
-        Public Sub LoadFromUserID(ByVal UserID As Object)
+        Public Sub Load(ByVal UserID As Integer)
 
-            'データベースからUserIDに紐づくのデータを読み込む
             Dim Value As New StringBuilder()
             Value.AppendLine("SELECT")
             Value.AppendLine("    [UserID],")
@@ -361,21 +291,6 @@ Namespace TCIDataAccess
                 End Using
             End Using
 
-        End Sub
-        ''' <summary>
-        ''' Locationドロップダウンリスト設定
-        ''' </summary>
-        ''' <param name="Combo">ドロップダウンリスト</param>
-        ''' <param name="UserID">UserID</param>
-        ''' <remarks></remarks>
-        Public Sub SetStorageDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal UserID As Object)
-            Combo.Items.Clear()
-            Me.LoadFromUserID(UserID)
-            Combo.Items.Add(New ListItem(String.Empty, String.Empty))
-
-            For Each StorageByPurchasingUser As StorageByPurchasingUser In Me
-                Combo.Items.Add(New ListItem(StorageByPurchasingUser.Storage, StorageByPurchasingUser.Storage))
-            Next
         End Sub
 
 #End Region 'User-Defined Methods of List End

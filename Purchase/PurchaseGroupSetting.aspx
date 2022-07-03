@@ -23,7 +23,20 @@
                     <asp:Label ID="Msg" runat="server" Text=""></asp:Label>
                 </p>
                 <asp:HiddenField ID="UserID" runat="server" />
+                <asp:HiddenField ID="LocationCode" runat="server" />
                 <table>
+                    <tr>
+                        <th>User Name : </th>
+                        <td>
+                            <asp:Label ID="UserName" runat="server"></asp:Label><span class="indent">(<asp:Label ID="LocationName" runat="server"></asp:Label>)</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Role : </th>
+                        <td>
+                            <asp:Label ID="RoleName" runat="server"></asp:Label>
+                        </td>
+                    </tr>
                     <tr>
                         <th>SAP Purchasing Group : </th>
                         <td>
@@ -31,49 +44,15 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>Location : </th>
-                        <td>
-                            <asp:TextBox ID="Location" runat="server" Width="7em" MaxLength="5"
-                                ReadOnly="true" CssClass="readonly" TabIndex="1"></asp:TextBox></td>
-                    </tr>
-                    <tr>
-                        <th>Name : </th>
-                        <td>
-                            <asp:TextBox ID="Name" runat="server" Width="21em" MaxLength="255"
-                                ReadOnly="True" CssClass="readonly" TabIndex="2"></asp:TextBox></td>
-                    </tr>
-                    <tr>
                         <th>Storage Locations : </th>
                         <td>
-                            <asp:Panel ID="StorageLocationIDsPanel" runat="server">
-                                <asp:CheckBox ID="AL10" Text="AL10" runat="server" />
-                                <asp:CheckBox ID="AL11" Text="AL11" runat="server" />
-                                <asp:CheckBox ID="AL20" Text="AL20" runat="server" />
-                                <asp:CheckBox ID="AL40" Text="AL40" runat="server" />
-                                <asp:CheckBox ID="AL50" Text="AL50" runat="server" />
-                                <asp:CheckBox ID="CL10" Text="CL10" runat="server" />
-                                <%--<asp:CheckBox ID="CL20" Text="CL20" runat="server" />
-                                <asp:CheckBox ID="CL30" Text="CL30" runat="server" />--%>
-                                <asp:CheckBox ID="CL40" Text="CL40" runat="server" />
-                                <asp:CheckBox ID="CL70" Text="CL70" runat="server" />
-                                <asp:CheckBox ID="EL10" Text="EL10" runat="server" />
-                                <asp:CheckBox ID="EL20" Text="EL20" runat="server" />
-                                <asp:CheckBox ID="HL10" Text="HL10" runat="server" />
-                                <asp:CheckBox ID="HL30" Text="HL30" runat="server" />
-                                <asp:CheckBox ID="HL50" Text="HL50" runat="server" />
-                                <asp:CheckBox ID="NL10" Text="NL10" runat="server" />
-                                <asp:CheckBox ID="NL20" Text="NL20" runat="server" />
-
-                            </asp:Panel>
+                            <asp:CheckBoxList ID="StorageLocationCheckBoxList" runat="server" RepeatLayout="UnorderedList" CssClass="storagelist"></asp:CheckBoxList>
                         </td>
                     </tr>
-
                     <tr>
                         <th>RFQ Correspondence Editable :</th>
-                        <td>
-                            <asp:CheckBox ID="RFQCorrespondenceEditable" runat="server" /></td>
+                        <td><asp:CheckBox ID="RFQCorrespondenceEditable" runat="server" /></td>
                     </tr>
-
                     <tr>
                         <th>MMSTA Invalidation Editable :</th>
                         <td>
@@ -81,7 +60,14 @@
                             <span>(The User need to close &amp; reopen browser to reflect change)</span>
                         </td>
                     </tr>
-
+                    <tr>
+                        <th>Default CC User 1 :</th>
+                        <td><asp:DropDownList ID="DefaultCCUser1" runat="server"></asp:DropDownList></td>
+                    </tr>
+                    <tr>
+                        <th>Default CC User 2 :</th>
+                        <td><asp:DropDownList ID="DefaultCCUser2" runat="server"></asp:DropDownList></td>
+                    </tr>
 
                 </table>
                 <asp:HiddenField ID="Mode" runat="server" Value="" />

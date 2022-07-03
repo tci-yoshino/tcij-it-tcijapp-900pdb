@@ -50,6 +50,42 @@ Partial Public Class PurchaseGroupSetting
     Protected WithEvents UserID As Global.System.Web.UI.WebControls.HiddenField
     
     '''<summary>
+    '''LocationCode コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents LocationCode As Global.System.Web.UI.WebControls.HiddenField
+    
+    '''<summary>
+    '''UserName コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents UserName As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''LocationName コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents LocationName As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
+    '''RoleName コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents RoleName As Global.System.Web.UI.WebControls.Label
+    
+    '''<summary>
     '''R3PurchasingGroup コントロール。
     '''</summary>
     '''<remarks>
@@ -59,166 +95,13 @@ Partial Public Class PurchaseGroupSetting
     Protected WithEvents R3PurchasingGroup As Global.System.Web.UI.WebControls.TextBox
     
     '''<summary>
-    '''Location コントロール。
+    '''StorageLocationCheckBoxList コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents Location As Global.System.Web.UI.WebControls.TextBox
-    
-    '''<summary>
-    '''Name コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents Name As Global.System.Web.UI.WebControls.TextBox
-    
-    '''<summary>
-    '''StorageLocationIDsPanel コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents StorageLocationIDsPanel As Global.System.Web.UI.WebControls.Panel
-    
-    '''<summary>
-    '''AL10 コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents AL10 As Global.System.Web.UI.WebControls.CheckBox
-    
-    '''<summary>
-    '''AL11 コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents AL11 As Global.System.Web.UI.WebControls.CheckBox
-    
-    '''<summary>
-    '''AL20 コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents AL20 As Global.System.Web.UI.WebControls.CheckBox
-    
-    '''<summary>
-    '''AL40 コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents AL40 As Global.System.Web.UI.WebControls.CheckBox
-    
-    '''<summary>
-    '''AL50 コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents AL50 As Global.System.Web.UI.WebControls.CheckBox
-    
-    '''<summary>
-    '''CL10 コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents CL10 As Global.System.Web.UI.WebControls.CheckBox
-    
-    '''<summary>
-    '''CL40 コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents CL40 As Global.System.Web.UI.WebControls.CheckBox
-    
-    '''<summary>
-    '''CL70 コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents CL70 As Global.System.Web.UI.WebControls.CheckBox
-    
-    '''<summary>
-    '''EL10 コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents EL10 As Global.System.Web.UI.WebControls.CheckBox
-    
-    '''<summary>
-    '''EL20 コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents EL20 As Global.System.Web.UI.WebControls.CheckBox
-    
-    '''<summary>
-    '''HL10 コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents HL10 As Global.System.Web.UI.WebControls.CheckBox
-    
-    '''<summary>
-    '''HL30 コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents HL30 As Global.System.Web.UI.WebControls.CheckBox
-    
-    '''<summary>
-    '''HL50 コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents HL50 As Global.System.Web.UI.WebControls.CheckBox
-    
-    '''<summary>
-    '''NL10 コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents NL10 As Global.System.Web.UI.WebControls.CheckBox
-    
-    '''<summary>
-    '''NL20 コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents NL20 As Global.System.Web.UI.WebControls.CheckBox
+    Protected WithEvents StorageLocationCheckBoxList As Global.System.Web.UI.WebControls.CheckBoxList
     
     '''<summary>
     '''RFQCorrespondenceEditable コントロール。
@@ -237,6 +120,24 @@ Partial Public Class PurchaseGroupSetting
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
     Protected WithEvents MMSTAInvalidationEditable As Global.System.Web.UI.WebControls.CheckBox
+    
+    '''<summary>
+    '''DefaultCCUser1 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents DefaultCCUser1 As Global.System.Web.UI.WebControls.DropDownList
+    
+    '''<summary>
+    '''DefaultCCUser2 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents DefaultCCUser2 As Global.System.Web.UI.WebControls.DropDownList
     
     '''<summary>
     '''Mode コントロール。

@@ -12,7 +12,7 @@ Partial Public Class RFQCorrespondence
         If IsPostBack = False Then
             '[RFQNumberの取込]--------------------------------------------------------------------------
             If Request.QueryString("RFQNumber") <> "" Then
-                hd_RFQNumber.Value = Request.QueryString("RFQNumber")
+                RFQNumber.Value = Request.QueryString("RFQNumber")
             Else
                 EnqUser.Enabled = False
                 QuoUser.Enabled = False
@@ -35,7 +35,7 @@ Partial Public Class RFQCorrespondence
                     Using sqlCmd As SqlCommand = sqlConn.CreateCommand()
 
                         sqlCmd.CommandText = "SELECT 1 FROM v_RFQHeader WHERE isCONFIDENTIAL = 1 AND RFQNumber = @RFQNumber"
-                        sqlCmd.Parameters.AddWithValue("RFQNumber", hd_RFQNumber.Value)
+                        sqlCmd.Parameters.AddWithValue("RFQNumber", RFQNumber.Value)
                         sqlConn.Open()
                         Dim dr As SqlDataReader = sqlCmd.ExecuteReader
                         If dr.Read = True Then
@@ -65,7 +65,7 @@ Partial Public Class RFQCorrespondence
                 conn = New SqlConnection(DB_CONNECT_STRING)
                 Dim cmd As SqlCommand = conn.CreateCommand()
                 cmd.CommandText = "SELECT ProductNumber,ProductName FROM v_RFQHeader WHERE RFQNumber = @RFQNumber"
-                cmd.Parameters.AddWithValue("RFQNumber", hd_RFQNumber.Value)
+                cmd.Parameters.AddWithValue("RFQNumber", RFQNumber.Value)
                 conn.Open()
                 Dim dr As SqlDataReader = cmd.ExecuteReader
                 ProductNumber.Text = ""
@@ -104,7 +104,7 @@ Partial Public Class RFQCorrespondence
                 Using sqlCmd As SqlCommand = sqlConn.CreateCommand
                     sqlCmd.CommandText = sqlStr.ToString
                     sqlCmd.Parameters.Add("RFQNumber", SqlDbType.Int)
-                    sqlCmd.Parameters("RFQNumber").Value = hd_RFQNumber.Value
+                    sqlCmd.Parameters("RFQNumber").Value = RFQNumber.Value
 
                     Using sqlReader As SqlDataReader = sqlCmd.ExecuteReader
                         If sqlReader.Read = True Then
@@ -143,7 +143,7 @@ Partial Public Class RFQCorrespondence
                 Using sqlCmd As SqlCommand = sqlConn.CreateCommand
                     sqlCmd.CommandText = sqlStr.ToString
                     sqlCmd.Parameters.Add("RFQNumber", SqlDbType.Int)
-                    sqlCmd.Parameters("RFQNumber").Value = hd_RFQNumber.Value
+                    sqlCmd.Parameters("RFQNumber").Value = RFQNumber.Value
 
                     Using sqlReader As SqlDataReader = sqlCmd.ExecuteReader
                         If sqlReader.Read = True Then
@@ -158,78 +158,26 @@ Partial Public Class RFQCorrespondence
 
             '[QuoUserが設定されていない場合は選択できないようにする]------------------------------------
             If QuoUser.Text.ToString = "" Then QuoUser.Enabled = False : QuoLocation.Enabled = False
+
+            If EnqUser.Checked Then
+                SetDefaultCCUsers(CInt(EnqUserID.Value))
+            ElseIf QuoUser.Checked Then
+                SetDefaultCCUsers(CInt(QuoUserID.Value))
+            End If
+
         End If
 
-        '[SrcRFQHistoryにSelectCommand設定]-------------------------------------------------------------
-        SrcRFQHistory.SelectCommand = "SELECT dbo.RFQStatus.Text AS Status, dbo.RFQHistory.CreateDate AS Date, dbo.v_UserAll.Name AS Sender, '(' + dbo.s_Location.Name + ')' AS SenderLocation, v_UserAll_1.Name AS Addressee, '(' + s_Location_1.Name + ')' AS AddresseeLocation, dbo.RFQCorres.Text AS Title, REPLACE(dbo.RFQHistory.Note,Char(10),'<br>') AS Notes, dbo.RFQHistory.isChecked, dbo.RFQHistory.RcptUserID, dbo.RFQHistory.RFQHistoryNumber " & _
-                                      "FROM dbo.RFQHistory LEFT OUTER JOIN " & _
-                                      "dbo.RFQCorres ON dbo.RFQHistory.RFQCorresCode = dbo.RFQCorres.RFQCorresCode LEFT OUTER JOIN " & _
-                                      "dbo.s_Location AS s_Location_1 ON dbo.RFQHistory.RcptLocationCode = s_Location_1.LocationCode LEFT OUTER JOIN " & _
-                                      "dbo.s_Location ON dbo.RFQHistory.SendLocationCode = dbo.s_Location.LocationCode LEFT OUTER JOIN " & _
-                                      "dbo.v_UserAll AS v_UserAll_1 ON dbo.RFQHistory.RcptUserID = v_UserAll_1.UserID LEFT OUTER JOIN " & _
-                                      "dbo.v_UserAll ON dbo.RFQHistory.SendUserID = dbo.v_UserAll.UserID LEFT OUTER JOIN " & _
-                                      "dbo.RFQStatus ON dbo.RFQHistory.RFQStatusCode = dbo.RFQStatus.RFQStatusCode " & _
-                                      "WHERE (dbo.RFQHistory.RFQNumber = @RFQNumber) " & _
-                                      "ORDER BY dbo.RFQHistory.RFQHistoryNumber DESC"
+        ShowList()
 
     End Sub
 
-    Private Sub Set_isChecked(ByVal sender As Object, ByVal e As EventArgs) Handles RFQHistory.ItemDataBound
-        '[RFQHistoryの行編集]-------------------------------------------------------------------
-        Dim lb As LinkButton = DirectCast(DirectCast(DirectCast(e, ListViewItemEventArgs).Item.FindControl("Check"), System.Web.UI.Control), LinkButton)
-        Dim isChecked As HiddenField = DirectCast(DirectCast(DirectCast(e, ListViewItemEventArgs).Item.FindControl("ischecked"), System.Web.UI.Control), HiddenField)
-        Dim RcptUserID As HiddenField = DirectCast(DirectCast(DirectCast(e, ListViewItemEventArgs).Item.FindControl("RcptUserID"), System.Web.UI.Control), HiddenField)
+    Private Sub ShowList()
 
-        Dim locationCode As String = String.Empty
-        Dim editable As Boolean = False
+        Dim history As New TCIDataAccess.Join.RFQHistoryDispList
+        history.Load(CInt(RFQNumber.Value))
+        RFQHistory.DataSource = history
+        RFQHistory.DataBind()
 
-        If Not String.IsNullOrEmpty(RcptUserID.Value) Then
-
-            Dim sqlStr As New StringBuilder
-            sqlStr.AppendLine("SELECT")
-            sqlStr.AppendLine("    LocationCode")
-            sqlStr.AppendLine("    ,RFQCorrespondenceEditable")
-            sqlStr.AppendLine("FROM")
-            sqlStr.AppendLine("    v_UserAll")
-            sqlStr.AppendLine("WHERE")
-            sqlStr.AppendLine("    UserID = @UserID")
-
-            Using sqlConn As New SqlConnection(DB_CONNECT_STRING)
-                sqlConn.Open()
-
-                Using sqlCmd As SqlCommand = sqlConn.CreateCommand
-                    sqlCmd.CommandText = sqlStr.ToString
-                    sqlCmd.Parameters.Add("UserID", SqlDbType.Int)
-                    sqlCmd.Parameters("UserID").Value = RcptUserID.Value
-
-                    Using sqlReader As SqlDataReader = sqlCmd.ExecuteReader
-                        If sqlReader.Read = True Then
-                            locationCode = sqlReader("LocationCode").ToString
-                            editable = CBool(sqlReader("RFQCorrespondenceEditable"))
-                        End If
-                    End Using
-                End Using
-            End Using
-
-        End If
-
-        If isChecked.Value = "False" AndAlso RcptUserID.Value = Session("UserID") Then
-            lb.Visible = True
-        ElseIf isChecked.Value = "False" AndAlso editable = True AndAlso locationCode = Session("LocationCode") Then
-            lb.Visible = True
-        Else
-            lb.Visible = False
-        End If
-    End Sub
-
-    Private Sub UpdateChecked(ByVal sender As Object, ByVal e As EventArgs) Handles RFQHistory.ItemCommand
-        If Request.QueryString("Action") = "Check" Then
-            Dim RFQHistoryNumber As HiddenField = DirectCast(DirectCast(DirectCast(e, ListViewCommandEventArgs).Item.FindControl("RFQHistoryNumber"), System.Web.UI.Control), HiddenField)
-            SrcRFQHistory.UpdateCommand = "UPDATE RFQHistory SET isChecked=1 WHERE RFQHistoryNumber='" & RFQHistoryNumber.Value & "'"
-            SrcRFQHistory.Update()
-        Else
-            Msg.Text = Common.ERR_INVALID_PARAMETER
-        End If
     End Sub
 
     Protected Sub Send_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Send.Click
@@ -263,7 +211,7 @@ Partial Public Class RFQCorrespondence
             conn = New SqlConnection(DB_CONNECT_STRING)
             Dim cmd As SqlCommand = conn.CreateCommand()
             cmd.CommandText = "SELECT RFQStatusCode, convert(varchar,StatusChangeDate,121) as StatusChangeDate FROM dbo.RFQHistory WHERE (RFQHistoryNumber = (SELECT MAX(RFQHistoryNumber) AS MaxNo FROM dbo.RFQHistory AS RFQHistory_1 WHERE (RFQNumber = @RFQNumber)))"
-            cmd.Parameters.AddWithValue("RFQNumber", hd_RFQNumber.Value)
+            cmd.Parameters.AddWithValue("RFQNumber", RFQNumber.Value)
             conn.Open()
             Dim dr As SqlDataReader = cmd.ExecuteReader
             If dr.Read = True Then
@@ -283,25 +231,246 @@ Partial Public Class RFQCorrespondence
             st_LocationCode = QuoLocationCode.Value
         End If
 
+        Dim ccUserID1 As Integer?
+        Dim ccLocationCode1 As String = String.Empty
+        If String.IsNullOrEmpty(CCUser1.SelectedValue) = False Then
+            ccUserID1 = CInt(CCUser1.SelectedValue)
+            ccLocationCode1 = CCLocation1.SelectedValue
+        End If
+
+        Dim ccUserID2 As Integer?
+        Dim ccLocationCode2 As String = String.Empty
+        If String.IsNullOrEmpty(CCUser2.SelectedValue) = False Then
+            ccUserID2 = CInt(CCUser2.SelectedValue)
+            ccLocationCode2 = CCLocation2.SelectedValue
+        End If
+
         '[RFQHistory(を新規登録)]-----------------------------------------------------------------------
-        st_SqlStr = "INSERT INTO RFQHistory (RFQNumber,RFQStatusCode,StatusChangeDate,RFQCorresCode,Note,SendLocationCode,SendUserID,RcptLocationCode,RcptUserID,isChecked,CreatedBy,UpdatedBy) values ("
-        st_SqlStr = st_SqlStr + "'" + Trim(Str(hd_RFQNumber.Value)) + "',"
-        st_SqlStr = st_SqlStr + "'" + st_RFQStatusCode + "',"
-        st_SqlStr = st_SqlStr + "'" + StatusChangeDate + "',"
-        st_SqlStr = st_SqlStr + "'" + CorresTitle.SelectedValue + "',"
-        st_SqlStr = st_SqlStr + "@Note,"
-        st_SqlStr = st_SqlStr + "'" + Session("LocationCode") + "',"
-        st_SqlStr = st_SqlStr + Session("UserID") + ","
-        st_SqlStr = st_SqlStr + "'" + st_LocationCode + "',"
-        st_SqlStr = st_SqlStr + st_UserID + ","
-        st_SqlStr = st_SqlStr + "0,"
-        st_SqlStr = st_SqlStr + Session("UserID") + "," + Session("UserID") + ")"
-        SrcRFQHistory.InsertParameters.Add("Note", CorresNote.Text)
-        SrcRFQHistory.InsertCommand = st_SqlStr
-        SrcRFQHistory.Insert()
+        Dim addrHistory As New TCIDataAccess.RFQHistory
+        With addrHistory
+            .RFQNumber = CInt(RFQNumber.Value)
+            .RFQStatusCode = st_RFQStatusCode
+            .StatusChangeDate = Convert.ToDateTime(StatusChangeDate)
+            .RFQCorresCode = CorresTitle.SelectedValue
+            .Note = CorresNote.Text
+            .SendLocationCode = Session("LocationCode").ToString
+            .SendUserID = CInt(Session("UserID"))
+            .RcptLocationCode = st_LocationCode
+            .RcptUserID = CInt(st_UserID)
+            .isChecked = 0
+            .AddrLocationCode = st_LocationCode
+            .AddrUserID = CInt(st_UserID)
+            .CCLocationCode1 = ccLocationCode1
+            .CCUserID1 = ccUserID1
+            .CCLocationCode2 = ccLocationCode2
+            .CCUserID2 = ccUserID2
+            .CreatedBy = CInt(Session("UserID"))
+            .UpdatedBy = CInt(Session("UserID"))
+            .Save()
+        End With
+
+        If ccUserID1 IsNot Nothing Then
+            Dim cc1History As New TCIDataAccess.RFQHistory
+            With cc1History
+                .RFQNumber = CInt(RFQNumber.Value)
+                .RFQStatusCode = st_RFQStatusCode
+                .StatusChangeDate = Convert.ToDateTime(StatusChangeDate)
+                .RFQCorresCode = CorresTitle.SelectedValue
+                .Note = CorresNote.Text
+                .SendLocationCode = Session("LocationCode").ToString
+                .SendUserID = CInt(Session("UserID"))
+                .RcptLocationCode = ccLocationCode1
+                .RcptUserID = ccUserID1
+                .isChecked = 0
+                .AddrLocationCode = st_LocationCode
+                .AddrUserID = CInt(st_UserID)
+                .CCLocationCode1 = ccLocationCode1
+                .CCUserID1 = ccUserID1
+                .CCLocationCode2 = ccLocationCode2
+                .CCUserID2 = ccUserID2
+                .CreatedBy = CInt(Session("UserID"))
+                .UpdatedBy = CInt(Session("UserID"))
+                .Save()
+            End With
+        End If
+
+        If ccUserID2 IsNot Nothing Then
+            Dim cc2History As New TCIDataAccess.RFQHistory
+            With cc2History
+                .RFQNumber = CInt(RFQNumber.Value)
+                .RFQStatusCode = st_RFQStatusCode
+                .StatusChangeDate = Convert.ToDateTime(StatusChangeDate)
+                .RFQCorresCode = CorresTitle.SelectedValue
+                .Note = CorresNote.Text
+                .SendLocationCode = Session("LocationCode").ToString
+                .SendUserID = CInt(Session("UserID"))
+                .RcptLocationCode = ccLocationCode2
+                .RcptUserID = ccUserID2
+                .isChecked = 0
+                .AddrLocationCode = st_LocationCode
+                .AddrUserID = CInt(st_UserID)
+                .CCLocationCode1 = ccLocationCode1
+                .CCUserID1 = ccUserID1
+                .CCLocationCode2 = ccLocationCode2
+                .CCUserID2 = ccUserID2
+                .CreatedBy = CInt(Session("UserID"))
+                .UpdatedBy = CInt(Session("UserID"))
+                .Save()
+            End With
+        End If
 
         '[CorresNoteのClear]-----------------------------------------------------------------------------
         CorresNote.Text = ""
+
+        ShowList()
+
+    End Sub
+
+    Private Sub SetDefaultCCUsers(ByVal UserID As Integer)
+
+        Dim purchasingUser As New TCIDataAccess.Join.PurchasingUserDisp
+        purchasingUser.Load(UserID)
+
+        Dim userList As New TCIDataAccess.Join.PurchasingUserDispList
+        userList.LoadEditUsers(purchasingUser.LocationCode)
+
+        Dim cc1 As Boolean = False
+        Dim cc2 As Boolean = False
+
+        CCUser1.Items.Clear()
+        If purchasingUser.DefaultCCUserID1 IsNot Nothing Then
+
+            CCUser1.Items.Add(New ListItem())
+            For Each user As TCIDataAccess.Join.PurchasingUserDisp In userList
+                If user.UserID = purchasingUser.DefaultCCUserID1 Then
+                    cc1 = True
+                End If
+                CCUser1.Items.Add(New ListItem(user.UserName, user.UserID))
+            Next
+            If cc1 Then CCUser1.SelectedValue = purchasingUser.DefaultCCUserID1.ToString
+
+        End If
+
+        CCUser2.Items.Clear()
+        If purchasingUser.DefaultCCUserID2 IsNot Nothing Then
+
+            CCUser2.Items.Add(New ListItem())
+            For Each user As TCIDataAccess.Join.PurchasingUserDisp In userList
+                If user.UserID = purchasingUser.DefaultCCUserID2 Then
+                    cc2 = True
+                End If
+                CCUser2.Items.Add(New ListItem(user.UserName, user.UserID))
+            Next
+            If cc2 Then CCUser2.SelectedValue = purchasingUser.DefaultCCUserID2.ToString
+
+        End If
+
+        Dim locationList As New TCIDataAccess.s_LocationList
+        locationList.Load()
+
+        CCLocation1.Items.Clear()
+        CCLocation2.Items.Clear()
+
+        CCLocation1.Items.Add(New ListItem())
+        CCLocation2.Items.Add(New ListItem())
+        For Each location As TCIDataAccess.s_Location In locationList
+            CCLocation1.Items.Add(New ListItem(location.Name, location.LocationCode))
+            CCLocation2.Items.Add(New ListItem(location.Name, location.LocationCode))
+        Next
+        If cc1 Then CCLocation1.SelectedValue = purchasingUser.LocationCode
+        If cc2 Then CCLocation2.SelectedValue = purchasingUser.LocationCode
+
+    End Sub
+
+    Protected Sub CCLocation1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CCLocation1.SelectedIndexChanged
+
+        Dim locationCode As String = CCLocation1.SelectedValue
+
+        Dim userList As New TCIDataAccess.Join.PurchasingUserDispList
+        userList.LoadEditUsers(locationCode)
+
+        CCUser1.Items.Clear()
+        CCUser1.Items.Add(New ListItem())
+        For Each user As TCIDataAccess.Join.PurchasingUserDisp In userList
+            CCUser1.Items.Add(New ListItem(user.UserName, user.UserID))
+        Next
+
+    End Sub
+
+    Protected Sub CCLocation2_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CCLocation2.SelectedIndexChanged
+
+        Dim locationCode As String = CCLocation2.SelectedValue
+
+        Dim userList As New TCIDataAccess.Join.PurchasingUserDispList
+        userList.LoadEditUsers(locationCode)
+
+        CCUser2.Items.Clear()
+        CCUser2.Items.Add(New ListItem())
+        For Each user As TCIDataAccess.Join.PurchasingUserDisp In userList
+            CCUser2.Items.Add(New ListItem(user.UserName, user.UserID))
+        Next
+
+    End Sub
+
+    Protected Sub Addressee_CheckedChanged(sender As Object, e As EventArgs) Handles EnqUser.CheckedChanged, QuoUser.CheckedChanged
+
+        Dim uid As Integer = 0
+
+        If EnqUser.Checked Then
+            uid = CInt(EnqUserID.Value)
+        ElseIf QuoUser.Checked Then
+            uid = CInt(QuoUserID.Value)
+        Else
+            Exit Sub
+        End If
+
+        SetDefaultCCUsers(uid)
+
+    End Sub
+
+    Protected Sub RFQHistory_ItemDataBound(sender As Object, e As ListViewItemEventArgs) Handles RFQHistory.ItemDataBound
+
+        Dim checkLink As LinkButton = DirectCast(e.Item.FindControl("Check"), LinkButton)
+        Dim isChecked As HiddenField = DirectCast(e.Item.FindControl("isChecked"), HiddenField)
+        Dim rcptUserID As HiddenField = DirectCast(e.Item.FindControl("RcptUserID"), HiddenField)
+
+        Dim locationCode As String = String.Empty
+        Dim editable As Boolean = False
+
+        If Not String.IsNullOrEmpty(rcptUserID.Value) Then
+            Dim user As New TCIDataAccess.Join.PurchasingUserDisp
+            user.Load(CInt(rcptUserID.Value))
+
+            locationCode = user.LocationCode
+            editable = user.RFQCorrespondenceEditable
+        End If
+
+        If isChecked.Value = "False" AndAlso rcptUserID.Value = Session("UserID").ToString Then
+            checkLink.Visible = True
+        ElseIf isChecked.Value = "False" AndAlso editable = True AndAlso locationCode = Session("LocationCode") Then
+            checkLink.Visible = True
+        Else
+            checkLink.Visible = False
+        End If
+
+    End Sub
+
+    Protected Sub RFQHistory_ItemCommand(sender As Object, e As ListViewCommandEventArgs) Handles RFQHistory.ItemCommand
+
+        If Request.QueryString("Action").Equals("Check") = False Then
+            Msg.Text = Common.ERR_INVALID_PARAMETER
+            Exit Sub
+        End If
+
+        Dim historyNumber As HiddenField = DirectCast(e.Item.FindControl("RFQHistoryNumber"), HiddenField)
+
+        Dim history As New TCIDataAccess.RFQHistory
+        history.Load(CInt(historyNumber.Value))
+        history.isChecked = True
+        history.Save()
+
+        ShowList()
+
     End Sub
 
 End Class

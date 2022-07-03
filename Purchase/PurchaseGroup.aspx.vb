@@ -8,40 +8,23 @@ Imports Purchase.Common
 Partial Public Class PurchaseGroup
     Inherits CommonPage
 
-    Private Structure ExcelLineType
-        ''' <summary>Excel名</summary>
-        Public ExlName As String
-        ''' <summary>Header情報</summary>
-        Public HeaderLine As String
-        ''' <summary>Worksheet開始タグ</summary>
-        Public StartWorksheetLine As String
-        ''' <summary>Worksheet終了タグ</summary>
-        Public EndWorksheetLine As String
-        ''' <summary>Data情報</summary>
-        Public DataLine As String
-        ''' <summary>Row開始タグ</summary>
-        Public StartRowLine As String
-        ''' <summary>Row終了タグ</summary>
-        Public EndRowLine As String
-        ''' <summary>Table開始タグ</summary>
-        Public StartTableLine As String
-        ''' <summary>Table終了タグ</summary>
-        Public EndTableLine As String
-        ''' <summary>'Book終了タグ</summary>
-        Public EndWorkBookLine As String
-    End Structure
-
-    Dim str_ExcelLine As ExcelLineType
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        Dim purchaseGroupDisp As TCIDataAccess.Join.PurchaseGroupList = New TCIDataAccess.Join.PurchaseGroupList
+        'Dim purchaseGroupDisp As TCIDataAccess.Join.PurchaseGroupDispList = New TCIDataAccess.Join.PurchaseGroupDispList
 
-        dim st_LocationCode As String = Session("LocationCode").ToString
+        Dim locationCode As String = Session("LocationCode").ToString
 
         If IsPostBack = False Then
-            purchaseGroupDisp.Load(st_LocationCode)
-            UserList.DataSource = purchaseGroupDisp
-            UserList.DataBind
+            'purchaseGroupDisp.Load(locationCode)
+            'UserList.DataSource = purchaseGroupDisp
+            'UserList.DataBind()
+
+            Dim purchasingUserList As New TCIDataAccess.Join.PurchasingUserDispList
+            purchasingUserList.LoadAllUsers(locationCode)
+            UserList.DataSource = purchasingUserList
+            UserList.DataBind()
+
         End If
+
     End Sub
     Public Function GetStorageLocations(ByVal userid As String) As String
         Dim ret As String = ""
@@ -54,4 +37,20 @@ Partial Public Class PurchaseGroup
         End If
         Return ret
     End Function
+
+    Protected Sub UserList_ItemDataBound(sender As Object, e As ListViewItemEventArgs) Handles UserList.ItemDataBound
+
+        If e.Item.ItemType <> ListViewItemType.DataItem Then
+            Exit Sub
+        End If
+
+        Dim purchasingUser As TCIDataAccess.Join.PurchasingUserDisp = DirectCast(DirectCast(e.Item, ListViewDataItem).DataItem, TCIDataAccess.Join.PurchasingUserDisp)
+
+        If TypeOf e.Item.FindControl("EditLink") Is HyperLink Then
+            Dim editLink As HyperLink = DirectCast(e.Item.FindControl("EditLink"), HyperLink)
+            editLink.NavigateUrl = String.Format("~/PurchaseGroupSetting.aspx?UserID={0}", purchasingUser.UserID)
+        End If
+
+    End Sub
+
 End Class

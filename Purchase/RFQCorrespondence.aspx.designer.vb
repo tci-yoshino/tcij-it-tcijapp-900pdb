@@ -86,6 +86,42 @@ Partial Public Class RFQCorrespondence
     Protected WithEvents QuoLocation As Global.System.Web.UI.WebControls.Label
     
     '''<summary>
+    '''CCUser1 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents CCUser1 As Global.System.Web.UI.WebControls.DropDownList
+    
+    '''<summary>
+    '''CCLocation1 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents CCLocation1 As Global.System.Web.UI.WebControls.DropDownList
+    
+    '''<summary>
+    '''CCUser2 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents CCUser2 As Global.System.Web.UI.WebControls.DropDownList
+    
+    '''<summary>
+    '''CCLocation2 コントロール。
+    '''</summary>
+    '''<remarks>
+    '''自動生成されたフィールド。
+    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
+    '''</remarks>
+    Protected WithEvents CCLocation2 As Global.System.Web.UI.WebControls.DropDownList
+    
+    '''<summary>
     '''CorresTitle コントロール。
     '''</summary>
     '''<remarks>
@@ -158,20 +194,11 @@ Partial Public Class RFQCorrespondence
     Protected WithEvents RFQHistory As Global.System.Web.UI.WebControls.ListView
     
     '''<summary>
-    '''SrcRFQHistory コントロール。
+    '''RFQNumber コントロール。
     '''</summary>
     '''<remarks>
     '''自動生成されたフィールド。
     '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
     '''</remarks>
-    Protected WithEvents SrcRFQHistory As Global.System.Web.UI.WebControls.SqlDataSource
-    
-    '''<summary>
-    '''hd_RFQNumber コントロール。
-    '''</summary>
-    '''<remarks>
-    '''自動生成されたフィールド。
-    '''変更するには、フィールドの宣言をデザイナー ファイルから分離コード ファイルに移動します。
-    '''</remarks>
-    Protected WithEvents hd_RFQNumber As Global.System.Web.UI.WebControls.HiddenField
+    Protected WithEvents RFQNumber As Global.System.Web.UI.WebControls.HiddenField
 End Class

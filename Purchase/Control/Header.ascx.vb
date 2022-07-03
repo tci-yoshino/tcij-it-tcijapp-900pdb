@@ -45,6 +45,7 @@ Partial Public Class Header
         End If
 
         ' ログイン情報を表示
+        Dim userID As Integer = CInt(Session("UserID"))
         Dim userName As String = Session("UserName")
         Dim locationName As String = Session("LocationName")
         Me.UserName.Text = userName
@@ -87,6 +88,12 @@ Partial Public Class Header
         ' サブメニュー選択状態設定
         For Each item As Menu In displaySubMenuList
             item.CSS = If(item.PageName = requestPageName, "current", "")
+
+            If (item.PageName = "CCReminder") Then
+                If TCIDataAccess.Join.CCReminderDisp.IsExists(userID) = True Then
+                    item.CSS = item.CSS + " remind"
+                End If
+            End If
         Next
 
         ' データソースにセット
@@ -193,6 +200,7 @@ Partial Public Class Header
         Public Sub New()
             Me.Add(New MenuItem With {.MainMenuName = "Home", .SubMenuName = "My Tasks", .PageName = "MyTask"})
             Me.Add(New MenuItem With {.MainMenuName = "Home", .SubMenuName = "Requested Tasks", .PageName = "RequestedTask"})
+            Me.Add(New MenuItem With {.MainMenuName = "Home", .SubMenuName = "CC Reminder", .PageName = "CCReminder"})
             Me.Add(New MenuItem With {.MainMenuName = "Home", .SubMenuName = "Unassigned Tasks", .PageName = "UnassignedTask"})
             Me.Add(New MenuItem With {.MainMenuName = "Home", .SubMenuName = "JFYI", .PageName = "JFYISearch"})
             Me.Add(New MenuItem With {.MainMenuName = "Product", .SubMenuName = "", .PageName = "RFQSearchByProduct"})
@@ -270,6 +278,7 @@ Partial Public Class Header
             Me.pageList.Add(New PageItem With {.MainMenuName = "Setting", .PageName = "ProductInfoRegulation"})
             Me.pageList.Add(New PageItem With {.MainMenuName = "Product", .PageName = "HeaderEhs"})
             Me.pageList.Add(New PageItem With {.MainMenuName = "", .PageName = "MultipleList"})
+            Me.pageList.Add(New PageItem With {.MainMenuName = "Home", .PageName = "CCReminder"})
             'Me.pageList.Add(New PageItem With {.MainMenuName = "", .PageName = ""})
         End Sub
 

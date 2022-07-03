@@ -4,198 +4,133 @@ Option Strict On
 
 Imports System.Data.SqlClient
 Imports Purchase.Common
+
 Partial Public Class PurchaseGroupSetting
     Inherits CommonPage
 
     Const SAVE_ACTION As String = "Save"
-    Const EDIT_ACTION As String = "Edit"
 
+    ''' <summary>
+    ''' ページロード処理を行います
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Msg.Text = String.Empty
 
         If IsPostBack = False Then
-            Mode.Value = Common.GetHttpAction(Request)
             UserID.Value = Common.GetHttpQuery(Request, "UserID")
-            If Common.IsInteger(UserID.Value) = False Or UserID.Value.Length = 0 Then
+
+            'パラメータが整数でない場合はエラー
+            If Common.IsInteger(UserID.Value) = False Then
                 Msg.Text = Common.ERR_INVALID_PARAMETER
                 Exit Sub
             End If
 
-            Dim dc_PurchaseGroupSettingDispList As TCIDataAccess.Join.PurchaseGroupSettingDispList = New TCIDataAccess.Join.PurchaseGroupSettingDispList
-            dc_PurchaseGroupSettingDispList.Load(Cint(UserID.Value))
-
-            If dc_PurchaseGroupSettingDispList.Count <> 0  Then
-                R3PurchasingGroup.Text = dc_PurchaseGroupSettingDispList(0).R3PurchasingGroup
-                Me.Location.Text = dc_PurchaseGroupSettingDispList(0).LocationName
-                Name.Text = dc_PurchaseGroupSettingDispList(0).Name
-
-                For Each storagePUser As TCIDataAccess.StorageByPurchasingUser In dc_PurchaseGroupSettingDispList(0).StorageByPurchasingUserList
-                    If storagePUser.Storage = "AL10" Then
-                        AL10.Checked = True
-                    End If
-                    If storagePUser.Storage = "AL11" Then
-                        AL11.Checked = True
-                    End If
-                    If storagePUser.Storage = "AL20" Then
-                        AL20.Checked = True
-                    End If
-                    If storagePUser.Storage = "AL40" Then
-                        AL40.Checked = True
-                    End If
-                    If storagePUser.Storage = "AL50" Then
-                        AL50.Checked = True
-                    End If
-                    If storagePUser.Storage = "CL10" Then
-                        CL10.Checked = True
-                    End If
-                    'If storagePUser.Storage = "CL20" Then
-                    '    CL20.Checked = True
-                    'End If
-                    'If storagePUser.Storage = "CL30" Then
-                    '    CL30.Checked = True
-                    'End If
-                    If storagePUser.Storage = "CL40" Then
-                        CL40.Checked = True
-                    End If
-                    If storagePUser.Storage = "CL70" Then
-                        CL70.Checked = True
-                    End If
-                    If storagePUser.Storage = "EL10" Then
-                        EL10.Checked = True
-                    End If
-                    If storagePUser.Storage = "EL20" Then
-                        EL20.Checked = True
-                    End If
-                    If storagePUser.Storage = "HL10" Then
-                        HL10.Checked = True
-                    End If
-                    If storagePUser.Storage = "HL30" Then
-                        HL30.Checked = True
-                    End If
-                    If storagePUser.Storage = "HL50" Then
-                        HL50.Checked = True
-                    End If
-                    If storagePUser.Storage = "NL10" Then
-                        NL10.Checked = True
-                    End If
-                    If storagePUser.Storage = "NL20" Then
-                        NL20.Checked = True
-                    End If
-                Next
-            Else
-                Msg.Text = Common.MSG_NO_DATA_FOUND
+            'ログオンユーザの所属拠点と対象ユーザの所属拠点が異なる場合はエラー
+            If TCIDataAccess.Join.PurchasingUserDisp.IsActive(Session("LocationCode").ToString, CInt(UserID.Value)) = False Then
+                Msg.Text = Common.ERR_INVALID_PARAMETER
                 Exit Sub
             End If
 
-            If dc_PurchaseGroupSettingDispList(0).RFQCorrespondenceEditable = "Y" Then
-                RFQCorrespondenceEditable.Checked = True
-            End If
+            Dim uid As Integer = CInt(UserID.Value)
 
-            If dc_PurchaseGroupSettingDispList(0).MMSTAInvalidationEditable = "Y" Then
-                MMSTAInvalidationEditable.Checked = True
-            End If
+            Dim purchasingUser As New TCIDataAccess.Join.PurchasingUserDisp
+            purchasingUser.Load(uid)
+
+            LocationCode.Value = purchasingUser.LocationCode
+            LocationName.Text = purchasingUser.LocationName
+            UserName.Text = purchasingUser.UserName
+            RoleName.Text = purchasingUser.RoleName
+            R3PurchasingGroup.Text = purchasingUser.R3PurchasingGroup
+            RFQCorrespondenceEditable.Checked = purchasingUser.RFQCorrespondenceEditable
+            MMSTAInvalidationEditable.Checked = purchasingUser.MMSTAInvalidationEditable
+
+            Dim dc_StorageByPurchasingUserDispList As New TCIDataAccess.Join.StorageByPurchasingUserDispList
+            dc_StorageByPurchasingUserDispList.Load(uid)
+
+            For Each dc_StorageByPurchasingUserDisp As TCIDataAccess.Join.StorageByPurchasingUserDisp In dc_StorageByPurchasingUserDispList
+                Dim item As New ListItem
+                item.Text = dc_StorageByPurchasingUserDisp.Storage
+                item.Value = dc_StorageByPurchasingUserDisp.Storage
+                item.Selected = dc_StorageByPurchasingUserDisp.IsChecked
+                StorageLocationCheckBoxList.Items.Add(item)
+            Next
+
+            Dim dc_UserDispList As New TCIDataAccess.Join.PurchasingUserDispList
+            dc_UserDispList.LoadEditUsers(LocationCode.Value)
+
+            Dim cc1 As Boolean = False
+            Dim cc2 As Boolean = False
+
+            DefaultCCUser1.Items.Add(New ListItem())
+            DefaultCCUser2.Items.Add(New ListItem())
+            For Each dc_UserDisp As TCIDataAccess.Join.PurchasingUserDisp In dc_UserDispList
+
+                If (dc_UserDisp.UserID = purchasingUser.DefaultCCUserID1) Then
+                    cc1 = True
+                End If
+
+                If (dc_UserDisp.UserID = purchasingUser.DefaultCCUserID2) Then
+                    cc2 = True
+                End If
+
+                DefaultCCUser1.Items.Add(New ListItem(dc_UserDisp.UserName, dc_UserDisp.UserID.ToString))
+                DefaultCCUser2.Items.Add(New ListItem(dc_UserDisp.UserName, dc_UserDisp.UserID.ToString))
+            Next
+            If cc1 Then DefaultCCUser1.SelectedValue = purchasingUser.DefaultCCUserID1.ToString
+            If cc2 Then DefaultCCUser2.SelectedValue = purchasingUser.DefaultCCUserID2.ToString
 
         End If
 
     End Sub
+
+    ''' <summary>
+    ''' Save ボタンクリック時の処理を行います
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
     Protected Sub Save_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Save.Click
+
         If Common.GetHttpAction(Request) <> SAVE_ACTION Then
             Msg.Text = Common.ERR_INVALID_PARAMETER
             Exit Sub
         End If
-        If UserID.Value.Length = 0 Then
-            Msg.Text = "User ID " & Common.ERR_REQUIRED_FIELD
-            Exit Sub
-        End If
-        If Common.IsInteger(UserID.Value) = False Then
-            Msg.Text = "User ID" & Common.ERR_INVALID_NUMBER
-            Exit Sub
-        End If
-        If Common.ExistenceConfirmation("s_User", "UserID", UserID.Value) = False Then
-            Msg.Text = "User ID" & Common.ERR_DOES_NOT_EXIST
-            Exit Sub
-        End If
 
-        If Common.GetHttpQuery(Request, "Mode") = EDIT_ACTION Then
-            If Common.ExistenceConfirmation("PurchasingUser", "UserID", UserID.Value) = False Then    '[入力UserIDのPurchasingUser存在有無]
-                Msg.Text = Common.ERR_DELETED_BY_ANOTHER_USER
-                Exit Sub
-            End If
+        Dim uid As Integer = CInt(UserID.Value)
 
-            Dim st_R3PurchasingGroup As String = String.Empty
-            st_R3PurchasingGroup = R3PurchasingGroup.Text
+        Dim dc_PurchasingUser As New TCIDataAccess.PurchasingUser
+        dc_PurchasingUser.Load(uid)
+        dc_PurchasingUser.R3PurchasingGroup = R3PurchasingGroup.Text
+        dc_PurchasingUser.RFQCorrespondenceEditable = RFQCorrespondenceEditable.Checked
+        dc_PurchasingUser.MMSTAInvalidationEditable = MMSTAInvalidationEditable.Checked
 
-            Dim bl_RFQCorrespondenceEditable As Boolean = False
-            If RFQCorrespondenceEditable.Checked = True Then
-                bl_RFQCorrespondenceEditable = True
-            End If
-
-            Dim bl_MMSTAInvalidationEditable As Boolean = False
-            If MMSTAInvalidationEditable.Checked = True Then
-                bl_MMSTAInvalidationEditable = True
-            End If
-
-            Dim StorageList As List(Of String) = New List(Of String)
-            If AL10.Checked.Equals(True) Then
-                StorageList.Add(AL10.ID.ToString)
-            End If
-            If AL11.Checked = True Then
-                StorageList.Add(AL11.ID.ToString)
-            End If
-            If AL20.Checked = True Then
-                StorageList.Add(AL20.ID.ToString)
-            End If
-            If AL40.Checked = True Then
-                StorageList.Add(AL40.ID.ToString)
-            End If
-            If AL50.Checked = True Then
-                StorageList.Add(AL50.ID.ToString)
-            End If
-            If CL10.Checked = True Then
-                StorageList.Add(CL10.ID.ToString)
-            End If
-            'If CL20.Checked = True Then
-                'StorageList.Add(CL20.ID.ToString)
-            'End If
-            'If CL30.Checked = True Then
-                'StorageList.Add(CL30.ID.ToString)
-            'End If
-            If CL40.Checked = True Then
-                StorageList.Add(CL40.ID.ToString)
-            End If
-            If CL70.Checked = True Then
-                StorageList.Add(CL70.ID.ToString)
-            End If
-            If EL10.Checked = True Then
-                StorageList.Add(EL10.ID.ToString)
-            End If
-            If EL20.Checked = True Then
-                StorageList.Add(EL20.ID.ToString)
-            End If
-            If HL10.Checked = True Then
-                StorageList.Add(HL10.ID.ToString)
-            End If
-            If HL30.Checked = True Then
-                StorageList.Add(HL30.ID.ToString)
-            End If
-            If HL50.Checked = True Then
-                StorageList.Add(HL50.ID.ToString)
-            End If
-            If NL10.Checked = True Then
-                StorageList.Add(NL10.ID.ToString)
-            End If
-            If NL20.Checked = True Then
-                StorageList.Add(NL20.ID.ToString)
-            End If
-
-            '' 
-            TCIDataAccess.FacadePurchaseGroupSetting.Save(CInt(UserID.Value), CInt(Session("UserID")), st_R3PurchasingGroup,
-                                                          bl_RFQCorrespondenceEditable, bl_MMSTAInvalidationEditable, StorageList)
+        If (DefaultCCUser1.SelectedIndex = 0) Then
+            dc_PurchasingUser.DefaultCCUserID1 = Nothing
         Else
-            Msg.Text = Common.ERR_INVALID_PARAMETER
-            Exit Sub
+            dc_PurchasingUser.DefaultCCUserID1 = CInt(DefaultCCUser1.SelectedValue)
         End If
+
+        If (DefaultCCUser2.SelectedIndex = 0) Then
+            dc_PurchasingUser.DefaultCCUserID2 = Nothing
+        Else
+            dc_PurchasingUser.DefaultCCUserID2 = CInt(DefaultCCUser2.SelectedValue)
+        End If
+
+        Dim dc_StorageByPurchasingUserList As New TCIDataAccess.StorageByPurchasingUserList
+        For Each item As ListItem In StorageLocationCheckBoxList.Items
+            If item.Selected Then
+                Dim dc_StorageByPurchasingUser As New TCIDataAccess.StorageByPurchasingUser
+                dc_StorageByPurchasingUser.Storage = item.Value
+                dc_StorageByPurchasingUserList.Add(dc_StorageByPurchasingUser)
+            End If
+
+        Next
+
+        TCIDataAccess.FacadePurchaseGroupSetting.Save(uid, dc_PurchasingUser, dc_StorageByPurchasingUserList)
 
         Response.Redirect("PurchaseGroup.aspx")
+
     End Sub
+
 End Class

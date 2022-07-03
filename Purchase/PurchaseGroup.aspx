@@ -22,14 +22,16 @@
                     <LayoutTemplate>
                         <table id="itemPlaceholderContainer" runat="server" border="0" style="">
                             <tr runat="server" style="">
-                                <th runat="server" style="width:7%">Location</th>
                                 <th runat="server" style="width:15%">Account</th>
                                 <th runat="server" style="width:10%">Surname</th>
                                 <th runat="server" style="width:10%">Given Name</th>
+                                <th runat="server" style="width:7%">Role</th>
                                 <th runat="server" style="width:10%">SAP Pur. Grp</th>
                                 <th runat="server" style="width:20%">Storage Locations</th>
                                 <th runat="server" style="width:10%">RFQ Correspondence<br />Editable</th>
                                 <th runat="server" style="width:10%">MMSTA Invalidation<br />Editable</th>
+                                <th runat="server">Default CC User 1</th>
+                                <th runat="server">Default CC User 2</th>
                                 <th></th>
                             </tr>
                             <tr id="itemPlaceholder" runat="server">
@@ -41,24 +43,39 @@
                     </EmptyDataTemplate>
                     <ItemTemplate>
                         <tr>
-                            <td class="<%# iif(Eval("isDisabled")="1","disable","") %>">
-                                <asp:Label ID="LocationLabel" runat="server" Text='<%# Eval("LocationName") %>' /></td>
-                            <td class="<%# iif(Eval("isDisabled")="1","disable","") %>">
-                                <asp:Label ID="AccountNameLabel" runat="server" Text='<%# Eval("AccountName") %>' /></td>
-                            <td class="<%# iif(Eval("isDisabled")="1","disable","") %>">
-                                <asp:Label ID="SurnameLabel" runat="server" Text='<%# Eval("Surname") %>' /></td>
-                            <td class="<%# iif(Eval("isDisabled")="1","disable","") %>">
-                                <asp:Label ID="GivenNameLabel" runat="server" Text='<%# Eval("GivenName") %>' /></td>
-                            <td class="<%# iif(Eval("isDisabled")="1","disable","") %>">
-                                <asp:Label ID="R3PurchasingGroup" runat="server" Text='<%# Eval("R3PurchasingGroup") %>' /></td>
-                            <td class="<%# iif(Eval("isDisabled")="1","disable","") %>" style="white-space:normal">
-                                <asp:Label ID="Storages" runat="server" Text='<%# GetStorageLocations(Eval("UserID"))  %>' /></td>
-                            <td class="<%# iif(Eval("isDisabled")="1","disable","") %>">
-                                <asp:Label ID="RFQCorrespondenceEditable" runat="server" Text='<%# Eval("RFQCorrespondenceEditable") %>' /></td>
-                            <td class="<%# iif(Eval("isDisabled")="1","disable","") %>">
-                                <asp:Label ID="MMSTAInvalidationEditable" runat="server" Text='<%# Eval("MMSTAInvalidationEditable") %>' /></td>
-                            <td class="<%# iif(Eval("isDisabled")="1","disable","") %>">
-                                <asp:HyperLink ID="Edit" runat="server" NavigateUrl='<%# Eval("Url") %>'>Edit</asp:HyperLink></td>
+                            <td>
+                                <asp:Label ID="AccountNameLabel" runat="server" Text='<%#Eval("AccountName")%>' />
+                            </td>
+                            <td>
+                                <asp:Label ID="SurnameLabel" runat="server" Text='<%#Eval("Surname")%>' />
+                            </td>
+                            <td>
+                                <asp:Label ID="GivenNameLabel" runat="server" Text='<%#Eval("GivenName")%>' />
+                            </td>
+                            <td>
+                                <asp:Label ID="RoleLabel" runat="server" Text='<%#Eval("RoleName")%>' />
+                            </td>
+                            <td>
+                                <asp:Label ID="R3PurchasingGroup" runat="server" Text='<%#Eval("R3PurchasingGroup")%>' />
+                            </td>
+                            <td style="white-space:normal">
+                                <asp:Label ID="Storages" runat="server" Text='<%#GetStorageLocations(Eval("UserID"))%>' />
+                            </td>
+                            <td>
+                                <asp:Label ID="RFQCorrespondenceEditable" runat="server" Text='<%#IIf(Eval("RFQCorrespondenceEditable").Equals(True), "Y", "")%>' />
+                            </td>
+                            <td>
+                                <asp:Label ID="MMSTAInvalidationEditable" runat="server" Text='<%#IIf(Eval("MMSTAInvalidationEditable").Equals(True), "Y", "")%>' />
+                            </td>
+                            <td>
+                                <asp:Label ID="DefaultCCUserName1" runat="server" Text='<%#Eval("DefaultCCUserName1")%>'></asp:Label>
+                            </td>
+                            <td>
+                                <asp:Label ID="DefaultCCUserName2" runat="server" Text='<%#Eval("DefaultCCUserName2")%>'></asp:Label>
+                            </td>
+                            <td>
+                                <asp:HyperLink ID="EditLink" runat="server">Edit</asp:HyperLink>
+                            </td>
                         </tr>
                     </ItemTemplate>
                 </asp:ListView>

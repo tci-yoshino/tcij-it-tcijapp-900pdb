@@ -26,14 +26,16 @@ Namespace TCIDataAccess
         Protected _RoleCode As String = String.Empty
         Protected _PrivilegeLevel As String = String.Empty
         Protected _R3PurchasingGroup As String = String.Empty
+        Protected _RFQCorrespondenceEditable As Boolean = False
+        Protected _MMSTAInvalidationEditable As Boolean = False
+        Protected _DefaultCCUserID1 As Integer? = Nothing
+        Protected _DefaultCCUserID2 As Integer? = Nothing
         Protected _isAdmin As Boolean = False
         Protected _isDisabled As Boolean = False
         Protected _CreatedBy As Integer = 0
         Protected _CreateDate As DateTime = New DateTime(0)
         Protected _UpdatedBy As Integer = 0
         Protected _UpdateDate As DateTime = New DateTime(0)
-        Protected _RFQCorrespondenceEditable As Boolean = False
-        Protected _MMSTAInvalidationEditable As Boolean = False
 
         ''' <summary> 
         ''' UserID を設定、または取得する 
@@ -80,6 +82,64 @@ Namespace TCIDataAccess
             End Get
             Set(ByVal value As String)
                 _R3PurchasingGroup = value
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' RFQCorrespondenceEditable を設定、または取得する 
+        ''' </summary> 
+        Public Property RFQCorrespondenceEditable() As Boolean
+            Get
+                Return _RFQCorrespondenceEditable
+            End Get
+            Set(ByVal value As Boolean)
+                _RFQCorrespondenceEditable = value
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' MMSTAInvalidationEditable を設定、または取得する 
+        ''' </summary> 
+        Public Property MMSTAInvalidationEditable() As Boolean
+            Get
+                Return _MMSTAInvalidationEditable
+            End Get
+            Set(ByVal value As Boolean)
+                _MMSTAInvalidationEditable = value
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' DefaultCCUserID1 を設定、または取得する 
+        ''' <para>
+        ''' ※ Integer 変数へ格納する場合は以下のようにすること。
+        '''     Dim val As Integer = IIf(DefaultCCUserID1.HasValue, DefaultCCUserID1, 0)
+        '''     Dim val As Integer = DefaultCCUserID1.GetValueOrDefault() 
+        ''' </para>
+        ''' </summary> 
+        Public Property DefaultCCUserID1() As Integer?
+            Get
+                Return _DefaultCCUserID1
+            End Get
+            Set(ByVal value As Integer?)
+                _DefaultCCUserID1 = value
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' DefaultCCUserID2 を設定、または取得する 
+        ''' <para>
+        ''' ※ Integer 変数へ格納する場合は以下のようにすること。
+        '''     Dim val As Integer = IIf(DefaultCCUserID2.HasValue, DefaultCCUserID2, 0)
+        '''     Dim val As Integer = DefaultCCUserID2.GetValueOrDefault() 
+        ''' </para>
+        ''' </summary> 
+        Public Property DefaultCCUserID2() As Integer?
+            Get
+                Return _DefaultCCUserID2
+            End Get
+            Set(ByVal value As Integer?)
+                _DefaultCCUserID2 = value
             End Set
         End Property
 
@@ -156,30 +216,6 @@ Namespace TCIDataAccess
         End Property
 
         ''' <summary> 
-        ''' RFQCorrespondenceEditable を設定、または取得する 
-        ''' </summary> 
-        Public Property RFQCorrespondenceEditable() As Boolean
-            Get
-                Return _RFQCorrespondenceEditable
-            End Get
-            Set(ByVal value As Boolean)
-                _RFQCorrespondenceEditable = value
-            End Set
-        End Property
-
-        ''' <summary> 
-        ''' MMSTAInvalidationEditable を設定、または取得する 
-        ''' </summary> 
-        Public Property MMSTAInvalidationEditable() As Boolean
-            Get
-                Return _MMSTAInvalidationEditable
-            End Get
-            Set(ByVal value As Boolean)
-                _MMSTAInvalidationEditable = value
-            End Set
-        End Property
-
-        ''' <summary> 
         ''' コンストラクタ
         ''' </summary> 
         Public Sub New()
@@ -199,14 +235,16 @@ Namespace TCIDataAccess
             Value.AppendLine("    [RoleCode],")
             Value.AppendLine("    [PrivilegeLevel],")
             Value.AppendLine("    [R3PurchasingGroup],")
+            Value.AppendLine("    [RFQCorrespondenceEditable],")
+            Value.AppendLine("    [MMSTAInvalidationEditable],")
+            Value.AppendLine("    [DefaultCCUserID1],")
+            Value.AppendLine("    [DefaultCCUserID2],")
             Value.AppendLine("    [isAdmin],")
             Value.AppendLine("    [isDisabled],")
             Value.AppendLine("    [CreatedBy],")
             Value.AppendLine("    [CreateDate],")
             Value.AppendLine("    [UpdatedBy],")
-            Value.AppendLine("    [UpdateDate],")
-            Value.AppendLine("    [RFQCorrespondenceEditable],")
-            Value.AppendLine("    [MMSTAInvalidationEditable]")
+            Value.AppendLine("    [UpdateDate]")
             Value.AppendLine("FROM")
             Value.AppendLine("    [PurchasingUser]")
             Value.AppendLine("WHERE")
@@ -223,14 +261,16 @@ Namespace TCIDataAccess
                         SetProperty(DBReader("RoleCode"), _RoleCode)
                         SetProperty(DBReader("PrivilegeLevel"), _PrivilegeLevel)
                         SetProperty(DBReader("R3PurchasingGroup"), _R3PurchasingGroup)
+                        SetProperty(DBReader("RFQCorrespondenceEditable"), _RFQCorrespondenceEditable)
+                        SetProperty(DBReader("MMSTAInvalidationEditable"), _MMSTAInvalidationEditable)
+                        SetProperty(DBReader("DefaultCCUserID1"), _DefaultCCUserID1)
+                        SetProperty(DBReader("DefaultCCUserID2"), _DefaultCCUserID2)
                         SetProperty(DBReader("isAdmin"), _isAdmin)
                         SetProperty(DBReader("isDisabled"), _isDisabled)
                         SetProperty(DBReader("CreatedBy"), _CreatedBy)
                         SetProperty(DBReader("CreateDate"), _CreateDate)
                         SetProperty(DBReader("UpdatedBy"), _UpdatedBy)
                         SetProperty(DBReader("UpdateDate"), _UpdateDate)
-                        SetProperty(DBReader("RFQCorrespondenceEditable"), _RFQCorrespondenceEditable)
-                        SetProperty(DBReader("MMSTAInvalidationEditable"), _MMSTAInvalidationEditable)
                     End While
                     DBReader.Close()
                 End Using
@@ -268,12 +308,14 @@ Namespace TCIDataAccess
             DBCommand.Parameters.AddWithValue("RoleCode", _RoleCode)
             DBCommand.Parameters.AddWithValue("PrivilegeLevel", _PrivilegeLevel)
             DBCommand.Parameters.AddWithValue("R3PurchasingGroup", ConvertEmptyStringToNull(_R3PurchasingGroup))
+            DBCommand.Parameters.AddWithValue("RFQCorrespondenceEditable", _RFQCorrespondenceEditable)
+            DBCommand.Parameters.AddWithValue("MMSTAInvalidationEditable", _MMSTAInvalidationEditable)
+            DBCommand.Parameters.AddWithValue("DefaultCCUserID1", ConvertNothingToNull(_DefaultCCUserID1))
+            DBCommand.Parameters.AddWithValue("DefaultCCUserID2", ConvertNothingToNull(_DefaultCCUserID2))
             DBCommand.Parameters.AddWithValue("isAdmin", _isAdmin)
             DBCommand.Parameters.AddWithValue("isDisabled", _isDisabled)
             DBCommand.Parameters.AddWithValue("CreatedBy", _CreatedBy)
             DBCommand.Parameters.AddWithValue("UpdatedBy", _UpdatedBy)
-            DBCommand.Parameters.AddWithValue("RFQCorrespondenceEditable", _RFQCorrespondenceEditable)
-            DBCommand.Parameters.AddWithValue("MMSTAInvalidationEditable", _MMSTAInvalidationEditable)
             Dim ob_ID As Object = DBCommand.ExecuteScalar()
             If Not IsDBNull(ob_ID) Then
                 i_ID = CInt(ob_ID)
@@ -302,28 +344,32 @@ Namespace TCIDataAccess
             Value.AppendLine("            [RoleCode],")
             Value.AppendLine("            [PrivilegeLevel],")
             Value.AppendLine("            [R3PurchasingGroup],")
+            Value.AppendLine("            [RFQCorrespondenceEditable],")
+            Value.AppendLine("            [MMSTAInvalidationEditable],")
+            Value.AppendLine("            [DefaultCCUserID1],")
+            Value.AppendLine("            [DefaultCCUserID2],")
             Value.AppendLine("            [isAdmin],")
             Value.AppendLine("            [isDisabled],")
             Value.AppendLine("            [CreatedBy],")
             Value.AppendLine("            [CreateDate],")
             Value.AppendLine("            [UpdatedBy],")
-            Value.AppendLine("            [UpdateDate],")
-            Value.AppendLine("            [RFQCorrespondenceEditable],")
-            Value.AppendLine("            [MMSTAInvalidationEditable]")
+            Value.AppendLine("            [UpdateDate]")
             Value.AppendLine("        )")
             Value.AppendLine("        Values(")
             Value.AppendLine("            @UserID,")
             Value.AppendLine("            @RoleCode,")
             Value.AppendLine("            @PrivilegeLevel,")
             Value.AppendLine("            @R3PurchasingGroup,")
+            Value.AppendLine("            @RFQCorrespondenceEditable,")
+            Value.AppendLine("            @MMSTAInvalidationEditable,")
+            Value.AppendLine("            @DefaultCCUserID1,")
+            Value.AppendLine("            @DefaultCCUserID2,")
             Value.AppendLine("            @isAdmin,")
             Value.AppendLine("            @isDisabled,")
             Value.AppendLine("            @CreatedBy,")
             Value.AppendLine("            GETDATE(),")
             Value.AppendLine("            @UpdatedBy,")
-            Value.AppendLine("            GETDATE(),")
-            Value.AppendLine("            @RFQCorrespondenceEditable,")
-            Value.AppendLine("            @MMSTAInvalidationEditable")
+            Value.AppendLine("            GETDATE()")
             Value.AppendLine("        )")
             Value.AppendLine("    ELSE")
             Value.AppendLine("        UPDATE")
@@ -333,12 +379,14 @@ Namespace TCIDataAccess
             Value.AppendLine("            [RoleCode] = @RoleCode,")
             Value.AppendLine("            [PrivilegeLevel] = @PrivilegeLevel,")
             Value.AppendLine("            [R3PurchasingGroup] = @R3PurchasingGroup,")
+            Value.AppendLine("            [RFQCorrespondenceEditable] = @RFQCorrespondenceEditable,")
+            Value.AppendLine("            [MMSTAInvalidationEditable] = @MMSTAInvalidationEditable,")
+            Value.AppendLine("            [DefaultCCUserID1] = @DefaultCCUserID1,")
+            Value.AppendLine("            [DefaultCCUserID2] = @DefaultCCUserID2,")
             Value.AppendLine("            [isAdmin] = @isAdmin,")
             Value.AppendLine("            [isDisabled] = @isDisabled,")
             Value.AppendLine("            [UpdatedBy] = @UpdatedBy,")
-            Value.AppendLine("            [UpdateDate] = GETDATE(),")
-            Value.AppendLine("            [RFQCorrespondenceEditable] = @RFQCorrespondenceEditable,")
-            Value.AppendLine("            [MMSTAInvalidationEditable] = @MMSTAInvalidationEditable")
+            Value.AppendLine("            [UpdateDate] = GETDATE()")
             Value.AppendLine("        WHERE ")
             Value.AppendLine("            [UserID] = @UserID")
             Value.AppendLine(";")

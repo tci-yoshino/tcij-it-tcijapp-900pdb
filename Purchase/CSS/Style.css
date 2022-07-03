@@ -177,6 +177,12 @@ pre {
     font-weight: bold;
 }
 
+#subNavi a.remind {
+    background: url("/Purchase/Image/Exclamation.png") no-repeat;
+    margin: 3px;
+    padding: 3px 0 3px 25px;
+}
+
 /* HeaderEhs Rules */
 #ehs ul li
 {
@@ -648,4 +654,15 @@ div.purpose table td{
     border: 1px solid #000;
     outline: 1px solid #000;
     border-radius: 0;
+}
+
+ul.storagelist {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul.storagelist>li {
+    float: left;
+    padding: 0 3px 0 0;
 }

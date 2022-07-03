@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\ExcelForm.xml" />
+    <Content Include="CCReminder.aspx" />
     <Content Include="Class\JME.jar" />
     <Content Include="Control\Header.ascx" />
     <Content Include="Control\HeaderEhs.ascx" />
@@ -110,6 +111,7 @@
     <Content Include="Global.asax" />
     <Content Include="Image\Arrow.gif" />
     <Content Include="Image\Check.gif" />
+    <Content Include="Image\Exclamation.png" />
     <Content Include="Image\Logo.gif" />
     <Content Include="Image\NoImage.gif" />
     <Content Include="Image\Search.gif" />
@@ -232,6 +234,13 @@
     <Content Include="UserSelect.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CCReminder.aspx.designer.vb">
+      <DependentUpon>CCReminder.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CCReminder.aspx.vb">
+      <DependentUpon>CCReminder.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
     <Compile Include="Common.vb" />
     <Compile Include="CommonPage.vb">
       <SubType>ASPXCodeBehind</SubType>
@@ -579,31 +588,34 @@
     <Compile Include="TCIDataAccess\FacadePurchaseGroupSetting.vb" />
     <Compile Include="TCIDataAccess\FacadeRFQIssue.vb" />
     <Compile Include="TCIDataAccess\FacadeSupplierListByProduct.vb" />
+    <Compile Include="TCIDataAccess\Join\CCReminderDisp.vb" />
     <Compile Include="TCIDataAccess\Join\EhsHeader_Personalize_Sort.vb" />
     <Compile Include="TCIDataAccess\Join\Export_ProductListSupplier.vb" />
     <Compile Include="TCIDataAccess\Join\HeaderEhsDisp.vb" />
     <Compile Include="TCIDataAccess\Join\ProductInfoRegulationDisp.vb" />
     <Compile Include="TCIDataAccess\Join\ProductSearchByKeywordDisp.vb" />
     <Compile Include="TCIDataAccess\Join\ProductSearchDisp.vb" />
-    <Compile Include="TCIDataAccess\Join\PurchaseGroupDisp.vb" />
-    <Compile Include="TCIDataAccess\Join\PurchaseGroupSettingDisp.vb" />
     <Compile Include="TCIDataAccess\Join\RFQHeader.vb" />
     <Compile Include="TCIDataAccess\Join\MytaskDisp.vb" />
     <Compile Include="TCIDataAccess\Join\ProductListBySupplierDisp.vb" />
     <Compile Include="TCIDataAccess\Join\RequestedTaskDisp.vb" />
+    <Compile Include="TCIDataAccess\Join\RFQHistoryDisp.vb" />
     <Compile Include="TCIDataAccess\Join\RFQIssueDisp.vb" />
     <Compile Include="TCIDataAccess\Join\RFQListByProductDisp.vb" />
+    <Compile Include="TCIDataAccess\Join\StorageByPurchasingUserDisp.vb" />
     <Compile Include="TCIDataAccess\Join\StructureSearchDisp.vb" />
     <Compile Include="TCIDataAccess\Join\SupplierListByProductDisp.vb" />
     <Compile Include="TCIDataAccess\Join\ExcelReportBase.vb" />
     <Compile Include="TCIDataAccess\Join\Export_RFQSearch.vb" />
     <Compile Include="TCIDataAccess\Join\RFQLine.vb" />
+    <Compile Include="TCIDataAccess\Join\PurchasingUserDisp.vb" />
     <Compile Include="TCIDataAccess\Join\v_UserAll.vb" />
     <Compile Include="TCIDataAccess\Join\v_Country.vb" />
     <Compile Include="TCIDataAccess\Product.vb" />
     <Compile Include="TCIDataAccess\PurchasingUser.vb" />
     <Compile Include="TCIDataAccess\Purpose.vb" />
     <Compile Include="TCIDataAccess\RFQHeader.vb" />
+    <Compile Include="TCIDataAccess\RFQHistory.vb" />
     <Compile Include="TCIDataAccess\RFQLine.vb" />
     <Compile Include="TCIDataAccess\RFQStatus.vb" />
     <Compile Include="TCIDataAccess\StorageByPurchasingUser.vb" />
