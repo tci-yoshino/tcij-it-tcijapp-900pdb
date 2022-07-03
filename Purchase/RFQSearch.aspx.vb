@@ -73,8 +73,9 @@ Public Class RFQSearch
 
     'EnqStorageLocationの値設定
     Protected Sub EnqUserID_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles EnqUserID.SelectedIndexChanged
-        Dim StorageByPurchasingUserList As TCIDataAccess.StorageByPurchasingUserList = New TCIDataAccess.StorageByPurchasingUserList
-        StorageByPurchasingUserList.SetStorageDropDownList(EnqStorageLocation,ConvertStringToInt(EnqUserID.SelectedValue))
+
+        Common.SetStorageDropDownList(EnqStorageLocation, Convert.ToInt32(EnqUserID.SelectedValue))
+
     End Sub
 
     'QuoUserIDの値設定
@@ -85,8 +86,9 @@ Public Class RFQSearch
 
     'QuoStorageLocationの値設定
     Protected Sub QuoUserID_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles QuoUserID.SelectedIndexChanged
-        Dim StorageByPurchasingUserList As TCIDataAccess.StorageByPurchasingUserList = New TCIDataAccess.StorageByPurchasingUserList
-        StorageByPurchasingUserList.SetStorageDropDownList(QuoStorageLocation,ConvertStringToInt(QuoUserID.SelectedValue))
+
+        Common.SetStorageDropDownList(QuoStorageLocation, Convert.ToInt32(QuoUserID.SelectedValue))
+
     End Sub
 
     Protected Sub Search_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Search.Click

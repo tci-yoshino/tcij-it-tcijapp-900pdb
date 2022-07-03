@@ -986,6 +986,24 @@ Public Class Common
     End Sub
 
     ''' <summary>
+    ''' Storageドロップダウンリスト設定
+    ''' </summary>
+    ''' <param name="Combo">ドロップダウンリスト</param>
+    ''' <param name="UserID">UserID</param>
+    ''' <remarks></remarks>
+    Public Shared Sub SetStorageDropDownList(ByVal Combo As System.Web.UI.WebControls.ListControl, ByVal UserID As Integer)
+        Combo.Items.Clear()
+        Dim storageList As New TCIDataAccess.StorageByPurchasingUserList
+        storageList.Load(UserID)
+
+        Combo.Items.Add(New ListItem(String.Empty, String.Empty))
+
+        For Each StorageByPurchasingUser As StorageByPurchasingUser In storageList
+            Combo.Items.Add(New ListItem(StorageByPurchasingUser.Storage, StorageByPurchasingUser.Storage))
+        Next
+    End Sub
+
+    ''' <summary>
     ''' 指定された製品が極秘品か否かを判定する
     ''' </summary>
     ''' <param name="key">ProductID または ProductNumber</param>
