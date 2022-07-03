@@ -33,15 +33,15 @@ window.onload = function() {
             
                 <table>
 					<tr>
-						<th>Supplier Code : </th>
+						<th>Supplier/Maker Code : </th>
 						<td><asp:TextBox ID="SupplierCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox></td>
 					</tr>
 					<tr>
-						<th>SAP Supplier Code : </th>
+						<th>SAP Supplier/Maker Code : </th>
 						<td><asp:TextBox ID="R3SupplierCode" runat="server" Width="7em" MaxLength="10"></asp:TextBox></td>
 					</tr>
 					<tr>
-						<th>Supplier Name : </th>
+						<th>Supplier/Maker Name : </th>
 						<td><asp:TextBox ID="SupplierName" runat="server" Width="21em" MaxLength="255"></asp:TextBox> (Partial text match)</td>
 					</tr>
                     <tr>

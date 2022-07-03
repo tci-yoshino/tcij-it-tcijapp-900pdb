@@ -89,12 +89,12 @@
                 return false;
             }
             function SupplierCodeBtn_onclick(Postback) {
-                openMultipleListWindow("SupplierCode", "Supplier Code", document.SearchForm.SupplierCode.value)
+                openMultipleListWindow("SupplierCode", "Supplier/Maker Code", document.SearchForm.SupplierCode.value)
 
                 return false;
             }
             function S4SupplierCodeBtn_onclick(Postback) {
-                openMultipleListWindow("S4SupplierCode", "SAP Supplier Code", document.SearchForm.S4SupplierCode.value)
+                openMultipleListWindow("S4SupplierCode", "SAP Supplier/Maker Code", document.SearchForm.S4SupplierCode.value)
 
                 return false;
             }
@@ -213,7 +213,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>Supplier Code : </th>
+                            <th>Supplier/Maker Code : </th>
                             <td>
                                 <%-- (SupplierCodeの桁数 10 + パイプライン区切り 1) * SupplierCodeの入力可能数 100 = 1100 --%>
                                 <asp:TextBox ID="SupplierCode" class="MultipleTarget" runat="server" Width="10em" MaxLength="1100"></asp:TextBox>
@@ -221,7 +221,7 @@
                             </td>
                         </tr>
                         <tr id ="SAPSupplier_line" style="visibility: collapse;">
-                            <th>SAP Supplier Code : </th>
+                            <th>SAP Supplier/Maker Code : </th>
                             <td>
                                 <%-- (S4SupplierCodeの桁数 10 + パイプライン区切り 1) * S4SupplierCodeの入力可能数 100 = 1100 --%>
                                 <asp:TextBox ID="S4SupplierCode" class="MultipleTarget" runat="server" Width="10em" MaxLength="1100"></asp:TextBox>
@@ -229,14 +229,14 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>Supplier Name : </th>
+                            <th>Supplier/Maker Name : </th>
                             <td>
                                 <asp:TextBox ID="SupplierName" runat="server" Width="10em" MaxLength="255"></asp:TextBox>
                                 <span id ="SupplierNameNotes">(Partial text match)</span>
                             </td>
                         </tr>
                         <tr id ="SupplierCountry_line" style="visibility: collapse;">
-                            <th>Supplier Country : </th>
+                            <th>Supplier/Maker Country : </th>
                             <td>
                                 <asp:DropDownList ID="SupplierCountryCode" runat="server">
                                     <asp:ListItem></asp:ListItem>
