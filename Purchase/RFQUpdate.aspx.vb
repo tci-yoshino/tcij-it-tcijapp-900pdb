@@ -612,7 +612,7 @@ Partial Public Class RFQUpdate
             SupplierContactPersonCodeList.SelectedValue = da_vRFQHeader.SupplierContactPersonSel
 
             If CBool(da_vRFQHeader.isCONFIDENTIAL) Then
-                SDS_RFQUpdate_EnqUser.SelectCommand = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') " _
+                SDS_RFQUpdate_EnqUser.SelectCommand = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode IN ('WRITE', 'WRITE_AA') and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') " _
                                              & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1}) ORDER BY [Name]" _
                                              , EnqLocationCode.Value, da_vRFQHeader.EnqUserID.ToString)
             Else
@@ -666,7 +666,7 @@ Partial Public Class RFQUpdate
             End If
 
             If CBool(da_vRFQHeader.isCONFIDENTIAL.ToString) Then
-                SDS_RFQUpdate_QuoUser.SelectCommand = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') " _
+                SDS_RFQUpdate_QuoUser.SelectCommand = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode IN ('WRITE', 'WRITE_AA') and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') " _
                                              & "UNION SELECT UserID, [Name] FROM v_UserAll WHERE (UserID = {1}) ORDER BY [Name]" _
                                              , QuoLocationCode.Value, da_vRFQHeader.QuoUserID.GetValueOrDefault.ToString)
             Else
@@ -1301,7 +1301,7 @@ Partial Public Class RFQUpdate
                 sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
                                              , EnqLocation.SelectedValue)
             Else
-                sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
+                sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode IN ('WRITE', 'WRITE_AA') and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
                                                  , EnqLocation.SelectedValue)
             End If
             dt = GetDataTable(sql)
@@ -1343,7 +1343,7 @@ Partial Public Class RFQUpdate
                 sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
                                              , EnqLocation.SelectedValue)
             Else
-                sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
+                sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode IN ('WRITE', 'WRITE_AA') and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
                                                  , EnqLocation.SelectedValue)
             End If
             dt = GetDataTable(sql)
@@ -2171,7 +2171,7 @@ Partial Public Class RFQUpdate
                 sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
                                              , QuoLocation.SelectedValue)
             Else
-                sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
+                sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode IN ('WRITE', 'WRITE_AA') and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
                                                  , QuoLocation.SelectedValue)
             End If
             dt = GetDataTable(sql)
@@ -2214,7 +2214,7 @@ Partial Public Class RFQUpdate
                 sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
                                              , QuoLocation.SelectedValue)
             Else
-                sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
+                sql = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode IN ('WRITE', 'WRITE_AA') and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
                                                  , QuoLocation.SelectedValue)
             End If
             dt = GetDataTable(sql)

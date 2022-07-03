@@ -772,7 +772,7 @@ Partial Public Class RFQIssue
         EnqUser.Items.Add(String.Empty)
 
         If IsConfidentialItem(ProductNumber.Text) Then
-            SDS_RFQIssue_Enq_U.SelectCommand = "SELECT [UserID], [Name] FROM [v_User] WHERE [LocationCode] = @LocationCode AND isDisabled = 0 AND [RoleCode] = 'WRITE' and  [R3PurchasingGroup] is not null and [R3PurchasingGroup] <>'' ORDER BY [Name]"
+            SDS_RFQIssue_Enq_U.SelectCommand = "SELECT [UserID], [Name] FROM [v_User] WHERE [LocationCode] = @LocationCode AND isDisabled = 0 AND [RoleCode] IN ('WRITE', 'WRITE_AA') and  [R3PurchasingGroup] is not null and [R3PurchasingGroup] <>'' ORDER BY [Name]"
         Else
             SDS_RFQIssue_Enq_U.SelectCommand = "SELECT [UserID], [Name] FROM [v_User] WHERE [LocationCode] = @LocationCode AND isDisabled = 0 and [R3PurchasingGroup] is not null and [R3PurchasingGroup] <>'' ORDER BY [Name]"
         End If
@@ -792,7 +792,7 @@ Partial Public Class RFQIssue
         QuoUser.Items.Add(String.Empty)
 
         If IsConfidentialItem(ProductNumber.Text) Then
-            SDS_RFQIssue_Que_U.SelectCommand = "SELECT [UserID], [Name] FROM [v_User] WHERE [LocationCode] = @LocationCode AND [isDisabled] = 0 AND [RoleCode] = 'WRITE' and [R3PurchasingGroup] is not null and [R3PurchasingGroup] <>'' ORDER BY [Name]"
+            SDS_RFQIssue_Que_U.SelectCommand = "SELECT [UserID], [Name] FROM [v_User] WHERE [LocationCode] = @LocationCode AND [isDisabled] = 0 AND [RoleCode] IN ('WRITE', 'WRITE_AA') and [R3PurchasingGroup] is not null and [R3PurchasingGroup] <>'' ORDER BY [Name]"
         Else
             SDS_RFQIssue_Que_U.SelectCommand = "SELECT [UserID], [Name] FROM [v_User] WHERE [LocationCode] = @LocationCode AND [isDisabled] = 0 and [R3PurchasingGroup] is not null and [R3PurchasingGroup] <>'' ORDER BY [Name]"
         End If
