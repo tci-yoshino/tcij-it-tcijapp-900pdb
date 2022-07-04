@@ -136,8 +136,10 @@
                                     <th style="width:10%">Note</th>
                                     <th id ="ValidQuotationHeader" class="sortField" style="width:10%">Valid Quotation</th>
                                     <th id ="UpdateDateHeader" class="sortField" style="width:10%">Update Date</th>
-                                    <th style="width:5%">Edit</th>
-                                    <th style="width:5%">Delete</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th style="width:5%"></th>
+                                    <th style="width:5%"></th>
                                 </tr>
                                 <tr ID="itemPlaceholder" runat="server">
                                 </tr>
@@ -158,6 +160,8 @@
                                 <td><asp:Label ID="Note" runat="server" Text='<%# Eval("Note") %>' /></td>
                                 <td><asp:Label ID="ValidQuotation" runat="server" Text='<%# Eval("ValidQuotation") %>' /></td>
                                 <td><asp:Label ID="UpdateDate" runat="server" Text='<%# Purchase.Common.GetLocalTime(Session("LocationCode"), Eval("UpdateDate"), True, False)%>' /></td>
+                                <td style="white-space:nowrap"><asp:HyperLink ID="RFQLink" runat="server" NavigateUrl='<%#Eval("SupplierCode", "./RFQListBySupplier.aspx?SupplierCode={0}")%>' Target="_blank">RFQ List</asp:HyperLink></td>
+                                <td style="white-space:nowrap"><asp:HyperLink ID="ProductLink" runat="server" NavigateUrl='<%#Eval("SupplierCode", "./ProductListBySupplier.aspx?Supplier={0}")%>' Target="_blank">Product List</asp:HyperLink></td>
                                 <td><asp:HyperLink ID="Edit" runat="server" NavigateUrl='<%# Eval("Url") %>'>Edit</asp:HyperLink></td>
                                 <td><asp:HyperLink ID="Delete" runat="server" NavigateUrl='<%# "javascript:deleteLine(" & Eval("SupplierCode") & ");" %>'>Delete</asp:HyperLink></td>
                             </tr>
