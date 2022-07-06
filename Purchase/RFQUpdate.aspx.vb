@@ -640,6 +640,8 @@ Partial Public Class RFQUpdate
                 Dim enqTmpDt As DataTable
                 enqTmpDt = GetDataTable(String.Format("SELECT Storage FROM StorageLocation where Storage in(select Storage from StorageByPurchasingUser where UserId=" + da_vRFQHeader.EnqUserID.ToString + ") and Storage='" + da_vRFQHeader.EnqStorageLocation.ToString + "'  ORDER BY Storage"))
                 If enqTmpDt.Rows.Count > 0 Then
+                    StorageLocation.Items.Clear()
+                    StorageLocation.Items.Add(New ListItem())
                     StorageLocation.DataBind()
                     StorageLocation.SelectedValue = da_vRFQHeader.EnqStorageLocation.ToString
                 End If
@@ -654,6 +656,8 @@ Partial Public Class RFQUpdate
                 Dim quoTmpDt As DataTable
                 quoTmpDt = GetDataTable(String.Format("SELECT Storage FROM StorageLocation where Storage in(select Storage from StorageByPurchasingUser where UserId=" + da_vRFQHeader.QuoUserID.GetValueOrDefault.ToString + ") and Storage='" + da_vRFQHeader.QuoStorageLocation.ToString + "'  ORDER BY Storage"))
                 If quoTmpDt.Rows.Count > 0 Then
+                    StorageLocation2.Items.Clear()
+                    StorageLocation2.Items.Add(New ListItem())
                     StorageLocation2.DataBind()
                     StorageLocation2.SelectedValue = da_vRFQHeader.QuoStorageLocation.ToString
                 End If
