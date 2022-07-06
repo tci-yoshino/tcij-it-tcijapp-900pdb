@@ -20,6 +20,8 @@ Namespace TCIDataAccess
 
 #Region "User-Defined Constant"
 
+        Public Const CORRES_NOTE_FOR_SELF As String = "NS"
+
 #End Region 'User-Defined Constant End
 
         Protected _RFQHistoryNumber As Integer = 0

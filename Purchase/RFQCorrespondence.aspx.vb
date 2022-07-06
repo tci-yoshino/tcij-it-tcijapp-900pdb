@@ -233,16 +233,19 @@ Partial Public Class RFQCorrespondence
 
         Dim ccUserID1 As Integer?
         Dim ccLocationCode1 As String = String.Empty
-        If String.IsNullOrEmpty(CCUser1.SelectedValue) = False Then
-            ccUserID1 = CInt(CCUser1.SelectedValue)
-            ccLocationCode1 = CCLocation1.SelectedValue
-        End If
-
         Dim ccUserID2 As Integer?
         Dim ccLocationCode2 As String = String.Empty
-        If String.IsNullOrEmpty(CCUser2.SelectedValue) = False Then
-            ccUserID2 = CInt(CCUser2.SelectedValue)
-            ccLocationCode2 = CCLocation2.SelectedValue
+
+        If Not CorresTitle.SelectedValue.Equals(TCIDataAccess.RFQHistory.CORRES_NOTE_FOR_SELF) Then
+            If String.IsNullOrEmpty(CCUser1.SelectedValue) = False Then
+                ccUserID1 = CInt(CCUser1.SelectedValue)
+                ccLocationCode1 = CCLocation1.SelectedValue
+            End If
+
+            If String.IsNullOrEmpty(CCUser2.SelectedValue) = False Then
+                ccUserID2 = CInt(CCUser2.SelectedValue)
+                ccLocationCode2 = CCLocation2.SelectedValue
+            End If
         End If
 
         '[RFQHistory(を新規登録)]-----------------------------------------------------------------------
