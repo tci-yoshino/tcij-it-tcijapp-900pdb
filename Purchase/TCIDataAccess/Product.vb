@@ -563,14 +563,13 @@ Namespace TCIDataAccess
 
             '権限ロールに従い極秘品を除外する
             If Common.CheckSessionRole(st_RoleCode) = False Then
-                sb_SQL.AppendLine("  And ")
-                sb_SQL.AppendLine("Not EXISTS (")
+                sb_SQL.AppendLine("AND NOT EXISTS (")
                 sb_SQL.AppendLine("    SELECT 1")
                 sb_SQL.AppendLine("    FROM")
                 sb_SQL.AppendLine("      [v_CONFIDENTIAL] As C")
                 sb_SQL.AppendLine("    WHERE")
                 sb_SQL.AppendLine("      C.[isCONFIDENTIAL] = 1 AND ")
-                sb_SQL.AppendLine("      C.[ProductID] = T.[ProductID]")
+                sb_SQL.AppendLine("      C.[ProductID] = P.[ProductID]")
                 sb_SQL.AppendLine(")")
             End If
 
