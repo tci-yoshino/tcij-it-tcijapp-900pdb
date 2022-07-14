@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="./CSS/Style.css" type="text/css" media="screen,print" />
     <script type="text/javascript" src="./JS/Common.js"></script>
     <script type="text/javascript" src="./JS/Colorful.js"></script>
-    <!--
     <script type="text/javascript">
+    <!--
 
     window.onload = function() {
         colorful.set();
@@ -30,8 +30,8 @@
        window.close();
     }
 
-    </script>
     -->
+    </script>
 </head>
 <body>
 	<!-- Main Content Area -->
