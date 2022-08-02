@@ -77,6 +77,17 @@ Namespace TCIDataAccess
         Protected _ECSC As String = String.Empty
         Protected _CC As String = String.Empty
         Protected _IPL As String = String.Empty
+        Protected _HS_I As String = String.Empty
+        Protected _FIREG As String = String.Empty
+        Protected _FIRESG As String = String.Empty
+        Protected _FIRECLASS As String = String.Empty
+        Protected _FIRESYU As String = String.Empty
+        Protected _AVOID As String = String.Empty
+        Protected _UNPG As String = String.Empty
+        Protected _CA_MAXNET As String = String.Empty
+        Protected _CA_PI As String = String.Empty
+        Protected _PA1_MAXNET As String = String.Empty
+        Protected _PA1_PI As String = String.Empty
 
         ''' <summary> 
         ''' MATNR を設定、または取得する 
@@ -787,6 +798,138 @@ Namespace TCIDataAccess
         End Property
 
         ''' <summary> 
+        ''' HS_I を設定、または取得する 
+        ''' </summary> 
+        Public Property HS_I() As String
+            Get
+                Return _HS_I
+            End Get
+            Set(ByVal value As String)
+                _HS_I = value
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' FIREG を設定、または取得する 
+        ''' </summary> 
+        Public Property FIREG() As String
+            Get
+                Return _FIREG
+            End Get
+            Set(ByVal value As String)
+                _FIREG = value
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' FIRESG を設定、または取得する 
+        ''' </summary> 
+        Public Property FIRESG() As String
+            Get
+                Return _FIRESG
+            End Get
+            Set(ByVal value As String)
+                _FIRESG = value
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' FIRECLASS を設定、または取得する 
+        ''' </summary> 
+        Public Property FIRECLASS() As String
+            Get
+                Return _FIRECLASS
+            End Get
+            Set(ByVal value As String)
+                _FIRECLASS = value
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' FIRESYU を設定、または取得する 
+        ''' </summary> 
+        Public Property FIRESYU() As String
+            Get
+                Return _FIRESYU
+            End Get
+            Set(ByVal value As String)
+                _FIRESYU = value
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' AVOID を設定、または取得する 
+        ''' </summary> 
+        Public Property AVOID() As String
+            Get
+                Return _AVOID
+            End Get
+            Set(ByVal value As String)
+                _AVOID = value
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' UNPG を設定、または取得する 
+        ''' </summary> 
+        Public Property UNPG() As String
+            Get
+                Return _UNPG
+            End Get
+            Set(ByVal value As String)
+                _UNPG = value
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' CA_MAXNET を設定、または取得する 
+        ''' </summary> 
+        Public Property CA_MAXNET() As String
+            Get
+                Return _CA_MAXNET
+            End Get
+            Set(ByVal value As String)
+                _CA_MAXNET = value
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' CA_PI を設定、または取得する 
+        ''' </summary> 
+        Public Property CA_PI() As String
+            Get
+                Return _CA_PI
+            End Get
+            Set(ByVal value As String)
+                _CA_PI = value
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' PA1_MAXNET を設定、または取得する 
+        ''' </summary> 
+        Public Property PA1_MAXNET() As String
+            Get
+                Return _PA1_MAXNET
+            End Get
+            Set(ByVal value As String)
+                _PA1_MAXNET = value
+            End Set
+        End Property
+
+        ''' <summary> 
+        ''' PA1_PI を設定、または取得する 
+        ''' </summary> 
+        Public Property PA1_PI() As String
+            Get
+                Return _PA1_PI
+            End Get
+            Set(ByVal value As String)
+                _PA1_PI = value
+            End Set
+        End Property
+
+        ''' <summary> 
         ''' コンストラクタ
         ''' </summary> 
         Public Sub New()
@@ -859,7 +1002,18 @@ Namespace TCIDataAccess
             Value.AppendLine("    [EXPORT],")
             Value.AppendLine("    [ECSC],")
             Value.AppendLine("    [CC],")
-            Value.AppendLine("    [IPL]")
+            Value.AppendLine("    [IPL],")
+            Value.AppendLine("    [HS_I],")
+            Value.AppendLine("    [FIREG],")
+            Value.AppendLine("    [FIRESG],")
+            Value.AppendLine("    [FIRECLASS],")
+            Value.AppendLine("    [FIRESYU],")
+            Value.AppendLine("    [AVOID],")
+            Value.AppendLine("    [UNPG],")
+            Value.AppendLine("    [CA_MAXNET],")
+            Value.AppendLine("    [CA_PI],")
+            Value.AppendLine("    [PA1_MAXNET],")
+            Value.AppendLine("    [PA1_PI]")
             Value.AppendLine("FROM")
             Value.AppendLine("    [s_SPECS]")
 
@@ -928,6 +1082,17 @@ Namespace TCIDataAccess
                         SetProperty(DBReader("ECSC"), _ECSC)
                         SetProperty(DBReader("CC"), _CC)
                         SetProperty(DBReader("IPL"), _IPL)
+                        SetProperty(DBReader("HS_I"), _HS_I)
+                        SetProperty(DBReader("FIREG"), _FIREG)
+                        SetProperty(DBReader("FIRESG"), _FIRESG)
+                        SetProperty(DBReader("FIRECLASS"), _FIRECLASS)
+                        SetProperty(DBReader("FIRESYU"), _FIRESYU)
+                        SetProperty(DBReader("AVOID"), _AVOID)
+                        SetProperty(DBReader("UNPG"), _UNPG)
+                        SetProperty(DBReader("CA_MAXNET"), _CA_MAXNET)
+                        SetProperty(DBReader("CA_PI"), _CA_PI)
+                        SetProperty(DBReader("PA1_MAXNET"), _PA1_MAXNET)
+                        SetProperty(DBReader("PA1_PI"), _PA1_PI)
                     End While
                     DBReader.Close()
                 End Using
@@ -1000,7 +1165,18 @@ Namespace TCIDataAccess
             Value.AppendLine("    [EXPORT],")
             Value.AppendLine("    [ECSC],")
             Value.AppendLine("    [CC],")
-            Value.AppendLine("    [IPL]")
+            Value.AppendLine("    [IPL],")
+            Value.AppendLine("    [HS_I],")
+            Value.AppendLine("    [FIREG],")
+            Value.AppendLine("    [FIRESG],")
+            Value.AppendLine("    [FIRECLASS],")
+            Value.AppendLine("    [FIRESYU],")
+            Value.AppendLine("    [AVOID],")
+            Value.AppendLine("    [UNPG],")
+            Value.AppendLine("    [CA_MAXNET],")
+            Value.AppendLine("    [CA_PI],")
+            Value.AppendLine("    [PA1_MAXNET],")
+            Value.AppendLine("    [PA1_PI]")
             Value.AppendLine("FROM")
             Value.AppendLine("    [s_SPECS]")
             Value.AppendLine("WHERE")
@@ -1073,6 +1249,17 @@ Namespace TCIDataAccess
                         SetProperty(DBReader("ECSC"), _ECSC)
                         SetProperty(DBReader("CC"), _CC)
                         SetProperty(DBReader("IPL"), _IPL)
+                        SetProperty(DBReader("HS_I"), _HS_I)
+                        SetProperty(DBReader("FIREG"), _FIREG)
+                        SetProperty(DBReader("FIRESG"), _FIRESG)
+                        SetProperty(DBReader("FIRECLASS"), _FIRECLASS)
+                        SetProperty(DBReader("FIRESYU"), _FIRESYU)
+                        SetProperty(DBReader("AVOID"), _AVOID)
+                        SetProperty(DBReader("UNPG"), _UNPG)
+                        SetProperty(DBReader("CA_MAXNET"), _CA_MAXNET)
+                        SetProperty(DBReader("CA_PI"), _CA_PI)
+                        SetProperty(DBReader("PA1_MAXNET"), _PA1_MAXNET)
+                        SetProperty(DBReader("PA1_PI"), _PA1_PI)
                     End While
                     DBReader.Close()
                 End Using

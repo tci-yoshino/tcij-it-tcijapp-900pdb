@@ -342,6 +342,39 @@ Public Class HeaderEhs
         ElseIf ehsHeader.Item.Equals("UNSUB") Then
             EhsItem = New EhsItem(ehsHeader.Text, s_SPECS.UNSUB)
             Me.EhsItemList.Add(EhsItem)
+        ElseIf ehsHeader.Item.Equals("HS_I") Then
+            EhsItem = New EhsItem(ehsHeader.Text, s_SPECS.HS_I)
+            Me.EhsItemList.Add(EhsItem)
+        ElseIf ehsHeader.Item.Equals("FIREG") Then
+            EhsItem = New EhsItem(ehsHeader.Text, s_SPECS.FIREG)
+            Me.EhsItemList.Add(EhsItem)
+        ElseIf ehsHeader.Item.Equals("FIRESG") Then
+            EhsItem = New EhsItem(ehsHeader.Text, s_SPECS.FIRESG)
+            Me.EhsItemList.Add(EhsItem)
+        ElseIf ehsHeader.Item.Equals("FIRECLASS") Then
+            EhsItem = New EhsItem(ehsHeader.Text, s_SPECS.FIRECLASS)
+            Me.EhsItemList.Add(EhsItem)
+        ElseIf ehsHeader.Item.Equals("FIRESYU") Then
+            EhsItem = New EhsItem(ehsHeader.Text, s_SPECS.FIRESYU)
+            Me.EhsItemList.Add(EhsItem)
+        ElseIf ehsHeader.Item.Equals("AVOID") Then
+            EhsItem = New EhsItem(ehsHeader.Text, s_SPECS.AVOID)
+            Me.EhsItemList.Add(EhsItem)
+        ElseIf ehsHeader.Item.Equals("UNPG") Then
+            EhsItem = New EhsItem(ehsHeader.Text, s_SPECS.UNPG)
+            Me.EhsItemList.Add(EhsItem)
+        ElseIf ehsHeader.Item.Equals("CA_MAXNET") Then
+            EhsItem = New EhsItem(ehsHeader.Text, s_SPECS.CA_MAXNET)
+            Me.EhsItemList.Add(EhsItem)
+        ElseIf ehsHeader.Item.Equals("CA_PI") Then
+            EhsItem = New EhsItem(ehsHeader.Text, s_SPECS.CA_PI)
+            Me.EhsItemList.Add(EhsItem)
+        ElseIf ehsHeader.Item.Equals("PA1_MAXNET") Then
+            EhsItem = New EhsItem(ehsHeader.Text, s_SPECS.PA1_MAXNET)
+            Me.EhsItemList.Add(EhsItem)
+        ElseIf ehsHeader.Item.Equals("PA1_PI") Then
+            EhsItem = New EhsItem(ehsHeader.Text, s_SPECS.PA1_PI)
+            Me.EhsItemList.Add(EhsItem)
         End If
 
     End Sub
