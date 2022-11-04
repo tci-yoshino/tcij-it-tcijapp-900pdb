@@ -8,13 +8,13 @@
   DTS:DTSID="{19D05BC8-92A0-47B5-B85E-BAD0746F3CA5}"
   DTS:EnableConfig="True"
   DTS:ExecutableType="Microsoft.Package"
-  DTS:LastModifiedProductVersion="15.0.1100.123"
+  DTS:LastModifiedProductVersion="15.0.2000.170"
   DTS:LocaleID="1041"
   DTS:ObjectName="ProductImport"
   DTS:PackageType="5"
   DTS:ProtectionLevel="0"
-  DTS:VersionBuild="350"
-  DTS:VersionGUID="{D48645D2-ADEF-4658-BACB-F24F5BC7996E}">
+  DTS:VersionBuild="351"
+  DTS:VersionGUID="{657BE525-3995-4AA1-9745-5286AB23FFC5}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -25,7 +25,7 @@
       DTS:ObjectName="ADO.Purchase">
       <DTS:ObjectData>
         <DTS:ConnectionManager
-          DTS:ConnectionString="Data Source=TDB2QAS;User ID=Purchase;Initial Catalog=Purchase;Persist Security Info=True;">
+          DTS:ConnectionString="Data Source=&quot;(local)&quot;;User ID=Purchase;Initial Catalog=Purchase;Persist Security Info=True;">
           <DTS:Password
             DTS:Name="Password"
             Sensitive="1"></DTS:Password>
@@ -288,6 +288,134 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyVersion("1.0.0.0")> 
 <Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
           <ProjectItem
+            Name="ScriptMain.vb"
+            Encoding="UTF8"><![CDATA[#Region "Imports"
+Imports MailKit
+Imports MimeKit
+Imports System.Text.RegularExpressions
+#End Region
+
+'ScriptMain is the entry point class of the script.  Do not change the name, attributes,
+'or parent of this class.
+<Microsoft.SqlServer.Dts.Tasks.ScriptTask.SSISScriptTaskEntryPointAttribute()> _
+<System.CLSCompliantAttribute(False)> _
+Partial Public Class ScriptMain
+    Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
+
+    'This method is called when this script task executes in the control flow.
+    'Before returning from this method, set the value of Dts.TaskResult to indicate success or failure.
+    'To open Help, press F1.
+
+    Private Const MAIL_SUBJECT As String = "[Purchase] 製品インポートでエラーが発生しました"
+
+    Private smtpEndPoint As String = String.Empty
+    Private smtpPort As Integer = 0
+    Private smtpUserName As String = String.Empty
+    Private smtpPassword As String = String.Empty
+    Private mailFrom As String = String.Empty
+    Private errorMessage As String = String.Empty
+
+    ''' <summary>
+    ''' メイン処理を行います。
+    ''' </summary>
+    Public Sub Main()
+
+        Dts.TaskResult = ScriptResults.Success
+
+        smtpEndPoint = Dts.Variables("SMTPEndPoint").Value.ToString
+        smtpPort = Convert.ToInt32(Dts.Variables("SMTPPort").Value)
+        smtpUserName = Dts.Variables("SMTPUserName").Value.ToString
+        smtpPassword = Dts.Variables("SMTPPassword").Value.ToString
+        mailFrom = Dts.Variables("MailFrom").Value.ToString
+        errorMessage = Dts.Variables("Comment").Value.ToString
+
+        Dim mailTo() As String = Regex.Split(Dts.Variables("MailTo").Value.ToString, ",|;")
+
+        Try
+            'メールを送信する
+            SendMailSync(mailTo)
+
+        Catch ex As Exception
+            Dts.TaskResult = ScriptResults.Failure
+
+        End Try
+
+    End Sub
+
+    ''' <summary>
+    ''' メールを送信します。(同期バージョン)
+    ''' </summary>
+    Private Sub SendMailSync(ByVal mailTo() As String)
+
+        Dim addressList As New InternetAddressList
+        For Each address As String In mailTo
+            addressList.Add(New MailboxAddress(address, address))
+        Next
+
+        Dim mailMsg As New MimeMessage
+        mailMsg.From.Add(New MailboxAddress(mailFrom, mailFrom))
+        mailMsg.To.AddRange(addressList)
+        mailMsg.Subject = MAIL_SUBJECT
+        mailMsg.Priority = MessagePriority.Urgent
+
+        Dim bodyText As New TextPart(Text.TextFormat.Plain) With {
+            .Text = errorMessage
+        }
+        mailMsg.Body = bodyText
+
+        Using client As Net.Smtp.SmtpClient = New Net.Smtp.SmtpClient()
+            client.Connect(smtpEndPoint, smtpPort)
+            client.Authenticate(smtpUserName, smtpPassword)
+            client.Send(mailMsg)
+            client.Disconnect(True)
+        End Using
+
+    End Sub
+
+    ''' <summary>
+    ''' メールを送信します。(非同期バージョン・サーバ環境で動作しないため未使用)
+    ''' </summary>
+    Async Sub SendMailAsync(ByVal mailTo() As String)
+
+        Dim addressList As New InternetAddressList
+        For Each address As String In mailTo
+            addressList.Add(New MailboxAddress(address, address))
+        Next
+
+        Dim mailMsg As New MimeMessage
+        mailMsg.From.Add(New MailboxAddress(mailFrom, mailFrom))
+        mailMsg.To.AddRange(addressList)
+        mailMsg.Subject = MAIL_SUBJECT
+        mailMsg.Priority = MessagePriority.Urgent
+
+        Dim bodyText As New TextPart(Text.TextFormat.Plain) With {
+            .Text = errorMessage
+        }
+        mailMsg.Body = bodyText
+
+        Using client As Net.Smtp.SmtpClient = New Net.Smtp.SmtpClient()
+            Await client.ConnectAsync(smtpEndPoint, smtpPort,)
+            Await client.AuthenticateAsync(smtpUserName, smtpPassword)
+            Await client.SendAsync(mailMsg)
+            Await client.DisconnectAsync(True)
+        End Using
+
+    End Sub
+
+#Region "ScriptResults declaration"
+    'This enum provides a convenient shorthand within the scope of this class for setting the
+    'result of the script.
+
+    'This code was generated automatically.
+    Enum ScriptResults
+        Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
+        Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
+    End Enum
+
+#End Region
+
+End Class]]></ProjectItem>
+          <ProjectItem
             Name="My Project\Settings.settings"
             Encoding="UTF8"><![CDATA[<?xml version='1.0' encoding='iso-8859-1'?>
 <SettingsFile xmlns="uri:settings" CurrentProfile="(Default)" GeneratedClassNamespace="$safeprojectname" GeneratedClassName="MySettings">
@@ -296,26 +424,6 @@ Imports System.Runtime.InteropServices
   </Profiles>
   <Settings />
 </SettingsFile>]]></ProjectItem>
-          <ProjectItem
-            Name="Project"
-            Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="UTF-16" standalone="yes"?>
-<c:Project xmlns:c="http://schemas.microsoft.com/codeprojectml/2010/08/main" xmlns:msb="http://schemas.microsoft.com/developer/msbuild/2003" runtimeVersion="3.0" schemaVersion="1.0">
-	<msb:PropertyGroup>
-		<msb:CodeName>ST_7590ca41ec28413083832092a8466a62</msb:CodeName>
-		<msb:Language>msBuild</msb:Language>
-		<msb:DisplayName>ST_7590ca41ec28413083832092a8466a62</msb:DisplayName>
-		<msb:ProjectId>{9A2BBAC0-5D9F-48BE-9CB2-12AF57629FEA}</msb:ProjectId>
-	</msb:PropertyGroup>
-	<msb:ItemGroup>
-		<msb:Project Include="ST_7590ca41ec28413083832092a8466a62.vbproj"/>
-		<msb:File Include="My Project\AssemblyInfo.vb"/>
-		<msb:File Include="My Project\Resources.resx"/>
-		<msb:File Include="ScriptMain.vb"/>
-		<msb:File Include="My Project\Resources.Designer.vb"/>
-		<msb:File Include="My Project\Settings.settings"/>
-		<msb:File Include="My Project\Settings.Designer.vb"/>
-	</msb:ItemGroup>
-</c:Project>]]></ProjectItem>
           <ProjectItem
             Name="My Project\Settings.Designer.vb"
             Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
@@ -465,133 +573,25 @@ End Class]]></ProjectItem>
   </ProjectExtensions>
 </Project>]]></ProjectItem>
           <ProjectItem
-            Name="ScriptMain.vb"
-            Encoding="UTF8"><![CDATA[#Region "Imports"
-Imports MailKit
-Imports MimeKit
-Imports System.Text.RegularExpressions
-#End Region
-
-'ScriptMain is the entry point class of the script.  Do not change the name, attributes,
-'or parent of this class.
-<Microsoft.SqlServer.Dts.Tasks.ScriptTask.SSISScriptTaskEntryPointAttribute()> _
-<System.CLSCompliantAttribute(False)> _
-Partial Public Class ScriptMain
-    Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
-
-    'This method is called when this script task executes in the control flow.
-    'Before returning from this method, set the value of Dts.TaskResult to indicate success or failure.
-    'To open Help, press F1.
-
-    Private Const MAIL_SUBJECT As String = "[Purchase] 製品インポートでエラーが発生しました"
-
-    Private smtpEndPoint As String = String.Empty
-    Private smtpPort As Integer = 0
-    Private smtpUserName As String = String.Empty
-    Private smtpPassword As String = String.Empty
-    Private mailFrom As String = String.Empty
-    Private errorMessage As String = String.Empty
-
-    ''' <summary>
-    ''' メイン処理を行います。
-    ''' </summary>
-    Public Sub Main()
-
-        Dts.TaskResult = ScriptResults.Success
-
-        smtpEndPoint = Dts.Variables("SMTPEndPoint").Value.ToString
-        smtpPort = Convert.ToInt32(Dts.Variables("SMTPPort").Value)
-        smtpUserName = Dts.Variables("SMTPUserName").Value.ToString
-        smtpPassword = Dts.Variables("SMTPPassword").Value.ToString
-        mailFrom = Dts.Variables("MailFrom").Value.ToString
-        errorMessage = Dts.Variables("Comment").Value.ToString
-
-        Dim mailTo() As String = Regex.Split(Dts.Variables("MailTo").Value.ToString, ",|;")
-
-        Try
-            'メールを送信する
-            SendMailSync(mailTo)
-
-        Catch ex As Exception
-            Dts.TaskResult = ScriptResults.Failure
-
-        End Try
-
-    End Sub
-
-    ''' <summary>
-    ''' メールを送信します。(同期バージョン)
-    ''' </summary>
-    Private Sub SendMailSync(ByVal mailTo() As String)
-
-        Dim addressList As New InternetAddressList
-        For Each address As String In mailTo
-            addressList.Add(New MailboxAddress(address, address))
-        Next
-
-        Dim mailMsg As New MimeMessage
-        mailMsg.From.Add(New MailboxAddress(mailFrom, mailFrom))
-        mailMsg.To.AddRange(addressList)
-        mailMsg.Subject = MAIL_SUBJECT
-        mailMsg.Priority = MessagePriority.Urgent
-
-        Dim bodyText As New TextPart(Text.TextFormat.Plain) With {
-            .Text = errorMessage
-        }
-        mailMsg.Body = bodyText
-
-        Using client As Net.Smtp.SmtpClient = New Net.Smtp.SmtpClient()
-            client.Connect(smtpEndPoint, smtpPort)
-            client.Authenticate(smtpUserName, smtpPassword)
-            client.Send(mailMsg)
-            client.Disconnect(True)
-        End Using
-
-    End Sub
-
-    ''' <summary>
-    ''' メールを送信します。(非同期バージョン・サーバ環境で動作しないため未使用)
-    ''' </summary>
-    Async Sub SendMailAsync(ByVal mailTo() As String)
-
-        Dim addressList As New InternetAddressList
-        For Each address As String In mailTo
-            addressList.Add(New MailboxAddress(address, address))
-        Next
-
-        Dim mailMsg As New MimeMessage
-        mailMsg.From.Add(New MailboxAddress(mailFrom, mailFrom))
-        mailMsg.To.AddRange(addressList)
-        mailMsg.Subject = MAIL_SUBJECT
-        mailMsg.Priority = MessagePriority.Urgent
-
-        Dim bodyText As New TextPart(Text.TextFormat.Plain) With {
-            .Text = errorMessage
-        }
-        mailMsg.Body = bodyText
-
-        Using client As Net.Smtp.SmtpClient = New Net.Smtp.SmtpClient()
-            Await client.ConnectAsync(smtpEndPoint, smtpPort,)
-            Await client.AuthenticateAsync(smtpUserName, smtpPassword)
-            Await client.SendAsync(mailMsg)
-            Await client.DisconnectAsync(True)
-        End Using
-
-    End Sub
-
-#Region "ScriptResults declaration"
-    'This enum provides a convenient shorthand within the scope of this class for setting the
-    'result of the script.
-
-    'This code was generated automatically.
-    Enum ScriptResults
-        Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
-        Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
-    End Enum
-
-#End Region
-
-End Class]]></ProjectItem>
+            Name="Project"
+            Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="UTF-16" standalone="yes"?>
+<c:Project xmlns:c="http://schemas.microsoft.com/codeprojectml/2010/08/main" xmlns:msb="http://schemas.microsoft.com/developer/msbuild/2003" runtimeVersion="3.0" schemaVersion="1.0">
+	<msb:PropertyGroup>
+		<msb:CodeName>ST_7590ca41ec28413083832092a8466a62</msb:CodeName>
+		<msb:Language>msBuild</msb:Language>
+		<msb:DisplayName>ST_7590ca41ec28413083832092a8466a62</msb:DisplayName>
+		<msb:ProjectId>{9A2BBAC0-5D9F-48BE-9CB2-12AF57629FEA}</msb:ProjectId>
+	</msb:PropertyGroup>
+	<msb:ItemGroup>
+		<msb:Project Include="ST_7590ca41ec28413083832092a8466a62.vbproj"/>
+		<msb:File Include="My Project\AssemblyInfo.vb"/>
+		<msb:File Include="My Project\Resources.resx"/>
+		<msb:File Include="ScriptMain.vb"/>
+		<msb:File Include="My Project\Resources.Designer.vb"/>
+		<msb:File Include="My Project\Settings.settings"/>
+		<msb:File Include="My Project\Settings.Designer.vb"/>
+	</msb:ItemGroup>
+</c:Project>]]></ProjectItem>
           <ProjectItem
             Name="My Project\Resources.resx"
             Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
@@ -1030,7 +1030,168 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</BinaryItem>
           Language="VisualBasic"
           ReadWriteVariables="Comment,Start_Time,Dir_File,Dir_Temp,File_New_Product,Err_Flag">
           <ProjectItem
-            Name="\my project\settings.settings"
+            Name="ScriptMain.vb"
+            Encoding="UTF8"><![CDATA[' Microsoft SQL Server Integration Services Script Task
+' Write scripts using Microsoft Visual Basic
+' The ScriptMain class is the entry point of the Script Task.
+
+Imports System
+Imports System.Xml
+Imports System.Data
+Imports System.Math
+Imports Microsoft.SqlServer.Dts.Runtime
+Imports System.Data.SqlClient
+Imports System.Text.RegularExpressions
+
+<Microsoft.SqlServer.Dts.Tasks.ScriptTask.SSISScriptTaskEntryPointAttribute> _
+<System.CLSCompliantAttribute(False)> _
+Partial Public Class ScriptMain
+	Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
+
+	Enum ScriptResults
+		Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
+		Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
+	End Enum
+
+    Public Sub Main()
+
+        ' データベース接続設定
+        Dim st_tmp_table As String = "TmpNewProduct"
+
+        ' 変数設定
+        Dim st_dir_temp As String = Dts.Variables("Dir_Temp").Value.ToString   ' 作業ディレクトリ
+        Dim st_file_name As String = Dts.Variables("File_New_Product").Value.ToString   ' ファイル名
+        Dim stb_error_comments As New Text.StringBuilder() ' DB エラーメッセージ格納用
+        Dim stb_comments As New Text.StringBuilder() ' その他処理コメント格納用
+
+        ' 作業ディレクトリにコピーしたデータファイルを読込む
+        Try
+            Using reader As New FileIO.TextFieldParser(st_dir_temp & st_file_name), _
+                  connection As SqlConnection = DirectCast(Dts.Connections("ADO.Purchase").AcquireConnection(Dts.Transaction), SqlConnection)
+
+                ' データファイルデリミタ指定
+                reader.TextFieldType = FileIO.FieldType.Delimited
+                reader.SetDelimiters(vbTab)
+
+                ' DB選択、作業テーブルのデータ消去
+                Dim command As New SqlCommand("TRUNCATE TABLE " & st_tmp_table, connection)
+                command.ExecuteNonQuery()
+
+                ' SQLパラメータ設定
+                Dim sqlp_ProductNumber As SqlParameter = command.Parameters.Add("ProductNumber", SqlDbType.VarChar)
+                Dim sqlp_NewProductRegNumber As SqlParameter = command.Parameters.Add("NewProductRegNumber", SqlDbType.VarChar)
+                Dim sqlp_ProductName As SqlParameter = command.Parameters.Add("ProductName", SqlDbType.NVarChar)
+                Dim sqlp_CASNumber As SqlParameter = command.Parameters.Add("CASNumber", SqlDbType.VarChar)
+                Dim sqlp_Status As SqlParameter = command.Parameters.Add("Status", SqlDbType.NVarChar)
+                Dim sqlp_ProposalDept As SqlParameter = command.Parameters.Add("ProposalDept", SqlDbType.NVarChar)
+                Dim sqlp_ProcumentDept As SqlParameter = command.Parameters.Add("ProcumentDept", SqlDbType.NVarChar)
+                Dim sqlp_PD As SqlParameter = command.Parameters.Add("PD", SqlDbType.NVarChar)
+                Dim sqlp_MolecularFormula As SqlParameter = command.Parameters.Add("MolecularFormula", SqlDbType.VarChar)
+
+                ' データファイルを一行ずつ読み込み、作業テーブルに挿入していく
+                Dim row As String()
+                Dim i As Integer
+                Dim i_LineCount As Integer = 0 ' ループ数を格納.行番号として使用。
+                Dim st_err_line_number As String
+                Dim st_err_line_data As String
+                Dim utf8 As System.Text.Encoding = System.Text.Encoding.GetEncoding("UTF-8")
+                Dim ucs2 As System.Text.Encoding = System.Text.Encoding.GetEncoding("UCS-2")
+
+                While Not reader.EndOfData
+                    Try
+                        ' 一行読込む
+                        row = reader.ReadFields()
+
+                        ' 行番号インクリメント
+                        i_LineCount += 1
+
+                        For i = 0 To UBound(row)
+                            If Not String.IsNullOrEmpty(row(i)) Then
+                                row(i) = ucs2.GetString(System.Text.Encoding.Convert(utf8, ucs2, utf8.GetBytes(row(i))))
+                            End If
+                        Next i
+
+                        st_err_line_number = i_LineCount & " 行目の"
+                        st_err_line_data = row(0) & vbTab & row(1) & vbTab & row(3) & vbCrLf
+
+                        ' バリデート
+                        ' 製品コード
+                        If Not row(0) = "$" Then
+                            If Not Regex.IsMatch(row(0), "^[A-Z][0-9][0-9][0-9][0-9]") Then
+                                stb_comments.Append(st_err_line_number & " 製品コード が不正です: " & st_err_line_data)
+                                Dts.Variables("Err_Flag").Value = True
+                                Continue While
+                            End If
+                        End If
+
+                        ' 新製品登録番号
+                        If Not row(1) = "$" Then
+                            If Not Regex.IsMatch(row(1), "^[A-Z]{1,2}[0-9]{9}$") Then
+                                stb_comments.Append(st_err_line_number & " 新製品登録番号 が不正です: " & st_err_line_data)
+                                Dts.Variables("Err_Flag").Value = True
+                                Continue While
+                            End If
+                        End If
+
+                        ' CASナンバー
+                        If Not String.IsNullOrEmpty(row(3)) Then
+                            If Not Regex.IsMatch(row(3), "^[0-9]+\-[0-9]{2}\-[0-9]$") Then
+                                stb_comments.Append(st_err_line_number & " CAS 番号 が不正です: " & st_err_line_data)
+                                Dts.Variables("Err_Flag").Value = True
+                                Continue While
+                            End If
+                        End If
+
+                        ' SQLパラメータに追加
+                        sqlp_ProductNumber.Value = IIf(row(0) = "$", DBNull.Value, row(0))
+                        sqlp_NewProductRegNumber.Value = IIf(row(1) = "$", DBNull.Value, row(1))
+                        sqlp_ProductName.Value = IIf(String.IsNullOrEmpty(row(2)), DBNull.Value, row(2))
+                        sqlp_CASNumber.Value = IIf(String.IsNullOrEmpty(row(3)), DBNull.Value, row(3))
+                        sqlp_Status.Value = IIf(String.IsNullOrEmpty(row(4)), DBNull.Value, row(4))
+                        sqlp_ProposalDept.Value = IIf(String.IsNullOrEmpty(row(5)), DBNull.Value, row(5))
+                        sqlp_ProcumentDept.Value = IIf(String.IsNullOrEmpty(row(6)), DBNull.Value, row(6))
+                        sqlp_PD.Value = IIf(String.IsNullOrEmpty(row(7)), DBNull.Value, row(7))
+                        sqlp_MolecularFormula.Value = IIf(String.IsNullOrEmpty(row(8)), DBNull.Value, row(8))
+
+                        ' INSERT 文を生成し、実行
+                        command.CommandText =
+                          "INSERT INTO " & st_tmp_table & " " _
+                        & "(ProductNumber,NewProductRegNumber,ProductName,CASNumber,Status,ProposalDept,ProcumentDept,PD,MolecularFormula,ImportStatus,CreateDate) " _
+                        & " VALUES (@ProductNumber,@NewProductRegNumber,LEFT(@ProductName, 1000),@CASNumber,@Status,@ProposalDept,@ProcumentDept,@PD,@MolecularFormula,'1',GETDATE())"
+                        command.ExecuteNonQuery()
+
+                    Catch e As FileIO.MalformedLineException
+                        stb_comments.Append("Line " & reader.ErrorLine & " is not valid.")
+                        Dts.Variables("Err_Flag").Value = True
+                    End Try
+
+                End While
+            End Using
+
+        Catch e As Exception
+            stb_error_comments.Append(e.ToString())
+            Dts.Variables("Err_Flag").Value = True
+        End Try
+
+        ' 処理コメント生成
+        If stb_comments.Length > 0 Or stb_error_comments.Length > 0 Then
+            stb_comments.Insert(0, "-- 作業テーブルインポート" & vbCrLf)
+            stb_comments.Append(stb_error_comments.ToString() & vbCrLf)
+            Dts.Variables("Comment").Value = Dts.Variables("Comment").Value.ToString() & vbCrLf & stb_comments.ToString()
+        End If
+
+        ' エラーコメントがあった場合はエラー終了
+        If stb_error_comments.Length > 0 Then
+            Dts.TaskResult = ScriptResults.Failure
+        Else
+            Dts.TaskResult = ScriptResults.Success
+        End If
+
+    End Sub
+
+End Class]]></ProjectItem>
+          <ProjectItem
+            Name="My Project\Settings.settings"
             Encoding="UTF8"><![CDATA[<?xml version='1.0' encoding='iso-8859-1'?>
 <SettingsFile xmlns="uri:settings" CurrentProfile="(Default)" GeneratedClassNamespace="$safeprojectname" GeneratedClassName="MySettings">
   <Profiles>
@@ -1039,7 +1200,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</BinaryItem>
   <Settings />
 </SettingsFile>]]></ProjectItem>
           <ProjectItem
-            Name="\my project\assemblyinfo.vb"
+            Name="My Project\AssemblyInfo.vb"
             Encoding="UTF8"><![CDATA[Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
@@ -1077,25 +1238,247 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyVersion("1.0.0.0")> 
 <Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
           <ProjectItem
+            Name="My Project\Settings.Designer.vb"
+            Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
+' <autogenerated>
+'     This code was generated by a tool.
+'
+'     Changes to this file may cause incorrect behavior and will be lost if
+'     the code is regenerated.
+' </autogenerated>
+'------------------------------------------------------------------------------
+
+Option Strict Off
+Option Explicit On
+
+
+
+Partial Friend NotInheritable Class MySettings
+    Inherits System.Configuration.ApplicationSettingsBase
+
+    Private Shared m_Value As MySettings
+
+    Private Shared m_SyncObject As Object = New Object
+
+    <System.Diagnostics.DebuggerNonUserCode()> _
+    Public Shared ReadOnly Property Value() As MySettings
+        Get
+            If (MySettings.m_Value Is Nothing) Then
+                System.Threading.Monitor.Enter(MySettings.m_SyncObject)
+                If (MySettings.m_Value Is Nothing) Then
+                    Try
+                        MySettings.m_Value = New MySettings
+                    Finally
+                        System.Threading.Monitor.Exit(MySettings.m_SyncObject)
+                    End Try
+                End If
+            End If
+            Return MySettings.m_Value
+        End Get
+    End Property
+End Class]]></ProjectItem>
+          <ProjectItem
             Name="Project"
             Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="UTF-16" standalone="yes"?>
 <c:Project xmlns:c="http://schemas.microsoft.com/codeprojectml/2010/08/main" xmlns:msb="http://schemas.microsoft.com/developer/msbuild/2003" runtimeVersion="4.0" schemaVersion="1.0">
 	<msb:PropertyGroup>
-		<msb:Language>msBuild</msb:Language>
 		<msb:CodeName>scripttask_1bffdc2093464a3aaa435d590aee9efd</msb:CodeName>
+		<msb:Language>msBuild</msb:Language>
 		<msb:DisplayName>scripttask_1bffdc2093464a3aaa435d590aee9efd</msb:DisplayName>
 		<msb:ProjectId>{E209F6CC-028D-4006-9D7E-3049CCE576B9}</msb:ProjectId>
 	</msb:PropertyGroup>
 	<msb:ItemGroup>
 		<msb:Project Include="scripttask_1bffdc2093464a3aaa435d590aee9efd.vbproj"/>
 		<msb:File Include="My Project\AssemblyInfo.vb"/>
-		<msb:File Include="My Project\Resources.resx"/>
 		<msb:File Include="ScriptMain.vb"/>
+		<msb:File Include="My Project\Resources.resx"/>
 		<msb:File Include="My Project\Resources.Designer.vb"/>
 		<msb:File Include="My Project\Settings.settings"/>
 		<msb:File Include="My Project\Settings.Designer.vb"/>
 	</msb:ItemGroup>
 </c:Project>]]></ProjectItem>
+          <ProjectItem
+            Name="My Project\Resources.resx"
+            Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+</root>]]></ProjectItem>
+          <ProjectItem
+            Name="My Project\Resources.Designer.vb"
+            Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
+' <autogenerated>
+'     This code was generated by a tool.
+'
+'     Changes to this file may cause incorrect behavior and will be lost if
+'     the code is regenerated.
+' </autogenerated>
+'------------------------------------------------------------------------------
+
+Option Strict Off
+Option Explicit On
+
+
+Namespace My.Resources
+    
+    '''<summary>
+    '''   A strongly-typed resource class, for looking up localized strings, etc.
+    '''</summary>
+    'This class was auto-generated by the Strongly Typed Resource Builder
+    'class via a tool like ResGen or Visual Studio.NET.
+    'To add or remove a member, edit your .ResX file then rerun ResGen
+    'with the /str option, or rebuild your VS project.
+    Class MyResources
+        
+        Private Shared _resMgr As System.Resources.ResourceManager
+        
+        Private Shared _resCulture As System.Globalization.CultureInfo
+        
+        Friend Sub New()
+            MyBase.New
+        End Sub
+        
+        '''<summary>
+        '''   Returns the cached ResourceManager instance used by this class.
+        '''</summary>
+        <System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)>  _
+        Public Shared ReadOnly Property ResourceManager() As System.Resources.ResourceManager
+            Get
+                If (_resMgr Is Nothing) Then
+                    Dim temp As System.Resources.ResourceManager = New System.Resources.ResourceManager("My.Resources.MyResources", GetType(MyResources).Assembly)
+                    _resMgr = temp
+                End If
+                Return _resMgr
+            End Get
+        End Property
+        
+        '''<summary>
+        '''   Overrides the current thread's CurrentUICulture property for all
+        '''   resource lookups using this strongly typed resource class.
+        '''</summary>
+        <System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)>  _
+        Public Shared Property Culture() As System.Globalization.CultureInfo
+            Get
+                Return _resCulture
+            End Get
+            Set
+                _resCulture = value
+            End Set
+        End Property
+    End Class
+End Namespace]]></ProjectItem>
           <ProjectItem
             Name="scripttask_1bffdc2093464a3aaa435d590aee9efd.vbproj"
             Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="utf-16"?>
@@ -1252,986 +1635,17 @@ Imports System.Runtime.InteropServices
     </VisualStudio>
   </ProjectExtensions>
 </Project>]]></ProjectItem>
-          <ProjectItem
-            Name="My Project\Settings.Designer.vb"
-            Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
-' <autogenerated>
-'     This code was generated by a tool.
-'
-'     Changes to this file may cause incorrect behavior and will be lost if
-'     the code is regenerated.
-' </autogenerated>
-'------------------------------------------------------------------------------
-
-Option Strict Off
-Option Explicit On
-
-
-
-Partial Friend NotInheritable Class MySettings
-    Inherits System.Configuration.ApplicationSettingsBase
-
-    Private Shared m_Value As MySettings
-
-    Private Shared m_SyncObject As Object = New Object
-
-    <System.Diagnostics.DebuggerNonUserCode()> _
-    Public Shared ReadOnly Property Value() As MySettings
-        Get
-            If (MySettings.m_Value Is Nothing) Then
-                System.Threading.Monitor.Enter(MySettings.m_SyncObject)
-                If (MySettings.m_Value Is Nothing) Then
-                    Try
-                        MySettings.m_Value = New MySettings
-                    Finally
-                        System.Threading.Monitor.Exit(MySettings.m_SyncObject)
-                    End Try
-                End If
-            End If
-            Return MySettings.m_Value
-        End Get
-    End Property
-End Class]]></ProjectItem>
-          <ProjectItem
-            Name="\scripttask_1bffdc2093464a3aaa435d590aee9efd.vbproj"
-            Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="utf-16"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!-- This section defines project-level properties.
-
-       Configuration - Specifies whether the default configuration is Release or Debug.
-       Platform - Specifies what CPU the output of this project can run on.
-       OutputType - Must be "Library" for VSTA.
-       NoStandardLibraries - Set to "false" for VSTA.
-       RootNamespace - In C#, this specifies the namespace given to new files.
-                       In Visual Basic, all objects are wrapped in this namespace at runtime.
-       AssemblyName - Name of the output assembly.
-  -->
-  <PropertyGroup>
-    <ProjectTypeGuids>{30D016F9-3734-4E33-A861-5E7D899E18F3};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Library</OutputType>
-    <RootNamespace>ScriptTask_1bffdc2093464a3aaa435d590aee9efd.vbproj</RootNamespace>
-    <AssemblyName>ScriptTask_1bffdc2093464a3aaa435d590aee9efd.vbproj</AssemblyName>
-    <StartupObject></StartupObject>
-    <OptionExplicit>On</OptionExplicit>
-    <OptionCompare>Binary</OptionCompare>
-    <OptionStrict>Off</OptionStrict>
-    <OptionInfer>On</OptionInfer>
-    <ProjectGuid>{286AD8E1-2AB1-4D3D-9161-64F8763A7783}</ProjectGuid>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
-  </PropertyGroup>
-  <!-- This section defines properties that are set when the "Debug" configuration is
-       selected.
-
-       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
-       Optimize - If true, optimize the build output. If false, do not optimize.
-       OutputPath - Output path of the project relative to the project file.
-       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
-       DefineConstants - Constants defined for the preprocessor.
-       Warning Level - Warning level for the compiler.
-  -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DefineConstants></DefineConstants>
-    <DefineDebug>true</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
-  </PropertyGroup>
-  <!-- This section defines properties that are set when the "Release" configuration is
-       selected.
-
-       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
-       Optimize - If true, optimize the build output. If false, do not optimize.
-       OutputPath - Output path of the project relative to the project file.
-       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
-       DefineConstants - Constants defined for the preprocessor.
-       Warning Level - Warning level for the compiler.
-  -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DefineConstants></DefineConstants>
-    <DefineDebug>false</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <DebugSymbols>false</DebugSymbols>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
-  </PropertyGroup>
-  <!-- This section enables pre- and post-build steps. However,
-       it is recommended that MSBuild tasks be used instead of these properties.
-  -->
-  <PropertyGroup>
-    <PreBuildEvent></PreBuildEvent>
-    <PostBuildEvent></PostBuildEvent>
-  </PropertyGroup>
-  <!-- This sections specifies references for the project. -->
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.SqlServer.ManagedDTS, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
-    <Reference Include="Microsoft.SqlServer.ScriptTask, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
-  </ItemGroup>
-  <!-- Visual Basic supports Importing namespaces (equivalent to using statements in C#).-->
-  <ItemGroup>
-    <Import Include="Microsoft.VisualBasic" />
-    <Import Include="System" />
-    <Import Include="System.Collections" />
-    <Import Include="System.Data" />
-    <Import Include="System.Diagnostics" />
-    <Import Include="System.Windows.Forms" />
-  </ItemGroup>
-  <!-- This section defines the user source files that are part of the
-       project.
-
-       Compile - Specifies a source file to compile.
-       EmbeddedResource - Specifies a .resx file for embedded resources.
-       None - Specifies a file that is not to be passed to the compiler (for instance,
-              a text file or XML file).
-       AppDesigner - Specifies the directory where the application properties files can
-                     be found.
-  -->
-  <ItemGroup>
-    <AppDesigner Include="My Project\" />
-    <Compile Include="My Project\AssemblyInfo.vb">
-      <SubType>Code</SubType>
-    </Compile>
-    <EmbeddedResource Include="My Project\Resources.resx">
-      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
-      <CustomToolNamespace>My.Resources</CustomToolNamespace>
-    </EmbeddedResource>
-    <Compile Include="My Project\Resources.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <None Include="My Project\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
-    </None>
-    <Compile Include="My Project\Settings.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ScriptMain.vb">
-      <SubType>Code</SubType>
-    </Compile>
-    <!-- Include the default configuration information and metadata files for the add-in.
-         These files are copied to the build output directory when the project is
-         built, and the path to the configuration file is passed to add-in on the command
-         line when debugging.
-    -->
-  </ItemGroup>
-  <!-- Include the build rules for a VB project.-->
-  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
-  <!-- This section defines VSTA properties that describe the host-changable project properties. -->
-  <ProjectExtensions>
-    <VisualStudio>
-      <FlavorProperties GUID="{30D016F9-3734-4E33-A861-5E7D899E18F3}">
-        <ProjectProperties HostName="VSTAHostName" HostPackage="{B3A685AA-7EAF-4BC6-9940-57959FA5AC07}" ApplicationType="usd" Language="vb" TemplatesPath="" DebugInfoExeName="" />
-        <Host Name="SSIS_ScriptTask" />
-        <ProjectClient>
-          <HostIdentifier>SSIS_ST130</HostIdentifier>
-        </ProjectClient>
-      </FlavorProperties>
-    </VisualStudio>
-  </ProjectExtensions>
-</Project>]]></ProjectItem>
-          <ProjectItem
-            Name="My Project\Resources.Designer.vb"
-            Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
-' <autogenerated>
-'     This code was generated by a tool.
-'
-'     Changes to this file may cause incorrect behavior and will be lost if
-'     the code is regenerated.
-' </autogenerated>
-'------------------------------------------------------------------------------
-
-Option Strict Off
-Option Explicit On
-
-
-Namespace My.Resources
-    
-    '''<summary>
-    '''   A strongly-typed resource class, for looking up localized strings, etc.
-    '''</summary>
-    'This class was auto-generated by the Strongly Typed Resource Builder
-    'class via a tool like ResGen or Visual Studio.NET.
-    'To add or remove a member, edit your .ResX file then rerun ResGen
-    'with the /str option, or rebuild your VS project.
-    Class MyResources
-        
-        Private Shared _resMgr As System.Resources.ResourceManager
-        
-        Private Shared _resCulture As System.Globalization.CultureInfo
-        
-        Friend Sub New()
-            MyBase.New
-        End Sub
-        
-        '''<summary>
-        '''   Returns the cached ResourceManager instance used by this class.
-        '''</summary>
-        <System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)>  _
-        Public Shared ReadOnly Property ResourceManager() As System.Resources.ResourceManager
-            Get
-                If (_resMgr Is Nothing) Then
-                    Dim temp As System.Resources.ResourceManager = New System.Resources.ResourceManager("My.Resources.MyResources", GetType(MyResources).Assembly)
-                    _resMgr = temp
-                End If
-                Return _resMgr
-            End Get
-        End Property
-        
-        '''<summary>
-        '''   Overrides the current thread's CurrentUICulture property for all
-        '''   resource lookups using this strongly typed resource class.
-        '''</summary>
-        <System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)>  _
-        Public Shared Property Culture() As System.Globalization.CultureInfo
-            Get
-                Return _resCulture
-            End Get
-            Set
-                _resCulture = value
-            End Set
-        End Property
-    End Class
-End Namespace]]></ProjectItem>
-          <ProjectItem
-            Name="\my project\resources.resx"
-            Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
-<root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-</root>]]></ProjectItem>
-          <ProjectItem
-            Name="ScriptMain.vb"
-            Encoding="UTF8"><![CDATA[' Microsoft SQL Server Integration Services Script Task
-' Write scripts using Microsoft Visual Basic
-' The ScriptMain class is the entry point of the Script Task.
-
-Imports System
-Imports System.Xml
-Imports System.Data
-Imports System.Math
-Imports Microsoft.SqlServer.Dts.Runtime
-Imports System.Data.SqlClient
-Imports System.Text.RegularExpressions
-
-<Microsoft.SqlServer.Dts.Tasks.ScriptTask.SSISScriptTaskEntryPointAttribute> _
-<System.CLSCompliantAttribute(False)> _
-Partial Public Class ScriptMain
-	Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
-
-	Enum ScriptResults
-		Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
-		Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
-	End Enum
-
-    Public Sub Main()
-
-        ' データベース接続設定
-        Dim st_tmp_table As String = "TmpNewProduct"
-
-        ' 変数設定
-        Dim st_dir_temp As String = Dts.Variables("Dir_Temp").Value.ToString   ' 作業ディレクトリ
-        Dim st_file_name As String = Dts.Variables("File_New_Product").Value.ToString   ' ファイル名
-        Dim stb_error_comments As New Text.StringBuilder() ' DB エラーメッセージ格納用
-        Dim stb_comments As New Text.StringBuilder() ' その他処理コメント格納用
-
-        ' 作業ディレクトリにコピーしたデータファイルを読込む
-        Try
-            Using reader As New FileIO.TextFieldParser(st_dir_temp & st_file_name), _
-                  connection As SqlConnection = DirectCast(Dts.Connections("ADO.Purchase").AcquireConnection(Dts.Transaction), SqlConnection)
-
-                ' データファイルデリミタ指定
-                reader.TextFieldType = FileIO.FieldType.Delimited
-                reader.SetDelimiters(vbTab)
-
-                ' DB選択、作業テーブルのデータ消去
-                Dim command As New SqlCommand("TRUNCATE TABLE " & st_tmp_table, connection)
-                command.ExecuteNonQuery()
-
-                ' SQLパラメータ設定
-                Dim sqlp_ProductNumber As SqlParameter = command.Parameters.Add("ProductNumber", SqlDbType.VarChar)
-                Dim sqlp_NewProductRegNumber As SqlParameter = command.Parameters.Add("NewProductRegNumber", SqlDbType.VarChar)
-                Dim sqlp_ProductName As SqlParameter = command.Parameters.Add("ProductName", SqlDbType.NVarChar)
-                Dim sqlp_CASNumber As SqlParameter = command.Parameters.Add("CASNumber", SqlDbType.VarChar)
-                Dim sqlp_Status As SqlParameter = command.Parameters.Add("Status", SqlDbType.NVarChar)
-                Dim sqlp_ProposalDept As SqlParameter = command.Parameters.Add("ProposalDept", SqlDbType.NVarChar)
-                Dim sqlp_ProcumentDept As SqlParameter = command.Parameters.Add("ProcumentDept", SqlDbType.NVarChar)
-                Dim sqlp_PD As SqlParameter = command.Parameters.Add("PD", SqlDbType.NVarChar)
-                Dim sqlp_MolecularFormula As SqlParameter = command.Parameters.Add("MolecularFormula", SqlDbType.VarChar)
-
-                ' データファイルを一行ずつ読み込み、作業テーブルに挿入していく
-                Dim row As String()
-                Dim i As Integer
-                Dim i_LineCount As Integer = 0 ' ループ数を格納.行番号として使用。
-                Dim st_err_line_number As String
-                Dim st_err_line_data As String
-                Dim utf8 As System.Text.Encoding = System.Text.Encoding.GetEncoding("UTF-8")
-                Dim ucs2 As System.Text.Encoding = System.Text.Encoding.GetEncoding("UCS-2")
-
-                While Not reader.EndOfData
-                    Try
-                        ' 一行読込む
-                        row = reader.ReadFields()
-
-                        ' 行番号インクリメント
-                        i_LineCount += 1
-
-                        For i = 0 To UBound(row)
-                            If Not String.IsNullOrEmpty(row(i)) Then
-                                row(i) = ucs2.GetString(System.Text.Encoding.Convert(utf8, ucs2, utf8.GetBytes(row(i))))
-                            End If
-                        Next i
-
-                        st_err_line_number = i_LineCount & " 行目の"
-                        st_err_line_data = row(0) & vbTab & row(1) & vbTab & row(3) & vbCrLf
-
-                        ' バリデート
-                        ' 製品コード
-                        If Not row(0) = "$" Then
-                            If Not Regex.IsMatch(row(0), "^[A-Z][0-9][0-9][0-9][0-9]") Then
-                                stb_comments.Append(st_err_line_number & " 製品コード が不正です: " & st_err_line_data)
-                                Dts.Variables("Err_Flag").Value = True
-                                Continue While
-                            End If
-                        End If
-
-                        ' 新製品登録番号
-                        If Not row(1) = "$" Then
-                            If Not Regex.IsMatch(row(1), "^[A-Z]{1,2}[0-9]{9}$") Then
-                                stb_comments.Append(st_err_line_number & " 新製品登録番号 が不正です: " & st_err_line_data)
-                                Dts.Variables("Err_Flag").Value = True
-                                Continue While
-                            End If
-                        End If
-
-                        ' CASナンバー
-                        If Not String.IsNullOrEmpty(row(3)) Then
-                            If Not Regex.IsMatch(row(3), "^[0-9]+\-[0-9]{2}\-[0-9]$") Then
-                                stb_comments.Append(st_err_line_number & " CAS 番号 が不正です: " & st_err_line_data)
-                                Dts.Variables("Err_Flag").Value = True
-                                Continue While
-                            End If
-                        End If
-
-                        ' SQLパラメータに追加
-                        sqlp_ProductNumber.Value = IIf(row(0) = "$", DBNull.Value, row(0))
-                        sqlp_NewProductRegNumber.Value = IIf(row(1) = "$", DBNull.Value, row(1))
-                        sqlp_ProductName.Value = IIf(String.IsNullOrEmpty(row(2)), DBNull.Value, row(2))
-                        sqlp_CASNumber.Value = IIf(String.IsNullOrEmpty(row(3)), DBNull.Value, row(3))
-                        sqlp_Status.Value = IIf(String.IsNullOrEmpty(row(4)), DBNull.Value, row(4))
-                        sqlp_ProposalDept.Value = IIf(String.IsNullOrEmpty(row(5)), DBNull.Value, row(5))
-                        sqlp_ProcumentDept.Value = IIf(String.IsNullOrEmpty(row(6)), DBNull.Value, row(6))
-                        sqlp_PD.Value = IIf(String.IsNullOrEmpty(row(7)), DBNull.Value, row(7))
-                        sqlp_MolecularFormula.Value = IIf(String.IsNullOrEmpty(row(8)), DBNull.Value, row(8))
-
-                        ' INSERT 文を生成し、実行
-                        command.CommandText = _
-                          "INSERT INTO " & st_tmp_table & " " _
-                        & "(ProductNumber,NewProductRegNumber,ProductName,CASNumber,Status,ProposalDept,ProcumentDept,PD,MolecularFormula,ImportStatus,CreateDate) " _
-                        & " VALUES (@ProductNumber,@NewProductRegNumber,@ProductName,@CASNumber,@Status,@ProposalDept,@ProcumentDept,@PD,@MolecularFormula,'1',GETDATE())"
-                        command.ExecuteNonQuery()
-
-                    Catch e As FileIO.MalformedLineException
-                        stb_comments.Append("Line " & reader.ErrorLine & " is not valid.")
-                        Dts.Variables("Err_Flag").Value = True
-                    End Try
-
-                End While
-            End Using
-
-        Catch e As Exception
-            stb_error_comments.Append(e.ToString())
-            Dts.Variables("Err_Flag").Value = True
-        End Try
-
-        ' 処理コメント生成
-        If stb_comments.Length > 0 Or stb_error_comments.Length > 0 Then
-            stb_comments.Insert(0, "-- 作業テーブルインポート" & vbCrLf)
-            stb_comments.Append(stb_error_comments.ToString() & vbCrLf)
-            Dts.Variables("Comment").Value = Dts.Variables("Comment").Value.ToString() & vbCrLf & stb_comments.ToString()
-        End If
-
-        ' エラーコメントがあった場合はエラー終了
-        If stb_error_comments.Length > 0 Then
-            Dts.TaskResult = ScriptResults.Failure
-        Else
-            Dts.TaskResult = ScriptResults.Success
-        End If
-
-    End Sub
-
-End Class]]></ProjectItem>
-          <ProjectItem
-            Name="My Project\AssemblyInfo.vb"
-            Encoding="UTF8"><![CDATA[Imports System
-Imports System.Reflection
-Imports System.Runtime.InteropServices
-
-' General Information about an assembly is controlled through the following 
-' set of attributes. Change these attribute values to modify the information
-' associated with an assembly.
-
-' Review the values of the assembly attributes
-
-<Assembly: AssemblyTitle("ScriptTask_1bffdc2093464a3aaa435d590aee9efd.vbproj")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("ScriptTask_1bffdc2093464a3aaa435d590aee9efd.vbproj")> 
-<Assembly: AssemblyCopyright("Copyright @  2012")> 
-<Assembly: AssemblyTrademark("")> 
-<Assembly: CLSCompliant(True)> 
-
-<Assembly: ComVisible(False)> 
-
-'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("5fb77df7-dd2c-4314-ac5a-acf3ce312598")> 
-
-' Version information for an assembly consists of the following four values:
-'
-'      Major Version
-'      Minor Version 
-'      Build Number
-'      Revision
-'
-' You can specify all the values or you can default the Build and Revision Numbers 
-' by using the '*' as shown below:
-' <Assembly: AssemblyVersion("1.0.*")>
-
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
-          <ProjectItem
-            Name="\my project\settings.designer.vb"
-            Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
-' <autogenerated>
-'     This code was generated by a tool.
-'
-'     Changes to this file may cause incorrect behavior and will be lost if
-'     the code is regenerated.
-' </autogenerated>
-'------------------------------------------------------------------------------
-
-Option Strict Off
-Option Explicit On
-
-
-
-Partial Friend NotInheritable Class MySettings
-    Inherits System.Configuration.ApplicationSettingsBase
-
-    Private Shared m_Value As MySettings
-
-    Private Shared m_SyncObject As Object = New Object
-
-    <System.Diagnostics.DebuggerNonUserCode()> _
-    Public Shared ReadOnly Property Value() As MySettings
-        Get
-            If (MySettings.m_Value Is Nothing) Then
-                System.Threading.Monitor.Enter(MySettings.m_SyncObject)
-                If (MySettings.m_Value Is Nothing) Then
-                    Try
-                        MySettings.m_Value = New MySettings
-                    Finally
-                        System.Threading.Monitor.Exit(MySettings.m_SyncObject)
-                    End Try
-                End If
-            End If
-            Return MySettings.m_Value
-        End Get
-    End Property
-End Class]]></ProjectItem>
-          <ProjectItem
-            Name="My Project\Settings.settings"
-            Encoding="UTF8"><![CDATA[<?xml version='1.0' encoding='iso-8859-1'?>
-<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)" GeneratedClassNamespace="$safeprojectname" GeneratedClassName="MySettings">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
-</SettingsFile>]]></ProjectItem>
-          <ProjectItem
-            Name="\scriptmain.vb"
-            Encoding="UTF8"><![CDATA[' Microsoft SQL Server Integration Services Script Task
-' Write scripts using Microsoft Visual Basic
-' The ScriptMain class is the entry point of the Script Task.
-
-Imports System
-Imports System.Xml
-Imports System.Data
-Imports System.Math
-Imports Microsoft.SqlServer.Dts.Runtime
-Imports System.Data.SqlClient
-Imports System.Text.RegularExpressions
-
-<Microsoft.SqlServer.Dts.Tasks.ScriptTask.SSISScriptTaskEntryPointAttribute> _
-<System.CLSCompliantAttribute(False)> _
-Partial Public Class ScriptMain
-	Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
-
-	Enum ScriptResults
-		Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
-		Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
-	End Enum
-
-    Public Sub Main()
-
-        ' データベース接続設定
-        Dim st_tmp_table As String = "TmpNewProduct"
-
-        ' 変数設定
-        Dim st_dir_temp As String = Dts.Variables("Dir_Temp").Value.ToString   ' 作業ディレクトリ
-        Dim st_file_name As String = Dts.Variables("File_New_Product").Value.ToString   ' ファイル名
-        Dim stb_error_comments As New Text.StringBuilder() ' DB エラーメッセージ格納用
-        Dim stb_comments As New Text.StringBuilder() ' その他処理コメント格納用
-
-        ' 作業ディレクトリにコピーしたデータファイルを読込む
-        Try
-            Using reader As New FileIO.TextFieldParser(st_dir_temp & st_file_name), _
-                  connection As SqlConnection = DirectCast(Dts.Connections("ADO.Purchase").AcquireConnection(Dts.Transaction), SqlConnection)
-
-                ' データファイルデリミタ指定
-                reader.TextFieldType = FileIO.FieldType.Delimited
-                reader.SetDelimiters(vbTab)
-
-                ' DB選択、作業テーブルのデータ消去
-                Dim command As New SqlCommand("TRUNCATE TABLE " & st_tmp_table, connection)
-                command.ExecuteNonQuery()
-
-                ' SQLパラメータ設定
-                Dim sqlp_ProductNumber As SqlParameter = command.Parameters.Add("ProductNumber", SqlDbType.VarChar)
-                Dim sqlp_NewProductRegNumber As SqlParameter = command.Parameters.Add("NewProductRegNumber", SqlDbType.VarChar)
-                Dim sqlp_ProductName As SqlParameter = command.Parameters.Add("ProductName", SqlDbType.NVarChar)
-                Dim sqlp_CASNumber As SqlParameter = command.Parameters.Add("CASNumber", SqlDbType.VarChar)
-                Dim sqlp_Status As SqlParameter = command.Parameters.Add("Status", SqlDbType.NVarChar)
-                Dim sqlp_ProposalDept As SqlParameter = command.Parameters.Add("ProposalDept", SqlDbType.NVarChar)
-                Dim sqlp_ProcumentDept As SqlParameter = command.Parameters.Add("ProcumentDept", SqlDbType.NVarChar)
-                Dim sqlp_PD As SqlParameter = command.Parameters.Add("PD", SqlDbType.NVarChar)
-                Dim sqlp_MolecularFormula As SqlParameter = command.Parameters.Add("MolecularFormula", SqlDbType.VarChar)
-
-                ' データファイルを一行ずつ読み込み、作業テーブルに挿入していく
-                Dim row As String()
-                Dim i As Integer
-                Dim i_LineCount As Integer = 0 ' ループ数を格納.行番号として使用。
-                Dim st_err_line_number As String
-                Dim st_err_line_data As String
-                Dim utf8 As System.Text.Encoding = System.Text.Encoding.GetEncoding("UTF-8")
-                Dim ucs2 As System.Text.Encoding = System.Text.Encoding.GetEncoding("UCS-2")
-
-                While Not reader.EndOfData
-                    Try
-                        ' 一行読込む
-                        row = reader.ReadFields()
-
-                        ' 行番号インクリメント
-                        i_LineCount += 1
-
-                        For i = 0 To UBound(row)
-                            If Not String.IsNullOrEmpty(row(i)) Then
-                                row(i) = ucs2.GetString(System.Text.Encoding.Convert(utf8, ucs2, utf8.GetBytes(row(i))))
-                            End If
-                        Next i
-
-                        st_err_line_number = i_LineCount & " 行目の"
-                        st_err_line_data = row(0) & vbTab & row(1) & vbTab & row(3) & vbCrLf
-
-                        ' バリデート
-                        ' 製品コード
-                        If Not row(0) = "$" Then
-                            If Not Regex.IsMatch(row(0), "^[A-Z][0-9][0-9][0-9][0-9]") Then
-                                stb_comments.Append(st_err_line_number & " 製品コード が不正です: " & st_err_line_data)
-                                Dts.Variables("Err_Flag").Value = True
-                                Continue While
-                            End If
-                        End If
-
-                        ' 新製品登録番号
-                        If Not row(1) = "$" Then
-                            If Not Regex.IsMatch(row(1), "^[A-Z]{1,2}[0-9]{9}$") Then
-                                stb_comments.Append(st_err_line_number & " 新製品登録番号 が不正です: " & st_err_line_data)
-                                Dts.Variables("Err_Flag").Value = True
-                                Continue While
-                            End If
-                        End If
-
-                        ' CASナンバー
-                        If Not String.IsNullOrEmpty(row(3)) Then
-                            If Not Regex.IsMatch(row(3), "^[0-9]+\-[0-9]{2}\-[0-9]$") Then
-                                stb_comments.Append(st_err_line_number & " CAS 番号 が不正です: " & st_err_line_data)
-                                Dts.Variables("Err_Flag").Value = True
-                                Continue While
-                            End If
-                        End If
-
-                        ' SQLパラメータに追加
-                        sqlp_ProductNumber.Value = IIf(row(0) = "$", DBNull.Value, row(0))
-                        sqlp_NewProductRegNumber.Value = IIf(row(1) = "$", DBNull.Value, row(1))
-                        sqlp_ProductName.Value = IIf(String.IsNullOrEmpty(row(2)), DBNull.Value, row(2))
-                        sqlp_CASNumber.Value = IIf(String.IsNullOrEmpty(row(3)), DBNull.Value, row(3))
-                        sqlp_Status.Value = IIf(String.IsNullOrEmpty(row(4)), DBNull.Value, row(4))
-                        sqlp_ProposalDept.Value = IIf(String.IsNullOrEmpty(row(5)), DBNull.Value, row(5))
-                        sqlp_ProcumentDept.Value = IIf(String.IsNullOrEmpty(row(6)), DBNull.Value, row(6))
-                        sqlp_PD.Value = IIf(String.IsNullOrEmpty(row(7)), DBNull.Value, row(7))
-                        sqlp_MolecularFormula.Value = IIf(String.IsNullOrEmpty(row(8)), DBNull.Value, row(8))
-
-                        ' INSERT 文を生成し、実行
-                        command.CommandText = _
-                          "INSERT INTO " & st_tmp_table & " " _
-                        & "(ProductNumber,NewProductRegNumber,ProductName,CASNumber,Status,ProposalDept,ProcumentDept,PD,MolecularFormula,ImportStatus,CreateDate) " _
-                        & " VALUES (@ProductNumber,@NewProductRegNumber,@ProductName,@CASNumber,@Status,@ProposalDept,@ProcumentDept,@PD,@MolecularFormula,'1',GETDATE())"
-                        command.ExecuteNonQuery()
-
-                    Catch e As FileIO.MalformedLineException
-                        stb_comments.Append("Line " & reader.ErrorLine & " is not valid.")
-                        Dts.Variables("Err_Flag").Value = True
-                    End Try
-
-                End While
-            End Using
-
-        Catch e As Exception
-            stb_error_comments.Append(e.ToString())
-            Dts.Variables("Err_Flag").Value = True
-        End Try
-
-        ' 処理コメント生成
-        If stb_comments.Length > 0 Or stb_error_comments.Length > 0 Then
-            stb_comments.Insert(0, "-- 作業テーブルインポート" & vbCrLf)
-            stb_comments.Append(stb_error_comments.ToString() & vbCrLf)
-            Dts.Variables("Comment").Value = Dts.Variables("Comment").Value.ToString() & vbCrLf & stb_comments.ToString()
-        End If
-
-        ' エラーコメントがあった場合はエラー終了
-        If stb_error_comments.Length > 0 Then
-            Dts.TaskResult = ScriptResults.Failure
-        Else
-            Dts.TaskResult = ScriptResults.Success
-        End If
-
-    End Sub
-
-End Class]]></ProjectItem>
-          <ProjectItem
-            Name="My Project\Resources.resx"
-            Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
-<root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-</root>]]></ProjectItem>
-          <ProjectItem
-            Name="\my project\resources.designer.vb"
-            Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
-' <autogenerated>
-'     This code was generated by a tool.
-'
-'     Changes to this file may cause incorrect behavior and will be lost if
-'     the code is regenerated.
-' </autogenerated>
-'------------------------------------------------------------------------------
-
-Option Strict Off
-Option Explicit On
-
-
-Namespace My.Resources
-    
-    '''<summary>
-    '''   A strongly-typed resource class, for looking up localized strings, etc.
-    '''</summary>
-    'This class was auto-generated by the Strongly Typed Resource Builder
-    'class via a tool like ResGen or Visual Studio.NET.
-    'To add or remove a member, edit your .ResX file then rerun ResGen
-    'with the /str option, or rebuild your VS project.
-    Class MyResources
-        
-        Private Shared _resMgr As System.Resources.ResourceManager
-        
-        Private Shared _resCulture As System.Globalization.CultureInfo
-        
-        Friend Sub New()
-            MyBase.New
-        End Sub
-        
-        '''<summary>
-        '''   Returns the cached ResourceManager instance used by this class.
-        '''</summary>
-        <System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)>  _
-        Public Shared ReadOnly Property ResourceManager() As System.Resources.ResourceManager
-            Get
-                If (_resMgr Is Nothing) Then
-                    Dim temp As System.Resources.ResourceManager = New System.Resources.ResourceManager("My.Resources.MyResources", GetType(MyResources).Assembly)
-                    _resMgr = temp
-                End If
-                Return _resMgr
-            End Get
-        End Property
-        
-        '''<summary>
-        '''   Overrides the current thread's CurrentUICulture property for all
-        '''   resource lookups using this strongly typed resource class.
-        '''</summary>
-        <System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)>  _
-        Public Shared Property Culture() As System.Globalization.CultureInfo
-            Get
-                Return _resCulture
-            End Get
-            Set
-                _resCulture = value
-            End Set
-        End Property
-    End Class
-End Namespace]]></ProjectItem>
           <BinaryItem
             Name="ScriptTask_1bffdc2093464a3aaa435d590aee9efd.vbproj.dll">TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAgAAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1v
-ZGUuDQ0KJAAAAAAAAABQRQAATAEDAOpuoVgAAAAAAAAAAOAAIiALAVAAACoAAAAIAAAAAAAAMkkA
+ZGUuDQ0KJAAAAAAAAABQRQAATAEDABe5ZGMAAAAAAAAAAOAAIiALAVAAACoAAAAIAAAAAAAASkkA
 AAAgAAAAYAAAAAAAEAAgAAAAAgAABAAAAAAAAAAEAAAAAAAAAACgAAAAAgAAAAAAAAMAQIUAABAA
-ABAAAAAAEAAAEAAAAAAAABAAAAAAAAAAAAAAAOBIAABPAAAAAGAAAMgEAAAAAAAAAAAAAAAAAAAA
+ABAAAAAAEAAAEAAAAAAAABAAAAAAAAAAAAAAAPhIAABPAAAAAGAAAMgEAAAAAAAAAAAAAAAAAAAA
 AAAAAIAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAIAAACAAAAAAAAAAAAAAACCAAAEgAAAAAAAAAAAAAAC50ZXh0AAAAOCkAAAAgAAAAKgAAAAIA
+AAAAIAAACAAAAAAAAAAAAAAACCAAAEgAAAAAAAAAAAAAAC50ZXh0AAAAUCkAAAAgAAAAKgAAAAIA
 AAAAAAAAAAAAAAAAACAAAGAucnNyYwAAAMgEAAAAYAAAAAYAAAAsAAAAAAAAAAAAAAAAAABAAABA
-LnJlbG9jAAAMAAAAAIAAAAACAAAAMgAAAAAAAAAAAAAAAAAAQAAAQgAAAAAAAAAAAAAAAAAAAAAU
-SQAAAAAAAEgAAAACAAUAtCgAAHQfAAABAAAAAAAAAChIAAC4AAAAAAAAAAAAAAAAAAAAAAAAAAAA
+LnJlbG9jAAAMAAAAAIAAAAACAAAAMgAAAAAAAAAAAAAAAAAAQAAAQgAAAAAAAAAAAAAAAAAAAAAs
+SQAAAAAAAEgAAAACAAUAtCgAAIwfAAABAAAAAAAAAEBIAAC4AAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAB4CKBgAAAoqHgIoGQAACiqmcxoAAAqAAQAABHMbAAAKgAIA
 AARzHAAACoADAAAEcx0AAAqABAAABCoufgEAAARvHgAACioufgIAAARvHwAACioufgMAAARvIAAA
 CioufgQAAARvIQAACioeAigiAAAKKq5+BQAABC0ecgEAAHDQBQAAAigjAAAKbyQAAApzJQAACoAF
@@ -2259,19 +1673,19 @@ b00AAAoRCxERGZooQAAACn5LAAAKEREZmihMAAAKKCYAAApvTQAAChEMEREamihAAAAKfksAAAoR
 ERqaKEwAAAooJgAACm9NAAAKEQ0RERuaKEAAAAp+SwAAChERG5ooTAAACigmAAAKb00AAAoRDhER
 HJooQAAACn5LAAAKEREcmihMAAAKKCYAAApvTQAAChEPEREdmihAAAAKfksAAAoRER2aKEwAAAoo
 JgAACm9NAAAKERARER6aKEAAAAp+SwAAChERHpooTAAACigmAAAKb00AAAoRB3LPAgBwBnLpAgBw
-KEgAAApvTgAAChEHbzoAAAom3k0lKE8AAAoTGREEchoFAHARBW9QAAAKciYFAHAoSAAACm9JAAAK
+KEgAAApvTgAAChEHbzoAAAom3k0lKE8AAAoTGREEcjIFAHARBW9QAAAKcj4FAHAoSAAACm9JAAAK
 JgIoKwAACm8sAAAKch0CAHBvLQAACheMQAAAAW9KAAAKKFEAAAreABEFb1IAAAo5hvz//94MEQYs
 BxEGb1MAAArc3gwRBSwHEQVvUwAACtzePSUoTwAAChMaCREab1QAAApvSQAACiYCKCsAAApvLAAA
-CnIdAgBwby0AAAoXjEAAAAFvSgAACihRAAAK3gARBG9VAAAKFv4CCW9VAAAKFv4CYCxwEQQWckQF
-AHBvVgAACiYRBAlvVwAACnK/AQBwKDEAAApvSQAACiYCKCsAAApvLAAACnJmBQBwby0AAAoCKCsA
-AApvLAAACnJmBQBwby0AAApvLgAACm8vAAAKcr8BAHARBG9XAAAKKEgAAApvSgAACglvVQAAChYx
+CnIdAgBwby0AAAoXjEAAAAFvSgAACihRAAAK3gARBG9VAAAKFv4CCW9VAAAKFv4CYCxwEQQWclwF
+AHBvVgAACiYRBAlvVwAACnK/AQBwKDEAAApvSQAACiYCKCsAAApvLAAACnJ+BQBwby0AAAoCKCsA
+AApvLAAACnJ+BQBwby0AAApvLgAACm8vAAAKcr8BAHARBG9XAAAKKEgAAApvSgAACglvVQAAChYx
 DQIoKwAAChdvWAAACioCKCsAAAoWb1gAAAoqAABBZAAAAAAAAKkBAAAgAwAAyQQAAE0AAAArAAAB
 AgAAAJIAAACSBAAAJAUAAAwAAAAAAAAAAgAAAGEAAADRBAAAMgUAAAwAAAAAAAAAAAAAAFMAAADt
 BAAAQAUAAD0AAAAsAAABNgIDKCYAAAooWQAACioeAihaAAAKKi7QCAAAAigjAAAKKh4CKC8AAAoq
 AAATMAEAFAAAAAIAABECjAUAABstCCgBAAArCisCAgoGKiID/hUFAAAbKgAAABMwAgAoAAAAAwAA
 EQJ7XAAACm9dAAAKCgaMCAAAGy0SKAIAACsKAntcAAAKBm9eAAAKBipKAigiAAAKAnNfAAAKfVwA
 AAoqAEJTSkIBAAEAAAAAAAwAAAB2NC4wLjMwMzE5AAAAAAUAbAAAAEAJAAAjfgAArAkAANgLAAAj
-U3RyaW5ncwAAAACEFQAAeAUAACNVUwD8GgAAEAAAACNHVUlEAAAADBsAAGgEAAAjQmxvYgAAAAAA
+U3RyaW5ncwAAAACEFQAAkAUAACNVUwAUGwAAEAAAACNHVUlEAAAAJBsAAGgEAAAjQmxvYgAAAAAA
 AAACAAABVx2iCQkPAAAA+gEzABYAAAEAAABFAAAACgAAAAwAAAAZAAAABAAAAF8AAAACAAAANwAA
 AAMAAAAEAAAACAAAAAkAAAAIAAAAAQAAAAYAAAABAAAAAwAAAAMAAAACAAAAAAD+BQEAAAAAAAYA
 zwNgCQYAdARgCQYApgKWCA8AJAoAAAYA5wLxBgYAsgPxBgYAWwTxBgYA7wPxBgYACATxBgYALgPx
@@ -2379,44 +1793,44 @@ AC0AOQBdAFsAMAAtADkAXQBbADAALQA5AF0AWwAwAC0AOQBdAAEdIAD9iMFUszD8MMkwIABMMA1O
 Y2tnMFkwOgAgAAERRQByAHIAXwBGAGwAYQBnAAApXgBbAEEALQBaAF0AewAxACwAMgB9AFsAMAAt
 ADkAXQB7ADkAfQAkAAEhIACwZf2IwVR7djKTanX3UyAATDANTmNrZzBZMDoAIAABM14AWwAwAC0A
 OQBdACsAXAAtAFsAMAAtADkAXQB7ADIAfQBcAC0AWwAwAC0AOQBdACQAAR8gAEMAQQBTACAAanX3
-UyAATDANTmNrZzBZMDoAIAABGUkATgBTAEUAUgBUACAASQBOAFQATwAgAACCLyAAKABQAHIAbwBk
+UyAATDANTmNrZzBZMDoAIAABGUkATgBTAEUAUgBUACAASQBOAFQATwAgAACCRyAAKABQAHIAbwBk
 AHUAYwB0AE4AdQBtAGIAZQByACwATgBlAHcAUAByAG8AZAB1AGMAdABSAGUAZwBOAHUAbQBiAGUA
 cgAsAFAAcgBvAGQAdQBjAHQATgBhAG0AZQAsAEMAQQBTAE4AdQBtAGIAZQByACwAUwB0AGEAdAB1
 AHMALABQAHIAbwBwAG8AcwBhAGwARABlAHAAdAAsAFAAcgBvAGMAdQBtAGUAbgB0AEQAZQBwAHQA
 LABQAEQALABNAG8AbABlAGMAdQBsAGEAcgBGAG8AcgBtAHUAbABhACwASQBtAHAAbwByAHQAUwB0
 AGEAdAB1AHMALABDAHIAZQBhAHQAZQBEAGEAdABlACkAIAAgAFYAQQBMAFUARQBTACAAKABAAFAA
 cgBvAGQAdQBjAHQATgB1AG0AYgBlAHIALABAAE4AZQB3AFAAcgBvAGQAdQBjAHQAUgBlAGcATgB1
-AG0AYgBlAHIALABAAFAAcgBvAGQAdQBjAHQATgBhAG0AZQAsAEAAQwBBAFMATgB1AG0AYgBlAHIA
-LABAAFMAdABhAHQAdQBzACwAQABQAHIAbwBwAG8AcwBhAGwARABlAHAAdAAsAEAAUAByAG8AYwB1
-AG0AZQBuAHQARABlAHAAdAAsAEAAUABEACwAQABNAG8AbABlAGMAdQBsAGEAcgBGAG8AcgBtAHUA
-bABhACwAJwAxACcALABHAEUAVABEAEEAVABFACgAKQApAAELTABpAG4AZQAgAAAdIABpAHMAIABu
-AG8AdAAgAHYAYQBsAGkAZAAuAAAhLQAtACAAXE9tacYw/DDWMOswpDDzMN0w/DDIMA0ACgABD0MA
-bwBtAG0AZQBuAHQAAAAApwWmEJJsLESv4DAVXlpSCAAEIAEBCAMgAAEFIAEBEREEIAEBDgQgAQEC
-BSACAQ4OBSABARFFByAEAQ4ODg4GFRIkARIMBhUSJAESCAYVEiQBEmUGFRIkARIgBCAAEwAHAAES
-bRGAuQUgABKAvQcgAgEOEoC9BAABHBwEAAEBHEIHGw4ODhKAlRKAlRKAmRKAnRKAoRKApRKApRKA
-pRKApRKApRKApRKApRKApRKApR0OCAgODhKAqRKAqQgSgK0SgLEFIAASgMkFIAASgM0GIAESgNEc
-AyAAHAMgAA4FAAIODg4FIAASgNkGIAESgN0cBCABHBwGIAEBEYDhBSABAR0OByACAQ4SgJ0DIAAI
-BSAAEoDlCSACEoClDhGA6QYAARKAqQ4EIAAdDgcAAggSgPEIBAABAg4FIAEdBQ4MAAMdBRKAqRKA
-qR0FBSABDh0FBAABDggFAAEOHQ4GAAMIDg4CBQACAg4OBgADDg4ODgYgARKAlQ4EIAEBHAQGEoEF
-BgADHAIcHAYAAQESgLEDAAABAyAAAgcgAhKAlQgOBCABAhwEBwEeAAIeAAUQAQAeAAQKAR4ABAcB
-EwAGFRIkARMABwYVEnEBEwAGFRJxARMAAhMABAoBEwAFIAEBEwAIt3pcVhk04IkIsD9ffxHVCjoI
-iYRdzYCAzJEEAAAAAAQBAAAABwYVEiQBEgwHBhUSJAESCAcGFRIkARJlBwYVEiQBEiADBhJ5AwYS
-fQMGEhgCBhwCBggDBhEoBAAAEgwEAAASCAQAABJlBAAAEiAEAAASeQQAABJ9BQABARJ9BAAAEhgE
-IAASbQcQAQEeAB4ABzABAQEQHgAECAASDAQIABIIBAgAEmUECAASIAQIABJ5BAgAEn0ECAASGAQo
-ABMACAEACAAAAAAAHgEAAQBUAhZXcmFwTm9uRXhjZXB0aW9uVGhyb3dzAQgBAAIAAAAAADcBADJT
-Y3JpcHRUYXNrXzFiZmZkYzIwOTM0NjRhM2FhYTQzNWQ1OTBhZWU5ZWZkLnZicHJvagAABQEAAAAA
-FgEAEUNvcHlyaWdodCBAICAyMDEyAAAFAQABAAApAQAkNWZiNzdkZjctZGQyYy00MzE0LWFjNWEt
-YWNmM2NlMzEyNTk4AAAMAQAHMS4wLjAuMAAARwEAGi5ORVRGcmFtZXdvcmssVmVyc2lvbj12NC4w
-AQBUDhRGcmFtZXdvcmtEaXNwbGF5TmFtZRAuTkVUIEZyYW1ld29yayA0CAEAAQAAAAAAGAEACk15
-VGVtcGxhdGUIMTEuMC4wLjAAAGEBADRTeXN0ZW0uV2ViLlNlcnZpY2VzLlByb3RvY29scy5Tb2Fw
-SHR0cENsaWVudFByb3RvY29sEkNyZWF0ZV9fSW5zdGFuY2VfXxNEaXNwb3NlX19JbnN0YW5jZV9f
-AAAAEAEAC015LkNvbXB1dGVyAAATAQAOTXkuQXBwbGljYXRpb24AAAwBAAdNeS5Vc2VyAAATAQAO
-TXkuV2ViU2VydmljZXMAAAAAALQAAADOyu++AQAAAJEAAABsU3lzdGVtLlJlc291cmNlcy5SZXNv
-dXJjZVJlYWRlciwgbXNjb3JsaWIsIFZlcnNpb249NC4wLjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQ
-dWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5I1N5c3RlbS5SZXNvdXJjZXMuUnVudGltZVJl
-c291cmNlU2V0AgAAAAAAAAAAAAAAUEFEUEFEULQAAAAISQAAAAAAAAAAAAAiSQAAACAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAFEkAAAAAAAAAAAAAAABfQ29yRGxsTWFpbgBtc2NvcmVlLmRsbAAAAAAA
-/yUAIAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AG0AYgBlAHIALABMAEUARgBUACgAQABQAHIAbwBkAHUAYwB0AE4AYQBtAGUALAAgADEAMAAwADAA
+KQAsAEAAQwBBAFMATgB1AG0AYgBlAHIALABAAFMAdABhAHQAdQBzACwAQABQAHIAbwBwAG8AcwBh
+AGwARABlAHAAdAAsAEAAUAByAG8AYwB1AG0AZQBuAHQARABlAHAAdAAsAEAAUABEACwAQABNAG8A
+bABlAGMAdQBsAGEAcgBGAG8AcgBtAHUAbABhACwAJwAxACcALABHAEUAVABEAEEAVABFACgAKQAp
+AAELTABpAG4AZQAgAAAdIABpAHMAIABuAG8AdAAgAHYAYQBsAGkAZAAuAAAhLQAtACAAXE9tacYw
+/DDWMOswpDDzMN0w/DDIMA0ACgABD0MAbwBtAG0AZQBuAHQAAAAAuHsthvfmA06H091u5ZZlTAAE
+IAEBCAMgAAEFIAEBEREEIAEBDgQgAQECBSACAQ4OBSABARFFByAEAQ4ODg4GFRIkARIMBhUSJAES
+CAYVEiQBEmUGFRIkARIgBCAAEwAHAAESbRGAuQUgABKAvQcgAgEOEoC9BAABHBwEAAEBHEIHGw4O
+DhKAlRKAlRKAmRKAnRKAoRKApRKApRKApRKApRKApRKApRKApRKApRKApR0OCAgODhKAqRKAqQgS
+gK0SgLEFIAASgMkFIAASgM0GIAESgNEcAyAAHAMgAA4FAAIODg4FIAASgNkGIAESgN0cBCABHBwG
+IAEBEYDhBSABAR0OByACAQ4SgJ0DIAAIBSAAEoDlCSACEoClDhGA6QYAARKAqQ4EIAAdDgcAAggS
+gPEIBAABAg4FIAEdBQ4MAAMdBRKAqRKAqR0FBSABDh0FBAABDggFAAEOHQ4GAAMIDg4CBQACAg4O
+BgADDg4ODgYgARKAlQ4EIAEBHAQGEoEFBgADHAIcHAYAAQESgLEDAAABAyAAAgcgAhKAlQgOBCAB
+AhwEBwEeAAIeAAUQAQAeAAQKAR4ABAcBEwAGFRIkARMABwYVEnEBEwAGFRJxARMAAhMABAoBEwAF
+IAEBEwAIt3pcVhk04IkIsD9ffxHVCjoIiYRdzYCAzJEEAAAAAAQBAAAABwYVEiQBEgwHBhUSJAES
+CAcGFRIkARJlBwYVEiQBEiADBhJ5AwYSfQMGEhgCBhwCBggDBhEoBAAAEgwEAAASCAQAABJlBAAA
+EiAEAAASeQQAABJ9BQABARJ9BAAAEhgEIAASbQcQAQEeAB4ABzABAQEQHgAECAASDAQIABIIBAgA
+EmUECAASIAQIABJ5BAgAEn0ECAASGAQoABMACAEACAAAAAAAHgEAAQBUAhZXcmFwTm9uRXhjZXB0
+aW9uVGhyb3dzAQgBAAIAAAAAADcBADJTY3JpcHRUYXNrXzFiZmZkYzIwOTM0NjRhM2FhYTQzNWQ1
+OTBhZWU5ZWZkLnZicHJvagAABQEAAAAAFgEAEUNvcHlyaWdodCBAICAyMDEyAAAFAQABAAApAQAk
+NWZiNzdkZjctZGQyYy00MzE0LWFjNWEtYWNmM2NlMzEyNTk4AAAMAQAHMS4wLjAuMAAARwEAGi5O
+RVRGcmFtZXdvcmssVmVyc2lvbj12NC4wAQBUDhRGcmFtZXdvcmtEaXNwbGF5TmFtZRAuTkVUIEZy
+YW1ld29yayA0CAEAAQAAAAAAGAEACk15VGVtcGxhdGUIMTEuMC4wLjAAAGEBADRTeXN0ZW0uV2Vi
+LlNlcnZpY2VzLlByb3RvY29scy5Tb2FwSHR0cENsaWVudFByb3RvY29sEkNyZWF0ZV9fSW5zdGFu
+Y2VfXxNEaXNwb3NlX19JbnN0YW5jZV9fAAAAEAEAC015LkNvbXB1dGVyAAATAQAOTXkuQXBwbGlj
+YXRpb24AAAwBAAdNeS5Vc2VyAAATAQAOTXkuV2ViU2VydmljZXMAAAAAALQAAADOyu++AQAAAJEA
+AABsU3lzdGVtLlJlc291cmNlcy5SZXNvdXJjZVJlYWRlciwgbXNjb3JsaWIsIFZlcnNpb249NC4w
+LjAuMCwgQ3VsdHVyZT1uZXV0cmFsLCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5I1N5
+c3RlbS5SZXNvdXJjZXMuUnVudGltZVJlc291cmNlU2V0AgAAAAAAAAAAAAAAUEFEUEFEULQAAAAg
+SQAAAAAAAAAAAAA6SQAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALEkAAAAAAAAAAAAAAABfQ29y
+RGxsTWFpbgBtc2NvcmVlLmRsbAAAAAAA/yUAIAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAEAAAABgA
@@ -2446,7 +1860,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAADAAAADQ5AAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAADAAAAEw5AAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -3824,162 +3238,6 @@ Imports System.Runtime.InteropServices
 	</msb:ItemGroup>
 </c:Project>]]></ProjectItem>
           <ProjectItem
-            Name="\scripttask_a4658be98608414c89574ae7a889c28f.vbproj"
-            Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="utf-16"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!-- This section defines project-level properties.
-
-       Configuration - Specifies whether the default configuration is Release or Debug.
-       Platform - Specifies what CPU the output of this project can run on.
-       OutputType - Must be "Library" for VSTA.
-       NoStandardLibraries - Set to "false" for VSTA.
-       RootNamespace - In C#, this specifies the namespace given to new files.
-                       In Visual Basic, all objects are wrapped in this namespace at runtime.
-       AssemblyName - Name of the output assembly.
-  -->
-  <PropertyGroup>
-    <ProjectTypeGuids>{30D016F9-3734-4E33-A861-5E7D899E18F3};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Library</OutputType>
-    <RootNamespace>ScriptTask_a4658be98608414c89574ae7a889c28f.vbproj</RootNamespace>
-    <AssemblyName>ScriptTask_a4658be98608414c89574ae7a889c28f.vbproj</AssemblyName>
-    <StartupObject></StartupObject>
-    <OptionExplicit>On</OptionExplicit>
-    <OptionCompare>Binary</OptionCompare>
-    <OptionStrict>Off</OptionStrict>
-    <OptionInfer>On</OptionInfer>
-    <ProjectGuid>{C50CF6D6-8D0A-43A8-A7FA-73554A3F2166}</ProjectGuid>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile></TargetFrameworkProfile>
-  </PropertyGroup>
-  <!-- This section defines properties that are set when the "Debug" configuration is
-       selected.
-
-       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
-       Optimize - If true, optimize the build output. If false, do not optimize.
-       OutputPath - Output path of the project relative to the project file.
-       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
-       DefineConstants - Constants defined for the preprocessor.
-       Warning Level - Warning level for the compiler.
-  -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DefineConstants></DefineConstants>
-    <DefineDebug>true</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
-  </PropertyGroup>
-  <!-- This section defines properties that are set when the "Release" configuration is
-       selected.
-
-       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
-       Optimize - If true, optimize the build output. If false, do not optimize.
-       OutputPath - Output path of the project relative to the project file.
-       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
-       DefineConstants - Constants defined for the preprocessor.
-       Warning Level - Warning level for the compiler.
-  -->
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DefineConstants></DefineConstants>
-    <DefineDebug>false</DefineDebug>
-    <DefineTrace>true</DefineTrace>
-    <DebugSymbols>false</DebugSymbols>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <RegisterForComInterop>false</RegisterForComInterop>
-    <RemoveIntegerChecks>false</RemoveIntegerChecks>
-    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
-  </PropertyGroup>
-  <!-- This section enables pre- and post-build steps. However,
-       it is recommended that MSBuild tasks be used instead of these properties.
-  -->
-  <PropertyGroup>
-    <PreBuildEvent></PreBuildEvent>
-    <PostBuildEvent></PostBuildEvent>
-  </PropertyGroup>
-  <!-- This sections specifies references for the project. -->
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.SqlServer.ManagedDTS, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
-    <Reference Include="Microsoft.SqlServer.ScriptTask, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
-  </ItemGroup>
-  <!-- Visual Basic supports Importing namespaces (equivalent to using statements in C#).-->
-  <ItemGroup>
-    <Import Include="Microsoft.VisualBasic" />
-    <Import Include="System" />
-    <Import Include="System.Collections" />
-    <Import Include="System.Data" />
-    <Import Include="System.Diagnostics" />
-    <Import Include="System.Windows.Forms" />
-  </ItemGroup>
-  <!-- This section defines the user source files that are part of the
-       project.
-
-       Compile - Specifies a source file to compile.
-       EmbeddedResource - Specifies a .resx file for embedded resources.
-       None - Specifies a file that is not to be passed to the compiler (for instance,
-              a text file or XML file).
-       AppDesigner - Specifies the directory where the application properties files can
-                     be found.
-  -->
-  <ItemGroup>
-    <AppDesigner Include="My Project\" />
-    <Compile Include="My Project\AssemblyInfo.vb">
-      <SubType>Code</SubType>
-    </Compile>
-    <EmbeddedResource Include="My Project\Resources.resx">
-      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
-      <CustomToolNamespace>My.Resources</CustomToolNamespace>
-    </EmbeddedResource>
-    <Compile Include="My Project\Resources.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <None Include="My Project\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
-    </None>
-    <Compile Include="My Project\Settings.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ScriptMain.vb">
-      <SubType>Code</SubType>
-    </Compile>
-    <!-- Include the default configuration information and metadata files for the add-in.
-         These files are copied to the build output directory when the project is
-         built, and the path to the configuration file is passed to add-in on the command
-         line when debugging.
-    -->
-  </ItemGroup>
-  <!-- Include the build rules for a VB project.-->
-  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
-  <!-- This section defines VSTA properties that describe the host-changable project properties. -->
-  <ProjectExtensions>
-    <VisualStudio>
-      <FlavorProperties GUID="{30D016F9-3734-4E33-A861-5E7D899E18F3}">
-        <ProjectProperties HostName="VSTAHostName" HostPackage="{B3A685AA-7EAF-4BC6-9940-57959FA5AC07}" ApplicationType="usd" Language="vb" TemplatesPath="" DebugInfoExeName="" />
-        <Host Name="SSIS_ScriptTask" />
-        <ProjectClient>
-          <HostIdentifier>SSIS_ST130</HostIdentifier>
-        </ProjectClient>
-      </FlavorProperties>
-    </VisualStudio>
-  </ProjectExtensions>
-</Project>]]></ProjectItem>
-          <ProjectItem
             Name="My Project\Settings.Designer.vb"
             Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
 ' <autogenerated>
@@ -4804,6 +4062,162 @@ Namespace My.Resources
         End Property
     End Class
 End Namespace]]></ProjectItem>
+          <ProjectItem
+            Name="\scripttask_a4658be98608414c89574ae7a889c28f.vbproj"
+            Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="utf-16"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- This section defines project-level properties.
+
+       Configuration - Specifies whether the default configuration is Release or Debug.
+       Platform - Specifies what CPU the output of this project can run on.
+       OutputType - Must be "Library" for VSTA.
+       NoStandardLibraries - Set to "false" for VSTA.
+       RootNamespace - In C#, this specifies the namespace given to new files.
+                       In Visual Basic, all objects are wrapped in this namespace at runtime.
+       AssemblyName - Name of the output assembly.
+  -->
+  <PropertyGroup>
+    <ProjectTypeGuids>{30D016F9-3734-4E33-A861-5E7D899E18F3};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>ScriptTask_a4658be98608414c89574ae7a889c28f.vbproj</RootNamespace>
+    <AssemblyName>ScriptTask_a4658be98608414c89574ae7a889c28f.vbproj</AssemblyName>
+    <StartupObject></StartupObject>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>Off</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+    <ProjectGuid>{C50CF6D6-8D0A-43A8-A7FA-73554A3F2166}</ProjectGuid>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile></TargetFrameworkProfile>
+  </PropertyGroup>
+  <!-- This section defines properties that are set when the "Debug" configuration is
+       selected.
+
+       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
+       Optimize - If true, optimize the build output. If false, do not optimize.
+       OutputPath - Output path of the project relative to the project file.
+       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
+       DefineConstants - Constants defined for the preprocessor.
+       Warning Level - Warning level for the compiler.
+  -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DefineConstants></DefineConstants>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
+  </PropertyGroup>
+  <!-- This section defines properties that are set when the "Release" configuration is
+       selected.
+
+       DebugSymbols - If true, create symbols (.pdb). If false, do not create symbols.
+       Optimize - If true, optimize the build output. If false, do not optimize.
+       OutputPath - Output path of the project relative to the project file.
+       EnableUnmanagedDebugging - If true, starting the debugger will attach both managed and unmanaged debuggers.
+       DefineConstants - Constants defined for the preprocessor.
+       Warning Level - Warning level for the compiler.
+  -->
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants></DefineConstants>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <DebugSymbols>false</DebugSymbols>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <NoWarn>42016,42017,42018,42019,42032,42353,42354,42355</NoWarn>
+  </PropertyGroup>
+  <!-- This section enables pre- and post-build steps. However,
+       it is recommended that MSBuild tasks be used instead of these properties.
+  -->
+  <PropertyGroup>
+    <PreBuildEvent></PreBuildEvent>
+    <PostBuildEvent></PostBuildEvent>
+  </PropertyGroup>
+  <!-- This sections specifies references for the project. -->
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.SqlServer.ManagedDTS, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
+    <Reference Include="Microsoft.SqlServer.ScriptTask, Version=13.0.0.0, Culture=Neutral, PublicKeyToken=89845dcd8080cc91" />
+  </ItemGroup>
+  <!-- Visual Basic supports Importing namespaces (equivalent to using statements in C#).-->
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+  </ItemGroup>
+  <!-- This section defines the user source files that are part of the
+       project.
+
+       Compile - Specifies a source file to compile.
+       EmbeddedResource - Specifies a .resx file for embedded resources.
+       None - Specifies a file that is not to be passed to the compiler (for instance,
+              a text file or XML file).
+       AppDesigner - Specifies the directory where the application properties files can
+                     be found.
+  -->
+  <ItemGroup>
+    <AppDesigner Include="My Project\" />
+    <Compile Include="My Project\AssemblyInfo.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ScriptMain.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <!-- Include the default configuration information and metadata files for the add-in.
+         These files are copied to the build output directory when the project is
+         built, and the path to the configuration file is passed to add-in on the command
+         line when debugging.
+    -->
+  </ItemGroup>
+  <!-- Include the build rules for a VB project.-->
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <!-- This section defines VSTA properties that describe the host-changable project properties. -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{30D016F9-3734-4E33-A861-5E7D899E18F3}">
+        <ProjectProperties HostName="VSTAHostName" HostPackage="{B3A685AA-7EAF-4BC6-9940-57959FA5AC07}" ApplicationType="usd" Language="vb" TemplatesPath="" DebugInfoExeName="" />
+        <Host Name="SSIS_ScriptTask" />
+        <ProjectClient>
+          <HostIdentifier>SSIS_ST130</HostIdentifier>
+        </ProjectClient>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>]]></ProjectItem>
           <BinaryItem
             Name="ScriptTask_a4658be98608414c89574ae7a889c28f.vbproj.dll">TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAgAAAAA4fug4AtAnNIbgBTM0hVGhpcyBwcm9ncmFtIGNhbm5vdCBiZSBydW4gaW4gRE9TIG1v
@@ -5562,6 +4976,44 @@ Partial Friend NotInheritable Class MySettings
     End Property
 End Class]]></ProjectItem>
           <ProjectItem
+            Name="My Project\AssemblyInfo.vb"
+            Encoding="UTF8"><![CDATA[Imports System
+Imports System.Reflection
+Imports System.Runtime.InteropServices
+
+' General Information about an assembly is controlled through the following 
+' set of attributes. Change these attribute values to modify the information
+' associated with an assembly.
+
+' Review the values of the assembly attributes
+
+<Assembly: AssemblyTitle("ScriptTask_c09b31fe2d8b43f6afc84deb91c5a6d4.vbproj")> 
+<Assembly: AssemblyDescription("")> 
+<Assembly: AssemblyCompany("")> 
+<Assembly: AssemblyProduct("ScriptTask_c09b31fe2d8b43f6afc84deb91c5a6d4.vbproj")> 
+<Assembly: AssemblyCopyright("Copyright @  2012")> 
+<Assembly: AssemblyTrademark("")> 
+<Assembly: CLSCompliant(True)> 
+
+<Assembly: ComVisible(False)> 
+
+'The following GUID is for the ID of the typelib if this project is exposed to COM
+<Assembly: Guid("0e67c85b-4e39-4ee6-b330-4e9186186102")> 
+
+' Version information for an assembly consists of the following four values:
+'
+'      Major Version
+'      Minor Version 
+'      Build Number
+'      Revision
+'
+' You can specify all the values or you can default the Build and Revision Numbers 
+' by using the '*' as shown below:
+' <Assembly: AssemblyVersion("1.0.*")>
+
+<Assembly: AssemblyVersion("1.0.0.0")> 
+<Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
+          <ProjectItem
             Name="My Project\Settings.settings"
             Encoding="UTF8"><![CDATA[<?xml version='1.0' encoding='iso-8859-1'?>
 <SettingsFile xmlns="uri:settings" CurrentProfile="(Default)" GeneratedClassNamespace="$safeprojectname" GeneratedClassName="MySettings">
@@ -5897,44 +5349,6 @@ End Class]]></ProjectItem>
   </ProjectExtensions>
 </Project>]]></ProjectItem>
           <ProjectItem
-            Name="My Project\AssemblyInfo.vb"
-            Encoding="UTF8"><![CDATA[Imports System
-Imports System.Reflection
-Imports System.Runtime.InteropServices
-
-' General Information about an assembly is controlled through the following 
-' set of attributes. Change these attribute values to modify the information
-' associated with an assembly.
-
-' Review the values of the assembly attributes
-
-<Assembly: AssemblyTitle("ScriptTask_c09b31fe2d8b43f6afc84deb91c5a6d4.vbproj")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("")> 
-<Assembly: AssemblyProduct("ScriptTask_c09b31fe2d8b43f6afc84deb91c5a6d4.vbproj")> 
-<Assembly: AssemblyCopyright("Copyright @  2012")> 
-<Assembly: AssemblyTrademark("")> 
-<Assembly: CLSCompliant(True)> 
-
-<Assembly: ComVisible(False)> 
-
-'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("0e67c85b-4e39-4ee6-b330-4e9186186102")> 
-
-' Version information for an assembly consists of the following four values:
-'
-'      Major Version
-'      Minor Version 
-'      Build Number
-'      Revision
-'
-' You can specify all the values or you can default the Build and Revision Numbers 
-' by using the '*' as shown below:
-' <Assembly: AssemblyVersion("1.0.*")>
-
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> ]]></ProjectItem>
-          <ProjectItem
             Name="\my project\resources.designer.vb"
             Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
 ' <autogenerated>
@@ -6268,196 +5682,6 @@ Imports System.Runtime.InteropServices
 	</msb:ItemGroup>
 </c:Project>]]></ProjectItem>
           <ProjectItem
-            Name="My Project\Settings.Designer.vb"
-            Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
-' <autogenerated>
-'     This code was generated by a tool.
-'
-'     Changes to this file may cause incorrect behavior and will be lost if
-'     the code is regenerated.
-' </autogenerated>
-'------------------------------------------------------------------------------
-
-Option Strict Off
-Option Explicit On
-
-
-
-Partial Friend NotInheritable Class MySettings
-    Inherits System.Configuration.ApplicationSettingsBase
-
-    Private Shared m_Value As MySettings
-
-    Private Shared m_SyncObject As Object = New Object
-
-    <System.Diagnostics.DebuggerNonUserCode()> _
-    Public Shared ReadOnly Property Value() As MySettings
-        Get
-            If (MySettings.m_Value Is Nothing) Then
-                System.Threading.Monitor.Enter(MySettings.m_SyncObject)
-                If (MySettings.m_Value Is Nothing) Then
-                    Try
-                        MySettings.m_Value = New MySettings
-                    Finally
-                        System.Threading.Monitor.Exit(MySettings.m_SyncObject)
-                    End Try
-                End If
-            End If
-            Return MySettings.m_Value
-        End Get
-    End Property
-End Class]]></ProjectItem>
-          <ProjectItem
-            Name="My Project\Resources.Designer.vb"
-            Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
-' <autogenerated>
-'     This code was generated by a tool.
-'
-'     Changes to this file may cause incorrect behavior and will be lost if
-'     the code is regenerated.
-' </autogenerated>
-'------------------------------------------------------------------------------
-
-Option Strict Off
-Option Explicit On
-
-
-Namespace My.Resources
-    
-    '''<summary>
-    '''   A strongly-typed resource class, for looking up localized strings, etc.
-    '''</summary>
-    'This class was auto-generated by the Strongly Typed Resource Builder
-    'class via a tool like ResGen or Visual Studio.NET.
-    'To add or remove a member, edit your .ResX file then rerun ResGen
-    'with the /str option, or rebuild your VS project.
-    Class MyResources
-        
-        Private Shared _resMgr As System.Resources.ResourceManager
-        
-        Private Shared _resCulture As System.Globalization.CultureInfo
-        
-        Friend Sub New()
-            MyBase.New
-        End Sub
-        
-        '''<summary>
-        '''   Returns the cached ResourceManager instance used by this class.
-        '''</summary>
-        <System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)>  _
-        Public Shared ReadOnly Property ResourceManager() As System.Resources.ResourceManager
-            Get
-                If (_resMgr Is Nothing) Then
-                    Dim temp As System.Resources.ResourceManager = New System.Resources.ResourceManager("My.Resources.MyResources", GetType(MyResources).Assembly)
-                    _resMgr = temp
-                End If
-                Return _resMgr
-            End Get
-        End Property
-        
-        '''<summary>
-        '''   Overrides the current thread's CurrentUICulture property for all
-        '''   resource lookups using this strongly typed resource class.
-        '''</summary>
-        <System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)>  _
-        Public Shared Property Culture() As System.Globalization.CultureInfo
-            Get
-                Return _resCulture
-            End Get
-            Set
-                _resCulture = value
-            End Set
-        End Property
-    End Class
-End Namespace]]></ProjectItem>
-          <ProjectItem
-            Name="ScriptMain.vb"
-            Encoding="UTF8"><![CDATA[' Microsoft SQL Server Integration Services Script Task
-' Write scripts using Microsoft Visual Basic
-' The ScriptMain class is the entry point of the Script Task.
-
-Imports System
-Imports System.Xml
-Imports System.Data
-Imports System.Math
-Imports Microsoft.SqlServer.Dts.Runtime
-Imports System.Data.SqlClient
-
-<Microsoft.SqlServer.Dts.Tasks.ScriptTask.SSISScriptTaskEntryPointAttribute> _
-<System.CLSCompliantAttribute(False)> _
-Partial Public Class ScriptMain
-	Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
-
-	Enum ScriptResults
-		Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
-		Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
-	End Enum
-
-
-    Public Sub Main()
-
-        ' データベース接続設定
-        Dim st_tmp_table As String = "TmpNewProduct"
-
-        ' 変数設定
-        Dim stb_error_comments As New Text.StringBuilder() ' DB エラーメッセージ格納用
-        Dim stb_comments As New Text.StringBuilder() ' その他処理コメント格納用
-
-        Try
-            Using connection As SqlConnection = DirectCast(Dts.Connections("ADO.Purchase").AcquireConnection(Dts.Transaction), SqlConnection)
-
-                Dim command As New SqlCommand("sp_ProductNameImport", connection) 'コマンド定義
-                command.CommandType = CommandType.StoredProcedure 'コマンドタイプをストアドプロシージャに指定
-                Dim RETURN_VALUE As SqlParameter = command.Parameters.Add("RETURN_VALUE", SqlDbType.Int) 'ストアドプロシージャからRETURN値(@RETURN_VALUE)を取得する変数
-                Dim ErrNUMBER As SqlParameter = command.Parameters.Add("ErrNUMBER", SqlDbType.Int)
-                Dim ErrSTATE As SqlParameter = command.Parameters.Add("ErrSTATE", SqlDbType.Int)
-                Dim ErrLINE As SqlParameter = command.Parameters.Add("ErrLINE", SqlDbType.Int)
-                Dim ErrMESSAGE As SqlParameter = command.Parameters.Add("ErrMESSAGE", SqlDbType.NVarChar, 2000)
-
-                RETURN_VALUE.Direction = ParameterDirection.ReturnValue
-                ErrNUMBER.Direction = ParameterDirection.Output
-                ErrSTATE.Direction = ParameterDirection.Output
-                ErrLINE.Direction = ParameterDirection.Output
-                ErrMESSAGE.Direction = ParameterDirection.Output
-
-                command.CommandTimeout = 300
-                command.ExecuteNonQuery() ' ストアドプロシージャの実行
-
-                'Error処理 
-                If CInt(RETURN_VALUE.Value) = 0 Then
-                    ' なにもしない
-                Else
-                    stb_error_comments.Append("ERROR NUMBER  : " & CStr(ErrNUMBER.Value) & vbCrLf)
-                    stb_error_comments.Append("ERROR STATE   : " & CStr(ErrSTATE.Value) & vbCrLf)
-                    stb_error_comments.Append("ERROR LINE    : " & CStr(ErrLINE.Value) & vbCrLf)
-                    stb_error_comments.Append("ERROR MESSAGE : " & CStr(ErrMESSAGE.Value) & vbCrLf)
-                    stb_error_comments.Append(command.CommandText & vbCrLf)
-                End If
-            End Using
-
-        Catch e As Exception
-            stb_error_comments.Append(e.ToString())
-        End Try
-
-        ' 処理コメント生成
-        If stb_comments.Length > 0 Or stb_error_comments.Length > 0 Then
-            stb_comments.Insert(0, "-- 製品名インポート" & vbCrLf)
-            stb_comments.Append(stb_error_comments.ToString() & vbCrLf)
-            Dts.Variables("Comment").Value = Dts.Variables("Comment").Value.ToString() & vbCrLf & stb_comments.ToString()
-            Dts.Variables("Err_Flag").Value = True
-        End If
-
-        ' エラーコメントがあった場合はタスク失敗。
-        If stb_error_comments.Length > 0 Then
-            Dts.TaskResult = ScriptResults.Failure
-        Else
-            Dts.TaskResult = ScriptResults.Success
-        End If
-
-    End Sub
-
-End Class]]></ProjectItem>
-          <ProjectItem
             Name="scripttask_f8dac7879364440e97a6773a51a374da.vbproj"
             Encoding="UTF16LE"><![CDATA[<?xml version="1.0" encoding="utf-16"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
@@ -6613,6 +5837,156 @@ End Class]]></ProjectItem>
     </VisualStudio>
   </ProjectExtensions>
 </Project>]]></ProjectItem>
+          <ProjectItem
+            Name="My Project\Resources.Designer.vb"
+            Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
+' <autogenerated>
+'     This code was generated by a tool.
+'
+'     Changes to this file may cause incorrect behavior and will be lost if
+'     the code is regenerated.
+' </autogenerated>
+'------------------------------------------------------------------------------
+
+Option Strict Off
+Option Explicit On
+
+
+Namespace My.Resources
+    
+    '''<summary>
+    '''   A strongly-typed resource class, for looking up localized strings, etc.
+    '''</summary>
+    'This class was auto-generated by the Strongly Typed Resource Builder
+    'class via a tool like ResGen or Visual Studio.NET.
+    'To add or remove a member, edit your .ResX file then rerun ResGen
+    'with the /str option, or rebuild your VS project.
+    Class MyResources
+        
+        Private Shared _resMgr As System.Resources.ResourceManager
+        
+        Private Shared _resCulture As System.Globalization.CultureInfo
+        
+        Friend Sub New()
+            MyBase.New
+        End Sub
+        
+        '''<summary>
+        '''   Returns the cached ResourceManager instance used by this class.
+        '''</summary>
+        <System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)>  _
+        Public Shared ReadOnly Property ResourceManager() As System.Resources.ResourceManager
+            Get
+                If (_resMgr Is Nothing) Then
+                    Dim temp As System.Resources.ResourceManager = New System.Resources.ResourceManager("My.Resources.MyResources", GetType(MyResources).Assembly)
+                    _resMgr = temp
+                End If
+                Return _resMgr
+            End Get
+        End Property
+        
+        '''<summary>
+        '''   Overrides the current thread's CurrentUICulture property for all
+        '''   resource lookups using this strongly typed resource class.
+        '''</summary>
+        <System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)>  _
+        Public Shared Property Culture() As System.Globalization.CultureInfo
+            Get
+                Return _resCulture
+            End Get
+            Set
+                _resCulture = value
+            End Set
+        End Property
+    End Class
+End Namespace]]></ProjectItem>
+          <ProjectItem
+            Name="ScriptMain.vb"
+            Encoding="UTF8"><![CDATA[' Microsoft SQL Server Integration Services Script Task
+' Write scripts using Microsoft Visual Basic
+' The ScriptMain class is the entry point of the Script Task.
+
+Imports System
+Imports System.Xml
+Imports System.Data
+Imports System.Math
+Imports Microsoft.SqlServer.Dts.Runtime
+Imports System.Data.SqlClient
+
+<Microsoft.SqlServer.Dts.Tasks.ScriptTask.SSISScriptTaskEntryPointAttribute> _
+<System.CLSCompliantAttribute(False)> _
+Partial Public Class ScriptMain
+	Inherits Microsoft.SqlServer.Dts.Tasks.ScriptTask.VSTARTScriptObjectModelBase
+
+	Enum ScriptResults
+		Success = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Success
+		Failure = Microsoft.SqlServer.Dts.Runtime.DTSExecResult.Failure
+	End Enum
+
+
+    Public Sub Main()
+
+        ' データベース接続設定
+        Dim st_tmp_table As String = "TmpNewProduct"
+
+        ' 変数設定
+        Dim stb_error_comments As New Text.StringBuilder() ' DB エラーメッセージ格納用
+        Dim stb_comments As New Text.StringBuilder() ' その他処理コメント格納用
+
+        Try
+            Using connection As SqlConnection = DirectCast(Dts.Connections("ADO.Purchase").AcquireConnection(Dts.Transaction), SqlConnection)
+
+                Dim command As New SqlCommand("sp_ProductNameImport", connection) 'コマンド定義
+                command.CommandType = CommandType.StoredProcedure 'コマンドタイプをストアドプロシージャに指定
+                Dim RETURN_VALUE As SqlParameter = command.Parameters.Add("RETURN_VALUE", SqlDbType.Int) 'ストアドプロシージャからRETURN値(@RETURN_VALUE)を取得する変数
+                Dim ErrNUMBER As SqlParameter = command.Parameters.Add("ErrNUMBER", SqlDbType.Int)
+                Dim ErrSTATE As SqlParameter = command.Parameters.Add("ErrSTATE", SqlDbType.Int)
+                Dim ErrLINE As SqlParameter = command.Parameters.Add("ErrLINE", SqlDbType.Int)
+                Dim ErrMESSAGE As SqlParameter = command.Parameters.Add("ErrMESSAGE", SqlDbType.NVarChar, 2000)
+
+                RETURN_VALUE.Direction = ParameterDirection.ReturnValue
+                ErrNUMBER.Direction = ParameterDirection.Output
+                ErrSTATE.Direction = ParameterDirection.Output
+                ErrLINE.Direction = ParameterDirection.Output
+                ErrMESSAGE.Direction = ParameterDirection.Output
+
+                command.CommandTimeout = 300
+                command.ExecuteNonQuery() ' ストアドプロシージャの実行
+
+                'Error処理 
+                If CInt(RETURN_VALUE.Value) = 0 Then
+                    ' なにもしない
+                Else
+                    stb_error_comments.Append("ERROR NUMBER  : " & CStr(ErrNUMBER.Value) & vbCrLf)
+                    stb_error_comments.Append("ERROR STATE   : " & CStr(ErrSTATE.Value) & vbCrLf)
+                    stb_error_comments.Append("ERROR LINE    : " & CStr(ErrLINE.Value) & vbCrLf)
+                    stb_error_comments.Append("ERROR MESSAGE : " & CStr(ErrMESSAGE.Value) & vbCrLf)
+                    stb_error_comments.Append(command.CommandText & vbCrLf)
+                End If
+            End Using
+
+        Catch e As Exception
+            stb_error_comments.Append(e.ToString())
+        End Try
+
+        ' 処理コメント生成
+        If stb_comments.Length > 0 Or stb_error_comments.Length > 0 Then
+            stb_comments.Insert(0, "-- 製品名インポート" & vbCrLf)
+            stb_comments.Append(stb_error_comments.ToString() & vbCrLf)
+            Dts.Variables("Comment").Value = Dts.Variables("Comment").Value.ToString() & vbCrLf & stb_comments.ToString()
+            Dts.Variables("Err_Flag").Value = True
+        End If
+
+        ' エラーコメントがあった場合はタスク失敗。
+        If stb_error_comments.Length > 0 Then
+            Dts.TaskResult = ScriptResults.Failure
+        Else
+            Dts.TaskResult = ScriptResults.Success
+        End If
+
+    End Sub
+
+End Class]]></ProjectItem>
           <ProjectItem
             Name="\my project\resources.resx"
             Encoding="UTF8"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
@@ -6890,6 +6264,46 @@ End Class]]></ProjectItem>
 </Project>]]></ProjectItem>
           <ProjectItem
             Name="\my project\settings.designer.vb"
+            Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
+' <autogenerated>
+'     This code was generated by a tool.
+'
+'     Changes to this file may cause incorrect behavior and will be lost if
+'     the code is regenerated.
+' </autogenerated>
+'------------------------------------------------------------------------------
+
+Option Strict Off
+Option Explicit On
+
+
+
+Partial Friend NotInheritable Class MySettings
+    Inherits System.Configuration.ApplicationSettingsBase
+
+    Private Shared m_Value As MySettings
+
+    Private Shared m_SyncObject As Object = New Object
+
+    <System.Diagnostics.DebuggerNonUserCode()> _
+    Public Shared ReadOnly Property Value() As MySettings
+        Get
+            If (MySettings.m_Value Is Nothing) Then
+                System.Threading.Monitor.Enter(MySettings.m_SyncObject)
+                If (MySettings.m_Value Is Nothing) Then
+                    Try
+                        MySettings.m_Value = New MySettings
+                    Finally
+                        System.Threading.Monitor.Exit(MySettings.m_SyncObject)
+                    End Try
+                End If
+            End If
+            Return MySettings.m_Value
+        End Get
+    End Property
+End Class]]></ProjectItem>
+          <ProjectItem
+            Name="My Project\Settings.Designer.vb"
             Encoding="UTF8"><![CDATA['------------------------------------------------------------------------------
 ' <autogenerated>
 '     This code was generated by a tool.
