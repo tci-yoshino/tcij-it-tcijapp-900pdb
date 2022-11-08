@@ -375,6 +375,9 @@ Public Class HeaderEhs
         ElseIf ehsHeader.Item.Equals("PA1_PI") Then
             EhsItem = New EhsItem(ehsHeader.Text, s_SPECS.PA1_PI)
             Me.EhsItemList.Add(EhsItem)
+        ElseIf ehsHeader.Item.Equals("EXPCTRL") Then
+            EhsItem = New EhsItem(ehsHeader.Text, s_SPECS.EXPCTRL)
+            Me.EhsItemList.Add(EhsItem)
         End If
 
     End Sub

@@ -88,6 +88,7 @@ Namespace TCIDataAccess
         Protected _CA_PI As String = String.Empty
         Protected _PA1_MAXNET As String = String.Empty
         Protected _PA1_PI As String = String.Empty
+        Protected _EXPCTRL As String = String.Empty
 
         ''' <summary> 
         ''' MATNR を設定、または取得する 
@@ -929,6 +930,18 @@ Namespace TCIDataAccess
             End Set
         End Property
 
+        ''' <summary>
+        ''' EXPCTRL を設定、または取得する
+        ''' </summary>
+        Public Property EXPCTRL() As String
+            Get
+                Return _EXPCTRL
+            End Get
+            Set(ByVal value As String)
+                _EXPCTRL = value
+            End Set
+        End Property
+
         ''' <summary> 
         ''' コンストラクタ
         ''' </summary> 
@@ -1013,7 +1026,8 @@ Namespace TCIDataAccess
             Value.AppendLine("    [CA_MAXNET],")
             Value.AppendLine("    [CA_PI],")
             Value.AppendLine("    [PA1_MAXNET],")
-            Value.AppendLine("    [PA1_PI]")
+            Value.AppendLine("    [PA1_PI],")
+            Value.AppendLine("    [EXPCTRL]")
             Value.AppendLine("FROM")
             Value.AppendLine("    [s_SPECS]")
 
@@ -1093,6 +1107,7 @@ Namespace TCIDataAccess
                         SetProperty(DBReader("CA_PI"), _CA_PI)
                         SetProperty(DBReader("PA1_MAXNET"), _PA1_MAXNET)
                         SetProperty(DBReader("PA1_PI"), _PA1_PI)
+                        SetProperty(DBReader("EXPCTRL"), _EXPCTRL)
                     End While
                     DBReader.Close()
                 End Using
@@ -1176,7 +1191,8 @@ Namespace TCIDataAccess
             Value.AppendLine("    [CA_MAXNET],")
             Value.AppendLine("    [CA_PI],")
             Value.AppendLine("    [PA1_MAXNET],")
-            Value.AppendLine("    [PA1_PI]")
+            Value.AppendLine("    [PA1_PI],")
+            Value.AppendLine("    [EXPCTRL]")
             Value.AppendLine("FROM")
             Value.AppendLine("    [s_SPECS]")
             Value.AppendLine("WHERE")
@@ -1260,6 +1276,7 @@ Namespace TCIDataAccess
                         SetProperty(DBReader("CA_PI"), _CA_PI)
                         SetProperty(DBReader("PA1_MAXNET"), _PA1_MAXNET)
                         SetProperty(DBReader("PA1_PI"), _PA1_PI)
+                        SetProperty(DBReader("EXPCTRL"), _EXPCTRL)
                     End While
                     DBReader.Close()
                 End Using
