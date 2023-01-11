@@ -17,7 +17,7 @@
     <div id="content">
         <div class="tabs"><a href="./CountrySetting.aspx">New Country</a></div>
 
-        <h3>Country</h3>
+        <h3>Country or Region</h3>
 
         <div class="list">
             <p class="attention"></p>
@@ -26,8 +26,8 @@
                 <LayoutTemplate>
                     <table ID="itemPlaceholderContainer" runat="server" border="0" style="">
                         <tr runat="server" style="">
-                            <th runat="server" style="width:10%">Country Code</th>
-                            <th runat="server" style="width:15%">Country Name</th>
+                            <th runat="server" style="width:10%">Country or Region Code</th>
+                            <th runat="server" style="width:15%">Country or Region Name</th>
                             <th runat="server" style="width:15%">Default Quo-Location</th>
                             <th></th>
                         </tr>

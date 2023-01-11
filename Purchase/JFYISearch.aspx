@@ -73,13 +73,13 @@
                             <td colspan="5"><asp:Label ID="ProductNumber" runat="server" Text='<%#Eval("ProductNumber")%>'></asp:Label><span class="indent"><asp:Label ID="ProductName" runat="server" Text='<%#Eval("ProductName")%>'></asp:Label></span></td>
                         </tr>
                         <tr>
-                            <th>Supplier Name / Country</th>
+                            <th>Supplier Name / Country or Region</th>
                             <td colspan="3"><asp:Label ID="SupplierName" runat="server" Text='<%#Eval("SupplierName")%>'></asp:Label><span class="indent">(<asp:Label ID="SupplierCountry" runat="server" Text='<%#Eval("SupplierCountryName")%>'></asp:Label>)</span></td>
                             <th>Purpose</th>
                             <td><asp:Label ID="Purpose" runat="server" Text='<%#Eval("Purpose")%>'></asp:Label></td>
                         </tr>
                         <tr>
-                            <th>Maker Name / Country</th>
+                            <th>Maker Name / Country or Region</th>
                             <td colspan="3"><asp:Label ID="MakerName" runat="server" Text='<%#Eval("MakerName")%>'></asp:Label><span class="indent">(<asp:Label ID="MakerCountry" runat="server" Text='<%#Eval("MakerCountryName")%>'></asp:Label>)</span></td>
                             <th>Supplier Item Name</th>
                             <td><asp:Label ID="SupplierItemName" runat="server" Text='<%#Eval("SupplierItemName")%>'></asp:Label></td>

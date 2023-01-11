@@ -21,7 +21,7 @@
                 <h3>Setting</h3>
                 <div class="main">
                     <ul>
-                        <li id="CountryListli" runat="server"><a href="./CountryList.aspx">Country</a></li>
+                        <li id="CountryListli" runat="server"><a href="./CountryList.aspx">Country or Region</a></li>
                         <li id="SupplierSearchli" runat="server"><a href="./SupplierSearch.aspx">Supplier</a></li>
                         <li id="ProductSearchli" runat="server"><a href="./ProductSearchByKeyword.aspx">Product</a></li>
                         <li id="PurchaseGroupli" runat="server"><a href="./PurchaseGroup.aspx">User</a></li>

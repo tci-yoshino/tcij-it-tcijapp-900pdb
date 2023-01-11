@@ -45,7 +45,7 @@ window.onload = function() {
 						<td><asp:TextBox ID="SupplierName" runat="server" Width="21em" MaxLength="255"></asp:TextBox> (Partial text match)</td>
 					</tr>
                     <tr>
-                        <th>Country : </th>                        
+                        <th>Country or Region : </th>                        
                         <td><asp:ScriptManager ID="SM_RSS" runat="server"></asp:ScriptManager>
                                 <asp:UpdatePanel ID="UP_Country" runat="server">
                                     <ContentTemplate>

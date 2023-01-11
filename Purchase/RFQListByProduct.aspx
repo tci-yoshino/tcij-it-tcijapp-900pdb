@@ -148,7 +148,7 @@ function setFormAction(button_type) {
                             </td>
                         </tr>
                         <tr>
-                            <th>Supplier Code / Supplier Name / Country</th>
+                            <th>Supplier Code / Supplier Name / Country or Region</th>
                             <td colspan="3">
                                 <!-- １段下に改行されて表示される現象の対策のため他項目より前に記述する -->
                                 <span class="placedright"><asp:HyperLink ID="SupplierInfoLink" runat="server" NavigateUrl='<%#Eval("SupplierInfo")%>' Target="_blank"><asp:Label ID="SupplierInfo" runat="server" Text='<%#If(IsDBNull(Eval("SupplierInfo")), "", "Supplier Information")%>'></asp:Label></asp:HyperLink></span>
@@ -160,7 +160,7 @@ function setFormAction(button_type) {
                             <td><asp:Label ID="Purpose" runat="server" Text='<%#Eval("Purpose")%>'></asp:Label></td>
                         </tr>
                         <tr>
-                            <th>Maker Code / Maker Name / Country</th>
+                            <th>Maker Code / Maker Name / Country or Region</th>
                             <td colspan="3">
                                 <!-- １段下に改行されて表示される現象の対策のため他項目より前に記述する -->
                                 <span class="placedright"><asp:HyperLink ID="MakerInfoLink" runat="server" NavigateUrl='<%#Eval("MakerInfo")%>' Target="_blank"><asp:Label ID="MakerInfo" runat="server" Text='<%#If(IsDBNull(Eval("MakerInfo")), "", "Supplier Information")%>'></asp:Label></asp:HyperLink></span>

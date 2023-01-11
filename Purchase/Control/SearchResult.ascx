@@ -68,7 +68,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>Supplier Code / Name / Country</th>
+                    <th>Supplier Code / Name / Country or Region</th>
                     <td colspan="3"><span class="placedright"></span>
                         <!-- １段下に改行されて表示される現象の対策のため他項目より前に記述する -->
                         <span class="placedright">
@@ -86,7 +86,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>Maker Code / Name / Country</th>
+                    <th>Maker Code / Name / Country or Region</th>
                     <td colspan="3">
                         <!-- １段下に改行されて表示される現象の対策のため他項目より前に記述する -->
                         <span class="placedright">

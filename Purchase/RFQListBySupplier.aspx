@@ -35,7 +35,7 @@
             <p>
                 <strong>Address : </strong><asp:Label ID="Address1" runat="server" Text=""></asp:Label> <asp:Label ID="Address2" runat="server" Text=""></asp:Label> <asp:Label ID="Address3" runat="server" Text=""></asp:Label>
                 <strong class="indent">Postal Code : </strong><asp:Label ID="PostalCode" runat="server" Text=""></asp:Label>
-                <strong class="indent">Country : </strong><asp:Label ID="CountryName" runat="server" Text=""></asp:Label>
+                <strong class="indent">Country or Region : </strong><asp:Label ID="CountryName" runat="server" Text=""></asp:Label>
             </p>
             <p>
                 <strong>Telephone : </strong><asp:Label ID="Telephone" runat="server" Text=""></asp:Label>
@@ -170,13 +170,13 @@
                             </td>
                         </tr>
                         <tr>
-                            <th>Supplier Code / Name / Country</th>
+                            <th>Supplier Code / Name / Country or Region</th>
                             <td colspan="3"><asp:Label ID="SupplierCode" runat="server" Text='<%#Eval("SupplierCode")%>'></asp:Label><span class="indent"><asp:Label ID="SupplierName" runat="server" Text='<%#Eval("SupplierName")%>'></asp:Label></span><span class="indent">(<asp:Label ID="SupplierCountry" runat="server" Text='<%#Eval("SupplierCountryName")%>'></asp:Label>)</span></td>
                             <th>Purpose</th>
                             <td><asp:Label ID="Purpose" runat="server" Text='<%#Eval("Purpose")%>'></asp:Label></td>
                         </tr>
                         <tr>
-                            <th>Maker Code / Name / Country</th>
+                            <th>Maker Code / Name / Country or Region</th>
                             <td colspan="3">
                                 <!-- １段下に改行されて表示される現象の対策のため他項目より前に記述する -->
                                 <span class="placedright"><asp:HyperLink ID="MakerInfoLink" runat="server" NavigateUrl='<%#Eval("MakerInfo")%>' Target="_blank"><asp:Label ID="MakerInfo" runat="server" Text='<%#If(IsDBNull(Eval("MakerInfo")), "", "Supplier Information")%>'></asp:Label></asp:HyperLink></span>

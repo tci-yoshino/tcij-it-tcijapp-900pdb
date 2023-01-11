@@ -236,7 +236,7 @@
                             </td>
                         </tr>
                         <tr id ="SupplierCountry_line" style="visibility: collapse;">
-                            <th>Supplier/Maker Country : </th>
+                            <th>Supplier/Maker Country or Region : </th>
                             <td>
                                 <asp:DropDownList ID="SupplierCountryCode" runat="server">
                                     <asp:ListItem></asp:ListItem>
