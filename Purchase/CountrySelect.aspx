@@ -41,7 +41,7 @@ function returnValues(code, name){
     <div id="content">
         <div class="tabs"></div>
 
-        <h3>Country Select</h3>
+        <h3>Country or Region Select</h3>
 
         <div class="main">
             <p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
@@ -49,11 +49,11 @@ function returnValues(code, name){
             <form id="CountryForm" runat="server">
                 <table>
                     <tr>
-                        <th>Country Code : </th>
+                        <th>Country or Region Code : </th>
                         <td><asp:TextBox ID="Code" runat="server" Width="7em" MaxLength="5"></asp:TextBox></td>
                     </tr>
                     <tr>
-                        <th>Country Name : </th>
+                        <th>Country or Region Name : </th>
                         <td><asp:TextBox ID="Name" runat="server" Width="21em" MaxLength="255"></asp:TextBox></td>
                     </tr>
                 </table>
@@ -70,8 +70,8 @@ function returnValues(code, name){
                 <LayoutTemplate>
                     <table ID="itemPlaceholderContainer" runat="server">
                         <tr runat="server">
-                            <th runat="server" style="width:30%">Country Code</th>
-                            <th runat="server" style="width:70%">Country Name</th>
+                            <th runat="server" style="width:30%">Country or Region Code</th>
+                            <th runat="server" style="width:70%">Country or Region Name</th>
                         </tr>
                         <tr ID="itemPlaceholder" runat="server">
                         </tr>

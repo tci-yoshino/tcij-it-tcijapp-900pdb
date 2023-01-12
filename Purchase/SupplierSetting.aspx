@@ -221,7 +221,7 @@
                             <asp:TextBox ID="PostalCode" runat="server" Width="7em" MaxLength="32"></asp:TextBox></td>
                     </tr>
                     <tr>
-                        <th><span class="r3">Country</span><span class="required">*</span> : </th>
+                        <th><span class="r3">Country or Region</span><span class="required">*</span> : </th>
                         <td>
                             <asp:DropDownList ID="Country" runat="server" AutoPostBack="True">
                             </asp:DropDownList>

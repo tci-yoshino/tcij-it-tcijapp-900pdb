@@ -96,7 +96,7 @@
 						        </td>
 					        </tr>
 					        <tr>
-						        <th>Supplier Name / Country : </th>
+						        <th>Supplier Name / Country or Region : </th>
 						        <td>
 						            <asp:TextBox ID="SupplierName" runat="server" Width="21em" ReadOnly="true" 
                                         CssClass="readonly" EnableViewState="False"></asp:TextBox>
@@ -119,7 +119,7 @@
 						        </td>
 					        </tr>
 					        <tr>
-						        <th>Maker Name / Country : </th>
+						        <th>Maker Name / Country or Region : </th>
 						        <td>
 						            <asp:TextBox ID="MakerName" runat="server" Width="21em" ReadOnly="true" 
                                         CssClass="readonly" EnableViewState="False"></asp:TextBox>

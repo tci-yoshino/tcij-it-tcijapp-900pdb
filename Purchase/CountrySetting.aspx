@@ -18,19 +18,19 @@
 	<form id="CountryForm" runat="server">
 	<div id="content">
 		<div class="tabs"></div>
-		<h3>Country Setting</h3>
+		<h3>Country or Region Setting</h3>
 		<div class="main">
 			<p class="attention"><asp:Label ID="Msg" runat="server" Text=""></asp:Label></p>
 				<table>
 					<tr>
-						<th>Country Code <span class="required">*</span> : </th>
+						<th>Country or Region Code <span class="required">*</span> : </th>
 						<td>
 						    <asp:TextBox ID="Code" runat="server" Width="7em" MaxLength="5" ReadOnly="true" CssClass="readonly" TabIndex="1"></asp:TextBox>
 						    <asp:ImageButton ID="Search" runat="server" ImageUrl="./Image/Search.gif" CssClass="magnify" OnClientClick="return Search_onclick()" />
 						</td>
 					</tr>
 					<tr>
-						<th>Country Name : </th>
+						<th>Country or Region Name : </th>
 						<td><asp:TextBox ID="Name" runat="server" Width="21em" MaxLength="255" 
                                 ReadOnly="True" CssClass="readonly" TabIndex="2"></asp:TextBox></td>
 					</tr>

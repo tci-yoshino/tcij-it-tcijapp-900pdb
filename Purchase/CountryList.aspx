@@ -15,7 +15,7 @@
     <!-- Header End -->
     <!-- Main Content Area -->
     <div id="content">
-        <div class="tabs"><a href="./CountrySetting.aspx">New Country</a></div>
+        <div class="tabs"><a href="./CountrySetting.aspx">New Country or Region</a></div>
 
         <h3>Country or Region</h3>
 
