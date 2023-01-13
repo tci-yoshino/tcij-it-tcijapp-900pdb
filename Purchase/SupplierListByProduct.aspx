@@ -130,7 +130,7 @@
                                 <tr>
                                     <th id ="SupplierCodeHeader" class="sortField" style="width:10%">Supplier Code</th>
                                     <th style="width:23%">Supplier Name</th>
-                                    <th id ="CountryHeader" class="sortField" style="width:10%">Country or Region</th>
+                                    <th id ="CountryHeader" class="sortField" style="width:10%">Country/Region</th>
                                     <th style="width:7%">Territory</th>
                                     <th style="width:10%">Supplier Item Number</th>
                                     <th style="width:10%">Note</th>
