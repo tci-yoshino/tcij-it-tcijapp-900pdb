@@ -200,13 +200,6 @@ Partial Public Class RFQUpdate
             '入力された項目の型をチェックする(DB登録時にエラーになるもののみ)
             Exit Sub
         End If
-        '変更前 Enq-User のコレポンチェック (False = 未処理コレポン有り)
-        'If ViewState(OLD_ENQUSER_ID) <> EnqUser.SelectedValue Then
-        '    If CheckUntreatedCorrespondence(RFQNumber.Text, ViewState(OLD_ENQUSER_ID)) = False Then
-        '        Msg.Text = ERR_UNTREATED_CORRESPONDENCE
-        '        Exit Sub
-        '    End If
-        'End If
         '変更前 Quo-User のコレポンチェック (False = 未処理コレポン有り)
         ' 以下の場合はチェックをスキップ
         ' ・変更前のQuo-Userが未設定(Null)の場合
@@ -1023,12 +1016,7 @@ Partial Public Class RFQUpdate
                 End If
             End If
         End If
-        'If MakerCode.Text <> String.Empty Then
-        '    If SAPMakerCode.Text = "" Then
-        '        Msg.Text = "Please make sure SAP Maker Code already been created!"
-        '        Return False
-        '    End If
-        'End If
+
         Return True
     End Function
 
@@ -1107,11 +1095,6 @@ Partial Public Class RFQUpdate
             Return False
         End If
 
-        'If CheckLineSet() = False Then
-        '    'Currency,Price,Quo-Per,Quo-Unitの入力チェック
-        '    Msg.Text = ERR_INCORRECT_CURRENCY
-        '    Return False
-        'End If
         Return CheckLineSet()
     End Function
     Private Function CheckLineSet() As Boolean
@@ -1153,10 +1136,6 @@ Partial Public Class RFQUpdate
                 b_IsNull_ALLLine = False
                 Continue For
             End If
-            'If POInterface(i).Visible = True Then
-            '    b_IsNull_ALLLine = False
-            '    Continue For
-            'End If
             If POInterfaceButton(i).Visible = True Then
                 b_IsNull_ALLLine = False
                 Continue For
@@ -1282,23 +1261,6 @@ Partial Public Class RFQUpdate
             EnqLocation.SelectedValue = EnqLocationCode.Value
 
             Msg.Text = String.Empty
-            'DBCommand = DBConn.CreateCommand()
-            'If String.IsNullOrEmpty(Confidential.Text) Then
-            '    DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
-            '                                 , EnqLocation.SelectedValue)
-            'Else
-            '    DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
-            '                                     , EnqLocation.SelectedValue)
-            'End If
-            'Dim DBReader As System.Data.SqlClient.SqlDataReader
-            'DBReader = DBCommand.ExecuteReader()
-            'DBCommand.Dispose()
-            'EnqUser.Items.Clear()
-            'Do Until DBReader.Read = False
-            '    EnqUser.Items.Add(New ListItem(DBReader("Name").ToString, DBReader("UserID").ToString))
-            'Loop
-            'DBReader.Close()
-            'DBConn.Close()
             Dim sql As String = ""
             Dim dt As DataTable
             If String.IsNullOrEmpty(Confidential.Text) Then
@@ -1324,23 +1286,6 @@ Partial Public Class RFQUpdate
             End If
         Else
             Msg.Text = String.Empty
-            'DBCommand = DBConn.CreateCommand()
-            'If String.IsNullOrEmpty(Confidential.Text) Then
-            '    DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
-            '                                 , EnqLocation.SelectedValue)
-            'Else
-            '    DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
-            '                                     , EnqLocation.SelectedValue)
-            'End If
-            'Dim DBReader As System.Data.SqlClient.SqlDataReader
-            'DBReader = DBCommand.ExecuteReader()
-            'DBCommand.Dispose()
-            'EnqUser.Items.Clear()
-            'Do Until DBReader.Read = False
-            '    EnqUser.Items.Add(New ListItem(DBReader("Name").ToString, DBReader("UserID").ToString))
-            'Loop
-            'DBReader.Close()
-            'DBConn.Close()
             Dim sql As String = ""
             Dim dt As DataTable
             If String.IsNullOrEmpty(Confidential.Text) Then
@@ -1386,7 +1331,6 @@ Partial Public Class RFQUpdate
             Else
                 PFC1.Value = "4"
             End If
-            'Response.Write("<script>alert('PO Interface create successfully!')</script>")
             ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>MyFun();</script>")
         End If
     End Sub
@@ -1402,13 +1346,11 @@ Partial Public Class RFQUpdate
         tmpQuoUnitCode = POInterfaceFunction(st_RFQNumber, LineNumber2.Value, 2)
         If tmpQuoUnitCode <> "" Then
             POIssue_2.Enabled = False
-            'POIssue_2.Attributes.Add("onclick", "return alert('The function was removed!')")
             If tmpQuoUnitCode = "LB" Or tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Then
                 PFC2.Value = "2"
             Else
                 PFC2.Value = "4"
             End If
-            'Response.Write("<script>alert('PO Interface create successfully!')</script>")
             ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>MyFun();</script>")
         End If
     End Sub
@@ -1424,13 +1366,11 @@ Partial Public Class RFQUpdate
         tmpQuoUnitCode = POInterfaceFunction(st_RFQNumber, LineNumber3.Value, 3)
         If tmpQuoUnitCode <> "" Then
             POIssue_3.Enabled = False
-            'POIssue_3.Attributes.Add("onclick", "return alert('The function was removed!')")
             If tmpQuoUnitCode = "LB" Or tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Then
                 PFC3.Value = "2"
             Else
                 PFC3.Value = "4"
             End If
-            'Response.Write("<script>alert('PO Interface create successfully!')</script>")
             ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>MyFun();</script>")
         End If
     End Sub
@@ -1446,48 +1386,16 @@ Partial Public Class RFQUpdate
         tmpQuoUnitCode = POInterfaceFunction(st_RFQNumber, LineNumber4.Value, 4)
         If tmpQuoUnitCode <> "" Then
             POIssue_4.Enabled = False
-            'POIssue_4.Attributes.Add("onclick", "return alert('The function was removed!')")
             If tmpQuoUnitCode = "LB" Or tmpQuoUnitCode = "L" Or tmpQuoUnitCode = "ML" Then
                 PFC4.Value = "2"
             Else
                 PFC4.Value = "4"
             End If
-            'Response.Write("<script>alert('PO Interface create successfully!')</script>")
             ClientScript.RegisterStartupScript(ClientScript.GetType(), "myscript", "<script>MyFun();</script>")
         End If
     End Sub
 
     Protected Sub SupplierContactPersonCodeList_SelectedIndexChanged(sender As Object, e As EventArgs) Handles SupplierContactPersonCodeList.SelectedIndexChanged
-        'Dim Sql As String = ""
-        'Sql = "select * from ( select * from (select '' as supplierInfo,'' as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        'Sql += "Union All select (SupplierEmailID1+'-'+ SupplierEmail1) as supplierInfo,ISNULL(SupplierContactperson1,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        'Sql += "Union All select (SupplierEmailID2+'-'+ SupplierEmail2) as supplierInfo,ISNULL(SupplierContactperson2,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        'Sql += "Union All select (SupplierEmailID3+'-'+ SupplierEmail3) as supplierInfo,ISNULL(SupplierContactperson3,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        'Sql += "Union All select (SupplierEmailID4+'-'+ SupplierEmail4) as supplierInfo,ISNULL(SupplierContactperson4,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        'Sql += "Union All select (SupplierEmailID5+'-'+ SupplierEmail5) as supplierInfo,ISNULL(SupplierContactperson5,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        'Sql += "Union All select (SupplierEmailID6+'-'+ SupplierEmail6) as supplierInfo,ISNULL(SupplierContactperson6,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        'Sql += "Union All select (SupplierEmailID7+'-'+ SupplierEmail7) as supplierInfo,ISNULL(SupplierContactperson7,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        'Sql += "Union All select (SupplierEmailID8+'-'+ SupplierEmail8) as supplierInfo,ISNULL(SupplierContactperson8,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        'Sql += "Union All select (SupplierEmailID9+'-'+ SupplierEmail9) as supplierInfo,ISNULL(SupplierContactperson9,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + " "
-        'Sql += "Union All select (SupplierEmailID10+'-'+ SupplierEmail10) as supplierInfo,ISNULL(SupplierContactperson10,'') as SupplierContactperson FROM  Supplier where SupplierCode=" + SupplierCode.Text + ") as A "
-        'Sql += "where supplierInfo is not null) As B where supplierInfo='" + SupplierContactPersonCodeList.SelectedValue + "'"
-        'Dim DBConn As New System.Data.SqlClient.SqlConnection(DB_CONNECT_STRING)
-        'Dim DBAdapter As System.Data.SqlClient.SqlDataAdapter
-        'Dim DBCommand As System.Data.SqlClient.SqlCommand
-        'DBConn.Open()
-        'DBCommand = DBConn.CreateCommand()
-        'DBAdapter = New SqlDataAdapter
-        'Dim DS As DataSet = New DataSet
-        'DBCommand = New SqlCommand(Sql, DBConn)
-        'DBAdapter.SelectCommand = DBCommand
-        'DBAdapter.Fill(DS)
-        'Dim tmpdt As DataTable
-        'tmpdt = DS.Tables(0)
-        'DBCommand.Dispose()
-        'DBConn.Close()
-        'If tmpdt.Rows.Count > 0 Then
-        '    SupplierContactPerson.Text = tmpdt.Rows(0)("SupplierContactperson")
-        'End If
         If SupplierContactPersonCodeList.SelectedValue.Length > 0 AndAlso SupplierContactPersonCodeList.SelectedValue.IndexOf("-") > -1 Then
             SupplierContactPerson.Text = SupplierContactPersonCodeList.SelectedValue.Split("-")(0).ToString
         End If
@@ -1496,7 +1404,6 @@ Partial Public Class RFQUpdate
     Public Function GetInfo() As String
         Dim DataTable As System.Data.DataTable = GetDataTable("select Comment from v_RFQHeader where RFQNumber='" + RFQNumber.Text + "'", "v_RFQHeader")
         If DataTable IsNot Nothing And DataTable.Rows.Count > 0 Then
-            'Return DataTable.Rows(0)("Comment")
             If Not IsDBNull(DataTable.Rows(0)("Comment")) Then
                 Dim info = Replace(DataTable.Rows(0)("Comment"), Chr(13), "")
                 info = Replace(info, Chr(10), " ")
@@ -1566,32 +1473,13 @@ Partial Public Class RFQUpdate
         parameter(3) = EnqPlant
         'Purchase Org. for Shipping of STO
         Dim QuoInfo As DataTable = GetDataTable("select * from PurchasingUser where  UserID='" + DS.Tables("RFQHeader").Rows(0)("QuoUserID").ToString + "'", "PurchasingUser")
-        'If QuoInfo.Rows.Count > 0 Then
-        '    If QuoInfo.Rows(0)("R3PurchasingGroup").ToString.Length > 0 Then
-        '        parameter(4) = QuoInfo.Rows(0)("R3PurchasingGroup").ToString.Substring(0, 1) + "K00"
-        '    Else
-        '        parameter(4) = ""
-        '    End If
-        'Else
-        '    parameter(4) = ""
-        'End If
         '计算逻辑错误导致的修改-0520
         If DS.Tables("RFQHeader").Rows(0)("QuoStorageLocation").ToString.Length > 0 Then
             parameter(4) = DS.Tables("RFQHeader").Rows(0)("QuoStorageLocation").ToString.Substring(0, 1) + "K00"
         Else
             parameter(4) = ""
         End If
-        'Purchase Org. for receving of STO
         Dim EnqInfo As DataTable = GetDataTable("select * from PurchasingUser where  UserID='" + DS.Tables("RFQHeader").Rows(0)("EnqUserID").ToString + "'", "PurchasingUser")
-        'If EnqInfo.Rows.Count > 0 Then
-        '    If EnqInfo.Rows(0)("R3PurchasingGroup").ToString.Length > 0 Then
-        '        parameter(5) = EnqInfo.Rows(0)("R3PurchasingGroup").ToString.Substring(0, 1) + "K00"
-        '    Else
-        '        parameter(5) = ""
-        '    End If
-        'Else
-        '    parameter(5) = ""
-        'End If
         '计算逻辑错误导致的修改-0520
         If DS.Tables("RFQHeader").Rows(0)("EnqStorageLocation").ToString.Length > 0 Then
             parameter(5) = DS.Tables("RFQHeader").Rows(0)("EnqStorageLocation").ToString.Substring(0, 1) + "K00"
@@ -1671,9 +1559,6 @@ Partial Public Class RFQUpdate
         parameter(30) = ""
         'Supplying Plant' s offer vaild date from (not interfaced data)
         parameter(31) = ""
-        'Supplying Plant' s Reminding 1
-        'Supplying Plant' s Reminding 2
-        'Supplying Plant' s Reminding 3
 
         Dim POReminderInfo As DataTable = GetDataTable("select * from Reminder where  SupplyingPlant='" + QuoPlant + "'", "Reminder")
         If POReminderInfo.Rows.Count > 0 Then
@@ -2018,45 +1903,45 @@ Partial Public Class RFQUpdate
                     sql += " VALUES(" + MaxId.ToString
                     sql += "," + dt.Rows(i)("RFQLineNumber").ToString + ""
                     sql += "," + dt.Rows(i)("RFQNumber").ToString + ""
-                    sql += ",'" + dt.Rows(i)("Pattern").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("SupplyingPlant").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("ReceivingPlant").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("PurOrgShipping").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("PurOrgReceving").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("MaterialNumber").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("Vendor").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("Price").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("PriceUnit").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("OrderPriceUnit").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("Currency").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("RFQReferenceNumber").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("SupplierContactPersonCode").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("MakerCode").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("SupplierItemName").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("PaymentTerms").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("HandlingFee").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("ShipmentCost").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("Purpose").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("Priority").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("EnqUser").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("QuoUser").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("EnqQuantity").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("LeadTime").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("SupplierItemNumber").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("Incoterms").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("TermsDelivery").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("PurityMethod").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("Packing").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("SupplyingOfferVaildDateFrom").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("SupplyingOfferVaildDateTo").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("SupplyingPlantReminding1").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("SupplyingPlantReminding2").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("SupplyingPlantReminding3").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("ReceivingOfferVaildDateFrom").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("ReceivingOfferVaildDateTo").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("SupplyingStorageLocation").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("ReceivingStorageLocation").ToString + "'"
-                    sql += ",'" + dt.Rows(i)("SupplierOfferNo").ToString + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("Pattern").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("SupplyingPlant").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("ReceivingPlant").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("PurOrgShipping").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("PurOrgReceving").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("MaterialNumber").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("Vendor").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("Price").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("PriceUnit").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("OrderPriceUnit").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("Currency").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("RFQReferenceNumber").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("SupplierContactPersonCode").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("MakerCode").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("SupplierItemName").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("PaymentTerms").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("HandlingFee").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("ShipmentCost").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("Purpose").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("Priority").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("EnqUser").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("QuoUser").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("EnqQuantity").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("LeadTime").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("SupplierItemNumber").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("Incoterms").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("TermsDelivery").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("PurityMethod").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("Packing").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("SupplyingOfferVaildDateFrom").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("SupplyingOfferVaildDateTo").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("SupplyingPlantReminding1").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("SupplyingPlantReminding2").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("SupplyingPlantReminding3").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("ReceivingOfferVaildDateFrom").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("ReceivingOfferVaildDateTo").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("SupplyingStorageLocation").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("ReceivingStorageLocation").ToString) + "'"
+                    sql += ",'" + Common.SafeSqlLiteral(dt.Rows(i)("SupplierOfferNo").ToString) + "'"
                     sql += ");"
                 End If
             Next
@@ -2111,7 +1996,7 @@ Partial Public Class RFQUpdate
         sql += ")"
         sql += " VALUES(" + MaxId.ToString + "," + RFQLineNumber + "," + RFQNumber + ""
         For i = 1 To 39
-            sql += ",'" + parameter(i) + "'"
+            sql += ",'" + Common.SafeSqlLiteral(parameter(i)) + "'"
         Next
         sql += ");"
 
@@ -2195,22 +2080,6 @@ Partial Public Class RFQUpdate
             End If
         Else
             Msg.Text = String.Empty
-            'DBCommand = DBConn.CreateCommand()
-            'If String.IsNullOrEmpty(Confidential.Text) Then
-            '    DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
-            '                                 , QuoLocation.SelectedValue)
-            'Else
-            '    DBCommand.CommandText = String.Format("SELECT UserID, [Name] FROM v_UserAll WHERE (LocationCode = '{0}' AND isDisabled = 0 AND RoleCode = 'WRITE' and  R3PurchasingGroup  is not null and R3PurchasingGroup <>'') ORDER BY [Name] " _
-            '                                     , QuoLocation.SelectedValue)
-            'End If
-            'Dim DBReader As System.Data.SqlClient.SqlDataReader
-            'DBReader = DBCommand.ExecuteReader()
-            'DBCommand.Dispose()
-            'QuoUser.Items.Clear()
-            'Do Until DBReader.Read = False
-            '    QuoUser.Items.Add(New ListItem(DBReader("Name").ToString, DBReader("UserID").ToString))
-            'Loop
-            'DBReader.Close()
 
             Dim sql As String = ""
             Dim dt As DataTable
@@ -2223,7 +2092,6 @@ Partial Public Class RFQUpdate
             End If
             dt = GetDataTable(sql)
             QuoUser.Items.Clear()
-            'QuoUser.Items.Add(String.Empty)
             For i As Integer = 0 To dt.Rows.Count - 1
                 QuoUser.Items.Add(New ListItem(dt.Rows(i)("Name").ToString, dt.Rows(i)("UserID").ToString))
             Next
@@ -2286,12 +2154,6 @@ Partial Public Class RFQUpdate
     Private Sub SetSupplierContactPersonCodeList()
         Dim sql As String
         If SupplierCode.Text.Trim().Length > 0 Then
-            'If IsNumeric(SupplierCode.Text) Then
-
-            'Else
-            '    Msg.Text = "Supplier Code is invalid number!"
-            '    SupplierCode.Focus()
-            'End If
 
             sql = "select * from ("
             sql += "select '' as supplierInfo,'' as SupplierContactperson,'' as SupplierEmailID FROM  Supplier where SupplierCode=" + SupplierCode.Text + ""

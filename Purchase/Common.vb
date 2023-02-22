@@ -527,7 +527,7 @@ Public Class Common
     ''' <remarks></remarks>
     Public Shared Function SafeSqlLiteral(ByVal SqlString As String) As String
 
-        Return SqlString.Replace("'", "''")
+        Return SqlString.Replace("'", "''").Replace(vbTab, "")
 
     End Function
 
