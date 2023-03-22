@@ -176,7 +176,7 @@
                     <tr>
                         <th>Supplier Information : </th>
                         <td>
-                            <asp:TextBox ID="SupplierInfo" runat="server" Width="21em" MaxLength="255"></asp:TextBox></td>
+                            <asp:TextBox ID="SupplierInfo" runat="server" Width="21em" MaxLength="1000"></asp:TextBox></td>
                     </tr>
                     <tr>
                         <th><span class="r3">TCI-J Supplier Name</span> : </th>
