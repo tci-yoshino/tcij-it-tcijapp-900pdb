@@ -39,7 +39,7 @@
 
 	<!-- ファイル/ディレクトリ設定 -->
 	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::Dir_File].Properties[Value]" ValueType="String">
-		<ConfiguredValue>D:\IF\Purchase\</ConfiguredValue>
+		<ConfiguredValue>D:\PURCHASE\</ConfiguredValue>
 	</Configuration>
 	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::File_New_Product].Properties[Value]" ValueType="String">
 		<ConfiguredValue>NewProduct.txt</ConfiguredValue>
