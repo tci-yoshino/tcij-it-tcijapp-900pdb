@@ -89,6 +89,9 @@ Namespace TCIDataAccess
         Protected _PA1_MAXNET As String = String.Empty
         Protected _PA1_PI As String = String.Empty
         Protected _EXPCTRL As String = String.Empty
+        Protected _FLAG_IN As String = String.Empty
+        Protected _REP As String = String.Empty
+        Protected _SI As String = String.Empty
 
         ''' <summary> 
         ''' MATNR を設定、または取得する 
@@ -942,6 +945,42 @@ Namespace TCIDataAccess
             End Set
         End Property
 
+        ''' <summary>
+        ''' FLAG_IN を設定、または取得する
+        ''' </summary>
+        Public Property FLAG_IN() As String
+            Get
+                Return _FLAG_IN
+            End Get
+            Set(ByVal value As String)
+                _FLAG_IN = value
+            End Set
+        End Property
+
+        ''' <summary>
+        ''' REP を設定、または取得する
+        ''' </summary>
+        Public Property REP() As String
+            Get
+                Return _REP
+            End Get
+            Set(ByVal value As String)
+                _REP = value
+            End Set
+        End Property
+
+        ''' <summary>
+        ''' SI を設定、または取得する
+        ''' </summary>
+        Public Property SI() As String
+            Get
+                Return _SI
+            End Get
+            Set(ByVal value As String)
+                _SI = value
+            End Set
+        End Property
+
         ''' <summary> 
         ''' コンストラクタ
         ''' </summary> 
@@ -1027,7 +1066,10 @@ Namespace TCIDataAccess
             Value.AppendLine("    [CA_PI],")
             Value.AppendLine("    [PA1_MAXNET],")
             Value.AppendLine("    [PA1_PI],")
-            Value.AppendLine("    [EXPCTRL]")
+            Value.AppendLine("    [EXPCTRL],")
+            Value.AppendLine("    [FLAG_IN],")
+            Value.AppendLine("    [REP],")
+            Value.AppendLine("    [SI]")
             Value.AppendLine("FROM")
             Value.AppendLine("    [s_SPECS]")
 
@@ -1108,6 +1150,9 @@ Namespace TCIDataAccess
                         SetProperty(DBReader("PA1_MAXNET"), _PA1_MAXNET)
                         SetProperty(DBReader("PA1_PI"), _PA1_PI)
                         SetProperty(DBReader("EXPCTRL"), _EXPCTRL)
+                        SetProperty(DBReader("FLAG_IN"), _FLAG_IN)
+                        SetProperty(DBReader("REP"), _REP)
+                        SetProperty(DBReader("SI"), _SI)
                     End While
                     DBReader.Close()
                 End Using
@@ -1192,7 +1237,10 @@ Namespace TCIDataAccess
             Value.AppendLine("    [CA_PI],")
             Value.AppendLine("    [PA1_MAXNET],")
             Value.AppendLine("    [PA1_PI],")
-            Value.AppendLine("    [EXPCTRL]")
+            Value.AppendLine("    [EXPCTRL],")
+            Value.AppendLine("    [FLAG_IN],")
+            Value.AppendLine("    [REP],")
+            Value.AppendLine("    [SI]")
             Value.AppendLine("FROM")
             Value.AppendLine("    [s_SPECS]")
             Value.AppendLine("WHERE")
@@ -1277,6 +1325,9 @@ Namespace TCIDataAccess
                         SetProperty(DBReader("PA1_MAXNET"), _PA1_MAXNET)
                         SetProperty(DBReader("PA1_PI"), _PA1_PI)
                         SetProperty(DBReader("EXPCTRL"), _EXPCTRL)
+                        SetProperty(DBReader("FLAG_IN"), _FLAG_IN)
+                        SetProperty(DBReader("REP"), _REP)
+                        SetProperty(DBReader("SI"), _SI)
                     End While
                     DBReader.Close()
                 End Using
