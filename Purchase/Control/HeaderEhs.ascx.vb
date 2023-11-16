@@ -378,6 +378,15 @@ Public Class HeaderEhs
         ElseIf ehsHeader.Item.Equals("EXPCTRL") Then
             EhsItem = New EhsItem(ehsHeader.Text, s_SPECS.EXPCTRL)
             Me.EhsItemList.Add(EhsItem)
+        ElseIf ehsHeader.Item.Equals("FLAG_IN") Then
+            EhsItem = New EhsItem(ehsHeader.Text, s_SPECS.FLAG_IN)
+            Me.EhsItemList.Add(EhsItem)
+        ElseIf ehsHeader.Item.Equals("REP") Then
+            EhsItem = New EhsItem(ehsHeader.Text, s_SPECS.REP)
+            Me.EhsItemList.Add(EhsItem)
+        ElseIf ehsHeader.Item.Equals("SI") Then
+            EhsItem = New EhsItem(ehsHeader.Text, s_SPECS.SI)
+            Me.EhsItemList.Add(EhsItem)
         End If
 
     End Sub
