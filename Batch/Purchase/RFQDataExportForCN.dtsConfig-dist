@@ -1,0 +1,17 @@
+<?xml version="1.0"?><DTSConfiguration>
+	<DTSConfigurationHeading>
+		<DTSConfigurationFileInfo GeneratedBy="TCIX\Masumi.Koyama" GeneratedFromPackageName="RFQDataExportForCN" GeneratedFromPackageID="{5F2B42D5-1533-4ED9-83B8-E36757DE8EE9}" GeneratedDate="2024/04/18 22:32:32"/>
+	</DTSConfigurationHeading>
+
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::CommandTimeout].Properties[Value]" ValueType="Int32">
+		<ConfiguredValue>300</ConfiguredValue>
+	</Configuration>
+
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::TempDir].Properties[Value]" ValueType="String">
+		<ConfiguredValue>C:\tcijapp\Purchase\Batch\Temp</ConfiguredValue>
+	</Configuration>
+
+	<Configuration ConfiguredType="Property" Path="\Package.Variables[User::OutputFilePath].Properties[Value]" ValueType="String">
+		<ConfiguredValue>\\TFL5\GlobalProject\Supply_Chain_Management_Group\0500 IT data\PDB Data\TCI-S Open RFQ.xlsx</ConfiguredValue>
+	</Configuration>
+</DTSConfiguration>
